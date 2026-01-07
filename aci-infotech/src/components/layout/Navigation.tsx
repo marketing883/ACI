@@ -22,6 +22,7 @@ import {
   Snowflake,
   MessageSquare,
   Server,
+  Workflow,
   FileText,
   BookOpen,
   Users,
@@ -84,6 +85,7 @@ const NAV_DATA = {
     { label: 'Azure', href: '/platforms/azure', icon: Cloud, color: 'text-[#0078D4]' },
     { label: 'Salesforce', href: '/platforms/salesforce', icon: Users, color: 'text-[#00A1E0]' },
     { label: 'SAP', href: '/platforms/sap', icon: Server, color: 'text-[#0FAAFF]' },
+    { label: 'ServiceNow', href: '/platforms/servicenow', icon: Workflow, color: 'text-[#81B5A1]' },
     { label: 'Braze', href: '/platforms/braze', icon: MessageSquare, color: 'text-[#ED4B4B]' },
   ],
   industries: [
