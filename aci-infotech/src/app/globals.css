@@ -1,0 +1,62 @@
+@import "tailwindcss";
+@import "../styles/design-system.css";
+
+@theme inline {
+  /* ACI Brand Colors */
+  --color-aci-primary: #0F4BB9;
+  --color-aci-primary-dark: #0A3A8C;
+  --color-aci-primary-light: #3B6FD4;
+  --color-aci-secondary: #202122;
+  --color-aci-secondary-light: #666666;
+  --color-aci-off-white: #FAFAFA;
+
+  /* Override defaults */
+  --color-background: #ffffff;
+  --color-foreground: #202122;
+
+  /* Fonts */
+  --font-sans: 'Inter', sans-serif;
+  --font-title: 'Manrope', sans-serif;
+}
+
+/* Ensure smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove default margins */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Improve font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix for sticky header */
+main {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--aci-gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--aci-gray-400);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--aci-gray-500);
+}
