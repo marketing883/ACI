@@ -1,56 +1,16 @@
--- ACI Infotech Database Schema (Fixed Version)
--- Run this in Supabase SQL Editor (https://supabase.com/dashboard -> SQL Editor)
--- This schema handles existing tables gracefully
+-- ACI Infotech Database Schema (Robust Version)
+-- Run this in Supabase SQL Editor
 
 -- ============================================
--- STEP 1: ADD MISSING COLUMNS TO EXISTING TABLES
--- ============================================
--- This handles the case where contacts table already exists
-
-DO $$
-BEGIN
-  -- Add columns to contacts if they don't exist
-  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'contacts') THEN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'source') THEN
-      ALTER TABLE contacts ADD COLUMN source TEXT DEFAULT 'contact_form';
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'status') THEN
-      ALTER TABLE contacts ADD COLUMN status TEXT DEFAULT 'new';
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'lead_score') THEN
-      ALTER TABLE contacts ADD COLUMN lead_score INTEGER DEFAULT 0;
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'location') THEN
-      ALTER TABLE contacts ADD COLUMN location TEXT;
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'country') THEN
-      ALTER TABLE contacts ADD COLUMN country TEXT;
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'metadata') THEN
-      ALTER TABLE contacts ADD COLUMN metadata JSONB DEFAULT '{}'::jsonb;
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'updated_at') THEN
-      ALTER TABLE contacts ADD COLUMN updated_at TIMESTAMPTZ DEFAULT NOW();
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'job_title') THEN
-      ALTER TABLE contacts ADD COLUMN job_title TEXT;
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'service_interest') THEN
-      ALTER TABLE contacts ADD COLUMN service_interest TEXT;
-    END IF;
-  END IF;
-END $$;
-
--- ============================================
--- 1. CONTACTS TABLE (Create if not exists)
+-- STEP 1: CREATE ALL TABLES FIRST
 -- ============================================
 
 CREATE TABLE IF NOT EXISTS contacts (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
-  name TEXT NOT NULL,
-  email TEXT NOT NULL,
+  name TEXT,
+  email TEXT,
   phone TEXT,
   company TEXT,
   job_title TEXT,
@@ -64,16 +24,6 @@ CREATE TABLE IF NOT EXISTS contacts (
   metadata JSONB DEFAULT '{}'::jsonb
 );
 
--- Indexes
-CREATE INDEX IF NOT EXISTS idx_contacts_email ON contacts(email);
-CREATE INDEX IF NOT EXISTS idx_contacts_source ON contacts(source);
-CREATE INDEX IF NOT EXISTS idx_contacts_status ON contacts(status);
-CREATE INDEX IF NOT EXISTS idx_contacts_created_at ON contacts(created_at DESC);
-
--- ============================================
--- 2. CHAT LEADS TABLE
--- ============================================
-
 CREATE TABLE IF NOT EXISTS chat_leads (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -83,7 +33,7 @@ CREATE TABLE IF NOT EXISTS chat_leads (
   phone TEXT,
   company TEXT,
   job_title TEXT,
-  session_id TEXT NOT NULL,
+  session_id TEXT,
   service_interest TEXT,
   conversation_summary TEXT,
   conversation_history JSONB DEFAULT '[]'::jsonb,
@@ -95,21 +45,13 @@ CREATE TABLE IF NOT EXISTS chat_leads (
   ai_analysis JSONB DEFAULT '{}'::jsonb
 );
 
-CREATE INDEX IF NOT EXISTS idx_chat_leads_session ON chat_leads(session_id);
-CREATE INDEX IF NOT EXISTS idx_chat_leads_email ON chat_leads(email);
-CREATE INDEX IF NOT EXISTS idx_chat_leads_created_at ON chat_leads(created_at DESC);
-
--- ============================================
--- 3. BLOG POSTS TABLE
--- ============================================
-
 CREATE TABLE IF NOT EXISTS blog_posts (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   published_at TIMESTAMPTZ,
-  title TEXT NOT NULL,
-  slug TEXT NOT NULL UNIQUE,
+  title TEXT,
+  slug TEXT,
   excerpt TEXT,
   content TEXT,
   meta_title TEXT,
@@ -129,24 +71,15 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   ai_metadata JSONB DEFAULT '{}'::jsonb
 );
 
-CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_status ON blog_posts(status);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_category ON blog_posts(category);
-CREATE INDEX IF NOT EXISTS idx_blog_posts_published_at ON blog_posts(published_at DESC);
-
--- ============================================
--- 4. CASE STUDIES TABLE
--- ============================================
-
 CREATE TABLE IF NOT EXISTS case_studies (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   published_at TIMESTAMPTZ,
-  title TEXT NOT NULL,
-  slug TEXT NOT NULL UNIQUE,
+  title TEXT,
+  slug TEXT,
   excerpt TEXT,
-  client_name TEXT NOT NULL,
+  client_name TEXT,
   client_logo TEXT,
   client_industry TEXT,
   client_size TEXT,
@@ -168,21 +101,13 @@ CREATE TABLE IF NOT EXISTS case_studies (
   is_featured BOOLEAN DEFAULT FALSE
 );
 
-CREATE INDEX IF NOT EXISTS idx_case_studies_slug ON case_studies(slug);
-CREATE INDEX IF NOT EXISTS idx_case_studies_status ON case_studies(status);
-CREATE INDEX IF NOT EXISTS idx_case_studies_industry ON case_studies(client_industry);
-
--- ============================================
--- 5. WHITEPAPERS TABLE
--- ============================================
-
 CREATE TABLE IF NOT EXISTS whitepapers (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   published_at TIMESTAMPTZ,
-  title TEXT NOT NULL,
-  slug TEXT NOT NULL UNIQUE,
+  title TEXT,
+  slug TEXT,
   description TEXT,
   file_url TEXT,
   file_size_bytes INTEGER,
@@ -199,19 +124,12 @@ CREATE TABLE IF NOT EXISTS whitepapers (
   status TEXT DEFAULT 'draft'
 );
 
-CREATE INDEX IF NOT EXISTS idx_whitepapers_slug ON whitepapers(slug);
-CREATE INDEX IF NOT EXISTS idx_whitepapers_status ON whitepapers(status);
-
--- ============================================
--- 6. WHITEPAPER DOWNLOADS
--- ============================================
-
 CREATE TABLE IF NOT EXISTS whitepaper_downloads (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   whitepaper_id UUID,
   contact_id UUID,
-  email TEXT NOT NULL,
+  email TEXT,
   name TEXT,
   company TEXT,
   job_title TEXT,
@@ -219,19 +137,12 @@ CREATE TABLE IF NOT EXISTS whitepaper_downloads (
   user_agent TEXT
 );
 
-CREATE INDEX IF NOT EXISTS idx_whitepaper_downloads_whitepaper ON whitepaper_downloads(whitepaper_id);
-CREATE INDEX IF NOT EXISTS idx_whitepaper_downloads_email ON whitepaper_downloads(email);
-
--- ============================================
--- 7. WEBINARS TABLE
--- ============================================
-
 CREATE TABLE IF NOT EXISTS webinars (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
-  title TEXT NOT NULL,
-  slug TEXT NOT NULL UNIQUE,
+  title TEXT,
+  slug TEXT,
   description TEXT,
   scheduled_at TIMESTAMPTZ,
   duration_minutes INTEGER DEFAULT 60,
@@ -250,20 +161,12 @@ CREATE TABLE IF NOT EXISTS webinars (
   status TEXT DEFAULT 'upcoming'
 );
 
-CREATE INDEX IF NOT EXISTS idx_webinars_slug ON webinars(slug);
-CREATE INDEX IF NOT EXISTS idx_webinars_status ON webinars(status);
-CREATE INDEX IF NOT EXISTS idx_webinars_scheduled_at ON webinars(scheduled_at);
-
--- ============================================
--- 8. WEBINAR REGISTRATIONS
--- ============================================
-
 CREATE TABLE IF NOT EXISTS webinar_registrations (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   webinar_id UUID,
   contact_id UUID,
-  email TEXT NOT NULL,
+  email TEXT,
   name TEXT,
   company TEXT,
   job_title TEXT,
@@ -271,18 +174,11 @@ CREATE TABLE IF NOT EXISTS webinar_registrations (
   external_registration_id TEXT
 );
 
-CREATE INDEX IF NOT EXISTS idx_webinar_registrations_webinar ON webinar_registrations(webinar_id);
-CREATE INDEX IF NOT EXISTS idx_webinar_registrations_email ON webinar_registrations(email);
-
--- ============================================
--- 9. NEWSLETTER SUBSCRIBERS
--- ============================================
-
 CREATE TABLE IF NOT EXISTS newsletter_subscribers (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
-  email TEXT NOT NULL UNIQUE,
+  email TEXT,
   name TEXT,
   topics TEXT[],
   frequency TEXT DEFAULT 'weekly',
@@ -292,36 +188,22 @@ CREATE TABLE IF NOT EXISTS newsletter_subscribers (
   contact_id UUID
 );
 
-CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_email ON newsletter_subscribers(email);
-CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_status ON newsletter_subscribers(status);
-
--- ============================================
--- 10. CONTENT CATEGORIES
--- ============================================
-
 CREATE TABLE IF NOT EXISTS content_categories (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  name TEXT NOT NULL UNIQUE,
-  slug TEXT NOT NULL UNIQUE,
+  name TEXT,
+  slug TEXT,
   description TEXT,
   parent_id UUID,
-  content_type TEXT NOT NULL,
+  content_type TEXT,
   sort_order INTEGER DEFAULT 0
 );
-
-CREATE INDEX IF NOT EXISTS idx_content_categories_slug ON content_categories(slug);
-CREATE INDEX IF NOT EXISTS idx_content_categories_type ON content_categories(content_type);
-
--- ============================================
--- 11. SEO METRICS
--- ============================================
 
 CREATE TABLE IF NOT EXISTS seo_metrics (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
-  keyword TEXT NOT NULL,
+  keyword TEXT,
   search_volume INTEGER,
   cpc DECIMAL(10, 2),
   competition DECIMAL(5, 4),
@@ -331,31 +213,87 @@ CREATE TABLE IF NOT EXISTS seo_metrics (
   expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '7 days')
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_seo_metrics_keyword ON seo_metrics(keyword);
-
--- ============================================
--- 12. ADMIN ACTIVITY LOG
--- ============================================
-
 CREATE TABLE IF NOT EXISTS admin_activity_log (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   user_id UUID,
   user_email TEXT,
-  action TEXT NOT NULL,
-  resource_type TEXT NOT NULL,
+  action TEXT,
+  resource_type TEXT,
   resource_id UUID,
   details JSONB DEFAULT '{}'::jsonb,
   ip_address TEXT,
   user_agent TEXT
 );
 
-CREATE INDEX IF NOT EXISTS idx_admin_activity_user ON admin_activity_log(user_id);
-CREATE INDEX IF NOT EXISTS idx_admin_activity_resource ON admin_activity_log(resource_type, resource_id);
-CREATE INDEX IF NOT EXISTS idx_admin_activity_created ON admin_activity_log(created_at DESC);
+-- ============================================
+-- STEP 2: ADD MISSING COLUMNS TO ALL TABLES
+-- ============================================
+
+DO $$
+BEGIN
+  -- contacts
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'status') THEN
+    ALTER TABLE contacts ADD COLUMN status TEXT DEFAULT 'new';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'source') THEN
+    ALTER TABLE contacts ADD COLUMN source TEXT DEFAULT 'contact_form';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'lead_score') THEN
+    ALTER TABLE contacts ADD COLUMN lead_score INTEGER DEFAULT 0;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'updated_at') THEN
+    ALTER TABLE contacts ADD COLUMN updated_at TIMESTAMPTZ DEFAULT NOW();
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'contacts' AND column_name = 'metadata') THEN
+    ALTER TABLE contacts ADD COLUMN metadata JSONB DEFAULT '{}'::jsonb;
+  END IF;
+
+  -- blog_posts
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'blog_posts' AND column_name = 'status') THEN
+    ALTER TABLE blog_posts ADD COLUMN status TEXT DEFAULT 'draft';
+  END IF;
+
+  -- case_studies
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'case_studies' AND column_name = 'status') THEN
+    ALTER TABLE case_studies ADD COLUMN status TEXT DEFAULT 'draft';
+  END IF;
+
+  -- whitepapers
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'whitepapers' AND column_name = 'status') THEN
+    ALTER TABLE whitepapers ADD COLUMN status TEXT DEFAULT 'draft';
+  END IF;
+
+  -- webinars
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'webinars' AND column_name = 'status') THEN
+    ALTER TABLE webinars ADD COLUMN status TEXT DEFAULT 'upcoming';
+  END IF;
+
+  -- newsletter_subscribers
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'newsletter_subscribers' AND column_name = 'status') THEN
+    ALTER TABLE newsletter_subscribers ADD COLUMN status TEXT DEFAULT 'active';
+  END IF;
+END $$;
 
 -- ============================================
--- FUNCTIONS & TRIGGERS
+-- STEP 3: CREATE INDEXES
+-- ============================================
+
+CREATE INDEX IF NOT EXISTS idx_contacts_email ON contacts(email);
+CREATE INDEX IF NOT EXISTS idx_contacts_status ON contacts(status);
+CREATE INDEX IF NOT EXISTS idx_chat_leads_session ON chat_leads(session_id);
+CREATE INDEX IF NOT EXISTS idx_chat_leads_email ON chat_leads(email);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_status ON blog_posts(status);
+CREATE INDEX IF NOT EXISTS idx_case_studies_slug ON case_studies(slug);
+CREATE INDEX IF NOT EXISTS idx_case_studies_status ON case_studies(status);
+CREATE INDEX IF NOT EXISTS idx_whitepapers_slug ON whitepapers(slug);
+CREATE INDEX IF NOT EXISTS idx_whitepapers_status ON whitepapers(status);
+CREATE INDEX IF NOT EXISTS idx_webinars_slug ON webinars(slug);
+CREATE INDEX IF NOT EXISTS idx_webinars_status ON webinars(status);
+
+-- ============================================
+-- STEP 4: FUNCTIONS & TRIGGERS
 -- ============================================
 
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -366,7 +304,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Drop existing triggers if they exist (to avoid errors)
 DROP TRIGGER IF EXISTS update_contacts_updated_at ON contacts;
 DROP TRIGGER IF EXISTS update_chat_leads_updated_at ON chat_leads;
 DROP TRIGGER IF EXISTS update_blog_posts_updated_at ON blog_posts;
@@ -376,44 +313,19 @@ DROP TRIGGER IF EXISTS update_webinars_updated_at ON webinars;
 DROP TRIGGER IF EXISTS update_newsletter_subscribers_updated_at ON newsletter_subscribers;
 DROP TRIGGER IF EXISTS update_seo_metrics_updated_at ON seo_metrics;
 
--- Create triggers
-CREATE TRIGGER update_contacts_updated_at
-  BEFORE UPDATE ON contacts
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_chat_leads_updated_at
-  BEFORE UPDATE ON chat_leads
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_blog_posts_updated_at
-  BEFORE UPDATE ON blog_posts
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_case_studies_updated_at
-  BEFORE UPDATE ON case_studies
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_whitepapers_updated_at
-  BEFORE UPDATE ON whitepapers
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_webinars_updated_at
-  BEFORE UPDATE ON webinars
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_newsletter_subscribers_updated_at
-  BEFORE UPDATE ON newsletter_subscribers
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_seo_metrics_updated_at
-  BEFORE UPDATE ON seo_metrics
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_contacts_updated_at BEFORE UPDATE ON contacts FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_chat_leads_updated_at BEFORE UPDATE ON chat_leads FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_blog_posts_updated_at BEFORE UPDATE ON blog_posts FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_case_studies_updated_at BEFORE UPDATE ON case_studies FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_whitepapers_updated_at BEFORE UPDATE ON whitepapers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_webinars_updated_at BEFORE UPDATE ON webinars FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_newsletter_subscribers_updated_at BEFORE UPDATE ON newsletter_subscribers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_seo_metrics_updated_at BEFORE UPDATE ON seo_metrics FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================
--- ROW LEVEL SECURITY (RLS)
+-- STEP 5: ENABLE RLS
 -- ============================================
 
--- Enable RLS on all tables
 ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chat_leads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
@@ -427,147 +339,96 @@ ALTER TABLE content_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE seo_metrics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_activity_log ENABLE ROW LEVEL SECURITY;
 
--- Drop existing policies (to avoid conflicts)
-DROP POLICY IF EXISTS "Admins can view all contacts" ON contacts;
-DROP POLICY IF EXISTS "Admins can insert contacts" ON contacts;
-DROP POLICY IF EXISTS "Admins can update contacts" ON contacts;
-DROP POLICY IF EXISTS "Admins can delete contacts" ON contacts;
-DROP POLICY IF EXISTS "Public can submit contacts" ON contacts;
+-- ============================================
+-- STEP 6: DROP ALL EXISTING POLICIES
+-- ============================================
 
-DROP POLICY IF EXISTS "Admins can view chat leads" ON chat_leads;
-DROP POLICY IF EXISTS "Public can insert chat leads" ON chat_leads;
-DROP POLICY IF EXISTS "Admins can update chat leads" ON chat_leads;
+DO $$
+DECLARE
+  pol RECORD;
+BEGIN
+  FOR pol IN
+    SELECT policyname, tablename
+    FROM pg_policies
+    WHERE schemaname = 'public'
+    AND tablename IN ('contacts', 'chat_leads', 'blog_posts', 'case_studies',
+                      'whitepapers', 'whitepaper_downloads', 'webinars',
+                      'webinar_registrations', 'newsletter_subscribers',
+                      'content_categories', 'seo_metrics', 'admin_activity_log')
+  LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON %I', pol.policyname, pol.tablename);
+  END LOOP;
+END $$;
 
-DROP POLICY IF EXISTS "Admins can do everything with blog posts" ON blog_posts;
-DROP POLICY IF EXISTS "Public can view published blog posts" ON blog_posts;
-
-DROP POLICY IF EXISTS "Admins can do everything with case studies" ON case_studies;
-DROP POLICY IF EXISTS "Public can view published case studies" ON case_studies;
-
-DROP POLICY IF EXISTS "Admins can do everything with whitepapers" ON whitepapers;
-DROP POLICY IF EXISTS "Public can view published whitepapers" ON whitepapers;
-
-DROP POLICY IF EXISTS "Admins can view whitepaper downloads" ON whitepaper_downloads;
-DROP POLICY IF EXISTS "Public can register downloads" ON whitepaper_downloads;
-
-DROP POLICY IF EXISTS "Admins can do everything with webinars" ON webinars;
-DROP POLICY IF EXISTS "Public can view non-draft webinars" ON webinars;
-
-DROP POLICY IF EXISTS "Admins can view webinar registrations" ON webinar_registrations;
-DROP POLICY IF EXISTS "Public can register for webinars" ON webinar_registrations;
-
-DROP POLICY IF EXISTS "Admins can manage newsletter subscribers" ON newsletter_subscribers;
-DROP POLICY IF EXISTS "Public can subscribe to newsletter" ON newsletter_subscribers;
-
-DROP POLICY IF EXISTS "Admins can manage categories" ON content_categories;
-DROP POLICY IF EXISTS "Public can view categories" ON content_categories;
-
-DROP POLICY IF EXISTS "Admins can manage SEO metrics" ON seo_metrics;
-
-DROP POLICY IF EXISTS "Admins can view activity log" ON admin_activity_log;
-DROP POLICY IF EXISTS "System can insert activity log" ON admin_activity_log;
-
--- Create new policies
+-- ============================================
+-- STEP 7: CREATE ALL POLICIES
+-- ============================================
 
 -- Contacts
-CREATE POLICY "Admins can view all contacts" ON contacts
-  FOR SELECT TO authenticated USING (true);
-CREATE POLICY "Admins can insert contacts" ON contacts
-  FOR INSERT TO authenticated WITH CHECK (true);
-CREATE POLICY "Admins can update contacts" ON contacts
-  FOR UPDATE TO authenticated USING (true);
-CREATE POLICY "Admins can delete contacts" ON contacts
-  FOR DELETE TO authenticated USING (true);
-CREATE POLICY "Public can submit contacts" ON contacts
-  FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "contacts_select_auth" ON contacts FOR SELECT TO authenticated USING (true);
+CREATE POLICY "contacts_insert_auth" ON contacts FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "contacts_update_auth" ON contacts FOR UPDATE TO authenticated USING (true);
+CREATE POLICY "contacts_delete_auth" ON contacts FOR DELETE TO authenticated USING (true);
+CREATE POLICY "contacts_insert_anon" ON contacts FOR INSERT TO anon WITH CHECK (true);
 
 -- Chat leads
-CREATE POLICY "Admins can view chat leads" ON chat_leads
-  FOR SELECT TO authenticated USING (true);
-CREATE POLICY "Public can insert chat leads" ON chat_leads
-  FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "Admins can update chat leads" ON chat_leads
-  FOR UPDATE TO authenticated USING (true);
+CREATE POLICY "chat_leads_select_auth" ON chat_leads FOR SELECT TO authenticated USING (true);
+CREATE POLICY "chat_leads_insert_anon" ON chat_leads FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "chat_leads_update_auth" ON chat_leads FOR UPDATE TO authenticated USING (true);
 
 -- Blog posts
-CREATE POLICY "Admins can do everything with blog posts" ON blog_posts
-  FOR ALL TO authenticated USING (true);
-CREATE POLICY "Public can view published blog posts" ON blog_posts
-  FOR SELECT TO anon USING (status = 'published');
+CREATE POLICY "blog_posts_all_auth" ON blog_posts FOR ALL TO authenticated USING (true);
+CREATE POLICY "blog_posts_select_anon" ON blog_posts FOR SELECT TO anon USING (status = 'published');
 
 -- Case studies
-CREATE POLICY "Admins can do everything with case studies" ON case_studies
-  FOR ALL TO authenticated USING (true);
-CREATE POLICY "Public can view published case studies" ON case_studies
-  FOR SELECT TO anon USING (status = 'published');
+CREATE POLICY "case_studies_all_auth" ON case_studies FOR ALL TO authenticated USING (true);
+CREATE POLICY "case_studies_select_anon" ON case_studies FOR SELECT TO anon USING (status = 'published');
 
 -- Whitepapers
-CREATE POLICY "Admins can do everything with whitepapers" ON whitepapers
-  FOR ALL TO authenticated USING (true);
-CREATE POLICY "Public can view published whitepapers" ON whitepapers
-  FOR SELECT TO anon USING (status = 'published');
+CREATE POLICY "whitepapers_all_auth" ON whitepapers FOR ALL TO authenticated USING (true);
+CREATE POLICY "whitepapers_select_anon" ON whitepapers FOR SELECT TO anon USING (status = 'published');
 
 -- Whitepaper downloads
-CREATE POLICY "Admins can view whitepaper downloads" ON whitepaper_downloads
-  FOR SELECT TO authenticated USING (true);
-CREATE POLICY "Public can register downloads" ON whitepaper_downloads
-  FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "whitepaper_downloads_select_auth" ON whitepaper_downloads FOR SELECT TO authenticated USING (true);
+CREATE POLICY "whitepaper_downloads_insert_anon" ON whitepaper_downloads FOR INSERT TO anon WITH CHECK (true);
 
 -- Webinars
-CREATE POLICY "Admins can do everything with webinars" ON webinars
-  FOR ALL TO authenticated USING (true);
-CREATE POLICY "Public can view non-draft webinars" ON webinars
-  FOR SELECT TO anon USING (status != 'draft');
+CREATE POLICY "webinars_all_auth" ON webinars FOR ALL TO authenticated USING (true);
+CREATE POLICY "webinars_select_anon" ON webinars FOR SELECT TO anon USING (status != 'draft');
 
 -- Webinar registrations
-CREATE POLICY "Admins can view webinar registrations" ON webinar_registrations
-  FOR SELECT TO authenticated USING (true);
-CREATE POLICY "Public can register for webinars" ON webinar_registrations
-  FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "webinar_registrations_select_auth" ON webinar_registrations FOR SELECT TO authenticated USING (true);
+CREATE POLICY "webinar_registrations_insert_anon" ON webinar_registrations FOR INSERT TO anon WITH CHECK (true);
 
 -- Newsletter
-CREATE POLICY "Admins can manage newsletter subscribers" ON newsletter_subscribers
-  FOR ALL TO authenticated USING (true);
-CREATE POLICY "Public can subscribe to newsletter" ON newsletter_subscribers
-  FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "newsletter_all_auth" ON newsletter_subscribers FOR ALL TO authenticated USING (true);
+CREATE POLICY "newsletter_insert_anon" ON newsletter_subscribers FOR INSERT TO anon WITH CHECK (true);
 
 -- Categories
-CREATE POLICY "Admins can manage categories" ON content_categories
-  FOR ALL TO authenticated USING (true);
-CREATE POLICY "Public can view categories" ON content_categories
-  FOR SELECT TO anon USING (true);
+CREATE POLICY "categories_all_auth" ON content_categories FOR ALL TO authenticated USING (true);
+CREATE POLICY "categories_select_anon" ON content_categories FOR SELECT TO anon USING (true);
 
 -- SEO metrics
-CREATE POLICY "Admins can manage SEO metrics" ON seo_metrics
-  FOR ALL TO authenticated USING (true);
+CREATE POLICY "seo_all_auth" ON seo_metrics FOR ALL TO authenticated USING (true);
 
 -- Activity log
-CREATE POLICY "Admins can view activity log" ON admin_activity_log
-  FOR SELECT TO authenticated USING (true);
-CREATE POLICY "System can insert activity log" ON admin_activity_log
-  FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "activity_select_auth" ON admin_activity_log FOR SELECT TO authenticated USING (true);
+CREATE POLICY "activity_insert_auth" ON admin_activity_log FOR INSERT TO authenticated WITH CHECK (true);
 
 -- ============================================
--- SEED DATA
+-- STEP 8: SEED DATA
 -- ============================================
 
-INSERT INTO content_categories (name, slug, content_type, sort_order) VALUES
+INSERT INTO content_categories (name, slug, content_type, sort_order)
+SELECT * FROM (VALUES
   ('Data & Analytics', 'data-analytics', 'all', 1),
   ('Cloud Infrastructure', 'cloud-infrastructure', 'all', 2),
   ('AI & Machine Learning', 'ai-machine-learning', 'all', 3),
   ('Digital Transformation', 'digital-transformation', 'all', 4),
-  ('Cybersecurity', 'cybersecurity', 'all', 5),
-  ('DevOps & Automation', 'devops-automation', 'all', 6),
-  ('Enterprise Applications', 'enterprise-applications', 'all', 7),
-  ('Industry Insights', 'industry-insights', 'blog', 8),
-  ('Best Practices', 'best-practices', 'blog', 9),
-  ('Technology News', 'technology-news', 'blog', 10)
-ON CONFLICT (slug) DO NOTHING;
+  ('Cybersecurity', 'cybersecurity', 'all', 5)
+) AS v(name, slug, content_type, sort_order)
+WHERE NOT EXISTS (SELECT 1 FROM content_categories WHERE slug = v.slug);
 
 -- ============================================
 -- DONE!
 -- ============================================
--- After running this schema:
--- 1. Go to Authentication > Users > Add user
--- 2. Create an admin user with email/password
--- 3. Test login at /admin/login
