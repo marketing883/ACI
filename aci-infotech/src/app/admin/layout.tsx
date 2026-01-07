@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
@@ -14,7 +15,9 @@ import {
   LogOut,
   Settings,
   ChevronRight,
+  User,
 } from 'lucide-react';
+import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -30,7 +33,40 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Check if we're on the login page
+  const isLoginPage = pathname === '/admin/login';
+
+  // Get user info on mount
+  useEffect(() => {
+    const getUser = async () => {
+      const supabase = createSupabaseBrowserClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserEmail(user.email || null);
+      }
+    };
+    if (!isLoginPage) {
+      getUser();
+    }
+  }, [isLoginPage]);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    const supabase = createSupabaseBrowserClient();
+    await supabase.auth.signOut();
+    router.push('/admin/login');
+    router.refresh();
+  };
+
+  // Don't show the admin layout on the login page
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -49,8 +85,14 @@ export default function AdminLayout({
         }`}
       >
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-700">
-          <Link href="/admin" className="text-white font-bold text-xl">
-            ACI Admin
+          <Link href="/admin" className="flex items-center gap-2">
+            <Image
+              src="/images/brand/logo-white.svg"
+              alt="ACI Infotech"
+              width={120}
+              height={30}
+              className="h-8 w-auto"
+            />
           </Link>
           <button
             className="lg:hidden text-gray-400 hover:text-white"
@@ -84,14 +126,33 @@ export default function AdminLayout({
           })}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700 space-y-2">
+          {/* User Info */}
+          {userEmail && (
+            <div className="px-4 py-2 text-sm">
+              <div className="flex items-center gap-2 text-gray-400">
+                <User className="w-4 h-4" />
+                <span className="truncate">{userEmail}</span>
+              </div>
+            </div>
+          )}
+
           <Link
             href="/"
             className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
-            <LogOut className="w-5 h-5" />
+            <ChevronRight className="w-5 h-5 rotate-180" />
             <span>Back to Site</span>
           </Link>
+
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:text-red-300 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50"
+          >
+            <LogOut className="w-5 h-5" />
+            <span>{isLoggingOut ? 'Signing out...' : 'Sign Out'}</span>
+          </button>
         </div>
       </aside>
 
@@ -126,7 +187,7 @@ export default function AdminLayout({
               <Settings className="w-5 h-5" />
             </button>
             <div className="w-8 h-8 bg-[var(--aci-primary)] rounded-full flex items-center justify-center text-white text-sm font-bold">
-              A
+              {userEmail ? userEmail.charAt(0).toUpperCase() : 'A'}
             </div>
           </div>
         </header>
