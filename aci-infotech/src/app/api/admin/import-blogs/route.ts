@@ -109,18 +109,21 @@ export async function POST(request: NextRequest) {
           .filter(Boolean).length;
         const readTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
 
-        // Prepare blog post data
+        // Prepare blog post data - using both column names for compatibility
         const blogPost = {
           slug: blog.slug,
           title: blog.title,
           excerpt: blog.description?.trim() || null,
           content: blog.content,
           featured_image: featuredImageUrl,
+          featured_image_url: featuredImageUrl, // Both for compatibility
           featured_image_alt: blog.title,
           author_name: blog.author || 'ACI Infotech',
+          category: blog.tags?.[0] || 'Insights', // Use first tag as category
           tags: blog.tags?.length > 0 ? blog.tags : null,
           published_at: publishDate.toISOString(),
           status: setPublished ? 'published' : 'draft',
+          is_published: setPublished,
           read_time_minutes: readTimeMinutes,
           view_count: 0,
           ai_generated: false,

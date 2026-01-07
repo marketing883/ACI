@@ -8,12 +8,15 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 interface BlogPostDB {
   slug: string;
   title: string;
-  excerpt: string;
-  author_name: string;
-  category: string;
-  featured_image: string | null;
-  read_time_minutes: number | null;
-  published_at: string;
+  excerpt?: string | null;
+  author_name?: string | null;
+  category?: string | null;
+  featured_image?: string | null;
+  read_time_minutes?: number | null;
+  published_at?: string | null;
+  created_at?: string | null;
+  status?: string;
+  [key: string]: unknown;
 }
 
 async function getLatestPosts(limit: number = 3) {
@@ -23,11 +26,12 @@ async function getLatestPosts(limit: number = 3) {
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+  // Use * to fetch all columns - works with any table structure
   const { data, error } = await supabase
     .from('blog_posts')
-    .select('slug, title, excerpt, author_name, category, featured_image, read_time_minutes, published_at')
+    .select('*')
     .eq('status', 'published')
-    .order('published_at', { ascending: false })
+    .order('created_at', { ascending: false })
     .limit(limit);
 
   if (error) {

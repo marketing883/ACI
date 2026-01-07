@@ -22,15 +22,17 @@ interface BlogPost {
   id: string;
   slug: string;
   title: string;
-  excerpt: string;
-  author_name: string;
-  category: string;
-  status: string;
-  read_time_minutes: number;
-  published_at: string | null;
-  created_at: string;
-  updated_at: string;
-  featured_image: string | null;
+  excerpt?: string | null;
+  author_name?: string | null;
+  category?: string | null;
+  status?: string;
+  read_time_minutes?: number | null;
+  published_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  featured_image?: string | null;
+  // Allow any additional fields from the table
+  [key: string]: unknown;
 }
 
 export default function BlogAdmin() {
@@ -57,10 +59,11 @@ export default function BlogAdmin() {
 
   async function fetchPosts() {
     try {
+      // Use * to select all available columns - works with any table structure
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('id, slug, title, excerpt, author_name, category, status, read_time_minutes, published_at, created_at, updated_at, featured_image')
-        .order('published_at', { ascending: false, nullsFirst: false });
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setPosts(data || []);
