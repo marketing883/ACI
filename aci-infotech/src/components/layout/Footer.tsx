@@ -52,7 +52,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <Link href="/" className="inline-block mb-6">
               <Image
-                src="/images/brand/logo-white.svg"
+                src="/aci-infotech-logo-white.png"
                 alt="ACI Infotech"
                 width={160}
                 height={40}

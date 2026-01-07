@@ -146,7 +146,7 @@ export default function Navigation() {
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
               <Image
-                src="/images/brand/logo-color.svg"
+                src="/aci-infotech-logo.png"
                 alt="ACI Infotech"
                 width={180}
                 height={45}
