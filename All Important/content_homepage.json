@@ -1,0 +1,597 @@
+{
+  "page": "homepage",
+  "url": "/",
+  "seo": {
+    "title": "ACI Infotech | Production-Grade Engineering at Enterprise Scale",
+    "description": "We build data platforms, AI systems, and cloud architectures for Fortune 500 operations. Senior architects. Production code with SLAs. We answer the 2am call.",
+    "keywords": "enterprise data engineering, AI ML consulting, cloud modernization, Fortune 500 technology consulting, production-grade engineering"
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "type": "hero",
+      "layout": "centered_with_background",
+      "content": {
+        "eyebrow": "Engineers Who Stay",
+        "headline": "Production-Grade Engineering at Enterprise Scale",
+        "subheadline": "We build data platforms, AI systems, and cloud architectures that run Fortune 500 operations. Senior architects lead every project. We ship production code with SLAs. We answer the 2am call.",
+        "stats_line": {
+          "items": [
+            {
+              "number": "19",
+              "unit": "Years",
+              "description": "Building enterprise systems"
+            },
+            {
+              "number": "80+",
+              "unit": "Fortune 500",
+              "description": "Clients trust our code in production"
+            },
+            {
+              "number": "1,250+",
+              "unit": "Engineers",
+              "description": "Senior architects across 10 countries"
+            }
+          ]
+        },
+        "ctas": {
+          "primary": {
+            "text": "See Our Case Studies",
+            "url": "/case-studies",
+            "style": "primary"
+          },
+          "secondary": {
+            "text": "Talk to an Architect",
+            "url": "/contact",
+            "style": "secondary"
+          }
+        }
+      },
+      "visual": {
+        "type": "subtle_animation",
+        "description": "Abstract system architecture diagram with flowing data connections, subtle motion"
+      }
+    },
+    {
+      "id": "the_difference",
+      "type": "three_column",
+      "background": "light_gray",
+      "content": {
+        "headline": "Why We're Different",
+        "subheadline": "Most firms build and leave. We build, deploy, and stand behind it.",
+        "columns": [
+          {
+            "icon": "senior_engineer",
+            "stat": "70%",
+            "stat_label": "Senior architects with 10+ years",
+            "headline": "Engineers Who've Been on the Call",
+            "description": "Your project lead has 15-20 years enterprise experience and has built this specific system 10+ times. Not junior analysts learning on your time. Architects who've debugged production issues at 2am and know how systems break."
+          },
+          {
+            "icon": "production_code",
+            "stat": "100%",
+            "stat_label": "Production deployments with SLAs",
+            "headline": "Production Code, Not PowerPoints",
+            "description": "We ship working systems with SLAs. Databricks lakehouses. Salesforce CDP integrations. AWS cloud architectures. Every line of code designed for production scale, not demos. We stand behind uptime, not just delivery dates."
+          },
+          {
+            "icon": "enterprise_proven",
+            "stat": "80+",
+            "stat_label": "Fortune 500 clients",
+            "headline": "Proven at Enterprise Scale",
+            "description": "RaceTrac, MSCI, Sodexo, Nestlé, PDS. 80+ Fortune 500 companies trust our code in their operations. We've deployed 100+ data platforms, 50+ AI systems, 200+ cloud migrations. Pattern recognition from 19 years of production experience."
+          }
+        ]
+      }
+    },
+    {
+      "id": "services",
+      "type": "service_cards",
+      "background": "white",
+      "content": {
+        "headline": "What We Build",
+        "subheadline": "Enterprise systems that run 24/7, backed by SLAs",
+        "services": [
+          {
+            "id": "data-engineering",
+            "icon": "database_architecture",
+            "title": "Data Engineering",
+            "tagline": "Platforms that feed AI and analytics",
+            "description": "Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. AI-ready from day one.",
+            "technologies": ["Databricks", "Snowflake", "AWS Glue", "Azure Data Factory", "Dynatrace"],
+            "outcome": "Cut data latency 30%+, enable real-time decisioning",
+            "cta": {
+              "text": "See Data Projects →",
+              "url": "/services/data-engineering"
+            }
+          },
+          {
+            "id": "ai-ml",
+            "icon": "ai_brain",
+            "title": "Applied AI & ML",
+            "tagline": "From GenAI pilots to production ML",
+            "description": "GenAI chatbots, forecasting engines, recommendation systems. With MLOps, governance, and SLAs.",
+            "technologies": ["Azure OpenAI", "AWS Bedrock", "Databricks Mosaic AI", "MLflow"],
+            "outcome": "Ship models to production, not pilot purgatory",
+            "cta": {
+              "text": "See AI Projects →",
+              "url": "/services/applied-ai-ml"
+            }
+          },
+          {
+            "id": "cloud-modernization",
+            "icon": "cloud_architecture",
+            "title": "Cloud Modernization",
+            "tagline": "Multi-cloud without the chaos",
+            "description": "AWS, Azure, GCP migrations. Refactor, replatform, or rearchitect. Proven playbooks that reduce risk.",
+            "technologies": ["AWS", "Azure", "GCP", "Kubernetes", "Terraform"],
+            "outcome": "On-time, on-budget cloud migrations with zero downtime",
+            "cta": {
+              "text": "See Cloud Projects →",
+              "url": "/services/cloud-modernization"
+            }
+          },
+          {
+            "id": "martech-cdp",
+            "icon": "customer_data",
+            "title": "MarTech & CDP",
+            "tagline": "Customer 360 that actually works",
+            "description": "Salesforce Marketing Cloud, Adobe Experience Platform, Braze. Real-time personalization at scale.",
+            "technologies": ["Salesforce", "Adobe", "Braze", "Segment"],
+            "outcome": "1:1 personalization, measurable lift in conversion",
+            "cta": {
+              "text": "See MarTech Projects →",
+              "url": "/services/martech-cdp"
+            }
+          },
+          {
+            "id": "digital-transformation",
+            "icon": "automation",
+            "title": "Digital Transformation",
+            "tagline": "Intelligent process automation",
+            "description": "ServiceNow workflows, RPA, document processing. Automate what humans shouldn't do manually.",
+            "technologies": ["ServiceNow", "UiPath", "Power Automate"],
+            "outcome": "40% reduction in manual processes, measurable ROI",
+            "cta": {
+              "text": "See Automation Projects →",
+              "url": "/services/digital-transformation"
+            }
+          },
+          {
+            "id": "cyber-security",
+            "icon": "security_shield",
+            "title": "Cyber Security",
+            "tagline": "Security built in, not bolted on",
+            "description": "DevSecOps, observability, compliance. SOC 2, ISO 27001 compliant architectures from day one.",
+            "technologies": ["DevSecOps", "Dynatrace", "Compliance Frameworks"],
+            "outcome": "Audit-ready architectures, reduced security incidents",
+            "cta": {
+              "text": "See Security Projects →",
+              "url": "/services/cyber-security"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "case_studies",
+      "type": "featured_case_studies",
+      "background": "dark",
+      "content": {
+        "headline": "Here's What We Built. Here's What It Delivered.",
+        "subheadline": "Real projects. Real Fortune 500 clients. Real outcomes.",
+        "featured_studies": [
+          {
+            "slug": "msci-data-automation",
+            "client": "MSCI",
+            "logo_url": "/images/clients/msci-logo.svg",
+            "industry": "Financial Services",
+            "challenge": "40+ finance systems post-acquisitions needed consolidation",
+            "solution": "SAP S/4HANA implementation with automated data quality gates",
+            "results": [
+              {
+                "metric": "$12M",
+                "description": "Operational savings in year one"
+              },
+              {
+                "metric": "18 months",
+                "description": "Delivery timeline"
+              },
+              {
+                "metric": "Zero",
+                "description": "Financial reporting disruptions"
+              }
+            ],
+            "technologies": ["SAP S/4HANA", "Python", "Azure DevOps"],
+            "featured_image": "/images/case-studies/msci-hero.jpg",
+            "cta": {
+              "text": "Read Full Story →",
+              "url": "/case-studies/msci-data-automation"
+            }
+          },
+          {
+            "slug": "racetrac-martech",
+            "client": "RaceTrac",
+            "logo_url": "/images/clients/racetrac-logo.svg",
+            "industry": "Retail / Convenience",
+            "challenge": "Payment systems across 600+ locations, zero downtime tolerance",
+            "solution": "Modernized payment infrastructure, integrated loyalty program with Braze",
+            "results": [
+              {
+                "metric": "30%",
+                "description": "Reduction in data latency"
+              },
+              {
+                "metric": "25%",
+                "description": "Improvement in promotion effectiveness"
+              },
+              {
+                "metric": "600+",
+                "description": "Locations with zero downtime"
+              }
+            ],
+            "technologies": ["Salesforce", "Braze", "AWS", "Databricks"],
+            "featured_image": "/images/case-studies/racetrac-hero.jpg",
+            "cta": {
+              "text": "Read Full Story →",
+              "url": "/case-studies/racetrac-martech"
+            }
+          },
+          {
+            "slug": "sodexo-unified-data",
+            "client": "Sodexo",
+            "logo_url": "/images/clients/sodexo-logo.svg",
+            "industry": "Hospitality",
+            "challenge": "Global operations with data scattered across regional silos",
+            "solution": "Unified data platform with Informatica IICS and MDM",
+            "results": [
+              {
+                "metric": "Single",
+                "description": "Source of truth across all operations"
+              },
+              {
+                "metric": "Global",
+                "description": "Supply chain visibility"
+              },
+              {
+                "metric": "50%",
+                "description": "Faster decision-making"
+              }
+            ],
+            "technologies": ["Informatica IICS", "MDM", "Cloud Integration"],
+            "featured_image": "/images/case-studies/sodexo-hero.jpg",
+            "cta": {
+              "text": "Read Full Story →",
+              "url": "/case-studies/sodexo-unified-data"
+            }
+          }
+        ],
+        "view_all_cta": {
+          "text": "See All 80+ Client Success Stories →",
+          "url": "/case-studies"
+        }
+      }
+    },
+    {
+      "id": "technology_partners",
+      "type": "partner_logos",
+      "background": "white",
+      "content": {
+        "headline": "Built on Enterprise-Grade Platforms",
+        "subheadline": "We're certified experts in the platforms enterprises already trust",
+        "partners": [
+          {
+            "name": "Databricks",
+            "logo_url": "/images/partners/databricks.svg",
+            "badge": "Exclusive Partner",
+            "badge_style": "gold"
+          },
+          {
+            "name": "Dynatrace",
+            "logo_url": "/images/partners/dynatrace.svg",
+            "badge": "Partner",
+            "badge_style": "silver"
+          },
+          {
+            "name": "Salesforce",
+            "logo_url": "/images/partners/salesforce.svg",
+            "badge": "Agentforce Exclusive Partner",
+            "badge_style": "gold"
+          },
+          {
+            "name": "AWS",
+            "logo_url": "/images/partners/aws.svg",
+            "badge": "Partner",
+            "badge_style": "silver"
+          },
+          {
+            "name": "Microsoft Azure",
+            "logo_url": "/images/partners/azure.svg",
+            "badge": "Solutions Partner",
+            "badge_style": "silver"
+          },
+          {
+            "name": "Snowflake",
+            "logo_url": "/images/partners/snowflake.svg",
+            "badge": null,
+            "badge_style": null
+          },
+          {
+            "name": "SAP",
+            "logo_url": "/images/partners/sap.svg",
+            "badge": null,
+            "badge_style": null
+          },
+          {
+            "name": "ServiceNow",
+            "logo_url": "/images/partners/servicenow.svg",
+            "badge": null,
+            "badge_style": null
+          },
+          {
+            "name": "Adobe",
+            "logo_url": "/images/partners/adobe.svg",
+            "badge": null,
+            "badge_style": null
+          },
+          {
+            "name": "Oracle",
+            "logo_url": "/images/partners/oracle.svg",
+            "badge": null,
+            "badge_style": null
+          },
+          {
+            "name": "Braze",
+            "logo_url": "/images/partners/braze.svg",
+            "badge": null,
+            "badge_style": null
+          },
+          {
+            "name": "Mulesoft",
+            "logo_url": "/images/partners/mulesoft.svg",
+            "badge": null,
+            "badge_style": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "recent_news",
+      "type": "news_grid",
+      "background": "light_gray",
+      "content": {
+        "headline": "In The News",
+        "subheadline": "Recent recognition and partnerships",
+        "news_items": [
+          {
+            "id": "cio-world-recognition",
+            "title": "Enterprise Visionary",
+            "excerpt": "CIO World recognizes Jag Kanumuri, CEO of ACI Infotech, for pioneering AI-native enterprises and shaping a technopreneurial era where change is built into the DNA of business.",
+            "image_url": "/images/news/cio-world.jpg",
+            "source": "CIO World",
+            "date": "December 2025",
+            "url": "https://thecioworldmedia.com/...",
+            "cta_text": "Read Full Article"
+          },
+          {
+            "id": "salesforce-agentforce",
+            "title": "Agentforce Alliance",
+            "excerpt": "ACI Infotech Accelerates Growth with Exclusive Salesforce-Agentforce Partnership and Bold Vision for the Future.",
+            "image_url": "/images/news/salesforce-partnership.jpg",
+            "source": "PR Newswire",
+            "date": "November 2025",
+            "url": "https://www.prnewswire.com/...",
+            "cta_text": "Read Full Article"
+          },
+          {
+            "id": "arqai-launch",
+            "title": "Innovation in MENA",
+            "excerpt": "ACI Infotech unveils ArqAI at the World CIO 200 Summit Egypt, enabling MENA enterprises to scale AI responsibly with governance, orchestration, and measurable impact.",
+            "image_url": "/images/news/arqai-launch.jpg",
+            "source": "GEC Newswire",
+            "date": "October 2025",
+            "url": "https://gecnewswire.com/...",
+            "cta_text": "Read Full Article"
+          },
+          {
+            "id": "great-place-to-work",
+            "title": "Great Place to Work Certified 2024-25",
+            "excerpt": "Our work culture and employee experience validated by global workplace excellence benchmark.",
+            "image_url": "/images/certifications/gptw-badge.jpg",
+            "source": "Great Place to Work",
+            "date": "2024-2025",
+            "url": null,
+            "cta_text": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "testimonials",
+      "type": "testimonial_carousel",
+      "background": "white",
+      "content": {
+        "headline": "What Fortune 500 Leaders Say",
+        "testimonials": [
+          {
+            "quote": "I'm thrilled with our Data Team's achievement at ACI Infotech. They've flawlessly delivered top-tier Digital Data to Altria, marking a critical milestone for RaceTrac. Their dedication and expertise have made ACI Infotech a valuable partner to RaceTrac.",
+            "author": "Director of Data and MarTech",
+            "company": "RaceTrac",
+            "company_logo": "/images/clients/racetrac-logo.svg",
+            "photo_url": null
+          },
+          {
+            "quote": "I'm extremely satisfied with ACI Infotech, especially their work on IICS Informatica and MDM integrations. Their commitment to deliverables without compromising quality is impressive. It's a pleasure working with such a dedicated, professional team.",
+            "author": "Senior Director",
+            "company": "Sodexo",
+            "company_logo": "/images/clients/sodexo-logo.svg",
+            "photo_url": null
+          },
+          {
+            "quote": "It was truly a pleasure working with ACI Infotech. I am really impressed by the quality of the services Arcadia University received from ACI. Jag and the team have significantly contributed to the process of identifying the best ways to add values to the institution.",
+            "author": "Interim CIO",
+            "company": "Arcadia University",
+            "company_logo": "/images/clients/arcadia-logo.svg",
+            "photo_url": null
+          },
+          {
+            "quote": "ACI Infotech's dedicated resources consistently deliver excellent work quality, exceeding our expectations. Their dedicated onshore and onsite resources have been commendable, consistently demonstrating excellence.",
+            "author": "Director",
+            "company": "Gen II",
+            "company_logo": "/images/clients/genii-logo.svg",
+            "photo_url": null
+          },
+          {
+            "quote": "Our partnership with ACI Infotech has been transformative. Their data analytics solutions have provided critical insights, enabling us to make data-driven decisions that drive our business forward.",
+            "author": "CEO",
+            "company": "Fortune 500 Healthcare Firm",
+            "company_logo": null,
+            "photo_url": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "arqai_platform",
+      "type": "platform_intro",
+      "background": "gradient_dark",
+      "content": {
+        "eyebrow": "Introducing ArqAI",
+        "headline": "Enterprise AI Governance Platform",
+        "description": "ArqAI is our purpose-built AI governance platform for enterprises scaling AI responsibly. Policy-as-code, model observability, automated compliance reporting, and audit trails that satisfy regulators.",
+        "features": [
+          {
+            "title": "Automated AI Governance",
+            "description": "Policy enforcement across all ML models, automated compliance checks"
+          },
+          {
+            "title": "Model Observability",
+            "description": "Drift detection, bias monitoring, performance tracking in production"
+          },
+          {
+            "title": "Compliance Ready",
+            "description": "EU AI Act, GDPR, DPDP compliant out of the box, audit-ready logs"
+          }
+        ],
+        "visual": {
+          "type": "product_screenshot",
+          "image_url": "/images/arqai-dashboard.png",
+          "alt": "ArqAI platform dashboard showing AI governance controls"
+        },
+        "ctas": {
+          "primary": {
+            "text": "See ArqAI Demo",
+            "url": "https://demo.thearq.ai"
+          },
+          "secondary": {
+            "text": "Visit ArqAI.ai →",
+            "url": "https://thearq.ai"
+          }
+        }
+      }
+    },
+    {
+      "id": "awards_certifications",
+      "type": "badge_grid",
+      "background": "white",
+      "content": {
+        "headline": "Trusted & Certified",
+        "subheadline": "Our work, culture, and capabilities have been validated by global benchmarks, across security, delivery excellence, and workplace trust.",
+        "badges": [
+          {
+            "name": "Great Place to Work",
+            "description": "Certified 2024-25",
+            "image_url": "/images/certifications/gptw.png"
+          },
+          {
+            "name": "ISO 27001:2022",
+            "description": "Information Security Certified",
+            "image_url": "/images/certifications/iso27001.png"
+          },
+          {
+            "name": "CMMi Level 3",
+            "description": "Process Maturity Certified",
+            "image_url": "/images/certifications/cmmi.png"
+          },
+          {
+            "name": "5 Best Data Analytics Companies",
+            "description": "To Watch in 2025",
+            "image_url": "/images/certifications/best-data-analytics.png"
+          }
+        ]
+      }
+    },
+    {
+      "id": "blog_preview",
+      "type": "blog_cards",
+      "background": "light_gray",
+      "content": {
+        "headline": "Thoughts and Insights",
+        "subheadline": "Technical depth from engineers who've been there",
+        "featured_posts": [
+          {
+            "slug": "why-enterprise-ai-fails",
+            "title": "Why Most Financial AI Initiatives Fail, and How CDOs Can Make Them Stick",
+            "excerpt": "BFSI enterprises struggle with AI implementations. Here's what actually works based on 50+ deployments.",
+            "author": "Engineering Team",
+            "date": "July 17, 2025",
+            "category": "AI & ML",
+            "tags": ["BFSI", "AI", "Enterprise"],
+            "featured_image": "/images/blog/ai-bfsi.jpg",
+            "read_time": "8 min"
+          },
+          {
+            "slug": "enterprise-app-modernization",
+            "title": "How CIOs Are Rebuilding for Real-World Agility",
+            "excerpt": "Application modernization isn't about rewriting everything. Here's the pragmatic approach that actually works.",
+            "author": "Engineering Team",
+            "date": "July 16, 2025",
+            "category": "Digital Transformation",
+            "tags": ["Modernization", "Enterprise Apps"],
+            "featured_image": "/images/blog/app-modernization.jpg",
+            "read_time": "7 min"
+          },
+          {
+            "slug": "post-quantum-cryptography",
+            "title": "Preparing Enterprises for the Quantum Era in Cybersecurity",
+            "excerpt": "Post-quantum cryptography is coming. Here's what enterprises need to know and do today.",
+            "author": "Security Team",
+            "date": "July 15, 2025",
+            "category": "Cybersecurity",
+            "tags": ["Security", "Quantum", "Compliance"],
+            "featured_image": "/images/blog/quantum-crypto.jpg",
+            "read_time": "10 min"
+          }
+        ],
+        "view_all_cta": {
+          "text": "Read All Insights →",
+          "url": "/blog"
+        }
+      }
+    },
+    {
+      "id": "final_cta",
+      "type": "centered_cta",
+      "background": "brand_blue",
+      "content": {
+        "headline": "Ready to Build Something That Lasts?",
+        "subheadline": "Talk to an architect about your specific challenge. No sales pitch. Just an engineering conversation about what's actually possible. We're the team that answers the phone when your system needs us.",
+        "trust_signals": [
+          "Talk to senior architects, not sales reps",
+          "Typical first call: 30 minutes, technical discussion",
+          "We'll tell you if we're not the right fit"
+        ],
+        "ctas": {
+          "primary": {
+            "text": "Schedule Architecture Call",
+            "url": "/contact?type=architecture-call"
+          },
+          "secondary": {
+            "text": "See Our Case Studies",
+            "url": "/case-studies"
+          }
+        }
+      }
+    }
+  ]
+}
