@@ -214,7 +214,9 @@ export default function HeroSection() {
             }}
           >
             Data platforms. AI systems. Cloud architectures. Built for production,
-            backed by SLAs. When your system breaks, we're on the call.
+            backed by SLAs.
+            <br />
+            We stand behind what we build.
           </p>
 
           {/* Stats Row - 50px gap from subheadline */}
