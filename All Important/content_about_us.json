@@ -1,0 +1,405 @@
+{
+  "page": "about_us",
+  "url": "/about",
+  "seo": {
+    "title": "About ACI Infotech | The Engineers Behind Enterprise Modernization",
+    "description": "1,250+ engineers building data platforms, AI systems, and cloud architectures for 80+ Fortune 500 clients. 19 years of production-grade engineering. We answer the 2am call.",
+    "keywords": "enterprise technology consulting, data engineering company, AI ML consulting, Fortune 500 technology partner, production-grade engineering"
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "type": "hero",
+      "layout": "centered_with_stats",
+      "content": {
+        "headline": "The Engineers Behind Enterprise Modernization",
+        "subheadline": "We're the 1,250-person technical team between your strategy and your operations. We build data platforms, deploy AI systems, and stabilize cloud architectures—then we stand behind them with SLAs. We're the team that answers the 2am call.",
+        "stats_bar": {
+          "items": [
+            {
+              "number": "19",
+              "unit": "Years",
+              "description": "Founded 2006"
+            },
+            {
+              "number": "80+",
+              "unit": "Fortune 500",
+              "description": "Clients served"
+            },
+            {
+              "number": "$650M+",
+              "unit": "Value",
+              "description": "Delivered to clients"
+            },
+            {
+              "number": "1,250+",
+              "unit": "Engineers",
+              "description": "Technologists globally"
+            },
+            {
+              "number": "10",
+              "unit": "Countries",
+              "description": "Global delivery"
+            }
+          ]
+        }
+      },
+      "visual": {
+        "type": "background_image",
+        "description": "Team collaboration or office environment photo"
+      }
+    },
+    {
+      "id": "who_we_are",
+      "type": "content_block",
+      "background": "white",
+      "content": {
+        "headline": "Built for Enterprise Scale, Moves Like a Startup",
+        "paragraphs": [
+          "ACI Infotech isn't trying to be the next Accenture. We're the alternative—large enough to staff Fortune 500 projects, small enough to make decisions in days not months, and focused enough to deliver deep expertise in the platforms enterprises actually use.",
+          "Founded in 2006, we've spent 19 years building one thing: production-grade enterprise systems. Not strategy. Not advisory. Not staff augmentation. We ship code that runs in production, carries SLAs, and delivers measurable ROI.",
+          "Our clients are Fortune 500 companies in banking, healthcare, retail, manufacturing, and hospitality. They choose us because we combine Big 4 capabilities with boutique speed and cost. Senior architects lead every project. We move fast. We cost 40-60% less. And we've been doing this long enough to have the scars and the case studies to prove it.",
+          "When your system goes down at 2am, we're the team that answers the phone. That's the difference between consultants who leave and engineers who stay."
+        ],
+        "visual": {
+          "type": "image",
+          "description": "Office photo or team collaboration image (real, not stock)"
+        }
+      }
+    },
+    {
+      "id": "how_we_work",
+      "type": "three_principles",
+      "background": "light_gray",
+      "content": {
+        "headline": "How We Work",
+        "subheadline": "Three principles that define every engagement",
+        "principles": [
+          {
+            "number": "01",
+            "title": "Outcome-Engineered",
+            "description": "Every engagement starts with baseline metrics and ends with audited results. We align on KPIs for time to value, cost to serve, and reliability, then instrument dashboards so progress is visible and decisions stay objective.",
+            "proof_points": [
+              "Measurable KPIs defined upfront",
+              "Executive dashboards for visibility",
+              "Value realized at close, documented"
+            ]
+          },
+          {
+            "number": "02",
+            "title": "Governed by Design",
+            "description": "Security, compliance, and lineage are built into data, models, and workflows. Policies as code. Full observability. Audit-ready by default. Speed never compromises trust. Our architectures pass SOC 2, ISO 27001, and industry-specific audits.",
+            "proof_points": [
+              "Policy guardrails automated",
+              "Data quality gates at every stage",
+              "End-to-end lineage tracking",
+              "SOC-friendly audit logs"
+            ]
+          },
+          {
+            "number": "03",
+            "title": "Built for Scale",
+            "description": "Cross-functional pods that ship fast and stand behind SLAs. Product, data, apps, QA, and SRE work as one unit. Small releases, strong runbooks, clean handoffs.",
+            "proof_points": [
+              "Faster release cycles",
+              "Lower MTTR",
+              "SLA-backed operations",
+              "Production support included"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "capabilities",
+      "type": "capability_grid",
+      "background": "white",
+      "content": {
+        "headline": "What We've Built 80+ Times",
+        "subheadline": "Four capability areas where we have deep, proven expertise",
+        "capabilities": [
+          {
+            "title": "Data Resilience",
+            "description": "Unify your data estate and make it AI-ready with platform-native observability, lineage, and policy controls.",
+            "outcomes": [
+              "Executive-grade dashboards",
+              "Real-time decisioning",
+              "Compliant analytics",
+              "High-trust data products"
+            ],
+            "technologies": ["Databricks", "Snowflake", "AWS Glue", "Azure Data Factory", "dbt", "Dynatrace"]
+          },
+          {
+            "title": "Observability & Platform Reliability",
+            "description": "Instrument apps, data pipelines, and infrastructure end to end. Set SLOs, trace latency across the stack.",
+            "outcomes": [
+              "Fewer Sev1 incidents",
+              "Faster MTTR",
+              "Release stability",
+              "Performance SLOs met"
+            ],
+            "technologies": ["Dynatrace", "Datadog", "Prometheus", "Grafana", "PagerDuty"]
+          },
+          {
+            "title": "MarTech & CDP",
+            "description": "Modern growth runs on composable CDP stacks and signal-rich journeys.",
+            "outcomes": [
+              "1:1 personalization",
+              "Loyalty intelligence",
+              "Media ROI measurement",
+              "Privacy-safe activation"
+            ],
+            "technologies": ["Salesforce Marketing Cloud", "Adobe Experience Platform", "Braze", "Segment"]
+          },
+          {
+            "title": "Intelligent Automation",
+            "description": "Move from scattered bots to intelligent process automation that spans systems and teams.",
+            "outcomes": [
+              "Straight-through processing",
+              "Faster close cycles",
+              "Measurable cost reduction",
+              "Human-in-the-loop where needed"
+            ],
+            "technologies": ["ServiceNow", "UiPath", "Automation Anywhere", "Power Automate"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "leadership",
+      "type": "team_grid",
+      "background": "light_gray",
+      "content": {
+        "headline": "Meet the Team",
+        "subheadline": "Leadership that's built enterprise systems, not just managed them",
+        "team_members": [
+          {
+            "name": "Jag Kanumuri",
+            "title": "Founder & CEO",
+            "bio": "At ACI Infotech, our purpose is to drive enterprise excellence through innovation and intelligence. We partner with organizations to help them reimagine their business models, modernize operations, and unlock value through technology. Our commitment is to deliver measurable outcomes that fuel growth, resilience, and long-term success in a rapidly evolving digital landscape.",
+            "photo_url": "/images/team/jag-kanumuri.jpg",
+            "linkedin_url": "https://linkedin.com/in/jagkanumuri"
+          },
+          {
+            "name": "Habib Mehmoodi",
+            "title": "VP Strategy & Innovation",
+            "bio": "Drives strategic initiatives and innovation programs across the enterprise portfolio.",
+            "photo_url": "/images/team/habib-mehmoodi.jpg",
+            "linkedin_url": null
+          },
+          {
+            "name": "Narayanan Nanjan",
+            "title": "VP Head of Delivery",
+            "bio": "Leads delivery operations ensuring Fortune 500 projects meet timelines, budgets, and SLAs.",
+            "photo_url": "/images/team/narayanan-nanjan.jpg",
+            "linkedin_url": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "awards_certifications",
+      "type": "certification_grid",
+      "background": "white",
+      "content": {
+        "headline": "Trusted & Certified",
+        "subheadline": "Our work, culture, and capabilities have been validated by global benchmarks, across security, delivery excellence, and workplace trust.",
+        "certifications": [
+          {
+            "name": "Great Place to Work",
+            "description": "Certified 2024-25",
+            "type": "culture",
+            "logo_url": "/images/certifications/gptw.png"
+          },
+          {
+            "name": "ISO 27001:2022",
+            "description": "Information Security Certified",
+            "type": "security",
+            "logo_url": "/images/certifications/iso27001.png"
+          },
+          {
+            "name": "CMMi Level 3",
+            "description": "Process Maturity Certified",
+            "type": "quality",
+            "logo_url": "/images/certifications/cmmi.png"
+          },
+          {
+            "name": "SOC 2 Type II",
+            "description": "Security & Privacy Controls",
+            "type": "security",
+            "logo_url": "/images/certifications/soc2.png"
+          },
+          {
+            "name": "AWS Partner",
+            "description": "Certified Partner",
+            "type": "partnership",
+            "logo_url": "/images/partners/aws.svg"
+          },
+          {
+            "name": "Azure Solutions Partner",
+            "description": "Microsoft Partner",
+            "type": "partnership",
+            "logo_url": "/images/partners/azure.svg"
+          },
+          {
+            "name": "Databricks Partner",
+            "description": "Exclusive Partner",
+            "type": "partnership",
+            "logo_url": "/images/partners/databricks.svg"
+          },
+          {
+            "name": "Salesforce Partner",
+            "description": "Agentforce Exclusive",
+            "type": "partnership",
+            "logo_url": "/images/partners/salesforce.svg"
+          }
+        ]
+      }
+    },
+    {
+      "id": "by_the_numbers",
+      "type": "stats_grid",
+      "background": "dark",
+      "content": {
+        "headline": "The ACI Track Record",
+        "subheadline": "Numbers that represent 19 years of production-grade engineering",
+        "stats": [
+          {
+            "number": "$650M+",
+            "label": "Total value delivered to clients",
+            "context": "Measurable ROI, not estimated"
+          },
+          {
+            "number": "80+",
+            "label": "Fortune 500 clients served",
+            "context": "Across banking, healthcare, retail, manufacturing"
+          },
+          {
+            "number": "19 Years",
+            "label": "In business since 2006",
+            "context": "Stable, growing, here for the long term"
+          },
+          {
+            "number": "1,250+",
+            "label": "Technologists globally",
+            "context": "Engineers, architects, data scientists"
+          },
+          {
+            "number": "10 Countries",
+            "label": "Global delivery centers",
+            "context": "US, India, and beyond"
+          },
+          {
+            "number": "85%+",
+            "label": "Client retention rate",
+            "context": "Clients come back because we deliver"
+          },
+          {
+            "number": "70%",
+            "label": "Senior engineers (10+ years)",
+            "context": "Not junior analysts learning on your dime"
+          },
+          {
+            "number": "6-12 Months",
+            "label": "Average project timeline",
+            "context": "Enterprise scale, realistic timelines"
+          }
+        ]
+      }
+    },
+    {
+      "id": "technology_ecosystem",
+      "type": "technology_grid",
+      "background": "white",
+      "content": {
+        "headline": "Built on Platforms Enterprises Trust",
+        "subheadline": "Open standards, API-first design, and event-driven patterns to avoid lock-in and extend what you already have.",
+        "categories": [
+          {
+            "category": "Data & Analytics",
+            "technologies": [
+              {"name": "Databricks", "badge": "Exclusive Partner"},
+              {"name": "Snowflake", "badge": null},
+              {"name": "dbt", "badge": null},
+              {"name": "Tableau", "badge": null},
+              {"name": "Power BI", "badge": null}
+            ]
+          },
+          {
+            "category": "Cloud Infrastructure",
+            "technologies": [
+              {"name": "AWS", "badge": "Partner"},
+              {"name": "Microsoft Azure", "badge": "Solutions Partner"},
+              {"name": "Google Cloud Platform", "badge": null}
+            ]
+          },
+          {
+            "category": "AI & ML",
+            "technologies": [
+              {"name": "Azure OpenAI", "badge": null},
+              {"name": "AWS Bedrock", "badge": null},
+              {"name": "Databricks Mosaic AI", "badge": null}
+            ]
+          },
+          {
+            "category": "Observability",
+            "technologies": [
+              {"name": "Dynatrace", "badge": "Partner"},
+              {"name": "Datadog", "badge": null},
+              {"name": "Splunk", "badge": null}
+            ]
+          },
+          {
+            "category": "Enterprise Applications",
+            "technologies": [
+              {"name": "Salesforce", "badge": "Agentforce Exclusive Partner"},
+              {"name": "SAP", "badge": null},
+              {"name": "Oracle", "badge": null},
+              {"name": "ServiceNow", "badge": null}
+            ]
+          },
+          {
+            "category": "Integration & Automation",
+            "technologies": [
+              {"name": "Mulesoft", "badge": null},
+              {"name": "Informatica", "badge": null},
+              {"name": "Workato", "badge": null}
+            ]
+          },
+          {
+            "category": "MarTech & CDP",
+            "technologies": [
+              {"name": "Adobe Experience Platform", "badge": null},
+              {"name": "Braze", "badge": null},
+              {"name": "Segment", "badge": null}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "final_cta",
+      "type": "centered_cta",
+      "background": "brand_blue",
+      "content": {
+        "headline": "Ready to Discuss Your Challenge?",
+        "subheadline": "Talk to an architect about your specific needs. No sales pitch—just an engineering conversation about what's actually possible.",
+        "trust_signals": [
+          "Talk to senior architects, not sales reps",
+          "Typical first call: 30 minutes, technical discussion",
+          "No pressure, no obligation"
+        ],
+        "ctas": {
+          "primary": {
+            "text": "Schedule Architecture Call",
+            "url": "/contact?type=architecture-call"
+          },
+          "secondary": {
+            "text": "Download Capabilities Overview",
+            "url": "/resources/capabilities-deck"
+          }
+        }
+      }
+    }
+  ]
+}

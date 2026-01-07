@@ -1,0 +1,509 @@
+{
+  "page": "service_data_engineering",
+  "url": "/services/data-engineering",
+  "seo": {
+    "title": "Data Engineering Services | ACI Infotech",
+    "description": "Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. 40+ deployments, 30%+ latency reduction.",
+    "keywords": "data engineering services, databricks consulting, snowflake implementation, data lakehouse, real-time data pipelines, enterprise data platform"
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "type": "service_hero",
+      "layout": "left_aligned_with_visual",
+      "content": {
+        "service_name": "Data Engineering",
+        "tagline": "Platforms That Feed AI and Analytics",
+        "headline": "Data Engineering That Actually Ships to Production",
+        "description": "Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. We build data platforms that feed AI, power analytics, and run 24/7 with SLAs. Not architecture diagrams—production code that handles millions of records per second.",
+        "key_outcomes": [
+          "Cut data latency 30%+ with real-time pipelines",
+          "Unify scattered data into single source of truth",
+          "Enable AI-ready data products from day one",
+          "Instrument observability so you see issues before users"
+        ],
+        "proof_line": "40+ enterprise data platforms deployed | 30%+ average latency reduction",
+        "ctas": {
+          "primary": {
+            "text": "Talk to a Data Architect",
+            "url": "/contact?service=data-engineering"
+          },
+          "secondary": {
+            "text": "See Data Projects",
+            "url": "/case-studies?service=data-engineering"
+          }
+        }
+      },
+      "visual": {
+        "type": "architecture_diagram",
+        "description": "Data platform architecture showing data flow from sources through lakehouse to consumption"
+      }
+    },
+    {
+      "id": "what_we_build",
+      "type": "content_block",
+      "background": "white",
+      "content": {
+        "headline": "What We Actually Build",
+        "intro": "We build data platforms on Databricks, Snowflake, and AWS/Azure cloud data services. This isn't abstract architecture—it's production code that handles your data volumes, meets your SLAs, and feeds your AI models.",
+        "paragraphs": [
+          "Typical project: 6-12 months from legacy consolidation to production lakehouse with ML-ready data products. We instrument observability with Dynatrace so data quality, freshness, and SLA compliance are visible in real-time.",
+          "Most enterprises have data scattered across 10-50 systems accumulated over decades of acquisitions, point solutions, and organic growth. We consolidate that chaos into a governed lakehouse where every dataset has lineage, quality scores, and access controls.",
+          "We've done this 40+ times for Fortune 500 companies. We know where projects fail (governance gaps, quality debt, missing observability) and we build those safeguards in from sprint one. Every data platform we ship includes monitoring, alerting, and runbooks. When something breaks at 2am, we're on the call with you."
+        ]
+      }
+    },
+    {
+      "id": "service_offerings",
+      "type": "offering_grid",
+      "background": "light_gray",
+      "content": {
+        "headline": "Data Engineering Services",
+        "subheadline": "Six core offerings, each delivered with production-grade quality",
+        "offerings": [
+          {
+            "id": "unified-lakehouse",
+            "title": "Unified Data Lakehouse",
+            "description": "Consolidate scattered data warehouses into one governed lakehouse built on Databricks or Snowflake, cutting storage costs, ending schema sprawl, and giving every AI or BI workload a single source of truth.",
+            "technologies": ["Azure Databricks", "Delta Lake", "Unity Catalog", "Snowflake", "Apache Iceberg", "AWS Glue", "dbt"],
+            "timeline": "6-9 months for enterprise-scale consolidation",
+            "outcomes": [
+              "30-40% storage cost reduction",
+              "Single source of truth for all analytics",
+              "AI-ready data products with governance",
+              "Real-time data availability"
+            ],
+            "use_cases": [
+              "Post-M&A data consolidation",
+              "Legacy warehouse modernization",
+              "Multi-cloud data architecture"
+            ]
+          },
+          {
+            "id": "real-time-pipelines",
+            "title": "Real-Time Data Pipelines",
+            "description": "Streaming data pipelines that feed dashboards, ML models, and operational systems with millisecond latency. Event-driven architecture with auto-scaling and fault tolerance.",
+            "technologies": ["Kafka", "Databricks Structured Streaming", "Azure Event Hubs", "AWS Kinesis", "Spark Streaming", "Flink"],
+            "timeline": "3-6 months for core pipeline infrastructure",
+            "outcomes": [
+              "<1 second data latency",
+              "Real-time operational insights",
+              "Automated data quality checks",
+              "Self-healing pipelines"
+            ],
+            "use_cases": [
+              "Real-time fraud detection",
+              "Live inventory tracking",
+              "Operational monitoring dashboards"
+            ]
+          },
+          {
+            "id": "data-observability",
+            "title": "Data Observability & Quality",
+            "description": "Monitor data lineage, freshness, and SLAs end-to-end with Dynatrace or similar platforms. Issues surface before they hit production dashboards or ML models.",
+            "technologies": ["Dynatrace", "Great Expectations", "Monte Carlo", "dbt tests", "OpenLineage", "DataHub"],
+            "timeline": "2-4 months to instrument existing platforms",
+            "outcomes": [
+              "90% reduction in data quality incidents",
+              "Automated alerting on quality drift",
+              "Full lineage from source to dashboard",
+              "SLA compliance visibility"
+            ],
+            "use_cases": [
+              "Data quality monitoring for ML",
+              "Regulatory compliance tracking",
+              "Executive dashboard trust"
+            ]
+          },
+          {
+            "id": "dataops-automation",
+            "title": "DataOps & Automation",
+            "description": "CI/CD pipelines for data with automated testing, deployment, and monitoring. GitOps workflows, infrastructure-as-code, and AI-assisted pipeline generation.",
+            "technologies": ["GitLab CI/CD", "Terraform", "Airflow", "Prefect", "Dagster", "GenAI pipeline generation"],
+            "timeline": "3-5 months to establish DataOps framework",
+            "outcomes": [
+              "40% faster pipeline development",
+              "Automated testing on every commit",
+              "Self-healing pipelines",
+              "Version-controlled infrastructure"
+            ],
+            "use_cases": [
+              "Scaling data team productivity",
+              "Reducing manual deployment errors",
+              "Accelerating feature delivery"
+            ]
+          },
+          {
+            "id": "data-governance",
+            "title": "Data Governance & Cataloging",
+            "description": "Enterprise data governance with Unity Catalog, Collibra, or Alation. Automated classification, access controls, and compliance reporting that doesn't slow down data teams.",
+            "technologies": ["Unity Catalog", "Collibra", "Alation", "Apache Atlas", "ArqAI Governance"],
+            "timeline": "4-6 months for enterprise governance framework",
+            "outcomes": [
+              "100% data asset cataloged",
+              "Automated PII classification",
+              "Self-service data discovery",
+              "Audit-ready access logs"
+            ],
+            "use_cases": [
+              "GDPR/CCPA compliance",
+              "Data democratization initiatives",
+              "M&A data due diligence"
+            ]
+          },
+          {
+            "id": "cloud-data-migration",
+            "title": "Cloud Data Migration",
+            "description": "Migrate on-premises data warehouses to cloud with zero downtime. Teradata, Oracle, SQL Server to Databricks, Snowflake, or BigQuery with automated schema conversion and validation.",
+            "technologies": ["AWS DMS", "Azure Data Migration", "Snowflake Migration", "Databricks Migration Toolkit"],
+            "timeline": "6-12 months depending on data volumes",
+            "outcomes": [
+              "Zero-downtime migration",
+              "30-50% infrastructure cost reduction",
+              "Validated data accuracy",
+              "Legacy decommissioning"
+            ],
+            "use_cases": [
+              "Data center exit",
+              "Teradata/Oracle modernization",
+              "Multi-cloud data strategy"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_stack",
+      "type": "technology_visual",
+      "background": "white",
+      "content": {
+        "headline": "Our Data Engineering Tech Stack",
+        "subheadline": "Enterprise-grade platforms we've deployed 100+ times",
+        "layers": [
+          {
+            "layer_name": "Data Platforms",
+            "technologies": [
+              {"name": "Databricks", "logo_url": "/images/tech/databricks.svg", "badge": "Exclusive Partner"},
+              {"name": "Snowflake", "logo_url": "/images/tech/snowflake.svg", "badge": null},
+              {"name": "AWS Redshift", "logo_url": "/images/tech/redshift.svg", "badge": null},
+              {"name": "Google BigQuery", "logo_url": "/images/tech/bigquery.svg", "badge": null}
+            ]
+          },
+          {
+            "layer_name": "Data Ingestion & Processing",
+            "technologies": [
+              {"name": "Apache Spark", "logo_url": "/images/tech/spark.svg", "badge": null},
+              {"name": "Apache Kafka", "logo_url": "/images/tech/kafka.svg", "badge": null},
+              {"name": "AWS Glue", "logo_url": "/images/tech/glue.svg", "badge": null},
+              {"name": "Azure Data Factory", "logo_url": "/images/tech/adf.svg", "badge": null},
+              {"name": "Fivetran", "logo_url": "/images/tech/fivetran.svg", "badge": null}
+            ]
+          },
+          {
+            "layer_name": "Transformation & Modeling",
+            "technologies": [
+              {"name": "dbt", "logo_url": "/images/tech/dbt.svg", "badge": null},
+              {"name": "Databricks SQL", "logo_url": "/images/tech/databricks-sql.svg", "badge": null},
+              {"name": "Spark SQL", "logo_url": "/images/tech/spark-sql.svg", "badge": null}
+            ]
+          },
+          {
+            "layer_name": "Governance & Observability",
+            "technologies": [
+              {"name": "Unity Catalog", "logo_url": "/images/tech/unity-catalog.svg", "badge": null},
+              {"name": "Dynatrace", "logo_url": "/images/tech/dynatrace.svg", "badge": "Partner"},
+              {"name": "Great Expectations", "logo_url": "/images/tech/great-expectations.svg", "badge": null},
+              {"name": "Monte Carlo", "logo_url": "/images/tech/monte-carlo.svg", "badge": null}
+            ]
+          },
+          {
+            "layer_name": "Visualization & Consumption",
+            "technologies": [
+              {"name": "Tableau", "logo_url": "/images/tech/tableau.svg", "badge": null},
+              {"name": "Power BI", "logo_url": "/images/tech/powerbi.svg", "badge": null},
+              {"name": "Looker", "logo_url": "/images/tech/looker.svg", "badge": null}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "case_studies",
+      "type": "featured_case_studies",
+      "background": "dark",
+      "content": {
+        "headline": "Data Engineering Projects We've Built",
+        "subheadline": "Real projects. Real Fortune 500 clients. Real outcomes.",
+        "case_studies": [
+          {
+            "slug": "msci-data-automation",
+            "client": "MSCI",
+            "logo_url": "/images/clients/msci-logo.svg",
+            "industry": "Financial Services",
+            "challenge": "40+ finance systems post-acquisitions needed consolidation into unified platform",
+            "solution": "SAP S/4HANA implementation with automated data quality gates and real-time reconciliation pipelines",
+            "results": [
+              {"metric": "$12M", "description": "Operational savings in year one"},
+              {"metric": "18 months", "description": "Delivery timeline"},
+              {"metric": "Zero", "description": "Financial reporting disruptions"}
+            ],
+            "technologies": ["SAP S/4HANA", "Python", "Azure DevOps", "Data Quality Automation"],
+            "timeline": "18 months",
+            "testimonial": null,
+            "cta": {"text": "Read Full Case Study", "url": "/case-studies/msci-data-automation"}
+          },
+          {
+            "slug": "racetrac-real-time-data",
+            "client": "RaceTrac",
+            "logo_url": "/images/clients/racetrac-logo.svg",
+            "industry": "Retail / Convenience",
+            "challenge": "Payment systems across 600+ locations needed real-time data with zero downtime tolerance",
+            "solution": "Databricks-powered real-time data platform with streaming pipelines and Braze integration",
+            "results": [
+              {"metric": "30%", "description": "Reduction in data latency"},
+              {"metric": "600+", "description": "Locations with zero downtime"},
+              {"metric": "Real-time", "description": "Inventory and sales visibility"}
+            ],
+            "technologies": ["Databricks", "Kafka", "AWS", "Braze"],
+            "timeline": "12 months",
+            "testimonial": {
+              "quote": "They've flawlessly delivered top-tier Digital Data to Altria, marking a critical milestone for RaceTrac.",
+              "author": "Director of Data and MarTech",
+              "company": "RaceTrac"
+            },
+            "cta": {"text": "Read Full Case Study", "url": "/case-studies/racetrac-real-time-data"}
+          },
+          {
+            "slug": "sodexo-unified-data",
+            "client": "Sodexo",
+            "logo_url": "/images/clients/sodexo-logo.svg",
+            "industry": "Hospitality",
+            "challenge": "Global operations with data scattered across regional silos, no unified view",
+            "solution": "Unified data intelligence platform with Informatica IICS and MDM for global single source of truth",
+            "results": [
+              {"metric": "Single", "description": "Source of truth across all operations"},
+              {"metric": "Global", "description": "Supply chain visibility"},
+              {"metric": "50%", "description": "Faster decision-making"}
+            ],
+            "technologies": ["Informatica IICS", "MDM", "Cloud Integration", "Data Quality"],
+            "timeline": "12 months",
+            "testimonial": {
+              "quote": "Their commitment to deliverables without compromising quality is impressive.",
+              "author": "Senior Director",
+              "company": "Sodexo"
+            },
+            "cta": {"text": "Read Full Case Study", "url": "/case-studies/sodexo-unified-data"}
+          },
+          {
+            "slug": "healthcare-self-service",
+            "client": "Fortune 500 Healthcare Firm",
+            "logo_url": null,
+            "industry": "Healthcare",
+            "challenge": "Data analysts spending 80% of time finding and preparing data instead of analyzing",
+            "solution": "Self-service analytics platform with governed data products and Tableau dashboards",
+            "results": [
+              {"metric": "80%", "description": "Reduction in data preparation time"},
+              {"metric": "Self-service", "description": "Analytics for 200+ users"},
+              {"metric": "Data-driven", "description": "Decision making enabled"}
+            ],
+            "technologies": ["Databricks", "Tableau", "dbt", "Unity Catalog"],
+            "timeline": "9 months",
+            "testimonial": null,
+            "cta": {"text": "Read Full Case Study", "url": "/case-studies/healthcare-self-service"}
+          }
+        ],
+        "view_all_cta": {
+          "text": "See All Data Engineering Case Studies",
+          "url": "/case-studies?service=data-engineering"
+        }
+      }
+    },
+    {
+      "id": "process",
+      "type": "process_timeline",
+      "background": "white",
+      "content": {
+        "headline": "Our Data Engineering Process",
+        "subheadline": "From engagement to production: how we work",
+        "phases": [
+          {
+            "phase_number": 1,
+            "title": "Discovery & Architecture",
+            "duration": "Weeks 1-4",
+            "description": "We assess your current data landscape, understand business requirements, and design the target architecture. No surprises later—we map every source system, data flow, and consumption pattern.",
+            "activities": [
+              "Current state data assessment",
+              "Source system inventory",
+              "Data quality baseline",
+              "Architecture design",
+              "Technology selection",
+              "Timeline and budget proposal"
+            ],
+            "deliverables": ["Architecture blueprint", "Project plan", "SOW", "Risk assessment"]
+          },
+          {
+            "phase_number": 2,
+            "title": "Foundation & Setup",
+            "duration": "Weeks 5-12",
+            "description": "Platform provisioning, security framework, governance setup. We establish the foundational infrastructure that everything else builds on.",
+            "activities": [
+              "Cloud platform provisioning",
+              "Security and IAM setup",
+              "Governance framework",
+              "Initial data ingestion",
+              "CI/CD pipeline setup",
+              "Team onboarding"
+            ],
+            "deliverables": ["Working dev environment", "Initial pipelines", "Documentation", "Governance policies"]
+          },
+          {
+            "phase_number": 3,
+            "title": "Build & Iterate",
+            "duration": "Months 4-8",
+            "description": "Iterative development in 2-week sprints. We build pipelines, transform data, create data products, and continuously validate quality.",
+            "activities": [
+              "Pipeline development",
+              "Data transformation",
+              "Quality automation",
+              "Performance optimization",
+              "Integration testing",
+              "User acceptance testing"
+            ],
+            "deliverables": ["Production-ready pipelines", "Data products", "Quality reports", "Runbooks"]
+          },
+          {
+            "phase_number": 4,
+            "title": "Launch & Stabilize",
+            "duration": "Weeks 9-12",
+            "description": "Production deployment with monitoring, alerting, and runbooks. We don't hand off and leave—we stabilize until SLAs are consistently met.",
+            "activities": [
+              "Production deployment",
+              "Observability setup",
+              "Performance tuning",
+              "Team training",
+              "Knowledge transfer",
+              "Post-launch support"
+            ],
+            "deliverables": ["Live system with SLAs", "Monitoring dashboards", "Trained team", "Complete documentation"]
+          },
+          {
+            "phase_number": 5,
+            "title": "Optimize & Scale",
+            "duration": "Ongoing",
+            "description": "Continuous optimization, cost management, and feature enhancements. We can provide ongoing support or transfer fully to your team.",
+            "activities": [
+              "Performance tuning",
+              "Cost optimization",
+              "Feature enhancements",
+              "Capacity planning",
+              "Technology upgrades"
+            ],
+            "deliverables": ["Optimized system", "Cost savings", "Expanded capabilities", "Quarterly reviews"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "why_choose_aci",
+      "type": "differentiation_grid",
+      "background": "light_gray",
+      "content": {
+        "headline": "Why Choose ACI for Data Engineering",
+        "subheadline": "What makes us different from other consulting firms",
+        "reasons": [
+          {
+            "title": "Deep Platform Expertise",
+            "description": "We're Databricks Exclusive Partner and Snowflake certified with 40+ lakehouse implementations. We know the platforms better than most consultancies because we've deployed them at Fortune 500 scale.",
+            "proof": "40+ enterprise data platforms deployed"
+          },
+          {
+            "title": "Observability Built In",
+            "description": "Dynatrace partnership means we instrument observability from day one. You see data quality, lineage, and SLAs in real-time. No surprises when dashboards break.",
+            "proof": "Every platform ships with monitoring"
+          },
+          {
+            "title": "Production-Grade from Start",
+            "description": "We don't build pilots that die. We architect for production scale, governance, and SLAs from the first sprint. Your data platform is designed to run 24/7.",
+            "proof": "Zero production failures in last 3 years"
+          },
+          {
+            "title": "Cost-Effective Delivery",
+            "description": "40-60% less than Big 4 consultancies for the same outcome. Senior architects leading, not junior analysts learning on your budget.",
+            "proof": "70% senior engineers on every project"
+          },
+          {
+            "title": "We Answer the 2am Call",
+            "description": "Our engineers have debugged production data issues at 2am. We understand what it means when pipelines fail and executives are waiting for reports. That's why we build systems that don't fail.",
+            "proof": "SLA-backed support available"
+          }
+        ]
+      }
+    },
+    {
+      "id": "faq",
+      "type": "accordion",
+      "background": "white",
+      "content": {
+        "headline": "Common Questions About Data Engineering",
+        "faqs": [
+          {
+            "question": "How long does a typical data platform project take?",
+            "answer": "6-12 months for enterprise-scale lakehouse consolidation. We can show you a detailed timeline in the first discovery call based on your specific data volumes and source systems. Smaller projects (single pipeline, specific integration) can be 3-6 months."
+          },
+          {
+            "question": "What's the ROI of a modern data platform?",
+            "answer": "Typical clients see 30-40% reduction in storage costs, 50%+ faster time to insights, and 3-5x improvement in data analyst productivity. MSCI saved $12M operationally in the first year. We'll help you build a business case with your specific numbers."
+          },
+          {
+            "question": "Do we need to migrate everything at once?",
+            "answer": "No. We typically use a phased approach—critical systems first, then expand. You'll see value within the first 3-4 months while we continue building out the full platform. This reduces risk and lets you validate the approach before full commitment."
+          },
+          {
+            "question": "What happens to our existing data warehouse?",
+            "answer": "We run it in parallel during migration, then decommission once validated. Zero disruption to business operations. Most clients see cost savings immediately by retiring legacy infrastructure in phases."
+          },
+          {
+            "question": "Can you work with our existing cloud provider?",
+            "answer": "Yes. We're certified on AWS, Azure, and GCP. We meet you where you run and can design multi-cloud architectures if needed. We're also platform-agnostic—we'll recommend what's best for your situation, not what gives us the biggest partnership bonus."
+          },
+          {
+            "question": "What about data security and compliance?",
+            "answer": "Security is built in, not bolted on. Every platform includes encryption at rest and in transit, role-based access controls, audit logging, and compliance frameworks (SOC 2, HIPAA, GDPR depending on your needs). We're ISO 27001 certified ourselves."
+          },
+          {
+            "question": "How do you handle data quality issues?",
+            "answer": "We implement automated data quality checks at every stage—ingestion, transformation, and consumption. Dynatrace observability surfaces issues before they impact downstream users. We typically see 90% reduction in data quality incidents after implementing our framework."
+          },
+          {
+            "question": "What happens after go-live?",
+            "answer": "We offer flexible support options: full managed services, co-managed with your team, or complete knowledge transfer. Most clients start with co-managed support for 3-6 months, then transition to their internal team with our architects available for escalations."
+          }
+        ]
+      }
+    },
+    {
+      "id": "final_cta",
+      "type": "centered_cta",
+      "background": "brand_blue",
+      "content": {
+        "headline": "Ready to Build Your Data Platform?",
+        "subheadline": "Schedule a 30-minute technical call with one of our data architects. No sales pitch—just an engineering conversation about your specific data challenges.",
+        "trust_signals": [
+          "Talk to senior data architects, not sales reps",
+          "Typical first call: 30 minutes, technical discussion",
+          "We'll tell you if we're not the right fit"
+        ],
+        "ctas": {
+          "primary": {
+            "text": "Talk to a Data Architect",
+            "url": "/contact?service=data-engineering&type=architecture-call"
+          },
+          "secondary": {
+            "text": "See Data Engineering Case Studies",
+            "url": "/case-studies?service=data-engineering"
+          }
+        }
+      }
+    }
+  ]
+}
