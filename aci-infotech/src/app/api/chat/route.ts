@@ -107,6 +107,16 @@ interface ChatMessage {
   content: string;
 }
 
+interface LeadInfo {
+  name?: string;
+  email?: string;
+  company?: string;
+  phone?: string;
+  jobTitle?: string;
+  serviceInterest?: string;
+  requirements?: string;
+}
+
 // Initialize Anthropic client
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -114,7 +124,11 @@ const anthropic = new Anthropic({
 
 export async function POST(request: NextRequest) {
   try {
-    const { messages } = await request.json();
+    const { messages, leadInfo, stage } = await request.json() as {
+      messages: ChatMessage[];
+      leadInfo?: LeadInfo;
+      stage?: string;
+    };
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -130,11 +144,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Build personalized context based on lead info
+    let personalizedContext = ACI_CONTEXT;
+
+    if (leadInfo) {
+      const leadContext = [];
+      if (leadInfo.name) leadContext.push(`The user's name is ${leadInfo.name}.`);
+      if (leadInfo.company) leadContext.push(`They work at ${leadInfo.company}.`);
+      if (leadInfo.serviceInterest) leadContext.push(`They're interested in ${leadInfo.serviceInterest}.`);
+
+      if (leadContext.length > 0) {
+        personalizedContext += `\n\nCURRENT LEAD INFO:\n${leadContext.join(' ')}`;
+      }
+    }
+
+    if (stage === 'qualified') {
+      personalizedContext += '\n\nIMPORTANT: The user has shared their contact info. Thank them warmly and offer to have a specialist reach out. Suggest scheduling a call.';
+    }
+
     // Call Claude API
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 250,
-      system: ACI_CONTEXT,
+      system: personalizedContext,
       messages: messages.map((m: ChatMessage) => ({
         role: m.role,
         content: m.content,
