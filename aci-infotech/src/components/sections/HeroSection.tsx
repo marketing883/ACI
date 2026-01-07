@@ -113,6 +113,9 @@ export default function HeroSection() {
             }`}
             style={{ willChange: 'opacity' }}
           >
+            {/* WebM is smaller and better quality - use as primary */}
+            <source src="/hero-video.webm" type="video/webm" />
+            {/* MP4 fallback for older browsers */}
             <source src="/hero-video.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
@@ -176,7 +179,7 @@ export default function HeroSection() {
               href="/contact"
               variant="ghost"
               size="lg"
-              className="text-white border-2 border-white/50 hover:bg-white/10 hover:border-white font-semibold text-base px-8 py-4"
+              className="text-white border-2 border-white/50 hover:bg-white/10 hover:border-white hover:text-[#84cc16] font-semibold text-base px-8 py-4"
             >
               Start Your Transformation
             </Button>

@@ -149,14 +149,14 @@ export default function Navigation() {
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            {/* Logo */}
+            {/* Logo - Increased size by ~17% */}
             <Link href="/" className="flex-shrink-0">
               <Image
                 src="/aci-infotech-logo.png"
                 alt="ACI Infotech"
-                width={180}
-                height={45}
-                className="h-10 w-auto"
+                width={210}
+                height={52}
+                className="h-12 w-auto"
                 priority
               />
             </Link>
@@ -223,7 +223,12 @@ export default function Navigation() {
 
             {/* Desktop CTA - Call to Outcome style */}
             <div className="hidden lg:flex items-center gap-4">
-              <Button href="/contact?reason=architecture-call" variant="primary" size="md">
+              <Button
+                href="/contact?reason=architecture-call"
+                variant="primary"
+                size="md"
+                className="hover:text-[#84cc16]"
+              >
                 Start Your Transformation
               </Button>
             </div>
@@ -697,7 +702,14 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
 
             {/* CTA - Call to Outcome style */}
             <div className="pt-6 px-4 pb-8">
-              <Button href="/contact?reason=architecture-call" variant="primary" size="lg" fullWidth onClick={onClose}>
+              <Button
+                href="/contact?reason=architecture-call"
+                variant="primary"
+                size="lg"
+                fullWidth
+                onClick={onClose}
+                className="hover:text-[#84cc16]"
+              >
                 Start Your Transformation
               </Button>
             </div>
