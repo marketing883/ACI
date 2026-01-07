@@ -227,7 +227,7 @@ export default function Navigation() {
                 href="/contact?reason=architecture-call"
                 variant="primary"
                 size="md"
-                className="hover:text-[#84cc16]"
+                className="hover:!text-[#84cc16]"
               >
                 Start Your Transformation
               </Button>
@@ -708,7 +708,7 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
                 size="lg"
                 fullWidth
                 onClick={onClose}
-                className="hover:text-[#84cc16]"
+                className="hover:!text-[#84cc16]"
               >
                 Start Your Transformation
               </Button>

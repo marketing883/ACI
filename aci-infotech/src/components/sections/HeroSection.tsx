@@ -104,7 +104,7 @@ export default function HeroSection() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             onCanPlayThrough={handleCanPlayThrough}
             onLoadedData={() => setVideoLoaded(true)}
             onError={() => setVideoError(true)}
@@ -114,9 +114,9 @@ export default function HeroSection() {
             style={{ willChange: 'opacity' }}
           >
             {/* WebM is smaller and better quality - use as primary */}
-            <source src="/hero-video.webm" type="video/webm" />
+            <source src="/GettyImages-1394448388.webm" type="video/webm" />
             {/* MP4 fallback for older browsers */}
-            <source src="/hero-video.mp4" type="video/mp4" />
+            <source src="/GettyImages-1394448388.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         )}
@@ -171,7 +171,7 @@ export default function HeroSection() {
               href="/case-studies"
               variant="secondary"
               size="lg"
-              className="group bg-white text-[var(--aci-secondary)] hover:bg-white hover:text-[#84cc16] border-0 font-semibold text-base px-8 py-4 transition-colors"
+              className="group !bg-white !text-[var(--aci-secondary)] hover:!bg-white hover:!text-[#84cc16] !border-0 font-semibold text-base px-8 py-4 transition-colors"
             >
               See Our Success Stories
             </Button>
@@ -179,7 +179,7 @@ export default function HeroSection() {
               href="/contact"
               variant="ghost"
               size="lg"
-              className="text-white border-2 border-white/50 hover:bg-white/10 hover:border-white hover:text-[#84cc16] font-semibold text-base px-8 py-4"
+              className="!text-white !border-2 !border-white/50 hover:!bg-white/10 hover:!border-white hover:!text-[#84cc16] font-semibold text-base px-8 py-4"
             >
               Start Your Transformation
             </Button>
