@@ -46,12 +46,12 @@ export default function Card({
   children,
   className = '',
 }: CardProps) {
-  // Variant styles
+  // Variant styles - updated with new design system
   const variantStyles = {
     default: 'bg-white border border-gray-200',
     bordered: 'bg-white border-2 border-gray-300',
-    elevated: 'bg-white shadow-lg',
-    flat: 'bg-gray-50',
+    elevated: 'bg-white shadow-md',
+    flat: 'bg-[#FAFAFA]',
   };
 
   // Padding styles
@@ -62,13 +62,13 @@ export default function Card({
     lg: 'p-8',
   };
 
-  // Hover styles
+  // Hover styles - subtler lift effect and softer shadow
   const hoverStyles = hover
-    ? 'transition-all duration-200 hover:shadow-xl hover:-translate-y-1'
+    ? 'transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5'
     : '';
 
   const combinedClassName = `
-    rounded-xl overflow-hidden
+    rounded-[6px] overflow-hidden
     ${variantStyles[variant]}
     ${paddingStyles[padding]}
     ${hoverStyles}

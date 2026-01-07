@@ -238,7 +238,7 @@ export default function Navigation() {
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = '#003D99';
                   e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 82, 204, 0.4)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 82, 204, 0.25)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = '#0052CC';

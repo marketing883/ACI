@@ -139,10 +139,10 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-[var(--aci-primary)] transition-colors"
+                  className="w-10 h-10 bg-gray-700 rounded-[6px] flex items-center justify-center hover:bg-[#0052CC] transition-all duration-200 hover:-translate-y-0.5"
                   aria-label={social.label}
                 >
-                  <social.icon className="w-5 h-5" />
+                  <social.icon className="w-5 h-5" strokeWidth={1.5} />
                 </a>
               ))}
             </div>
@@ -153,14 +153,14 @@ export default function Footer() {
                 href="tel:+17324167900"
                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
               >
-                <Phone className="w-4 h-4" />
+                <Phone className="w-4 h-4" strokeWidth={1.5} />
                 <span>+1 (732) 416-7900</span>
               </a>
               <a
                 href="mailto:info@aciinfotech.com"
                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
               >
-                <Mail className="w-4 h-4" />
+                <Mail className="w-4 h-4" strokeWidth={1.5} />
                 <span>info@aciinfotech.com</span>
               </a>
             </div>
@@ -176,7 +176,7 @@ export default function Footer() {
             {CERTIFICATIONS.map((cert) => (
               <div
                 key={cert.name}
-                className="h-12 w-24 bg-gray-700 rounded flex items-center justify-center text-xs text-gray-400"
+                className="h-12 w-24 bg-gray-700 rounded-[6px] flex items-center justify-center text-xs text-gray-400"
                 title={cert.name}
               >
                 {/* Placeholder for certification images */}

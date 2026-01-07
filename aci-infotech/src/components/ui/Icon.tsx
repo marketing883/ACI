@@ -22,8 +22,9 @@ export default function Icon({
   name,
   size = 'md',
   className = '',
+  strokeWidth = 1.5, // Thin line icons by default
   ...props
-}: IconProps) {
+}: IconProps & { strokeWidth?: number }) {
   const LucideIcon = Icons[name] as LucideIcon;
 
   if (!LucideIcon) {
@@ -35,6 +36,7 @@ export default function Icon({
     <LucideIcon
       size={sizeMap[size]}
       className={className}
+      strokeWidth={strokeWidth}
       {...props}
     />
   );

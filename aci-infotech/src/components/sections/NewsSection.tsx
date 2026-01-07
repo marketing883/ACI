@@ -27,11 +27,11 @@ export default function NewsSection({
   news,
 }: NewsSectionProps) {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-[#FAFAFA]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-3">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#0A1628] mb-3">
             {headline}
           </h2>
           <p className="text-gray-600">{subheadline}</p>
@@ -42,7 +42,7 @@ export default function NewsSection({
           {news.map((item) => (
             <article
               key={item.id}
-              className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow group"
+              className="bg-white rounded-[6px] overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group"
             >
               {/* Image */}
               {item.image_url && (
@@ -59,12 +59,12 @@ export default function NewsSection({
               {/* Content */}
               <div className="p-5">
                 <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
-                  <span className="font-medium text-[var(--aci-primary)]">{item.source}</span>
+                  <span className="font-medium text-[#0052CC]">{item.source}</span>
                   <span>|</span>
                   <span>{item.date}</span>
                 </div>
 
-                <h3 className="font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] transition-colors">
+                <h3 className="font-semibold text-[#0A1628] mb-2 group-hover:text-[#0052CC] transition-colors">
                   {item.title}
                 </h3>
 
@@ -75,10 +75,10 @@ export default function NewsSection({
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 hover:gap-2 transition-all"
+                    className="text-[#0052CC] text-sm font-medium inline-flex items-center gap-1 hover:gap-2 transition-all"
                   >
                     {item.cta_text || 'Read More'}
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3 h-3" strokeWidth={1.5} />
                   </a>
                 )}
               </div>

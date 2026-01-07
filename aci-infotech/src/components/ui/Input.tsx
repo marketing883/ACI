@@ -37,14 +37,14 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
 
     const isTextarea = 'variant' in props && props.variant === 'textarea';
 
-    // Base styles
+    // Base styles - updated with new design system
     const baseStyles = `
       w-full px-4 py-3
-      bg-white border rounded-lg
-      text-[var(--aci-secondary)] text-base
+      bg-white border rounded-[6px]
+      text-[#0A1628] text-base
       placeholder:text-gray-400
       transition-all duration-200
-      focus:outline-none focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent
+      focus:outline-none focus:ring-2 focus:ring-[#0052CC] focus:border-transparent
       disabled:bg-gray-100 disabled:cursor-not-allowed
     `;
 
@@ -60,7 +60,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
     return (
       <div className={`${wrapperClass} space-y-1.5`}>
         {label && (
-          <label className="block text-sm font-medium text-[var(--aci-secondary)]">
+          <label className="block text-sm font-medium text-[#0A1628]">
             {label}
             {rest.required && <span className="text-red-500 ml-1">*</span>}
           </label>

@@ -42,7 +42,7 @@ export default function PartnersSection({
               <div className="relative h-12 w-full grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300">
                 {/* Placeholder for partner logo */}
                 <div className="flex items-center justify-center h-full">
-                  <span className="text-sm font-medium text-gray-500 group-hover:text-[var(--aci-primary)] transition-colors">
+                  <span className="text-sm font-medium text-gray-500 group-hover:text-[#0052CC] transition-colors">
                     {partner.name}
                   </span>
                 </div>

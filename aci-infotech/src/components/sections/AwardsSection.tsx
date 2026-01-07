@@ -35,7 +35,7 @@ export default function AwardsSection({
           {badges.map((badge) => (
             <div
               key={badge.name}
-              className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-xl"
+              className="flex flex-col items-center text-center p-6 bg-[#FAFAFA] rounded-[6px] hover:-translate-y-0.5 transition-all duration-200"
             >
               {badge.image_url ? (
                 <Image
@@ -46,13 +46,13 @@ export default function AwardsSection({
                   className="object-contain mb-4"
                 />
               ) : (
-                <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-20 h-20 bg-gray-200 rounded-[6px] flex items-center justify-center mb-4">
                   <span className="text-2xl font-bold text-gray-400">
                     {badge.name.charAt(0)}
                   </span>
                 </div>
               )}
-              <h3 className="font-semibold text-[var(--aci-secondary)] text-sm mb-1">
+              <h3 className="font-semibold text-[#0A1628] text-sm mb-1">
                 {badge.name}
               </h3>
               <p className="text-xs text-gray-500">{badge.description}</p>

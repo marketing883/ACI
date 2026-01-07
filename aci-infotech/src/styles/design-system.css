@@ -5,15 +5,18 @@ ACI Infotech Design System
 */
 
 :root {
-  /* Brand Colors */
-  --aci-primary: #0F4BB9;
-  --aci-primary-dark: #0A3A8C;
+  /* Brand Colors - New Design System */
+  --aci-primary: #0052CC;
+  --aci-primary-dark: #003D99;
   --aci-primary-light: #3B6FD4;
 
   /* Secondary Colors */
-  --aci-secondary: #202122;
+  --aci-secondary: #0A1628;
   --aci-secondary-light: #666666;
   --aci-secondary-lighter: #999999;
+
+  /* Accent */
+  --aci-lime: #C4FF61;
 
   /* Neutral Colors */
   --aci-white: #FFFFFF;

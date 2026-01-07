@@ -51,7 +51,7 @@ export default function CaseStudiesSection({
             <Link
               key={study.slug}
               href={`/case-studies/${study.slug}`}
-              className="group bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-700 transition-colors"
+              className="group bg-gray-800 rounded-[6px] overflow-hidden hover:bg-gray-700 transition-all duration-200 hover:-translate-y-0.5"
             >
               {/* Header with logo */}
               <div className="p-6 border-b border-gray-700">
@@ -77,7 +77,7 @@ export default function CaseStudiesSection({
                 <div className="space-y-4 mb-6">
                   {study.results.slice(0, 3).map((result, index) => (
                     <div key={index} className="flex items-baseline gap-3">
-                      <span className="text-2xl font-bold text-[var(--aci-primary-light)]">
+                      <span className="text-2xl font-bold text-[#3B6FD4]">
                         {result.metric}
                       </span>
                       <span className="text-sm text-gray-400">{result.description}</span>
@@ -90,7 +90,7 @@ export default function CaseStudiesSection({
                   {study.technologies.slice(0, 3).map((tech) => (
                     <span
                       key={tech}
-                      className="px-2 py-1 bg-gray-700 rounded text-xs text-gray-300"
+                      className="px-2 py-1 bg-gray-700 rounded-[4px] text-xs text-gray-300"
                     >
                       {tech}
                     </span>
@@ -98,8 +98,8 @@ export default function CaseStudiesSection({
                 </div>
 
                 {/* CTA */}
-                <span className="text-[var(--aci-primary-light)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                  Read Full Story <ArrowRight className="w-4 h-4" />
+                <span className="text-[#3B6FD4] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                  Read Full Story <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
                 </span>
               </div>
             </Link>

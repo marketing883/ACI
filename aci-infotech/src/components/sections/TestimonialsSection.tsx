@@ -46,8 +46,8 @@ export default function TestimonialsSection({
 
         {/* Testimonial Card */}
         <div className="relative">
-          <div className="bg-gray-50 rounded-2xl p-8 md:p-12">
-            <Quote className="w-12 h-12 text-[var(--aci-primary)] opacity-20 mb-6" />
+          <div className="bg-[#FAFAFA] rounded-[6px] p-8 md:p-12">
+            <Quote className="w-12 h-12 text-[#0052CC] opacity-20 mb-6" strokeWidth={1.5} />
 
             <blockquote className="text-xl md:text-2xl text-[var(--aci-secondary)] leading-relaxed mb-8">
               "{currentTestimonial.quote}"
@@ -64,7 +64,7 @@ export default function TestimonialsSection({
                     className="rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-14 h-14 bg-[var(--aci-primary)] rounded-full flex items-center justify-center text-white text-xl font-bold">
+                  <div className="w-14 h-14 bg-[#0052CC] rounded-full flex items-center justify-center text-white text-xl font-bold">
                     {currentTestimonial.author.charAt(0)}
                   </div>
                 )}
@@ -97,10 +97,10 @@ export default function TestimonialsSection({
             <div className="flex items-center justify-center gap-4 mt-8">
               <button
                 onClick={goToPrevious}
-                className="p-2 rounded-full border border-gray-300 hover:border-[var(--aci-primary)] hover:text-[var(--aci-primary)] transition-colors"
+                className="p-2 rounded-full border border-gray-300 hover:border-[#0052CC] hover:text-[#0052CC] transition-all duration-200"
                 aria-label="Previous testimonial"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
               </button>
 
               {/* Dots */}
@@ -111,7 +111,7 @@ export default function TestimonialsSection({
                     onClick={() => setCurrentIndex(index)}
                     className={`w-2 h-2 rounded-full transition-colors ${
                       index === currentIndex
-                        ? 'bg-[var(--aci-primary)]'
+                        ? 'bg-[#0052CC]'
                         : 'bg-gray-300 hover:bg-gray-400'
                     }`}
                     aria-label={`Go to testimonial ${index + 1}`}
@@ -121,10 +121,10 @@ export default function TestimonialsSection({
 
               <button
                 onClick={goToNext}
-                className="p-2 rounded-full border border-gray-300 hover:border-[var(--aci-primary)] hover:text-[var(--aci-primary)] transition-colors"
+                className="p-2 rounded-full border border-gray-300 hover:border-[#0052CC] hover:text-[#0052CC] transition-all duration-200"
                 aria-label="Next testimonial"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
               </button>
             </div>
           )}

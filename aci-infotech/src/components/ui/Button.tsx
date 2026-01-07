@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   loading?: boolean;
   disabled?: boolean;
@@ -18,6 +18,7 @@ export interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
   children: ReactNode;
   className?: string;
+  withLimeDot?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
@@ -36,31 +37,34 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
       type = 'button',
       children,
       className = '',
+      withLimeDot = false,
     },
     ref
   ) => {
-    // Base styles
+    // Base styles - updated with 6px border-radius and lift hover effect
     const baseStyles =
-      'inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+      'inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5';
 
-    // Variant styles
+    // Variant styles - updated with new design system colors and shadows
     const variantStyles = {
       primary:
-        'bg-[var(--aci-primary)] text-white hover:bg-[var(--aci-primary-dark)] focus:ring-[var(--aci-primary)]',
+        'bg-[#0052CC] text-white hover:bg-[#003D99] hover:shadow-[0_4px_12px_rgba(0,82,204,0.25)] focus:ring-[#0052CC]',
       secondary:
-        'bg-white text-[var(--aci-secondary)] border border-gray-300 hover:bg-gray-50 hover:border-gray-400 focus:ring-gray-300',
+        'bg-white text-[#0A1628] border border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md focus:ring-gray-300',
       ghost:
-        'bg-transparent text-[var(--aci-primary)] hover:bg-[var(--aci-primary)]/10 focus:ring-[var(--aci-primary)]',
+        'bg-transparent text-[#0052CC] hover:bg-[#0052CC]/10 focus:ring-[#0052CC]',
       danger:
-        'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+        'bg-red-600 text-white hover:bg-red-700 hover:shadow-[0_4px_12px_rgba(239,68,68,0.25)] focus:ring-red-500',
+      outline:
+        'bg-transparent text-white border-2 border-white/30 hover:border-white/80 hover:bg-white/5 focus:ring-white/50',
     };
 
-    // Size styles
+    // Size styles - updated padding to match design system
     const sizeStyles = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-4 py-2 text-sm',
-      lg: 'px-6 py-3 text-base',
-      xl: 'px-8 py-4 text-lg',
+      sm: 'px-4 py-2 text-sm rounded-md',
+      md: 'px-5 py-2.5 text-sm rounded-[6px]',
+      lg: 'px-6 py-3 text-base rounded-[6px]',
+      xl: 'px-8 py-4 text-lg rounded-[6px]',
     };
 
     // Combined class names
@@ -72,11 +76,26 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
       ${className}
     `.trim();
 
+    // Lime dot accent element
+    const limeDot = withLimeDot ? (
+      <span
+        className="flex-shrink-0"
+        style={{
+          width: '5px',
+          height: '5px',
+          backgroundColor: '#C4FF61',
+          borderRadius: '50%',
+        }}
+      />
+    ) : null;
+
     // Content with loading state
     const content = (
       <>
         {loading ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
+          <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.5} />
+        ) : limeDot ? (
+          limeDot
         ) : leftIcon ? (
           <span className="flex-shrink-0">{leftIcon}</span>
         ) : null}

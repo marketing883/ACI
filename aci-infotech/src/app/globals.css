@@ -2,21 +2,27 @@
 @import "../styles/design-system.css";
 
 @theme inline {
-  /* ACI Brand Colors */
-  --color-aci-primary: #0F4BB9;
-  --color-aci-primary-dark: #0A3A8C;
+  /* ACI Brand Colors - Updated Design System */
+  --color-aci-primary: #0052CC;
+  --color-aci-primary-dark: #003D99;
   --color-aci-primary-light: #3B6FD4;
-  --color-aci-secondary: #202122;
+  --color-aci-secondary: #0A1628;
   --color-aci-secondary-light: #666666;
   --color-aci-off-white: #FAFAFA;
+  --color-aci-lime: #C4FF61;
 
   /* Override defaults */
   --color-background: #ffffff;
-  --color-foreground: #202122;
+  --color-foreground: #0A1628;
 
   /* Fonts - Funnel Display for headers, Funnel Sans for body */
   --font-sans: 'Funnel Sans', system-ui, -apple-system, sans-serif;
   --font-title: 'Funnel Display', system-ui, -apple-system, sans-serif;
+}
+
+/* Thin line icons globally - Lucide icons */
+.lucide, [class*="lucide-"] {
+  stroke-width: 1.5 !important;
 }
 
 /* Animated counter for hero stats */

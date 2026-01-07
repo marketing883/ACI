@@ -94,9 +94,9 @@ export default function ContactForm({
 
   if (status === 'success') {
     return (
-      <div className={`p-8 bg-green-50 rounded-xl text-center ${className}`}>
-        <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2">
+      <div className={`p-8 bg-green-50 rounded-[6px] text-center ${className}`}>
+        <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" strokeWidth={1.5} />
+        <h3 className="text-xl font-semibold text-[#0A1628] mb-2">
           Thank You!
         </h3>
         <p className="text-gray-600">
@@ -109,8 +109,8 @@ export default function ContactForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={`space-y-6 ${className}`}>
       {status === 'error' && (
-        <div className="p-4 bg-red-50 rounded-lg flex items-center gap-3 text-red-700">
-          <AlertCircle className="w-5 h-5 flex-shrink-0" />
+        <div className="p-4 bg-red-50 rounded-[6px] flex items-center gap-3 text-red-700">
+          <AlertCircle className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
           <p className="text-sm">{errorMessage}</p>
         </div>
       )}
@@ -202,7 +202,7 @@ export default function ContactForm({
 
         <p className="text-sm text-gray-500 mt-4 text-center">
           We typically respond within 24 hours. For urgent matters, call us at{' '}
-          <a href="tel:+17324167900" className="text-[var(--aci-primary)] hover:underline">
+          <a href="tel:+17324167900" className="text-[#0052CC] hover:underline">
             +1 (732) 416-7900
           </a>
         </p>
