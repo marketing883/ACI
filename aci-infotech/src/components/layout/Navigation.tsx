@@ -531,130 +531,172 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   return (
-    <div
-      className={`
-        fixed inset-0 top-20 bg-white z-40 lg:hidden
-        transition-all duration-300
-        ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}
-      `}
-    >
-      <div className="h-full overflow-y-auto pb-20">
-        <div className="px-4 py-6 space-y-2">
-          {/* Services */}
-          <MobileAccordion
-            title="Services"
-            isExpanded={expandedSection === 'services'}
-            onToggle={() => setExpandedSection(expandedSection === 'services' ? null : 'services')}
-          >
-            {navData.services.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
-                >
-                  <Icon className={`w-5 h-5 ${item.color}`} />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </MobileAccordion>
+    <>
+      {/* Backdrop */}
+      <div
+        className={`
+          fixed inset-0 bg-black/50 z-40 lg:hidden
+          transition-opacity duration-300
+          ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}
+        `}
+        onClick={onClose}
+      />
 
-          {/* Platforms */}
-          <MobileAccordion
-            title="Platforms"
-            isExpanded={expandedSection === 'platforms'}
-            onToggle={() => setExpandedSection(expandedSection === 'platforms' ? null : 'platforms')}
-          >
-            {navData.platforms.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
-                >
-                  <Icon className={`w-5 h-5 ${item.color}`} />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </MobileAccordion>
+      {/* Menu Panel */}
+      <div
+        className={`
+          fixed top-20 left-0 right-0 bottom-0 bg-white z-50 lg:hidden
+          transition-transform duration-300 ease-out
+          ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+        `}
+      >
+        <div className="h-full overflow-y-auto">
+          <div className="px-4 py-6 space-y-1">
+            {/* Services */}
+            <MobileAccordion
+              title="Services"
+              isExpanded={expandedSection === 'services'}
+              onToggle={() => setExpandedSection(expandedSection === 'services' ? null : 'services')}
+            >
+              {navData.services.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)] hover:bg-gray-50 rounded-lg"
+                  >
+                    <Icon className={`w-5 h-5 ${item.color}`} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+              <Link
+                href="/services"
+                onClick={onClose}
+                className="flex items-center gap-2 px-4 py-3 text-[var(--aci-primary)] font-medium"
+              >
+                View all services <ArrowRight className="w-4 h-4" />
+              </Link>
+            </MobileAccordion>
 
-          {/* Industries */}
-          <MobileAccordion
-            title="Industries"
-            isExpanded={expandedSection === 'industries'}
-            onToggle={() => setExpandedSection(expandedSection === 'industries' ? null : 'industries')}
-          >
-            {navData.industries.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
-                >
-                  <Icon className={`w-5 h-5 ${item.color}`} />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </MobileAccordion>
+            {/* Platforms */}
+            <MobileAccordion
+              title="Platforms"
+              isExpanded={expandedSection === 'platforms'}
+              onToggle={() => setExpandedSection(expandedSection === 'platforms' ? null : 'platforms')}
+            >
+              {navData.platforms.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)] hover:bg-gray-50 rounded-lg"
+                  >
+                    <Icon className={`w-5 h-5 ${item.color}`} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+              <Link
+                href="/platforms"
+                onClick={onClose}
+                className="flex items-center gap-2 px-4 py-3 text-[var(--aci-primary)] font-medium"
+              >
+                View all platforms <ArrowRight className="w-4 h-4" />
+              </Link>
+            </MobileAccordion>
 
-          {/* Resources */}
-          <MobileAccordion
-            title="Resources"
-            isExpanded={expandedSection === 'resources'}
-            onToggle={() => setExpandedSection(expandedSection === 'resources' ? null : 'resources')}
-          >
-            {navData.resources.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
-                >
-                  <Icon className="w-5 h-5 text-[var(--aci-primary)]" />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </MobileAccordion>
+            {/* Industries */}
+            <MobileAccordion
+              title="Industries"
+              isExpanded={expandedSection === 'industries'}
+              onToggle={() => setExpandedSection(expandedSection === 'industries' ? null : 'industries')}
+            >
+              {navData.industries.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)] hover:bg-gray-50 rounded-lg"
+                  >
+                    <Icon className={`w-5 h-5 ${item.color}`} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+              <Link
+                href="/industries"
+                onClick={onClose}
+                className="flex items-center gap-2 px-4 py-3 text-[var(--aci-primary)] font-medium"
+              >
+                View all industries <ArrowRight className="w-4 h-4" />
+              </Link>
+            </MobileAccordion>
 
-          {/* About */}
-          <Link
-            href="/about"
-            onClick={onClose}
-            className="block px-4 py-4 text-lg font-medium text-[var(--aci-secondary)]"
-          >
-            About
-          </Link>
+            {/* Resources */}
+            <MobileAccordion
+              title="Resources"
+              isExpanded={expandedSection === 'resources'}
+              onToggle={() => setExpandedSection(expandedSection === 'resources' ? null : 'resources')}
+            >
+              {navData.resources.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)] hover:bg-gray-50 rounded-lg"
+                  >
+                    <Icon className="w-5 h-5 text-[var(--aci-primary)]" />
+                    <div>
+                      <div>{item.label}</div>
+                      {item.description && (
+                        <div className="text-xs text-gray-400">{item.description}</div>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </MobileAccordion>
 
-          {/* Contact */}
-          <Link
-            href="/contact"
-            onClick={onClose}
-            className="block px-4 py-4 text-lg font-medium text-[var(--aci-secondary)]"
-          >
-            Contact
-          </Link>
+            {/* Direct Links */}
+            <div className="border-t border-gray-100 pt-4 mt-4">
+              <Link
+                href="/about"
+                onClick={onClose}
+                className="flex items-center gap-3 px-4 py-4 text-lg font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)]"
+              >
+                <Users className="w-5 h-5" />
+                About Us
+              </Link>
 
-          {/* CTA */}
-          <div className="pt-6 px-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg" fullWidth onClick={onClose}>
-              Talk to an Architect
-            </Button>
+              <Link
+                href="/contact"
+                onClick={onClose}
+                className="flex items-center gap-3 px-4 py-4 text-lg font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)]"
+              >
+                <MessageSquare className="w-5 h-5" />
+                Contact
+              </Link>
+            </div>
+
+            {/* CTA */}
+            <div className="pt-6 px-4 pb-8">
+              <Button href="/contact?reason=architecture-call" variant="primary" size="lg" fullWidth onClick={onClose}>
+                Talk to an Architect
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -671,13 +713,18 @@ function MobileAccordion({ title, isExpanded, onToggle, children }: MobileAccord
     <div className="border-b border-gray-100">
       <button
         onClick={onToggle}
-        className="flex items-center justify-between w-full px-4 py-4 text-lg font-medium text-[var(--aci-secondary)]"
+        className="flex items-center justify-between w-full px-4 py-4 text-lg font-semibold text-[var(--aci-secondary)]"
       >
-        {title}
-        <ChevronDown className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+        <span>{title}</span>
+        <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
       </button>
-      <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-[500px]' : 'max-h-0'}`}>
-        <div className="pb-4">{children}</div>
+      <div
+        className={`
+          overflow-hidden transition-all duration-300 ease-in-out
+          ${isExpanded ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}
+        `}
+      >
+        <div className="pb-4 pl-2">{children}</div>
       </div>
     </div>
   );
