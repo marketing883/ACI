@@ -11,6 +11,16 @@ import {
   X,
   CheckCircle2,
   AlertCircle,
+  MessageSquare,
+  FileText,
+  Users,
+  Sparkles,
+  Loader2,
+  TrendingUp,
+  Target,
+  Lightbulb,
+  BookOpen,
+  Star,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
@@ -25,6 +35,19 @@ interface Contact {
   message: string;
   status: 'new' | 'contacted' | 'qualified' | 'closed';
   notes: string | null;
+  source?: string;
+  lead_score?: number;
+}
+
+interface LeadIntelligence {
+  leadScore: number;
+  analysis: {
+    summary: string;
+    companyInsights: string[] | null;
+    recommendations: string[];
+    talkingPoints: string[];
+    similarCaseStudies: string[];
+  };
 }
 
 const statusColors = {
@@ -34,12 +57,18 @@ const statusColors = {
   closed: 'bg-gray-100 text-gray-700',
 };
 
-const inquiryTypes: Record<string, string> = {
-  'architecture-call': 'Architecture Call',
-  'project-inquiry': 'Project Inquiry',
-  'partnership': 'Partnership',
-  'careers': 'Careers',
-  'general': 'General',
+const sourceIcons: Record<string, typeof Users> = {
+  contact_form: FileText,
+  chat_widget: MessageSquare,
+  newsletter: Mail,
+  default: Users,
+};
+
+const sourceLabels: Record<string, string> = {
+  contact_form: 'Contact Form',
+  chat_widget: 'Chat',
+  newsletter: 'Newsletter',
+  website_footer: 'Website',
 };
 
 // Mock data for demo
@@ -51,10 +80,12 @@ const mockContacts: Contact[] = [
     email: 'john.smith@acmecorp.com',
     company: 'Acme Corporation',
     phone: '+1 (555) 123-4567',
-    inquiry_type: 'architecture-call',
+    inquiry_type: 'Data Engineering',
     message: 'We are looking to modernize our data infrastructure and would like to discuss potential solutions for our enterprise data platform.',
     status: 'new',
     notes: null,
+    source: 'contact_form',
+    lead_score: 85,
   },
   {
     id: '2',
@@ -63,10 +94,12 @@ const mockContacts: Contact[] = [
     email: 'sarah@techstartup.io',
     company: 'TechStartup Inc',
     phone: null,
-    inquiry_type: 'project-inquiry',
+    inquiry_type: 'Applied AI & ML',
     message: 'Interested in your AI/ML services for building a recommendation engine.',
     status: 'contacted',
     notes: 'Scheduled call for next week',
+    source: 'chat_widget',
+    lead_score: 72,
   },
   {
     id: '3',
@@ -75,10 +108,12 @@ const mockContacts: Contact[] = [
     email: 'mchen@enterprise.com',
     company: 'Enterprise Solutions LLC',
     phone: '+1 (555) 987-6543',
-    inquiry_type: 'partnership',
-    message: 'We would like to explore a strategic partnership for cloud migration services.',
+    inquiry_type: 'Cloud Modernization',
+    message: 'We would like to explore cloud migration services for our Fortune 500 company.',
     status: 'qualified',
     notes: 'High potential - Fortune 500 company',
+    source: 'contact_form',
+    lead_score: 95,
   },
   {
     id: '4',
@@ -87,10 +122,12 @@ const mockContacts: Contact[] = [
     email: 'emily.davis@retailco.com',
     company: 'RetailCo',
     phone: '+1 (555) 456-7890',
-    inquiry_type: 'project-inquiry',
+    inquiry_type: 'MarTech & CDP',
     message: 'Need help with MarTech stack implementation and CDP integration.',
     status: 'new',
     notes: null,
+    source: 'chat_widget',
+    lead_score: 78,
   },
   {
     id: '5',
@@ -99,10 +136,12 @@ const mockContacts: Contact[] = [
     email: 'dwilson@fintech.com',
     company: 'FinTech Global',
     phone: null,
-    inquiry_type: 'architecture-call',
+    inquiry_type: 'Cyber Security',
     message: 'Looking for security consulting for our cloud infrastructure.',
     status: 'closed',
     notes: 'Project completed',
+    source: 'contact_form',
+    lead_score: 88,
   },
 ];
 
@@ -112,7 +151,10 @@ export default function ContactsPage() {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [sourceFilter, setSourceFilter] = useState('all');
   const [configured, setConfigured] = useState(false);
+  const [intelligence, setIntelligence] = useState<LeadIntelligence | null>(null);
+  const [loadingIntelligence, setLoadingIntelligence] = useState(false);
 
   useEffect(() => {
     const isConfigured = isSupabaseConfigured();
@@ -142,6 +184,38 @@ export default function ContactsPage() {
     }
   }
 
+  async function fetchIntelligence(contact: Contact) {
+    setLoadingIntelligence(true);
+    setIntelligence(null);
+
+    try {
+      const response = await fetch('/api/admin/lead-intelligence', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lead: {
+            name: contact.name,
+            email: contact.email,
+            company: contact.company,
+            phone: contact.phone,
+            inquiry_type: contact.inquiry_type,
+            message: contact.message,
+            service_interest: contact.inquiry_type,
+          },
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIntelligence(data);
+      }
+    } catch (error) {
+      console.error('Error fetching intelligence:', error);
+    } finally {
+      setLoadingIntelligence(false);
+    }
+  }
+
   async function updateContactStatus(id: string, status: Contact['status']) {
     if (!configured) {
       setContacts(contacts.map(c => c.id === id ? { ...c, status } : c));
@@ -168,6 +242,12 @@ export default function ContactsPage() {
     }
   }
 
+  function handleSelectContact(contact: Contact) {
+    setSelectedContact(contact);
+    setIntelligence(null);
+    fetchIntelligence(contact);
+  }
+
   const filteredContacts = contacts.filter((contact) => {
     const matchesSearch =
       searchQuery === '' ||
@@ -175,8 +255,17 @@ export default function ContactsPage() {
       contact.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       contact.company?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || contact.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesSource = sourceFilter === 'all' || contact.source === sourceFilter;
+    return matchesSearch && matchesStatus && matchesSource;
   });
+
+  // Stats
+  const stats = {
+    total: contacts.length,
+    new: contacts.filter(c => c.status === 'new').length,
+    qualified: contacts.filter(c => c.status === 'qualified').length,
+    chat: contacts.filter(c => c.source === 'chat_widget').length,
+  };
 
   function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -188,11 +277,65 @@ export default function ContactsPage() {
     });
   }
 
+  function getScoreColor(score: number) {
+    if (score >= 80) return 'text-green-600 bg-green-100';
+    if (score >= 60) return 'text-yellow-600 bg-yellow-100';
+    return 'text-gray-600 bg-gray-100';
+  }
+
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Contact Submissions</h1>
-        <p className="text-gray-600">Manage and respond to contact form submissions</p>
+        <h1 className="text-2xl font-bold text-gray-900">Lead Management</h1>
+        <p className="text-gray-600">Manage and qualify leads from all sources with AI-powered insights</p>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <Users className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+              <p className="text-sm text-gray-500">Total Leads</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <Star className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{stats.new}</p>
+              <p className="text-sm text-gray-500">New Leads</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <Target className="w-5 h-5 text-purple-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{stats.qualified}</p>
+              <p className="text-sm text-gray-500">Qualified</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+              <MessageSquare className="w-5 h-5 text-orange-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{stats.chat}</p>
+              <p className="text-sm text-gray-500">From Chat</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {!configured && (
@@ -201,7 +344,7 @@ export default function ContactsPage() {
           <div>
             <p className="font-medium text-yellow-800">Demo Mode</p>
             <p className="text-sm text-yellow-700">
-              Showing sample data. Configure Supabase to manage real contacts.
+              Showing sample data. Configure Supabase to manage real leads.
             </p>
           </div>
         </div>
@@ -209,7 +352,7 @@ export default function ContactsPage() {
 
       {/* Filters */}
       <div className="bg-white rounded-xl shadow-sm mb-6">
-        <div className="p-4 flex flex-col sm:flex-row gap-4">
+        <div className="p-4 flex flex-col lg:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
@@ -220,18 +363,30 @@ export default function ContactsPage() {
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-gray-400" />
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Filter className="w-5 h-5 text-gray-400" />
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
+              >
+                <option value="all">All Status</option>
+                <option value="new">New</option>
+                <option value="contacted">Contacted</option>
+                <option value="qualified">Qualified</option>
+                <option value="closed">Closed</option>
+              </select>
+            </div>
             <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              value={sourceFilter}
+              onChange={(e) => setSourceFilter(e.target.value)}
               className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
             >
-              <option value="all">All Status</option>
-              <option value="new">New</option>
-              <option value="contacted">Contacted</option>
-              <option value="qualified">Qualified</option>
-              <option value="closed">Closed</option>
+              <option value="all">All Sources</option>
+              <option value="contact_form">Contact Form</option>
+              <option value="chat_widget">Chat Widget</option>
+              <option value="newsletter">Newsletter</option>
             </select>
           </div>
         </div>
@@ -240,61 +395,75 @@ export default function ContactsPage() {
       {/* Contacts List */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-gray-500">Loading contacts...</div>
+          <div className="p-8 text-center text-gray-500">Loading leads...</div>
         ) : filteredContacts.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">No contacts found</div>
+          <div className="p-8 text-center text-gray-500">No leads found</div>
         ) : (
           <div className="divide-y">
-            {filteredContacts.map((contact) => (
-              <div
-                key={contact.id}
-                className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                  selectedContact?.id === contact.id ? 'bg-blue-50' : ''
-                }`}
-                onClick={() => setSelectedContact(contact)}
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-1">
-                      <h3 className="font-semibold text-gray-900">{contact.name}</h3>
-                      <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${statusColors[contact.status]}`}>
-                        {contact.status}
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Mail className="w-4 h-4" />
-                        {contact.email}
-                      </span>
-                      {contact.company && (
-                        <span className="flex items-center gap-1">
-                          <Building2 className="w-4 h-4" />
-                          {contact.company}
+            {filteredContacts.map((contact) => {
+              const SourceIcon = sourceIcons[contact.source || 'default'] || Users;
+              return (
+                <div
+                  key={contact.id}
+                  className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
+                    selectedContact?.id === contact.id ? 'bg-blue-50' : ''
+                  }`}
+                  onClick={() => handleSelectContact(contact)}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-1">
+                        <h3 className="font-semibold text-gray-900">{contact.name}</h3>
+                        <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${statusColors[contact.status]}`}>
+                          {contact.status}
                         </span>
-                      )}
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {formatDate(contact.created_at)}
+                        {contact.lead_score && (
+                          <span className={`px-2 py-0.5 text-xs font-bold rounded-full ${getScoreColor(contact.lead_score)}`}>
+                            {contact.lead_score}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <Mail className="w-4 h-4" />
+                          {contact.email}
+                        </span>
+                        {contact.company && (
+                          <span className="flex items-center gap-1">
+                            <Building2 className="w-4 h-4" />
+                            {contact.company}
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {formatDate(contact.created_at)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-2 line-clamp-1">{contact.message}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="flex items-center gap-1 text-xs text-gray-400 px-2 py-1 bg-gray-100 rounded">
+                        <SourceIcon className="w-3 h-3" />
+                        {sourceLabels[contact.source || ''] || contact.source}
+                      </span>
+                      <span className="text-xs text-gray-400 px-2 py-1 bg-gray-100 rounded">
+                        {contact.inquiry_type}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mt-2 line-clamp-1">{contact.message}</p>
                   </div>
-                  <span className="text-xs text-gray-400 px-2 py-1 bg-gray-100 rounded">
-                    {inquiryTypes[contact.inquiry_type] || contact.inquiry_type}
-                  </span>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
 
-      {/* Contact Detail Sidebar */}
+      {/* Contact Detail Sidebar with AI Intelligence */}
       {selectedContact && (
-        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl z-50 overflow-y-auto">
+        <div className="fixed inset-y-0 right-0 w-full max-w-lg bg-white shadow-xl z-50 overflow-y-auto">
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Contact Details</h2>
+              <h2 className="text-xl font-bold text-gray-900">Lead Details</h2>
               <button
                 onClick={() => setSelectedContact(null)}
                 className="p-2 hover:bg-gray-100 rounded-lg"
@@ -304,10 +473,43 @@ export default function ContactsPage() {
             </div>
 
             <div className="space-y-6">
+              {/* Lead Score & AI Badge */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${
+                    (intelligence?.leadScore || selectedContact.lead_score || 0) >= 80
+                      ? 'bg-green-100'
+                      : (intelligence?.leadScore || selectedContact.lead_score || 0) >= 60
+                        ? 'bg-yellow-100'
+                        : 'bg-gray-100'
+                  }`}>
+                    <span className={`text-2xl font-bold ${
+                      (intelligence?.leadScore || selectedContact.lead_score || 0) >= 80
+                        ? 'text-green-600'
+                        : (intelligence?.leadScore || selectedContact.lead_score || 0) >= 60
+                          ? 'text-yellow-600'
+                          : 'text-gray-600'
+                    }`}>
+                      {intelligence?.leadScore || selectedContact.lead_score || '--'}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Lead Score</p>
+                    <p className="text-sm text-gray-500">AI-powered qualification</p>
+                  </div>
+                </div>
+                {loadingIntelligence && (
+                  <div className="flex items-center gap-2 text-sm text-[var(--aci-primary)]">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Analyzing...
+                  </div>
+                )}
+              </div>
+
               {/* Contact Info */}
-              <div>
-                <h3 className="font-semibold text-gray-900 text-lg">{selectedContact.name}</h3>
-                <div className="mt-3 space-y-2">
+              <div className="bg-gray-50 rounded-xl p-4">
+                <h3 className="font-semibold text-gray-900 text-lg mb-3">{selectedContact.name}</h3>
+                <div className="space-y-2">
                   <a
                     href={`mailto:${selectedContact.email}`}
                     className="flex items-center gap-2 text-[var(--aci-primary)] hover:underline"
@@ -333,6 +535,85 @@ export default function ContactsPage() {
                 </div>
               </div>
 
+              {/* AI Intelligence Section */}
+              {intelligence && (
+                <div className="space-y-4">
+                  {/* Summary */}
+                  <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-4 border border-purple-100">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="w-4 h-4 text-purple-600" />
+                      <h4 className="font-semibold text-purple-900">AI Summary</h4>
+                    </div>
+                    <p className="text-sm text-purple-800">{intelligence.analysis.summary}</p>
+                  </div>
+
+                  {/* Company Insights */}
+                  {intelligence.analysis.companyInsights && intelligence.analysis.companyInsights.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Building2 className="w-4 h-4 text-gray-600" />
+                        <h4 className="font-medium text-gray-900">Company Insights</h4>
+                      </div>
+                      <ul className="space-y-1">
+                        {intelligence.analysis.companyInsights.map((insight, i) => (
+                          <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                            <span className="text-gray-400">•</span>
+                            {insight}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Recommendations */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <TrendingUp className="w-4 h-4 text-green-600" />
+                      <h4 className="font-medium text-gray-900">Recommended Approach</h4>
+                    </div>
+                    <ul className="space-y-1">
+                      {intelligence.analysis.recommendations.map((rec, i) => (
+                        <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                          {rec}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Talking Points */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Lightbulb className="w-4 h-4 text-yellow-600" />
+                      <h4 className="font-medium text-gray-900">Talking Points</h4>
+                    </div>
+                    <ul className="space-y-1">
+                      {intelligence.analysis.talkingPoints.map((point, i) => (
+                        <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                          <span className="text-yellow-500">→</span>
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Similar Case Studies */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <BookOpen className="w-4 h-4 text-blue-600" />
+                      <h4 className="font-medium text-gray-900">Relevant Case Studies</h4>
+                    </div>
+                    <div className="space-y-2">
+                      {intelligence.analysis.similarCaseStudies.map((study, i) => (
+                        <div key={i} className="text-sm bg-blue-50 text-blue-800 px-3 py-2 rounded-lg">
+                          {study}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Status */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
@@ -348,22 +629,16 @@ export default function ContactsPage() {
                 </select>
               </div>
 
-              {/* Inquiry Type */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Inquiry Type</label>
-                <p className="text-gray-900">{inquiryTypes[selectedContact.inquiry_type] || selectedContact.inquiry_type}</p>
-              </div>
-
               {/* Message */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                <p className="text-gray-700 bg-gray-50 p-4 rounded-lg">{selectedContact.message}</p>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Original Message</label>
+                <p className="text-gray-700 bg-gray-50 p-4 rounded-lg text-sm">{selectedContact.message}</p>
               </div>
 
               {/* Submitted */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Submitted</label>
-                <p className="text-gray-600">{formatDate(selectedContact.created_at)}</p>
+                <p className="text-gray-600 text-sm">{formatDate(selectedContact.created_at)}</p>
               </div>
 
               {/* Actions */}
