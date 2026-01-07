@@ -221,16 +221,42 @@ export default function Navigation() {
               </Link>
             </div>
 
-            {/* Desktop CTA - Call to Outcome style */}
+            {/* Desktop CTA - New design system */}
             <div className="hidden lg:flex items-center gap-4">
-              <Button
+              <Link
                 href="/contact?reason=architecture-call"
-                variant="primary"
-                size="md"
-                className="hover:!text-[#84cc16]"
+                className="inline-flex items-center justify-center transition-all duration-200"
+                style={{
+                  backgroundColor: '#0052CC',
+                  color: '#FFFFFF',
+                  padding: '12px 24px',
+                  borderRadius: '6px',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  letterSpacing: '0.01em',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#003D99';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 82, 204, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#0052CC';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
               >
-                Start Your Transformation
-              </Button>
+                <span
+                  className="mr-2 flex-shrink-0"
+                  style={{
+                    width: '5px',
+                    height: '5px',
+                    backgroundColor: '#C4FF61',
+                    borderRadius: '50%',
+                  }}
+                />
+                Talk to an Architect
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -700,18 +726,33 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
               </Link>
             </div>
 
-            {/* CTA - Call to Outcome style */}
+            {/* CTA - New design system */}
             <div className="pt-6 px-4 pb-8">
-              <Button
+              <Link
                 href="/contact?reason=architecture-call"
-                variant="primary"
-                size="lg"
-                fullWidth
                 onClick={onClose}
-                className="hover:!text-[#84cc16]"
+                className="w-full inline-flex items-center justify-center transition-all duration-200"
+                style={{
+                  backgroundColor: '#0052CC',
+                  color: '#FFFFFF',
+                  padding: '16px 32px',
+                  borderRadius: '6px',
+                  fontSize: '17px',
+                  fontWeight: 600,
+                  letterSpacing: '0.01em',
+                }}
               >
-                Start Your Transformation
-              </Button>
+                <span
+                  className="mr-2 flex-shrink-0"
+                  style={{
+                    width: '6px',
+                    height: '6px',
+                    backgroundColor: '#C4FF61',
+                    borderRadius: '50%',
+                  }}
+                />
+                Talk to an Architect
+              </Link>
             </div>
           </div>
         </div>
