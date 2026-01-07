@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Linkedin, Twitter, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import { Linkedin, Twitter, Youtube, Mail, Phone } from 'lucide-react';
 import NewsletterForm from '@/components/forms/NewsletterForm';
 
 const FOOTER_LINKS = {
@@ -47,8 +47,24 @@ export default function Footer() {
     <footer className="bg-[var(--aci-secondary)] text-white">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Column 1: Company */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+          {/* Column 1: Logo & About */}
+          <div className="lg:col-span-1">
+            <Link href="/" className="inline-block mb-6">
+              <Image
+                src="/images/brand/logo-white.svg"
+                alt="ACI Infotech"
+                width={160}
+                height={40}
+                className="h-10 w-auto"
+              />
+            </Link>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Accelerating enterprise transformation through AI, data, and cloud innovation.
+            </p>
+          </div>
+
+          {/* Column 2: Company */}
           <div>
             <h3 className="text-lg font-semibold mb-6">Company</h3>
             <ul className="space-y-3">

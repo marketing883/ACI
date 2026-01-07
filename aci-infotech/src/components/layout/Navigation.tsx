@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   Menu,
@@ -144,9 +145,14 @@ export default function Navigation() {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
-              <span className="text-2xl font-bold text-[var(--aci-primary)]">
-                ACI Infotech
-              </span>
+              <Image
+                src="/images/brand/logo-color.svg"
+                alt="ACI Infotech"
+                width={180}
+                height={45}
+                className="h-10 w-auto"
+                priority
+              />
             </Link>
 
             {/* Desktop Navigation */}
