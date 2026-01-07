@@ -76,7 +76,14 @@ function AnimatedCounter({ end, suffix = '', duration = 2000 }: CounterProps) {
 export default function HeroSection() {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [animationStarted, setAnimationStarted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Trigger animations on mount
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimationStarted(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Manually trigger video play to handle browser autoplay policies
   const attemptVideoPlay = useCallback(async () => {
@@ -145,7 +152,7 @@ export default function HeroSection() {
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-8 md:px-16 lg:px-[120px] py-32 lg:py-40">
         <div className="max-w-4xl">
           {/* Headline with Lime Accent Line */}
-          <div className="flex items-start gap-6 mb-6">
+          <div className="flex items-start gap-6 mb-4">
             {/* Lime accent line */}
             <div
               className="hidden md:block flex-shrink-0 mt-4"
@@ -155,37 +162,65 @@ export default function HeroSection() {
                 backgroundColor: '#C4FF61',
               }}
             />
-            <h1
-              className="font-bold text-white font-[var(--font-title)]"
-              style={{
-                fontSize: 'clamp(48px, 8vw, 96px)',
-                lineHeight: 1.1,
-                letterSpacing: '-0.02em',
-                WebkitFontSmoothing: 'antialiased',
-              }}
-            >
-              Engineering That Bolsters!
-            </h1>
+
+            {/* Two-line headline with staggered animation */}
+            <div className="flex flex-col">
+              {/* Line 1: We're BUILT Different - 84px */}
+              <h1
+                className="font-bold text-white font-[var(--font-title)]"
+                style={{
+                  fontSize: 'clamp(42px, 7vw, 84px)',
+                  lineHeight: 1.1,
+                  letterSpacing: '-0.02em',
+                  WebkitFontSmoothing: 'antialiased',
+                  opacity: animationStarted ? 1 : 0,
+                  transform: animationStarted ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'opacity 200ms ease-out, transform 200ms ease-out',
+                }}
+              >
+                We're <span style={{ color: '#C4FF61' }}>BUILT</span> Different
+              </h1>
+
+              {/* Line 2: We BUILD Different - 96px */}
+              <h1
+                className="font-bold text-white font-[var(--font-title)]"
+                style={{
+                  fontSize: 'clamp(48px, 8vw, 96px)',
+                  lineHeight: 1.1,
+                  letterSpacing: '-0.02em',
+                  WebkitFontSmoothing: 'antialiased',
+                  opacity: animationStarted ? 1 : 0,
+                  transform: animationStarted ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'opacity 200ms ease-out 100ms, transform 200ms ease-out 100ms',
+                }}
+              >
+                We <span style={{ color: '#C4FF61' }}>BUILD Different</span>
+              </h1>
+            </div>
           </div>
 
-          {/* Subheadline - 24px gap from headline */}
+          {/* 16px gap already from mb-4 above */}
+
+          {/* Subheadline - 24px, 85% white with fade animation */}
           <p
-            className="mb-16 max-w-[680px]"
+            className="mb-[50px] max-w-[680px]"
             style={{
               fontSize: 'clamp(18px, 2vw, 24px)',
               fontWeight: 400,
               lineHeight: 1.5,
               color: 'rgba(255, 255, 255, 0.85)',
+              opacity: animationStarted ? 1 : 0,
+              transition: 'opacity 200ms ease-out 300ms',
             }}
           >
             Data platforms. AI systems. Cloud architectures. Built for production,
             backed by SLAs. When your system breaks, we're on the call.
           </p>
 
-          {/* Stats Row - 64px gap from subheadline */}
-          <div className="flex flex-wrap gap-12 md:gap-16 lg:gap-24 mb-12">
+          {/* Stats Row - 50px gap from subheadline */}
+          <div className="flex flex-wrap gap-12 md:gap-16 lg:gap-24 mb-[50px]">
             <div>
-              <AnimatedCounter end={40} suffix="+" duration={1500} />
+              <AnimatedCounter end={80} suffix="+" duration={1500} />
               <div
                 className="mt-2 uppercase font-medium"
                 style={{
@@ -225,7 +260,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Buttons - 48px gap from stats */}
+          {/* Buttons - 50px gap from stats */}
           <div className="flex flex-col sm:flex-row gap-6">
             {/* Primary Button */}
             <Link
