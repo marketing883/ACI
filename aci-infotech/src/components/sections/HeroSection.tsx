@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Button from '@/components/ui/Button';
 
 interface CounterProps {
@@ -67,30 +67,62 @@ function AnimatedCounter({ end, suffix = '', duration = 2000 }: CounterProps) {
 
 export default function HeroSection() {
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Manually trigger video play to handle browser autoplay policies
+  const attemptVideoPlay = useCallback(async () => {
+    if (videoRef.current) {
+      try {
+        await videoRef.current.play();
+      } catch (err) {
+        console.log('Video autoplay prevented, will play on interaction');
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    // Try to play video after component mounts
+    const timer = setTimeout(attemptVideoPlay, 100);
+    return () => clearTimeout(timer);
+  }, [attemptVideoPlay]);
+
+  // Handle video can play through
+  const handleCanPlayThrough = () => {
+    setVideoLoaded(true);
+    attemptVideoPlay();
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Video Background */}
       <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          onLoadedData={() => setVideoLoaded(true)}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-            videoLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
+        {!videoError && (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            onCanPlayThrough={handleCanPlayThrough}
+            onLoadedData={() => setVideoLoaded(true)}
+            onError={() => setVideoError(true)}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              videoLoaded && !videoError ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ willChange: 'opacity' }}
+          >
+            <source src="/hero-video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        )}
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
-        {/* Fallback gradient while video loads */}
+        {/* Fallback gradient while video loads or on error */}
         <div
           className={`absolute inset-0 bg-gradient-to-br from-[var(--aci-secondary)] to-[#1a2a4a] transition-opacity duration-1000 ${
-            videoLoaded ? 'opacity-0' : 'opacity-100'
+            videoLoaded && !videoError ? 'opacity-0' : 'opacity-100'
           }`}
         />
       </div>

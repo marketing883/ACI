@@ -27,11 +27,12 @@ async function getLatestPosts(limit: number = 3) {
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
   // Use * to fetch all columns - works with any table structure
+  // Order by published_at to show most recently published articles first
   const { data, error } = await supabase
     .from('blog_posts')
     .select('*')
     .eq('status', 'published')
-    .order('created_at', { ascending: false })
+    .order('published_at', { ascending: false })
     .limit(limit);
 
   if (error) {

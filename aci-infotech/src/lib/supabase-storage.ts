@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import sharp from 'sharp';
 
 // Server-side Supabase client with service role for storage operations
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -12,13 +13,79 @@ export interface UploadResult {
   error?: string;
 }
 
+export interface OptimizeOptions {
+  maxWidth?: number;
+  maxHeight?: number;
+  quality?: number;
+  format?: 'webp' | 'jpeg' | 'png';
+}
+
+/**
+ * Optimize image buffer using Sharp
+ */
+export async function optimizeImage(
+  buffer: Buffer,
+  options: OptimizeOptions = {}
+): Promise<{ buffer: Buffer; contentType: string }> {
+  const {
+    maxWidth = 1200,
+    maxHeight = 800,
+    quality = 80,
+    format = 'webp',
+  } = options;
+
+  try {
+    let image = sharp(buffer);
+    const metadata = await image.metadata();
+
+    // Resize if larger than max dimensions while maintaining aspect ratio
+    if (metadata.width && metadata.height) {
+      if (metadata.width > maxWidth || metadata.height > maxHeight) {
+        image = image.resize(maxWidth, maxHeight, {
+          fit: 'inside',
+          withoutEnlargement: true,
+        });
+      }
+    }
+
+    // Convert to specified format with quality settings
+    let optimized: Buffer;
+    let contentType: string;
+
+    switch (format) {
+      case 'webp':
+        optimized = await image.webp({ quality }).toBuffer();
+        contentType = 'image/webp';
+        break;
+      case 'jpeg':
+        optimized = await image.jpeg({ quality, progressive: true }).toBuffer();
+        contentType = 'image/jpeg';
+        break;
+      case 'png':
+        optimized = await image.png({ quality }).toBuffer();
+        contentType = 'image/png';
+        break;
+      default:
+        optimized = await image.webp({ quality }).toBuffer();
+        contentType = 'image/webp';
+    }
+
+    return { buffer: optimized, contentType };
+  } catch (error) {
+    console.error('Image optimization failed, using original:', error);
+    return { buffer, contentType: 'image/jpeg' };
+  }
+}
+
 /**
  * Download image from URL and upload to Supabase Storage
+ * Automatically optimizes images for web (converts to WebP, resizes if needed)
  */
 export async function downloadAndUploadImage(
   imageUrl: string,
   bucket: string,
-  fileName: string
+  fileName: string,
+  optimizeOptions?: OptimizeOptions
 ): Promise<UploadResult> {
   try {
     // Download image
@@ -32,17 +99,38 @@ export async function downloadAndUploadImage(
       return { success: false, error: `Failed to download: ${response.status}` };
     }
 
-    const contentType = response.headers.get('content-type') || 'image/jpeg';
+    const originalContentType = response.headers.get('content-type') || 'image/jpeg';
     const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const originalBuffer = Buffer.from(arrayBuffer);
 
-    // Determine file extension from content type
-    const ext = contentType.includes('png') ? 'png'
-      : contentType.includes('webp') ? 'webp'
-      : contentType.includes('gif') ? 'gif'
-      : 'jpg';
+    // Skip optimization for GIFs and SVGs
+    const skipOptimization = originalContentType.includes('gif') || originalContentType.includes('svg');
 
-    const finalFileName = fileName.endsWith(`.${ext}`) ? fileName : `${fileName}.${ext}`;
+    let buffer: Buffer;
+    let contentType: string;
+    let ext: string;
+
+    if (skipOptimization) {
+      buffer = originalBuffer;
+      contentType = originalContentType;
+      ext = originalContentType.includes('gif') ? 'gif' : 'svg';
+    } else {
+      // Optimize the image (default: convert to WebP, max 1200x800, quality 80)
+      const optimized = await optimizeImage(originalBuffer, {
+        maxWidth: 1200,
+        maxHeight: 800,
+        quality: 80,
+        format: 'webp',
+        ...optimizeOptions,
+      });
+      buffer = optimized.buffer;
+      contentType = optimized.contentType;
+      ext = 'webp';
+
+      console.log(`Image optimized: ${(originalBuffer.length / 1024).toFixed(1)}KB → ${(buffer.length / 1024).toFixed(1)}KB`);
+    }
+
+    const finalFileName = `${fileName}.${ext}`;
 
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage

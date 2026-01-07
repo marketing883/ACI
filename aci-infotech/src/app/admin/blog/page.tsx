@@ -15,6 +15,9 @@ import {
   Upload,
   Filter,
   X,
+  ChevronUp,
+  ChevronDown,
+  ChevronsUpDown,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
@@ -35,6 +38,9 @@ interface BlogPost {
   [key: string]: unknown;
 }
 
+type SortColumn = 'title' | 'author_name' | 'category' | 'status' | 'published_at';
+type SortDirection = 'asc' | 'desc';
+
 export default function BlogAdmin() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,6 +50,8 @@ export default function BlogAdmin() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [deleteModal, setDeleteModal] = useState<BlogPost | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [sortColumn, setSortColumn] = useState<SortColumn>('published_at');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
   useEffect(() => {
     const isConfigured = isSupabaseConfigured();
@@ -122,16 +130,59 @@ export default function BlogAdmin() {
     }
   }
 
-  const filteredPosts = posts.filter((post) => {
-    const matchesSearch = searchQuery === '' ||
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.author_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.category?.toLowerCase().includes(searchQuery.toLowerCase());
+  // Handle column sort click
+  const handleSort = (column: SortColumn) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
 
-    const matchesStatus = statusFilter === 'all' || post.status === statusFilter;
+  // Get sort icon for column header
+  const getSortIcon = (column: SortColumn) => {
+    if (sortColumn !== column) {
+      return <ChevronsUpDown className="w-4 h-4 text-gray-400" />;
+    }
+    return sortDirection === 'asc'
+      ? <ChevronUp className="w-4 h-4 text-[var(--aci-primary)]" />
+      : <ChevronDown className="w-4 h-4 text-[var(--aci-primary)]" />;
+  };
 
-    return matchesSearch && matchesStatus;
-  });
+  const filteredPosts = posts
+    .filter((post) => {
+      const matchesSearch = searchQuery === '' ||
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.author_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.category?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesStatus = statusFilter === 'all' || post.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      const aValue = a[sortColumn];
+      const bValue = b[sortColumn];
+
+      // Handle null/undefined values
+      if (aValue == null && bValue == null) return 0;
+      if (aValue == null) return sortDirection === 'asc' ? 1 : -1;
+      if (bValue == null) return sortDirection === 'asc' ? -1 : 1;
+
+      // Compare based on type
+      if (sortColumn === 'published_at') {
+        const aDate = new Date(aValue as string).getTime();
+        const bDate = new Date(bValue as string).getTime();
+        return sortDirection === 'asc' ? aDate - bDate : bDate - aDate;
+      }
+
+      // String comparison for other columns
+      const aStr = String(aValue).toLowerCase();
+      const bStr = String(bValue).toLowerCase();
+      const comparison = aStr.localeCompare(bStr);
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
 
   function formatDate(dateString: string | null) {
     if (!dateString) return 'Not published';
@@ -254,20 +305,50 @@ export default function BlogAdmin() {
             <table className="w-full">
               <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Title
+                  <th
+                    onClick={() => handleSort('title')}
+                    className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                  >
+                    <span className="flex items-center gap-1">
+                      Title
+                      {getSortIcon('title')}
+                    </span>
                   </th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Author
+                  <th
+                    onClick={() => handleSort('author_name')}
+                    className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                  >
+                    <span className="flex items-center gap-1">
+                      Author
+                      {getSortIcon('author_name')}
+                    </span>
                   </th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Category
+                  <th
+                    onClick={() => handleSort('category')}
+                    className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                  >
+                    <span className="flex items-center gap-1">
+                      Category
+                      {getSortIcon('category')}
+                    </span>
                   </th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
+                  <th
+                    onClick={() => handleSort('status')}
+                    className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                  >
+                    <span className="flex items-center gap-1">
+                      Status
+                      {getSortIcon('status')}
+                    </span>
                   </th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Published
+                  <th
+                    onClick={() => handleSort('published_at')}
+                    className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
+                  >
+                    <span className="flex items-center gap-1">
+                      Published
+                      {getSortIcon('published_at')}
+                    </span>
                   </th>
                   <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
