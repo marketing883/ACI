@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, Database, Brain, Cloud, Users, Shield, Zap } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import {
+  HeroSection,
   CaseStudiesSection,
   PartnersSection,
   TestimonialsSection,
@@ -137,56 +138,14 @@ const badges = [
 export default function HomePage() {
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-gray-50 to-white py-20 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <p className="text-[var(--aci-primary)] font-semibold mb-4">
-              Engineers Who Stay
-            </p>
-
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--aci-secondary)] mb-6 font-[var(--font-title)]">
-              Production-Grade Engineering at Enterprise Scale
-            </h1>
-
-            <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              We build data platforms, AI systems, and cloud architectures that run Fortune 500 operations.
-              Senior architects lead every project. We ship production code with SLAs.
-              We answer the 2am call.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-8 md:gap-16 mb-10">
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-[var(--aci-primary)]">19</div>
-                <div className="text-sm text-gray-500">Years Building Enterprise Systems</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-[var(--aci-primary)]">80+</div>
-                <div className="text-sm text-gray-500">Fortune 500 Clients</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-[var(--aci-primary)]">1,250+</div>
-                <div className="text-sm text-gray-500">Engineers Worldwide</div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/case-studies" variant="primary" size="lg">
-                See Our Case Studies
-              </Button>
-              <Button href="/contact" variant="secondary" size="lg">
-                Talk to an Architect
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section with Video Background */}
+      <HeroSection />
 
       {/* Why We're Different Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4 font-[var(--font-title)]">
               Why We're Different
             </h2>
             <p className="text-lg text-gray-600">
@@ -196,9 +155,9 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
-              <div className="text-4xl font-bold text-[var(--aci-primary)] mb-2">70%</div>
+              <div className="text-4xl font-bold text-[var(--aci-primary)] mb-2 font-[var(--font-title)]">70%</div>
               <div className="text-sm text-gray-500 mb-4">Senior architects with 10+ years</div>
-              <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
+              <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3 font-[var(--font-title)]">
                 Engineers Who've Been on the Call
               </h3>
               <p className="text-gray-600">
@@ -208,9 +167,9 @@ export default function HomePage() {
             </div>
 
             <div className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
-              <div className="text-4xl font-bold text-[var(--aci-primary)] mb-2">100%</div>
+              <div className="text-4xl font-bold text-[var(--aci-primary)] mb-2 font-[var(--font-title)]">100%</div>
               <div className="text-sm text-gray-500 mb-4">Production deployments with SLAs</div>
-              <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
+              <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3 font-[var(--font-title)]">
                 Production Code, Not PowerPoints
               </h3>
               <p className="text-gray-600">
@@ -220,9 +179,9 @@ export default function HomePage() {
             </div>
 
             <div className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
-              <div className="text-4xl font-bold text-[var(--aci-primary)] mb-2">80+</div>
+              <div className="text-4xl font-bold text-[var(--aci-primary)] mb-2 font-[var(--font-title)]">80+</div>
               <div className="text-sm text-gray-500 mb-4">Fortune 500 clients</div>
-              <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
+              <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3 font-[var(--font-title)]">
                 Proven at Enterprise Scale
               </h3>
               <p className="text-gray-600">
@@ -238,7 +197,7 @@ export default function HomePage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4 font-[var(--font-title)]">
               What We Build
             </h2>
             <p className="text-lg text-gray-600">
@@ -250,7 +209,7 @@ export default function HomePage() {
             <Link href="/services/data-engineering" className="group">
               <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
                 <Database className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)]">
+                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
                   Data Engineering
                 </h3>
                 <p className="text-sm text-gray-500 mb-3">Platforms that feed AI and analytics</p>
@@ -266,7 +225,7 @@ export default function HomePage() {
             <Link href="/services/applied-ai-ml" className="group">
               <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
                 <Brain className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)]">
+                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
                   Applied AI & ML
                 </h3>
                 <p className="text-sm text-gray-500 mb-3">From GenAI pilots to production ML</p>
@@ -282,7 +241,7 @@ export default function HomePage() {
             <Link href="/services/cloud-modernization" className="group">
               <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
                 <Cloud className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)]">
+                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
                   Cloud Modernization
                 </h3>
                 <p className="text-sm text-gray-500 mb-3">Multi-cloud without the chaos</p>
@@ -298,7 +257,7 @@ export default function HomePage() {
             <Link href="/services/martech-cdp" className="group">
               <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
                 <Users className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)]">
+                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
                   MarTech & CDP
                 </h3>
                 <p className="text-sm text-gray-500 mb-3">Customer 360 that actually works</p>
@@ -314,7 +273,7 @@ export default function HomePage() {
             <Link href="/services/digital-transformation" className="group">
               <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
                 <Zap className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)]">
+                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
                   Digital Transformation
                 </h3>
                 <p className="text-sm text-gray-500 mb-3">Intelligent process automation</p>
@@ -330,7 +289,7 @@ export default function HomePage() {
             <Link href="/services/cyber-security" className="group">
               <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
                 <Shield className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)]">
+                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
                   Cyber Security
                 </h3>
                 <p className="text-sm text-gray-500 mb-3">Security built in, not bolted on</p>
@@ -352,7 +311,7 @@ export default function HomePage() {
         subheadline="Real projects. Real Fortune 500 clients. Real outcomes."
         studies={caseStudies}
         viewAllUrl="/case-studies"
-        viewAllText="See All 80+ Client Success Stories"
+        viewAllText="See All Success Stories"
       />
 
       {/* Partners Section */}
@@ -406,7 +365,7 @@ export default function HomePage() {
       {/* Final CTA Section */}
       <section className="py-20 bg-[var(--aci-primary)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-[var(--font-title)]">
             Ready to Build Something That Lasts?
           </h2>
           <p className="text-lg text-blue-100 mb-8">
@@ -424,15 +383,15 @@ export default function HomePage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button href="/contact" variant="secondary" size="lg">
-              Schedule Architecture Call
+              Start Your Transformation
             </Button>
             <Button
               href="/case-studies"
               variant="ghost"
               size="lg"
-              className="text-white border-white hover:bg-white/10"
+              className="text-white border-white hover:bg-white/10 hover:text-[#84cc16]"
             >
-              See Our Case Studies
+              See Our Success Stories
             </Button>
           </div>
         </div>

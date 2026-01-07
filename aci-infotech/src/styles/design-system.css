@@ -35,9 +35,9 @@ ACI Infotech Design System
   --aci-error: #EF4444;
   --aci-info: #3B82F6;
 
-  /* Typography - System fonts for reliability */
-  --font-title: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Typography - Funnel Display for headers, Funnel Sans for body */
+  --font-title: 'Funnel Display', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Funnel Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* Font Sizes */
   --text-xs: 0.75rem;
@@ -142,15 +142,15 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-title);
   color: var(--aci-secondary);
   line-height: var(--leading-tight);
-  font-weight: var(--font-bold);
 }
 
-h1 { font-size: var(--text-5xl); }
-h2 { font-size: var(--text-4xl); }
-h3 { font-size: var(--text-3xl); }
-h4 { font-size: var(--text-2xl); }
-h5 { font-size: var(--text-xl); }
-h6 { font-size: var(--text-lg); }
+/* Funnel Display font weights - H1/H2 at 700, decreasing for others */
+h1 { font-size: var(--text-5xl); font-weight: 700; }
+h2 { font-size: var(--text-4xl); font-weight: 700; }
+h3 { font-size: var(--text-3xl); font-weight: 600; }
+h4 { font-size: var(--text-2xl); font-weight: 600; }
+h5 { font-size: var(--text-xl); font-weight: 500; }
+h6 { font-size: var(--text-lg); font-weight: 500; }
 
 /* Responsive Typography */
 @media (max-width: 768px) {

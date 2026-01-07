@@ -14,9 +14,19 @@
   --color-background: #ffffff;
   --color-foreground: #202122;
 
-  /* Fonts */
-  --font-sans: 'Inter', sans-serif;
-  --font-title: 'Manrope', sans-serif;
+  /* Fonts - Funnel Display for headers, Funnel Sans for body */
+  --font-sans: 'Funnel Sans', system-ui, -apple-system, sans-serif;
+  --font-title: 'Funnel Display', system-ui, -apple-system, sans-serif;
+}
+
+/* Animated counter for hero stats */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-count-up {
+  animation: countUp 0.6s ease-out forwards;
 }
 
 /* Ensure smooth scrolling */

@@ -138,8 +138,14 @@ export default function Navigation() {
         className={`
           fixed top-0 left-0 right-0 z-50
           transition-all duration-300
-          ${isScrolled ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-sm'}
+          ${isScrolled
+            ? 'bg-white/70 backdrop-blur-xl shadow-lg border-b border-gray-200/50'
+            : 'bg-white/30 backdrop-blur-md border-b border-white/20'}
         `}
+        style={{
+          WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'blur(12px) saturate(150%)',
+          backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'blur(12px) saturate(150%)',
+        }}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
@@ -215,10 +221,10 @@ export default function Navigation() {
               </Link>
             </div>
 
-            {/* Desktop CTA */}
+            {/* Desktop CTA - Call to Outcome style */}
             <div className="hidden lg:flex items-center gap-4">
               <Button href="/contact?reason=architecture-call" variant="primary" size="md">
-                Talk to an Architect
+                Start Your Transformation
               </Button>
             </div>
 
@@ -689,10 +695,10 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
               </Link>
             </div>
 
-            {/* CTA */}
+            {/* CTA - Call to Outcome style */}
             <div className="pt-6 px-4 pb-8">
               <Button href="/contact?reason=architecture-call" variant="primary" size="lg" fullWidth onClick={onClose}>
-                Talk to an Architect
+                Start Your Transformation
               </Button>
             </div>
           </div>

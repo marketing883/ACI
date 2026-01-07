@@ -1,3 +1,4 @@
+export { default as HeroSection } from './HeroSection';
 export { default as CaseStudiesSection } from './CaseStudiesSection';
 export { default as PartnersSection } from './PartnersSection';
 export { default as TestimonialsSection } from './TestimonialsSection';
