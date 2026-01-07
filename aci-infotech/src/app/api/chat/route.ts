@@ -89,14 +89,18 @@ CONTACT INFORMATION:
 - Schedule architecture call: /contact?reason=architecture-call
 
 RESPONSE GUIDELINES:
-- Be helpful, professional, and conversational
-- Keep responses concise but informative (2-4 paragraphs max)
-- Use markdown formatting for lists and emphasis
-- If users ask about pricing, explain engagements are customized and suggest scheduling an architecture call
-- For detailed technical questions, provide what you know and offer to connect them with our team
-- Always be ready to suggest scheduling a call or visiting relevant pages
-- Don't make up information not provided in this context
-- If you don't know something specific, say so and offer to connect them with the team`;
+- **BE BRIEF**: Maximum 2-3 short sentences per response. Never exceed 150 words.
+- **FORMAT NICELY**: Use bullet points for lists, **bold** for emphasis
+- **STRUCTURE**: Lead with the answer, then one supporting detail if needed
+- **LINKS**: Include relevant page links like [Contact Us](/contact) or [Services](/services)
+- If asked about pricing → "Engagements are customized. [Schedule a call](/contact?reason=architecture-call) to discuss."
+- If asked technical details → Give a 1-line answer + offer to connect with team
+- Be warm but professional, like a helpful concierge
+- End with a clear next step when appropriate
+
+EXAMPLE GOOD RESPONSE:
+"We specialize in **Data Engineering**, **AI/ML**, and **Cloud Modernization** for Fortune 500 companies. Our senior architects have delivered $500M+ in client value. [View our services](/services) or [schedule a call](/contact) to discuss your needs!"`;
+
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -129,7 +133,7 @@ export async function POST(request: NextRequest) {
     // Call Claude API
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
+      max_tokens: 250,
       system: ACI_CONTEXT,
       messages: messages.map((m: ChatMessage) => ({
         role: m.role,
