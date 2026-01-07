@@ -5,36 +5,48 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    const { name, email, company, role, inquiry_type, message, phone } = data;
+    const { name, email, company, phone, reason, message } = data;
 
     // Validate required fields
-    if (!name || !email || !company || !inquiry_type || !message) {
+    if (!name || !email || !reason || !message) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
+    // Validate email format
+    if (!email.includes('@')) {
+      return NextResponse.json(
+        { error: 'Invalid email address' },
+        { status: 400 }
+      );
+    }
+
     // Insert into Supabase
-    const { error } = await supabase.from('leads_contacts').insert([
+    const { error } = await supabase.from('contacts').insert([
       {
         name,
         email,
-        company,
-        role: role || null,
-        inquiry_type,
-        message,
+        company: company || null,
         phone: phone || null,
+        inquiry_type: reason,
+        message,
         source: 'website_contact_form',
-        created_at: new Date().toISOString(),
+        status: 'new',
       },
     ]);
 
     if (error) {
       console.error('Supabase error:', error);
-      // For development, return success even if DB insert fails
-      // In production, you'd want to handle this differently
-      return NextResponse.json({ success: true, warning: 'Database insert pending' });
+      // For development without Supabase, still return success
+      if (error.message?.includes('placeholder')) {
+        return NextResponse.json({ success: true, warning: 'Database not configured' });
+      }
+      return NextResponse.json(
+        { error: 'Failed to submit form' },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ success: true });

@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    const { email } = data;
+    const { email, source } = data;
 
     // Validate email
     if (!email || !email.includes('@')) {
@@ -16,11 +16,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert into Supabase
-    const { error } = await supabase.from('leads_newsletter').insert([
+    const { error } = await supabase.from('newsletter_subscribers').insert([
       {
-        email,
-        source: 'website_footer',
-        subscribed_at: new Date().toISOString(),
+        email: email.toLowerCase().trim(),
+        source: source || 'website_footer',
+        status: 'active',
       },
     ]);
 
@@ -30,8 +30,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: true, message: 'Already subscribed' });
       }
       console.error('Supabase error:', error);
-      // For development, return success even if DB insert fails
-      return NextResponse.json({ success: true, warning: 'Database insert pending' });
+      // For development without Supabase
+      if (error.message?.includes('placeholder')) {
+        return NextResponse.json({ success: true, warning: 'Database not configured' });
+      }
+      return NextResponse.json(
+        { error: 'Failed to subscribe' },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ success: true });

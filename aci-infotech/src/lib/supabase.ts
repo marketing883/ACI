@@ -1,21 +1,13 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-// Create a placeholder client if env vars are not available (build time)
-let supabase: SupabaseClient;
-
-if (supabaseUrl && supabaseAnonKey) {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-} else {
-  // Create a dummy client for build time
-  // This will be replaced with a real client at runtime
-  supabase = createClient(
-    'https://placeholder.supabase.co',
-    'placeholder-key'
-  );
-}
+// Create client - uses placeholder during build if env vars not set
+const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-key'
+);
 
 export { supabase };
 
@@ -29,4 +21,9 @@ export const getServiceSupabase = () => {
   }
 
   return createClient(url, serviceKey);
+};
+
+// Helper to check if Supabase is configured
+export const isSupabaseConfigured = () => {
+  return !!(supabaseUrl && supabaseAnonKey);
 };
