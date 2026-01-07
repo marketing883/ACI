@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { downloadAndUploadImage, generateSafeFileName } from '@/lib/supabase-storage';
+import { downloadAndUploadImage, generateSafeFileName, isValidImageUrl } from '@/lib/supabase-storage';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -77,19 +77,26 @@ export async function POST(request: NextRequest) {
         }
 
         // Handle image
-        let featuredImageUrl = blog.image;
+        let featuredImageUrl = blog.image || null;
         if (importImages && blog.image) {
-          const safeFileName = `${generateSafeFileName(blog.slug)}`;
-          const uploadResult = await downloadAndUploadImage(
-            blog.image,
-            'blog-images',
-            safeFileName
-          );
+          // Validate that the URL is actually an image URL before attempting download
+          if (isValidImageUrl(blog.image)) {
+            const safeFileName = `${generateSafeFileName(blog.slug)}`;
+            const uploadResult = await downloadAndUploadImage(
+              blog.image,
+              'blog-images',
+              safeFileName
+            );
 
-          if (uploadResult.success && uploadResult.url) {
-            featuredImageUrl = uploadResult.url;
+            if (uploadResult.success && uploadResult.url) {
+              featuredImageUrl = uploadResult.url;
+            }
+            // If upload fails, keep original URL as fallback
+          } else {
+            // Non-image URL (like Zoom links) - set to null instead of keeping invalid URL
+            console.log(`Skipping non-image URL for ${blog.slug}: ${blog.image}`);
+            featuredImageUrl = null;
           }
-          // If upload fails, keep original URL as fallback
         }
 
         // Parse and format the publish date

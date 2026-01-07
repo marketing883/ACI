@@ -156,3 +156,109 @@ export function generateSafeFileName(input: string): string {
     .replace(/^-|-$/g, '')
     .substring(0, 100);
 }
+
+/**
+ * Check if a URL is likely an image URL
+ */
+export function isValidImageUrl(url: string): boolean {
+  if (!url || typeof url !== 'string') return false;
+
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname.toLowerCase();
+    const hostname = urlObj.hostname.toLowerCase();
+
+    // Known non-image domains to exclude
+    const excludedDomains = [
+      'zoom.us',
+      'hubspot.zoom.us',
+      'meet.google.com',
+      'teams.microsoft.com',
+      'webex.com',
+      'gotomeeting.com',
+      'youtube.com',
+      'youtu.be',
+      'vimeo.com',
+    ];
+
+    // Check if domain is excluded
+    for (const domain of excludedDomains) {
+      if (hostname.includes(domain)) {
+        return false;
+      }
+    }
+
+    // Common image extensions
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico', '.tiff', '.avif'];
+
+    // Check file extension
+    for (const ext of imageExtensions) {
+      if (pathname.endsWith(ext)) {
+        return true;
+      }
+    }
+
+    // Known image hosting services (even without extension)
+    const imageHostingDomains = [
+      'images.unsplash.com',
+      'images.pexels.com',
+      'cloudinary.com',
+      'imgix.net',
+      'imagekit.io',
+      'cdn.shopify.com',
+      'i.imgur.com',
+      'res.cloudinary.com',
+      'media.istockphoto.com',
+      'cdn.pixabay.com',
+      'images.ctfassets.net',
+      'storage.googleapis.com',
+      's3.amazonaws.com',
+      'blob.core.windows.net',
+      'cdn.sanity.io',
+      'hubspot.com',
+      'hubspotusercontent',
+      'hubspot.net',
+      'hs-cms',
+    ];
+
+    for (const domain of imageHostingDomains) {
+      if (hostname.includes(domain)) {
+        return true;
+      }
+    }
+
+    // Check for common image patterns in URL
+    const imagePatterns = [
+      '/images/',
+      '/img/',
+      '/media/',
+      '/uploads/',
+      '/assets/',
+      '/static/',
+      '/photos/',
+      '/pictures/',
+      'image',
+      'photo',
+      'thumbnail',
+      'featured',
+    ];
+
+    for (const pattern of imagePatterns) {
+      if (pathname.includes(pattern) || urlObj.search.toLowerCase().includes(pattern)) {
+        // Additional check: URL should not be a redirect or tracking link
+        if (!pathname.includes('/click') && !pathname.includes('/track') && !pathname.includes('/redirect')) {
+          return true;
+        }
+      }
+    }
+
+    // If URL has a query string that looks like an image service
+    if (urlObj.search && (urlObj.search.includes('format=') || urlObj.search.includes('width=') || urlObj.search.includes('height='))) {
+      return true;
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}

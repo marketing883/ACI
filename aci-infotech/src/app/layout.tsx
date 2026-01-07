@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navigation from "@/components/layout/Navigation";
-import Footer from "@/components/layout/Footer";
-import ChatWidgetWrapper from "@/components/chat/ChatWidgetWrapper";
+import ConditionalLayout from "@/components/layout/ConditionalLayout";
 
 export const metadata: Metadata = {
   title: {
@@ -67,10 +65,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <Navigation />
-        <main className="pt-20">{children}</main>
-        <Footer />
-        <ChatWidgetWrapper />
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   );

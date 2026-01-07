@@ -16,6 +16,8 @@ import {
   Settings,
   ChevronRight,
   User,
+  Video,
+  FileCheck,
 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 
@@ -24,6 +26,8 @@ const navItems = [
   { href: '/admin/contacts', label: 'Contact Submissions', icon: Users },
   { href: '/admin/case-studies', label: 'Case Studies', icon: FileText },
   { href: '/admin/blog', label: 'Blog Posts', icon: BookOpen },
+  { href: '/admin/whitepapers', label: 'Whitepapers', icon: FileCheck },
+  { href: '/admin/webinars', label: 'Webinars', icon: Video },
   { href: '/admin/subscribers', label: 'Newsletter', icon: Mail },
 ];
 
