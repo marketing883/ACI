@@ -7,7 +7,7 @@ import {
   TestimonialsSection,
   NewsSection,
   AwardsSection,
-  BlogPreviewSection,
+  DynamicBlogSection,
   ArqAISection,
 } from '@/components/sections';
 
@@ -133,38 +133,6 @@ const badges = [
   { name: '5 Best Data Analytics Companies', description: 'To Watch in 2025', image_url: '/images/certifications/best-data-analytics.png' },
 ];
 
-const blogPosts = [
-  {
-    slug: 'why-enterprise-ai-fails',
-    title: 'Why Most Financial AI Initiatives Fail, and How CDOs Can Make Them Stick',
-    excerpt: 'BFSI enterprises struggle with AI implementations. Here\'s what actually works based on 50+ deployments.',
-    author: 'Engineering Team',
-    date: 'July 17, 2025',
-    category: 'AI & ML',
-    featured_image: '/images/blog/ai-bfsi.jpg',
-    read_time: '8 min',
-  },
-  {
-    slug: 'enterprise-app-modernization',
-    title: 'How CIOs Are Rebuilding for Real-World Agility',
-    excerpt: 'Application modernization isn\'t about rewriting everything. Here\'s the pragmatic approach that actually works.',
-    author: 'Engineering Team',
-    date: 'July 16, 2025',
-    category: 'Digital Transformation',
-    featured_image: '/images/blog/app-modernization.jpg',
-    read_time: '7 min',
-  },
-  {
-    slug: 'post-quantum-cryptography',
-    title: 'Preparing Enterprises for the Quantum Era in Cybersecurity',
-    excerpt: 'Post-quantum cryptography is coming. Here\'s what enterprises need to know and do today.',
-    author: 'Security Team',
-    date: 'July 15, 2025',
-    category: 'Cybersecurity',
-    featured_image: '/images/blog/quantum-crypto.jpg',
-    read_time: '10 min',
-  },
-];
 
 export default function HomePage() {
   return (
@@ -428,12 +396,11 @@ export default function HomePage() {
         badges={badges}
       />
 
-      {/* Blog Preview Section */}
-      <BlogPreviewSection
+      {/* Blog Preview Section - Dynamic from Database */}
+      <DynamicBlogSection
         headline="Thoughts and Insights"
         subheadline="Technical depth from engineers who've been there"
-        posts={blogPosts}
-        viewAllUrl="/blog"
+        limit={3}
       />
 
       {/* Final CTA Section */}

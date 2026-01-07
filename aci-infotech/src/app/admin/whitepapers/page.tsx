@@ -11,36 +11,36 @@ import {
   EyeOff,
   MoreVertical,
   AlertCircle,
-  Clock,
-  Upload,
+  Download,
+  FileText,
   Filter,
   X,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
-interface BlogPost {
+interface Whitepaper {
   id: string;
   slug: string;
   title: string;
-  excerpt: string;
-  author_name: string;
+  description: string;
   category: string;
   status: string;
-  read_time_minutes: number;
+  download_count: number;
+  file_url: string | null;
+  cover_image: string | null;
+  requires_registration: boolean;
   published_at: string | null;
   created_at: string;
-  updated_at: string;
-  featured_image: string | null;
 }
 
-export default function BlogAdmin() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+export default function WhitepapersAdmin() {
+  const [whitepapers, setWhitepapers] = useState<Whitepaper[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [configured, setConfigured] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [deleteModal, setDeleteModal] = useState<BlogPost | null>(null);
+  const [deleteModal, setDeleteModal] = useState<Whitepaper | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -48,24 +48,24 @@ export default function BlogAdmin() {
     setConfigured(isConfigured);
 
     if (isConfigured) {
-      fetchPosts();
+      fetchWhitepapers();
     } else {
-      setPosts([]);
+      setWhitepapers([]);
       setLoading(false);
     }
   }, []);
 
-  async function fetchPosts() {
+  async function fetchWhitepapers() {
     try {
       const { data, error } = await supabase
-        .from('blog_posts')
-        .select('id, slug, title, excerpt, author_name, category, status, read_time_minutes, published_at, created_at, updated_at, featured_image')
-        .order('published_at', { ascending: false, nullsFirst: false });
+        .from('whitepapers')
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setPosts(data || []);
+      setWhitepapers(data || []);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error('Error fetching whitepapers:', error);
     } finally {
       setLoading(false);
     }
@@ -78,54 +78,45 @@ export default function BlogAdmin() {
       updates.published_at = new Date().toISOString();
     }
 
-    if (!configured) {
-      setPosts(posts.map(p =>
-        p.id === id ? { ...p, status: newStatus, published_at: updates.published_at || p.published_at } : p
-      ));
-      setActiveMenu(null);
-      return;
-    }
-
     try {
       const { error } = await supabase
-        .from('blog_posts')
+        .from('whitepapers')
         .update(updates)
         .eq('id', id);
 
       if (error) throw error;
-      setPosts(posts.map(p => p.id === id ? { ...p, ...updates } : p));
+      setWhitepapers(whitepapers.map(w => w.id === id ? { ...w, ...updates } : w));
     } catch (error) {
-      console.error('Error updating post:', error);
+      console.error('Error updating whitepaper:', error);
     }
     setActiveMenu(null);
   }
 
-  async function deletePost(post: BlogPost) {
+  async function deleteWhitepaper(whitepaper: Whitepaper) {
     setIsDeleting(true);
     try {
       const { error } = await supabase
-        .from('blog_posts')
+        .from('whitepapers')
         .delete()
-        .eq('id', post.id);
+        .eq('id', whitepaper.id);
 
       if (error) throw error;
-      setPosts(posts.filter(p => p.id !== post.id));
+      setWhitepapers(whitepapers.filter(w => w.id !== whitepaper.id));
       setDeleteModal(null);
     } catch (error) {
-      console.error('Error deleting post:', error);
-      alert('Failed to delete post');
+      console.error('Error deleting whitepaper:', error);
+      alert('Failed to delete whitepaper');
     } finally {
       setIsDeleting(false);
     }
   }
 
-  const filteredPosts = posts.filter((post) => {
+  const filteredWhitepapers = whitepapers.filter((wp) => {
     const matchesSearch = searchQuery === '' ||
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.author_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.category?.toLowerCase().includes(searchQuery.toLowerCase());
+      wp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      wp.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesStatus = statusFilter === 'all' || post.status === statusFilter;
+    const matchesStatus = statusFilter === 'all' || wp.status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
@@ -140,40 +131,32 @@ export default function BlogAdmin() {
   }
 
   const stats = {
-    total: posts.length,
-    published: posts.filter(p => p.status === 'published').length,
-    draft: posts.filter(p => p.status === 'draft').length,
+    total: whitepapers.length,
+    published: whitepapers.filter(w => w.status === 'published').length,
+    draft: whitepapers.filter(w => w.status === 'draft').length,
+    totalDownloads: whitepapers.reduce((sum, w) => sum + (w.download_count || 0), 0),
   };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Blog Posts</h1>
-          <p className="text-gray-600">Create and manage blog articles</p>
+          <h1 className="text-2xl font-bold text-gray-900">Whitepapers</h1>
+          <p className="text-gray-600">Manage downloadable resources</p>
         </div>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/admin/blog/import"
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <Upload className="w-5 h-5" />
-            Import
-          </Link>
-          <Link
-            href="/admin/blog/new"
-            className="flex items-center gap-2 px-4 py-2 bg-[var(--aci-primary)] text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-            New Post
-          </Link>
-        </div>
+        <Link
+          href="/admin/whitepapers/new"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--aci-primary)] text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <Plus className="w-5 h-5" />
+          New Whitepaper
+        </Link>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm p-4">
-          <p className="text-sm text-gray-500">Total Posts</p>
+          <p className="text-sm text-gray-500">Total</p>
           <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
         </div>
         <div className="bg-white rounded-xl shadow-sm p-4">
@@ -184,6 +167,10 @@ export default function BlogAdmin() {
           <p className="text-sm text-gray-500">Drafts</p>
           <p className="text-2xl font-bold text-yellow-600">{stats.draft}</p>
         </div>
+        <div className="bg-white rounded-xl shadow-sm p-4">
+          <p className="text-sm text-gray-500">Total Downloads</p>
+          <p className="text-2xl font-bold text-blue-600">{stats.totalDownloads}</p>
+        </div>
       </div>
 
       {!configured && (
@@ -192,7 +179,7 @@ export default function BlogAdmin() {
           <div>
             <p className="font-medium text-yellow-800">Configure Supabase</p>
             <p className="text-sm text-yellow-700">
-              Add Supabase credentials to manage blog posts. Use the Import feature to bring in existing content.
+              Add Supabase credentials to manage whitepapers.
             </p>
           </div>
         </div>
@@ -205,7 +192,7 @@ export default function BlogAdmin() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search posts..."
+              placeholder="Search whitepapers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
@@ -226,24 +213,25 @@ export default function BlogAdmin() {
         </div>
       </div>
 
-      {/* Posts Table */}
+      {/* Whitepapers Table */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="p-8 text-center text-gray-500">Loading...</div>
-        ) : filteredPosts.length === 0 ? (
+        ) : filteredWhitepapers.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
-            {posts.length === 0 ? (
+            {whitepapers.length === 0 ? (
               <div>
-                <p className="mb-4">No posts yet</p>
+                <FileText className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                <p className="mb-4">No whitepapers yet</p>
                 <Link
-                  href="/admin/blog/import"
+                  href="/admin/whitepapers/new"
                   className="text-blue-600 hover:underline"
                 >
-                  Import existing blog posts
+                  Create your first whitepaper
                 </Link>
               </div>
             ) : (
-              'No posts match your search'
+              'No whitepapers match your search'
             )}
           </div>
         ) : (
@@ -255,13 +243,13 @@ export default function BlogAdmin() {
                     Title
                   </th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Author
-                  </th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Category
                   </th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
+                  </th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Downloads
                   </th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Published
@@ -272,52 +260,64 @@ export default function BlogAdmin() {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {filteredPosts.map((post) => (
-                  <tr key={post.id} className="hover:bg-gray-50">
+                {filteredWhitepapers.map((wp) => (
+                  <tr key={wp.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
-                      <div>
-                        <p className="font-medium text-gray-900 line-clamp-1">{post.title}</p>
-                        <p className="text-sm text-gray-500 flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {post.read_time_minutes || 5} min read
-                        </p>
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-8 h-8 text-red-500" />
+                        <div>
+                          <p className="font-medium text-gray-900 line-clamp-1">{wp.title}</p>
+                          <p className="text-sm text-gray-500 line-clamp-1">{wp.description}</p>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{post.author_name || 'Unknown'}</td>
                     <td className="px-6 py-4">
-                      {post.category && (
-                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
-                          {post.category}
+                      {wp.category && (
+                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-700">
+                          {wp.category}
                         </span>
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          post.status === 'published'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-yellow-100 text-yellow-700'
-                        }`}
-                      >
-                        {post.status === 'published' ? 'Published' : 'Draft'}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${
+                            wp.status === 'published'
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-yellow-100 text-yellow-700'
+                          }`}
+                        >
+                          {wp.status === 'published' ? 'Published' : 'Draft'}
+                        </span>
+                        {wp.requires_registration && (
+                          <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
+                            Gated
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-1 text-gray-600">
+                        <Download className="w-4 h-4" />
+                        {wp.download_count || 0}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
-                      {formatDate(post.published_at)}
+                      {formatDate(wp.published_at)}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="relative">
                         <button
-                          onClick={() => setActiveMenu(activeMenu === post.id ? null : post.id)}
+                          onClick={() => setActiveMenu(activeMenu === wp.id ? null : wp.id)}
                           className="p-2 hover:bg-gray-100 rounded-lg"
                         >
                           <MoreVertical className="w-5 h-5 text-gray-400" />
                         </button>
-                        {activeMenu === post.id && (
+                        {activeMenu === wp.id && (
                           <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-10">
-                            {post.status === 'published' && (
+                            {wp.status === 'published' && (
                               <Link
-                                href={`/blog/${post.slug}`}
+                                href={`/resources/whitepapers/${wp.slug}`}
                                 target="_blank"
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                               >
@@ -326,17 +326,17 @@ export default function BlogAdmin() {
                               </Link>
                             )}
                             <Link
-                              href={`/admin/blog/${post.id}/edit`}
+                              href={`/admin/whitepapers/${wp.id}/edit`}
                               className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                             >
                               <Edit2 className="w-4 h-4" />
                               Edit
                             </Link>
                             <button
-                              onClick={() => togglePublished(post.id, post.status)}
+                              onClick={() => togglePublished(wp.id, wp.status)}
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                             >
-                              {post.status === 'published' ? (
+                              {wp.status === 'published' ? (
                                 <>
                                   <EyeOff className="w-4 h-4" />
                                   Unpublish
@@ -350,7 +350,7 @@ export default function BlogAdmin() {
                             </button>
                             <button
                               onClick={() => {
-                                setDeleteModal(post);
+                                setDeleteModal(wp);
                                 setActiveMenu(null);
                               }}
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
@@ -375,7 +375,7 @@ export default function BlogAdmin() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Delete Blog Post</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Delete Whitepaper</h3>
               <button
                 onClick={() => setDeleteModal(null)}
                 className="p-1 hover:bg-gray-100 rounded"
@@ -384,13 +384,13 @@ export default function BlogAdmin() {
               </button>
             </div>
             <p className="text-gray-600 mb-2">
-              Are you sure you want to delete this post?
+              Are you sure you want to delete this whitepaper?
             </p>
             <p className="font-medium text-gray-900 mb-4 p-3 bg-gray-50 rounded-lg">
               {deleteModal.title}
             </p>
             <p className="text-sm text-red-600 mb-6">
-              This action cannot be undone.
+              This action cannot be undone. Download history will be preserved.
             </p>
             <div className="flex gap-3 justify-end">
               <button
@@ -400,7 +400,7 @@ export default function BlogAdmin() {
                 Cancel
               </button>
               <button
-                onClick={() => deletePost(deleteModal)}
+                onClick={() => deleteWhitepaper(deleteModal)}
                 disabled={isDeleting}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
               >

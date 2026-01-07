@@ -4,4 +4,5 @@ export { default as TestimonialsSection } from './TestimonialsSection';
 export { default as NewsSection } from './NewsSection';
 export { default as AwardsSection } from './AwardsSection';
 export { default as BlogPreviewSection } from './BlogPreviewSection';
+export { default as DynamicBlogSection } from './DynamicBlogSection';
 export { default as ArqAISection } from './ArqAISection';

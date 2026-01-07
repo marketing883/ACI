@@ -1,0 +1,483 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import {
+  ArrowLeft,
+  Save,
+  Loader2,
+  Upload,
+  Sparkles,
+  FileText,
+  Image as ImageIcon,
+  X,
+} from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+
+const categories = [
+  'Data & Analytics',
+  'AI & Machine Learning',
+  'Cloud Infrastructure',
+  'Digital Transformation',
+  'Cybersecurity',
+  'DevOps & Automation',
+  'Enterprise Applications',
+];
+
+export default function NewWhitepaperPage() {
+  const router = useRouter();
+  const [saving, setSaving] = useState(false);
+  const [generating, setGenerating] = useState<string | null>(null);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+
+  // Form state
+  const [title, setTitle] = useState('');
+  const [slug, setSlug] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [tags, setTags] = useState('');
+  const [fileUrl, setFileUrl] = useState('');
+  const [coverImage, setCoverImage] = useState('');
+  const [requiresRegistration, setRequiresRegistration] = useState(true);
+  const [metaTitle, setMetaTitle] = useState('');
+  const [metaDescription, setMetaDescription] = useState('');
+  const [status, setStatus] = useState<'draft' | 'published'>('draft');
+
+  // Auto-generate slug from title
+  const generateSlug = (text: string) => {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+  };
+
+  const handleTitleChange = (value: string) => {
+    setTitle(value);
+    if (!slug || slug === generateSlug(title)) {
+      setSlug(generateSlug(value));
+    }
+  };
+
+  // AI Generate description
+  const generateDescription = async () => {
+    if (!title) {
+      alert('Please enter a title first');
+      return;
+    }
+
+    setGenerating('description');
+    try {
+      const response = await fetch('/api/admin/content-generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'whitepaper',
+          field: 'description',
+          context: { title, category },
+        }),
+      });
+
+      const data = await response.json();
+      if (data.content) {
+        setDescription(data.content);
+      }
+    } catch (error) {
+      console.error('Error generating description:', error);
+    } finally {
+      setGenerating(null);
+    }
+  };
+
+  // File upload handlers
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      alert('Please upload a PDF file');
+      return;
+    }
+
+    setUploadingFile(true);
+    try {
+      const fileName = `whitepapers/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const { data, error } = await supabase.storage
+        .from('whitepaper-files')
+        .upload(fileName, file, { upsert: true });
+
+      if (error) throw error;
+
+      const { data: urlData } = supabase.storage
+        .from('whitepaper-files')
+        .getPublicUrl(fileName);
+
+      setFileUrl(urlData.publicUrl);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Failed to upload file');
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file');
+      return;
+    }
+
+    setUploadingCover(true);
+    try {
+      const fileName = `covers/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const { data, error } = await supabase.storage
+        .from('whitepaper-files')
+        .upload(fileName, file, { upsert: true });
+
+      if (error) throw error;
+
+      const { data: urlData } = supabase.storage
+        .from('whitepaper-files')
+        .getPublicUrl(fileName);
+
+      setCoverImage(urlData.publicUrl);
+    } catch (error) {
+      console.error('Error uploading cover:', error);
+      alert('Failed to upload cover image');
+    } finally {
+      setUploadingCover(false);
+    }
+  };
+
+  // Save whitepaper
+  const handleSave = async () => {
+    if (!title || !slug) {
+      alert('Title and slug are required');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const whitepaperData = {
+        title,
+        slug,
+        description,
+        category,
+        tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+        file_url: fileUrl || null,
+        cover_image: coverImage || null,
+        requires_registration: requiresRegistration,
+        meta_title: metaTitle || title,
+        meta_description: metaDescription || description?.substring(0, 160),
+        status,
+        published_at: status === 'published' ? new Date().toISOString() : null,
+        download_count: 0,
+      };
+
+      const { error } = await supabase
+        .from('whitepapers')
+        .insert(whitepaperData);
+
+      if (error) throw error;
+
+      router.push('/admin/whitepapers');
+    } catch (error) {
+      console.error('Error saving whitepaper:', error);
+      alert('Failed to save whitepaper');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/admin/whitepapers"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">New Whitepaper</h1>
+            <p className="text-gray-500">Create a downloadable resource</p>
+          </div>
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={() => { setStatus('draft'); handleSave(); }}
+            disabled={saving}
+            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+          >
+            Save Draft
+          </button>
+          <button
+            onClick={() => { setStatus('published'); handleSave(); }}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+          >
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            Publish
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        {/* Basic Info */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Title *
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => handleTitleChange(e.target.value)}
+                placeholder="e.g., The Complete Guide to Enterprise Data Mesh"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                URL Slug *
+              </label>
+              <div className="flex items-center gap-2">
+                <span className="text-gray-500">/resources/whitepapers/</span>
+                <input
+                  type="text"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Description
+                </label>
+                <button
+                  onClick={generateDescription}
+                  disabled={generating === 'description'}
+                  className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                >
+                  {generating === 'description' ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-3 h-3" />
+                  )}
+                  Generate with AI
+                </button>
+              </div>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="A compelling description of what readers will learn..."
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Category
+                </label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select category</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tags
+                </label>
+                <input
+                  type="text"
+                  value={tags}
+                  onChange={(e) => setTags(e.target.value)}
+                  placeholder="data, analytics, guide (comma separated)"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* File Upload */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold mb-4">Files</h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* PDF Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                PDF File
+              </label>
+              {fileUrl ? (
+                <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <FileText className="w-8 h-8 text-green-600" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-green-800 truncate">
+                      File uploaded
+                    </p>
+                    <a
+                      href={fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-green-600 hover:underline"
+                    >
+                      View PDF
+                    </a>
+                  </div>
+                  <button
+                    onClick={() => setFileUrl('')}
+                    className="p-1 hover:bg-green-100 rounded"
+                  >
+                    <X className="w-4 h-4 text-green-600" />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                  {uploadingFile ? (
+                    <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+                  ) : (
+                    <Upload className="w-8 h-8 text-gray-400" />
+                  )}
+                  <span className="text-sm text-gray-600">
+                    {uploadingFile ? 'Uploading...' : 'Upload PDF file'}
+                  </span>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    disabled={uploadingFile}
+                  />
+                </label>
+              )}
+            </div>
+
+            {/* Cover Image Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cover Image
+              </label>
+              {coverImage ? (
+                <div className="relative">
+                  <img
+                    src={coverImage}
+                    alt="Cover preview"
+                    className="w-full h-40 object-cover rounded-lg"
+                  />
+                  <button
+                    onClick={() => setCoverImage('')}
+                    className="absolute top-2 right-2 p-1 bg-white rounded-full shadow hover:bg-gray-100"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                  {uploadingCover ? (
+                    <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+                  ) : (
+                    <ImageIcon className="w-8 h-8 text-gray-400" />
+                  )}
+                  <span className="text-sm text-gray-600">
+                    {uploadingCover ? 'Uploading...' : 'Upload cover image'}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverUpload}
+                    className="hidden"
+                    disabled={uploadingCover}
+                  />
+                </label>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Lead Capture Settings */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold mb-4">Lead Capture</h2>
+
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={requiresRegistration}
+              onChange={(e) => setRequiresRegistration(e.target.checked)}
+              className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <div>
+              <span className="font-medium text-gray-900">Require registration to download</span>
+              <p className="text-sm text-gray-500">
+                Users must provide their email before downloading (recommended for lead generation)
+              </p>
+            </div>
+          </label>
+        </div>
+
+        {/* SEO */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold mb-4">SEO Settings</h2>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Meta Title
+              </label>
+              <input
+                type="text"
+                value={metaTitle}
+                onChange={(e) => setMetaTitle(e.target.value)}
+                placeholder={title || 'Page title for search engines'}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {metaTitle.length || title.length}/60 characters
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Meta Description
+              </label>
+              <textarea
+                value={metaDescription}
+                onChange={(e) => setMetaDescription(e.target.value)}
+                placeholder={description?.substring(0, 160) || 'Description for search engines'}
+                rows={2}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {metaDescription.length || description?.substring(0, 160).length || 0}/160 characters
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
