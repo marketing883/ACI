@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
+import ChatWidgetWrapper from "@/components/chat/ChatWidgetWrapper";
 
 export const metadata: Metadata = {
   title: {
@@ -69,6 +70,7 @@ export default function RootLayout({
         <Navigation />
         <main className="pt-20">{children}</main>
         <Footer />
+        <ChatWidgetWrapper />
       </body>
     </html>
   );
