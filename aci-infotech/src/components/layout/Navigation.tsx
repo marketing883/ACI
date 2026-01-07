@@ -2,52 +2,100 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
+import {
+  Menu,
+  X,
+  ChevronDown,
+  ArrowRight,
+  Database,
+  Brain,
+  Cloud,
+  Target,
+  Cog,
+  Shield,
+  Building2,
+  ShoppingCart,
+  Heart,
+  Factory,
+  Zap,
+  Snowflake,
+  MessageSquare,
+  Server,
+  FileText,
+  BookOpen,
+  Users,
+  Award,
+  Download,
+  Play,
+} from 'lucide-react';
 import Button from '@/components/ui/Button';
 
-// Navigation data
+// Navigation data with icons
 const NAV_DATA = {
   services: [
-    { label: 'Data Engineering', href: '/services/data-engineering', description: 'Platforms that feed AI and analytics' },
-    { label: 'Applied AI & ML', href: '/services/applied-ai-ml', description: 'From GenAI pilots to production ML' },
-    { label: 'Cloud Modernization', href: '/services/cloud-modernization', description: 'Multi-cloud without the chaos' },
-    { label: 'MarTech & CDP', href: '/services/martech-cdp', description: 'Customer 360 that actually works' },
-    { label: 'Digital Transformation', href: '/services/digital-transformation', description: 'Intelligent process automation' },
-    { label: 'Cyber Security', href: '/services/cyber-security', description: 'Security built in, not bolted on' },
+    {
+      label: 'Data Engineering',
+      href: '/services/data-engineering',
+      description: 'Platforms that feed AI and analytics',
+      icon: Database,
+      color: 'text-blue-500',
+    },
+    {
+      label: 'Applied AI & ML',
+      href: '/services/applied-ai-ml',
+      description: 'From GenAI pilots to production ML',
+      icon: Brain,
+      color: 'text-purple-500',
+    },
+    {
+      label: 'Cloud Modernization',
+      href: '/services/cloud-modernization',
+      description: 'Multi-cloud without the chaos',
+      icon: Cloud,
+      color: 'text-cyan-500',
+    },
+    {
+      label: 'MarTech & CDP',
+      href: '/services/martech-cdp',
+      description: 'Customer 360 that actually works',
+      icon: Target,
+      color: 'text-pink-500',
+    },
+    {
+      label: 'Digital Transformation',
+      href: '/services/digital-transformation',
+      description: 'Intelligent process automation',
+      icon: Cog,
+      color: 'text-orange-500',
+    },
+    {
+      label: 'Cyber Security',
+      href: '/services/cyber-security',
+      description: 'Security built in, not bolted on',
+      icon: Shield,
+      color: 'text-red-500',
+    },
   ],
   platforms: [
-    { label: 'Salesforce', href: '/platforms/salesforce' },
-    { label: 'ServiceNow', href: '/platforms/servicenow' },
-    { label: 'Snowflake', href: '/platforms/snowflake' },
-    { label: 'SAP', href: '/platforms/sap' },
-    { label: 'Mulesoft', href: '/platforms/mulesoft' },
-    { label: 'Adobe', href: '/platforms/adobe' },
-    { label: 'AWS', href: '/platforms/aws' },
+    { label: 'Databricks', href: '/platforms/databricks', icon: Database, color: 'text-[#FF3621]' },
+    { label: 'Snowflake', href: '/platforms/snowflake', icon: Snowflake, color: 'text-[#29B5E8]' },
+    { label: 'AWS', href: '/platforms/aws', icon: Cloud, color: 'text-[#FF9900]' },
+    { label: 'Azure', href: '/platforms/azure', icon: Cloud, color: 'text-[#0078D4]' },
+    { label: 'Salesforce', href: '/platforms/salesforce', icon: Users, color: 'text-[#00A1E0]' },
+    { label: 'SAP', href: '/platforms/sap', icon: Server, color: 'text-[#0FAAFF]' },
+    { label: 'Braze', href: '/platforms/braze', icon: MessageSquare, color: 'text-[#ED4B4B]' },
   ],
   industries: [
-    { label: 'Banking & Financial Services', href: '/industries/banking' },
-    { label: 'Healthcare', href: '/industries/healthcare' },
-    { label: 'Retail & CPG', href: '/industries/retail' },
-    { label: 'Manufacturing', href: '/industries/manufacturing' },
-    { label: 'Hospitality', href: '/industries/hospitality' },
-    { label: 'Education', href: '/industries/education' },
-    { label: 'Automotive', href: '/industries/automotive' },
-    { label: 'Energy & Utilities', href: '/industries/energy' },
-    { label: 'Public Sector', href: '/industries/public-sector' },
-    { label: 'Oil & Gas', href: '/industries/oil-gas' },
+    { label: 'Financial Services', href: '/industries/financial-services', icon: Building2, color: 'text-emerald-600' },
+    { label: 'Retail & Consumer', href: '/industries/retail', icon: ShoppingCart, color: 'text-blue-600' },
+    { label: 'Healthcare', href: '/industries/healthcare', icon: Heart, color: 'text-red-500' },
+    { label: 'Manufacturing', href: '/industries/manufacturing', icon: Factory, color: 'text-orange-600' },
+    { label: 'Energy & Utilities', href: '/industries/energy', icon: Zap, color: 'text-yellow-500' },
   ],
   resources: [
-    { label: 'Case Studies', href: '/case-studies' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Whitepapers', href: '/resources/whitepapers' },
-    { label: 'Webinars', href: '/resources/webinars' },
-  ],
-  about: [
-    { label: 'Who We Are', href: '/about' },
-    { label: 'Leadership Team', href: '/about#leadership' },
-    { label: 'Careers', href: '/careers' },
+    { label: 'Case Studies', href: '/case-studies', icon: Award, description: 'Real results from real clients' },
+    { label: 'Blog', href: '/blog', icon: BookOpen, description: 'Insights and thought leadership' },
   ],
 };
 
@@ -57,7 +105,6 @@ export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 
-  // Handle scroll for sticky header effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -66,13 +113,11 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setActiveDropdown(null);
   }, [pathname]);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -89,19 +134,16 @@ export default function Navigation() {
       className={`
         fixed top-0 left-0 right-0 z-50
         transition-all duration-300
-        ${isScrolled ? 'bg-white shadow-md' : 'bg-white/95 backdrop-blur-sm'}
+        ${isScrolled ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-sm'}
       `}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <div className="relative w-40 h-12">
-              {/* Placeholder for logo - replace with actual logo */}
-              <span className="text-2xl font-bold text-[var(--aci-primary)]">
-                ACI Infotech
-              </span>
-            </div>
+            <span className="text-2xl font-bold text-[var(--aci-primary)]">
+              ACI Infotech
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -112,8 +154,9 @@ export default function Navigation() {
               isActive={activeDropdown === 'services'}
               onMouseEnter={() => setActiveDropdown('services')}
               onMouseLeave={() => setActiveDropdown(null)}
+              wide
             >
-              <MegaMenuServices items={NAV_DATA.services} />
+              <ServicesMegaMenu items={NAV_DATA.services} />
             </NavDropdown>
 
             {/* Platforms Dropdown */}
@@ -123,7 +166,7 @@ export default function Navigation() {
               onMouseEnter={() => setActiveDropdown('platforms')}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <SimpleDropdown items={NAV_DATA.platforms} columns={2} />
+              <PlatformsMegaMenu items={NAV_DATA.platforms} />
             </NavDropdown>
 
             {/* Industries Dropdown */}
@@ -133,7 +176,7 @@ export default function Navigation() {
               onMouseEnter={() => setActiveDropdown('industries')}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <SimpleDropdown items={NAV_DATA.industries} columns={2} />
+              <IndustriesMegaMenu items={NAV_DATA.industries} />
             </NavDropdown>
 
             {/* Resources Dropdown */}
@@ -143,18 +186,16 @@ export default function Navigation() {
               onMouseEnter={() => setActiveDropdown('resources')}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <SimpleDropdown items={NAV_DATA.resources} columns={1} />
+              <ResourcesMegaMenu items={NAV_DATA.resources} />
             </NavDropdown>
 
-            {/* About Dropdown */}
-            <NavDropdown
-              label="About"
-              isActive={activeDropdown === 'about'}
-              onMouseEnter={() => setActiveDropdown('about')}
-              onMouseLeave={() => setActiveDropdown(null)}
+            {/* About Link */}
+            <Link
+              href="/about"
+              className="px-4 py-2 text-sm font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
             >
-              <SimpleDropdown items={NAV_DATA.about} columns={1} />
-            </NavDropdown>
+              About
+            </Link>
 
             {/* Contact Link */}
             <Link
@@ -167,7 +208,7 @@ export default function Navigation() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
-            <Button href="/contact" variant="primary" size="md">
+            <Button href="/contact?reason=architecture-call" variant="primary" size="md">
               Talk to an Architect
             </Button>
           </div>
@@ -178,11 +219,7 @@ export default function Navigation() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </nav>
@@ -204,43 +241,30 @@ interface NavDropdownProps {
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   children: React.ReactNode;
+  wide?: boolean;
 }
 
-function NavDropdown({
-  label,
-  isActive,
-  onMouseEnter,
-  onMouseLeave,
-  children,
-}: NavDropdownProps) {
+function NavDropdown({ label, isActive, onMouseEnter, onMouseLeave, children, wide }: NavDropdownProps) {
   return (
-    <div
-      className="relative"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
+    <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <button
         className={`
-          flex items-center gap-1 px-4 py-2 text-sm font-medium
-          transition-colors
+          flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors
           ${isActive ? 'text-[var(--aci-primary)]' : 'text-[var(--aci-secondary)] hover:text-[var(--aci-primary)]'}
         `}
       >
         {label}
-        <ChevronDown
-          className={`w-4 h-4 transition-transform ${isActive ? 'rotate-180' : ''}`}
-        />
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'rotate-180' : ''}`} />
       </button>
 
-      {/* Dropdown Content */}
       <div
         className={`
-          absolute top-full left-0 pt-2
+          absolute top-full ${wide ? 'left-1/2 -translate-x-1/2' : 'left-0'} pt-4
           transition-all duration-200
           ${isActive ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
         `}
       >
-        <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
           {children}
         </div>
       </div>
@@ -248,60 +272,247 @@ function NavDropdown({
   );
 }
 
-// Mega Menu for Services
-interface MegaMenuServicesProps {
-  items: { label: string; href: string; description: string }[];
+// Grand Services Mega Menu with Video Promo
+interface ServicesMegaMenuProps {
+  items: typeof NAV_DATA.services;
 }
 
-function MegaMenuServices({ items }: MegaMenuServicesProps) {
+function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
   return (
-    <div className="p-6 w-[600px]">
-      <div className="grid grid-cols-2 gap-4">
-        {items.map((item) => (
+    <div className="flex w-[850px]">
+      {/* Services List */}
+      <div className="flex-1 p-6 bg-gradient-to-br from-gray-50 to-white">
+        <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+          Our Services
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {items.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="group flex items-start gap-3 p-3 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200"
+              >
+                <div className="w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-blue-50 flex items-center justify-center transition-colors">
+                  <Icon className={`w-5 h-5 ${item.color} transition-transform group-hover:scale-110`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors text-sm">
+                    {item.label}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-0.5 line-clamp-1">{item.description}</div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+        <div className="mt-4 pt-4 border-t border-gray-100">
           <Link
-            key={item.href}
-            href={item.href}
-            className="group p-4 rounded-lg hover:bg-gray-50 transition-colors"
+            href="/services"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--aci-primary)] hover:gap-3 transition-all"
           >
-            <div className="font-medium text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
-              {item.label}
-            </div>
-            <div className="text-sm text-gray-500 mt-1">{item.description}</div>
+            View all services <ArrowRight className="w-4 h-4" />
           </Link>
-        ))}
+        </div>
       </div>
-      <div className="mt-4 pt-4 border-t border-gray-100">
+
+      {/* Video Promo Section */}
+      <div className="w-[280px] bg-gradient-to-br from-[var(--aci-secondary)] to-[#1a2a4a] p-6 flex flex-col justify-between">
+        <div>
+          <div className="text-xs font-semibold text-blue-300 uppercase tracking-wider mb-3">
+            Featured
+          </div>
+          <h3 className="text-lg font-bold text-white mb-2">
+            Enterprise Data Transformation
+          </h3>
+          <p className="text-sm text-gray-300 mb-4">
+            See how we helped MSCI save $12M with unified data platform
+          </p>
+        </div>
+
+        {/* Video Placeholder with Play Button */}
+        <div className="relative aspect-video bg-black/30 rounded-xl overflow-hidden group cursor-pointer">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-[var(--aci-primary)]/20" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+              <Play className="w-5 h-5 text-[var(--aci-primary)] ml-1" />
+            </div>
+          </div>
+          <div className="absolute bottom-2 left-2 right-2">
+            <span className="text-xs text-white/80">2 min watch</span>
+          </div>
+        </div>
+
         <Link
-          href="/services"
-          className="flex items-center gap-2 text-sm font-medium text-[var(--aci-primary)] hover:underline"
+          href="/case-studies/msci-data-automation"
+          className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-white hover:text-blue-200 transition-colors"
         >
-          View all services
-          <ArrowRight className="w-4 h-4" />
+          View case study <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
     </div>
   );
 }
 
-// Simple Dropdown for other menus
-interface SimpleDropdownProps {
-  items: { label: string; href: string }[];
-  columns?: 1 | 2;
+// Platforms Mega Menu with Icons
+interface PlatformsMegaMenuProps {
+  items: typeof NAV_DATA.platforms;
 }
 
-function SimpleDropdown({ items, columns = 1 }: SimpleDropdownProps) {
+function PlatformsMegaMenu({ items }: PlatformsMegaMenuProps) {
   return (
-    <div className={`p-4 ${columns === 2 ? 'w-[400px]' : 'w-[220px]'}`}>
-      <div className={`grid ${columns === 2 ? 'grid-cols-2' : 'grid-cols-1'} gap-1`}>
-        {items.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="px-4 py-2 text-sm text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] hover:bg-gray-50 rounded-lg transition-colors"
-          >
-            {item.label}
-          </Link>
-        ))}
+    <div className="p-6 w-[480px] bg-gradient-to-br from-gray-50 to-white">
+      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+        Technology Partners
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        {items.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group flex items-center gap-3 p-3 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200"
+            >
+              <div className="w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-gray-50 flex items-center justify-center transition-colors border border-gray-200">
+                <Icon className={`w-5 h-5 ${item.color} transition-transform group-hover:scale-110`} />
+              </div>
+              <span className="font-medium text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+      <div className="mt-4 pt-4 border-t border-gray-100">
+        <Link
+          href="/platforms"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--aci-primary)] hover:gap-3 transition-all"
+        >
+          View all platforms <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// Industries Mega Menu
+interface IndustriesMegaMenuProps {
+  items: typeof NAV_DATA.industries;
+}
+
+function IndustriesMegaMenu({ items }: IndustriesMegaMenuProps) {
+  return (
+    <div className="p-6 w-[400px] bg-gradient-to-br from-gray-50 to-white">
+      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+        Industries We Serve
+      </div>
+      <div className="space-y-1">
+        {items.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group flex items-center gap-3 p-3 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200"
+            >
+              <div className="w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-gray-50 flex items-center justify-center transition-colors">
+                <Icon className={`w-5 h-5 ${item.color} transition-transform group-hover:scale-110`} />
+              </div>
+              <span className="font-medium text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+      <div className="mt-4 pt-4 border-t border-gray-100">
+        <Link
+          href="/industries"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--aci-primary)] hover:gap-3 transition-all"
+        >
+          View all industries <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// Resources Mega Menu with Ebook Promo
+interface ResourcesMegaMenuProps {
+  items: typeof NAV_DATA.resources;
+}
+
+function ResourcesMegaMenu({ items }: ResourcesMegaMenuProps) {
+  return (
+    <div className="flex w-[580px]">
+      {/* Resources List */}
+      <div className="flex-1 p-6 bg-gradient-to-br from-gray-50 to-white">
+        <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+          Resources
+        </div>
+        <div className="space-y-1">
+          {items.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="group flex items-center gap-3 p-3 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200"
+              >
+                <div className="w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-blue-50 flex items-center justify-center transition-colors">
+                  <Icon className="w-5 h-5 text-[var(--aci-primary)] transition-transform group-hover:scale-110" />
+                </div>
+                <div>
+                  <div className="font-medium text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
+                    {item.label}
+                  </div>
+                  {item.description && (
+                    <div className="text-xs text-gray-500">{item.description}</div>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Ebook Promo Section */}
+      <div className="w-[260px] bg-gradient-to-br from-[var(--aci-primary)] to-blue-700 p-6 flex flex-col">
+        <div className="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-3">
+          Free Download
+        </div>
+        <h3 className="text-lg font-bold text-white mb-2">
+          2025 Enterprise Data Strategy Guide
+        </h3>
+        <p className="text-sm text-blue-100 mb-4 flex-1">
+          Learn how leading companies are building modern data platforms
+        </p>
+
+        {/* Ebook Visual */}
+        <div className="relative mb-4">
+          <div className="bg-white rounded-lg shadow-xl p-4 transform -rotate-3 hover:rotate-0 transition-transform">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center">
+                <FileText className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="text-xs font-medium text-gray-800">PDF Guide</div>
+                <div className="text-xs text-gray-500">32 pages</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Link
+          href="/contact?reason=ebook"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-[var(--aci-primary)] rounded-lg font-semibold text-sm hover:bg-blue-50 transition-colors"
+        >
+          <Download className="w-4 h-4" />
+          Download Free
+        </Link>
       </div>
     </div>
   );
@@ -327,107 +538,104 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
     >
       <div className="h-full overflow-y-auto pb-20">
         <div className="px-4 py-6 space-y-2">
-          {/* Services Accordion */}
+          {/* Services */}
           <MobileAccordion
             title="Services"
             isExpanded={expandedSection === 'services'}
-            onToggle={() =>
-              setExpandedSection(expandedSection === 'services' ? null : 'services')
-            }
+            onToggle={() => setExpandedSection(expandedSection === 'services' ? null : 'services')}
           >
-            {navData.services.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className="block px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navData.services.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
+                >
+                  <Icon className={`w-5 h-5 ${item.color}`} />
+                  {item.label}
+                </Link>
+              );
+            })}
           </MobileAccordion>
 
-          {/* Platforms Accordion */}
+          {/* Platforms */}
           <MobileAccordion
             title="Platforms"
             isExpanded={expandedSection === 'platforms'}
-            onToggle={() =>
-              setExpandedSection(expandedSection === 'platforms' ? null : 'platforms')
-            }
+            onToggle={() => setExpandedSection(expandedSection === 'platforms' ? null : 'platforms')}
           >
-            {navData.platforms.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className="block px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navData.platforms.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
+                >
+                  <Icon className={`w-5 h-5 ${item.color}`} />
+                  {item.label}
+                </Link>
+              );
+            })}
           </MobileAccordion>
 
-          {/* Industries Accordion */}
+          {/* Industries */}
           <MobileAccordion
             title="Industries"
             isExpanded={expandedSection === 'industries'}
-            onToggle={() =>
-              setExpandedSection(expandedSection === 'industries' ? null : 'industries')
-            }
+            onToggle={() => setExpandedSection(expandedSection === 'industries' ? null : 'industries')}
           >
-            {navData.industries.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className="block px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navData.industries.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
+                >
+                  <Icon className={`w-5 h-5 ${item.color}`} />
+                  {item.label}
+                </Link>
+              );
+            })}
           </MobileAccordion>
 
-          {/* Resources Accordion */}
+          {/* Resources */}
           <MobileAccordion
             title="Resources"
             isExpanded={expandedSection === 'resources'}
-            onToggle={() =>
-              setExpandedSection(expandedSection === 'resources' ? null : 'resources')
-            }
+            onToggle={() => setExpandedSection(expandedSection === 'resources' ? null : 'resources')}
           >
-            {navData.resources.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className="block px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navData.resources.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
+                >
+                  <Icon className="w-5 h-5 text-[var(--aci-primary)]" />
+                  {item.label}
+                </Link>
+              );
+            })}
           </MobileAccordion>
 
-          {/* About Accordion */}
-          <MobileAccordion
-            title="About"
-            isExpanded={expandedSection === 'about'}
-            onToggle={() =>
-              setExpandedSection(expandedSection === 'about' ? null : 'about')
-            }
+          {/* About */}
+          <Link
+            href="/about"
+            onClick={onClose}
+            className="block px-4 py-4 text-lg font-medium text-[var(--aci-secondary)]"
           >
-            {navData.about.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className="block px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)]"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </MobileAccordion>
+            About
+          </Link>
 
-          {/* Contact Link */}
+          {/* Contact */}
           <Link
             href="/contact"
             onClick={onClose}
@@ -436,9 +644,9 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
             Contact
           </Link>
 
-          {/* Mobile CTA */}
+          {/* CTA */}
           <div className="pt-6 px-4">
-            <Button href="/contact" variant="primary" size="lg" fullWidth onClick={onClose}>
+            <Button href="/contact?reason=architecture-call" variant="primary" size="lg" fullWidth onClick={onClose}>
               Talk to an Architect
             </Button>
           </div>
@@ -448,7 +656,7 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
   );
 }
 
-// Mobile Accordion Component
+// Mobile Accordion
 interface MobileAccordionProps {
   title: string;
   isExpanded: boolean;
@@ -456,12 +664,7 @@ interface MobileAccordionProps {
   children: React.ReactNode;
 }
 
-function MobileAccordion({
-  title,
-  isExpanded,
-  onToggle,
-  children,
-}: MobileAccordionProps) {
+function MobileAccordion({ title, isExpanded, onToggle, children }: MobileAccordionProps) {
   return (
     <div className="border-b border-gray-100">
       <button
@@ -469,16 +672,9 @@ function MobileAccordion({
         className="flex items-center justify-between w-full px-4 py-4 text-lg font-medium text-[var(--aci-secondary)]"
       >
         {title}
-        <ChevronDown
-          className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-        />
+        <ChevronDown className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
       </button>
-      <div
-        className={`
-          overflow-hidden transition-all duration-300
-          ${isExpanded ? 'max-h-96' : 'max-h-0'}
-        `}
-      >
+      <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-[500px]' : 'max-h-0'}`}>
         <div className="pb-4">{children}</div>
       </div>
     </div>
