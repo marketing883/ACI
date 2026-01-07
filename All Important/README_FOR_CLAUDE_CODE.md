@@ -7,10 +7,11 @@ You are building a complete website for ACI Infotech, an enterprise technology c
 - Dynamic content (case studies, blog, resources)
 - Intelligent chat agent powered by Claude API
 - Admin CMS
-- Advanced features (SEO, analytics, chat)
+- Advanced features (SEO, AEO, GEO, analytics, chat)
 
-**Reference Design:** You have access to ArqAI website design (HTML/CSS/JS) in Git repo
-**Your Job:** Use ArqAI's visual language, but build ACI's consulting firm content
+**Reference Design:** You have access (https://github.com/marketing883/ACI) main brainch to see the website design (HTML/CSS/JS) in Git repo - use index-2.html as the reference design for the homepage
+**IMPORTANT Reference Files:** Access this folder forall important reference files for tech, specs, content, brand, etc - https://github.com/marketing883/ACI/blob/main/All%20Important/SERVICES_TEMPLATE_GUIDE.md
+**Your Job:** Use ACI's (www.aciinfotech) visual language, and build ACI's consulting firm content
 
 ---
 
@@ -21,6 +22,7 @@ You are building a complete website for ACI Infotech, an enterprise technology c
 2. **01_SITEMAP.md** - Full site structure and navigation
 3. **02_BRAND_NARRATIVE.md** - Brand positioning, voice, design principles
 4. **04_COMPONENT_LIBRARY.md** - All reusable components to build
+
 
 ### Phase 2 Documents (Content)
 5. **content_homepage.json** - Structured homepage content
@@ -35,9 +37,9 @@ You are building a complete website for ACI Infotech, an enterprise technology c
 
 ## 🚀 BUILD SEQUENCE (FOLLOW THIS ORDER)
 
-### **WEEK 1: FOUNDATION & CORE PAGES**
+### **Start: FOUNDATION & CORE PAGES**
 
-#### Day 1-2: Project Setup & Component Library
+#### First: Project Setup & Component Library
 
 **Step 1: Initialize Project**
 ```bash
@@ -50,8 +52,8 @@ npm install -D @types/node
 ```
 
 **Step 2: Reference Design Integration**
-- Clone ArqAI Git repo design files
-- Extract CSS variables (colors, typography, spacing) from ArqAI
+- (https://github.com/marketing883/ACI) main brainch to see the website design (HTML/CSS/JS) in Git repo - use index-2.html as the reference design for the homepage
+- Extract CSS variables (colors, typography, spacing)
 - Create `/styles/design-system.css` with ACI-branded variables
 - Copy component patterns (but NOT content)
 
@@ -68,7 +70,7 @@ Build in this order:
 
 ---
 
-#### Day 2-3: Homepage + Core Pages
+#### Next: Homepage + Core Pages
 
 **Step 4: Build Homepage**
 **READ:** `content_homepage.json` (has all structured content)
@@ -112,7 +114,7 @@ Sections:
 
 ---
 
-#### Day 3-4: Service Pages (All 6)
+#### Next: Service Pages (All 6)
 
 **Step 7: Build Service Page Template**
 **READ:** `ACI_Website_Content_KB.md` → Section 7 → SERVICE PAGES
