@@ -10,6 +10,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/contact',
     '/case-studies',
     '/blog',
+    '/services',
+    '/platforms',
+    '/industries',
   ];
 
   // Service pages
@@ -20,6 +23,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/services/martech-cdp',
     '/services/digital-transformation',
     '/services/cyber-security',
+  ];
+
+  // Platform pages
+  const platformPages = [
+    '/platforms/databricks',
+    '/platforms/snowflake',
+    '/platforms/salesforce',
+    '/platforms/aws',
+    '/platforms/azure',
+    '/platforms/sap',
+  ];
+
+  // Industry pages
+  const industryPages = [
+    '/industries/financial-services',
+    '/industries/retail',
+    '/industries/healthcare',
+    '/industries/manufacturing',
+    '/industries/energy',
   ];
 
   // Case study slugs - in production, fetch from database
@@ -80,5 +102,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...serviceEntries, ...caseStudyEntries, ...blogEntries];
+  const platformEntries: MetadataRoute.Sitemap = platformPages.map((path) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }));
+
+  const industryEntries: MetadataRoute.Sitemap = industryPages.map((path) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }));
+
+  return [...staticEntries, ...serviceEntries, ...platformEntries, ...industryEntries, ...caseStudyEntries, ...blogEntries];
 }
