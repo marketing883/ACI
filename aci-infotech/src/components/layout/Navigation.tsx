@@ -532,22 +532,12 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
 
   return (
     <>
-      {/* Backdrop */}
-      <div
-        className={`
-          fixed inset-0 bg-black/50 z-40 lg:hidden
-          transition-opacity duration-300
-          ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}
-        `}
-        onClick={onClose}
-      />
-
-      {/* Menu Panel */}
+      {/* Menu Panel - Full screen overlay below header */}
       <div
         className={`
           fixed top-20 left-0 right-0 bottom-0 bg-white z-50 lg:hidden
-          transition-transform duration-300 ease-out
-          ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+          transition-all duration-300 ease-out
+          ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}
         `}
       >
         <div className="h-full overflow-y-auto">
