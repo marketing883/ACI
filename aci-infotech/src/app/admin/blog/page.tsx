@@ -191,10 +191,13 @@ export default function BlogAdmin() {
           <h1 className="text-2xl font-bold text-gray-900">Blog Posts</h1>
           <p className="text-gray-600">Create and manage blog articles</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-[var(--aci-primary)] text-white rounded-lg hover:bg-blue-700 transition-colors">
+        <Link
+          href="/admin/blog/new"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--aci-primary)] text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
           <Plus className="w-5 h-5" />
           New Post
-        </button>
+        </Link>
       </div>
 
       {!configured && (
