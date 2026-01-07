@@ -132,107 +132,111 @@ export default function Navigation() {
   }, [isMobileMenuOpen]);
 
   return (
-    <header
-      className={`
-        fixed top-0 left-0 right-0 z-50
-        transition-all duration-300
-        ${isScrolled ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-sm'}
-      `}
-    >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <span className="text-2xl font-bold text-[var(--aci-primary)]">
-              ACI Infotech
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
-            {/* Services Dropdown */}
-            <NavDropdown
-              label="Services"
-              isActive={activeDropdown === 'services'}
-              onMouseEnter={() => setActiveDropdown('services')}
-              onMouseLeave={() => setActiveDropdown(null)}
-              wide
-            >
-              <ServicesMegaMenu items={NAV_DATA.services} />
-            </NavDropdown>
-
-            {/* Platforms Dropdown */}
-            <NavDropdown
-              label="Platforms"
-              isActive={activeDropdown === 'platforms'}
-              onMouseEnter={() => setActiveDropdown('platforms')}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <PlatformsMegaMenu items={NAV_DATA.platforms} />
-            </NavDropdown>
-
-            {/* Industries Dropdown */}
-            <NavDropdown
-              label="Industries"
-              isActive={activeDropdown === 'industries'}
-              onMouseEnter={() => setActiveDropdown('industries')}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <IndustriesMegaMenu items={NAV_DATA.industries} />
-            </NavDropdown>
-
-            {/* Resources Dropdown */}
-            <NavDropdown
-              label="Resources"
-              isActive={activeDropdown === 'resources'}
-              onMouseEnter={() => setActiveDropdown('resources')}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <ResourcesMegaMenu items={NAV_DATA.resources} />
-            </NavDropdown>
-
-            {/* About Link */}
-            <Link
-              href="/about"
-              className="px-4 py-2 text-sm font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
-            >
-              About
+    <>
+      <header
+        className={`
+          fixed top-0 left-0 right-0 z-50
+          transition-all duration-300
+          ${isScrolled ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-sm'}
+        `}
+      >
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <Link href="/" className="flex-shrink-0">
+              <span className="text-2xl font-bold text-[var(--aci-primary)]">
+                ACI Infotech
+              </span>
             </Link>
 
-            {/* Contact Link */}
-            <Link
-              href="/contact"
-              className="px-4 py-2 text-sm font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-1">
+              {/* Services Dropdown */}
+              <NavDropdown
+                label="Services"
+                isActive={activeDropdown === 'services'}
+                onMouseEnter={() => setActiveDropdown('services')}
+                onMouseLeave={() => setActiveDropdown(null)}
+                wide
+              >
+                <ServicesMegaMenu items={NAV_DATA.services} />
+              </NavDropdown>
+
+              {/* Platforms Dropdown */}
+              <NavDropdown
+                label="Platforms"
+                isActive={activeDropdown === 'platforms'}
+                onMouseEnter={() => setActiveDropdown('platforms')}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <PlatformsMegaMenu items={NAV_DATA.platforms} />
+              </NavDropdown>
+
+              {/* Industries Dropdown */}
+              <NavDropdown
+                label="Industries"
+                isActive={activeDropdown === 'industries'}
+                onMouseEnter={() => setActiveDropdown('industries')}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <IndustriesMegaMenu items={NAV_DATA.industries} />
+              </NavDropdown>
+
+              {/* Resources Dropdown */}
+              <NavDropdown
+                label="Resources"
+                isActive={activeDropdown === 'resources'}
+                onMouseEnter={() => setActiveDropdown('resources')}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <ResourcesMegaMenu items={NAV_DATA.resources} />
+              </NavDropdown>
+
+              {/* About Link */}
+              <Link
+                href="/about"
+                className="px-4 py-2 text-sm font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
+              >
+                About
+              </Link>
+
+              {/* Contact Link */}
+              <Link
+                href="/contact"
+                className="px-4 py-2 text-sm font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
+              >
+                Contact
+              </Link>
+            </div>
+
+            {/* Desktop CTA */}
+            <div className="hidden lg:flex items-center gap-4">
+              <Button href="/contact?reason=architecture-call" variant="primary" size="md">
+                Talk to an Architect
+              </Button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2 text-[var(--aci-secondary)]"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
-              Contact
-            </Link>
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
+        </nav>
+      </header>
 
-          {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="md">
-              Talk to an Architect
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2 text-[var(--aci-secondary)]"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu */}
-      <MobileMenu
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-        navData={NAV_DATA}
-      />
-    </header>
+      {/* Mobile Menu - Rendered outside header to avoid stacking context issues */}
+      {isMobileMenuOpen && (
+        <MobileMenu
+          isOpen={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+          navData={NAV_DATA}
+        />
+      )}
+    </>
   );
 }
 
@@ -530,16 +534,18 @@ interface MobileMenuProps {
 function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
+  if (!isOpen) return null;
+
   return (
-    <>
-      {/* Menu Panel - Full screen overlay below header */}
+    <div className="fixed inset-0 z-[100] lg:hidden">
+      {/* Backdrop */}
       <div
-        className={`
-          fixed top-20 left-0 right-0 bottom-0 bg-white z-50 lg:hidden
-          transition-all duration-300 ease-out
-          ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}
-        `}
-      >
+        className="absolute inset-0 bg-black/20"
+        onClick={onClose}
+      />
+
+      {/* Menu Panel */}
+      <div className="absolute top-20 left-0 right-0 bottom-0 bg-white shadow-xl overflow-hidden">
         <div className="h-full overflow-y-auto">
           <div className="px-4 py-6 space-y-1">
             {/* Services */}
@@ -686,7 +692,7 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
