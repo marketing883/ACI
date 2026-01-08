@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   X,
@@ -12,6 +12,7 @@ import {
   Shield,
   Zap,
   ChevronRight,
+  Building2,
 } from 'lucide-react';
 
 // ============================================================================
@@ -30,68 +31,9 @@ interface ServiceData {
   keyOutcome: string;
   icon: typeof Database;
   href: string;
-  flowOrder: number;
 }
 
-const SERVICES: ServiceData[] = [
-  {
-    id: 'digital',
-    name: 'Digital Transformation',
-    shortName: 'Digital',
-    tagline: 'Intelligent process automation',
-    description: 'ServiceNow workflows, RPA, document processing. Automate what humans shouldn\'t do manually—not vanity projects, but processes that move the P&L.',
-    deployments: '40',
-    deploymentsLabel: 'deployments',
-    techStack: ['ServiceNow', 'UiPath', 'Power Automate', 'Appian', 'Camunda'],
-    keyOutcome: '78% average process time reduction',
-    icon: Zap,
-    href: '/services/digital-transformation',
-    flowOrder: 1,
-  },
-  {
-    id: 'data',
-    name: 'Data Engineering',
-    shortName: 'Data',
-    tagline: 'Platforms that feed AI and analytics',
-    description: 'Databricks lakehouses, Snowflake warehouses, real-time Kafka pipelines. Not data swamps—governed, observable systems with Dynatrace monitoring and automated quality gates.',
-    deployments: '100+',
-    deploymentsLabel: 'deployments',
-    techStack: ['Databricks', 'Snowflake', 'Kafka', 'Dynatrace', 'dbt'],
-    keyOutcome: '64% average data latency reduction',
-    icon: Database,
-    href: '/services/data-engineering',
-    flowOrder: 2,
-  },
-  {
-    id: 'ai',
-    name: 'Applied AI & ML',
-    shortName: 'AI & ML',
-    tagline: 'From GenAI pilots to production ML',
-    description: 'GenAI chatbots, forecasting engines, recommendation systems. Not POCs that die—production ML with MLOps, model monitoring, and governance that passes audits.',
-    deployments: '50',
-    deploymentsLabel: 'deployments',
-    techStack: ['OpenAI', 'Databricks ML', 'SageMaker', 'MLflow', 'ArqAI'],
-    keyOutcome: '3x faster model deployment cycles',
-    icon: Brain,
-    href: '/services/applied-ai-ml',
-    flowOrder: 3,
-  },
-  {
-    id: 'martech',
-    name: 'MarTech & CDP',
-    shortName: 'MarTech',
-    tagline: 'Customer 360 that actually works',
-    description: 'Salesforce Marketing Cloud, Adobe Experience Platform, Braze. Real-time personalization at scale—not siloed campaigns that miss the customer standing in your store.',
-    deployments: '34',
-    deploymentsLabel: 'deployments',
-    techStack: ['Salesforce', 'Adobe AEP', 'Braze', 'Segment', 'Twilio'],
-    keyOutcome: '25% average campaign effectiveness lift',
-    icon: Users,
-    href: '/services/martech-cdp',
-    flowOrder: 4,
-  },
-];
-
+// Tier 1: Infrastructure
 const CLOUD_SERVICE: ServiceData = {
   id: 'cloud',
   name: 'Cloud Modernization',
@@ -104,9 +46,82 @@ const CLOUD_SERVICE: ServiceData = {
   keyOutcome: '68% average infrastructure cost reduction',
   icon: Cloud,
   href: '/services/cloud-modernization',
-  flowOrder: 0,
 };
 
+// Tier 2: Core Business Systems
+const ERP_SERVICE: ServiceData = {
+  id: 'erp',
+  name: 'ERP & Enterprise Applications',
+  shortName: 'ERP & Apps',
+  tagline: 'Core systems that run your business',
+  description: 'SAP S/4HANA, Oracle ERP Cloud, Microsoft Dynamics. Core business systems for finance, supply chain, HR, and operations. Post-acquisition consolidations and greenfield implementations.',
+  deployments: '40',
+  deploymentsLabel: 'implementations',
+  techStack: ['SAP S/4HANA', 'Oracle ERP', 'Microsoft Dynamics', 'Workday', 'NetSuite'],
+  keyOutcome: '$9.2M average year-one savings from consolidations',
+  icon: Building2,
+  href: '/services/enterprise-applications',
+};
+
+// Tier 3: Data Intelligence Pipeline
+const DATA_SERVICE: ServiceData = {
+  id: 'data',
+  name: 'Data Engineering',
+  shortName: 'Data',
+  tagline: 'Platforms that feed AI',
+  description: 'Databricks lakehouses, Snowflake warehouses, real-time Kafka pipelines. Not data swamps—governed, observable systems with Dynatrace monitoring and automated quality gates.',
+  deployments: '100+',
+  deploymentsLabel: 'deployments',
+  techStack: ['Databricks', 'Snowflake', 'Kafka', 'Dynatrace', 'dbt'],
+  keyOutcome: '64% average data latency reduction',
+  icon: Database,
+  href: '/services/data-engineering',
+};
+
+const AI_SERVICE: ServiceData = {
+  id: 'ai',
+  name: 'Applied AI & ML',
+  shortName: 'AI & ML',
+  tagline: 'GenAI to production ML',
+  description: 'GenAI chatbots, forecasting engines, recommendation systems. Not POCs that die—production ML with MLOps, model monitoring, and governance that passes audits.',
+  deployments: '50',
+  deploymentsLabel: 'deployments',
+  techStack: ['OpenAI', 'Databricks ML', 'SageMaker', 'MLflow', 'ArqAI'],
+  keyOutcome: '3x faster model deployment cycles',
+  icon: Brain,
+  href: '/services/applied-ai-ml',
+};
+
+const MARTECH_SERVICE: ServiceData = {
+  id: 'martech',
+  name: 'MarTech & CDP',
+  shortName: 'MarTech',
+  tagline: 'Customer 360 that works',
+  description: 'Salesforce Marketing Cloud, Adobe Experience Platform, Braze. Real-time personalization at scale—not siloed campaigns that miss the customer standing in your store.',
+  deployments: '34',
+  deploymentsLabel: 'deployments',
+  techStack: ['Salesforce', 'Adobe AEP', 'Braze', 'Segment', 'Twilio'],
+  keyOutcome: '25% average campaign effectiveness lift',
+  icon: Users,
+  href: '/services/martech-cdp',
+};
+
+// Tier 4: Process Optimization
+const DIGITAL_SERVICE: ServiceData = {
+  id: 'digital',
+  name: 'Digital Transformation',
+  shortName: 'Digital',
+  tagline: 'Intelligent process automation',
+  description: 'ServiceNow workflows, RPA, document processing. Automate what humans shouldn\'t do manually—not vanity projects, but processes that move the P&L.',
+  deployments: '40',
+  deploymentsLabel: 'deployments',
+  techStack: ['ServiceNow', 'UiPath', 'Power Automate', 'Appian', 'Camunda'],
+  keyOutcome: '78% average process time reduction',
+  icon: Zap,
+  href: '/services/digital-transformation',
+};
+
+// Security wraps everything
 const SECURITY_SERVICE: ServiceData = {
   id: 'security',
   name: 'Cyber Security',
@@ -119,7 +134,6 @@ const SECURITY_SERVICE: ServiceData = {
   keyOutcome: 'Zero security incidents across deployments',
   icon: Shield,
   href: '/services/cyber-security',
-  flowOrder: 5,
 };
 
 // ============================================================================
@@ -132,13 +146,11 @@ interface ServiceNodeProps {
   hoveredId: string | null;
   onHover: (id: string | null) => void;
   onClick: (service: ServiceData) => void;
-  variant?: 'default' | 'infrastructure' | 'security';
+  size?: 'sm' | 'md';
 }
 
-function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, variant = 'default' }: ServiceNodeProps) {
+function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, size = 'md' }: ServiceNodeProps) {
   const Icon = service.icon;
-  const isSecurity = variant === 'security';
-  const isInfrastructure = variant === 'infrastructure';
   const isDimmed = hoveredId !== null && !isHovered;
 
   return (
@@ -148,7 +160,7 @@ function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, variant 
         ${isDimmed ? 'opacity-40' : 'opacity-100'}
       `}
       style={{
-        transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+        transform: isHovered ? 'scale(1.03) translateY(-2px)' : 'scale(1)',
       }}
       onMouseEnter={() => onHover(service.id)}
       onMouseLeave={() => onHover(null)}
@@ -156,61 +168,46 @@ function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, variant 
     >
       <div
         className={`
-          relative p-5 md:p-6 rounded-sm bg-white
-          border-2 transition-all duration-300
-          ${isHovered ? 'border-[#0052CC] shadow-[0_8px_32px_rgba(0,82,204,0.2)]' : 'border-[#0052CC]/20 shadow-[0_4px_16px_rgba(0,0,0,0.06)]'}
-          ${isSecurity ? 'border-[#C4FF61]/50' : ''}
-          ${isInfrastructure ? 'border-[#0052CC]/30' : ''}
+          relative bg-white rounded-sm border-2 transition-all duration-300
+          ${size === 'sm' ? 'p-3 md:p-4' : 'p-4 md:p-5'}
+          ${isHovered ? 'border-[#0052CC] shadow-[0_8px_24px_rgba(0,82,204,0.2)]' : 'border-[#0052CC]/20 shadow-[0_2px_8px_rgba(0,0,0,0.04)]'}
         `}
       >
-        {/* Security pulse animation */}
-        {isSecurity && (
-          <>
-            <div className="absolute inset-0 rounded-sm bg-[#C4FF61]/5" />
-            <div
-              className="absolute inset-0 rounded-sm border-2 border-[#C4FF61]/30"
-              style={{
-                animation: 'pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              }}
-            />
-          </>
-        )}
-
         {/* Icon */}
         <div className={`
-          w-11 h-11 md:w-12 md:h-12 rounded-sm flex items-center justify-center mb-3
-          ${isSecurity ? 'bg-[#C4FF61]/20' : isInfrastructure ? 'bg-[#0052CC]/15' : 'bg-[#0052CC]/10'}
+          ${size === 'sm' ? 'w-9 h-9 md:w-10 md:h-10' : 'w-10 h-10 md:w-11 md:h-11'}
+          rounded-sm flex items-center justify-center mb-2 md:mb-3 bg-[#0052CC]/10
           transition-colors duration-300
         `}>
           <Icon
-            className={`w-5 h-5 md:w-6 md:h-6 ${isSecurity ? 'text-[#0A1628]' : 'text-[#0052CC]'}`}
+            className={`${size === 'sm' ? 'w-4 h-4 md:w-5 md:h-5' : 'w-5 h-5 md:w-6 md:h-6'} text-[#0052CC]`}
             strokeWidth={1.5}
           />
         </div>
 
         {/* Name */}
-        <h3 className="font-semibold text-sm md:text-base text-[#0A1628] mb-1 leading-tight">
+        <h3 className={`font-semibold text-[#0A1628] leading-tight mb-1 ${size === 'sm' ? 'text-xs md:text-sm' : 'text-sm md:text-base'}`}>
           {service.shortName}
         </h3>
 
-        {/* Tagline */}
-        <p className="text-xs text-gray-500 mb-3 line-clamp-1">
+        {/* Tagline - hidden on small */}
+        <p className={`text-gray-500 mb-2 line-clamp-1 hidden md:block ${size === 'sm' ? 'text-[10px]' : 'text-xs'}`}>
           {service.tagline}
         </p>
 
         {/* Deployment count */}
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-xl md:text-2xl font-bold text-[#C4FF61] font-mono">
+        <div className="flex items-baseline gap-1">
+          <span className={`font-bold text-[#C4FF61] font-mono ${size === 'sm' ? 'text-base md:text-lg' : 'text-lg md:text-xl'}`}>
             {service.deployments}
           </span>
-          <span className="text-[10px] md:text-xs text-gray-400">
+          <span className={`text-gray-400 ${size === 'sm' ? 'text-[9px] md:text-[10px]' : 'text-[10px] md:text-xs'}`}>
             {service.deploymentsLabel}
           </span>
         </div>
 
         {/* Hover indicator */}
         <div className={`
-          absolute bottom-0 left-0 right-0 h-1 bg-[#0052CC] rounded-b-sm
+          absolute bottom-0 left-0 right-0 h-0.5 bg-[#0052CC] rounded-b-sm
           transition-transform duration-300 origin-left
           ${isHovered ? 'scale-x-100' : 'scale-x-0'}
         `} />
@@ -224,17 +221,12 @@ function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, variant 
                      whitespace-nowrap"
           style={{ animation: 'fadeIn 0.15s ease-out' }}
         >
-          <div className="flex gap-1.5 flex-wrap justify-center max-w-[180px]">
+          <div className="flex gap-1.5 flex-wrap justify-center max-w-[160px]">
             {service.techStack.slice(0, 3).map((tech, i) => (
               <span key={i} className="px-1.5 py-0.5 bg-white/10 rounded text-[10px]">
                 {tech}
               </span>
             ))}
-            {service.techStack.length > 3 && (
-              <span className="px-1.5 py-0.5 text-white/50 text-[10px]">
-                +{service.techStack.length - 3}
-              </span>
-            )}
           </div>
           <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#0A1628] rotate-45" />
         </div>
@@ -247,34 +239,23 @@ function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, variant 
 // FLOW ARROW COMPONENT
 // ============================================================================
 
-function FlowArrow({ isHighlighted }: { isHighlighted: boolean }) {
+function FlowArrow({ isHighlighted, size = 'md' }: { isHighlighted: boolean; size?: 'sm' | 'md' }) {
   return (
-    <div className="hidden md:flex items-center justify-center px-2">
+    <div className={`hidden md:flex items-center justify-center ${size === 'sm' ? 'px-1' : 'px-2'}`}>
       <div className="relative">
-        {/* Arrow line */}
         <div
           className={`
-            w-8 lg:w-12 h-0.5 transition-all duration-300
-            ${isHighlighted ? 'bg-[#0052CC]' : 'bg-[#0052CC]/30'}
+            ${size === 'sm' ? 'w-4 lg:w-6' : 'w-6 lg:w-8'} h-0.5 transition-all duration-300
+            ${isHighlighted ? 'bg-[#0052CC]' : 'bg-[#0052CC]/25'}
           `}
         />
-        {/* Arrow head */}
         <ChevronRight
           className={`
-            absolute -right-1 top-1/2 -translate-y-1/2 w-4 h-4 transition-all duration-300
-            ${isHighlighted ? 'text-[#0052CC]' : 'text-[#0052CC]/30'}
+            absolute -right-1 top-1/2 -translate-y-1/2 ${size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'} transition-all duration-300
+            ${isHighlighted ? 'text-[#0052CC]' : 'text-[#0052CC]/25'}
           `}
           strokeWidth={2}
         />
-        {/* Animated flow dot */}
-        {isHighlighted && (
-          <div
-            className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-[#C4FF61] rounded-full"
-            style={{
-              animation: 'flowDot 1s ease-in-out infinite',
-            }}
-          />
-        )}
       </div>
     </div>
   );
@@ -296,7 +277,6 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
 
   useEffect(() => {
     requestAnimationFrame(() => setIsVisible(true));
-    // Prevent body scroll
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
@@ -316,13 +296,11 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
         transition: 'opacity 0.25s ease-out',
       }}
     >
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-white/95 backdrop-blur-sm"
         onClick={handleClose}
       />
 
-      {/* Panel */}
       <div
         className="relative w-full max-w-2xl bg-white rounded-sm shadow-[0_25px_80px_rgba(0,0,0,0.12)] border-2 border-[#0052CC]/20 max-h-[90vh] overflow-y-auto"
         style={{
@@ -330,7 +308,6 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
           transition: 'transform 0.25s ease-out',
         }}
       >
-        {/* Close button */}
         <button
           onClick={handleClose}
           className="absolute top-4 right-4 p-2 rounded-sm bg-gray-100 hover:bg-gray-200 transition-colors z-10"
@@ -338,9 +315,7 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
           <X className="w-5 h-5 text-gray-600" />
         </button>
 
-        {/* Content */}
         <div className="p-6 md:p-8">
-          {/* Header */}
           <div className="flex items-start gap-4 mb-6">
             <div className={`
               w-14 h-14 rounded-sm flex items-center justify-center shrink-0
@@ -359,7 +334,6 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
             </div>
           </div>
 
-          {/* Deployment count badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#0A1628] rounded-sm mb-6">
             <span className="text-xl font-bold text-[#C4FF61] font-mono">
               {service.deployments}
@@ -367,7 +341,6 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
             <span className="text-white/70 text-sm">{service.deploymentsLabel}</span>
           </div>
 
-          {/* Description */}
           <div className="mb-6">
             <h3 className="text-2xl font-semibold text-[#0052CC] capitalize mb-2">
               What We Build
@@ -377,7 +350,6 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
             </p>
           </div>
 
-          {/* Tech Stack */}
           <div className="mb-6">
             <h3 className="text-2xl font-semibold text-[#0052CC] capitalize mb-3">
               Tech Stack
@@ -394,7 +366,6 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
             </div>
           </div>
 
-          {/* Key Outcome */}
           <div className="mb-6 p-4 bg-[#C4FF61]/10 rounded-sm border border-[#C4FF61]/30">
             <h3 className="text-2xl font-semibold text-[#0A1628] capitalize mb-1">
               Key Outcome
@@ -404,7 +375,6 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
             </p>
           </div>
 
-          {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
             <Link
               href={service.href}
@@ -434,6 +404,8 @@ export default function WhatWeBuildSection() {
   const [hoveredService, setHoveredService] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<ServiceData | null>(null);
 
+  const isSecurityHovered = hoveredService === 'security';
+
   return (
     <>
       <section className="relative py-16 md:py-20 lg:py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden">
@@ -453,7 +425,7 @@ export default function WhatWeBuildSection() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="text-center mb-12 md:mb-16">
+          <div className="text-center mb-10 md:mb-14">
             <p className="text-[#0052CC] text-xs font-semibold uppercase tracking-[0.2em] mb-2">
               System Architecture
             </p>
@@ -461,95 +433,165 @@ export default function WhatWeBuildSection() {
               What We Build
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Our solutions integrate as a complete system.
+              End-to-end enterprise solutions, secured at every layer.
               <span className="hidden md:inline"> Hover to explore. Click for details.</span>
             </p>
           </div>
 
-          {/* CLOUD - Infrastructure Layer */}
-          <div className="flex justify-center mb-8">
-            <div className="w-full max-w-[200px]">
-              <ServiceNode
-                service={CLOUD_SERVICE}
-                isHovered={hoveredService === CLOUD_SERVICE.id}
-                hoveredId={hoveredService}
-                onHover={setHoveredService}
-                onClick={setSelectedService}
-                variant="infrastructure"
-              />
-            </div>
-          </div>
-
-          {/* Vertical connector from Cloud */}
-          <div className="flex justify-center mb-6">
-            <div className="flex flex-col items-center">
-              <div className={`w-0.5 h-8 transition-colors duration-300 ${hoveredService === 'cloud' ? 'bg-[#0052CC]' : 'bg-[#0052CC]/20'}`} />
-              <div className={`w-3 h-3 border-l-2 border-b-2 rotate-[-45deg] -mt-1.5 transition-colors duration-300 ${hoveredService === 'cloud' ? 'border-[#0052CC]' : 'border-[#0052CC]/20'}`} />
-            </div>
-          </div>
-
-          {/* Label */}
-          <div className="text-center mb-4">
-            <span className="text-xs text-gray-400 uppercase tracking-wider">Data Pipeline Flow</span>
-          </div>
-
-          {/* MAIN FLOW - Left to Right: Digital → Data → AI → MarTech */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0 mb-8">
-            {SERVICES.map((service, index) => (
-              <div key={service.id} className="flex items-center">
-                {/* Service Node */}
-                <div className="w-[160px] md:w-[170px] lg:w-[180px]">
-                  <ServiceNode
-                    service={service}
-                    isHovered={hoveredService === service.id}
-                    hoveredId={hoveredService}
-                    onHover={setHoveredService}
-                    onClick={setSelectedService}
-                  />
+          {/* SECURITY WRAPPER - Wraps Everything */}
+          <div
+            className={`
+              relative border-2 rounded-sm p-4 md:p-6 lg:p-8 transition-all duration-300
+              ${isSecurityHovered ? 'border-[#C4FF61] bg-[#C4FF61]/5' : 'border-[#C4FF61]/30 bg-transparent'}
+            `}
+            onMouseEnter={() => setHoveredService('security')}
+            onMouseLeave={() => setHoveredService(null)}
+          >
+            {/* Security Header Bar */}
+            <div
+              className="flex items-center justify-between mb-6 pb-4 border-b border-[#C4FF61]/20 cursor-pointer"
+              onClick={() => setSelectedService(SECURITY_SERVICE)}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`
+                  w-10 h-10 rounded-sm flex items-center justify-center transition-colors duration-300
+                  ${isSecurityHovered ? 'bg-[#C4FF61]/30' : 'bg-[#C4FF61]/15'}
+                `}>
+                  <Shield className="w-5 h-5 text-[#0A1628]" strokeWidth={1.5} />
                 </div>
-
-                {/* Arrow between nodes (not after last) */}
-                {index < SERVICES.length - 1 && (
-                  <FlowArrow isHighlighted={
-                    hoveredService === service.id ||
-                    hoveredService === SERVICES[index + 1].id
-                  } />
-                )}
+                <div>
+                  <h3 className="font-semibold text-[#0A1628] text-sm md:text-base">
+                    Security
+                  </h3>
+                  <p className="text-xs text-gray-500">Built in, not bolted on</p>
+                </div>
               </div>
-            ))}
-          </div>
-
-          {/* Vertical connector to Security */}
-          <div className="flex justify-center mb-6">
-            <div className="flex flex-col items-center">
-              <div className={`w-0.5 h-8 transition-colors duration-300 ${hoveredService === 'security' ? 'bg-[#C4FF61]' : 'bg-[#0052CC]/20'}`} />
-              <div className={`w-3 h-3 border-l-2 border-b-2 rotate-[-45deg] -mt-1.5 transition-colors duration-300 ${hoveredService === 'security' ? 'border-[#C4FF61]' : 'border-[#0052CC]/20'}`} />
+              <div className="flex items-center gap-2">
+                <span className="text-xl md:text-2xl font-bold text-[#C4FF61] font-mono">82</span>
+                <span className="text-xs text-gray-400">clients protected</span>
+              </div>
             </div>
-          </div>
 
-          {/* SECURITY - Wraps Everything */}
-          <div className="flex justify-center mb-12">
-            <div className="w-full max-w-[220px]">
-              <ServiceNode
-                service={SECURITY_SERVICE}
-                isHovered={hoveredService === SECURITY_SERVICE.id}
-                hoveredId={hoveredService}
-                onHover={setHoveredService}
-                onClick={setSelectedService}
-                variant="security"
-              />
+            {/* Main Flow: Cloud → ERP → [Data → AI → MarTech] → Digital */}
+            <div className="flex flex-col lg:flex-row items-stretch justify-between gap-4 lg:gap-2">
+
+              {/* Tier 1: Infrastructure */}
+              <div className="flex flex-col">
+                <div className="flex-1 flex items-center">
+                  <div className="w-full lg:w-[140px] xl:w-[150px]">
+                    <ServiceNode
+                      service={CLOUD_SERVICE}
+                      isHovered={hoveredService === CLOUD_SERVICE.id || isSecurityHovered}
+                      hoveredId={isSecurityHovered ? null : hoveredService}
+                      onHover={setHoveredService}
+                      onClick={setSelectedService}
+                      size="md"
+                    />
+                  </div>
+                </div>
+                <p className="text-[10px] md:text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
+                  Infrastructure
+                </p>
+              </div>
+
+              <FlowArrow isHighlighted={hoveredService === 'cloud' || hoveredService === 'erp' || isSecurityHovered} />
+
+              {/* Tier 2: Core Business Systems */}
+              <div className="flex flex-col">
+                <div className="flex-1 flex items-center">
+                  <div className="w-full lg:w-[140px] xl:w-[150px]">
+                    <ServiceNode
+                      service={ERP_SERVICE}
+                      isHovered={hoveredService === ERP_SERVICE.id || isSecurityHovered}
+                      hoveredId={isSecurityHovered ? null : hoveredService}
+                      onHover={setHoveredService}
+                      onClick={setSelectedService}
+                      size="md"
+                    />
+                  </div>
+                </div>
+                <p className="text-[10px] md:text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
+                  Core Business
+                </p>
+              </div>
+
+              <FlowArrow isHighlighted={hoveredService === 'erp' || hoveredService === 'data' || isSecurityHovered} />
+
+              {/* Tier 3: Data Intelligence Pipeline */}
+              <div className="flex flex-col">
+                <div className="flex-1">
+                  <div className="flex items-center gap-0">
+                    <div className="w-[100px] md:w-[110px] lg:w-[120px]">
+                      <ServiceNode
+                        service={DATA_SERVICE}
+                        isHovered={hoveredService === DATA_SERVICE.id || isSecurityHovered}
+                        hoveredId={isSecurityHovered ? null : hoveredService}
+                        onHover={setHoveredService}
+                        onClick={setSelectedService}
+                        size="sm"
+                      />
+                    </div>
+                    <FlowArrow isHighlighted={hoveredService === 'data' || hoveredService === 'ai' || isSecurityHovered} size="sm" />
+                    <div className="w-[100px] md:w-[110px] lg:w-[120px]">
+                      <ServiceNode
+                        service={AI_SERVICE}
+                        isHovered={hoveredService === AI_SERVICE.id || isSecurityHovered}
+                        hoveredId={isSecurityHovered ? null : hoveredService}
+                        onHover={setHoveredService}
+                        onClick={setSelectedService}
+                        size="sm"
+                      />
+                    </div>
+                    <FlowArrow isHighlighted={hoveredService === 'ai' || hoveredService === 'martech' || isSecurityHovered} size="sm" />
+                    <div className="w-[100px] md:w-[110px] lg:w-[120px]">
+                      <ServiceNode
+                        service={MARTECH_SERVICE}
+                        isHovered={hoveredService === MARTECH_SERVICE.id || isSecurityHovered}
+                        hoveredId={isSecurityHovered ? null : hoveredService}
+                        onHover={setHoveredService}
+                        onClick={setSelectedService}
+                        size="sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <p className="text-[10px] md:text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
+                  Data Intelligence Pipeline
+                </p>
+              </div>
+
+              <FlowArrow isHighlighted={hoveredService === 'martech' || hoveredService === 'digital' || isSecurityHovered} />
+
+              {/* Tier 4: Process Optimization */}
+              <div className="flex flex-col">
+                <div className="flex-1 flex items-center">
+                  <div className="w-full lg:w-[140px] xl:w-[150px]">
+                    <ServiceNode
+                      service={DIGITAL_SERVICE}
+                      isHovered={hoveredService === DIGITAL_SERVICE.id || isSecurityHovered}
+                      hoveredId={isSecurityHovered ? null : hoveredService}
+                      onHover={setHoveredService}
+                      onClick={setSelectedService}
+                      size="md"
+                    />
+                  </div>
+                </div>
+                <p className="text-[10px] md:text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
+                  Process Optimization
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Security annotation */}
-          <div className="text-center mb-12">
-            <p className="text-xs text-gray-500 italic">
-              Security wraps all layers — built in, not bolted on
-            </p>
+            {/* Security annotation */}
+            <div className="mt-6 pt-4 border-t border-[#C4FF61]/20 text-center">
+              <p className="text-xs text-gray-500">
+                <span className="text-[#C4FF61] font-semibold">Security</span> wraps all layers — SOC 2, ISO 27001, HIPAA compliant from day one
+              </p>
+            </div>
           </div>
 
           {/* Legend */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500">
+          <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-sm text-gray-500">
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <div className="w-6 h-0.5 bg-[#0052CC]/40" />
@@ -558,8 +600,8 @@ export default function WhatWeBuildSection() {
               <span>Data Flow</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-sm bg-[#C4FF61]/20 border border-[#C4FF61]/50" />
-              <span>Security Layer</span>
+              <div className="w-4 h-4 rounded-sm bg-[#C4FF61]/20 border-2 border-[#C4FF61]/50" />
+              <span>Security Wrapper</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[#C4FF61] font-mono font-bold text-base">52</span>
@@ -573,34 +615,6 @@ export default function WhatWeBuildSection() {
           @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
-          }
-
-          @keyframes pulse-ring {
-            0%, 100% {
-              opacity: 0.3;
-              transform: scale(1);
-            }
-            50% {
-              opacity: 0.1;
-              transform: scale(1.03);
-            }
-          }
-
-          @keyframes flowDot {
-            0% {
-              left: 0;
-              opacity: 0;
-            }
-            20% {
-              opacity: 1;
-            }
-            80% {
-              opacity: 1;
-            }
-            100% {
-              left: calc(100% - 8px);
-              opacity: 0;
-            }
           }
         `}</style>
       </section>
