@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { X } from 'lucide-react';
 
@@ -12,6 +12,7 @@ interface PlaybookData {
   id: string;
   name: string;
   shortName: string;
+  slug: string;
   deployments: number;
   challengePattern: string[];
   keyLearnings: string[];
@@ -25,6 +26,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'post-acquisition',
     name: 'Post-Acquisition System Consolidation',
     shortName: 'Post-Acquisition',
+    slug: 'post-acquisition-consolidation',
     deployments: 23,
     challengePattern: [
       '30-50 disparate systems post-merger',
@@ -49,6 +51,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'multi-location',
     name: 'Multi-Location Real-Time Data Platform',
     shortName: 'Real-Time Platform',
+    slug: 'real-time-data-platform',
     deployments: 47,
     challengePattern: [
       '300-1000+ locations generating data',
@@ -73,6 +76,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'global-unification',
     name: 'Global Data Unification',
     shortName: 'Global Unification',
+    slug: 'global-data-unification',
     deployments: 31,
     challengePattern: [
       '40-60 countries with regional silos',
@@ -97,6 +101,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'self-service-analytics',
     name: 'Enterprise Self-Service Analytics',
     shortName: 'Self-Service Analytics',
+    slug: 'self-service-analytics',
     deployments: 19,
     challengePattern: [
       '5,000-15,000 users need data access',
@@ -121,6 +126,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'healthcare-data',
     name: 'Multi-Jurisdiction Healthcare Data',
     shortName: 'Healthcare Data',
+    slug: 'healthcare-data-platform',
     deployments: 12,
     challengePattern: [
       'Patient data across multiple countries',
@@ -145,6 +151,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'supply-chain',
     name: 'Supply Chain Visibility',
     shortName: 'Supply Chain',
+    slug: 'supply-chain-visibility',
     deployments: 28,
     challengePattern: [
       'Data scattered across procurement/logistics',
@@ -169,6 +176,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'cloud-migration',
     name: 'Legacy to Cloud Migration',
     shortName: 'Cloud Migration',
+    slug: 'legacy-cloud-migration',
     deployments: 52,
     challengePattern: [
       'On-prem Hadoop/Teradata/Oracle aging',
@@ -193,6 +201,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'data-integration',
     name: 'Multi-Source Data Integration',
     shortName: 'Data Integration',
+    slug: 'multi-source-integration',
     deployments: 34,
     challengePattern: [
       '20-40 disparate source systems',
@@ -216,58 +225,345 @@ const PLAYBOOKS: PlaybookData[] = [
 ];
 
 // ============================================================================
-// BLUEPRINT ROLL ICON SVG
+// ANIMATED BLUEPRINT ROLL SVG (No box, just the roll)
 // ============================================================================
 
-function BlueprintRollIcon({ size = 48, isHovered = false }: { size?: number; isHovered?: boolean }) {
+function BlueprintRollIcon({ isHovered = false, isCompressed = false }: { isHovered?: boolean; isCompressed?: boolean }) {
+  const size = isCompressed ? 36 : 56;
+  const id = `roll-${Math.random().toString(36).substr(2, 9)}`;
+
   return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+    <svg width={size} height={size * 0.7} viewBox="0 0 80 56" fill="none" className="transition-transform duration-500">
       <defs>
-        <linearGradient id={`rollGrad-${isHovered}`} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#0a3d62" />
-          <stop offset="40%" stopColor={isHovered ? "#40a9ff" : "#1890FF"} />
-          <stop offset="60%" stopColor={isHovered ? "#40a9ff" : "#1890FF"} />
-          <stop offset="100%" stopColor="#0a3d62" />
+        <linearGradient id={`${id}-grad`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#0a3d62">
+            <animate attributeName="stop-color" values="#0a3d62;#0d4a75;#0a3d62" dur="3s" repeatCount="indefinite" />
+          </stop>
+          <stop offset="50%" stopColor={isHovered ? "#40a9ff" : "#1890FF"}>
+            <animate attributeName="stop-color" values="#1890FF;#40a9ff;#1890FF" dur="2s" repeatCount="indefinite" />
+          </stop>
+          <stop offset="100%" stopColor="#0a3d62">
+            <animate attributeName="stop-color" values="#0a3d62;#0d4a75;#0a3d62" dur="3s" repeatCount="indefinite" />
+          </stop>
         </linearGradient>
+        <filter id={`${id}-glow`} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
       </defs>
-      {/* Outer roll body */}
-      <rect x="6" y="10" width="36" height="28" rx="3"
-        fill={`url(#rollGrad-${isHovered})`}
-        stroke="#1890FF"
-        strokeWidth="1.5"
-      />
-      {/* Left cap */}
-      <ellipse cx="6" cy="24" rx="3" ry="14" fill="#0a3d62" stroke="#1890FF" strokeWidth="1" />
-      {/* Right cap */}
-      <ellipse cx="42" cy="24" rx="3" ry="14" fill="#0d4a75" stroke="#1890FF" strokeWidth="1" />
-      {/* Blueprint lines */}
-      <line x1="12" y1="16" x2="36" y2="16" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
-      <line x1="12" y1="22" x2="36" y2="22" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-      <line x1="12" y1="28" x2="36" y2="28" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
-      <line x1="12" y1="34" x2="36" y2="34" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-      {/* Vertical lines */}
-      <line x1="18" y1="12" x2="18" y2="36" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-      <line x1="24" y1="12" x2="24" y2="36" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-      <line x1="30" y1="12" x2="30" y2="36" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+
+      {/* Outer glow on hover */}
+      {isHovered && (
+        <ellipse cx="40" cy="28" rx="38" ry="24" fill="none" stroke="#1890FF" strokeWidth="1" opacity="0.3" filter={`url(#${id}-glow)`}>
+          <animate attributeName="opacity" values="0.3;0.6;0.3" dur="1.5s" repeatCount="indefinite" />
+        </ellipse>
+      )}
+
+      {/* Main roll body - cylinder effect */}
+      <ellipse cx="10" cy="28" rx="8" ry="22" fill="#0a3d62" stroke="#1890FF" strokeWidth="1.5">
+        <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
+      </ellipse>
+      <rect x="10" y="6" width="60" height="44" fill={`url(#${id}-grad)`} />
+      <ellipse cx="70" cy="28" rx="8" ry="22" fill="#0d4a75" stroke="#1890FF" strokeWidth="1.5">
+        <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
+      </ellipse>
+
+      {/* Blueprint grid lines on roll surface */}
+      <g opacity="0.4">
+        <line x1="18" y1="12" x2="62" y2="12" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5">
+          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite" />
+        </line>
+        <line x1="18" y1="20" x2="62" y2="20" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
+        <line x1="18" y1="28" x2="62" y2="28" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5">
+          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite" begin="0.5s" />
+        </line>
+        <line x1="18" y1="36" x2="62" y2="36" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
+        <line x1="18" y1="44" x2="62" y2="44" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5">
+          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite" begin="1s" />
+        </line>
+
+        {/* Vertical lines */}
+        <line x1="26" y1="8" x2="26" y2="48" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" />
+        <line x1="40" y1="8" x2="40" y2="48" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" />
+        <line x1="54" y1="8" x2="54" y2="48" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" />
+      </g>
+
+      {/* Highlight line */}
+      <line x1="10" y1="14" x2="70" y2="14" stroke="rgba(255,255,255,0.15)" strokeWidth="2" />
     </svg>
   );
 }
 
 // ============================================================================
-// ARCHITECTURE DIAGRAM (COMPACT)
+// ANIMATED BACKGROUND ELEMENTS
 // ============================================================================
 
-function ArchitectureDiagram({ components }: { components: string[] }) {
+function AnimatedBackgroundElements() {
   return (
-    <div className="flex flex-wrap gap-2">
-      {components.map((comp, i) => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Floating particles */}
+      {[...Array(12)].map((_, i) => (
         <div
           key={i}
-          className="px-3 py-1.5 rounded text-xs font-mono bg-[#1890FF]/15 border border-[#1890FF]/40 text-white/90"
-        >
-          {comp}
-        </div>
+          className="absolute w-1 h-1 bg-[#1890FF] rounded-full opacity-30"
+          style={{
+            left: `${10 + (i * 8)}%`,
+            top: `${20 + (i % 3) * 25}%`,
+            animation: `float ${4 + (i % 3)}s ease-in-out infinite`,
+            animationDelay: `${i * 0.3}s`,
+          }}
+        />
       ))}
+
+      {/* Scanning line */}
+      <div
+        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#1890FF] to-transparent opacity-20"
+        style={{
+          animation: 'scan 8s linear infinite',
+        }}
+      />
+
+      {/* Corner brackets */}
+      <svg className="absolute top-8 left-8 w-12 h-12 text-[#1890FF] opacity-20">
+        <path d="M0 12 L0 0 L12 0" fill="none" stroke="currentColor" strokeWidth="1">
+          <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" />
+        </path>
+      </svg>
+      <svg className="absolute top-8 right-8 w-12 h-12 text-[#1890FF] opacity-20">
+        <path d="M12 0 L24 0 L24 12" fill="none" stroke="currentColor" strokeWidth="1" transform="translate(-12, 0)">
+          <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" begin="0.5s" />
+        </path>
+      </svg>
+      <svg className="absolute bottom-8 left-8 w-12 h-12 text-[#1890FF] opacity-20">
+        <path d="M0 0 L0 12 L12 12" fill="none" stroke="currentColor" strokeWidth="1" transform="translate(0, 0)">
+          <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" begin="1s" />
+        </path>
+      </svg>
+      <svg className="absolute bottom-8 right-8 w-12 h-12 text-[#1890FF] opacity-20">
+        <path d="M0 12 L12 12 L12 0" fill="none" stroke="currentColor" strokeWidth="1">
+          <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" begin="1.5s" />
+        </path>
+      </svg>
+    </div>
+  );
+}
+
+// ============================================================================
+// EXPANDED PLAYBOOK CONTENT
+// ============================================================================
+
+function ExpandedPlaybook({
+  playbook,
+  onClose,
+  isVisible
+}: {
+  playbook: PlaybookData;
+  onClose: () => void;
+  isVisible: boolean;
+}) {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div
+      ref={contentRef}
+      className="relative overflow-hidden"
+      style={{
+        maxHeight: isVisible ? '600px' : '0px',
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'scaleY(1) translateY(0)' : 'scaleY(0.8) translateY(-20px)',
+        transformOrigin: 'top center',
+        transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+      }}
+    >
+      <div className="relative rounded-lg border border-[#1890FF]/50 bg-gradient-to-b from-[#001020] to-[#001529] overflow-hidden">
+        {/* Animated border glow */}
+        <div
+          className="absolute inset-0 rounded-lg pointer-events-none"
+          style={{
+            background: 'linear-gradient(90deg, transparent, rgba(24,144,255,0.1), transparent)',
+            animation: 'shimmer 3s linear infinite',
+          }}
+        />
+
+        {/* Blueprint grid overlay with animation */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(24,144,255,0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(24,144,255,0.05) 1px, transparent 1px)
+            `,
+            backgroundSize: '20px 20px',
+            animation: 'gridPulse 4s ease-in-out infinite',
+          }}
+        />
+
+        {/* Header */}
+        <div className="relative flex items-center justify-between p-4 border-b border-[#1890FF]/20">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <BlueprintRollIcon isHovered={true} />
+            </div>
+            <div>
+              <h3 className="text-lg md:text-xl font-bold text-white">
+                {playbook.name}
+              </h3>
+              <span className="text-[#C4FF61] text-sm font-mono">
+                Deployed {playbook.deployments}x
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg border border-[#1890FF]/30 hover:border-[#1890FF] hover:bg-[#1890FF]/10 transition-all duration-300 group"
+          >
+            <X className="w-5 h-5 text-white/70 group-hover:text-white transition-colors" />
+          </button>
+        </div>
+
+        {/* Content Grid */}
+        <div
+          className="relative p-5 grid md:grid-cols-3 gap-6"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'all 0.5s ease-out 0.3s',
+          }}
+        >
+          {/* Column 1: Challenge & Learnings */}
+          <div className="space-y-5">
+            <div>
+              <h4 className="text-white/90 text-sm font-medium mb-3">
+                Challenge pattern
+              </h4>
+              <ul className="space-y-1.5">
+                {playbook.challengePattern.map((item, i) => (
+                  <li
+                    key={i}
+                    className="text-white/70 text-sm flex items-start gap-2"
+                    style={{
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible ? 'translateX(0)' : 'translateX(-10px)',
+                      transition: `all 0.4s ease-out ${0.4 + i * 0.1}s`,
+                    }}
+                  >
+                    <span className="text-[#1890FF] mt-0.5">→</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white/90 text-sm font-medium mb-3">
+                Key learnings
+              </h4>
+              <ul className="space-y-1.5">
+                {playbook.keyLearnings.map((item, i) => (
+                  <li
+                    key={i}
+                    className="text-white/70 text-sm flex items-start gap-2"
+                    style={{
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible ? 'translateX(0)' : 'translateX(-10px)',
+                      transition: `all 0.4s ease-out ${0.6 + i * 0.1}s`,
+                    }}
+                  >
+                    <span className="text-[#C4FF61]">•</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Column 2: Outcomes & Industries */}
+          <div className="space-y-5">
+            <div>
+              <h4 className="text-white/90 text-sm font-medium mb-3">
+                Outcomes achieved
+              </h4>
+              <div className="grid grid-cols-3 gap-2">
+                {playbook.outcomes.map((outcome, i) => (
+                  <div
+                    key={i}
+                    className="p-2 rounded bg-[#1890FF]/10 border border-[#1890FF]/20 text-center"
+                    style={{
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible ? 'scale(1)' : 'scale(0.8)',
+                      transition: `all 0.4s ease-out ${0.5 + i * 0.1}s`,
+                    }}
+                  >
+                    <div className="text-[#C4FF61] font-mono text-lg font-bold">
+                      {outcome.metric}
+                    </div>
+                    <div className="text-white/50 text-[10px] leading-tight">
+                      {outcome.description}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-white/90 text-sm font-medium mb-3">
+                Industries
+              </h4>
+              <div className="flex flex-wrap gap-1.5">
+                {playbook.industries.map((ind, i) => (
+                  <span
+                    key={i}
+                    className="px-2 py-1 rounded text-xs bg-[#1890FF]/10 border border-[#1890FF]/20 text-white/70"
+                    style={{
+                      opacity: isVisible ? 1 : 0,
+                      transition: `opacity 0.3s ease-out ${0.7 + i * 0.05}s`,
+                    }}
+                  >
+                    {ind}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Column 3: Architecture & CTA */}
+          <div className="space-y-5">
+            <div>
+              <h4 className="text-white/90 text-sm font-medium mb-3">
+                Architecture stack
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {playbook.architecture.map((comp, i) => (
+                  <div
+                    key={i}
+                    className="px-3 py-1.5 rounded text-xs font-mono bg-[#1890FF]/10 border border-[#1890FF]/30 text-white/80"
+                    style={{
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible ? 'translateY(0)' : 'translateY(10px)',
+                      transition: `all 0.3s ease-out ${0.6 + i * 0.05}s`,
+                    }}
+                  >
+                    {comp}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div
+              className="pt-2"
+              style={{
+                opacity: isVisible ? 1 : 0,
+                transition: 'opacity 0.4s ease-out 0.9s',
+              }}
+            >
+              <Link
+                href={`/contact?playbook=${playbook.id}`}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-[#1890FF] text-white text-sm font-semibold hover:bg-[#40a9ff] transition-all duration-300 hover:shadow-[0_0_20px_rgba(24,144,255,0.4)]"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C4FF61] animate-pulse" />
+                Talk to the architect who built this
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -279,6 +575,20 @@ function ArchitectureDiagram({ components }: { components: string[] }) {
 export default function PlaybookVaultSection() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleExpand = (id: string) => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+
+    if (expandedId === id) {
+      setExpandedId(null);
+    } else {
+      setExpandedId(id);
+    }
+
+    setTimeout(() => setIsAnimating(false), 600);
+  };
 
   const expandedPlaybook = PLAYBOOKS.find(p => p.id === expandedId);
 
@@ -289,265 +599,153 @@ export default function PlaybookVaultSection() {
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(24,144,255,0.08) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(24,144,255,0.08) 1px, transparent 1px)
+            linear-gradient(rgba(24,144,255,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(24,144,255,0.06) 1px, transparent 1px)
           `,
           backgroundSize: '20px 20px',
         }}
       />
 
+      {/* Animated background elements */}
+      <AnimatedBackgroundElements />
+
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Section Header - Matching other sections */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-            THE PLAYBOOK VAULT
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-[var(--font-title)]">
+            Proven Architectures
           </h2>
-          <p className="text-lg text-white/85 mb-2">
-            19 years. 100+ deployments. Every pattern documented.
+          <p className="text-lg text-white/85 mb-3">
+            100+ enterprise deployments. Every challenge. Every solution. Documented.
           </p>
-          <p className="text-white/60 text-sm max-w-2xl mx-auto">
-            Not theory. Not best practices from books. Actual blueprints from systems we've built dozens of times.
+          <p className="text-white/50 text-sm max-w-2xl mx-auto">
+            Browse the playbooks. See how many times we've deployed each one.
+            See how the approach improved with each deployment. See the outcomes.
           </p>
         </div>
 
-        {/* Expanded Playbook (at TOP) */}
+        {/* Expanded Playbook (at TOP with unroll animation) */}
         {expandedPlaybook && (
-          <div
-            className="mb-8 animate-in slide-in-from-top duration-300"
-            style={{
-              animation: 'unroll 0.4s ease-out',
-            }}
-          >
-            <div className="relative rounded-lg border-2 border-[#1890FF] bg-[#001020] overflow-hidden">
-              {/* Blueprint grid overlay */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-50"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(rgba(24,144,255,0.06) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(24,144,255,0.06) 1px, transparent 1px)
-                  `,
-                  backgroundSize: '20px 20px',
-                }}
-              />
-
-              {/* Header */}
-              <div className="relative flex items-center justify-between p-4 border-b border-[#1890FF]/30 bg-[#1890FF]/10">
-                <div>
-                  <h3 className="text-lg md:text-xl font-bold text-white">
-                    {expandedPlaybook.name}
-                  </h3>
-                  <span className="text-[#C4FF61] text-sm font-mono">
-                    Deployed {expandedPlaybook.deployments}x
-                  </span>
-                </div>
-                <button
-                  onClick={() => setExpandedId(null)}
-                  className="p-2 rounded-lg border border-[#1890FF]/50 hover:border-[#1890FF] hover:bg-[#1890FF]/20 transition-all"
-                >
-                  <X className="w-5 h-5 text-white" />
-                </button>
-              </div>
-
-              {/* Content Grid */}
-              <div className="relative p-5 grid md:grid-cols-3 gap-6">
-                {/* Column 1: Challenge & Learnings */}
-                <div className="space-y-5">
-                  <div>
-                    <h4 className="text-[#1890FF] text-xs font-semibold uppercase tracking-wider mb-3">
-                      Challenge Pattern
-                    </h4>
-                    <ul className="space-y-1.5">
-                      {expandedPlaybook.challengePattern.map((item, i) => (
-                        <li key={i} className="text-white/80 text-sm flex items-start gap-2">
-                          <span className="text-[#1890FF] mt-0.5">→</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="text-[#1890FF] text-xs font-semibold uppercase tracking-wider mb-3">
-                      Key Learnings
-                    </h4>
-                    <ul className="space-y-1.5">
-                      {expandedPlaybook.keyLearnings.map((item, i) => (
-                        <li key={i} className="text-white/80 text-sm flex items-start gap-2">
-                          <span className="text-[#C4FF61]">•</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Column 2: Outcomes & Industries */}
-                <div className="space-y-5">
-                  <div>
-                    <h4 className="text-[#1890FF] text-xs font-semibold uppercase tracking-wider mb-3">
-                      Outcomes Achieved
-                    </h4>
-                    <div className="grid grid-cols-3 gap-2">
-                      {expandedPlaybook.outcomes.map((outcome, i) => (
-                        <div key={i} className="p-2 rounded bg-[#1890FF]/10 border border-[#1890FF]/30 text-center">
-                          <div className="text-[#C4FF61] font-mono text-lg font-bold">
-                            {outcome.metric}
-                          </div>
-                          <div className="text-white/60 text-[10px] leading-tight">
-                            {outcome.description}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="text-[#1890FF] text-xs font-semibold uppercase tracking-wider mb-3">
-                      Industries
-                    </h4>
-                    <div className="flex flex-wrap gap-1.5">
-                      {expandedPlaybook.industries.map((ind, i) => (
-                        <span key={i} className="px-2 py-1 rounded text-xs bg-[#1890FF]/10 border border-[#1890FF]/30 text-white/80">
-                          {ind}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Column 3: Architecture & CTA */}
-                <div className="space-y-5">
-                  <div>
-                    <h4 className="text-[#1890FF] text-xs font-semibold uppercase tracking-wider mb-3">
-                      Architecture Stack
-                    </h4>
-                    <ArchitectureDiagram components={expandedPlaybook.architecture} />
-                  </div>
-                  <div className="pt-2">
-                    <Link
-                      href={`/contact?playbook=${expandedPlaybook.id}`}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-[#1890FF] text-white text-sm font-semibold hover:bg-[#40a9ff] transition-colors"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#C4FF61]" />
-                      Talk to Architect
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="mb-8">
+            <ExpandedPlaybook
+              playbook={expandedPlaybook}
+              onClose={() => handleExpand(expandedPlaybook.id)}
+              isVisible={!!expandedId}
+            />
           </div>
         )}
 
-        {/* Blueprint Rolls Grid */}
+        {/* Blueprint Rolls Grid - NO BOXES */}
         <div
-          className={`grid gap-3 transition-all duration-300 ${
+          className={`grid gap-4 transition-all duration-500 ${
             expandedId
-              ? 'grid-cols-4 md:grid-cols-8'  // Compressed when one is open
-              : 'grid-cols-2 md:grid-cols-4'   // Normal 4x2 grid
+              ? 'grid-cols-4 md:grid-cols-7'
+              : 'grid-cols-2 md:grid-cols-4'
           }`}
         >
           {PLAYBOOKS.map((playbook) => {
             const isExpanded = expandedId === playbook.id;
             const isCompressed = expandedId && !isExpanded;
 
-            if (isExpanded) return null; // Don't show in grid, it's above
+            if (isExpanded) return null;
 
             return (
               <button
                 key={playbook.id}
-                onClick={() => setExpandedId(playbook.id)}
+                onClick={() => handleExpand(playbook.id)}
                 onMouseEnter={() => setHoveredId(playbook.id)}
                 onMouseLeave={() => setHoveredId(null)}
                 className={`
-                  relative rounded-lg border-2 transition-all duration-300 text-left
-                  ${hoveredId === playbook.id
-                    ? 'border-[#1890FF] shadow-[0_0_20px_rgba(24,144,255,0.3)] -translate-y-1'
-                    : 'border-[#1890FF]/30 hover:border-[#1890FF]/60'
-                  }
-                  ${isCompressed ? 'p-2' : 'p-4'}
-                  bg-gradient-to-br from-[#001529] to-[#002140]
+                  relative flex flex-col items-center text-center
+                  transition-all duration-500 ease-out
+                  ${isCompressed ? 'py-2 px-1' : 'py-4 px-2'}
+                  ${hoveredId === playbook.id ? '-translate-y-2' : ''}
+                  group
                 `}
               >
-                {/* Grid overlay */}
+                {/* Roll Icon - NO BOX WRAPPER */}
                 <div
-                  className="absolute inset-0 rounded-lg pointer-events-none opacity-30"
+                  className="transition-all duration-500"
                   style={{
-                    backgroundImage: `
-                      linear-gradient(rgba(24,144,255,0.1) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(24,144,255,0.1) 1px, transparent 1px)
-                    `,
-                    backgroundSize: '10px 10px',
+                    filter: hoveredId === playbook.id ? 'drop-shadow(0 0 12px rgba(24,144,255,0.5))' : 'none',
                   }}
-                />
-
-                <div className="relative flex flex-col items-center text-center">
-                  {/* Roll Icon */}
-                  <div className={`transition-transform duration-300 ${isCompressed ? 'scale-75' : ''}`}>
-                    <BlueprintRollIcon
-                      size={isCompressed ? 32 : 48}
-                      isHovered={hoveredId === playbook.id}
-                    />
-                  </div>
-
-                  {/* Name */}
-                  <div className={`mt-2 font-semibold text-white leading-tight transition-all duration-300 ${
-                    isCompressed ? 'text-[10px]' : 'text-xs md:text-sm'
-                  }`}>
-                    {isCompressed ? playbook.shortName.split(' ')[0] : playbook.shortName}
-                  </div>
-
-                  {/* Deployment count */}
-                  <div className={`text-[#C4FF61] font-mono transition-all duration-300 ${
-                    isCompressed ? 'text-[9px] mt-0.5' : 'text-xs mt-1'
-                  }`}>
-                    {isCompressed ? `${playbook.deployments}x` : `Deployed ${playbook.deployments}x`}
-                  </div>
+                >
+                  <BlueprintRollIcon
+                    isHovered={hoveredId === playbook.id}
+                    isCompressed={!!isCompressed}
+                  />
                 </div>
+
+                {/* Name */}
+                <div className={`mt-3 font-semibold text-white leading-tight transition-all duration-300 ${
+                  isCompressed ? 'text-[9px]' : 'text-xs md:text-sm'
+                } ${hoveredId === playbook.id ? 'text-[#40a9ff]' : ''}`}>
+                  {isCompressed ? playbook.shortName.split(' ')[0] : playbook.shortName}
+                </div>
+
+                {/* Deployment count */}
+                <div className={`text-[#C4FF61] font-mono transition-all duration-300 ${
+                  isCompressed ? 'text-[8px] mt-0.5' : 'text-xs mt-1'
+                }`}>
+                  {isCompressed ? `${playbook.deployments}x` : `${playbook.deployments}x deployed`}
+                </div>
+
+                {/* Hover indicator line */}
+                <div
+                  className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-[#1890FF] transition-all duration-300 ${
+                    hoveredId === playbook.id ? 'w-12 opacity-100' : 'w-0 opacity-0'
+                  }`}
+                />
               </button>
             );
           })}
         </div>
 
         {/* Section Footer */}
-        <div className="mt-12 p-6 rounded-lg border-2 border-dashed border-[#1890FF]/30 text-center">
+        <div className="mt-12 p-6 rounded-lg border border-[#1890FF]/20 text-center bg-[#001020]/50">
           <p className="text-white text-lg font-semibold mb-1">
             Can't find your exact scenario?
           </p>
-          <p className="text-white/60 text-sm mb-5">
+          <p className="text-white/50 text-sm mb-5">
             We've documented 100+ patterns beyond these 8.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-[#1890FF] text-white font-semibold text-sm hover:bg-[#40a9ff] transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-[#1890FF] text-white font-semibold text-sm hover:bg-[#40a9ff] transition-all duration-300 hover:shadow-[0_0_20px_rgba(24,144,255,0.4)]"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C4FF61]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C4FF61] animate-pulse" />
               Talk to an Architect
             </Link>
             <Link
               href="/case-studies"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border-2 border-white/30 text-white font-semibold text-sm hover:border-white/60 hover:bg-white/5 transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/20 text-white font-semibold text-sm hover:border-white/40 hover:bg-white/5 transition-all duration-300"
             >
-              See All Case Studies
+              See all Playbooks
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Unroll animation keyframes */}
+      {/* Keyframe animations */}
       <style jsx>{`
-        @keyframes unroll {
-          0% {
-            transform: scaleX(0.1) scaleY(0.8);
-            opacity: 0;
-          }
-          50% {
-            transform: scaleX(1) scaleY(0.9);
-            opacity: 0.8;
-          }
-          100% {
-            transform: scaleX(1) scaleY(1);
-            opacity: 1;
-          }
+        @keyframes float {
+          0%, 100% { transform: translateY(0) translateX(0); }
+          25% { transform: translateY(-10px) translateX(5px); }
+          50% { transform: translateY(-5px) translateX(-5px); }
+          75% { transform: translateY(-15px) translateX(3px); }
+        }
+        @keyframes scan {
+          0% { top: 0%; }
+          100% { top: 100%; }
+        }
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        @keyframes gridPulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
         }
       `}</style>
     </section>
