@@ -810,8 +810,8 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
         >
           {/* Challenge Pattern */}
           <div className="space-y-4">
-            <h3 className="text-white/90 font-semibold text-base capitalize tracking-wide flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#0052CC]" />
+            <h3 className="text-white font-semibold text-base capitalize tracking-wide flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#C4FF61]" />
               Challenge Pattern
             </h3>
             <ul className="space-y-3">
@@ -834,7 +834,7 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
 
           {/* Key Learnings */}
           <div className="space-y-4">
-            <h3 className="text-white/90 font-semibold text-base capitalize tracking-wide flex items-center gap-2">
+            <h3 className="text-white font-semibold text-base capitalize tracking-wide flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#C4FF61]" />
               Key Learnings
             </h3>
@@ -858,7 +858,8 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
 
           {/* Outcomes */}
           <div className="space-y-4">
-            <h3 className="text-white/90 font-semibold text-base capitalize tracking-wide">
+            <h3 className="text-white font-semibold text-base capitalize tracking-wide flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#C4FF61]" />
               Outcomes Achieved
             </h3>
             <div className="grid gap-3">
@@ -893,7 +894,8 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
         >
           {/* Architecture Stack */}
           <div className="mb-8">
-            <h3 className="text-white/90 font-semibold text-base capitalize tracking-wide mb-4">
+            <h3 className="text-white font-semibold text-base capitalize tracking-wide mb-4 flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#0052CC]" />
               Architecture Stack
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -910,7 +912,8 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
 
           {/* Industries */}
           <div className="mb-8">
-            <h3 className="text-white/90 font-semibold text-base capitalize tracking-wide mb-4">
+            <h3 className="text-white font-semibold text-base capitalize tracking-wide mb-4 flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#0052CC]" />
               Industries Deployed
             </h3>
             <div className="flex flex-wrap gap-2">
