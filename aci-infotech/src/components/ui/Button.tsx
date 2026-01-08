@@ -48,7 +48,7 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
     // Variant styles - updated with new design system colors and shadows
     const variantStyles = {
       primary:
-        'bg-[#0052CC] text-white hover:bg-[#003D99] hover:shadow-[0_4px_12px_rgba(0,82,204,0.25)] focus:ring-[#0052CC]',
+        'bg-[#0052CC] text-white hover:bg-[#003D99] hover:text-[#C4FF61] hover:shadow-[0_4px_12px_rgba(0,82,204,0.25)] focus:ring-[#0052CC]',
       secondary:
         'bg-white text-[#0A1628] border border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md focus:ring-gray-300',
       ghost:
@@ -59,12 +59,12 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
         'bg-transparent text-white border-2 border-white/30 hover:border-white/80 hover:bg-white/5 focus:ring-white/50',
     };
 
-    // Size styles - updated padding to match design system
+    // Size styles - updated with sharp corners (rounded-sm = 2px)
     const sizeStyles = {
-      sm: 'px-4 py-2 text-sm rounded-md',
-      md: 'px-5 py-2.5 text-sm rounded-[6px]',
-      lg: 'px-6 py-3 text-base rounded-[6px]',
-      xl: 'px-8 py-4 text-lg rounded-[6px]',
+      sm: 'px-4 py-2 text-sm rounded-sm',
+      md: 'px-5 py-2.5 text-sm rounded-sm',
+      lg: 'px-6 py-3 text-base rounded-sm',
+      xl: 'px-8 py-4 text-lg rounded-sm',
     };
 
     // Combined class names

@@ -2,7 +2,19 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Link from 'next/link';
-import { X, ArrowRight, Sparkles } from 'lucide-react';
+import {
+  X,
+  ArrowRight,
+  Sparkles,
+  Zap,
+  Radio,
+  Globe,
+  BarChart3,
+  Shield,
+  Truck,
+  Cloud,
+  GitMerge
+} from 'lucide-react';
 
 // ============================================================================
 // PLAYBOOK DATA
@@ -22,7 +34,7 @@ interface PlaybookData {
   architecture: string[];
   category: 'data' | 'cloud' | 'analytics' | 'integration';
   gradient: string;
-  icon: string;
+  iconType: 'zap' | 'radio' | 'globe' | 'barchart' | 'shield' | 'truck' | 'cloud' | 'gitmerge';
 }
 
 const PLAYBOOKS: PlaybookData[] = [
@@ -53,7 +65,7 @@ const PLAYBOOKS: PlaybookData[] = [
     architecture: ['SAP S/4HANA', 'Python ETL', 'Azure/AWS', 'PowerBI', 'Auto Reconciliation', 'Audit Logging'],
     category: 'integration',
     gradient: 'from-violet-500 to-purple-600',
-    icon: '⚡',
+    iconType: 'zap',
   },
   {
     id: 'multi-location',
@@ -82,7 +94,7 @@ const PLAYBOOKS: PlaybookData[] = [
     architecture: ['Kafka/Kinesis', 'Databricks', 'Delta Lake', 'Salesforce/Braze', 'Dynatrace', 'Real-time Dashboards'],
     category: 'data',
     gradient: 'from-cyan-500 to-blue-600',
-    icon: '🔄',
+    iconType: 'radio',
   },
   {
     id: 'global-unification',
@@ -111,7 +123,7 @@ const PLAYBOOKS: PlaybookData[] = [
     architecture: ['Informatica IICS', 'MDM', 'Cloud Data Lakes', 'API Gateway', 'Global Dashboards', 'Regional Integration'],
     category: 'data',
     gradient: 'from-emerald-500 to-teal-600',
-    icon: '🌐',
+    iconType: 'globe',
   },
   {
     id: 'self-service-analytics',
@@ -140,7 +152,7 @@ const PLAYBOOKS: PlaybookData[] = [
     architecture: ['Databricks', 'Power BI/Tableau', 'Row-Level Security', 'Real-time Refresh', 'Pre-built Dashboards', 'HIPAA Logging'],
     category: 'analytics',
     gradient: 'from-amber-500 to-orange-600',
-    icon: '📊',
+    iconType: 'barchart',
   },
   {
     id: 'healthcare-data',
@@ -169,7 +181,7 @@ const PLAYBOOKS: PlaybookData[] = [
     architecture: ['Patient MDM', 'Compliance Automation', 'Encrypted Storage', 'API Gateway', 'Clinical Integration', 'Audit Logging'],
     category: 'data',
     gradient: 'from-rose-500 to-pink-600',
-    icon: '🏥',
+    iconType: 'shield',
   },
   {
     id: 'supply-chain',
@@ -198,7 +210,7 @@ const PLAYBOOKS: PlaybookData[] = [
     architecture: ['Snowflake/Databricks', 'IoT Integration', 'SAP/Oracle', 'ML Forecasting', 'Tableau/PowerBI', 'Real-time Alerting'],
     category: 'analytics',
     gradient: 'from-lime-500 to-green-600',
-    icon: '📦',
+    iconType: 'truck',
   },
   {
     id: 'cloud-migration',
@@ -227,7 +239,7 @@ const PLAYBOOKS: PlaybookData[] = [
     architecture: ['AWS/Azure/GCP', 'Databricks/Snowflake', 'Migration Tools', 'Data Validation', 'Terraform IaC', 'Cost Optimization'],
     category: 'cloud',
     gradient: 'from-blue-500 to-indigo-600',
-    icon: '☁️',
+    iconType: 'cloud',
   },
   {
     id: 'data-integration',
@@ -256,9 +268,21 @@ const PLAYBOOKS: PlaybookData[] = [
     architecture: ['Fivetran/Airbyte', 'Informatica/Mulesoft', 'Databricks/Snowflake', 'Great Expectations', 'Unified Model', 'Self-healing Pipelines'],
     category: 'integration',
     gradient: 'from-fuchsia-500 to-purple-600',
-    icon: '🔗',
+    iconType: 'gitmerge',
   },
 ];
+
+// Icon component map
+const IconMap = {
+  zap: Zap,
+  radio: Radio,
+  globe: Globe,
+  barchart: BarChart3,
+  shield: Shield,
+  truck: Truck,
+  cloud: Cloud,
+  gitmerge: GitMerge,
+};
 
 // ============================================================================
 // ANIMATED SVG BACKGROUND - FLOWING DATA ARCHITECTURE
@@ -566,15 +590,20 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
         <div className="relative p-6 h-full flex flex-col">
           {/* Top section: Icon + Category */}
           <div className="flex items-start justify-between mb-4">
-            <div
-              className={`
-                w-14 h-14 rounded-xl flex items-center justify-center text-2xl
-                bg-gradient-to-br ${playbook.gradient}
-                shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300
-              `}
-            >
-              {playbook.icon}
-            </div>
+            {(() => {
+              const IconComponent = IconMap[playbook.iconType];
+              return (
+                <div
+                  className={`
+                    w-12 h-12 rounded-sm flex items-center justify-center
+                    bg-gradient-to-br ${playbook.gradient}
+                    shadow-lg transform group-hover:scale-110 transition-transform duration-300
+                  `}
+                >
+                  <IconComponent className="w-6 h-6 text-white" strokeWidth={1.5} />
+                </div>
+              );
+            })()}
             <div className="flex flex-col items-end">
               <span className="text-[#C4FF61] font-mono text-sm font-bold">
                 {playbook.deployments}x
@@ -584,7 +613,7 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
           </div>
 
           {/* Title */}
-          <h3 className="text-white font-bold text-lg mb-2 group-hover:text-[#C4FF61] transition-colors duration-300 line-clamp-2">
+          <h3 className="text-white font-semibold text-sm mb-2 group-hover:text-[#C4FF61] transition-colors duration-300">
             {playbook.displayTitle}
           </h3>
 
@@ -740,15 +769,20 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
           }}
         >
           <div className="flex items-start gap-6">
-            <div
-              className={`
-                w-20 h-20 rounded-2xl flex items-center justify-center text-4xl
-                bg-gradient-to-br ${playbook.gradient}
-                shadow-2xl
-              `}
-            >
-              {playbook.icon}
-            </div>
+            {(() => {
+              const IconComponent = IconMap[playbook.iconType];
+              return (
+                <div
+                  className={`
+                    w-16 h-16 rounded-sm flex items-center justify-center
+                    bg-gradient-to-br ${playbook.gradient}
+                    shadow-2xl
+                  `}
+                >
+                  <IconComponent className="w-8 h-8 text-white" strokeWidth={1.5} />
+                </div>
+              );
+            })()}
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
                 <span className="px-3 py-1 rounded-full bg-[#C4FF61]/10 text-[#C4FF61] text-sm font-medium border border-[#C4FF61]/20">
@@ -776,7 +810,7 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
         >
           {/* Challenge Pattern */}
           <div className="space-y-4">
-            <h3 className="text-[#0052CC] font-bold text-sm uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-white/90 font-semibold text-base capitalize tracking-wide flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#0052CC]" />
               Challenge Pattern
             </h3>
@@ -800,8 +834,8 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
 
           {/* Key Learnings */}
           <div className="space-y-4">
-            <h3 className="text-[#C4FF61] font-bold text-sm uppercase tracking-wider flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
+            <h3 className="text-white/90 font-semibold text-base capitalize tracking-wide flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#C4FF61]" />
               Key Learnings
             </h3>
             <ul className="space-y-3">
@@ -824,7 +858,7 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
 
           {/* Outcomes */}
           <div className="space-y-4">
-            <h3 className="text-white font-bold text-sm uppercase tracking-wider">
+            <h3 className="text-white/90 font-semibold text-base capitalize tracking-wide">
               Outcomes Achieved
             </h3>
             <div className="grid gap-3">
@@ -859,7 +893,7 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
         >
           {/* Architecture Stack */}
           <div className="mb-8">
-            <h3 className="text-white/60 font-medium text-sm uppercase tracking-wider mb-4">
+            <h3 className="text-white/90 font-semibold text-base capitalize tracking-wide mb-4">
               Architecture Stack
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -876,7 +910,7 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
 
           {/* Industries */}
           <div className="mb-8">
-            <h3 className="text-white/60 font-medium text-sm uppercase tracking-wider mb-4">
+            <h3 className="text-white/90 font-semibold text-base capitalize tracking-wide mb-4">
               Industries Deployed
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -895,7 +929,7 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
           <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-white/10">
             <Link
               href={`/contact?playbook=${playbook.id}`}
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-[#0052CC] text-white font-semibold hover:bg-[#003D99] transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,82,204,0.5)] group"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-sm bg-[#0052CC] text-white font-semibold hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,82,204,0.5)] group"
             >
               <span className="w-2 h-2 rounded-full bg-[#C4FF61] group-hover:scale-125 transition-transform" />
               Talk to the Architect
@@ -903,7 +937,7 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
             </Link>
             <Link
               href={`/playbooks/${playbook.slug}`}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-white/20 text-white/80 font-medium hover:border-white/40 hover:bg-white/5 transition-all duration-300"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-sm border border-white/20 text-white/80 font-medium hover:border-white/40 hover:bg-white/5 transition-all duration-300"
             >
               View Full Playbook
             </Link>
@@ -1128,14 +1162,14 @@ export default function PlaybookVaultSection() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-[#0052CC] text-white font-semibold hover:bg-[#003D99] transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,82,204,0.4)] group"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-sm bg-[#0052CC] text-white font-semibold hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,82,204,0.4)] group"
               >
                 <span className="w-2 h-2 rounded-full bg-[#C4FF61] group-hover:scale-125 transition-transform" />
                 Talk to an Architect
               </Link>
               <Link
                 href="/playbooks"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border border-white/20 text-white/80 font-medium hover:border-white/40 hover:bg-white/5 transition-all duration-300"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-sm border border-white/20 text-white/80 font-medium hover:border-white/40 hover:bg-white/5 transition-all duration-300"
               >
                 Explore All Playbooks
                 <ArrowRight className="w-4 h-4" />
