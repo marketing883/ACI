@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate download token
-    const downloadToken = uuidv4();
+    const downloadToken = crypto.randomUUID();
     const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
     // Insert into Supabase
