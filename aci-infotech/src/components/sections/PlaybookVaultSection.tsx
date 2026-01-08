@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { X, ChevronRight, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import { X, ChevronRight } from 'lucide-react';
 
 // ============================================================================
 // PLAYBOOK DATA
@@ -234,304 +235,124 @@ const PLAYBOOKS: PlaybookData[] = [
 ];
 
 // ============================================================================
-// FLOATING PARTICLES BACKGROUND
+// REALISTIC BLUEPRINT SCROLL ICON - Using CSS gradients for 3D effect
 // ============================================================================
 
-function FloatingParticles() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
-  const particlesRef = useRef<Array<{
-    x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    size: number;
-    opacity: number;
-    pulse: number;
-  }>>([]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    const particleCount = 60;
-    particlesRef.current = Array.from({ length: particleCount }, () => ({
-      x: Math.random() * canvas.offsetWidth,
-      y: Math.random() * canvas.offsetHeight,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      size: Math.random() * 2 + 1,
-      opacity: Math.random() * 0.5 + 0.2,
-      pulse: Math.random() * Math.PI * 2,
-    }));
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-
-      particlesRef.current.forEach((particle) => {
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-        particle.pulse += 0.02;
-
-        if (particle.x < 0) particle.x = canvas.offsetWidth;
-        if (particle.x > canvas.offsetWidth) particle.x = 0;
-        if (particle.y < 0) particle.y = canvas.offsetHeight;
-        if (particle.y > canvas.offsetHeight) particle.y = 0;
-
-        const pulseOpacity = particle.opacity * (0.7 + 0.3 * Math.sin(particle.pulse));
-
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(100, 180, 255, ${pulseOpacity})`;
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(100, 180, 255, ${pulseOpacity * 0.15})`;
-        ctx.fill();
-      });
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, []);
-
+function BlueprintScrollIcon({ isHovered = false, size = 64 }: { isHovered?: boolean; size?: number }) {
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ opacity: 0.6 }}
-    />
-  );
-}
-
-// ============================================================================
-// HOLOGRAPHIC CARD COMPONENT
-// ============================================================================
-
-interface HolographicCardProps {
-  playbook: PlaybookData;
-  index: number;
-  isSelected: boolean;
-  onSelect: () => void;
-}
-
-function HolographicCard({ playbook, index, isSelected, onSelect }: HolographicCardProps) {
-  const cardRef = useRef<HTMLButtonElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const [localMouse, setLocalMouse] = useState({ x: 0.5, y: 0.5 });
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    setLocalMouse({
-      x: (e.clientX - rect.left) / rect.width,
-      y: (e.clientY - rect.top) / rect.height,
-    });
-  }, []);
-
-  const rotateX = isHovered ? (localMouse.y - 0.5) * -15 : 0;
-  const rotateY = isHovered ? (localMouse.x - 0.5) * 15 : 0;
-
-  return (
-    <button
-      ref={cardRef}
-      onClick={onSelect}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        setLocalMouse({ x: 0.5, y: 0.5 });
+    <div
+      className="relative transition-transform duration-500"
+      style={{
+        width: size,
+        height: size * 0.75,
+        transform: isHovered ? 'scale(1.1) rotateY(-5deg)' : 'scale(1)',
+        transformStyle: 'preserve-3d',
+        perspective: '200px',
       }}
-      onMouseMove={handleMouseMove}
-      className="group relative w-full text-left focus:outline-none cursor-pointer"
-      style={{ perspective: '1000px' }}
     >
+      {/* Main scroll body */}
       <div
-        className="relative rounded-2xl p-6 transition-all duration-500 ease-out"
+        className="absolute inset-0 rounded-sm overflow-hidden"
         style={{
-          transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${isHovered ? '30px' : '0'}) scale(${isHovered ? 1.02 : 1})`,
-          transformStyle: 'preserve-3d',
-          background: isSelected
-            ? 'linear-gradient(135deg, rgba(0, 82, 204, 0.4) 0%, rgba(30, 58, 95, 0.95) 100%)'
-            : isHovered
-              ? 'linear-gradient(135deg, rgba(30, 58, 95, 0.9) 0%, rgba(20, 40, 70, 0.95) 100%)'
-              : 'linear-gradient(135deg, rgba(20, 45, 80, 0.7) 0%, rgba(15, 30, 55, 0.8) 100%)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid',
-          borderColor: isSelected
-            ? 'rgba(100, 180, 255, 0.7)'
-            : isHovered
-              ? 'rgba(100, 180, 255, 0.5)'
-              : 'rgba(100, 180, 255, 0.2)',
-          boxShadow: isSelected
-            ? '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 60px rgba(100, 180, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-            : isHovered
-              ? '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(100, 180, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-              : '0 10px 40px -10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+          background: `linear-gradient(135deg,
+            #1a4a6e 0%,
+            #0d3a5c 15%,
+            #1a5a7e 30%,
+            #0d3a5c 50%,
+            #1a5a7e 70%,
+            #0d3a5c 85%,
+            #1a4a6e 100%
+          )`,
+          boxShadow: isHovered
+            ? '0 8px 32px rgba(24, 144, 255, 0.4), inset 0 2px 4px rgba(255,255,255,0.1)'
+            : '0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255,255,255,0.05)',
+          border: '1px solid rgba(24, 144, 255, 0.3)',
         }}
       >
-        {/* Holographic shine effect */}
+        {/* Blueprint grid lines */}
         <div
-          className="absolute inset-0 rounded-2xl pointer-events-none overflow-hidden"
+          className="absolute inset-0"
           style={{
-            background: isHovered
-              ? `radial-gradient(circle at ${localMouse.x * 100}% ${localMouse.y * 100}%, rgba(255, 255, 255, 0.15) 0%, transparent 50%)`
-              : 'none',
-            transition: 'opacity 0.3s ease',
+            backgroundImage: `
+              linear-gradient(rgba(24,144,255,0.15) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(24,144,255,0.15) 1px, transparent 1px)
+            `,
+            backgroundSize: '8px 8px',
           }}
         />
 
-        {/* Glowing border effect on hover */}
+        {/* Horizontal blueprint lines */}
+        <div className="absolute inset-x-2 top-[20%] h-px bg-white/20" />
+        <div className="absolute inset-x-2 top-[40%] h-px bg-white/10" />
+        <div className="absolute inset-x-2 top-[60%] h-px bg-white/20" />
+        <div className="absolute inset-x-2 top-[80%] h-px bg-white/10" />
+
+        {/* Shine effect */}
         <div
-          className="absolute inset-0 rounded-2xl pointer-events-none"
+          className="absolute inset-0"
           style={{
-            background: 'linear-gradient(135deg, rgba(100, 180, 255, 0.3) 0%, transparent 50%, rgba(150, 100, 255, 0.2) 100%)',
-            opacity: isHovered || isSelected ? 1 : 0,
-            transition: 'opacity 0.5s ease',
-            mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-            maskComposite: 'xor',
-            WebkitMaskComposite: 'xor',
-            padding: '1px',
-          }}
-        />
-
-        {/* Content */}
-        <div className="relative z-10">
-          {/* Deployment badge */}
-          <div className="flex items-center justify-between mb-4">
-            <div
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono font-semibold"
-              style={{
-                background: 'linear-gradient(135deg, rgba(100, 180, 255, 0.2) 0%, rgba(100, 150, 255, 0.1) 100%)',
-                border: '1px solid rgba(100, 180, 255, 0.3)',
-                color: '#64B4FF',
-              }}
-            >
-              <span
-                className="w-2 h-2 rounded-full"
-                style={{
-                  background: '#4ADE80',
-                  boxShadow: '0 0 8px rgba(74, 222, 128, 0.6)',
-                  animation: 'pulse 2s ease-in-out infinite',
-                }}
-              />
-              {playbook.deployments}x Deployed
-            </div>
-
-            {/* Arrow indicator */}
-            <ChevronRight
-              className="w-5 h-5 transition-all duration-300"
-              style={{
-                color: isHovered || isSelected ? '#64B4FF' : 'rgba(255, 255, 255, 0.3)',
-                transform: isHovered ? 'translateX(4px)' : 'translateX(0)',
-              }}
-            />
-          </div>
-
-          {/* Title */}
-          <h3
-            className="text-xl font-bold mb-3 transition-colors duration-300"
-            style={{
-              color: isHovered || isSelected ? '#ffffff' : 'rgba(255, 255, 255, 0.9)',
-              textShadow: isHovered || isSelected ? '0 0 20px rgba(100, 180, 255, 0.3)' : 'none',
-            }}
-          >
-            {playbook.displayTitle}
-          </h3>
-
-          {/* Industries preview */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {playbook.industries.slice(0, 3).map((industry, i) => (
-              <span
-                key={i}
-                className="text-xs px-2 py-1 rounded-md transition-all duration-300"
-                style={{
-                  background: isHovered
-                    ? 'rgba(100, 180, 255, 0.15)'
-                    : 'rgba(255, 255, 255, 0.05)',
-                  color: isHovered ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.5)',
-                  border: `1px solid ${isHovered ? 'rgba(100, 180, 255, 0.3)' : 'rgba(255, 255, 255, 0.1)'}`,
-                }}
-              >
-                {industry}
-              </span>
-            ))}
-            {playbook.industries.length > 3 && (
-              <span className="text-xs px-2 py-1 rounded-md" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
-                +{playbook.industries.length - 3}
-              </span>
-            )}
-          </div>
-
-          {/* Click to explore hint */}
-          <div
-            className="flex items-center gap-2 text-xs transition-all duration-300"
-            style={{
-              color: isHovered ? '#64B4FF' : 'rgba(255, 255, 255, 0.3)',
-              opacity: isHovered ? 1 : 0.6,
-            }}
-          >
-            <Sparkles className="w-3 h-3" />
-            <span>{isSelected ? 'Click to close' : 'Click to explore'}</span>
-          </div>
-        </div>
-
-        {/* Bottom light trail */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-px"
-          style={{
-            background: isHovered || isSelected
-              ? 'linear-gradient(90deg, transparent 0%, rgba(100, 180, 255, 0.8) 50%, transparent 100%)'
-              : 'linear-gradient(90deg, transparent 0%, rgba(100, 180, 255, 0.2) 50%, transparent 100%)',
-            transition: 'all 0.5s ease',
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%)',
           }}
         />
       </div>
-    </button>
+
+      {/* Left scroll roll end */}
+      <div
+        className="absolute left-0 top-0 bottom-0 w-3 rounded-l-full"
+        style={{
+          background: 'linear-gradient(90deg, #0a2a3e 0%, #1a5a7e 40%, #0d3a5c 100%)',
+          boxShadow: '2px 0 8px rgba(0,0,0,0.3), inset 1px 0 2px rgba(255,255,255,0.1)',
+          border: '1px solid rgba(24, 144, 255, 0.4)',
+          borderRight: 'none',
+        }}
+      />
+
+      {/* Right scroll roll end */}
+      <div
+        className="absolute right-0 top-0 bottom-0 w-3 rounded-r-full"
+        style={{
+          background: 'linear-gradient(90deg, #0d3a5c 0%, #1a5a7e 60%, #0a2a3e 100%)',
+          boxShadow: '-2px 0 8px rgba(0,0,0,0.3), inset -1px 0 2px rgba(255,255,255,0.1)',
+          border: '1px solid rgba(24, 144, 255, 0.4)',
+          borderLeft: 'none',
+        }}
+      />
+
+      {/* Glow effect on hover */}
+      {isHovered && (
+        <div
+          className="absolute -inset-2 rounded-lg pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(24, 144, 255, 0.2) 0%, transparent 70%)',
+            animation: 'pulse 2s ease-in-out infinite',
+          }}
+        />
+      )}
+    </div>
   );
 }
 
 // ============================================================================
-// EXPANDED DETAIL PANEL WITH SMOOTH PERSPECTIVE ANIMATION
+// EXPANDED PLAYBOOK CONTENT WITH SMOOTH PERSPECTIVE ANIMATION
 // ============================================================================
 
-function ExpandedDetailPanel({
+function ExpandedPlaybook({
   playbook,
   onClose,
-  isVisible,
+  isVisible
 }: {
   playbook: PlaybookData;
   onClose: () => void;
   isVisible: boolean;
 }) {
-  const [contentVisible, setContentVisible] = useState(false);
+  const [contentReady, setContentReady] = useState(false);
 
   useEffect(() => {
     if (isVisible) {
-      const timer = setTimeout(() => setContentVisible(true), 150);
+      const timer = setTimeout(() => setContentReady(true), 400);
       return () => clearTimeout(timer);
     } else {
-      setContentVisible(false);
+      setContentReady(false);
     }
   }, [isVisible]);
 
@@ -539,127 +360,112 @@ function ExpandedDetailPanel({
     <div
       className="overflow-hidden"
       style={{
-        perspective: '2000px',
+        perspective: '1500px',
         perspectiveOrigin: 'center top',
       }}
     >
       <div
-        className="relative rounded-2xl transition-all ease-out"
+        className="relative rounded-xl border border-[#1890FF]/40 overflow-hidden"
         style={{
-          transitionDuration: '800ms',
-          transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-          maxHeight: isVisible ? '700px' : '0',
-          opacity: isVisible ? 1 : 0,
+          background: 'linear-gradient(180deg, #001020 0%, #001529 50%, #001830 100%)',
           transform: isVisible
-            ? 'rotateX(0deg) translateY(0) scale(1)'
-            : 'rotateX(-15deg) translateY(-30px) scale(0.95)',
+            ? 'rotateX(0deg) translateY(0) scaleY(1)'
+            : 'rotateX(-30deg) translateY(-50px) scaleY(0.8)',
+          opacity: isVisible ? 1 : 0,
+          maxHeight: isVisible ? '600px' : '0px',
           transformOrigin: 'center top',
-          background: 'linear-gradient(135deg, rgba(20, 45, 80, 0.95) 0%, rgba(10, 25, 50, 0.98) 100%)',
-          backdropFilter: 'blur(30px)',
-          border: '1px solid rgba(100, 180, 255, 0.3)',
+          transition: `
+            transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+            opacity 0.5s ease-out,
+            max-height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)
+          `,
           boxShadow: isVisible
-            ? '0 30px 60px -20px rgba(0, 0, 0, 0.5), 0 0 80px rgba(100, 180, 255, 0.15)'
+            ? '0 20px 60px -20px rgba(24, 144, 255, 0.3), 0 0 40px rgba(24, 144, 255, 0.1)'
             : 'none',
-          marginTop: isVisible ? '24px' : '0',
-          marginBottom: isVisible ? '24px' : '0',
         }}
       >
-        {/* Animated border glow */}
+        {/* Animated top edge - unfurling effect */}
         <div
-          className="absolute inset-0 rounded-2xl pointer-events-none overflow-hidden"
+          className="absolute top-0 left-0 right-0 h-1 z-10"
           style={{
-            opacity: isVisible ? 1 : 0,
-            transition: 'opacity 0.5s ease 0.3s',
+            background: 'linear-gradient(90deg, transparent, rgba(24, 144, 255, 0.6), transparent)',
+            transform: isVisible ? 'scaleX(1)' : 'scaleX(0)',
+            transition: 'transform 0.6s ease-out 0.2s',
           }}
-        >
-          <div
-            className="absolute inset-0"
-            style={{
-              background: 'linear-gradient(90deg, transparent, rgba(100, 180, 255, 0.3), transparent)',
-              animation: isVisible ? 'shimmer 2s ease-in-out infinite' : 'none',
-            }}
-          />
-        </div>
+        />
+
+        {/* Blueprint grid overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(24,144,255,0.04) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(24,144,255,0.04) 1px, transparent 1px)
+            `,
+            backgroundSize: '20px 20px',
+          }}
+        />
 
         {/* Header */}
         <div
-          className="relative flex items-start justify-between p-8 pb-6 border-b border-white/10"
+          className="relative flex items-center justify-between p-5 border-b border-[#1890FF]/20"
           style={{
-            opacity: contentVisible ? 1 : 0,
-            transform: contentVisible ? 'translateY(0)' : 'translateY(-10px)',
-            transition: 'all 0.5s ease 0.2s',
+            opacity: contentReady ? 1 : 0,
+            transform: contentReady ? 'translateY(0)' : 'translateY(-20px)',
+            transition: 'all 0.5s ease-out 0.3s',
           }}
         >
-          <div>
-            <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-mono font-bold mb-4"
-              style={{
-                background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(74, 222, 128, 0.1) 100%)',
-                border: '1px solid rgba(74, 222, 128, 0.4)',
-                color: '#4ADE80',
-                boxShadow: '0 0 20px rgba(74, 222, 128, 0.2)',
-              }}
-            >
-              <span
-                className="w-2 h-2 rounded-full"
-                style={{
-                  background: '#4ADE80',
-                  boxShadow: '0 0 8px rgba(74, 222, 128, 0.8)',
-                }}
-              />
-              DEPLOYED {playbook.deployments}x
+          <div className="flex items-center gap-4">
+            <BlueprintScrollIcon isHovered={true} size={48} />
+            <div>
+              <h3 className="text-xl font-bold text-white">
+                {playbook.displayTitle}
+              </h3>
+              <span className="text-[#C4FF61] text-sm font-mono">
+                Deployed {playbook.deployments}x
+              </span>
             </div>
-            <h3
-              className="text-3xl md:text-4xl font-bold text-white"
-              style={{ textShadow: '0 0 30px rgba(100, 180, 255, 0.2)' }}
-            >
-              {playbook.displayTitle}
-            </h3>
           </div>
           <button
             onClick={onClose}
-            className="p-3 rounded-xl transition-all duration-300 hover:scale-110"
-            style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-            }}
+            className="p-2 rounded-lg border border-[#1890FF]/30 hover:border-[#1890FF] hover:bg-[#1890FF]/10 transition-all duration-300"
           >
-            <X className="w-6 h-6 text-white/70 hover:text-white" />
+            <X className="w-5 h-5 text-white/70 hover:text-white" />
           </button>
         </div>
 
         {/* Content Grid */}
         <div
-          className="relative p-8 grid md:grid-cols-3 gap-8"
+          className="relative p-6 grid md:grid-cols-3 gap-6"
           style={{
-            opacity: contentVisible ? 1 : 0,
-            transform: contentVisible ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'all 0.6s ease 0.3s',
+            opacity: contentReady ? 1 : 0,
+            transform: contentReady ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'all 0.6s ease-out 0.4s',
           }}
         >
           {/* Column 1: Challenge & Learnings */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
-              <h4 className="text-sm font-semibold tracking-wider text-white/90 mb-4">
+              <h4 className="text-white text-sm font-semibold mb-3 uppercase tracking-wide">
                 Challenge Pattern
               </h4>
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 {playbook.challengePattern.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
-                    <span className="text-blue-400 mt-0.5">→</span>
+                  <li key={i} className="text-white/70 text-sm flex items-start gap-2">
+                    <span className="text-[#1890FF] mt-0.5">→</span>
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h4 className="text-sm font-semibold tracking-wider text-white/90 mb-4">
+              <h4 className="text-white text-sm font-semibold mb-3 uppercase tracking-wide">
                 Key Learnings
               </h4>
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 {playbook.keyLearnings.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
-                    <span className="text-emerald-400">•</span>
+                  <li key={i} className="text-white/70 text-sm flex items-start gap-2">
+                    <span className="text-[#C4FF61]">•</span>
                     {item}
                   </li>
                 ))}
@@ -667,46 +473,37 @@ function ExpandedDetailPanel({
             </div>
           </div>
 
-          {/* Column 2: Outcomes */}
-          <div className="space-y-6">
+          {/* Column 2: Outcomes & Industries */}
+          <div className="space-y-5">
             <div>
-              <h4 className="text-sm font-semibold tracking-wider text-white/90 mb-4">
+              <h4 className="text-white text-sm font-semibold mb-3 uppercase tracking-wide">
                 Outcomes Achieved
               </h4>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-2">
                 {playbook.outcomes.map((outcome, i) => (
                   <div
                     key={i}
-                    className="p-4 rounded-xl text-center"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(100, 180, 255, 0.1) 0%, rgba(100, 150, 255, 0.05) 100%)',
-                      border: '1px solid rgba(100, 180, 255, 0.2)',
-                    }}
+                    className="p-3 rounded-lg bg-[#1890FF]/10 border border-[#1890FF]/20 text-center"
                   >
-                    <div
-                      className="text-2xl font-bold font-mono mb-1"
-                      style={{ color: '#64B4FF', textShadow: '0 0 15px rgba(100, 180, 255, 0.4)' }}
-                    >
+                    <div className="text-[#C4FF61] font-mono text-xl font-bold">
                       {outcome.metric}
                     </div>
-                    <div className="text-xs text-white/50">{outcome.description}</div>
+                    <div className="text-white/50 text-xs">
+                      {outcome.description}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
             <div>
-              <h4 className="text-sm font-semibold tracking-wider text-white/90 mb-4">
+              <h4 className="text-white text-sm font-semibold mb-3 uppercase tracking-wide">
                 Industries
               </h4>
               <div className="flex flex-wrap gap-2">
                 {playbook.industries.map((ind, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1.5 rounded-lg text-xs text-white/70"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                    }}
+                    className="px-2.5 py-1 rounded text-xs bg-white/5 border border-white/10 text-white/70"
                   >
                     {ind}
                   </span>
@@ -716,43 +513,28 @@ function ExpandedDetailPanel({
           </div>
 
           {/* Column 3: Architecture & CTA */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
-              <h4 className="text-sm font-semibold tracking-wider text-white/90 mb-4">
+              <h4 className="text-white text-sm font-semibold mb-3 uppercase tracking-wide">
                 Architecture Stack
               </h4>
               <div className="flex flex-wrap gap-2">
                 {playbook.architecture.map((comp, i) => (
-                  <span
+                  <div
                     key={i}
-                    className="px-3 py-1.5 rounded-lg text-xs font-mono"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(150, 100, 255, 0.15) 0%, rgba(100, 150, 255, 0.1) 100%)',
-                      border: '1px solid rgba(150, 100, 255, 0.3)',
-                      color: 'rgba(200, 180, 255, 0.9)',
-                    }}
+                    className="px-3 py-1.5 rounded text-xs font-mono bg-[#1890FF]/10 border border-[#1890FF]/30 text-white/80"
                   >
                     {comp}
-                  </span>
+                  </div>
                 ))}
               </div>
             </div>
-            <div className="pt-4">
+            <div className="pt-3">
               <Link
                 href={`/contact?playbook=${playbook.id}`}
-                className="inline-flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105"
-                style={{
-                  background: 'linear-gradient(135deg, #0052CC 0%, #0066FF 100%)',
-                  boxShadow: '0 10px 30px -10px rgba(0, 82, 204, 0.5), 0 0 20px rgba(0, 102, 255, 0.2)',
-                }}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-[#0052CC] text-white text-sm font-semibold hover:bg-[#0066FF] transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,82,204,0.5)]"
               >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{
-                    background: '#C4FF61',
-                    boxShadow: '0 0 8px rgba(196, 255, 97, 0.6)',
-                  }}
-                />
+                <span className="w-2 h-2 rounded-full bg-[#C4FF61]" />
                 Talk to the Architect
               </Link>
             </div>
@@ -764,176 +546,245 @@ function ExpandedDetailPanel({
 }
 
 // ============================================================================
+// PLAYBOOK CARD
+// ============================================================================
+
+function PlaybookCard({
+  playbook,
+  isExpanded,
+  isCompressed,
+  onExpand,
+  isHovered,
+  onHover,
+}: {
+  playbook: PlaybookData;
+  isExpanded: boolean;
+  isCompressed: boolean;
+  onExpand: () => void;
+  isHovered: boolean;
+  onHover: (hovered: boolean) => void;
+}) {
+  if (isExpanded) return null;
+
+  return (
+    <button
+      onClick={onExpand}
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+      className={`
+        group relative text-left transition-all duration-500 ease-out
+        ${isCompressed ? 'p-3' : 'p-4'}
+        rounded-xl border border-[#1890FF]/20
+        hover:border-[#1890FF]/50 hover:bg-[#1890FF]/5
+        cursor-pointer
+      `}
+      style={{
+        background: isHovered
+          ? 'linear-gradient(135deg, rgba(24,144,255,0.1) 0%, rgba(0,21,41,0.95) 100%)'
+          : 'linear-gradient(135deg, rgba(0,21,41,0.8) 0%, rgba(0,21,41,0.95) 100%)',
+        boxShadow: isHovered
+          ? '0 10px 40px -10px rgba(24, 144, 255, 0.3)'
+          : '0 4px 20px -5px rgba(0, 0, 0, 0.3)',
+      }}
+    >
+      {/* Scroll Icon */}
+      <div className={`flex ${isCompressed ? 'justify-center' : 'justify-start'} mb-3`}>
+        <BlueprintScrollIcon
+          isHovered={isHovered}
+          size={isCompressed ? 40 : 56}
+        />
+      </div>
+
+      {/* Content */}
+      {!isCompressed && (
+        <>
+          <h3 className="text-white font-semibold text-base mb-2 group-hover:text-[#40a9ff] transition-colors line-clamp-2">
+            {playbook.displayTitle}
+          </h3>
+
+          <div className="flex items-center justify-between">
+            <span className="text-[#C4FF61] text-xs font-mono">
+              {playbook.deployments}x deployed
+            </span>
+            <ChevronRight
+              className={`w-4 h-4 text-white/40 group-hover:text-[#1890FF] transition-all duration-300 ${
+                isHovered ? 'translate-x-1' : ''
+              }`}
+            />
+          </div>
+
+          {/* Click hint */}
+          <div
+            className="mt-3 pt-3 border-t border-white/10 text-xs text-white/40 group-hover:text-white/60 transition-colors"
+          >
+            Click to explore playbook
+          </div>
+        </>
+      )}
+
+      {isCompressed && (
+        <div className="text-center">
+          <span className="text-[#C4FF61] text-[10px] font-mono block">
+            {playbook.deployments}x
+          </span>
+        </div>
+      )}
+    </button>
+  );
+}
+
+// ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
 export default function PlaybookVaultSection() {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
 
-  // Split playbooks into rows
   const row1Playbooks = PLAYBOOKS.slice(0, 4);
   const row2Playbooks = PLAYBOOKS.slice(4, 8);
 
-  // Determine which row the selected playbook is in
-  const selectedRow = selectedId
-    ? row1Playbooks.find(p => p.id === selectedId) ? 1 : 2
+  const expandedRow = expandedId
+    ? row1Playbooks.find(p => p.id === expandedId) ? 1 : 2
     : null;
 
-  const selectedPlaybook = PLAYBOOKS.find((p) => p.id === selectedId);
+  const handleExpand = (id: string) => {
+    if (isAnimating) return;
+    setIsAnimating(true);
 
-  const handleSelect = (id: string) => {
-    if (selectedId === id) {
-      setSelectedId(null);
+    if (expandedId === id) {
+      setExpandedId(null);
     } else {
-      setSelectedId(id);
+      setExpandedId(id);
     }
+
+    setTimeout(() => setIsAnimating(false), 800);
   };
 
+  const expandedPlaybook = PLAYBOOKS.find(p => p.id === expandedId);
+
   return (
-    <section
-      ref={sectionRef}
-      className="relative py-24 md:py-32 overflow-hidden"
-      style={{
-        background: 'linear-gradient(180deg, #0A1628 0%, #0D1F3C 50%, #0A1628 100%)',
-      }}
-    >
-      {/* Animated gradient orbs */}
+    <section className="relative py-20 md:py-28 overflow-hidden bg-[#001529]">
+      {/* Blueprint grid background */}
       <div
-        className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 rounded-full blur-3xl pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(100, 180, 255, 0.08) 0%, transparent 70%)',
-          animation: 'float 20s ease-in-out infinite',
-        }}
-      />
-      <div
-        className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 rounded-full blur-3xl pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(150, 100, 255, 0.08) 0%, transparent 70%)',
-          animation: 'float 25s ease-in-out infinite reverse',
+          backgroundImage: `
+            linear-gradient(rgba(24,144,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(24,144,255,0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: '30px 30px',
         }}
       />
 
-      {/* Floating particles */}
-      <FloatingParticles />
+      {/* Ambient glow */}
+      <div
+        className="absolute top-1/4 left-1/4 w-1/2 h-1/2 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(24, 144, 255, 0.08) 0%, transparent 70%)',
+        }}
+      />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-mono mb-6"
-            style={{
-              background: 'rgba(100, 180, 255, 0.1)',
-              border: '1px solid rgba(100, 180, 255, 0.3)',
-              color: '#64B4FF',
-            }}
-          >
-            <span
-              className="w-2 h-2 rounded-full"
-              style={{ background: '#4ADE80', boxShadow: '0 0 8px rgba(74, 222, 128, 0.6)' }}
-            />
-            BATTLE-TESTED ARCHITECTURES
-          </div>
-          <h2
-            className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6"
-            style={{ textShadow: '0 0 40px rgba(100, 180, 255, 0.15)' }}
-          >
-            Proven Playbooks
+        <div className="text-center mb-14">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Proven Architectures
           </h2>
-          <p className="text-xl text-white/60 max-w-2xl mx-auto mb-4">
-            100+ enterprise deployments. Every challenge documented.
-            <br />
-            Every solution battle-tested.
+          <p className="text-lg text-white/70 mb-3">
+            100+ enterprise deployments. Every challenge. Every solution. Documented.
           </p>
-          <p className="text-sm text-white/40 max-w-3xl mx-auto">
-            Browse the playbooks. See how many times we've deployed each one. See how the approach improved with each deployment. See the outcomes.
+          <p className="text-white/40 text-sm max-w-2xl mx-auto">
+            Browse the playbooks. See how many times we've deployed each one.
+            See how the approach improved with each deployment. See the outcomes.
           </p>
         </div>
 
-        {/* Row 1 Cards */}
-        <div ref={row1Ref} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {row1Playbooks.map((playbook, index) => (
-            <HolographicCard
+        {/* Row 1 */}
+        <div
+          ref={row1Ref}
+          className={`grid gap-4 mb-4 transition-all duration-500 ${
+            expandedId && expandedRow !== 1
+              ? 'grid-cols-4 md:grid-cols-8'
+              : 'grid-cols-2 md:grid-cols-4'
+          }`}
+        >
+          {row1Playbooks.map((playbook) => (
+            <PlaybookCard
               key={playbook.id}
               playbook={playbook}
-              index={index}
-              isSelected={selectedId === playbook.id}
-              onSelect={() => handleSelect(playbook.id)}
+              isExpanded={expandedId === playbook.id}
+              isCompressed={!!(expandedId && expandedId !== playbook.id && expandedRow !== 1)}
+              onExpand={() => handleExpand(playbook.id)}
+              isHovered={hoveredId === playbook.id}
+              onHover={(h) => setHoveredId(h ? playbook.id : null)}
             />
           ))}
         </div>
 
         {/* Expanded Panel for Row 1 */}
-        {selectedPlaybook && selectedRow === 1 && (
-          <ExpandedDetailPanel
-            playbook={selectedPlaybook}
-            onClose={() => setSelectedId(null)}
-            isVisible={true}
-          />
+        {expandedPlaybook && expandedRow === 1 && (
+          <div className="mb-4">
+            <ExpandedPlaybook
+              playbook={expandedPlaybook}
+              onClose={() => handleExpand(expandedPlaybook.id)}
+              isVisible={true}
+            />
+          </div>
         )}
 
-        {/* Row 2 Cards */}
-        <div ref={row2Ref} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-          {row2Playbooks.map((playbook, index) => (
-            <HolographicCard
+        {/* Row 2 */}
+        <div
+          ref={row2Ref}
+          className={`grid gap-4 transition-all duration-500 ${
+            expandedId && expandedRow !== 2
+              ? 'grid-cols-4 md:grid-cols-8'
+              : 'grid-cols-2 md:grid-cols-4'
+          }`}
+        >
+          {row2Playbooks.map((playbook) => (
+            <PlaybookCard
               key={playbook.id}
               playbook={playbook}
-              index={index + 4}
-              isSelected={selectedId === playbook.id}
-              onSelect={() => handleSelect(playbook.id)}
+              isExpanded={expandedId === playbook.id}
+              isCompressed={!!(expandedId && expandedId !== playbook.id && expandedRow !== 2)}
+              onExpand={() => handleExpand(playbook.id)}
+              isHovered={hoveredId === playbook.id}
+              onHover={(h) => setHoveredId(h ? playbook.id : null)}
             />
           ))}
         </div>
 
         {/* Expanded Panel for Row 2 */}
-        {selectedPlaybook && selectedRow === 2 && (
-          <ExpandedDetailPanel
-            playbook={selectedPlaybook}
-            onClose={() => setSelectedId(null)}
-            isVisible={true}
-          />
+        {expandedPlaybook && expandedRow === 2 && (
+          <div className="mt-4">
+            <ExpandedPlaybook
+              playbook={expandedPlaybook}
+              onClose={() => handleExpand(expandedPlaybook.id)}
+              isVisible={true}
+            />
+          </div>
         )}
 
         {/* Footer CTA */}
-        <div
-          className="mt-16 p-8 rounded-2xl text-center"
-          style={{
-            background: 'linear-gradient(135deg, rgba(20, 45, 80, 0.6) 0%, rgba(15, 30, 55, 0.7) 100%)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(100, 180, 255, 0.2)',
-          }}
-        >
-          <p className="text-xl font-semibold text-white mb-2">
-            Can't find your exact scenario?
-          </p>
-          <p className="text-white/50 mb-6">
-            We've documented 100+ patterns beyond these 8.
+        <div className="mt-14 text-center">
+          <p className="text-white/50 text-sm mb-4">
+            Can't find your exact scenario? We've documented 100+ patterns beyond these 8.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105"
-              style={{
-                background: 'linear-gradient(135deg, #0052CC 0%, #0066FF 100%)',
-                boxShadow: '0 10px 30px -10px rgba(0, 82, 204, 0.5)',
-              }}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#0052CC] text-white font-semibold hover:bg-[#0066FF] transition-all duration-300"
             >
-              <span
-                className="w-2 h-2 rounded-full"
-                style={{ background: '#C4FF61', boxShadow: '0 0 8px rgba(196, 255, 97, 0.6)' }}
-              />
+              <span className="w-2 h-2 rounded-full bg-[#C4FF61]" />
               Talk to an Architect
             </Link>
             <Link
               href="/playbooks"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-              style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                color: 'rgba(255, 255, 255, 0.8)',
-              }}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/20 text-white/80 font-medium hover:border-white/40 hover:bg-white/5 transition-all"
             >
               View All Playbooks
             </Link>
@@ -941,21 +792,11 @@ export default function PlaybookVaultSection() {
         </div>
       </div>
 
-      {/* CSS Animations */}
+      {/* CSS Animation */}
       <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) rotate(0deg); }
-          25% { transform: translate(5%, 5%) rotate(2deg); }
-          50% { transform: translate(0, 10%) rotate(0deg); }
-          75% { transform: translate(-5%, 5%) rotate(-2deg); }
-        }
         @keyframes pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.7; transform: scale(1.2); }
-        }
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
         }
       `}</style>
     </section>
