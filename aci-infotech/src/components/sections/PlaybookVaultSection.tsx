@@ -237,9 +237,9 @@ const PLAYBOOKS: PlaybookData[] = [
 // ANIMATED BLUEPRINT ROLL SVG (No box, just the roll)
 // ============================================================================
 
-function BlueprintRollIcon({ isHovered = false, isCompressed = false }: { isHovered?: boolean; isCompressed?: boolean }) {
+function BlueprintRollIcon({ isHovered = false, isCompressed = false, uniqueId = 'default' }: { isHovered?: boolean; isCompressed?: boolean; uniqueId?: string }) {
   const size = isCompressed ? 36 : 56;
-  const id = `roll-${Math.random().toString(36).substr(2, 9)}`;
+  const id = `roll-${uniqueId}`;
 
   return (
     <svg width={size} height={size * 0.7} viewBox="0 0 80 56" fill="none" className="transition-transform duration-500">
@@ -519,7 +519,7 @@ function ExpandedPlaybook({
         <div className="relative flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <BlueprintRollIcon isHovered={true} />
+              <BlueprintRollIcon isHovered={true} uniqueId={`expanded-${playbook.id}`} />
             </div>
             <div>
               <h3 className="text-lg md:text-xl font-bold text-gray-900">
@@ -781,6 +781,7 @@ export default function PlaybookVaultSection() {
                   <BlueprintRollIcon
                     isHovered={hoveredId === playbook.id}
                     isCompressed={!!isCompressed}
+                    uniqueId={playbook.id}
                   />
                 </div>
 
