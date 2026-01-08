@@ -10,35 +10,35 @@ import Button from '@/components/ui/Button';
 const playbookInfo: Record<string, { title: string; displayTitle: string }> = {
   'post-acquisition-consolidation': {
     title: 'Post-Acquisition System Consolidation',
-    displayTitle: '40 Systems → One',
+    displayTitle: 'Post-M&A System Consolidation',
   },
   'real-time-data-platform': {
     title: 'Multi-Location Real-Time Data Platform',
-    displayTitle: '600 Stores, Real-Time',
+    displayTitle: 'Multi-Location Real-Time Data',
   },
   'global-data-unification': {
     title: 'Global Data Unification',
-    displayTitle: '55 Countries, One System',
+    displayTitle: 'Global Operations Data Unification',
   },
   'self-service-analytics': {
     title: 'Enterprise Self-Service Analytics',
-    displayTitle: '10K Users, Self-Served',
+    displayTitle: 'Enterprise Self-Service Analytics',
   },
   'healthcare-data-platform': {
     title: 'Multi-Jurisdiction Healthcare Data',
-    displayTitle: 'HIPAA + GDPR + More',
+    displayTitle: 'Multi-Jurisdiction Healthcare Data',
   },
   'supply-chain-visibility': {
     title: 'Supply Chain Visibility',
-    displayTitle: 'Supplier → Customer',
+    displayTitle: 'End-to-End Supply Chain Visibility',
   },
   'legacy-cloud-migration': {
     title: 'Legacy to Cloud Migration',
-    displayTitle: 'Hadoop → Cloud',
+    displayTitle: 'Legacy System Cloud Migration',
   },
   'multi-source-integration': {
     title: 'Multi-Source Data Integration',
-    displayTitle: '40 Sources, One Truth',
+    displayTitle: 'Multi-Source Data Integration',
   },
 };
 

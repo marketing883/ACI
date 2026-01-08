@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     // Check if token exists and is valid
     const { data, error } = await supabase
       .from('playbook_leads')
-      .select('id, token_expires_at, token_used')
+      .select('id, token_expiry, token_used')
       .eq('download_token', token)
       .single();
 
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if token has expired
-    const expiryDate = new Date(data.token_expires_at);
+    const expiryDate = new Date(data.token_expiry);
     if (expiryDate < new Date()) {
       return NextResponse.json({ valid: false, reason: 'expired' });
     }
