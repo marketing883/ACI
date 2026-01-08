@@ -29,10 +29,9 @@ export async function POST(request: NextRequest) {
         whitepaper_slug,
         whitepaper_title,
         download_token: downloadToken,
-        token_expires_at: tokenExpiry.toISOString(),
+        token_expiry: tokenExpiry.toISOString(),
         token_used: false,
         source: 'whitepaper_download',
-        status: 'new',
       },
     ]);
 

@@ -29,10 +29,9 @@ export async function POST(request: NextRequest) {
         playbook_slug,
         playbook_title,
         download_token: downloadToken,
-        token_expires_at: tokenExpiry.toISOString(),
+        token_expiry: tokenExpiry.toISOString(),
         token_used: false,
         source: 'playbook_download',
-        status: 'new',
       },
     ]);
 
