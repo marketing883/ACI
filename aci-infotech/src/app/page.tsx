@@ -142,6 +142,12 @@ export default function HomePage() {
       {/* Hero Section with Video Background */}
       <HeroSection />
 
+      {/* Testimonials Section - Light relief between dark sections */}
+      <TestimonialsSection
+        headline="What Fortune 500 Leaders Say"
+        testimonials={testimonials}
+      />
+
       {/* Playbook Vault Section */}
       <PlaybookVaultSection />
 
@@ -330,12 +336,6 @@ export default function HomePage() {
         headline="In The News"
         subheadline="Recent recognition and partnerships"
         news={newsItems}
-      />
-
-      {/* Testimonials Section */}
-      <TestimonialsSection
-        headline="What Fortune 500 Leaders Say"
-        testimonials={testimonials}
       />
 
       {/* ArqAI Platform Section */}
