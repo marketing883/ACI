@@ -213,8 +213,7 @@ export default function HeroSection() {
               transition: 'opacity 200ms ease-out 300ms',
             }}
           >
-            Data platforms. AI systems. Cloud architectures. Built for production,
-            backed by SLAs.
+            Data platforms. AI systems. Cloud architectures.
             <br />
             We stand behind what we build.
           </p>
