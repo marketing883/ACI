@@ -176,17 +176,17 @@ function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, size = '
         {/* Icon */}
         <div className={`
           ${size === 'sm' ? 'w-10 h-10 md:w-11 md:h-11' : 'w-11 h-11 md:w-12 md:h-12'}
-          rounded-sm flex items-center justify-center mb-3 bg-[#0052CC]/10
+          rounded-sm flex items-center justify-center mb-3 bg-gray-700/50
           transition-colors duration-300
         `}>
           <Icon
-            className={`${size === 'sm' ? 'w-5 h-5 md:w-6 md:h-6' : 'w-6 h-6'} text-[#0052CC]`}
+            className={`${size === 'sm' ? 'w-5 h-5 md:w-6 md:h-6' : 'w-6 h-6'} text-[#C4FF61]`}
             strokeWidth={1.5}
           />
         </div>
 
         {/* Name */}
-        <h3 className={`font-semibold text-[#0A1628] leading-tight mb-2 ${size === 'sm' ? 'text-sm md:text-base' : 'text-base md:text-lg'}`}>
+        <h3 className={`font-semibold text-[#0A1628] leading-tight mb-2 ${size === 'sm' ? 'text-sm' : 'text-base'}`}>
           {service.shortName}
         </h3>
 
