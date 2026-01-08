@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { X } from 'lucide-react';
+import { X, ChevronRight } from 'lucide-react';
 
 // ============================================================================
 // PLAYBOOK DATA
@@ -234,448 +234,481 @@ const PLAYBOOKS: PlaybookData[] = [
 ];
 
 // ============================================================================
-// ANIMATED BLUEPRINT ROLL SVG (No box, just the roll)
+// FLOATING PARTICLES BACKGROUND
 // ============================================================================
 
-function BlueprintRollIcon({ isHovered = false, isCompressed = false, uniqueId = 'default' }: { isHovered?: boolean; isCompressed?: boolean; uniqueId?: string }) {
-  const size = isCompressed ? 36 : 56;
-  const id = `roll-${uniqueId}`;
+function FloatingParticles() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number>();
+  const particlesRef = useRef<Array<{
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    size: number;
+    opacity: number;
+    pulse: number;
+  }>>([]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Initialize particles
+    const particleCount = 60;
+    particlesRef.current = Array.from({ length: particleCount }, () => ({
+      x: Math.random() * canvas.offsetWidth,
+      y: Math.random() * canvas.offsetHeight,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      size: Math.random() * 2 + 1,
+      opacity: Math.random() * 0.5 + 0.2,
+      pulse: Math.random() * Math.PI * 2,
+    }));
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+
+      particlesRef.current.forEach((particle) => {
+        // Update position
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        particle.pulse += 0.02;
+
+        // Wrap around edges
+        if (particle.x < 0) particle.x = canvas.offsetWidth;
+        if (particle.x > canvas.offsetWidth) particle.x = 0;
+        if (particle.y < 0) particle.y = canvas.offsetHeight;
+        if (particle.y > canvas.offsetHeight) particle.y = 0;
+
+        // Pulsing opacity
+        const pulseOpacity = particle.opacity * (0.7 + 0.3 * Math.sin(particle.pulse));
+
+        // Draw particle with glow
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(100, 180, 255, ${pulseOpacity})`;
+        ctx.fill();
+
+        // Glow effect
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(100, 180, 255, ${pulseOpacity * 0.15})`;
+        ctx.fill();
+      });
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
 
   return (
-    <svg width={size} height={size * 0.7} viewBox="0 0 80 56" fill="none" className="transition-transform duration-500">
-      <defs>
-        <linearGradient id={`${id}-grad`} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#0a3d62">
-            <animate attributeName="stop-color" values="#0a3d62;#0d4a75;#0a3d62" dur="3s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="50%" stopColor={isHovered ? "#40a9ff" : "#1890FF"}>
-            <animate attributeName="stop-color" values="#1890FF;#40a9ff;#1890FF" dur="2s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="100%" stopColor="#0a3d62">
-            <animate attributeName="stop-color" values="#0a3d62;#0d4a75;#0a3d62" dur="3s" repeatCount="indefinite" />
-          </stop>
-        </linearGradient>
-        <filter id={`${id}-glow`} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="2" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-      </defs>
-
-      {/* Outer glow on hover */}
-      {isHovered && (
-        <ellipse cx="40" cy="28" rx="38" ry="24" fill="none" stroke="#1890FF" strokeWidth="1" opacity="0.3" filter={`url(#${id}-glow)`}>
-          <animate attributeName="opacity" values="0.3;0.6;0.3" dur="1.5s" repeatCount="indefinite" />
-        </ellipse>
-      )}
-
-      {/* Main roll body - cylinder effect */}
-      <ellipse cx="10" cy="28" rx="8" ry="22" fill="#0a3d62" stroke="#1890FF" strokeWidth="1.5">
-        <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
-      </ellipse>
-      <rect x="10" y="6" width="60" height="44" fill={`url(#${id}-grad)`} />
-      <ellipse cx="70" cy="28" rx="8" ry="22" fill="#0d4a75" stroke="#1890FF" strokeWidth="1.5">
-        <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
-      </ellipse>
-
-      {/* Blueprint grid lines on roll surface */}
-      <g opacity="0.4">
-        <line x1="18" y1="12" x2="62" y2="12" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5">
-          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite" />
-        </line>
-        <line x1="18" y1="20" x2="62" y2="20" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
-        <line x1="18" y1="28" x2="62" y2="28" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5">
-          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite" begin="0.5s" />
-        </line>
-        <line x1="18" y1="36" x2="62" y2="36" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
-        <line x1="18" y1="44" x2="62" y2="44" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5">
-          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite" begin="1s" />
-        </line>
-
-        {/* Vertical lines */}
-        <line x1="26" y1="8" x2="26" y2="48" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" />
-        <line x1="40" y1="8" x2="40" y2="48" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" />
-        <line x1="54" y1="8" x2="54" y2="48" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" />
-      </g>
-
-      {/* Highlight line */}
-      <line x1="10" y1="14" x2="70" y2="14" stroke="rgba(255,255,255,0.15)" strokeWidth="2" />
-    </svg>
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full pointer-events-none"
+      style={{ opacity: 0.6 }}
+    />
   );
 }
 
 // ============================================================================
-// ANIMATED BACKGROUND ELEMENTS
+// HOLOGRAPHIC CARD COMPONENT
 // ============================================================================
 
-function AnimatedBackgroundElements() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Floating particles */}
-      {[...Array(12)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-1 h-1 bg-[#1890FF] rounded-full opacity-30"
-          style={{
-            left: `${10 + (i * 8)}%`,
-            top: `${20 + (i % 3) * 25}%`,
-            animation: `float ${4 + (i % 3)}s ease-in-out infinite`,
-            animationDelay: `${i * 0.3}s`,
-          }}
-        />
-      ))}
-
-      {/* Scanning line */}
-      <div
-        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#1890FF] to-transparent opacity-20"
-        style={{
-          animation: 'scan 8s linear infinite',
-        }}
-      />
-
-      {/* Corner brackets */}
-      <svg className="absolute top-8 left-8 w-12 h-12 text-[#1890FF] opacity-20">
-        <path d="M0 12 L0 0 L12 0" fill="none" stroke="currentColor" strokeWidth="1">
-          <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" />
-        </path>
-      </svg>
-      <svg className="absolute top-8 right-8 w-12 h-12 text-[#1890FF] opacity-20">
-        <path d="M12 0 L24 0 L24 12" fill="none" stroke="currentColor" strokeWidth="1" transform="translate(-12, 0)">
-          <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" begin="0.5s" />
-        </path>
-      </svg>
-      <svg className="absolute bottom-8 left-8 w-12 h-12 text-[#1890FF] opacity-20">
-        <path d="M0 0 L0 12 L12 12" fill="none" stroke="currentColor" strokeWidth="1" transform="translate(0, 0)">
-          <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" begin="1s" />
-        </path>
-      </svg>
-      <svg className="absolute bottom-8 right-8 w-12 h-12 text-[#1890FF] opacity-20">
-        <path d="M0 12 L12 12 L12 0" fill="none" stroke="currentColor" strokeWidth="1">
-          <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" begin="1.5s" />
-        </path>
-      </svg>
-    </div>
-  );
+interface HolographicCardProps {
+  playbook: PlaybookData;
+  index: number;
+  isSelected: boolean;
+  onSelect: () => void;
+  mousePosition: { x: number; y: number };
 }
 
-// ============================================================================
-// UNROLL ANIMATION WRAPPER - Smooth scroll unfurling effect
-// ============================================================================
+function HolographicCard({ playbook, index, isSelected, onSelect, mousePosition }: HolographicCardProps) {
+  const cardRef = useRef<HTMLButtonElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [localMouse, setLocalMouse] = useState({ x: 0.5, y: 0.5 });
 
-function UnrollWrapper({
-  isVisible,
-  children
-}: {
-  isVisible: boolean;
-  children: React.ReactNode
-}) {
-  const [animationStage, setAnimationStage] = useState(0);
-  const [contentHeight, setContentHeight] = useState(0);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setLocalMouse({
+      x: (e.clientX - rect.left) / rect.width,
+      y: (e.clientY - rect.top) / rect.height,
+    });
+  }, []);
 
-  useEffect(() => {
-    if (isVisible) {
-      // Stage 0: Initial state (hidden)
-      // Stage 1: Paper edge appears (quick)
-      // Stage 2: Unrolling animation (smooth)
-      // Stage 3: Content fade in (final)
-      setAnimationStage(1);
-      const timer1 = setTimeout(() => setAnimationStage(2), 100);
-      const timer2 = setTimeout(() => setAnimationStage(3), 800);
+  // Calculate 3D transform based on mouse position
+  const rotateX = isHovered ? (localMouse.y - 0.5) * -15 : 0;
+  const rotateY = isHovered ? (localMouse.x - 0.5) * 15 : 0;
 
-      return () => {
-        clearTimeout(timer1);
-        clearTimeout(timer2);
-      };
-    } else {
-      setAnimationStage(0);
-    }
-  }, [isVisible]);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      setContentHeight(contentRef.current.scrollHeight);
-    }
-  }, [children]);
+  // Stagger animation delay
+  const animDelay = index * 0.1;
 
   return (
-    <div className="relative overflow-hidden">
-      {/* Scroll roll at top - appears first */}
+    <button
+      ref={cardRef}
+      onClick={onSelect}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setLocalMouse({ x: 0.5, y: 0.5 });
+      }}
+      onMouseMove={handleMouseMove}
+      className="group relative w-full text-left focus:outline-none"
+      style={{
+        perspective: '1000px',
+        animationDelay: `${animDelay}s`,
+      }}
+    >
       <div
-        className="absolute top-0 left-0 right-0 z-20 flex justify-center"
+        className="relative rounded-2xl p-6 transition-all duration-500 ease-out"
         style={{
-          opacity: animationStage >= 1 && animationStage < 3 ? 1 : 0,
-          transform: `translateY(${animationStage >= 2 ? '-100%' : '0'})`,
-          transition: 'all 0.8s cubic-bezier(0.22, 0.61, 0.36, 1)',
+          transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${isHovered ? '30px' : '0'}) scale(${isHovered ? 1.02 : 1})`,
+          transformStyle: 'preserve-3d',
+          background: isHovered
+            ? 'linear-gradient(135deg, rgba(30, 58, 95, 0.9) 0%, rgba(20, 40, 70, 0.95) 100%)'
+            : 'linear-gradient(135deg, rgba(20, 45, 80, 0.7) 0%, rgba(15, 30, 55, 0.8) 100%)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid',
+          borderColor: isHovered ? 'rgba(100, 180, 255, 0.5)' : 'rgba(100, 180, 255, 0.2)',
+          boxShadow: isHovered
+            ? '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(100, 180, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+            : '0 10px 40px -10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
         }}
       >
-        <div className="h-3 w-full max-w-[95%] bg-gradient-to-b from-[#0d4a75] to-[#0a3d62] rounded-t-full border-x border-t border-[#1890FF]/40">
-          <div className="h-full w-full bg-gradient-to-b from-white/10 to-transparent rounded-t-full" />
-        </div>
-      </div>
-
-      {/* Main content with unroll effect */}
-      <div
-        ref={contentRef}
-        style={{
-          maxHeight: animationStage >= 2 ? `${contentHeight + 100}px` : '0px',
-          opacity: animationStage >= 2 ? 1 : 0,
-          clipPath: animationStage >= 2
-            ? 'inset(0 0 0 0)'
-            : 'inset(0 0 100% 0)',
-          transition: `
-            max-height 1s cubic-bezier(0.22, 0.61, 0.36, 1),
-            opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s,
-            clip-path 1s cubic-bezier(0.22, 0.61, 0.36, 1)
-          `,
-        }}
-      >
-        {/* Paper unfurl shadow effect */}
+        {/* Holographic shine effect */}
         <div
-          className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-10"
+          className="absolute inset-0 rounded-2xl pointer-events-none overflow-hidden"
           style={{
-            background: 'linear-gradient(to bottom, rgba(0,21,41,0.8), transparent)',
-            opacity: animationStage >= 2 && animationStage < 3 ? 1 : 0,
-            transition: 'opacity 0.5s ease-out',
+            background: isHovered
+              ? `radial-gradient(circle at ${localMouse.x * 100}% ${localMouse.y * 100}%, rgba(255, 255, 255, 0.15) 0%, transparent 50%)`
+              : 'none',
+            transition: 'opacity 0.3s ease',
           }}
         />
 
-        {/* Content with staggered reveal */}
+        {/* Glowing border effect on hover */}
         <div
+          className="absolute inset-0 rounded-2xl pointer-events-none"
           style={{
-            opacity: animationStage >= 3 ? 1 : 0.7,
-            transform: animationStage >= 3 ? 'translateY(0)' : 'translateY(-10px)',
-            transition: 'all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s',
+            background: 'linear-gradient(135deg, rgba(100, 180, 255, 0.3) 0%, transparent 50%, rgba(150, 100, 255, 0.2) 100%)',
+            opacity: isHovered ? 1 : 0,
+            transition: 'opacity 0.5s ease',
+            mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            maskComposite: 'xor',
+            WebkitMaskComposite: 'xor',
+            padding: '1px',
           }}
-        >
-          {children}
-        </div>
-      </div>
+        />
 
-      {/* Bottom scroll curl */}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-20 flex justify-center"
-        style={{
-          opacity: animationStage >= 2 && animationStage < 3 ? 0.7 : 0,
-          transform: `translateY(${animationStage >= 3 ? '100%' : '0'})`,
-          transition: 'all 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s',
-        }}
-      >
-        <div className="h-2 w-full max-w-[95%] bg-gradient-to-t from-[#0d4a75] to-[#0a3d62] rounded-b-full border-x border-b border-[#1890FF]/30" />
+        {/* Content */}
+        <div className="relative z-10">
+          {/* Deployment badge */}
+          <div className="flex items-center justify-between mb-4">
+            <div
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono font-semibold"
+              style={{
+                background: 'linear-gradient(135deg, rgba(100, 180, 255, 0.2) 0%, rgba(100, 150, 255, 0.1) 100%)',
+                border: '1px solid rgba(100, 180, 255, 0.3)',
+                color: '#64B4FF',
+              }}
+            >
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{
+                  background: '#4ADE80',
+                  boxShadow: '0 0 8px rgba(74, 222, 128, 0.6)',
+                  animation: 'pulse 2s ease-in-out infinite',
+                }}
+              />
+              {playbook.deployments}x Deployed
+            </div>
+
+            {/* Arrow indicator */}
+            <ChevronRight
+              className="w-5 h-5 transition-all duration-300"
+              style={{
+                color: isHovered ? '#64B4FF' : 'rgba(255, 255, 255, 0.3)',
+                transform: isHovered ? 'translateX(4px)' : 'translateX(0)',
+              }}
+            />
+          </div>
+
+          {/* Title */}
+          <h3
+            className="text-xl font-bold mb-3 transition-colors duration-300"
+            style={{
+              color: isHovered ? '#ffffff' : 'rgba(255, 255, 255, 0.9)',
+              textShadow: isHovered ? '0 0 20px rgba(100, 180, 255, 0.3)' : 'none',
+            }}
+          >
+            {playbook.displayTitle}
+          </h3>
+
+          {/* Industries preview */}
+          <div className="flex flex-wrap gap-2">
+            {playbook.industries.slice(0, 3).map((industry, i) => (
+              <span
+                key={i}
+                className="text-xs px-2 py-1 rounded-md transition-all duration-300"
+                style={{
+                  background: isHovered
+                    ? 'rgba(100, 180, 255, 0.15)'
+                    : 'rgba(255, 255, 255, 0.05)',
+                  color: isHovered ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.5)',
+                  border: `1px solid ${isHovered ? 'rgba(100, 180, 255, 0.3)' : 'rgba(255, 255, 255, 0.1)'}`,
+                }}
+              >
+                {industry}
+              </span>
+            ))}
+            {playbook.industries.length > 3 && (
+              <span
+                className="text-xs px-2 py-1 rounded-md"
+                style={{
+                  color: 'rgba(255, 255, 255, 0.4)',
+                }}
+              >
+                +{playbook.industries.length - 3}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom light trail */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-px"
+          style={{
+            background: isHovered
+              ? 'linear-gradient(90deg, transparent 0%, rgba(100, 180, 255, 0.8) 50%, transparent 100%)'
+              : 'linear-gradient(90deg, transparent 0%, rgba(100, 180, 255, 0.2) 50%, transparent 100%)',
+            transition: 'all 0.5s ease',
+          }}
+        />
       </div>
-    </div>
+    </button>
   );
 }
 
 // ============================================================================
-// EXPANDED PLAYBOOK CONTENT
+// EXPANDED DETAIL PANEL
 // ============================================================================
 
-function ExpandedPlaybook({
+function ExpandedDetailPanel({
   playbook,
   onClose,
-  isVisible
+  isVisible,
 }: {
   playbook: PlaybookData;
   onClose: () => void;
   isVisible: boolean;
 }) {
-  const [contentReady, setContentReady] = useState(false);
-
-  useEffect(() => {
-    if (isVisible) {
-      const timer = setTimeout(() => setContentReady(true), 600);
-      return () => clearTimeout(timer);
-    } else {
-      setContentReady(false);
-    }
-  }, [isVisible]);
-
   return (
-    <UnrollWrapper isVisible={isVisible}>
-      <div className="relative rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden">
-        {/* Animated border glow */}
-        <div
-          className="absolute inset-0 rounded-lg pointer-events-none"
-          style={{
-            background: 'linear-gradient(90deg, transparent, rgba(24,144,255,0.1), transparent)',
-            animation: 'shimmer 3s linear infinite',
-          }}
-        />
+    <div
+      className="relative overflow-hidden rounded-2xl transition-all duration-700 ease-out"
+      style={{
+        maxHeight: isVisible ? '800px' : '0',
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(-20px) scale(0.98)',
+        background: 'linear-gradient(135deg, rgba(20, 45, 80, 0.95) 0%, rgba(10, 25, 50, 0.98) 100%)',
+        backdropFilter: 'blur(30px)',
+        border: '1px solid rgba(100, 180, 255, 0.3)',
+        boxShadow: '0 30px 60px -20px rgba(0, 0, 0, 0.5), 0 0 60px rgba(100, 180, 255, 0.1)',
+      }}
+    >
+      {/* Animated border glow */}
+      <div
+        className="absolute inset-0 rounded-2xl pointer-events-none"
+        style={{
+          background: 'linear-gradient(90deg, transparent, rgba(100, 180, 255, 0.2), transparent)',
+          animation: 'shimmer 3s linear infinite',
+        }}
+      />
 
-        {/* Blueprint grid overlay with animation */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(24,144,255,0.05) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(24,144,255,0.05) 1px, transparent 1px)
-            `,
-            backgroundSize: '20px 20px',
-            animation: 'gridPulse 4s ease-in-out infinite',
-          }}
-        />
-
-        {/* Header */}
-        <div className="relative flex items-center justify-between p-4 border-b border-gray-200">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <BlueprintRollIcon isHovered={true} uniqueId={`expanded-${playbook.id}`} />
-            </div>
-            <div>
-              <h3 className="text-lg md:text-xl font-bold text-gray-900">
-                {playbook.displayTitle}
-              </h3>
-              <span className="text-[#1890FF] text-sm font-mono">
-                Deployed {playbook.deployments}x
-              </span>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg border border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all duration-300 group"
+      {/* Header */}
+      <div className="relative flex items-start justify-between p-8 pb-6 border-b border-white/10">
+        <div>
+          <div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-mono font-bold mb-4"
+            style={{
+              background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(74, 222, 128, 0.1) 100%)',
+              border: '1px solid rgba(74, 222, 128, 0.4)',
+              color: '#4ADE80',
+              boxShadow: '0 0 20px rgba(74, 222, 128, 0.2)',
+            }}
           >
-            <X className="w-5 h-5 text-gray-500 group-hover:text-gray-700 transition-colors" />
-          </button>
+            <span
+              className="w-2 h-2 rounded-full"
+              style={{
+                background: '#4ADE80',
+                boxShadow: '0 0 8px rgba(74, 222, 128, 0.8)',
+              }}
+            />
+            DEPLOYED {playbook.deployments}x
+          </div>
+          <h2
+            className="text-3xl md:text-4xl font-bold text-white"
+            style={{ textShadow: '0 0 30px rgba(100, 180, 255, 0.2)' }}
+          >
+            {playbook.displayTitle}
+          </h2>
+        </div>
+        <button
+          onClick={onClose}
+          className="p-3 rounded-xl transition-all duration-300 hover:scale-110"
+          style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+        >
+          <X className="w-6 h-6 text-white/70 hover:text-white" />
+        </button>
+      </div>
+
+      {/* Content Grid */}
+      <div className="relative p-8 grid md:grid-cols-3 gap-8">
+        {/* Column 1: Challenge & Learnings */}
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-blue-400 mb-4">
+              Challenge Pattern
+            </h4>
+            <ul className="space-y-3">
+              {playbook.challengePattern.map((item, i) => (
+                <li key={i} className="flex items-start gap-3 text-white/80 text-sm">
+                  <span className="text-blue-400 mt-0.5">→</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-blue-400 mb-4">
+              Key Learnings
+            </h4>
+            <ul className="space-y-3">
+              {playbook.keyLearnings.map((item, i) => (
+                <li key={i} className="flex items-start gap-3 text-white/80 text-sm">
+                  <span className="text-emerald-400">•</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        {/* Content Grid */}
-        <div className="relative p-5 grid md:grid-cols-3 gap-6">
-          {/* Column 1: Challenge & Learnings */}
-          <div className="space-y-5">
-            <div>
-              <h4 className="text-gray-900 font-semibold mb-3">
-                Challenge pattern
-              </h4>
-              <ul className="space-y-1.5">
-                {playbook.challengePattern.map((item, i) => (
-                  <li
-                    key={i}
-                    className="text-gray-600 text-sm flex items-start gap-2"
-                    style={{
-                      opacity: contentReady ? 1 : 0,
-                      transform: contentReady ? 'translateX(0)' : 'translateX(-15px)',
-                      transition: `all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) ${0.1 + i * 0.08}s`,
-                    }}
+        {/* Column 2: Outcomes */}
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-blue-400 mb-4">
+              Outcomes Achieved
+            </h4>
+            <div className="grid grid-cols-3 gap-3">
+              {playbook.outcomes.map((outcome, i) => (
+                <div
+                  key={i}
+                  className="p-4 rounded-xl text-center"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(100, 180, 255, 0.1) 0%, rgba(100, 150, 255, 0.05) 100%)',
+                    border: '1px solid rgba(100, 180, 255, 0.2)',
+                  }}
+                >
+                  <div
+                    className="text-2xl font-bold font-mono mb-1"
+                    style={{ color: '#64B4FF', textShadow: '0 0 15px rgba(100, 180, 255, 0.4)' }}
                   >
-                    <span className="text-[#1890FF] mt-0.5">→</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-gray-900 font-semibold mb-3">
-                Key learnings
-              </h4>
-              <ul className="space-y-1.5">
-                {playbook.keyLearnings.map((item, i) => (
-                  <li
-                    key={i}
-                    className="text-gray-600 text-sm flex items-start gap-2"
-                    style={{
-                      opacity: contentReady ? 1 : 0,
-                      transform: contentReady ? 'translateX(0)' : 'translateX(-15px)',
-                      transition: `all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) ${0.4 + i * 0.08}s`,
-                    }}
-                  >
-                    <span className="text-[#1890FF]">•</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+                    {outcome.metric}
+                  </div>
+                  <div className="text-xs text-white/50">{outcome.description}</div>
+                </div>
+              ))}
             </div>
           </div>
-
-          {/* Column 2: Outcomes & Industries */}
-          <div className="space-y-5">
-            <div>
-              <h4 className="text-gray-900 font-semibold mb-3">
-                Outcomes achieved
-              </h4>
-              <div className="grid grid-cols-3 gap-2">
-                {playbook.outcomes.map((outcome, i) => (
-                  <div
-                    key={i}
-                    className="p-2 rounded bg-gray-50 border border-gray-200 text-center"
-                    style={{
-                      opacity: contentReady ? 1 : 0,
-                      transform: contentReady ? 'scale(1) translateY(0)' : 'scale(0.8) translateY(10px)',
-                      transition: `all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) ${0.2 + i * 0.1}s`,
-                    }}
-                  >
-                    <div className="text-[#1890FF] font-mono text-lg font-bold">
-                      {outcome.metric}
-                    </div>
-                    <div className="text-gray-500 text-[10px] leading-tight">
-                      {outcome.description}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h4 className="text-gray-900 font-semibold mb-3">
-                Industries
-              </h4>
-              <div className="flex flex-wrap gap-1.5">
-                {playbook.industries.map((ind, i) => (
-                  <span
-                    key={i}
-                    className="px-2 py-1 rounded text-xs bg-gray-100 border border-gray-200 text-gray-700"
-                    style={{
-                      opacity: contentReady ? 1 : 0,
-                      transition: `opacity 0.4s ease-out ${0.5 + i * 0.05}s`,
-                    }}
-                  >
-                    {ind}
-                  </span>
-                ))}
-              </div>
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-blue-400 mb-4">
+              Industries
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {playbook.industries.map((ind, i) => (
+                <span
+                  key={i}
+                  className="px-3 py-1.5 rounded-lg text-xs text-white/70"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                  }}
+                >
+                  {ind}
+                </span>
+              ))}
             </div>
           </div>
+        </div>
 
-          {/* Column 3: Architecture & CTA */}
-          <div className="space-y-5">
-            <div>
-              <h4 className="text-gray-900 font-semibold mb-3">
-                Architecture stack
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {playbook.architecture.map((comp, i) => (
-                  <div
-                    key={i}
-                    className="px-3 py-1.5 rounded text-xs font-mono bg-blue-50 border border-blue-200 text-blue-700"
-                    style={{
-                      opacity: contentReady ? 1 : 0,
-                      transform: contentReady ? 'translateY(0)' : 'translateY(10px)',
-                      transition: `all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) ${0.3 + i * 0.05}s`,
-                    }}
-                  >
-                    {comp}
-                  </div>
-                ))}
-              </div>
+        {/* Column 3: Architecture & CTA */}
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-blue-400 mb-4">
+              Architecture Stack
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {playbook.architecture.map((comp, i) => (
+                <span
+                  key={i}
+                  className="px-3 py-1.5 rounded-lg text-xs font-mono"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(150, 100, 255, 0.15) 0%, rgba(100, 150, 255, 0.1) 100%)',
+                    border: '1px solid rgba(150, 100, 255, 0.3)',
+                    color: 'rgba(200, 180, 255, 0.9)',
+                  }}
+                >
+                  {comp}
+                </span>
+              ))}
             </div>
-            <div
-              className="pt-2"
+          </div>
+          <div className="pt-4">
+            <Link
+              href={`/contact?playbook=${playbook.id}`}
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105"
               style={{
-                opacity: contentReady ? 1 : 0,
-                transform: contentReady ? 'translateY(0)' : 'translateY(10px)',
-                transition: 'all 0.5s ease-out 0.7s',
+                background: 'linear-gradient(135deg, #0052CC 0%, #0066FF 100%)',
+                boxShadow: '0 10px 30px -10px rgba(0, 82, 204, 0.5), 0 0 20px rgba(0, 102, 255, 0.2)',
               }}
             >
-              <Link
-                href={`/contact?playbook=${playbook.id}`}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-[#1890FF] text-white text-sm font-semibold hover:bg-[#40a9ff] transition-all duration-300 hover:shadow-lg"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                Talk to the architect who built this
-              </Link>
-            </div>
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{
+                  background: '#C4FF61',
+                  boxShadow: '0 0 8px rgba(196, 255, 97, 0.6)',
+                }}
+              />
+              Talk to the Architect
+            </Link>
           </div>
         </div>
       </div>
-    </UnrollWrapper>
+    </div>
   );
 }
 
@@ -684,177 +717,164 @@ function ExpandedPlaybook({
 // ============================================================================
 
 export default function PlaybookVaultSection() {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const sectionRef = useRef<HTMLElement>(null);
 
-  const handleExpand = (id: string) => {
-    if (isAnimating) return;
-    setIsAnimating(true);
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    setMousePosition({
+      x: (e.clientX - rect.left) / rect.width,
+      y: (e.clientY - rect.top) / rect.height,
+    });
+  }, []);
 
-    if (expandedId === id) {
-      setExpandedId(null);
-    } else {
-      setExpandedId(id);
-    }
-
-    setTimeout(() => setIsAnimating(false), 1000);
-  };
-
-  const expandedPlaybook = PLAYBOOKS.find(p => p.id === expandedId);
+  const selectedPlaybook = PLAYBOOKS.find((p) => p.id === selectedId);
 
   return (
-    <section className="relative py-16 md:py-24 overflow-hidden bg-slate-50">
-      {/* Blueprint grid background */}
+    <section
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      className="relative py-24 md:py-32 overflow-hidden"
+      style={{
+        background: 'linear-gradient(180deg, #0A1628 0%, #0D1F3C 50%, #0A1628 100%)',
+      }}
+    >
+      {/* Animated gradient orbs */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 rounded-full blur-3xl pointer-events-none"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(24,144,255,0.08) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(24,144,255,0.08) 1px, transparent 1px)
-          `,
-          backgroundSize: '20px 20px',
+          background: 'radial-gradient(circle, rgba(100, 180, 255, 0.08) 0%, transparent 70%)',
+          animation: 'float 20s ease-in-out infinite',
+        }}
+      />
+      <div
+        className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 rounded-full blur-3xl pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(150, 100, 255, 0.08) 0%, transparent 70%)',
+          animation: 'float 25s ease-in-out infinite reverse',
         }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header - Matching other sections */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-[var(--font-title)]">
-            Proven Architectures
+      {/* Floating particles */}
+      <FloatingParticles />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-mono mb-6"
+            style={{
+              background: 'rgba(100, 180, 255, 0.1)',
+              border: '1px solid rgba(100, 180, 255, 0.3)',
+              color: '#64B4FF',
+            }}
+          >
+            <span
+              className="w-2 h-2 rounded-full"
+              style={{ background: '#4ADE80', boxShadow: '0 0 8px rgba(74, 222, 128, 0.6)' }}
+            />
+            BATTLE-TESTED ARCHITECTURES
+          </div>
+          <h2
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6"
+            style={{ textShadow: '0 0 40px rgba(100, 180, 255, 0.15)' }}
+          >
+            Proven Playbooks
           </h2>
-          <p className="text-lg text-gray-700 mb-3">
-            100+ enterprise deployments. Every challenge. Every solution. Documented.
-          </p>
-          <p className="text-gray-500 text-sm max-w-2xl mx-auto">
-            Browse the playbooks. See how many times we've deployed each one.
-            See how the approach improved with each deployment. See the outcomes.
+          <p className="text-lg text-white/60 max-w-2xl mx-auto">
+            100+ enterprise deployments. Every challenge documented.
+            <br />
+            Every solution battle-tested.
           </p>
         </div>
 
-        {/* Expanded Playbook (at TOP with unroll animation) */}
-        {expandedPlaybook && (
-          <div className="mb-8">
-            <ExpandedPlaybook
-              playbook={expandedPlaybook}
-              onClose={() => handleExpand(expandedPlaybook.id)}
-              isVisible={!!expandedId}
+        {/* Expanded Detail Panel */}
+        {selectedPlaybook && (
+          <div className="mb-12">
+            <ExpandedDetailPanel
+              playbook={selectedPlaybook}
+              onClose={() => setSelectedId(null)}
+              isVisible={!!selectedId}
             />
           </div>
         )}
 
-        {/* Blueprint Rolls Grid - NO BOXES */}
-        <div
-          className={`grid gap-4 transition-all duration-700 ease-out ${
-            expandedId
-              ? 'grid-cols-4 md:grid-cols-8'
-              : 'grid-cols-2 md:grid-cols-4'
-          }`}
-        >
-          {PLAYBOOKS.map((playbook) => {
-            const isExpanded = expandedId === playbook.id;
-            const isCompressed = expandedId && !isExpanded;
-
-            if (isExpanded) return null;
-
-            return (
-              <button
-                key={playbook.id}
-                onClick={() => handleExpand(playbook.id)}
-                onMouseEnter={() => setHoveredId(playbook.id)}
-                onMouseLeave={() => setHoveredId(null)}
-                className={`
-                  relative flex flex-col items-center text-center
-                  transition-all duration-700 ease-out
-                  ${isCompressed ? 'py-2 px-1' : 'py-4 px-2'}
-                  ${hoveredId === playbook.id ? '-translate-y-2' : ''}
-                  group
-                `}
-              >
-                {/* Roll Icon - NO BOX WRAPPER */}
-                <div
-                  className="transition-all duration-500"
-                  style={{
-                    filter: hoveredId === playbook.id ? 'drop-shadow(0 0 12px rgba(24,144,255,0.5))' : 'none',
-                  }}
-                >
-                  <BlueprintRollIcon
-                    isHovered={hoveredId === playbook.id}
-                    isCompressed={!!isCompressed}
-                    uniqueId={playbook.id}
-                  />
-                </div>
-
-                {/* Title */}
-                <div className={`mt-3 font-semibold text-gray-900 leading-tight transition-all duration-500 ${
-                  isCompressed ? 'text-[9px]' : 'text-xs md:text-sm'
-                } ${hoveredId === playbook.id ? 'text-[#1890FF]' : ''}`}>
-                  {isCompressed ? playbook.displayTitle.split(' ')[0] : playbook.displayTitle}
-                </div>
-
-                {/* Deployment count */}
-                <div className={`text-[#1890FF] font-mono font-semibold transition-all duration-500 ${
-                  isCompressed ? 'text-[8px] mt-0.5' : 'text-xs mt-1'
-                }`}>
-                  {playbook.deployments}x
-                </div>
-
-                {/* Hover indicator line */}
-                <div
-                  className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-[#1890FF] transition-all duration-300 ${
-                    hoveredId === playbook.id ? 'w-12 opacity-100' : 'w-0 opacity-0'
-                  }`}
-                />
-              </button>
-            );
-          })}
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {PLAYBOOKS.map((playbook, index) => (
+            <HolographicCard
+              key={playbook.id}
+              playbook={playbook}
+              index={index}
+              isSelected={selectedId === playbook.id}
+              onSelect={() => setSelectedId(selectedId === playbook.id ? null : playbook.id)}
+              mousePosition={mousePosition}
+            />
+          ))}
         </div>
 
-        {/* Section Footer */}
-        <div className="mt-12 p-6 rounded-lg border border-gray-200 text-center bg-gray-50">
-          <p className="text-gray-900 text-lg font-semibold mb-1">
+        {/* Footer CTA */}
+        <div
+          className="mt-16 p-8 rounded-2xl text-center"
+          style={{
+            background: 'linear-gradient(135deg, rgba(20, 45, 80, 0.6) 0%, rgba(15, 30, 55, 0.7) 100%)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(100, 180, 255, 0.2)',
+          }}
+        >
+          <p className="text-xl font-semibold text-white mb-2">
             Can't find your exact scenario?
           </p>
-          <p className="text-gray-500 text-sm mb-5">
+          <p className="text-white/50 mb-6">
             We've documented 100+ patterns beyond these 8.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-[#1890FF] text-white font-semibold text-sm hover:bg-[#40a9ff] transition-all duration-300 hover:shadow-lg"
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #0052CC 0%, #0066FF 100%)',
+                boxShadow: '0 10px 30px -10px rgba(0, 82, 204, 0.5)',
+              }}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ background: '#C4FF61', boxShadow: '0 0 8px rgba(196, 255, 97, 0.6)' }}
+              />
               Talk to an Architect
             </Link>
             <Link
               href="/playbooks"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-gray-300 text-gray-700 font-semibold text-sm hover:border-gray-400 hover:bg-gray-100 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: 'rgba(255, 255, 255, 0.8)',
+              }}
             >
-              See all Playbooks
+              View All Playbooks
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Keyframe animations */}
+      {/* CSS Animations */}
       <style jsx>{`
         @keyframes float {
-          0%, 100% { transform: translateY(0) translateX(0); }
-          25% { transform: translateY(-10px) translateX(5px); }
-          50% { transform: translateY(-5px) translateX(-5px); }
-          75% { transform: translateY(-15px) translateX(3px); }
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          25% { transform: translate(5%, 5%) rotate(2deg); }
+          50% { transform: translate(0, 10%) rotate(0deg); }
+          75% { transform: translate(-5%, 5%) rotate(-2deg); }
         }
-        @keyframes scan {
-          0% { top: 0%; }
-          100% { top: 100%; }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.7; transform: scale(1.2); }
         }
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
           100% { transform: translateX(100%); }
-        }
-        @keyframes gridPulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.7; }
         }
       `}</style>
     </section>
