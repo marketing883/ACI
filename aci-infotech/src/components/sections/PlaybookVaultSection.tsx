@@ -487,7 +487,7 @@ function AnimatedBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 pointer-events-none"
+      className="absolute inset-0 pointer-events-none z-0"
       style={{ opacity: 0.6 }}
     />
   );
@@ -935,8 +935,8 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
               className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-sm bg-[#0052CC] text-white font-semibold hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,82,204,0.5)] group"
             >
               <span className="w-2 h-2 rounded-full bg-[#C4FF61] group-hover:scale-125 transition-transform" />
-              Talk to the Architect
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <span className="group-hover:text-[#C4FF61] transition-colors">Talk to the Architect</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 group-hover:text-[#C4FF61] transition-all" />
             </Link>
             <Link
               href={`/playbooks/${playbook.slug}`}
@@ -1116,7 +1116,7 @@ export default function PlaybookVaultSection() {
         <AnimatedBackground />
 
         {/* Gradient overlays */}
-        <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 pointer-events-none z-0">
           <div
             className="absolute top-0 left-1/4 w-96 h-96 rounded-full"
             style={{
@@ -1133,7 +1133,7 @@ export default function PlaybookVaultSection() {
           />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <SectionHeader />
 
