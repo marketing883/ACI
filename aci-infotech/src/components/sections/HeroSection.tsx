@@ -152,7 +152,7 @@ export default function HeroSection() {
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-8 md:px-16 lg:px-[120px] py-32 lg:py-40">
         <div className="max-w-4xl">
           {/* Headline with Lime Accent Line */}
-          <div className="flex items-start gap-6 mb-4">
+          <div className="flex items-start gap-6 mb-10">
             {/* Lime accent line */}
             <div
               className="hidden md:block flex-shrink-0 mt-4"
@@ -199,11 +199,9 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* 16px gap already from mb-4 above */}
-
           {/* Subheadline - 24px, 85% white with fade animation */}
           <p
-            className="mb-[50px] max-w-[680px]"
+            className="mb-16 max-w-[680px]"
             style={{
               fontSize: 'clamp(18px, 2vw, 24px)',
               fontWeight: 400,
@@ -218,8 +216,8 @@ export default function HeroSection() {
             We stand behind what we build.
           </p>
 
-          {/* Stats Row - 50px gap from subheadline */}
-          <div className="flex flex-wrap gap-12 md:gap-16 lg:gap-24 mb-[50px]">
+          {/* Stats Row */}
+          <div className="flex flex-wrap gap-12 md:gap-16 lg:gap-24 mb-16">
             <div>
               <AnimatedCounter end={80} suffix="+" duration={1500} />
               <div
