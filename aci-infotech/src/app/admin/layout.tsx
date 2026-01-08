@@ -24,11 +24,12 @@ import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/contacts', label: 'Contact Submissions', icon: Users },
+  { href: '/admin/playbook-leads', label: 'Playbook Leads', icon: BookOpen },
+  { href: '/admin/whitepaper-leads', label: 'Whitepaper Leads', icon: FileCheck },
   { href: '/admin/case-studies', label: 'Case Studies', icon: FileText },
   { href: '/admin/blog', label: 'Blog Posts', icon: BookOpen },
   { href: '/admin/whitepapers', label: 'Whitepapers', icon: FileCheck },
   { href: '/admin/webinars', label: 'Webinars', icon: Video },
-  { href: '/admin/subscribers', label: 'Newsletter', icon: Mail },
 ];
 
 export default function AdminLayout({

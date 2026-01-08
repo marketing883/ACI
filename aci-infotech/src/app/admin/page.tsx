@@ -6,27 +6,30 @@ import {
   Users,
   FileText,
   BookOpen,
-  Mail,
+  Download,
   TrendingUp,
   ArrowRight,
   Clock,
-  CheckCircle2,
   AlertCircle,
+  FileCheck,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 interface DashboardStats {
   contacts: { total: number; new: number };
+  playbookLeads: { total: number; new: number };
+  whitepaperLeads: { total: number; new: number };
   caseStudies: { total: number; published: number };
   blogPosts: { total: number; published: number };
-  subscribers: { total: number; active: number };
 }
 
-interface RecentContact {
+interface RecentLead {
   id: string;
   name: string;
   email: string;
-  inquiry_type: string;
+  company?: string;
+  type: 'contact' | 'playbook' | 'whitepaper';
+  source?: string;
   created_at: string;
   status: string;
 }
@@ -34,11 +37,12 @@ interface RecentContact {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats>({
     contacts: { total: 0, new: 0 },
+    playbookLeads: { total: 0, new: 0 },
+    whitepaperLeads: { total: 0, new: 0 },
     caseStudies: { total: 0, published: 0 },
     blogPosts: { total: 0, published: 0 },
-    subscribers: { total: 0, active: 0 },
   });
-  const [recentContacts, setRecentContacts] = useState<RecentContact[]>([]);
+  const [recentLeads, setRecentLeads] = useState<RecentLead[]>([]);
   const [loading, setLoading] = useState(true);
   const [configured, setConfigured] = useState(false);
 
@@ -52,16 +56,19 @@ export default function AdminDashboard() {
       // Use mock data when Supabase is not configured
       setStats({
         contacts: { total: 47, new: 12 },
+        playbookLeads: { total: 28, new: 8 },
+        whitepaperLeads: { total: 35, new: 5 },
         caseStudies: { total: 12, published: 10 },
         blogPosts: { total: 24, published: 18 },
-        subscribers: { total: 1250, active: 1180 },
       });
-      setRecentContacts([
+      setRecentLeads([
         {
           id: '1',
           name: 'John Smith',
           email: 'john@acmecorp.com',
-          inquiry_type: 'architecture-call',
+          company: 'Acme Corp',
+          type: 'contact',
+          source: 'Architecture Call',
           created_at: new Date().toISOString(),
           status: 'new',
         },
@@ -69,16 +76,40 @@ export default function AdminDashboard() {
           id: '2',
           name: 'Sarah Johnson',
           email: 'sarah@techstartup.io',
-          inquiry_type: 'project-inquiry',
+          company: 'TechStartup',
+          type: 'playbook',
+          source: 'Hadoop → Cloud',
           created_at: new Date(Date.now() - 86400000).toISOString(),
-          status: 'contacted',
+          status: 'new',
         },
         {
           id: '3',
           name: 'Michael Chen',
           email: 'mchen@enterprise.com',
-          inquiry_type: 'partnership',
+          company: 'Enterprise Co',
+          type: 'whitepaper',
+          source: 'AI Governance Playbook',
           created_at: new Date(Date.now() - 172800000).toISOString(),
+          status: 'new',
+        },
+        {
+          id: '4',
+          name: 'Emily Davis',
+          email: 'emily@retailcorp.com',
+          company: 'RetailCorp',
+          type: 'playbook',
+          source: '600 Stores, Real-Time',
+          created_at: new Date(Date.now() - 259200000).toISOString(),
+          status: 'contacted',
+        },
+        {
+          id: '5',
+          name: 'David Lee',
+          email: 'dlee@healthcare.com',
+          company: 'HealthCare Inc',
+          type: 'whitepaper',
+          source: 'Healthcare Data Compliance',
+          created_at: new Date(Date.now() - 345600000).toISOString(),
           status: 'new',
         },
       ]);
@@ -98,12 +129,25 @@ export default function AdminDashboard() {
         .select('*', { count: 'exact', head: true })
         .eq('status', 'new');
 
-      // Fetch recent contacts
-      const { data: contacts } = await supabase
-        .from('contacts')
-        .select('id, name, email, inquiry_type, created_at, status')
-        .order('created_at', { ascending: false })
-        .limit(5);
+      // Fetch playbook leads stats
+      const { count: totalPlaybookLeads } = await supabase
+        .from('playbook_leads')
+        .select('*', { count: 'exact', head: true });
+
+      const { count: newPlaybookLeads } = await supabase
+        .from('playbook_leads')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'new');
+
+      // Fetch whitepaper leads stats
+      const { count: totalWhitepaperLeads } = await supabase
+        .from('whitepaper_leads')
+        .select('*', { count: 'exact', head: true });
+
+      const { count: newWhitepaperLeads } = await supabase
+        .from('whitepaper_leads')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'new');
 
       // Fetch case studies stats
       const { count: totalCaseStudies } = await supabase
@@ -125,24 +169,54 @@ export default function AdminDashboard() {
         .select('*', { count: 'exact', head: true })
         .eq('is_published', true);
 
-      // Fetch subscriber stats
-      const { count: totalSubscribers } = await supabase
-        .from('newsletter_subscribers')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: activeSubscribers } = await supabase
-        .from('newsletter_subscribers')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'active');
-
       setStats({
         contacts: { total: totalContacts || 0, new: newContacts || 0 },
+        playbookLeads: { total: totalPlaybookLeads || 0, new: newPlaybookLeads || 0 },
+        whitepaperLeads: { total: totalWhitepaperLeads || 0, new: newWhitepaperLeads || 0 },
         caseStudies: { total: totalCaseStudies || 0, published: publishedCaseStudies || 0 },
         blogPosts: { total: totalBlog || 0, published: publishedBlog || 0 },
-        subscribers: { total: totalSubscribers || 0, active: activeSubscribers || 0 },
       });
 
-      setRecentContacts(contacts || []);
+      // Fetch recent leads from all sources
+      const { data: contacts } = await supabase
+        .from('contacts')
+        .select('id, name, email, company, inquiry_type, created_at, status')
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      const { data: playbookLeads } = await supabase
+        .from('playbook_leads')
+        .select('id, name, email, company, playbook_title, created_at, status')
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      const { data: whitepaperLeads } = await supabase
+        .from('whitepaper_leads')
+        .select('id, name, email, company, whitepaper_title, created_at, status')
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      // Combine and sort all leads
+      const allLeads: RecentLead[] = [
+        ...(contacts || []).map(c => ({
+          ...c,
+          type: 'contact' as const,
+          source: c.inquiry_type,
+        })),
+        ...(playbookLeads || []).map(p => ({
+          ...p,
+          type: 'playbook' as const,
+          source: p.playbook_title,
+        })),
+        ...(whitepaperLeads || []).map(w => ({
+          ...w,
+          type: 'whitepaper' as const,
+          source: w.whitepaper_title,
+        })),
+      ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .slice(0, 6);
+
+      setRecentLeads(allLeads);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -150,38 +224,57 @@ export default function AdminDashboard() {
     }
   }
 
-  const statCards = [
+  // Lead category cards with links
+  const leadCards = [
     {
       title: 'Contact Submissions',
       total: stats.contacts.total,
-      subtitle: `${stats.contacts.new} new`,
+      new: stats.contacts.new,
       icon: Users,
       color: 'bg-blue-500',
+      bgLight: 'bg-blue-50',
+      textColor: 'text-blue-600',
       href: '/admin/contacts',
     },
+    {
+      title: 'Playbook Downloads',
+      total: stats.playbookLeads.total,
+      new: stats.playbookLeads.new,
+      icon: BookOpen,
+      color: 'bg-purple-500',
+      bgLight: 'bg-purple-50',
+      textColor: 'text-purple-600',
+      href: '/admin/playbook-leads',
+    },
+    {
+      title: 'Whitepaper Downloads',
+      total: stats.whitepaperLeads.total,
+      new: stats.whitepaperLeads.new,
+      icon: Download,
+      color: 'bg-green-500',
+      bgLight: 'bg-green-50',
+      textColor: 'text-green-600',
+      href: '/admin/whitepaper-leads',
+    },
+  ];
+
+  // Content cards
+  const contentCards = [
     {
       title: 'Case Studies',
       total: stats.caseStudies.total,
       subtitle: `${stats.caseStudies.published} published`,
       icon: FileText,
-      color: 'bg-green-500',
+      color: 'bg-orange-500',
       href: '/admin/case-studies',
     },
     {
       title: 'Blog Posts',
       total: stats.blogPosts.total,
       subtitle: `${stats.blogPosts.published} published`,
-      icon: BookOpen,
-      color: 'bg-purple-500',
+      icon: FileCheck,
+      color: 'bg-teal-500',
       href: '/admin/blog',
-    },
-    {
-      title: 'Subscribers',
-      total: stats.subscribers.total,
-      subtitle: `${stats.subscribers.active} active`,
-      icon: Mail,
-      color: 'bg-orange-500',
-      href: '/admin/subscribers',
     },
   ];
 
@@ -198,15 +291,13 @@ export default function AdminDashboard() {
     return date.toLocaleDateString();
   }
 
-  function formatInquiryType(type: string) {
-    const types: Record<string, string> = {
-      'architecture-call': 'Architecture Call',
-      'project-inquiry': 'Project Inquiry',
-      'partnership': 'Partnership',
-      'careers': 'Careers',
-      'general': 'General',
+  function getLeadTypeLabel(type: 'contact' | 'playbook' | 'whitepaper') {
+    const labels = {
+      contact: { label: 'Contact', color: 'bg-blue-100 text-blue-700' },
+      playbook: { label: 'Playbook', color: 'bg-purple-100 text-purple-700' },
+      whitepaper: { label: 'Whitepaper', color: 'bg-green-100 text-green-700' },
     };
-    return types[type] || type;
+    return labels[type];
   }
 
   return (
@@ -228,142 +319,141 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Stats Grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {statCards.map((card) => {
-          const Icon = card.icon;
-          return (
-            <Link
-              key={card.title}
-              href={card.href}
-              className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-center justify-between mb-4">
+      {/* Lead Categories Section */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Lead Categories</h2>
+        <div className="grid sm:grid-cols-3 gap-6">
+          {leadCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <Link
+                key={card.title}
+                href={card.href}
+                className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`p-3 rounded-lg ${card.color}`}>
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  {card.new > 0 && (
+                    <span className={`px-3 py-1 ${card.bgLight} ${card.textColor} text-sm font-medium rounded-full`}>
+                      {card.new} new
+                    </span>
+                  )}
+                </div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">
+                  {loading ? '...' : card.total.toLocaleString()}
+                </div>
+                <div className="text-sm text-gray-500">{card.title}</div>
+                <div className="mt-3 text-sm text-[var(--aci-primary)] font-medium flex items-center gap-1">
+                  View all <ArrowRight className="w-4 h-4" />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Content Stats */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Content</h2>
+        <div className="grid sm:grid-cols-2 gap-6">
+          {contentCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <Link
+                key={card.title}
+                href={card.href}
+                className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex items-center gap-6"
+              >
                 <div className={`p-3 rounded-lg ${card.color}`}>
                   <Icon className="w-6 h-6 text-white" />
                 </div>
+                <div className="flex-grow">
+                  <div className="text-2xl font-bold text-gray-900">
+                    {loading ? '...' : card.total}
+                  </div>
+                  <div className="text-sm text-gray-500">{card.title}</div>
+                  <div className="text-xs text-gray-400">{card.subtitle}</div>
+                </div>
                 <TrendingUp className="w-5 h-5 text-green-500" />
-              </div>
-              <div className="text-3xl font-bold text-gray-900 mb-1">
-                {loading ? '...' : card.total.toLocaleString()}
-              </div>
-              <div className="text-sm text-gray-500">{card.title}</div>
-              <div className="text-xs text-gray-400 mt-1">{card.subtitle}</div>
-            </Link>
-          );
-        })}
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Recent Activity */}
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Recent Contacts */}
-        <div className="bg-white rounded-xl shadow-sm">
-          <div className="flex items-center justify-between p-6 border-b">
-            <h2 className="font-semibold text-gray-900">Recent Contact Submissions</h2>
-            <Link
-              href="/admin/contacts"
-              className="text-sm text-[var(--aci-primary)] hover:underline flex items-center gap-1"
-            >
-              View All <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="divide-y">
-            {loading ? (
-              <div className="p-6 text-center text-gray-500">Loading...</div>
-            ) : recentContacts.length === 0 ? (
-              <div className="p-6 text-center text-gray-500">No contacts yet</div>
-            ) : (
-              recentContacts.map((contact) => (
-                <div key={contact.id} className="p-4 hover:bg-gray-50">
+      {/* Recent Leads */}
+      <div className="bg-white rounded-xl shadow-sm">
+        <div className="flex items-center justify-between p-6 border-b">
+          <h2 className="font-semibold text-gray-900">Recent Leads (All Sources)</h2>
+        </div>
+        <div className="divide-y">
+          {loading ? (
+            <div className="p-6 text-center text-gray-500">Loading...</div>
+          ) : recentLeads.length === 0 ? (
+            <div className="p-6 text-center text-gray-500">No leads yet</div>
+          ) : (
+            recentLeads.map((lead) => {
+              const typeInfo = getLeadTypeLabel(lead.type);
+              return (
+                <div key={`${lead.type}-${lead.id}`} className="p-4 hover:bg-gray-50">
                   <div className="flex items-start justify-between">
-                    <div>
-                      <p className="font-medium text-gray-900">{contact.name}</p>
-                      <p className="text-sm text-gray-500">{contact.email}</p>
+                    <div className="flex-grow">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-medium text-gray-900">{lead.name}</p>
+                        <span className={`px-2 py-0.5 text-xs font-medium rounded ${typeInfo.color}`}>
+                          {typeInfo.label}
+                        </span>
+                        {lead.status === 'new' && (
+                          <span className="px-2 py-0.5 text-xs font-medium rounded bg-red-100 text-red-700">
+                            New
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-500">{lead.email}</p>
+                      {lead.company && (
+                        <p className="text-xs text-gray-400">{lead.company}</p>
+                      )}
                     </div>
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        contact.status === 'new'
-                          ? 'bg-blue-100 text-blue-700'
-                          : contact.status === 'contacted'
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : 'bg-green-100 text-green-700'
-                      }`}
-                    >
-                      {contact.status}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {formatDate(contact.created_at)}
-                    </span>
-                    <span>{formatInquiryType(contact.inquiry_type)}</span>
+                    <div className="text-right">
+                      <div className="flex items-center gap-1 text-xs text-gray-400">
+                        <Clock className="w-3 h-3" />
+                        {formatDate(lead.created_at)}
+                      </div>
+                      {lead.source && (
+                        <p className="text-xs text-gray-500 mt-1 max-w-[150px] truncate">
+                          {lead.source}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
+              );
+            })
+          )}
         </div>
-
-        {/* Quick Actions */}
-        <div className="bg-white rounded-xl shadow-sm">
-          <div className="p-6 border-b">
-            <h2 className="font-semibold text-gray-900">Quick Actions</h2>
-          </div>
-          <div className="p-6 space-y-4">
-            <Link
-              href="/admin/blog?action=new"
-              className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 hover:border-[var(--aci-primary)] hover:bg-blue-50 transition-colors"
-            >
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <BookOpen className="w-5 h-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">Create Blog Post</p>
-                <p className="text-sm text-gray-500">Write a new article for the blog</p>
-              </div>
-            </Link>
-            <Link
-              href="/admin/case-studies?action=new"
-              className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 hover:border-[var(--aci-primary)] hover:bg-blue-50 transition-colors"
-            >
-              <div className="p-3 bg-green-100 rounded-lg">
-                <FileText className="w-5 h-5 text-green-600" />
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">Add Case Study</p>
-                <p className="text-sm text-gray-500">Document a new client success story</p>
-              </div>
-            </Link>
-            <Link
-              href="/admin/contacts?status=new"
-              className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 hover:border-[var(--aci-primary)] hover:bg-blue-50 transition-colors"
-            >
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Users className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">Review New Leads</p>
-                <p className="text-sm text-gray-500">
-                  {stats.contacts.new} new submissions to review
-                </p>
-              </div>
-            </Link>
-            <a
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 hover:border-[var(--aci-primary)] hover:bg-blue-50 transition-colors"
-            >
-              <div className="p-3 bg-gray-100 rounded-lg">
-                <CheckCircle2 className="w-5 h-5 text-gray-600" />
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">View Live Site</p>
-                <p className="text-sm text-gray-500">Open the public website</p>
-              </div>
-            </a>
-          </div>
+        <div className="p-4 border-t bg-gray-50 flex gap-4 justify-center">
+          <Link
+            href="/admin/contacts"
+            className="text-sm text-[var(--aci-primary)] hover:underline"
+          >
+            View Contact Submissions
+          </Link>
+          <span className="text-gray-300">|</span>
+          <Link
+            href="/admin/playbook-leads"
+            className="text-sm text-[var(--aci-primary)] hover:underline"
+          >
+            View Playbook Leads
+          </Link>
+          <span className="text-gray-300">|</span>
+          <Link
+            href="/admin/whitepaper-leads"
+            className="text-sm text-[var(--aci-primary)] hover:underline"
+          >
+            View Whitepaper Leads
+          </Link>
         </div>
       </div>
     </div>

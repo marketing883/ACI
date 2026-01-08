@@ -12,6 +12,7 @@ interface PlaybookData {
   id: string;
   name: string;
   shortName: string;
+  displayTitle: string;
   slug: string;
   deployments: number;
   challengePattern: string[];
@@ -26,6 +27,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'post-acquisition',
     name: 'Post-Acquisition System Consolidation',
     shortName: 'Post-Acquisition',
+    displayTitle: '40 Systems → One',
     slug: 'post-acquisition-consolidation',
     deployments: 23,
     challengePattern: [
@@ -51,6 +53,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'multi-location',
     name: 'Multi-Location Real-Time Data Platform',
     shortName: 'Real-Time Platform',
+    displayTitle: '600 Stores, Real-Time',
     slug: 'real-time-data-platform',
     deployments: 47,
     challengePattern: [
@@ -76,6 +79,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'global-unification',
     name: 'Global Data Unification',
     shortName: 'Global Unification',
+    displayTitle: '55 Countries, One System',
     slug: 'global-data-unification',
     deployments: 31,
     challengePattern: [
@@ -101,6 +105,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'self-service-analytics',
     name: 'Enterprise Self-Service Analytics',
     shortName: 'Self-Service Analytics',
+    displayTitle: '10K Users, Self-Served',
     slug: 'self-service-analytics',
     deployments: 19,
     challengePattern: [
@@ -126,6 +131,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'healthcare-data',
     name: 'Multi-Jurisdiction Healthcare Data',
     shortName: 'Healthcare Data',
+    displayTitle: 'HIPAA + GDPR + More',
     slug: 'healthcare-data-platform',
     deployments: 12,
     challengePattern: [
@@ -151,6 +157,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'supply-chain',
     name: 'Supply Chain Visibility',
     shortName: 'Supply Chain',
+    displayTitle: 'Supplier → Customer',
     slug: 'supply-chain-visibility',
     deployments: 28,
     challengePattern: [
@@ -176,6 +183,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'cloud-migration',
     name: 'Legacy to Cloud Migration',
     shortName: 'Cloud Migration',
+    displayTitle: 'Hadoop → Cloud',
     slug: 'legacy-cloud-migration',
     deployments: 52,
     challengePattern: [
@@ -201,6 +209,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'data-integration',
     name: 'Multi-Source Data Integration',
     shortName: 'Data Integration',
+    displayTitle: '40 Sources, One Truth',
     slug: 'multi-source-integration',
     deployments: 34,
     challengePattern: [
@@ -349,6 +358,115 @@ function AnimatedBackgroundElements() {
 }
 
 // ============================================================================
+// UNROLL ANIMATION WRAPPER - Smooth scroll unfurling effect
+// ============================================================================
+
+function UnrollWrapper({
+  isVisible,
+  children
+}: {
+  isVisible: boolean;
+  children: React.ReactNode
+}) {
+  const [animationStage, setAnimationStage] = useState(0);
+  const [contentHeight, setContentHeight] = useState(0);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isVisible) {
+      // Stage 0: Initial state (hidden)
+      // Stage 1: Paper edge appears (quick)
+      // Stage 2: Unrolling animation (smooth)
+      // Stage 3: Content fade in (final)
+      setAnimationStage(1);
+      const timer1 = setTimeout(() => setAnimationStage(2), 100);
+      const timer2 = setTimeout(() => setAnimationStage(3), 800);
+
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+      };
+    } else {
+      setAnimationStage(0);
+    }
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setContentHeight(contentRef.current.scrollHeight);
+    }
+  }, [children]);
+
+  return (
+    <div className="relative overflow-hidden">
+      {/* Scroll roll at top - appears first */}
+      <div
+        className="absolute top-0 left-0 right-0 z-20 flex justify-center"
+        style={{
+          opacity: animationStage >= 1 && animationStage < 3 ? 1 : 0,
+          transform: `translateY(${animationStage >= 2 ? '-100%' : '0'})`,
+          transition: 'all 0.8s cubic-bezier(0.22, 0.61, 0.36, 1)',
+        }}
+      >
+        <div className="h-3 w-full max-w-[95%] bg-gradient-to-b from-[#0d4a75] to-[#0a3d62] rounded-t-full border-x border-t border-[#1890FF]/40">
+          <div className="h-full w-full bg-gradient-to-b from-white/10 to-transparent rounded-t-full" />
+        </div>
+      </div>
+
+      {/* Main content with unroll effect */}
+      <div
+        ref={contentRef}
+        style={{
+          maxHeight: animationStage >= 2 ? `${contentHeight + 100}px` : '0px',
+          opacity: animationStage >= 2 ? 1 : 0,
+          clipPath: animationStage >= 2
+            ? 'inset(0 0 0 0)'
+            : 'inset(0 0 100% 0)',
+          transition: `
+            max-height 1s cubic-bezier(0.22, 0.61, 0.36, 1),
+            opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s,
+            clip-path 1s cubic-bezier(0.22, 0.61, 0.36, 1)
+          `,
+        }}
+      >
+        {/* Paper unfurl shadow effect */}
+        <div
+          className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-10"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(0,21,41,0.8), transparent)',
+            opacity: animationStage >= 2 && animationStage < 3 ? 1 : 0,
+            transition: 'opacity 0.5s ease-out',
+          }}
+        />
+
+        {/* Content with staggered reveal */}
+        <div
+          style={{
+            opacity: animationStage >= 3 ? 1 : 0.7,
+            transform: animationStage >= 3 ? 'translateY(0)' : 'translateY(-10px)',
+            transition: 'all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s',
+          }}
+        >
+          {children}
+        </div>
+      </div>
+
+      {/* Bottom scroll curl */}
+      <div
+        className="absolute bottom-0 left-0 right-0 z-20 flex justify-center"
+        style={{
+          opacity: animationStage >= 2 && animationStage < 3 ? 0.7 : 0,
+          transform: `translateY(${animationStage >= 3 ? '100%' : '0'})`,
+          transition: 'all 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s',
+        }}
+      >
+        <div className="h-2 w-full max-w-[95%] bg-gradient-to-t from-[#0d4a75] to-[#0a3d62] rounded-b-full border-x border-b border-[#1890FF]/30" />
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
 // EXPANDED PLAYBOOK CONTENT
 // ============================================================================
 
@@ -361,20 +479,19 @@ function ExpandedPlaybook({
   onClose: () => void;
   isVisible: boolean;
 }) {
-  const contentRef = useRef<HTMLDivElement>(null);
+  const [contentReady, setContentReady] = useState(false);
+
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => setContentReady(true), 600);
+      return () => clearTimeout(timer);
+    } else {
+      setContentReady(false);
+    }
+  }, [isVisible]);
 
   return (
-    <div
-      ref={contentRef}
-      className="relative overflow-hidden"
-      style={{
-        maxHeight: isVisible ? '600px' : '0px',
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'scaleY(1) translateY(0)' : 'scaleY(0.8) translateY(-20px)',
-        transformOrigin: 'top center',
-        transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-      }}
-    >
+    <UnrollWrapper isVisible={isVisible}>
       <div className="relative rounded-lg border border-[#1890FF]/50 bg-gradient-to-b from-[#001020] to-[#001529] overflow-hidden">
         {/* Animated border glow */}
         <div
@@ -406,7 +523,7 @@ function ExpandedPlaybook({
             </div>
             <div>
               <h3 className="text-lg md:text-xl font-bold text-white">
-                {playbook.name}
+                {playbook.displayTitle}
               </h3>
               <span className="text-[#C4FF61] text-sm font-mono">
                 Deployed {playbook.deployments}x
@@ -422,14 +539,7 @@ function ExpandedPlaybook({
         </div>
 
         {/* Content Grid */}
-        <div
-          className="relative p-5 grid md:grid-cols-3 gap-6"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'all 0.5s ease-out 0.3s',
-          }}
-        >
+        <div className="relative p-5 grid md:grid-cols-3 gap-6">
           {/* Column 1: Challenge & Learnings */}
           <div className="space-y-5">
             <div>
@@ -442,9 +552,9 @@ function ExpandedPlaybook({
                     key={i}
                     className="text-white/70 text-sm flex items-start gap-2"
                     style={{
-                      opacity: isVisible ? 1 : 0,
-                      transform: isVisible ? 'translateX(0)' : 'translateX(-10px)',
-                      transition: `all 0.4s ease-out ${0.4 + i * 0.1}s`,
+                      opacity: contentReady ? 1 : 0,
+                      transform: contentReady ? 'translateX(0)' : 'translateX(-15px)',
+                      transition: `all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) ${0.1 + i * 0.08}s`,
                     }}
                   >
                     <span className="text-[#1890FF] mt-0.5">→</span>
@@ -463,9 +573,9 @@ function ExpandedPlaybook({
                     key={i}
                     className="text-white/70 text-sm flex items-start gap-2"
                     style={{
-                      opacity: isVisible ? 1 : 0,
-                      transform: isVisible ? 'translateX(0)' : 'translateX(-10px)',
-                      transition: `all 0.4s ease-out ${0.6 + i * 0.1}s`,
+                      opacity: contentReady ? 1 : 0,
+                      transform: contentReady ? 'translateX(0)' : 'translateX(-15px)',
+                      transition: `all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) ${0.4 + i * 0.08}s`,
                     }}
                   >
                     <span className="text-[#C4FF61]">•</span>
@@ -488,9 +598,9 @@ function ExpandedPlaybook({
                     key={i}
                     className="p-2 rounded bg-[#1890FF]/10 border border-[#1890FF]/20 text-center"
                     style={{
-                      opacity: isVisible ? 1 : 0,
-                      transform: isVisible ? 'scale(1)' : 'scale(0.8)',
-                      transition: `all 0.4s ease-out ${0.5 + i * 0.1}s`,
+                      opacity: contentReady ? 1 : 0,
+                      transform: contentReady ? 'scale(1) translateY(0)' : 'scale(0.8) translateY(10px)',
+                      transition: `all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) ${0.2 + i * 0.1}s`,
                     }}
                   >
                     <div className="text-[#C4FF61] font-mono text-lg font-bold">
@@ -513,8 +623,8 @@ function ExpandedPlaybook({
                     key={i}
                     className="px-2 py-1 rounded text-xs bg-[#1890FF]/10 border border-[#1890FF]/20 text-white/70"
                     style={{
-                      opacity: isVisible ? 1 : 0,
-                      transition: `opacity 0.3s ease-out ${0.7 + i * 0.05}s`,
+                      opacity: contentReady ? 1 : 0,
+                      transition: `opacity 0.4s ease-out ${0.5 + i * 0.05}s`,
                     }}
                   >
                     {ind}
@@ -536,9 +646,9 @@ function ExpandedPlaybook({
                     key={i}
                     className="px-3 py-1.5 rounded text-xs font-mono bg-[#1890FF]/10 border border-[#1890FF]/30 text-white/80"
                     style={{
-                      opacity: isVisible ? 1 : 0,
-                      transform: isVisible ? 'translateY(0)' : 'translateY(10px)',
-                      transition: `all 0.3s ease-out ${0.6 + i * 0.05}s`,
+                      opacity: contentReady ? 1 : 0,
+                      transform: contentReady ? 'translateY(0)' : 'translateY(10px)',
+                      transition: `all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) ${0.3 + i * 0.05}s`,
                     }}
                   >
                     {comp}
@@ -549,8 +659,9 @@ function ExpandedPlaybook({
             <div
               className="pt-2"
               style={{
-                opacity: isVisible ? 1 : 0,
-                transition: 'opacity 0.4s ease-out 0.9s',
+                opacity: contentReady ? 1 : 0,
+                transform: contentReady ? 'translateY(0)' : 'translateY(10px)',
+                transition: 'all 0.5s ease-out 0.7s',
               }}
             >
               <Link
@@ -564,7 +675,7 @@ function ExpandedPlaybook({
           </div>
         </div>
       </div>
-    </div>
+    </UnrollWrapper>
   );
 }
 
@@ -587,7 +698,7 @@ export default function PlaybookVaultSection() {
       setExpandedId(id);
     }
 
-    setTimeout(() => setIsAnimating(false), 600);
+    setTimeout(() => setIsAnimating(false), 1000);
   };
 
   const expandedPlaybook = PLAYBOOKS.find(p => p.id === expandedId);
@@ -637,9 +748,9 @@ export default function PlaybookVaultSection() {
 
         {/* Blueprint Rolls Grid - NO BOXES */}
         <div
-          className={`grid gap-4 transition-all duration-500 ${
+          className={`grid gap-4 transition-all duration-700 ease-out ${
             expandedId
-              ? 'grid-cols-4 md:grid-cols-7'
+              ? 'grid-cols-4 md:grid-cols-8'
               : 'grid-cols-2 md:grid-cols-4'
           }`}
         >
@@ -657,7 +768,7 @@ export default function PlaybookVaultSection() {
                 onMouseLeave={() => setHoveredId(null)}
                 className={`
                   relative flex flex-col items-center text-center
-                  transition-all duration-500 ease-out
+                  transition-all duration-700 ease-out
                   ${isCompressed ? 'py-2 px-1' : 'py-4 px-2'}
                   ${hoveredId === playbook.id ? '-translate-y-2' : ''}
                   group
@@ -676,18 +787,18 @@ export default function PlaybookVaultSection() {
                   />
                 </div>
 
-                {/* Name */}
-                <div className={`mt-3 font-semibold text-white leading-tight transition-all duration-300 ${
+                {/* Title */}
+                <div className={`mt-3 font-semibold text-white leading-tight transition-all duration-500 ${
                   isCompressed ? 'text-[9px]' : 'text-xs md:text-sm'
                 } ${hoveredId === playbook.id ? 'text-[#40a9ff]' : ''}`}>
-                  {isCompressed ? playbook.shortName.split(' ')[0] : playbook.shortName}
+                  {isCompressed ? playbook.displayTitle.split(' ')[0] : playbook.displayTitle}
                 </div>
 
                 {/* Deployment count */}
-                <div className={`text-[#C4FF61] font-mono transition-all duration-300 ${
+                <div className={`text-[#C4FF61] font-mono transition-all duration-500 ${
                   isCompressed ? 'text-[8px] mt-0.5' : 'text-xs mt-1'
                 }`}>
-                  {isCompressed ? `${playbook.deployments}x` : `${playbook.deployments}x deployed`}
+                  {playbook.deployments}x
                 </div>
 
                 {/* Hover indicator line */}
@@ -718,7 +829,7 @@ export default function PlaybookVaultSection() {
               Talk to an Architect
             </Link>
             <Link
-              href="/case-studies"
+              href="/playbooks"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/20 text-white font-semibold text-sm hover:border-white/40 hover:bg-white/5 transition-all duration-300"
             >
               See all Playbooks

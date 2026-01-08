@@ -227,6 +227,66 @@ CREATE TABLE IF NOT EXISTS admin_activity_log (
 );
 
 -- ============================================
+-- PLAYBOOK LEADS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS playbook_leads (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+
+  -- Lead information
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  company TEXT,
+  job_title TEXT,
+
+  -- Playbook information
+  playbook_slug TEXT NOT NULL,
+  playbook_title TEXT,
+
+  -- Download token system
+  download_token TEXT UNIQUE NOT NULL,
+  token_used BOOLEAN DEFAULT FALSE,
+  token_expiry TIMESTAMPTZ NOT NULL,
+  downloaded_at TIMESTAMPTZ,
+
+  -- Tracking
+  source TEXT DEFAULT 'playbooks-page',
+  ip_address TEXT,
+  user_agent TEXT
+);
+
+-- ============================================
+-- WHITEPAPER LEADS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS whitepaper_leads (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+
+  -- Lead information
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  company TEXT,
+  job_title TEXT,
+
+  -- Whitepaper information
+  whitepaper_slug TEXT NOT NULL,
+  whitepaper_title TEXT,
+
+  -- Download token system
+  download_token TEXT UNIQUE NOT NULL,
+  token_used BOOLEAN DEFAULT FALSE,
+  token_expiry TIMESTAMPTZ NOT NULL,
+  downloaded_at TIMESTAMPTZ,
+
+  -- Tracking
+  source TEXT DEFAULT 'whitepapers-page',
+  ip_address TEXT,
+  user_agent TEXT
+);
+
+-- ============================================
 -- STEP 2: ADD MISSING COLUMNS TO ALL TABLES
 -- ============================================
 
@@ -292,6 +352,18 @@ CREATE INDEX IF NOT EXISTS idx_whitepapers_status ON whitepapers(status);
 CREATE INDEX IF NOT EXISTS idx_webinars_slug ON webinars(slug);
 CREATE INDEX IF NOT EXISTS idx_webinars_status ON webinars(status);
 
+-- Playbook leads indexes
+CREATE INDEX IF NOT EXISTS idx_playbook_leads_email ON playbook_leads(email);
+CREATE INDEX IF NOT EXISTS idx_playbook_leads_token ON playbook_leads(download_token);
+CREATE INDEX IF NOT EXISTS idx_playbook_leads_playbook ON playbook_leads(playbook_slug);
+CREATE INDEX IF NOT EXISTS idx_playbook_leads_created ON playbook_leads(created_at DESC);
+
+-- Whitepaper leads indexes
+CREATE INDEX IF NOT EXISTS idx_whitepaper_leads_email ON whitepaper_leads(email);
+CREATE INDEX IF NOT EXISTS idx_whitepaper_leads_token ON whitepaper_leads(download_token);
+CREATE INDEX IF NOT EXISTS idx_whitepaper_leads_whitepaper ON whitepaper_leads(whitepaper_slug);
+CREATE INDEX IF NOT EXISTS idx_whitepaper_leads_created ON whitepaper_leads(created_at DESC);
+
 -- ============================================
 -- STEP 4: FUNCTIONS & TRIGGERS
 -- ============================================
@@ -312,6 +384,8 @@ DROP TRIGGER IF EXISTS update_whitepapers_updated_at ON whitepapers;
 DROP TRIGGER IF EXISTS update_webinars_updated_at ON webinars;
 DROP TRIGGER IF EXISTS update_newsletter_subscribers_updated_at ON newsletter_subscribers;
 DROP TRIGGER IF EXISTS update_seo_metrics_updated_at ON seo_metrics;
+DROP TRIGGER IF EXISTS update_playbook_leads_updated_at ON playbook_leads;
+DROP TRIGGER IF EXISTS update_whitepaper_leads_updated_at ON whitepaper_leads;
 
 CREATE TRIGGER update_contacts_updated_at BEFORE UPDATE ON contacts FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_chat_leads_updated_at BEFORE UPDATE ON chat_leads FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -321,6 +395,8 @@ CREATE TRIGGER update_whitepapers_updated_at BEFORE UPDATE ON whitepapers FOR EA
 CREATE TRIGGER update_webinars_updated_at BEFORE UPDATE ON webinars FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_newsletter_subscribers_updated_at BEFORE UPDATE ON newsletter_subscribers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_seo_metrics_updated_at BEFORE UPDATE ON seo_metrics FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_playbook_leads_updated_at BEFORE UPDATE ON playbook_leads FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_whitepaper_leads_updated_at BEFORE UPDATE ON whitepaper_leads FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================
 -- STEP 5: ENABLE RLS
@@ -338,6 +414,8 @@ ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE content_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE seo_metrics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_activity_log ENABLE ROW LEVEL SECURITY;
+ALTER TABLE playbook_leads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE whitepaper_leads ENABLE ROW LEVEL SECURITY;
 
 -- ============================================
 -- STEP 6: DROP ALL EXISTING POLICIES
@@ -354,7 +432,8 @@ BEGIN
     AND tablename IN ('contacts', 'chat_leads', 'blog_posts', 'case_studies',
                       'whitepapers', 'whitepaper_downloads', 'webinars',
                       'webinar_registrations', 'newsletter_subscribers',
-                      'content_categories', 'seo_metrics', 'admin_activity_log')
+                      'content_categories', 'seo_metrics', 'admin_activity_log',
+                      'playbook_leads', 'whitepaper_leads')
   LOOP
     EXECUTE format('DROP POLICY IF EXISTS %I ON %I', pol.policyname, pol.tablename);
   END LOOP;
@@ -415,6 +494,20 @@ CREATE POLICY "seo_all_auth" ON seo_metrics FOR ALL TO authenticated USING (true
 CREATE POLICY "activity_select_auth" ON admin_activity_log FOR SELECT TO authenticated USING (true);
 CREATE POLICY "activity_insert_auth" ON admin_activity_log FOR INSERT TO authenticated WITH CHECK (true);
 
+-- Playbook leads - anyone can submit, authenticated can read/update
+CREATE POLICY "playbook_leads_select_auth" ON playbook_leads FOR SELECT TO authenticated USING (true);
+CREATE POLICY "playbook_leads_insert_anon" ON playbook_leads FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "playbook_leads_insert_auth" ON playbook_leads FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "playbook_leads_update_anon" ON playbook_leads FOR UPDATE TO anon USING (true);
+CREATE POLICY "playbook_leads_update_auth" ON playbook_leads FOR UPDATE TO authenticated USING (true);
+
+-- Whitepaper leads - anyone can submit, authenticated can read/update
+CREATE POLICY "whitepaper_leads_select_auth" ON whitepaper_leads FOR SELECT TO authenticated USING (true);
+CREATE POLICY "whitepaper_leads_insert_anon" ON whitepaper_leads FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "whitepaper_leads_insert_auth" ON whitepaper_leads FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "whitepaper_leads_update_anon" ON whitepaper_leads FOR UPDATE TO anon USING (true);
+CREATE POLICY "whitepaper_leads_update_auth" ON whitepaper_leads FOR UPDATE TO authenticated USING (true);
+
 -- ============================================
 -- STEP 8: SEED DATA
 -- ============================================
@@ -428,6 +521,58 @@ SELECT * FROM (VALUES
   ('Cybersecurity', 'cybersecurity', 'all', 5)
 ) AS v(name, slug, content_type, sort_order)
 WHERE NOT EXISTS (SELECT 1 FROM content_categories WHERE slug = v.slug);
+
+-- ============================================
+-- STEP 9: VIEWS
+-- ============================================
+
+-- Combined leads view for dashboard
+CREATE OR REPLACE VIEW all_leads AS
+SELECT
+  id,
+  created_at,
+  name,
+  email,
+  company,
+  'contact' as lead_type,
+  service_interest as item_name,
+  NULL::boolean as downloaded
+FROM contacts
+UNION ALL
+SELECT
+  id,
+  created_at,
+  name,
+  email,
+  company,
+  'playbook' as lead_type,
+  playbook_title as item_name,
+  token_used as downloaded
+FROM playbook_leads
+UNION ALL
+SELECT
+  id,
+  created_at,
+  name,
+  email,
+  company,
+  'whitepaper' as lead_type,
+  whitepaper_title as item_name,
+  token_used as downloaded
+FROM whitepaper_leads
+ORDER BY created_at DESC;
+
+-- Lead stats summary view
+CREATE OR REPLACE VIEW lead_stats AS
+SELECT
+  (SELECT COUNT(*) FROM contacts) as total_contacts,
+  (SELECT COUNT(*) FROM contacts WHERE status = 'new') as new_contacts,
+  (SELECT COUNT(*) FROM playbook_leads) as total_playbook_leads,
+  (SELECT COUNT(*) FROM playbook_leads WHERE token_used = true) as playbook_downloads,
+  (SELECT COUNT(*) FROM whitepaper_leads) as total_whitepaper_leads,
+  (SELECT COUNT(*) FROM whitepaper_leads WHERE token_used = true) as whitepaper_downloads,
+  (SELECT COUNT(*) FROM blog_posts WHERE status = 'published') as published_posts,
+  (SELECT COUNT(*) FROM case_studies WHERE status = 'published') as published_case_studies;
 
 -- ============================================
 -- DONE!
