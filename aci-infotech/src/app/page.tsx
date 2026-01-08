@@ -1,7 +1,7 @@
 import Button from '@/components/ui/Button';
 import {
   HeroSection,
-  CaseStudiesSection,
+  DynamicCaseStudiesSection,
   PartnersSection,
   TestimonialsSection,
   NewsSection,
@@ -11,52 +11,6 @@ import {
   WhatWeBuildSection,
 } from '@/components/sections';
 import PlaybookVaultSection from '@/components/sections/PlaybookVaultSection';
-
-// Homepage data from content_homepage.json
-const caseStudies = [
-  {
-    slug: 'msci-data-automation',
-    client: 'MSCI',
-    logo_url: '/images/clients/msci-logo.svg',
-    industry: 'Financial Services',
-    challenge: '40+ finance systems post-acquisitions needed consolidation',
-    solution: 'SAP S/4HANA implementation with automated data quality gates',
-    results: [
-      { metric: '$12M', description: 'Operational savings in year one' },
-      { metric: '18 months', description: 'Delivery timeline' },
-      { metric: 'Zero', description: 'Financial reporting disruptions' },
-    ],
-    technologies: ['SAP S/4HANA', 'Python', 'Azure DevOps'],
-  },
-  {
-    slug: 'racetrac-martech',
-    client: 'RaceTrac',
-    logo_url: '/images/clients/racetrac-logo.svg',
-    industry: 'Retail / Convenience',
-    challenge: 'Payment systems across 600+ locations, zero downtime tolerance',
-    solution: 'Modernized payment infrastructure, integrated loyalty program with Braze',
-    results: [
-      { metric: '30%', description: 'Reduction in data latency' },
-      { metric: '25%', description: 'Improvement in promotion effectiveness' },
-      { metric: '600+', description: 'Locations with zero downtime' },
-    ],
-    technologies: ['Salesforce', 'Braze', 'AWS', 'Databricks'],
-  },
-  {
-    slug: 'sodexo-unified-data',
-    client: 'Sodexo',
-    logo_url: '/images/clients/sodexo-logo.svg',
-    industry: 'Hospitality',
-    challenge: 'Global operations with data scattered across regional silos',
-    solution: 'Unified data platform with Informatica IICS and MDM',
-    results: [
-      { metric: 'Single', description: 'Source of truth across all operations' },
-      { metric: 'Global', description: 'Supply chain visibility' },
-      { metric: '50%', description: 'Faster decision-making' },
-    ],
-    technologies: ['Informatica IICS', 'MDM', 'Cloud Integration'],
-  },
-];
 
 const partners = [
   { name: 'Databricks', logo_url: '/images/partners/databricks.svg', badge: 'Exclusive Partner', badge_style: 'gold' as const },
@@ -153,13 +107,10 @@ export default function HomePage() {
       {/* What We Build - System Architecture Diagram */}
       <WhatWeBuildSection />
 
-      {/* Case Studies Section */}
-      <CaseStudiesSection
+      {/* Case Studies Section - Dynamic from CMS */}
+      <DynamicCaseStudiesSection
         headline="Here's What We Built. Here's What It Delivered."
         subheadline="Real projects. Real Fortune 500 clients. Real outcomes."
-        studies={caseStudies}
-        viewAllUrl="/case-studies"
-        viewAllText="See All Success Stories"
       />
 
       {/* Partners Section */}
