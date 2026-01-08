@@ -143,13 +143,14 @@ const SECURITY_SERVICE: ServiceData = {
 interface ServiceNodeProps {
   service: ServiceData;
   isHovered: boolean;
+  isDirectlyHovered: boolean;
   hoveredId: string | null;
   onHover: (id: string | null) => void;
   onClick: (service: ServiceData) => void;
   size?: 'sm' | 'md';
 }
 
-function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, size = 'md' }: ServiceNodeProps) {
+function ServiceNode({ service, isHovered, isDirectlyHovered, hoveredId, onHover, onClick, size = 'md' }: ServiceNodeProps) {
   const Icon = service.icon;
   const isDimmed = hoveredId !== null && !isHovered;
 
@@ -176,7 +177,7 @@ function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, size = '
         {/* Icon */}
         <div className={`
           ${size === 'sm' ? 'w-10 h-10 md:w-11 md:h-11' : 'w-11 h-11 md:w-12 md:h-12'}
-          rounded-sm flex items-center justify-center mb-3 bg-gray-700/50
+          rounded-sm flex items-center justify-center mb-3 bg-[#0052CC]/80
           transition-colors duration-300
         `}>
           <Icon
@@ -203,8 +204,8 @@ function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, size = '
         `} />
       </div>
 
-      {/* Tech stack tooltip */}
-      {isHovered && (
+      {/* Tech stack tooltip - only show when directly hovering this box, not via Security wrapper */}
+      {isDirectlyHovered && (
         <div
           className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-30
                      bg-[#0A1628] text-white text-xs px-3 py-2 rounded-sm shadow-xl
@@ -236,13 +237,13 @@ function FlowArrow({ isHighlighted, size = 'md' }: { isHighlighted: boolean; siz
         <div
           className={`
             ${size === 'sm' ? 'w-4 xl:w-5' : 'w-5 xl:w-6'} h-0.5 transition-all duration-300
-            ${isHighlighted ? 'bg-[#0052CC]' : 'bg-[#0052CC]/25'}
+            ${isHighlighted ? 'bg-[#0052CC]' : 'bg-[#0052CC]/60'}
           `}
         />
         <ChevronRight
           className={`
             absolute -right-1 top-1/2 -translate-y-1/2 ${size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'} transition-all duration-300
-            ${isHighlighted ? 'text-[#0052CC]' : 'text-[#0052CC]/25'}
+            ${isHighlighted ? 'text-[#0052CC]' : 'text-[#0052CC]/60'}
           `}
           strokeWidth={2}
         />
@@ -462,6 +463,7 @@ export default function WhatWeBuildSection() {
                     <ServiceNode
                       service={CLOUD_SERVICE}
                       isHovered={hoveredService === CLOUD_SERVICE.id || isSecurityHovered}
+                      isDirectlyHovered={hoveredService === CLOUD_SERVICE.id}
                       hoveredId={isSecurityHovered ? null : hoveredService}
                       onHover={setHoveredService}
                       onClick={setSelectedService}
@@ -483,6 +485,7 @@ export default function WhatWeBuildSection() {
                     <ServiceNode
                       service={ERP_SERVICE}
                       isHovered={hoveredService === ERP_SERVICE.id || isSecurityHovered}
+                      isDirectlyHovered={hoveredService === ERP_SERVICE.id}
                       hoveredId={isSecurityHovered ? null : hoveredService}
                       onHover={setHoveredService}
                       onClick={setSelectedService}
@@ -505,6 +508,7 @@ export default function WhatWeBuildSection() {
                       <ServiceNode
                         service={DATA_SERVICE}
                         isHovered={hoveredService === DATA_SERVICE.id || isSecurityHovered}
+                        isDirectlyHovered={hoveredService === DATA_SERVICE.id}
                         hoveredId={isSecurityHovered ? null : hoveredService}
                         onHover={setHoveredService}
                         onClick={setSelectedService}
@@ -516,6 +520,7 @@ export default function WhatWeBuildSection() {
                       <ServiceNode
                         service={AI_SERVICE}
                         isHovered={hoveredService === AI_SERVICE.id || isSecurityHovered}
+                        isDirectlyHovered={hoveredService === AI_SERVICE.id}
                         hoveredId={isSecurityHovered ? null : hoveredService}
                         onHover={setHoveredService}
                         onClick={setSelectedService}
@@ -527,6 +532,7 @@ export default function WhatWeBuildSection() {
                       <ServiceNode
                         service={MARTECH_SERVICE}
                         isHovered={hoveredService === MARTECH_SERVICE.id || isSecurityHovered}
+                        isDirectlyHovered={hoveredService === MARTECH_SERVICE.id}
                         hoveredId={isSecurityHovered ? null : hoveredService}
                         onHover={setHoveredService}
                         onClick={setSelectedService}
@@ -549,6 +555,7 @@ export default function WhatWeBuildSection() {
                     <ServiceNode
                       service={DIGITAL_SERVICE}
                       isHovered={hoveredService === DIGITAL_SERVICE.id || isSecurityHovered}
+                      isDirectlyHovered={hoveredService === DIGITAL_SERVICE.id}
                       hoveredId={isSecurityHovered ? null : hoveredService}
                       onHover={setHoveredService}
                       onClick={setSelectedService}
