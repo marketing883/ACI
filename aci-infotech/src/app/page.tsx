@@ -1,5 +1,3 @@
-import Link from 'next/link';
-import { ArrowRight, Database, Brain, Cloud, Users, Shield, Zap } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import {
   HeroSection,
@@ -10,6 +8,7 @@ import {
   AwardsSection,
   DynamicBlogSection,
   ArqAISection,
+  WhatWeBuildSection,
 } from '@/components/sections';
 import PlaybookVaultSection from '@/components/sections/PlaybookVaultSection';
 
@@ -151,169 +150,8 @@ export default function HomePage() {
       {/* Playbook Vault Section */}
       <PlaybookVaultSection />
 
-      {/* Why We're Different Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4 font-[var(--font-title)]">
-              Why We're Different
-            </h2>
-            <p className="text-lg text-gray-600">
-              Most firms build and leave. We build, deploy, and stand behind it.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
-              <div className="text-4xl font-bold text-[var(--aci-primary)] mb-2 font-[var(--font-title)]">70%</div>
-              <div className="text-sm text-gray-500 mb-4">Senior architects with 10+ years</div>
-              <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3 font-[var(--font-title)]">
-                Engineers Who've Been on the Call
-              </h3>
-              <p className="text-gray-600">
-                Your project lead has 15-20 years enterprise experience and has built this specific
-                system 10+ times. Not junior analysts learning on your time.
-              </p>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
-              <div className="text-4xl font-bold text-[var(--aci-primary)] mb-2 font-[var(--font-title)]">100%</div>
-              <div className="text-sm text-gray-500 mb-4">Production deployments with SLAs</div>
-              <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3 font-[var(--font-title)]">
-                Production Code, Not PowerPoints
-              </h3>
-              <p className="text-gray-600">
-                We ship working systems with SLAs. Databricks lakehouses. Salesforce CDP integrations.
-                AWS cloud architectures. Every line designed for production scale.
-              </p>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
-              <div className="text-4xl font-bold text-[var(--aci-primary)] mb-2 font-[var(--font-title)]">80+</div>
-              <div className="text-sm text-gray-500 mb-4">Fortune 500 clients</div>
-              <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3 font-[var(--font-title)]">
-                Proven at Enterprise Scale
-              </h3>
-              <p className="text-gray-600">
-                RaceTrac, MSCI, Sodexo, Nestle, PDS. 80+ Fortune 500 companies trust our code.
-                Pattern recognition from 19 years of production experience.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4 font-[var(--font-title)]">
-              What We Build
-            </h2>
-            <p className="text-lg text-gray-600">
-              Enterprise systems that run 24/7, backed by SLAs
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Link href="/services/data-engineering" className="group">
-              <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
-                <Database className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
-                  Data Engineering
-                </h3>
-                <p className="text-sm text-gray-500 mb-3">Platforms that feed AI and analytics</p>
-                <p className="text-gray-600 text-sm mb-4">
-                  Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability.
-                </p>
-                <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                  See Data Projects <ArrowRight className="w-4 h-4" />
-                </span>
-              </div>
-            </Link>
-
-            <Link href="/services/applied-ai-ml" className="group">
-              <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
-                <Brain className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
-                  Applied AI & ML
-                </h3>
-                <p className="text-sm text-gray-500 mb-3">From GenAI pilots to production ML</p>
-                <p className="text-gray-600 text-sm mb-4">
-                  GenAI chatbots, forecasting engines, recommendation systems. With MLOps, governance, and SLAs.
-                </p>
-                <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                  See AI Projects <ArrowRight className="w-4 h-4" />
-                </span>
-              </div>
-            </Link>
-
-            <Link href="/services/cloud-modernization" className="group">
-              <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
-                <Cloud className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
-                  Cloud Modernization
-                </h3>
-                <p className="text-sm text-gray-500 mb-3">Multi-cloud without the chaos</p>
-                <p className="text-gray-600 text-sm mb-4">
-                  AWS, Azure, GCP migrations. Refactor, replatform, or rearchitect. Proven playbooks that reduce risk.
-                </p>
-                <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                  See Cloud Projects <ArrowRight className="w-4 h-4" />
-                </span>
-              </div>
-            </Link>
-
-            <Link href="/services/martech-cdp" className="group">
-              <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
-                <Users className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
-                  MarTech & CDP
-                </h3>
-                <p className="text-sm text-gray-500 mb-3">Customer 360 that actually works</p>
-                <p className="text-gray-600 text-sm mb-4">
-                  Salesforce Marketing Cloud, Adobe Experience Platform, Braze. Real-time personalization at scale.
-                </p>
-                <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                  See MarTech Projects <ArrowRight className="w-4 h-4" />
-                </span>
-              </div>
-            </Link>
-
-            <Link href="/services/digital-transformation" className="group">
-              <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
-                <Zap className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
-                  Digital Transformation
-                </h3>
-                <p className="text-sm text-gray-500 mb-3">Intelligent process automation</p>
-                <p className="text-gray-600 text-sm mb-4">
-                  ServiceNow workflows, RPA, document processing. Automate what humans shouldn't do manually.
-                </p>
-                <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                  See Automation Projects <ArrowRight className="w-4 h-4" />
-                </span>
-              </div>
-            </Link>
-
-            <Link href="/services/cyber-security" className="group">
-              <div className="bg-gray-50 p-6 rounded-xl hover:shadow-lg transition-all hover:-translate-y-1">
-                <Shield className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-2 group-hover:text-[var(--aci-primary)] font-[var(--font-title)]">
-                  Cyber Security
-                </h3>
-                <p className="text-sm text-gray-500 mb-3">Security built in, not bolted on</p>
-                <p className="text-gray-600 text-sm mb-4">
-                  DevSecOps, observability, compliance. SOC 2, ISO 27001 compliant architectures from day one.
-                </p>
-                <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                  See Security Projects <ArrowRight className="w-4 h-4" />
-                </span>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* What We Build - System Architecture Diagram */}
+      <WhatWeBuildSection />
 
       {/* Case Studies Section */}
       <CaseStudiesSection

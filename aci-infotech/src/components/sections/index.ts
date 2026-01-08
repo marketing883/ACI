@@ -7,3 +7,4 @@ export { default as AwardsSection } from './AwardsSection';
 export { default as BlogPreviewSection } from './BlogPreviewSection';
 export { default as DynamicBlogSection } from './DynamicBlogSection';
 export { default as ArqAISection } from './ArqAISection';
+export { default as WhatWeBuildSection } from './WhatWeBuildSection';
