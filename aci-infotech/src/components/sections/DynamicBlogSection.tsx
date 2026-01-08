@@ -43,7 +43,8 @@ async function getLatestPosts(limit: number = 3) {
   return data || [];
 }
 
-function formatDate(dateString: string): string {
+function formatDate(dateString: string | null): string {
+  if (!dateString) return '';
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -70,7 +71,7 @@ export default async function DynamicBlogSection({
     title: post.title,
     excerpt: post.excerpt || '',
     author: post.author_name || 'ACI Infotech',
-    date: formatDate(post.published_at),
+    date: formatDate(post.published_at ?? null),
     category: post.category || 'Insights',
     featured_image: post.featured_image || undefined,
     read_time: post.read_time_minutes ? `${post.read_time_minutes} min read` : undefined,

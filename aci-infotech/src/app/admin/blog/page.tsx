@@ -387,7 +387,7 @@ export default function BlogAdmin() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
-                      {formatDate(post.published_at)}
+                      {formatDate(post.published_at ?? null)}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="relative">
@@ -417,7 +417,7 @@ export default function BlogAdmin() {
                               Edit
                             </Link>
                             <button
-                              onClick={() => togglePublished(post.id, post.status)}
+                              onClick={() => togglePublished(post.id, post.status ?? 'draft')}
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                             >
                               {post.status === 'published' ? (

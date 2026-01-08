@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
             title: blog.title,
             status: 'success',
             message: 'Updated',
-            imageUrl: featuredImageUrl
+            imageUrl: featuredImageUrl ?? undefined
           });
         } else {
           // Insert new
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
             title: blog.title,
             status: 'success',
             message: 'Imported',
-            imageUrl: featuredImageUrl
+            imageUrl: featuredImageUrl ?? undefined
           });
         }
 

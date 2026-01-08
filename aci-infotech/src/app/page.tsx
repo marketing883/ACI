@@ -11,6 +11,7 @@ import {
   DynamicBlogSection,
   ArqAISection,
 } from '@/components/sections';
+import PlaybookVaultSection from '@/components/sections/PlaybookVaultSection';
 
 // Homepage data from content_homepage.json
 const caseStudies = [
@@ -140,6 +141,9 @@ export default function HomePage() {
     <>
       {/* Hero Section with Video Background */}
       <HeroSection />
+
+      {/* Playbook Vault Section */}
+      <PlaybookVaultSection />
 
       {/* Why We're Different Section */}
       <section className="py-20 bg-gray-50">
