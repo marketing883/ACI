@@ -140,12 +140,12 @@ export default function Navigation() {
           fixed top-0 left-0 right-0 z-50
           transition-all duration-300
           ${isScrolled
-            ? 'bg-white/70 backdrop-blur-xl shadow-lg border-b border-gray-200/50'
-            : 'bg-white/30 backdrop-blur-md border-b border-white/20'}
+            ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50'
+            : 'bg-white/90 backdrop-blur-xl border-b border-gray-100/50'}
         `}
         style={{
-          WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'blur(12px) saturate(150%)',
-          backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'blur(12px) saturate(150%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          backdropFilter: 'blur(20px) saturate(180%)',
         }}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -208,7 +208,7 @@ export default function Navigation() {
               {/* About Link */}
               <Link
                 href="/about"
-                className="px-4 py-2 text-sm font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
+                className="px-4 py-2 text-[15px] font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
               >
                 About
               </Link>
@@ -216,7 +216,7 @@ export default function Navigation() {
               {/* Contact Link */}
               <Link
                 href="/contact"
-                className="px-4 py-2 text-sm font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
+                className="px-4 py-2 text-[15px] font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
               >
                 Contact
               </Link>
@@ -299,7 +299,7 @@ function NavDropdown({ label, isActive, onMouseEnter, onMouseLeave, children, wi
     <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <button
         className={`
-          flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors
+          flex items-center gap-1.5 px-4 py-3 text-[15px] font-medium transition-colors
           ${isActive ? 'text-[var(--aci-primary)]' : 'text-[var(--aci-secondary)] hover:text-[var(--aci-primary)]'}
         `}
       >
@@ -307,11 +307,16 @@ function NavDropdown({ label, isActive, onMouseEnter, onMouseLeave, children, wi
         <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'rotate-180' : ''}`} />
       </button>
 
+      {/* Invisible bridge to prevent hover gap issues */}
+      <div
+        className={`absolute top-full left-0 right-0 h-2 ${isActive ? 'block' : 'hidden'}`}
+      />
+
       <div
         className={`
-          absolute top-full ${wide ? 'left-1/2 -translate-x-1/2' : 'left-0'} pt-4
+          absolute top-[calc(100%+8px)] ${wide ? 'left-1/2 -translate-x-1/2' : 'left-0'}
           transition-all duration-200
-          ${isActive ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}
+          ${isActive ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
         `}
       >
         <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
@@ -348,10 +353,10 @@ function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
                   <Icon className={`w-5 h-5 ${item.color} transition-transform group-hover:scale-110`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors text-sm">
+                  <div className="font-semibold text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors text-[15px]">
                     {item.label}
                   </div>
-                  <div className="text-xs text-gray-500 mt-0.5 line-clamp-1">{item.description}</div>
+                  <div className="text-sm text-gray-500 mt-0.5 line-clamp-1">{item.description}</div>
                 </div>
               </Link>
             );
@@ -429,7 +434,7 @@ function PlatformsMegaMenu({ items }: PlatformsMegaMenuProps) {
               <div className="w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-gray-50 flex items-center justify-center transition-colors border border-gray-200">
                 <Icon className={`w-5 h-5 ${item.color} transition-transform group-hover:scale-110`} />
               </div>
-              <span className="font-medium text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
+              <span className="font-medium text-[15px] text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
                 {item.label}
               </span>
             </Link>
@@ -471,7 +476,7 @@ function IndustriesMegaMenu({ items }: IndustriesMegaMenuProps) {
               <div className="w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-gray-50 flex items-center justify-center transition-colors">
                 <Icon className={`w-5 h-5 ${item.color} transition-transform group-hover:scale-110`} />
               </div>
-              <span className="font-medium text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
+              <span className="font-medium text-[15px] text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
                 {item.label}
               </span>
             </Link>
@@ -516,11 +521,11 @@ function ResourcesMegaMenu({ items }: ResourcesMegaMenuProps) {
                   <Icon className="w-5 h-5 text-[var(--aci-primary)] transition-transform group-hover:scale-110" />
                 </div>
                 <div>
-                  <div className="font-medium text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
+                  <div className="font-medium text-[15px] text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
                     {item.label}
                   </div>
                   {item.description && (
-                    <div className="text-xs text-gray-500">{item.description}</div>
+                    <div className="text-sm text-gray-500">{item.description}</div>
                   )}
                 </div>
               </Link>
