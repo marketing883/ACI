@@ -169,41 +169,31 @@ function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, size = '
       <div
         className={`
           relative bg-white rounded-sm border-2 transition-all duration-300
-          ${size === 'sm' ? 'p-3 md:p-4' : 'p-4 md:p-5'}
+          ${size === 'sm' ? 'p-4 md:p-5' : 'p-5 md:p-6'}
           ${isHovered ? 'border-[#0052CC] shadow-[0_8px_24px_rgba(0,82,204,0.2)]' : 'border-[#0052CC]/20 shadow-[0_2px_8px_rgba(0,0,0,0.04)]'}
         `}
       >
         {/* Icon */}
         <div className={`
-          ${size === 'sm' ? 'w-9 h-9 md:w-10 md:h-10' : 'w-10 h-10 md:w-11 md:h-11'}
-          rounded-sm flex items-center justify-center mb-2 md:mb-3 bg-[#0052CC]/10
+          ${size === 'sm' ? 'w-10 h-10 md:w-11 md:h-11' : 'w-11 h-11 md:w-12 md:h-12'}
+          rounded-sm flex items-center justify-center mb-3 bg-[#0052CC]/10
           transition-colors duration-300
         `}>
           <Icon
-            className={`${size === 'sm' ? 'w-4 h-4 md:w-5 md:h-5' : 'w-5 h-5 md:w-6 md:h-6'} text-[#0052CC]`}
+            className={`${size === 'sm' ? 'w-5 h-5 md:w-6 md:h-6' : 'w-6 h-6'} text-[#0052CC]`}
             strokeWidth={1.5}
           />
         </div>
 
         {/* Name */}
-        <h3 className={`font-semibold text-[#0A1628] leading-tight mb-1 ${size === 'sm' ? 'text-xs md:text-sm' : 'text-sm md:text-base'}`}>
+        <h3 className={`font-semibold text-[#0A1628] leading-tight mb-2 ${size === 'sm' ? 'text-sm md:text-base' : 'text-base md:text-lg'}`}>
           {service.shortName}
         </h3>
 
-        {/* Tagline - hidden on small */}
-        <p className={`text-gray-500 mb-2 line-clamp-1 hidden md:block ${size === 'sm' ? 'text-[10px]' : 'text-xs'}`}>
+        {/* Tagline */}
+        <p className={`text-gray-500 line-clamp-2 ${size === 'sm' ? 'text-xs md:text-sm' : 'text-sm'}`}>
           {service.tagline}
         </p>
-
-        {/* Deployment count */}
-        <div className="flex items-baseline gap-1">
-          <span className={`font-bold text-[#C4FF61] font-mono ${size === 'sm' ? 'text-base md:text-lg' : 'text-lg md:text-xl'}`}>
-            {service.deployments}
-          </span>
-          <span className={`text-gray-400 ${size === 'sm' ? 'text-[9px] md:text-[10px]' : 'text-[10px] md:text-xs'}`}>
-            {service.deploymentsLabel}
-          </span>
-        </div>
 
         {/* Hover indicator */}
         <div className={`
@@ -221,9 +211,9 @@ function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, size = '
                      whitespace-nowrap"
           style={{ animation: 'fadeIn 0.15s ease-out' }}
         >
-          <div className="flex gap-1.5 flex-wrap justify-center max-w-[160px]">
+          <div className="flex gap-1.5 flex-wrap justify-center max-w-[180px]">
             {service.techStack.slice(0, 3).map((tech, i) => (
-              <span key={i} className="px-1.5 py-0.5 bg-white/10 rounded text-[10px]">
+              <span key={i} className="px-1.5 py-0.5 bg-white/10 rounded text-[11px]">
                 {tech}
               </span>
             ))}
@@ -241,11 +231,11 @@ function ServiceNode({ service, isHovered, hoveredId, onHover, onClick, size = '
 
 function FlowArrow({ isHighlighted, size = 'md' }: { isHighlighted: boolean; size?: 'sm' | 'md' }) {
   return (
-    <div className={`hidden md:flex items-center justify-center ${size === 'sm' ? 'px-1' : 'px-2'}`}>
+    <div className={`hidden lg:flex items-center justify-center ${size === 'sm' ? 'px-1' : 'px-2'}`}>
       <div className="relative">
         <div
           className={`
-            ${size === 'sm' ? 'w-4 lg:w-6' : 'w-6 lg:w-8'} h-0.5 transition-all duration-300
+            ${size === 'sm' ? 'w-4 xl:w-5' : 'w-5 xl:w-6'} h-0.5 transition-all duration-300
             ${isHighlighted ? 'bg-[#0052CC]' : 'bg-[#0052CC]/25'}
           `}
         />
@@ -319,10 +309,10 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
           <div className="flex items-start gap-4 mb-6">
             <div className={`
               w-14 h-14 rounded-sm flex items-center justify-center shrink-0
-              ${isSecurity ? 'bg-[#C4FF61]/20' : 'bg-[#0052CC]/10'}
+              ${isSecurity ? 'bg-[#0052CC]/15' : 'bg-[#0052CC]/10'}
             `}>
               <Icon
-                className={`w-7 h-7 ${isSecurity ? 'text-[#0A1628]' : 'text-[#0052CC]'}`}
+                className="w-7 h-7 text-[#0052CC]"
                 strokeWidth={1.5}
               />
             </div>
@@ -332,13 +322,6 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
               </h2>
               <p className="text-gray-500">{service.tagline}</p>
             </div>
-          </div>
-
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#0A1628] rounded-sm mb-6">
-            <span className="text-xl font-bold text-[#C4FF61] font-mono">
-              {service.deployments}
-            </span>
-            <span className="text-white/70 text-sm">{service.deploymentsLabel}</span>
           </div>
 
           <div className="mb-6">
@@ -366,7 +349,7 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
             </div>
           </div>
 
-          <div className="mb-6 p-4 bg-[#C4FF61]/10 rounded-sm border border-[#C4FF61]/30">
+          <div className="mb-6 p-4 bg-[#0052CC]/5 rounded-sm border border-[#0052CC]/20">
             <h3 className="text-2xl font-semibold text-[#0A1628] capitalize mb-1">
               Key Outcome
             </h3>
@@ -442,43 +425,40 @@ export default function WhatWeBuildSection() {
           <div
             className={`
               relative border-2 rounded-sm p-4 md:p-6 lg:p-8 transition-all duration-300
-              ${isSecurityHovered ? 'border-[#C4FF61] bg-[#C4FF61]/5' : 'border-[#C4FF61]/30 bg-transparent'}
+              ${isSecurityHovered ? 'border-[#0052CC] bg-[#0052CC]/5' : 'border-[#0052CC]/30 bg-transparent'}
             `}
             onMouseEnter={() => setHoveredService('security')}
             onMouseLeave={() => setHoveredService(null)}
           >
             {/* Security Header Bar */}
             <div
-              className="flex items-center justify-between mb-6 pb-4 border-b border-[#C4FF61]/20 cursor-pointer"
+              className="flex items-center justify-between mb-6 pb-4 border-b border-[#0052CC]/15 cursor-pointer"
               onClick={() => setSelectedService(SECURITY_SERVICE)}
             >
               <div className="flex items-center gap-3">
                 <div className={`
                   w-10 h-10 rounded-sm flex items-center justify-center transition-colors duration-300
-                  ${isSecurityHovered ? 'bg-[#C4FF61]/30' : 'bg-[#C4FF61]/15'}
+                  ${isSecurityHovered ? 'bg-[#0052CC]/20' : 'bg-[#0052CC]/10'}
                 `}>
-                  <Shield className="w-5 h-5 text-[#0A1628]" strokeWidth={1.5} />
+                  <Shield className="w-5 h-5 text-[#0052CC]" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-[#0A1628] text-sm md:text-base">
+                  <h3 className="font-semibold text-[#0A1628] text-base md:text-lg">
                     Security
                   </h3>
-                  <p className="text-xs text-gray-500">Built in, not bolted on</p>
+                  <p className="text-sm text-gray-500">Built in, not bolted on</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl md:text-2xl font-bold text-[#C4FF61] font-mono">82</span>
-                <span className="text-xs text-gray-400">clients protected</span>
-              </div>
+              <ChevronRight className={`w-5 h-5 transition-colors duration-300 ${isSecurityHovered ? 'text-[#0052CC]' : 'text-gray-400'}`} />
             </div>
 
             {/* Main Flow: Cloud → ERP → [Data → AI → MarTech] → Digital */}
-            <div className="flex flex-col lg:flex-row items-stretch justify-between gap-4 lg:gap-2">
+            <div className="flex flex-col lg:flex-row items-stretch justify-between gap-4 lg:gap-1 xl:gap-2">
 
               {/* Tier 1: Infrastructure */}
               <div className="flex flex-col">
                 <div className="flex-1 flex items-center">
-                  <div className="w-full lg:w-[140px] xl:w-[150px]">
+                  <div className="w-full lg:w-[150px] xl:w-[160px]">
                     <ServiceNode
                       service={CLOUD_SERVICE}
                       isHovered={hoveredService === CLOUD_SERVICE.id || isSecurityHovered}
@@ -489,7 +469,7 @@ export default function WhatWeBuildSection() {
                     />
                   </div>
                 </div>
-                <p className="text-[10px] md:text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
+                <p className="text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
                   Infrastructure
                 </p>
               </div>
@@ -499,7 +479,7 @@ export default function WhatWeBuildSection() {
               {/* Tier 2: Core Business Systems */}
               <div className="flex flex-col">
                 <div className="flex-1 flex items-center">
-                  <div className="w-full lg:w-[140px] xl:w-[150px]">
+                  <div className="w-full lg:w-[150px] xl:w-[160px]">
                     <ServiceNode
                       service={ERP_SERVICE}
                       isHovered={hoveredService === ERP_SERVICE.id || isSecurityHovered}
@@ -510,7 +490,7 @@ export default function WhatWeBuildSection() {
                     />
                   </div>
                 </div>
-                <p className="text-[10px] md:text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
+                <p className="text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
                   Core Business
                 </p>
               </div>
@@ -520,8 +500,8 @@ export default function WhatWeBuildSection() {
               {/* Tier 3: Data Intelligence Pipeline */}
               <div className="flex flex-col">
                 <div className="flex-1">
-                  <div className="flex items-center gap-0">
-                    <div className="w-[100px] md:w-[110px] lg:w-[120px]">
+                  <div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-0">
+                    <div className="w-full lg:w-[130px] xl:w-[140px]">
                       <ServiceNode
                         service={DATA_SERVICE}
                         isHovered={hoveredService === DATA_SERVICE.id || isSecurityHovered}
@@ -532,7 +512,7 @@ export default function WhatWeBuildSection() {
                       />
                     </div>
                     <FlowArrow isHighlighted={hoveredService === 'data' || hoveredService === 'ai' || isSecurityHovered} size="sm" />
-                    <div className="w-[100px] md:w-[110px] lg:w-[120px]">
+                    <div className="w-full lg:w-[130px] xl:w-[140px]">
                       <ServiceNode
                         service={AI_SERVICE}
                         isHovered={hoveredService === AI_SERVICE.id || isSecurityHovered}
@@ -543,7 +523,7 @@ export default function WhatWeBuildSection() {
                       />
                     </div>
                     <FlowArrow isHighlighted={hoveredService === 'ai' || hoveredService === 'martech' || isSecurityHovered} size="sm" />
-                    <div className="w-[100px] md:w-[110px] lg:w-[120px]">
+                    <div className="w-full lg:w-[130px] xl:w-[140px]">
                       <ServiceNode
                         service={MARTECH_SERVICE}
                         isHovered={hoveredService === MARTECH_SERVICE.id || isSecurityHovered}
@@ -555,7 +535,7 @@ export default function WhatWeBuildSection() {
                     </div>
                   </div>
                 </div>
-                <p className="text-[10px] md:text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
+                <p className="text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
                   Data Intelligence Pipeline
                 </p>
               </div>
@@ -565,7 +545,7 @@ export default function WhatWeBuildSection() {
               {/* Tier 4: Process Optimization */}
               <div className="flex flex-col">
                 <div className="flex-1 flex items-center">
-                  <div className="w-full lg:w-[140px] xl:w-[150px]">
+                  <div className="w-full lg:w-[150px] xl:w-[160px]">
                     <ServiceNode
                       service={DIGITAL_SERVICE}
                       isHovered={hoveredService === DIGITAL_SERVICE.id || isSecurityHovered}
@@ -576,16 +556,16 @@ export default function WhatWeBuildSection() {
                     />
                   </div>
                 </div>
-                <p className="text-[10px] md:text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
+                <p className="text-xs text-gray-400 text-center mt-3 font-medium uppercase tracking-wider">
                   Process Optimization
                 </p>
               </div>
             </div>
 
             {/* Security annotation */}
-            <div className="mt-6 pt-4 border-t border-[#C4FF61]/20 text-center">
-              <p className="text-xs text-gray-500">
-                <span className="text-[#C4FF61] font-semibold">Security</span> wraps all layers — SOC 2, ISO 27001, HIPAA compliant from day one
+            <div className="mt-6 pt-4 border-t border-[#0052CC]/15 text-center">
+              <p className="text-sm text-gray-500">
+                <span className="text-[#0052CC] font-semibold">Security</span> wraps all layers — SOC 2, ISO 27001, HIPAA compliant from day one
               </p>
             </div>
           </div>
@@ -600,12 +580,8 @@ export default function WhatWeBuildSection() {
               <span>Data Flow</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-sm bg-[#C4FF61]/20 border-2 border-[#C4FF61]/50" />
+              <div className="w-4 h-4 rounded-sm bg-[#0052CC]/10 border-2 border-[#0052CC]/40" />
               <span>Security Wrapper</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[#C4FF61] font-mono font-bold text-base">52</span>
-              <span>Deployments</span>
             </div>
           </div>
         </div>
