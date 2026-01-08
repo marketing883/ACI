@@ -535,7 +535,7 @@ SELECT
   email,
   company,
   'contact' as lead_type,
-  service_interest as item_name,
+  'Contact Form' as item_name,
   NULL::boolean as downloaded
 FROM contacts
 UNION ALL
