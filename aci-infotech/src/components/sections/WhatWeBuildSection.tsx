@@ -369,7 +369,7 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
 
           {/* Description */}
           <div className="mb-6">
-            <h3 className="text-xs font-semibold text-[#0052CC] uppercase tracking-wider mb-2">
+            <h3 className="text-2xl font-semibold text-[#0052CC] capitalize mb-2">
               What We Build
             </h3>
             <p className="text-gray-700 leading-relaxed">
@@ -379,7 +379,7 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
 
           {/* Tech Stack */}
           <div className="mb-6">
-            <h3 className="text-xs font-semibold text-[#0052CC] uppercase tracking-wider mb-3">
+            <h3 className="text-2xl font-semibold text-[#0052CC] capitalize mb-3">
               Tech Stack
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -396,7 +396,7 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
 
           {/* Key Outcome */}
           <div className="mb-6 p-4 bg-[#C4FF61]/10 rounded-sm border border-[#C4FF61]/30">
-            <h3 className="text-xs font-semibold text-[#0A1628] uppercase tracking-wider mb-1">
+            <h3 className="text-2xl font-semibold text-[#0A1628] capitalize mb-1">
               Key Outcome
             </h3>
             <p className="text-lg font-semibold text-[#0A1628]">
