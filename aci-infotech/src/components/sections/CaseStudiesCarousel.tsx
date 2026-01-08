@@ -124,17 +124,38 @@ export default function CaseStudiesCarousel({
         />
       </div>
 
-      {/* Animated constellation dots */}
+      {/* Animated constellation dots - fixed positions to avoid hydration mismatch */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(20)].map((_, i) => (
+        {[
+          { left: '5%', top: '10%', delay: '0s', duration: '3s' },
+          { left: '15%', top: '80%', delay: '0.5s', duration: '4s' },
+          { left: '25%', top: '30%', delay: '1s', duration: '3.5s' },
+          { left: '35%', top: '60%', delay: '1.5s', duration: '4.5s' },
+          { left: '45%', top: '15%', delay: '2s', duration: '3s' },
+          { left: '55%', top: '85%', delay: '0.3s', duration: '4s' },
+          { left: '65%', top: '45%', delay: '1.2s', duration: '3.8s' },
+          { left: '75%', top: '70%', delay: '2.5s', duration: '4.2s' },
+          { left: '85%', top: '25%', delay: '0.8s', duration: '3.3s' },
+          { left: '95%', top: '55%', delay: '1.8s', duration: '4.8s' },
+          { left: '10%', top: '40%', delay: '2.2s', duration: '3.6s' },
+          { left: '20%', top: '95%', delay: '0.1s', duration: '4.1s' },
+          { left: '30%', top: '5%', delay: '1.6s', duration: '3.2s' },
+          { left: '40%', top: '75%', delay: '2.8s', duration: '4.6s' },
+          { left: '50%', top: '50%', delay: '0.6s', duration: '3.9s' },
+          { left: '60%', top: '20%', delay: '1.9s', duration: '4.3s' },
+          { left: '70%', top: '90%', delay: '0.4s', duration: '3.4s' },
+          { left: '80%', top: '35%', delay: '2.4s', duration: '4.7s' },
+          { left: '90%', top: '65%', delay: '1.1s', duration: '3.7s' },
+          { left: '3%', top: '48%', delay: '2.1s', duration: '4.4s' },
+        ].map((dot, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-white/10 rounded-full animate-pulse"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`,
+              left: dot.left,
+              top: dot.top,
+              animationDelay: dot.delay,
+              animationDuration: dot.duration,
             }}
           />
         ))}
