@@ -492,7 +492,7 @@ function ExpandedPlaybook({
 
   return (
     <UnrollWrapper isVisible={isVisible}>
-      <div className="relative rounded-lg border border-[#1890FF]/50 bg-gradient-to-b from-[#001020] to-[#001529] overflow-hidden">
+      <div className="relative rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden">
         {/* Animated border glow */}
         <div
           className="absolute inset-0 rounded-lg pointer-events-none"
@@ -516,25 +516,25 @@ function ExpandedPlaybook({
         />
 
         {/* Header */}
-        <div className="relative flex items-center justify-between p-4 border-b border-[#1890FF]/20">
+        <div className="relative flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-4">
             <div className="relative">
               <BlueprintRollIcon isHovered={true} />
             </div>
             <div>
-              <h3 className="text-lg md:text-xl font-bold text-white">
+              <h3 className="text-lg md:text-xl font-bold text-gray-900">
                 {playbook.displayTitle}
               </h3>
-              <span className="text-[#C4FF61] text-sm font-mono">
+              <span className="text-[#1890FF] text-sm font-mono">
                 Deployed {playbook.deployments}x
               </span>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg border border-[#1890FF]/30 hover:border-[#1890FF] hover:bg-[#1890FF]/10 transition-all duration-300 group"
+            className="p-2 rounded-lg border border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all duration-300 group"
           >
-            <X className="w-5 h-5 text-white/70 group-hover:text-white transition-colors" />
+            <X className="w-5 h-5 text-gray-500 group-hover:text-gray-700 transition-colors" />
           </button>
         </div>
 
@@ -543,14 +543,14 @@ function ExpandedPlaybook({
           {/* Column 1: Challenge & Learnings */}
           <div className="space-y-5">
             <div>
-              <h4 className="text-white/90 text-sm font-medium mb-3">
+              <h4 className="text-gray-900 font-semibold mb-3">
                 Challenge pattern
               </h4>
               <ul className="space-y-1.5">
                 {playbook.challengePattern.map((item, i) => (
                   <li
                     key={i}
-                    className="text-white/70 text-sm flex items-start gap-2"
+                    className="text-gray-600 text-sm flex items-start gap-2"
                     style={{
                       opacity: contentReady ? 1 : 0,
                       transform: contentReady ? 'translateX(0)' : 'translateX(-15px)',
@@ -564,21 +564,21 @@ function ExpandedPlaybook({
               </ul>
             </div>
             <div>
-              <h4 className="text-white/90 text-sm font-medium mb-3">
+              <h4 className="text-gray-900 font-semibold mb-3">
                 Key learnings
               </h4>
               <ul className="space-y-1.5">
                 {playbook.keyLearnings.map((item, i) => (
                   <li
                     key={i}
-                    className="text-white/70 text-sm flex items-start gap-2"
+                    className="text-gray-600 text-sm flex items-start gap-2"
                     style={{
                       opacity: contentReady ? 1 : 0,
                       transform: contentReady ? 'translateX(0)' : 'translateX(-15px)',
                       transition: `all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) ${0.4 + i * 0.08}s`,
                     }}
                   >
-                    <span className="text-[#C4FF61]">•</span>
+                    <span className="text-[#1890FF]">•</span>
                     {item}
                   </li>
                 ))}
@@ -589,24 +589,24 @@ function ExpandedPlaybook({
           {/* Column 2: Outcomes & Industries */}
           <div className="space-y-5">
             <div>
-              <h4 className="text-white/90 text-sm font-medium mb-3">
+              <h4 className="text-gray-900 font-semibold mb-3">
                 Outcomes achieved
               </h4>
               <div className="grid grid-cols-3 gap-2">
                 {playbook.outcomes.map((outcome, i) => (
                   <div
                     key={i}
-                    className="p-2 rounded bg-[#1890FF]/10 border border-[#1890FF]/20 text-center"
+                    className="p-2 rounded bg-gray-50 border border-gray-200 text-center"
                     style={{
                       opacity: contentReady ? 1 : 0,
                       transform: contentReady ? 'scale(1) translateY(0)' : 'scale(0.8) translateY(10px)',
                       transition: `all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) ${0.2 + i * 0.1}s`,
                     }}
                   >
-                    <div className="text-[#C4FF61] font-mono text-lg font-bold">
+                    <div className="text-[#1890FF] font-mono text-lg font-bold">
                       {outcome.metric}
                     </div>
-                    <div className="text-white/50 text-[10px] leading-tight">
+                    <div className="text-gray-500 text-[10px] leading-tight">
                       {outcome.description}
                     </div>
                   </div>
@@ -614,14 +614,14 @@ function ExpandedPlaybook({
               </div>
             </div>
             <div>
-              <h4 className="text-white/90 text-sm font-medium mb-3">
+              <h4 className="text-gray-900 font-semibold mb-3">
                 Industries
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {playbook.industries.map((ind, i) => (
                   <span
                     key={i}
-                    className="px-2 py-1 rounded text-xs bg-[#1890FF]/10 border border-[#1890FF]/20 text-white/70"
+                    className="px-2 py-1 rounded text-xs bg-gray-100 border border-gray-200 text-gray-700"
                     style={{
                       opacity: contentReady ? 1 : 0,
                       transition: `opacity 0.4s ease-out ${0.5 + i * 0.05}s`,
@@ -637,14 +637,14 @@ function ExpandedPlaybook({
           {/* Column 3: Architecture & CTA */}
           <div className="space-y-5">
             <div>
-              <h4 className="text-white/90 text-sm font-medium mb-3">
+              <h4 className="text-gray-900 font-semibold mb-3">
                 Architecture stack
               </h4>
               <div className="flex flex-wrap gap-2">
                 {playbook.architecture.map((comp, i) => (
                   <div
                     key={i}
-                    className="px-3 py-1.5 rounded text-xs font-mono bg-[#1890FF]/10 border border-[#1890FF]/30 text-white/80"
+                    className="px-3 py-1.5 rounded text-xs font-mono bg-blue-50 border border-blue-200 text-blue-700"
                     style={{
                       opacity: contentReady ? 1 : 0,
                       transform: contentReady ? 'translateY(0)' : 'translateY(10px)',
@@ -666,9 +666,9 @@ function ExpandedPlaybook({
             >
               <Link
                 href={`/contact?playbook=${playbook.id}`}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-[#1890FF] text-white text-sm font-semibold hover:bg-[#40a9ff] transition-all duration-300 hover:shadow-[0_0_20px_rgba(24,144,255,0.4)]"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-[#1890FF] text-white text-sm font-semibold hover:bg-[#40a9ff] transition-all duration-300 hover:shadow-lg"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C4FF61] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                 Talk to the architect who built this
               </Link>
             </div>
@@ -704,32 +704,29 @@ export default function PlaybookVaultSection() {
   const expandedPlaybook = PLAYBOOKS.find(p => p.id === expandedId);
 
   return (
-    <section className="relative py-16 md:py-24 overflow-hidden bg-[#001529]">
+    <section className="relative py-16 md:py-24 overflow-hidden bg-slate-50">
       {/* Blueprint grid background */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(24,144,255,0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(24,144,255,0.06) 1px, transparent 1px)
+            linear-gradient(rgba(24,144,255,0.08) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(24,144,255,0.08) 1px, transparent 1px)
           `,
           backgroundSize: '20px 20px',
         }}
       />
 
-      {/* Animated background elements */}
-      <AnimatedBackgroundElements />
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header - Matching other sections */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-[var(--font-title)]">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-[var(--font-title)]">
             Proven Architectures
           </h2>
-          <p className="text-lg text-white/85 mb-3">
+          <p className="text-lg text-gray-700 mb-3">
             100+ enterprise deployments. Every challenge. Every solution. Documented.
           </p>
-          <p className="text-white/50 text-sm max-w-2xl mx-auto">
+          <p className="text-gray-500 text-sm max-w-2xl mx-auto">
             Browse the playbooks. See how many times we've deployed each one.
             See how the approach improved with each deployment. See the outcomes.
           </p>
@@ -788,14 +785,14 @@ export default function PlaybookVaultSection() {
                 </div>
 
                 {/* Title */}
-                <div className={`mt-3 font-semibold text-white leading-tight transition-all duration-500 ${
+                <div className={`mt-3 font-semibold text-gray-900 leading-tight transition-all duration-500 ${
                   isCompressed ? 'text-[9px]' : 'text-xs md:text-sm'
-                } ${hoveredId === playbook.id ? 'text-[#40a9ff]' : ''}`}>
+                } ${hoveredId === playbook.id ? 'text-[#1890FF]' : ''}`}>
                   {isCompressed ? playbook.displayTitle.split(' ')[0] : playbook.displayTitle}
                 </div>
 
                 {/* Deployment count */}
-                <div className={`text-[#C4FF61] font-mono transition-all duration-500 ${
+                <div className={`text-[#1890FF] font-mono font-semibold transition-all duration-500 ${
                   isCompressed ? 'text-[8px] mt-0.5' : 'text-xs mt-1'
                 }`}>
                   {playbook.deployments}x
@@ -813,24 +810,24 @@ export default function PlaybookVaultSection() {
         </div>
 
         {/* Section Footer */}
-        <div className="mt-12 p-6 rounded-lg border border-[#1890FF]/20 text-center bg-[#001020]/50">
-          <p className="text-white text-lg font-semibold mb-1">
+        <div className="mt-12 p-6 rounded-lg border border-gray-200 text-center bg-gray-50">
+          <p className="text-gray-900 text-lg font-semibold mb-1">
             Can't find your exact scenario?
           </p>
-          <p className="text-white/50 text-sm mb-5">
+          <p className="text-gray-500 text-sm mb-5">
             We've documented 100+ patterns beyond these 8.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-[#1890FF] text-white font-semibold text-sm hover:bg-[#40a9ff] transition-all duration-300 hover:shadow-[0_0_20px_rgba(24,144,255,0.4)]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-[#1890FF] text-white font-semibold text-sm hover:bg-[#40a9ff] transition-all duration-300 hover:shadow-lg"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C4FF61] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               Talk to an Architect
             </Link>
             <Link
               href="/playbooks"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/20 text-white font-semibold text-sm hover:border-white/40 hover:bg-white/5 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-gray-300 text-gray-700 font-semibold text-sm hover:border-gray-400 hover:bg-gray-100 transition-all duration-300"
             >
               See all Playbooks
             </Link>
