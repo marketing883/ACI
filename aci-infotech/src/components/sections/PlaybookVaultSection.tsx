@@ -27,7 +27,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'post-acquisition',
     name: 'Post-Acquisition System Consolidation',
     shortName: 'Post-Acquisition',
-    displayTitle: '40 Systems → One',
+    displayTitle: 'Post-M&A System Consolidation',
     slug: 'post-acquisition-consolidation',
     deployments: 23,
     challengePattern: [
@@ -53,7 +53,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'multi-location',
     name: 'Multi-Location Real-Time Data Platform',
     shortName: 'Real-Time Platform',
-    displayTitle: '600 Stores, Real-Time',
+    displayTitle: 'Multi-Location Real-Time Data',
     slug: 'real-time-data-platform',
     deployments: 47,
     challengePattern: [
@@ -79,7 +79,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'global-unification',
     name: 'Global Data Unification',
     shortName: 'Global Unification',
-    displayTitle: '55 Countries, One System',
+    displayTitle: 'Global Operations Data Unification',
     slug: 'global-data-unification',
     deployments: 31,
     challengePattern: [
@@ -105,7 +105,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'self-service-analytics',
     name: 'Enterprise Self-Service Analytics',
     shortName: 'Self-Service Analytics',
-    displayTitle: '10K Users, Self-Served',
+    displayTitle: 'Enterprise Self-Service Analytics',
     slug: 'self-service-analytics',
     deployments: 19,
     challengePattern: [
@@ -131,7 +131,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'healthcare-data',
     name: 'Multi-Jurisdiction Healthcare Data',
     shortName: 'Healthcare Data',
-    displayTitle: 'HIPAA + GDPR + More',
+    displayTitle: 'Multi-Jurisdiction Healthcare Data',
     slug: 'healthcare-data-platform',
     deployments: 12,
     challengePattern: [
@@ -157,7 +157,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'supply-chain',
     name: 'Supply Chain Visibility',
     shortName: 'Supply Chain',
-    displayTitle: 'Supplier → Customer',
+    displayTitle: 'End-to-End Supply Chain Visibility',
     slug: 'supply-chain-visibility',
     deployments: 28,
     challengePattern: [
@@ -183,7 +183,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'cloud-migration',
     name: 'Legacy to Cloud Migration',
     shortName: 'Cloud Migration',
-    displayTitle: 'Hadoop → Cloud',
+    displayTitle: 'Legacy System Cloud Migration',
     slug: 'legacy-cloud-migration',
     deployments: 52,
     challengePattern: [
@@ -209,7 +209,7 @@ const PLAYBOOKS: PlaybookData[] = [
     id: 'data-integration',
     name: 'Multi-Source Data Integration',
     shortName: 'Data Integration',
-    displayTitle: '40 Sources, One Truth',
+    displayTitle: 'Multi-Source Data Integration',
     slug: 'multi-source-integration',
     deployments: 34,
     challengePattern: [

@@ -97,6 +97,7 @@ const NAV_DATA = {
     { label: 'Energy & Utilities', href: '/industries/energy', icon: Zap, color: 'text-yellow-500' },
   ],
   resources: [
+    { label: 'Playbooks', href: '/playbooks', icon: FileText, description: 'Proven architecture patterns' },
     { label: 'Case Studies', href: '/case-studies', icon: Award, description: 'Real results from real clients' },
     { label: 'Blog', href: '/blog', icon: BookOpen, description: 'Insights and thought leadership' },
   ],
