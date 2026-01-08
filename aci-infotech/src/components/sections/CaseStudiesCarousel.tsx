@@ -52,24 +52,18 @@ function getTechStyle(tech: string) {
   return techColors[tech] || { bg: 'bg-[#C4FF61]/10', text: 'text-[#C4FF61]', border: 'border-[#C4FF61]/30' };
 }
 
-// Single Case Study Card Component
-function CaseStudyCard({ study, isActive }: { study: CaseStudy; isActive: boolean }) {
+// Compact Case Study Card Component
+function CaseStudyCard({ study }: { study: CaseStudy }) {
   return (
-    <div
-      className={`
-        absolute inset-0 flex items-center justify-center px-4 sm:px-6 lg:px-8
-        transition-all duration-700 ease-out
-        ${isActive ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'}
-      `}
-    >
-      <div className="w-full max-w-4xl">
-        <div className="bg-gray-900/80 backdrop-blur-md rounded-sm border border-gray-700/50 overflow-hidden shadow-2xl">
-          {/* Card Header */}
-          <div className="p-6 md:p-8 border-b border-gray-700/50">
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-              <div className="flex items-center gap-4">
+    <div className="w-screen flex-shrink-0 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-3xl">
+        <div className="bg-gray-900/70 backdrop-blur-md rounded-sm border border-gray-700/50 overflow-hidden shadow-2xl">
+          {/* Card Header - Compact */}
+          <div className="p-4 md:p-5 border-b border-gray-700/50">
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <div className="flex items-center gap-3">
                 {study.client_logo ? (
-                  <div className="relative w-20 h-12 bg-white/10 rounded-sm p-2">
+                  <div className="relative w-16 h-10 bg-white/10 rounded-sm p-1.5">
                     <Image
                       src={study.client_logo}
                       alt={study.client_name}
@@ -78,19 +72,19 @@ function CaseStudyCard({ study, isActive }: { study: CaseStudy; isActive: boolea
                     />
                   </div>
                 ) : (
-                  <span className="text-2xl font-bold text-white">{study.client_name}</span>
+                  <span className="text-xl font-bold text-white">{study.client_name}</span>
                 )}
               </div>
-              <span className="text-sm text-gray-400 bg-gray-800/50 px-3 py-1.5 rounded-sm self-start">
+              <span className="text-xs text-gray-400 bg-gray-800/50 px-2 py-1 rounded-sm">
                 {study.client_industry}
               </span>
             </div>
 
-            {/* Playbook Badge */}
+            {/* Playbook Badge - Compact */}
             {study.playbook_used && (
-              <div className="flex items-center gap-2 mb-5 px-4 py-2.5 bg-[#0052CC]/15 border border-[#0052CC]/30 rounded-sm w-fit">
-                <BookOpen className="w-4 h-4 text-[#3B82F6]" />
-                <span className="text-sm text-[#3B82F6]">
+              <div className="flex items-center gap-2 mb-3 px-3 py-1.5 bg-[#0052CC]/15 border border-[#0052CC]/30 rounded-sm w-fit">
+                <BookOpen className="w-3.5 h-3.5 text-[#3B82F6]" />
+                <span className="text-xs text-[#3B82F6]">
                   Used: {study.playbook_used}
                   {study.playbook_count && (
                     <span className="text-gray-500"> ({study.playbook_count}x)</span>
@@ -99,65 +93,63 @@ function CaseStudyCard({ study, isActive }: { study: CaseStudy; isActive: boolea
               </div>
             )}
 
-            {/* The Problem */}
+            {/* The Problem - Compact */}
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">The Problem</p>
-              <p className="text-gray-300 text-lg leading-relaxed">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">The Problem</p>
+              <p className="text-gray-300 text-sm leading-relaxed">
                 {study.challenge}
               </p>
             </div>
           </div>
 
-          {/* Results Section */}
-          <div className="p-6 md:p-8">
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-4">What Changed</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          {/* Results Section - Compact */}
+          <div className="p-4 md:p-5">
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">What Changed</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
               {study.metrics.slice(0, 4).map((metric, idx) => (
                 <div key={idx} className="text-left">
-                  <span className="text-xl md:text-2xl font-bold text-[#C4FF61] block leading-tight">
+                  <span className="text-base md:text-lg font-bold text-[#C4FF61] block leading-tight">
                     {metric.value}
                   </span>
-                  <span className="text-sm text-gray-400">{metric.label}</span>
+                  <span className="text-xs text-gray-400">{metric.label}</span>
                 </div>
               ))}
             </div>
 
-            {/* Tech Stack */}
-            <div className="mb-6">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-3">Stack</p>
-              <div className="flex flex-wrap gap-2">
-                {study.technologies.map((tech) => {
-                  const style = getTechStyle(tech);
-                  return (
-                    <span
-                      key={tech}
-                      className={`px-3 py-1.5 ${style.bg} ${style.text} border ${style.border} rounded-sm text-sm font-medium`}
-                    >
-                      {tech}
-                    </span>
-                  );
-                })}
-              </div>
+            {/* Tech Stack - Compact */}
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              <span className="text-[10px] text-gray-500 uppercase tracking-wider">Stack:</span>
+              {study.technologies.map((tech) => {
+                const style = getTechStyle(tech);
+                return (
+                  <span
+                    key={tech}
+                    className={`px-2 py-1 ${style.bg} ${style.text} border ${style.border} rounded-sm text-xs font-medium`}
+                  >
+                    {tech}
+                  </span>
+                );
+              })}
             </div>
 
-            {/* Mini Quote Snippet */}
-            {study.testimonial_quote && (
-              <div className="mb-6 p-4 bg-gray-800/50 rounded-sm border-l-2 border-[#C4FF61]/50">
-                <Quote className="w-5 h-5 text-[#C4FF61]/50 mb-2" />
-                <p className="text-sm text-gray-400 italic leading-relaxed">
-                  "{study.testimonial_quote}"
-                </p>
-              </div>
-            )}
-
-            {/* CTA Button */}
-            <Link
-              href={`/case-studies/${study.slug}`}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#0052CC] text-white font-semibold rounded-sm hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-200 group"
-            >
-              {study.cta_text || 'See the Full Story'}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
-            </Link>
+            {/* Mini Quote + CTA Row */}
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+              {study.testimonial_quote && (
+                <div className="flex-1 flex items-start gap-2 max-w-md">
+                  <Quote className="w-4 h-4 text-[#C4FF61]/50 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-gray-400 italic line-clamp-2">
+                    "{study.testimonial_quote}"
+                  </p>
+                </div>
+              )}
+              <Link
+                href={`/case-studies/${study.slug}`}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#0052CC] text-white text-sm font-semibold rounded-sm hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-200 group flex-shrink-0"
+              >
+                {study.cta_text || 'See Full Story'}
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -171,7 +163,6 @@ export default function CaseStudiesCarousel({
   caseStudies,
 }: CaseStudiesCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const totalCards = caseStudies.length;
@@ -185,31 +176,29 @@ export default function CaseStudiesCarousel({
       const containerHeight = container.offsetHeight;
       const viewportHeight = window.innerHeight;
 
-      // Calculate how far we've scrolled through the section
-      // Start tracking when section enters viewport
-      const scrollStart = -viewportHeight; // When bottom of section reaches top of viewport
-      const scrollEnd = containerHeight - viewportHeight; // When we've scrolled through the entire section
-      const scrollRange = scrollEnd - scrollStart;
+      // Calculate scroll progress through this section
+      // Progress = 0 when section top hits viewport top
+      // Progress = 1 when section bottom hits viewport bottom
+      const scrollableDistance = containerHeight - viewportHeight;
+      const scrolled = -rect.top;
 
-      // Current scroll position relative to the section
-      const currentScroll = -rect.top;
-
-      // Progress from 0 to 1
-      const progress = Math.max(0, Math.min(1, (currentScroll - scrollStart) / scrollRange));
+      const progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
       setScrollProgress(progress);
-
-      // Calculate which card should be active
-      // Divide progress into segments for each card
-      const cardProgress = progress * totalCards;
-      const newIndex = Math.min(Math.floor(cardProgress), totalCards - 1);
-      setActiveIndex(newIndex);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [totalCards]);
+  }, []);
+
+  // Calculate horizontal offset based on scroll progress
+  // At progress 0, show card 0 (translateX = 0)
+  // At progress 1, show last card (translateX = -(totalCards-1) * 100vw)
+  const translateX = -scrollProgress * (totalCards - 1) * 100;
+
+  // Calculate which card is currently most visible (for indicators)
+  const activeIndex = Math.round(scrollProgress * (totalCards - 1));
 
   return (
     <div
@@ -229,9 +218,9 @@ export default function CaseStudiesCarousel({
             priority
           />
           {/* Blur overlay */}
-          <div className="absolute inset-0 backdrop-blur-sm" />
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-[#0A1628]/85" />
+          <div className="absolute inset-0 backdrop-blur-[2px]" />
+          {/* Dark overlay - reduced opacity for more image visibility */}
+          <div className="absolute inset-0 bg-[#0A1628]/70" />
         </div>
 
         {/* Constellation dots */}
@@ -240,17 +229,13 @@ export default function CaseStudiesCarousel({
             { left: '5%', top: '10%', delay: '0s', duration: '3s' },
             { left: '15%', top: '80%', delay: '0.5s', duration: '4s' },
             { left: '25%', top: '30%', delay: '1s', duration: '3.5s' },
-            { left: '35%', top: '60%', delay: '1.5s', duration: '4.5s' },
-            { left: '45%', top: '15%', delay: '2s', duration: '3s' },
             { left: '55%', top: '85%', delay: '0.3s', duration: '4s' },
-            { left: '65%', top: '45%', delay: '1.2s', duration: '3.8s' },
-            { left: '75%', top: '70%', delay: '2.5s', duration: '4.2s' },
             { left: '85%', top: '25%', delay: '0.8s', duration: '3.3s' },
             { left: '95%', top: '55%', delay: '1.8s', duration: '4.8s' },
           ].map((dot, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-white/10 rounded-full animate-pulse"
+              className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse"
               style={{
                 left: dot.left,
                 top: dot.top,
@@ -263,89 +248,82 @@ export default function CaseStudiesCarousel({
 
         {/* Content Container */}
         <div className="relative h-full flex flex-col">
-          {/* Header */}
-          <div className="text-center pt-16 pb-8 px-4">
-            <p className="text-[#C4FF61] text-xs font-semibold uppercase tracking-[0.2em] mb-2">
+          {/* Header - Compact */}
+          <div className="text-center pt-8 pb-4 px-4">
+            <p className="text-[#C4FF61] text-xs font-semibold uppercase tracking-[0.2em] mb-1">
               Case Studies
             </p>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">
               {headline}
             </h2>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto">{subheadline}</p>
+            <p className="text-sm md:text-base text-gray-400 max-w-2xl mx-auto">{subheadline}</p>
           </div>
 
-          {/* Cards Container */}
-          <div className="flex-1 relative">
-            {caseStudies.map((study, index) => (
-              <CaseStudyCard
-                key={study.id}
-                study={study}
-                isActive={index === activeIndex}
-              />
-            ))}
+          {/* Cards Strip - Horizontal scroll linked to vertical scroll */}
+          <div className="flex-1 flex items-center overflow-hidden">
+            <div
+              className="flex"
+              style={{
+                transform: `translateX(${translateX}vw)`,
+                width: `${totalCards * 100}vw`,
+              }}
+            >
+              {caseStudies.map((study) => (
+                <CaseStudyCard key={study.id} study={study} />
+              ))}
+            </div>
           </div>
 
-          {/* Progress Indicators */}
-          <div className="pb-8">
+          {/* Progress Indicators + Footer */}
+          <div className="pb-6 px-4">
             {/* Dots */}
-            <div className="flex justify-center gap-3 mb-4">
+            <div className="flex justify-center gap-2 mb-3">
               {caseStudies.map((_, index) => (
                 <div
                   key={index}
-                  className={`transition-all duration-300 rounded-full ${
+                  className={`transition-all duration-200 rounded-full ${
                     index === activeIndex
-                      ? 'w-8 h-2 bg-[#C4FF61]'
+                      ? 'w-6 h-1.5 bg-[#C4FF61]'
                       : index < activeIndex
-                      ? 'w-2 h-2 bg-[#C4FF61]/50'
-                      : 'w-2 h-2 bg-gray-600'
+                      ? 'w-1.5 h-1.5 bg-[#C4FF61]/50'
+                      : 'w-1.5 h-1.5 bg-gray-600'
                   }`}
                 />
               ))}
             </div>
 
             {/* Progress Bar */}
-            <div className="max-w-xs mx-auto px-4">
+            <div className="max-w-[200px] mx-auto mb-4">
               <div className="h-0.5 bg-gray-700 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#C4FF61] transition-all duration-150 ease-out"
+                  className="h-full bg-[#C4FF61]"
                   style={{ width: `${scrollProgress * 100}%` }}
                 />
               </div>
             </div>
 
-            {/* Scroll hint */}
-            {activeIndex < totalCards - 1 && (
-              <p className="text-center text-gray-500 text-sm mt-4 animate-pulse">
-                Scroll to see more
+            {/* Footer CTAs */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
+              <p className="text-gray-400 text-sm">
+                Can't find your exact scenario?
               </p>
-            )}
-          </div>
-
-          {/* Section Footer CTAs - Show after last card */}
-          {activeIndex === totalCards - 1 && (
-            <div className="absolute bottom-24 left-0 right-0 px-4">
-              <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
-                <p className="text-gray-400 text-center md:text-left">
-                  Can't find your exact scenario?
-                </p>
-                <div className="flex flex-wrap gap-4 justify-center">
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#0052CC] text-white font-semibold rounded-sm hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-200"
-                  >
-                    Talk to an Architect
-                  </Link>
-                  <Link
-                    href="/case-studies"
-                    className="inline-flex items-center gap-2 px-6 py-3 border-2 border-gray-600 text-white font-semibold rounded-sm hover:border-[#C4FF61] hover:text-[#C4FF61] transition-all duration-200 group"
-                  >
-                    See All Stories
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
+              <div className="flex gap-3">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#0052CC] text-white text-sm font-semibold rounded-sm hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-200"
+                >
+                  Talk to an Architect
+                </Link>
+                <Link
+                  href="/case-studies"
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-gray-600 text-white text-sm font-semibold rounded-sm hover:border-[#C4FF61] hover:text-[#C4FF61] transition-all duration-200 group"
+                >
+                  See All Stories
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
