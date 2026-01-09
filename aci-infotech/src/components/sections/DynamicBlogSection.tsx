@@ -107,6 +107,15 @@ export default async function DynamicBlogSection({
         category: 'Data Engineering',
         read_time: '15 min read',
       },
+      {
+        slug: 'real-time-streaming-architectures',
+        title: 'Real-Time Streaming Architectures for Enterprise',
+        excerpt: 'How to design and implement real-time data pipelines that handle millions of events.',
+        author: 'ACI Infotech',
+        date: 'Nov 2024',
+        category: 'Data Engineering',
+        read_time: '14 min read',
+      },
     ];
 
     return (
@@ -115,6 +124,7 @@ export default async function DynamicBlogSection({
         subheadline={subheadline}
         posts={placeholderPosts}
         viewAllUrl="/blog"
+        showWhitepaper={true}
       />
     );
   }
@@ -125,6 +135,7 @@ export default async function DynamicBlogSection({
       subheadline={subheadline}
       posts={posts}
       viewAllUrl="/blog"
+      showWhitepaper={true}
     />
   );
 }

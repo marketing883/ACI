@@ -168,7 +168,7 @@ export default function HomePage() {
       <DynamicBlogSection
         headline="Thoughts and Insights"
         subheadline="Technical depth from engineers who've been there"
-        limit={3}
+        limit={4}
       />
 
       {/* Final CTA Section */}
