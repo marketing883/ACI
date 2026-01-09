@@ -1036,6 +1036,7 @@ export default function NewBlogPostPage() {
 
       {/* Step 3: Generate & Edit */}
       {currentStep === 3 && (
+        <>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
@@ -1368,133 +1369,6 @@ export default function NewBlogPostPage() {
               </p>
             </div>
 
-            {/* SEO Settings */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">SEO Settings</h3>
-
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-sm font-medium text-gray-700">Meta Title</label>
-                  <button
-                    onClick={() => generateWithAI('meta_title')}
-                    disabled={isGenerating}
-                    className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
-                    title="Generate with AI"
-                  >
-                    {generatingField === 'meta_title' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                  </button>
-                </div>
-                <input
-                  type="text"
-                  value={metaTitle}
-                  onChange={(e) => setMetaTitle(e.target.value)}
-                  placeholder={title || 'SEO optimized title...'}
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-                />
-                <p className="text-xs text-gray-400 mt-1">{(metaTitle || title).length}/60</p>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-sm font-medium text-gray-700">Meta Description</label>
-                  <button
-                    onClick={() => generateWithAI('meta_description')}
-                    disabled={isGenerating}
-                    className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
-                    title="Generate with AI"
-                  >
-                    {generatingField === 'meta_description' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                  </button>
-                </div>
-                <textarea
-                  value={metaDescription}
-                  onChange={(e) => setMetaDescription(e.target.value)}
-                  placeholder={excerpt || 'SEO optimized description...'}
-                  rows={3}
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] resize-none"
-                />
-                <p className="text-xs text-gray-400 mt-1">{(metaDescription || excerpt).length}/160</p>
-              </div>
-            </div>
-
-            {/* SEO/AEO/GEO Quality Assessment */}
-            <SEOAssessment
-              title={title}
-              metaDescription={metaDescription || excerpt}
-              content={content + '\n\n' + faqs.map(f => `Q: ${f.question}\nA: ${f.answer}`).join('\n\n')}
-              slug={slug}
-              category={category}
-              tags={tags}
-              featuredImage={featuredImage}
-              author={authorInfo.name}
-              onAIFix={handleSEOFix}
-            />
-
-            {/* FAQ Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4" />
-                  FAQ Section
-                </h3>
-                <button
-                  onClick={generateFaqs}
-                  disabled={generatingFaqs}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-lg shadow-sm disabled:opacity-50"
-                >
-                  {generatingFaqs ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <Sparkles className="w-3.5 h-3.5" />
-                  )}
-                  Generate FAQs
-                </button>
-              </div>
-
-              <p className="text-xs text-gray-500 mb-4">
-                FAQ sections improve featured snippet eligibility and AEO performance.
-              </p>
-
-              <div className="space-y-4">
-                {faqs.map((faq, index) => (
-                  <div key={index} className="p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-start justify-between mb-2">
-                      <label className="block text-xs font-medium text-gray-600">Question {index + 1}</label>
-                      <button
-                        onClick={() => removeFaq(index)}
-                        className="p-1 text-gray-400 hover:text-red-500"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      value={faq.question}
-                      onChange={(e) => updateFaq(index, 'question', e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg mb-2"
-                      placeholder="What is...? How do I...? Why should...?"
-                    />
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Answer</label>
-                    <textarea
-                      value={faq.answer}
-                      onChange={(e) => updateFaq(index, 'answer', e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg resize-none"
-                      rows={3}
-                      placeholder="Provide a clear, concise answer (40-60 words ideal for snippets)..."
-                    />
-                  </div>
-                ))}
-
-                <button
-                  onClick={addFaq}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-[var(--aci-primary)] hover:text-[var(--aci-primary)] transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add FAQ
-                </button>
-              </div>
-            </div>
-
             {/* Featured Image */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h3 className="font-semibold text-gray-900 mb-4">Featured Image</h3>
@@ -1560,6 +1434,139 @@ export default function NewBlogPostPage() {
             </button>
           </div>
         </div>
+
+        {/* Full-width Section: FAQ, SEO Settings, Content Quality */}
+        <div className="mt-8 grid lg:grid-cols-3 gap-6">
+          {/* FAQ Section */}
+          <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                <HelpCircle className="w-4 h-4" />
+                FAQ Section
+              </h3>
+              <button
+                onClick={generateFaqs}
+                disabled={generatingFaqs}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-lg shadow-sm disabled:opacity-50"
+              >
+                {generatingFaqs ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3.5 h-3.5" />
+                )}
+                Generate FAQs
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 mb-4">
+              FAQ sections improve featured snippet eligibility and AEO performance.
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              {faqs.map((faq, index) => (
+                <div key={index} className="p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-start justify-between mb-2">
+                    <label className="block text-xs font-medium text-gray-600">Question {index + 1}</label>
+                    <button
+                      onClick={() => removeFaq(index)}
+                      className="p-1 text-gray-400 hover:text-red-500"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={faq.question}
+                    onChange={(e) => updateFaq(index, 'question', e.target.value)}
+                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg mb-2"
+                    placeholder="What is...? How do I...? Why should...?"
+                  />
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Answer</label>
+                  <textarea
+                    value={faq.answer}
+                    onChange={(e) => updateFaq(index, 'answer', e.target.value)}
+                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg resize-none"
+                    rows={3}
+                    placeholder="Provide a clear, concise answer (40-60 words ideal for snippets)..."
+                  />
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={addFaq}
+              className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-[var(--aci-primary)] hover:text-[var(--aci-primary)] transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Add FAQ
+            </button>
+          </div>
+
+          {/* SEO Settings */}
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <h3 className="font-semibold text-gray-900 mb-4">SEO Settings</h3>
+
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">Meta Title</label>
+                <button
+                  onClick={() => generateWithAI('meta_title')}
+                  disabled={isGenerating}
+                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                  title="Generate with AI"
+                >
+                  {generatingField === 'meta_title' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+              <input
+                type="text"
+                value={metaTitle}
+                onChange={(e) => setMetaTitle(e.target.value)}
+                placeholder={title || 'SEO optimized title...'}
+                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
+              />
+              <p className="text-xs text-gray-400 mt-1">{(metaTitle || title).length}/60</p>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">Meta Description</label>
+                <button
+                  onClick={() => generateWithAI('meta_description')}
+                  disabled={isGenerating}
+                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                  title="Generate with AI"
+                >
+                  {generatingField === 'meta_description' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+              <textarea
+                value={metaDescription}
+                onChange={(e) => setMetaDescription(e.target.value)}
+                placeholder={excerpt || 'SEO optimized description...'}
+                rows={3}
+                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] resize-none"
+              />
+              <p className="text-xs text-gray-400 mt-1">{(metaDescription || excerpt).length}/160</p>
+            </div>
+          </div>
+
+          {/* SEO/AEO/GEO Quality Assessment - Full Width */}
+          <div className="lg:col-span-3">
+            <SEOAssessment
+              title={title}
+              metaDescription={metaDescription || excerpt}
+              content={content + '\n\n' + faqs.map(f => `Q: ${f.question}\nA: ${f.answer}`).join('\n\n')}
+              slug={slug}
+              category={category}
+              tags={tags}
+              featuredImage={featuredImage}
+              author={authorInfo.name}
+              onAIFix={handleSEOFix}
+            />
+          </div>
+        </div>
+        </>
       )}
     </div>
   );
