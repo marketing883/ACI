@@ -144,23 +144,22 @@ export default function EditBlogPage() {
           setContent(data.content || '');
           setCategory(data.category || '');
           setTags(data.tags?.join(', ') || '');
-          setFeaturedImage(data.featured_image || '');
-          setMetaTitle(data.meta_title || '');
-          setMetaDescription(data.meta_description || '');
-          setStatus(data.status === 'published' ? 'published' : 'draft');
-          setTargetKeyword(data.keywords?.[0] || '');
-          setArticleType(data.article_type || 'how-to');
-          setFaqs(data.faqs || []);
+          setFeaturedImage(data.featured_image_url || '');
+          setMetaTitle(data.seo_title || '');
+          setMetaDescription(data.seo_description || '');
+          setStatus(data.is_published ? 'published' : 'draft');
+          setArticleType('how-to');
+          setFaqs([]);
 
           // Load author info
-          if (data.author_name || data.author_title || data.author_bio) {
+          if (data.author_name || data.author_title) {
             setAuthorInfo({
               name: data.author_name || DEFAULT_AUTHORS[0].name,
               title: data.author_title || DEFAULT_AUTHORS[0].title,
-              bio: data.author_bio || DEFAULT_AUTHORS[0].bio,
-              avatar: data.author_avatar || DEFAULT_AUTHORS[0].avatar,
-              linkedin: data.author_linkedin || DEFAULT_AUTHORS[0].linkedin,
-              twitter: data.author_twitter || DEFAULT_AUTHORS[0].twitter,
+              bio: DEFAULT_AUTHORS[0].bio,
+              avatar: data.author_image_url || DEFAULT_AUTHORS[0].avatar,
+              linkedin: DEFAULT_AUTHORS[0].linkedin,
+              twitter: DEFAULT_AUTHORS[0].twitter,
             });
             // Show custom author if any field differs from default
             const isCustom = data.author_name !== DEFAULT_AUTHORS[0].name ||
@@ -531,18 +530,13 @@ export default function EditBlogPage() {
         tags: tags.split(',').map(t => t.trim()).filter(Boolean),
         author_name: authorInfo.name || 'ACI Infotech',
         author_title: authorInfo.title,
-        author_bio: authorInfo.bio,
-        author_avatar: authorInfo.avatar,
-        author_linkedin: authorInfo.linkedin,
-        author_twitter: authorInfo.twitter,
-        featured_image: featuredImage || null,
-        meta_title: metaTitle || title,
-        meta_description: metaDescription || excerpt?.substring(0, 160),
-        keywords: targetKeyword ? [targetKeyword] : null,
-        status,
+        author_image_url: authorInfo.avatar || null,
+        featured_image_url: featuredImage || null,
+        seo_title: metaTitle || title,
+        seo_description: metaDescription || excerpt?.substring(0, 160),
+        is_published: status === 'published',
+        is_featured: false,
         published_at: status === 'published' ? new Date().toISOString() : null,
-        article_type: articleType,
-        faqs: faqs.filter(f => f.question && f.answer),
         read_time_minutes: Math.ceil(content.split(/\s+/).length / 200),
       };
 
@@ -556,13 +550,14 @@ export default function EditBlogPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to save post');
+        console.error('Save error details:', result);
+        throw new Error(result.error || result.details?.message || 'Failed to save post');
       }
 
       router.push('/admin/blog');
     } catch (error) {
       console.error('Error saving post:', error);
-      alert('Failed to save post');
+      alert(error instanceof Error ? error.message : 'Failed to save post');
     } finally {
       setSaving(false);
     }

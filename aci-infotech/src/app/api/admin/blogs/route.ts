@@ -55,6 +55,9 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    console.log('Updating blog post:', id);
+    console.log('Update data keys:', Object.keys(data));
+
     const supabase = getServiceSupabase();
 
     const { data: blog, error } = await supabase
@@ -66,8 +69,11 @@ export async function PUT(request: NextRequest) {
 
     if (error) {
       console.error('Blog update error:', error);
+      console.error('Error code:', error.code);
+      console.error('Error details:', error.details);
+      console.error('Error hint:', error.hint);
       return NextResponse.json(
-        { error: error.message, details: error },
+        { error: error.message, details: error, code: error.code },
         { status: 500 }
       );
     }
@@ -76,7 +82,7 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error('Blog PUT error:', error);
     return NextResponse.json(
-      { error: 'Failed to update blog post' },
+      { error: error instanceof Error ? error.message : 'Failed to update blog post' },
       { status: 500 }
     );
   }
