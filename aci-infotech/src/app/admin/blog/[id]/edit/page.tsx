@@ -19,6 +19,8 @@ import {
   Heading,
   Link as LinkIcon,
   Code,
+  Edit3,
+  Upload,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -66,6 +68,11 @@ export default function EditBlogPage() {
   const [targetKeyword, setTargetKeyword] = useState('');
   const [seoData, setSeoData] = useState<SEOData | null>(null);
   const [loadingSEO, setLoadingSEO] = useState(false);
+
+  // UI state
+  const [previewMode, setPreviewMode] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   // Load post data
   useEffect(() => {
@@ -185,6 +192,121 @@ export default function EditBlogPage() {
     const selected = content.substring(start, end);
     const newContent = content.substring(0, start) + before + selected + after + content.substring(end);
     setContent(newContent);
+  };
+
+  // Render markdown to HTML preview
+  const renderMarkdown = (text: string) => {
+    if (!text) return '<p class="text-gray-400 italic">No content yet. Start writing or generate content with AI.</p>';
+
+    return text.split('\n').map((line) => {
+      // Headings
+      if (line.startsWith('### ')) {
+        return `<h3 class="text-lg font-semibold mt-6 mb-2 text-gray-900">${processInline(line.slice(4))}</h3>`;
+      }
+      if (line.startsWith('## ')) {
+        return `<h2 class="text-xl font-bold mt-8 mb-3 text-gray-900">${processInline(line.slice(3))}</h2>`;
+      }
+      if (line.startsWith('# ')) {
+        return `<h1 class="text-2xl font-bold mt-8 mb-4 text-gray-900">${processInline(line.slice(2))}</h1>`;
+      }
+      // Blockquote
+      if (line.startsWith('> ')) {
+        return `<blockquote class="border-l-4 border-blue-500 pl-4 my-4 text-gray-600 italic">${processInline(line.slice(2))}</blockquote>`;
+      }
+      // Unordered list
+      if (line.startsWith('- ') || line.startsWith('* ')) {
+        return `<li class="ml-6 list-disc text-gray-700">${processInline(line.slice(2))}</li>`;
+      }
+      // Ordered list
+      if (/^\d+\.\s/.test(line)) {
+        return `<li class="ml-6 list-decimal text-gray-700">${processInline(line.replace(/^\d+\.\s/, ''))}</li>`;
+      }
+      // Horizontal rule
+      if (line.trim() === '---' || line.trim() === '***') {
+        return '<hr class="my-8 border-gray-200" />';
+      }
+      // Empty line
+      if (line.trim() === '') {
+        return '<br />';
+      }
+      // Regular paragraph
+      return `<p class="mb-4 text-gray-700 leading-relaxed">${processInline(line)}</p>`;
+    }).join('');
+  };
+
+  // Process inline markdown (bold, italic, code, links)
+  const processInline = (text: string) => {
+    return text
+      // Code (must be before bold/italic to avoid conflicts)
+      .replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-pink-600">$1</code>')
+      // Bold
+      .replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
+      // Italic
+      .replace(/\*([^*]+)\*/g, '<em class="italic">$1</em>')
+      // Links
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 hover:underline">$1</a>');
+  };
+
+  // Featured image upload handler
+  const handleImageUpload = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'blog-images');
+      formData.append('bucket', 'ACI-web');
+
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed');
+      }
+
+      setFeaturedImage(result.url);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  // Handle file input change
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleImageUpload(file);
+    }
+  };
+
+  // Handle drag events
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      handleImageUpload(file);
+    }
   };
 
   // Save post
@@ -348,47 +470,82 @@ export default function EditBlogPage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-2">
               <label className="block text-sm font-medium text-gray-700">Content</label>
-              <button
-                onClick={() => generateContent('content')}
-                disabled={generating === 'content'}
-                className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-lg shadow-sm text-sm disabled:opacity-50"
-                title="Generate with AI"
-              >
-                {generating === 'content' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                Generate Article
-              </button>
+              <div className="flex items-center gap-3">
+                {/* Write/Preview Toggle */}
+                <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
+                  <button
+                    onClick={() => setPreviewMode(false)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                      !previewMode ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    <Edit3 className="w-4 h-4" />
+                    Write
+                  </button>
+                  <button
+                    onClick={() => setPreviewMode(true)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                      previewMode ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    <Eye className="w-4 h-4" />
+                    Preview
+                  </button>
+                </div>
+                <button
+                  onClick={() => generateContent('content')}
+                  disabled={generating === 'content'}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-lg shadow-sm text-sm disabled:opacity-50"
+                  title="Generate with AI"
+                >
+                  {generating === 'content' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                  Generate Article
+                </button>
+              </div>
             </div>
 
-            {/* Formatting Toolbar */}
-            <div className="flex gap-1 mb-2 p-2 bg-gray-50 rounded-lg border border-gray-200">
-              <button onClick={() => insertFormatting('**', '**')} className="p-2 hover:bg-gray-200 rounded" title="Bold">
-                <Bold className="w-4 h-4" />
-              </button>
-              <button onClick={() => insertFormatting('*', '*')} className="p-2 hover:bg-gray-200 rounded" title="Italic">
-                <Italic className="w-4 h-4" />
-              </button>
-              <button onClick={() => insertFormatting('## ')} className="p-2 hover:bg-gray-200 rounded" title="Heading">
-                <Heading className="w-4 h-4" />
-              </button>
-              <button onClick={() => insertFormatting('- ')} className="p-2 hover:bg-gray-200 rounded" title="List">
-                <List className="w-4 h-4" />
-              </button>
-              <button onClick={() => insertFormatting('[', '](url)')} className="p-2 hover:bg-gray-200 rounded" title="Link">
-                <LinkIcon className="w-4 h-4" />
-              </button>
-              <button onClick={() => insertFormatting('`', '`')} className="p-2 hover:bg-gray-200 rounded" title="Code">
-                <Code className="w-4 h-4" />
-              </button>
-            </div>
+            {!previewMode ? (
+              <>
+                {/* Formatting Toolbar */}
+                <div className="flex gap-1 mb-2 p-2 bg-gray-50 rounded-lg border border-gray-200">
+                  <button onClick={() => insertFormatting('**', '**')} className="p-2 hover:bg-gray-200 rounded" title="Bold">
+                    <Bold className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => insertFormatting('*', '*')} className="p-2 hover:bg-gray-200 rounded" title="Italic">
+                    <Italic className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => insertFormatting('## ')} className="p-2 hover:bg-gray-200 rounded" title="Heading">
+                    <Heading className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => insertFormatting('- ')} className="p-2 hover:bg-gray-200 rounded" title="List">
+                    <List className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => insertFormatting('[', '](url)')} className="p-2 hover:bg-gray-200 rounded" title="Link">
+                    <LinkIcon className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => insertFormatting('`', '`')} className="p-2 hover:bg-gray-200 rounded" title="Code">
+                    <Code className="w-4 h-4" />
+                  </button>
+                </div>
 
-            <textarea
-              name="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Write your article content in Markdown or HTML..."
-              rows={20}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-            />
+                <textarea
+                  name="content"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Write your article content in Markdown or HTML..."
+                  rows={20}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                />
+              </>
+            ) : (
+              /* Preview Mode */
+              <div className="border border-gray-200 rounded-lg p-6 min-h-[500px] bg-white prose prose-sm max-w-none overflow-auto">
+                <div dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
+              </div>
+            )}
+            <p className="text-xs text-gray-400 mt-1">
+              ~{Math.ceil(content.split(/\s+/).filter(Boolean).length / 200)} min read ({content.split(/\s+/).filter(Boolean).length} words)
+            </p>
           </div>
         </div>
 
@@ -460,25 +617,52 @@ export default function EditBlogPage() {
                 />
                 <button
                   onClick={() => setFeaturedImage('')}
-                  className="absolute top-2 right-2 p-1 bg-white rounded-full shadow"
+                  className="absolute top-2 right-2 p-1 bg-white rounded-full shadow hover:bg-gray-100"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
             ) : (
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                <ImageIcon className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                <p className="text-sm text-gray-500">No image set</p>
-              </div>
+              <label
+                className={`flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                  isDragging
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50'
+                }`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                {uploadingImage ? (
+                  <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+                ) : (
+                  <Upload className="w-8 h-8 text-gray-400" />
+                )}
+                <span className="text-sm text-gray-600 text-center">
+                  {uploadingImage ? 'Uploading...' : 'Drag & drop or click to upload'}
+                </span>
+                <span className="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileInputChange}
+                  className="hidden"
+                  disabled={uploadingImage}
+                />
+              </label>
             )}
 
-            <input
-              type="url"
-              value={featuredImage}
-              onChange={(e) => setFeaturedImage(e.target.value)}
-              placeholder="Image URL"
-              className="w-full mt-3 px-3 py-2 border border-gray-300 rounded-lg text-sm"
-            />
+            {/* URL input option */}
+            <div className="mt-3">
+              <p className="text-xs text-gray-500 mb-1">Or paste image URL:</p>
+              <input
+                type="url"
+                value={featuredImage}
+                onChange={(e) => setFeaturedImage(e.target.value)}
+                placeholder="https://example.com/image.jpg"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              />
+            </div>
           </div>
 
           {/* Post Settings */}
