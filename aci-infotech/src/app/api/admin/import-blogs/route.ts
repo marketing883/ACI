@@ -2,8 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { downloadAndUploadImage, generateSafeFileName, isValidImageUrl } from '@/lib/supabase-storage';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// Lazy load supabase credentials to avoid build errors
+function getSupabase() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl) {
+    throw new Error('NEXT_PUBLIC_SUPABASE_URL is required');
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey || '');
+}
 
 interface BlogData {
   slug: string;
@@ -43,7 +52,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = getSupabase();
     const skipExisting = options?.skipExisting ?? true;
     const importImages = options?.importImages ?? true;
     const setPublished = options?.setPublished ?? true;

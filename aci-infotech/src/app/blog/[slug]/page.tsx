@@ -444,15 +444,102 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+  const canonicalUrl = `${siteUrl}/blog/${slug}`;
+  const imageUrl = post.featured_image?.startsWith('http')
+    ? post.featured_image
+    : `${siteUrl}${post.featured_image || '/images/og-default.jpg'}`;
+
   return {
     title: `${post.title} | ACI Infotech Blog`,
     description: post.excerpt,
+    keywords: post.tags.join(', '),
+    authors: [{ name: post.author.name }],
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: canonicalUrl,
+      siteName: 'ACI Infotech',
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      locale: 'en_US',
+      type: 'article',
+      publishedTime: post.date,
+      authors: [post.author.name],
+      tags: post.tags,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: [imageUrl],
+    },
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   };
 }
 
 function formatDate(dateString: string) {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+// JSON-LD structured data for SEO/AEO/GEO
+function generateArticleStructuredData(post: BlogPostDetail, slug: string) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt,
+    image: post.featured_image?.startsWith('http')
+      ? post.featured_image
+      : `${siteUrl}${post.featured_image || '/images/og-default.jpg'}`,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      '@type': 'Person',
+      name: post.author.name,
+      jobTitle: post.author.title,
+      description: post.author.bio,
+      url: post.author.linkedin,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'ACI Infotech',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/images/logo.png`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${siteUrl}/blog/${slug}`,
+    },
+    keywords: post.tags.join(', '),
+    articleSection: post.category,
+    wordCount: post.content.split(/\s+/).length,
+    timeRequired: post.read_time,
+  };
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
@@ -485,7 +572,17 @@ export default async function BlogPostPage({ params }: PageProps) {
     ?.map(slug => blogPostsData[slug])
     .filter(Boolean) || [];
 
+  const articleStructuredData = generateArticleStructuredData(post, slug);
+
   return (
+    <>
+      {/* JSON-LD Structured Data for SEO/AEO/GEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleStructuredData),
+        }}
+      />
     <main className="min-h-screen">
       {/* Hero Section */}
       <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
@@ -685,5 +782,6 @@ export default async function BlogPostPage({ params }: PageProps) {
         </div>
       </section>
     </main>
+    </>
   );
 }

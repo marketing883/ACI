@@ -1,11 +1,22 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import sharp from 'sharp';
 
-// Server-side Supabase client with service role for storage operations
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// Lazy initialization for server-side Supabase client
+let supabaseInstance: SupabaseClient | null = null;
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+function getSupabase(): SupabaseClient {
+  if (!supabaseInstance) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl) {
+      throw new Error('NEXT_PUBLIC_SUPABASE_URL is required');
+    }
+
+    supabaseInstance = createClient(supabaseUrl, supabaseServiceKey || '');
+  }
+  return supabaseInstance;
+}
 
 export interface UploadResult {
   success: boolean;
@@ -133,7 +144,7 @@ export async function downloadAndUploadImage(
     const finalFileName = `${fileName}.${ext}`;
 
     // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
+    const { data, error } = await getSupabase().storage
       .from(bucket)
       .upload(finalFileName, buffer, {
         contentType,
@@ -145,7 +156,7 @@ export async function downloadAndUploadImage(
     }
 
     // Get public URL
-    const { data: urlData } = supabase.storage
+    const { data: urlData } = getSupabase().storage
       .from(bucket)
       .getPublicUrl(finalFileName);
 
@@ -168,7 +179,7 @@ export async function uploadFile(
   contentType: string
 ): Promise<UploadResult> {
   try {
-    const { data, error } = await supabase.storage
+    const { data, error } = await getSupabase().storage
       .from(bucket)
       .upload(fileName, file, {
         contentType,
@@ -179,7 +190,7 @@ export async function uploadFile(
       return { success: false, error: error.message };
     }
 
-    const { data: urlData } = supabase.storage
+    const { data: urlData } = getSupabase().storage
       .from(bucket)
       .getPublicUrl(fileName);
 
@@ -197,7 +208,7 @@ export async function uploadFile(
  */
 export async function deleteFile(bucket: string, fileName: string): Promise<boolean> {
   try {
-    const { error } = await supabase.storage
+    const { error } = await getSupabase().storage
       .from(bucket)
       .remove([fileName]);
 
@@ -212,7 +223,7 @@ export async function deleteFile(bucket: string, fileName: string): Promise<bool
  */
 export async function listFiles(bucket: string, folder?: string) {
   try {
-    const { data, error } = await supabase.storage
+    const { data, error } = await getSupabase().storage
       .from(bucket)
       .list(folder || '', {
         limit: 100,

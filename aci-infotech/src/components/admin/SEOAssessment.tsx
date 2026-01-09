@@ -20,6 +20,8 @@ import {
   BarChart3,
   Target,
   Zap,
+  Sparkles,
+  Loader2,
 } from 'lucide-react';
 
 interface ContentData {
@@ -39,6 +41,7 @@ interface AssessmentResult {
   status: 'good' | 'warning' | 'error';
   message: string;
   suggestion?: string;
+  fixType?: 'title' | 'meta_description' | 'content' | 'headings' | 'lists' | 'faqs' | 'statistics' | 'definitions' | 'steps';
 }
 
 interface CategoryAssessment {
@@ -148,22 +151,22 @@ function assessContent(data: ContentData): CategoryAssessment[] {
 
   // Title assessment
   if (!title) {
-    seoItems.push({ score: 0, status: 'error', message: 'Missing title', suggestion: 'Add a compelling title' });
+    seoItems.push({ score: 0, status: 'error', message: 'Missing title', suggestion: 'Add a compelling title', fixType: 'title' });
   } else if (title.length < 30) {
-    seoItems.push({ score: 1, status: 'warning', message: `Title too short (${title.length} chars)`, suggestion: 'Aim for 50-60 characters' });
+    seoItems.push({ score: 1, status: 'warning', message: `Title too short (${title.length} chars)`, suggestion: 'Aim for 50-60 characters', fixType: 'title' });
   } else if (title.length > 60) {
-    seoItems.push({ score: 1, status: 'warning', message: `Title too long (${title.length} chars)`, suggestion: 'Keep under 60 characters for full display in search' });
+    seoItems.push({ score: 1, status: 'warning', message: `Title too long (${title.length} chars)`, suggestion: 'Keep under 60 characters for full display in search', fixType: 'title' });
   } else {
     seoItems.push({ score: 2, status: 'good', message: `Title length optimal (${title.length} chars)` });
   }
 
   // Meta description
   if (!metaDescription) {
-    seoItems.push({ score: 0, status: 'error', message: 'Missing meta description', suggestion: 'Add a 150-160 character description' });
+    seoItems.push({ score: 0, status: 'error', message: 'Missing meta description', suggestion: 'Add a 150-160 character description', fixType: 'meta_description' });
   } else if (metaDescription.length < 120) {
-    seoItems.push({ score: 1, status: 'warning', message: `Meta description short (${metaDescription.length} chars)`, suggestion: 'Aim for 150-160 characters' });
+    seoItems.push({ score: 1, status: 'warning', message: `Meta description short (${metaDescription.length} chars)`, suggestion: 'Aim for 150-160 characters', fixType: 'meta_description' });
   } else if (metaDescription.length > 160) {
-    seoItems.push({ score: 1, status: 'warning', message: `Meta description long (${metaDescription.length} chars)`, suggestion: 'Keep under 160 characters' });
+    seoItems.push({ score: 1, status: 'warning', message: `Meta description long (${metaDescription.length} chars)`, suggestion: 'Keep under 160 characters', fixType: 'meta_description' });
   } else {
     seoItems.push({ score: 2, status: 'good', message: `Meta description optimal (${metaDescription.length} chars)` });
   }
@@ -193,9 +196,9 @@ function assessContent(data: ContentData): CategoryAssessment[] {
   const h2Count = headings.filter(h => h.level === 2).length;
 
   if (h2Count === 0) {
-    seoItems.push({ score: 0, status: 'error', message: 'No H2 headings found', suggestion: 'Add subheadings to structure content' });
+    seoItems.push({ score: 0, status: 'error', message: 'No H2 headings found', suggestion: 'Add subheadings to structure content', fixType: 'headings' });
   } else if (h2Count < 3) {
-    seoItems.push({ score: 1, status: 'warning', message: `Only ${h2Count} H2 headings`, suggestion: 'Add more subheadings for better structure' });
+    seoItems.push({ score: 1, status: 'warning', message: `Only ${h2Count} H2 headings`, suggestion: 'Add more subheadings for better structure', fixType: 'headings' });
   } else {
     seoItems.push({ score: 2, status: 'good', message: `Good heading structure (${h2Count} H2s)` });
   }
@@ -228,9 +231,9 @@ function assessContent(data: ContentData): CategoryAssessment[] {
   // Question-based content
   const questionCount = countQuestions(content);
   if (questionCount === 0) {
-    aeoItems.push({ score: 0, status: 'warning', message: 'No questions in content', suggestion: 'Include questions that users might ask' });
+    aeoItems.push({ score: 0, status: 'warning', message: 'No questions in content', suggestion: 'Include questions that users might ask', fixType: 'faqs' });
   } else if (questionCount < 3) {
-    aeoItems.push({ score: 1, status: 'warning', message: `${questionCount} question(s) found`, suggestion: 'Add more Q&A style content' });
+    aeoItems.push({ score: 1, status: 'warning', message: `${questionCount} question(s) found`, suggestion: 'Add more Q&A style content', fixType: 'faqs' });
   } else {
     aeoItems.push({ score: 2, status: 'good', message: `${questionCount} questions - good for featured snippets` });
   }
@@ -239,15 +242,15 @@ function assessContent(data: ContentData): CategoryAssessment[] {
   if (hasDefinitions(content)) {
     aeoItems.push({ score: 2, status: 'good', message: 'Contains clear definitions', suggestion: 'Great for "What is..." queries' });
   } else {
-    aeoItems.push({ score: 0, status: 'warning', message: 'No clear definitions found', suggestion: 'Add "X is..." or "X means..." statements' });
+    aeoItems.push({ score: 0, status: 'warning', message: 'No clear definitions found', suggestion: 'Add "X is..." or "X means..." statements', fixType: 'definitions' });
   }
 
   // Lists for featured snippets
   const listCount = countLists(content);
   if (listCount === 0) {
-    aeoItems.push({ score: 0, status: 'warning', message: 'No lists found', suggestion: 'Add bulleted/numbered lists for snippet eligibility' });
+    aeoItems.push({ score: 0, status: 'warning', message: 'No lists found', suggestion: 'Add bulleted/numbered lists for snippet eligibility', fixType: 'lists' });
   } else if (listCount < 2) {
-    aeoItems.push({ score: 1, status: 'warning', message: `${listCount} list(s) found`, suggestion: 'More lists improve snippet chances' });
+    aeoItems.push({ score: 1, status: 'warning', message: `${listCount} list(s) found`, suggestion: 'More lists improve snippet chances', fixType: 'lists' });
   } else {
     aeoItems.push({ score: 2, status: 'good', message: `${listCount} lists - excellent for snippets` });
   }
@@ -256,14 +259,14 @@ function assessContent(data: ContentData): CategoryAssessment[] {
   if (hasFAQStructure(content)) {
     aeoItems.push({ score: 2, status: 'good', message: 'FAQ structure detected', suggestion: 'Consider adding FAQ schema markup' });
   } else {
-    aeoItems.push({ score: 0, status: 'warning', message: 'No FAQ section', suggestion: 'Add a FAQ section for People Also Ask' });
+    aeoItems.push({ score: 0, status: 'warning', message: 'No FAQ section', suggestion: 'Add a FAQ section for People Also Ask', fixType: 'faqs' });
   }
 
   // How-to structure
   if (hasHowToStructure(content)) {
     aeoItems.push({ score: 2, status: 'good', message: 'How-to/step content detected', suggestion: 'Consider adding HowTo schema markup' });
   } else {
-    aeoItems.push({ score: 1, status: 'warning', message: 'No step-by-step content', suggestion: 'Add numbered steps for how-to queries' });
+    aeoItems.push({ score: 1, status: 'warning', message: 'No step-by-step content', suggestion: 'Add numbered steps for how-to queries', fixType: 'steps' });
   }
 
   // Concise answer paragraphs (40-60 words ideal for snippets)
@@ -296,7 +299,7 @@ function assessContent(data: ContentData): CategoryAssessment[] {
   if (hasStatistics(content)) {
     geoItems.push({ score: 2, status: 'good', message: 'Contains statistics/data', suggestion: 'Quantitative data improves AI citations' });
   } else {
-    geoItems.push({ score: 0, status: 'warning', message: 'No statistics found', suggestion: 'Add numbers, percentages, or metrics' });
+    geoItems.push({ score: 0, status: 'warning', message: 'No statistics found', suggestion: 'Add numbers, percentages, or metrics', fixType: 'statistics' });
   }
 
   // Citations and sources
@@ -398,6 +401,7 @@ interface SEOAssessmentProps {
   featuredImageAlt?: string;
   author?: string;
   className?: string;
+  onAIFix?: (fixType: string, currentContent: string) => Promise<string | null>;
 }
 
 export default function SEOAssessment({
@@ -411,12 +415,14 @@ export default function SEOAssessment({
   featuredImageAlt,
   author,
   className = '',
+  onAIFix,
 }: SEOAssessmentProps) {
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
     'SEO': true,
     'AEO (Answer Engine)': false,
     'GEO (Generative AI)': false,
   });
+  const [fixingItem, setFixingItem] = useState<string | null>(null);
 
   const assessment = useMemo(() => {
     return assessContent({
@@ -464,6 +470,32 @@ export default function SEOAssessment({
       ...prev,
       [name]: !prev[name],
     }));
+  };
+
+  const handleAIFix = async (fixType: string) => {
+    if (!onAIFix || fixingItem) return;
+
+    setFixingItem(fixType);
+    try {
+      // Get the current content based on fix type
+      let currentContent = '';
+      switch (fixType) {
+        case 'title':
+          currentContent = title;
+          break;
+        case 'meta_description':
+          currentContent = metaDescription || '';
+          break;
+        default:
+          currentContent = content;
+      }
+
+      await onAIFix(fixType, currentContent);
+    } catch (error) {
+      console.error('AI fix error:', error);
+    } finally {
+      setFixingItem(null);
+    }
   };
 
   return (
@@ -552,7 +584,25 @@ export default function SEOAssessment({
                       <div className="flex items-start gap-2">
                         {getStatusIcon(item.status)}
                         <div className="flex-1">
-                          <div className="font-medium text-gray-900">{item.message}</div>
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="font-medium text-gray-900">{item.message}</div>
+                            {/* AI Fix Button */}
+                            {item.status !== 'good' && item.fixType && onAIFix && (
+                              <button
+                                onClick={() => handleAIFix(item.fixType!)}
+                                disabled={fixingItem !== null}
+                                className="flex items-center gap-1 px-2 py-1 text-xs bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-md hover:from-violet-600 hover:to-purple-700 disabled:opacity-50 flex-shrink-0"
+                                title="Fix with AI"
+                              >
+                                {fixingItem === item.fixType ? (
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                ) : (
+                                  <Sparkles className="w-3 h-3" />
+                                )}
+                                <span>Fix</span>
+                              </button>
+                            )}
+                          </div>
                           {item.suggestion && (
                             <div className="text-gray-600 text-xs mt-1">
                               {item.suggestion}

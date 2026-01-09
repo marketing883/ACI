@@ -365,6 +365,86 @@ export default function NewBlogPostPage() {
     }
   }
 
+  // Handle SEO Assessment AI Fix
+  async function handleSEOFix(fixType: string, currentContent: string): Promise<string | null> {
+    try {
+      // Map fix types to content generation fields and actions
+      let field = fixType;
+      const context: Record<string, unknown> = {
+        title,
+        category,
+        keyword: keywordData?.keyword || keyword || title,
+        existingContent: currentContent,
+        articleType,
+      };
+
+      // Handle special fix types
+      switch (fixType) {
+        case 'headings':
+          field = 'content';
+          context.requirement = 'Add structured H2 subheadings to improve content organization';
+          break;
+        case 'lists':
+          field = 'content';
+          context.requirement = 'Add bulleted or numbered lists to make content more scannable';
+          break;
+        case 'definitions':
+          field = 'content';
+          context.requirement = 'Add clear definitions using "X is..." or "X means..." patterns';
+          break;
+        case 'statistics':
+          field = 'content';
+          context.requirement = 'Add relevant statistics, percentages, or quantitative data';
+          break;
+        case 'steps':
+          field = 'content';
+          context.requirement = 'Add step-by-step instructions with "Step 1:", "First,", "Next," patterns';
+          break;
+        case 'faqs':
+          // Trigger FAQ generation
+          await generateFaqs();
+          return null;
+      }
+
+      const response = await fetch('/api/admin/content-generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'blog',
+          field,
+          context,
+        }),
+      });
+
+      const data = await response.json();
+      const generated = data.content || data.generated;
+
+      if (generated) {
+        switch (fixType) {
+          case 'title':
+            setTitle(generated);
+            handleTitleChange(generated);
+            break;
+          case 'meta_description':
+            setMetaDescription(generated);
+            break;
+          default:
+            // For content improvements, append or enhance
+            if (fixType === 'headings' || fixType === 'lists' || fixType === 'definitions' ||
+                fixType === 'statistics' || fixType === 'steps') {
+              setContent(content + '\n\n' + generated);
+            }
+        }
+        return generated;
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Error in SEO fix:', error);
+      return null;
+    }
+  }
+
   // Insert formatting
   function insertFormatting(format: string) {
     const textarea = document.getElementById('content-editor') as HTMLTextAreaElement;
@@ -1347,6 +1427,7 @@ export default function NewBlogPostPage() {
               tags={tags}
               featuredImage={featuredImage}
               author={authorInfo.name}
+              onAIFix={handleSEOFix}
             />
 
             {/* FAQ Section */}
