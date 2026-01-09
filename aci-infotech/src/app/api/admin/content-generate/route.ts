@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 
 interface GenerateRequest {
   type: 'blog' | 'case_study' | 'whitepaper' | 'webinar';
-  field: 'title' | 'excerpt' | 'content' | 'outline' | 'challenge' | 'solution' | 'results';
+  field: 'title' | 'excerpt' | 'content' | 'outline' | 'challenge' | 'solution' | 'results' | 'description';
   context: {
     keyword?: string;
     title?: string;
@@ -47,9 +47,10 @@ export async function POST(request: NextRequest) {
 
     // Extract text from response
     const textContent = response.content.find(block => block.type === 'text');
-    const generated = textContent && 'text' in textContent ? textContent.text : getMockContent(type, field, context);
+    const content = textContent && 'text' in textContent ? textContent.text : getMockContent(type, field, context);
 
-    return NextResponse.json({ generated });
+    // Return both 'content' and 'generated' for backward compatibility
+    return NextResponse.json({ content, generated: content });
 
   } catch (error) {
     console.error('Content generation error:', error);
@@ -122,6 +123,46 @@ Return the full article in markdown format.`;
     }
   }
 
+  if (type === 'whitepaper') {
+    switch (field) {
+      case 'description':
+        return `Write a compelling description for a whitepaper titled "${title}".
+Category: ${category || 'Enterprise Technology'}
+
+Requirements:
+- 150-200 words
+- Explain what readers will learn
+- Highlight key insights and takeaways
+- Include value proposition for enterprise decision makers
+- Professional tone suitable for C-level executives
+- Mention practical applications
+
+Return ONLY the description, nothing else.`;
+      default:
+        return `Generate ${field} content for whitepaper`;
+    }
+  }
+
+  if (type === 'webinar') {
+    switch (field) {
+      case 'description':
+        return `Write a compelling description for a webinar titled "${title}".
+Category: ${category || 'Enterprise Technology'}
+
+Requirements:
+- 150-200 words
+- Explain what attendees will learn
+- Highlight key topics and speakers
+- Include value proposition for enterprise decision makers
+- Create urgency to register
+- Professional yet engaging tone
+
+Return ONLY the description, nothing else.`;
+      default:
+        return `Generate ${field} content for webinar`;
+    }
+  }
+
   if (type === 'case_study') {
     switch (field) {
       case 'challenge':
@@ -165,7 +206,21 @@ Write 150-200 words in a professional tone. Return ONLY the content.`;
 }
 
 function getMockContent(type: string, field: string, context: GenerateRequest['context']): string {
-  const { keyword, title } = context;
+  const { keyword, title, category } = context;
+
+  if (type === 'whitepaper') {
+    if (field === 'description') {
+      return `This comprehensive whitepaper explores ${title || 'enterprise technology strategies'} and provides actionable insights for technology leaders. You'll discover proven methodologies used by Fortune 500 companies, learn from real-world case studies, and gain practical frameworks you can implement immediately. Whether you're modernizing legacy systems or building new capabilities, this guide will help you navigate complexity and deliver measurable business outcomes.`;
+    }
+    return 'Generated whitepaper content placeholder';
+  }
+
+  if (type === 'webinar') {
+    if (field === 'description') {
+      return `Join our expert panel as they dive deep into ${title || 'enterprise technology'}. This session will cover the latest trends, best practices, and practical strategies for ${category || 'digital transformation'}. Attendees will learn from real implementation experiences, get answers to their specific questions, and walk away with actionable insights they can apply immediately. Reserve your spot now to gain a competitive edge.`;
+    }
+    return 'Generated webinar content placeholder';
+  }
 
   if (type === 'blog') {
     switch (field) {
