@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -25,8 +25,28 @@ const categories = [
   'Enterprise Applications',
 ];
 
-export default function NewWhitepaperPage() {
+interface WhitepaperData {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  category: string;
+  tags: string[];
+  file_url: string | null;
+  cover_image: string | null;
+  requires_registration: boolean;
+  featured: boolean;
+  meta_title: string;
+  meta_description: string;
+  status: string;
+}
+
+export default function EditWhitepaperPage() {
   const router = useRouter();
+  const params = useParams();
+  const whitepapershipId = params.id as string;
+
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState<string | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
@@ -46,6 +66,42 @@ export default function NewWhitepaperPage() {
   const [metaDescription, setMetaDescription] = useState('');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
 
+  useEffect(() => {
+    fetchWhitepaper();
+  }, [whitepapershipId]);
+
+  async function fetchWhitepaper() {
+    try {
+      const { data, error } = await supabase
+        .from('whitepapers')
+        .select('*')
+        .eq('id', whitepapershipId)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setTitle(data.title || '');
+        setSlug(data.slug || '');
+        setDescription(data.description || '');
+        setCategory(data.category || '');
+        setTags(data.tags?.join(', ') || '');
+        setFileUrl(data.file_url || '');
+        setCoverImage(data.cover_image || '');
+        setRequiresRegistration(data.requires_registration ?? true);
+        setFeatured(data.featured ?? false);
+        setMetaTitle(data.meta_title || '');
+        setMetaDescription(data.meta_description || '');
+        setStatus(data.status || 'draft');
+      }
+    } catch (error) {
+      console.error('Error fetching whitepaper:', error);
+      alert('Failed to load whitepaper');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // Auto-generate slug from title
   const generateSlug = (text: string) => {
     return text
@@ -57,9 +113,6 @@ export default function NewWhitepaperPage() {
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
-    if (!slug || slug === generateSlug(title)) {
-      setSlug(generateSlug(value));
-    }
   };
 
   // AI Generate description
@@ -156,15 +209,17 @@ export default function NewWhitepaperPage() {
   };
 
   // Save whitepaper
-  const handleSave = async () => {
+  const handleSave = async (newStatus?: 'draft' | 'published') => {
     if (!title || !slug) {
       alert('Title and slug are required');
       return;
     }
 
+    const finalStatus = newStatus || status;
     setSaving(true);
+
     try {
-      const whitepaperData = {
+      const whitepaperData: Record<string, unknown> = {
         title,
         slug,
         description,
@@ -176,14 +231,26 @@ export default function NewWhitepaperPage() {
         featured,
         meta_title: metaTitle || title,
         meta_description: metaDescription || description?.substring(0, 160),
-        status,
-        published_at: status === 'published' ? new Date().toISOString() : null,
-        download_count: 0,
+        status: finalStatus,
       };
+
+      // If publishing and not already published, set published_at
+      if (finalStatus === 'published' && status !== 'published') {
+        whitepaperData.published_at = new Date().toISOString();
+      }
+
+      // If setting as featured, unfeature all others first
+      if (featured) {
+        await supabase
+          .from('whitepapers')
+          .update({ featured: false })
+          .neq('id', whitepapershipId);
+      }
 
       const { error } = await supabase
         .from('whitepapers')
-        .insert(whitepaperData);
+        .update(whitepaperData)
+        .eq('id', whitepapershipId);
 
       if (error) throw error;
 
@@ -195,6 +262,14 @@ export default function NewWhitepaperPage() {
       setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -208,25 +283,25 @@ export default function NewWhitepaperPage() {
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">New Whitepaper</h1>
-            <p className="text-gray-500">Create a downloadable resource</p>
+            <h1 className="text-2xl font-bold text-gray-900">Edit Whitepaper</h1>
+            <p className="text-gray-500">Update whitepaper details</p>
           </div>
         </div>
         <div className="flex gap-3">
           <button
-            onClick={() => { setStatus('draft'); handleSave(); }}
+            onClick={() => handleSave('draft')}
             disabled={saving}
             className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
           >
-            Save Draft
+            Save as Draft
           </button>
           <button
-            onClick={() => { setStatus('published'); handleSave(); }}
+            onClick={() => handleSave('published')}
             disabled={saving}
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            Publish
+            {status === 'published' ? 'Update' : 'Publish'}
           </button>
         </div>
       </div>
