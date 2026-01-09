@@ -145,7 +145,7 @@ export default function EditWhitepaperPage() {
     }
   };
 
-  // File upload handlers
+  // File upload handlers - using server-side API to bypass RLS
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -157,18 +157,23 @@ export default function EditWhitepaperPage() {
 
     setUploadingFile(true);
     try {
-      const fileName = `whitepapers/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-      const { data, error } = await supabase.storage
-        .from('ACI-web')
-        .upload(fileName, file, { upsert: true });
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'whitepapers');
+      formData.append('bucket', 'ACI-web');
 
-      if (error) throw error;
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-      const { data: urlData } = supabase.storage
-        .from('ACI-web')
-        .getPublicUrl(fileName);
+      const result = await response.json();
 
-      setFileUrl(urlData.publicUrl);
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed');
+      }
+
+      setFileUrl(result.url);
     } catch (error) {
       console.error('Error uploading file:', error);
       alert('Failed to upload file');
@@ -188,18 +193,23 @@ export default function EditWhitepaperPage() {
 
     setUploadingCover(true);
     try {
-      const fileName = `whitepaper-covers/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-      const { data, error } = await supabase.storage
-        .from('ACI-web')
-        .upload(fileName, file, { upsert: true });
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'whitepaper-covers');
+      formData.append('bucket', 'ACI-web');
 
-      if (error) throw error;
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-      const { data: urlData } = supabase.storage
-        .from('ACI-web')
-        .getPublicUrl(fileName);
+      const result = await response.json();
 
-      setCoverImage(urlData.publicUrl);
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed');
+      }
+
+      setCoverImage(result.url);
     } catch (error) {
       console.error('Error uploading cover:', error);
       alert('Failed to upload cover image');
