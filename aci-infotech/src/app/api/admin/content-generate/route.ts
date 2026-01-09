@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 
 interface GenerateRequest {
   type: 'blog' | 'case_study' | 'whitepaper' | 'webinar';
-  field: 'title' | 'excerpt' | 'content' | 'outline' | 'challenge' | 'solution' | 'results' | 'description';
+  field: 'title' | 'excerpt' | 'content' | 'outline' | 'challenge' | 'solution' | 'results' | 'description' | 'meta_title' | 'meta_description';
   context: {
     keyword?: string;
     title?: string;
@@ -12,6 +12,8 @@ interface GenerateRequest {
     clientName?: string;
     industry?: string;
     technologies?: string[];
+    description?: string;
+    topics?: string;
   };
 }
 
@@ -118,6 +120,39 @@ ${existingContent ? `Build upon this existing outline/content:\n${existingConten
 
 Return the full article in markdown format.`;
 
+      case 'meta_title':
+        return `Generate an SEO-optimized meta title for a blog post.
+
+Blog Title: "${title}"
+${keyword ? `Target Keyword: ${keyword}` : ''}
+Category: ${category || 'Enterprise Technology'}
+
+Requirements:
+- Maximum 60 characters (strict limit)
+- Include the main keyword naturally
+- Make it compelling and click-worthy
+- Professional tone for enterprise audience
+- Can be slightly different from the main title
+
+Return ONLY the meta title, nothing else.`;
+
+      case 'meta_description':
+        return `Generate an SEO-optimized meta description for a blog post.
+
+Blog Title: "${title}"
+${keyword ? `Target Keyword: ${keyword}` : ''}
+Category: ${category || 'Enterprise Technology'}
+${existingContent ? `Content Preview: ${existingContent.substring(0, 200)}` : ''}
+
+Requirements:
+- 150-160 characters (strict limit)
+- Include the main keyword naturally
+- Summarize what readers will learn
+- Include a subtle call-to-action
+- Make it compelling to drive clicks
+
+Return ONLY the meta description, nothing else.`;
+
       default:
         return `Generate content for ${field}`;
     }
@@ -138,6 +173,39 @@ Requirements:
 - Mention practical applications
 
 Return ONLY the description, nothing else.`;
+
+      case 'meta_title':
+        return `Generate an SEO-optimized meta title for a whitepaper.
+
+Whitepaper Title: "${title}"
+Category: ${category || 'Enterprise Technology'}
+${context.description ? `Description: ${context.description}` : ''}
+
+Requirements:
+- Maximum 60 characters (strict limit)
+- Include the main topic/keyword naturally
+- Make it compelling and click-worthy
+- Professional tone for enterprise audience
+- Can be different from the main title but capture the essence
+
+Return ONLY the meta title, nothing else.`;
+
+      case 'meta_description':
+        return `Generate an SEO-optimized meta description for a whitepaper.
+
+Whitepaper Title: "${title}"
+Category: ${category || 'Enterprise Technology'}
+${context.description ? `Description: ${context.description}` : ''}
+
+Requirements:
+- 150-160 characters (strict limit)
+- Summarize the whitepaper's value proposition
+- Include a subtle call-to-action (e.g., "Download now", "Learn how")
+- Target enterprise decision makers
+- Make it compelling enough to encourage clicks
+
+Return ONLY the meta description, nothing else.`;
+
       default:
         return `Generate ${field} content for whitepaper`;
     }
@@ -148,6 +216,7 @@ Return ONLY the description, nothing else.`;
       case 'description':
         return `Write a compelling description for a webinar titled "${title}".
 Category: ${category || 'Enterprise Technology'}
+${context.topics ? `Topics: ${context.topics}` : ''}
 
 Requirements:
 - 150-200 words
@@ -158,6 +227,39 @@ Requirements:
 - Professional yet engaging tone
 
 Return ONLY the description, nothing else.`;
+
+      case 'meta_title':
+        return `Generate an SEO-optimized meta title for a webinar.
+
+Webinar Title: "${title}"
+${context.topics ? `Topics: ${context.topics}` : ''}
+${context.description ? `Description: ${context.description}` : ''}
+
+Requirements:
+- Maximum 60 characters (strict limit)
+- Include the main topic naturally
+- Make it compelling and attention-grabbing
+- Consider including "Webinar" or "Live" if space permits
+- Professional tone for enterprise audience
+
+Return ONLY the meta title, nothing else.`;
+
+      case 'meta_description':
+        return `Generate an SEO-optimized meta description for a webinar.
+
+Webinar Title: "${title}"
+${context.topics ? `Topics: ${context.topics}` : ''}
+${context.description ? `Description: ${context.description}` : ''}
+
+Requirements:
+- 150-160 characters (strict limit)
+- Summarize what attendees will learn
+- Include a call-to-action (e.g., "Register now", "Save your spot")
+- Create urgency without being pushy
+- Target enterprise decision makers
+
+Return ONLY the meta description, nothing else.`;
+
       default:
         return `Generate ${field} content for webinar`;
     }
@@ -165,6 +267,23 @@ Return ONLY the description, nothing else.`;
 
   if (type === 'case_study') {
     switch (field) {
+      case 'excerpt':
+        return `Write a compelling short excerpt/summary for a case study.
+
+Title: "${title}"
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+
+Requirements:
+- 100-150 words
+- Summarize the challenge, solution, and key results
+- Focus on the transformation story
+- Include a notable metric or outcome
+- Professional tone
+
+Return ONLY the excerpt, nothing else.`;
+
       case 'challenge':
         return `Write a compelling "Challenge" section for a case study about ${clientName || 'a client'} in the ${industry || 'enterprise'} industry.
 
@@ -196,6 +315,40 @@ Create realistic, impactful results. Include:
 - Long-term benefits
 
 Write 150-200 words in a professional tone. Return ONLY the content.`;
+
+      case 'meta_title':
+        return `Generate an SEO-optimized meta title for a case study.
+
+Case Study Title: "${title}"
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+
+Requirements:
+- Maximum 60 characters (strict limit)
+- Include client industry or key technology
+- Make it compelling and results-focused
+- Professional tone for enterprise audience
+- Consider including "Case Study" if space permits
+
+Return ONLY the meta title, nothing else.`;
+
+      case 'meta_description':
+        return `Generate an SEO-optimized meta description for a case study.
+
+Case Study Title: "${title}"
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+
+Requirements:
+- 150-160 characters (strict limit)
+- Highlight the transformation and key results
+- Include a notable metric if possible
+- Encourage readers to learn more
+- Professional tone
+
+Return ONLY the meta description, nothing else.`;
 
       default:
         return `Generate ${field} content for case study`;

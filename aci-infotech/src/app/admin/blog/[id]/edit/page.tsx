@@ -137,12 +137,12 @@ export default function EditBlogPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'blog',
-          field: field === 'meta_title' ? 'title' : field,
+          field,
           context: {
             title,
             category,
             keyword: targetKeyword,
-            existingContent: field === 'content' ? excerpt : undefined,
+            existingContent: field === 'content' ? excerpt : field === 'meta_description' ? excerpt : undefined,
           },
         }),
       });

@@ -87,7 +87,7 @@ export default function NewWebinarPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'webinar',
-          field: field === 'meta_title' ? 'title' : field === 'meta_description' ? 'excerpt' : field,
+          field,
           context: { title, topics, description },
         }),
       });

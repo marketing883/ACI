@@ -183,7 +183,7 @@ export default function NewBlogPostPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'blog',
-          field: field === 'meta_title' ? 'title' : field === 'meta_description' ? 'excerpt' : field,
+          field,
           context: {
             keyword: keywordData?.keyword || keyword || title,
             title,

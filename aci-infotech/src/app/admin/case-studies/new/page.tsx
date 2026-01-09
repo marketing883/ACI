@@ -122,7 +122,7 @@ export default function NewCaseStudyPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'case_study',
-          field: field === 'meta_title' ? 'title' : field === 'meta_description' ? 'excerpt' : field,
+          field,
           context: { title, clientName, industry: clientIndustry, technologies: technologies.split(',').map(t => t.trim()) },
         }),
       });

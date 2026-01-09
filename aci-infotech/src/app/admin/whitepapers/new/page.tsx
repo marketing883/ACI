@@ -76,7 +76,7 @@ export default function NewWhitepaperPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'whitepaper',
-          field: field === 'meta_title' ? 'title' : field === 'meta_description' ? 'excerpt' : field,
+          field,
           context: { title, category, description },
         }),
       });
