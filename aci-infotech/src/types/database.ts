@@ -65,9 +65,15 @@ export interface BlogPost {
   content: string;
   author_name: string;
   author_title: string | null;
+  author_bio: string | null;
   author_image_url: string | null;
+  author_linkedin: string | null;
+  author_twitter: string | null;
   category: string;
   tags: string[];
+  keywords: string[];
+  article_type: string;
+  faqs: { question: string; answer: string }[];
   featured_image_url: string | null;
   read_time_minutes: number;
   is_featured: boolean;

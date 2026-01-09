@@ -148,18 +148,19 @@ export default function EditBlogPage() {
           setMetaTitle(data.seo_title || '');
           setMetaDescription(data.seo_description || '');
           setStatus(data.is_published ? 'published' : 'draft');
-          setArticleType('how-to');
-          setFaqs([]);
+          setTargetKeyword(data.keywords?.[0] || '');
+          setArticleType(data.article_type || 'how-to');
+          setFaqs(data.faqs || []);
 
           // Load author info
-          if (data.author_name || data.author_title) {
+          if (data.author_name || data.author_title || data.author_bio) {
             setAuthorInfo({
               name: data.author_name || DEFAULT_AUTHORS[0].name,
               title: data.author_title || DEFAULT_AUTHORS[0].title,
-              bio: DEFAULT_AUTHORS[0].bio,
+              bio: data.author_bio || DEFAULT_AUTHORS[0].bio,
               avatar: data.author_image_url || DEFAULT_AUTHORS[0].avatar,
-              linkedin: DEFAULT_AUTHORS[0].linkedin,
-              twitter: DEFAULT_AUTHORS[0].twitter,
+              linkedin: data.author_linkedin || DEFAULT_AUTHORS[0].linkedin,
+              twitter: data.author_twitter || DEFAULT_AUTHORS[0].twitter,
             });
             // Show custom author if any field differs from default
             const isCustom = data.author_name !== DEFAULT_AUTHORS[0].name ||
@@ -530,10 +531,16 @@ export default function EditBlogPage() {
         tags: tags.split(',').map(t => t.trim()).filter(Boolean),
         author_name: authorInfo.name || 'ACI Infotech',
         author_title: authorInfo.title,
+        author_bio: authorInfo.bio || null,
         author_image_url: authorInfo.avatar || null,
+        author_linkedin: authorInfo.linkedin || null,
+        author_twitter: authorInfo.twitter || null,
         featured_image_url: featuredImage || null,
         seo_title: metaTitle || title,
         seo_description: metaDescription || excerpt?.substring(0, 160),
+        keywords: targetKeyword ? [targetKeyword] : [],
+        article_type: articleType,
+        faqs: faqs.filter(f => f.question && f.answer),
         is_published: status === 'published',
         is_featured: false,
         published_at: status === 'published' ? new Date().toISOString() : null,
