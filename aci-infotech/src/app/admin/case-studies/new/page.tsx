@@ -14,7 +14,6 @@ import {
   Plus,
   Trash2,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 
 const industries = [
   'Financial Services',
@@ -158,7 +157,7 @@ export default function NewCaseStudyPage() {
     }
   };
 
-  // Image upload handlers
+  // Image upload handlers using server-side API with optimization
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -170,18 +169,22 @@ export default function NewCaseStudyPage() {
 
     setUploadingImage(true);
     try {
-      const fileName = `case-studies/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-      const { error } = await supabase.storage
-        .from('case-study-images')
-        .upload(fileName, file, { upsert: true });
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('bucket', 'case-study-images');
+      formData.append('path', 'case-studies');
 
-      if (error) throw error;
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-      const { data: urlData } = supabase.storage
-        .from('case-study-images')
-        .getPublicUrl(fileName);
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to upload image');
+      }
 
-      setFeaturedImage(urlData.publicUrl);
+      setFeaturedImage(result.url);
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Failed to upload image');
@@ -201,18 +204,22 @@ export default function NewCaseStudyPage() {
 
     setUploadingLogo(true);
     try {
-      const fileName = `logos/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-      const { error } = await supabase.storage
-        .from('case-study-images')
-        .upload(fileName, file, { upsert: true });
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('bucket', 'case-study-images');
+      formData.append('path', 'logos');
 
-      if (error) throw error;
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-      const { data: urlData } = supabase.storage
-        .from('case-study-images')
-        .getPublicUrl(fileName);
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to upload logo');
+      }
 
-      setClientLogo(urlData.publicUrl);
+      setClientLogo(result.url);
     } catch (error) {
       console.error('Error uploading logo:', error);
       alert('Failed to upload logo');
@@ -281,9 +288,18 @@ export default function NewCaseStudyPage() {
         published_at: status === 'published' ? new Date().toISOString() : null,
       };
 
-      const { error } = await supabase.from('case_studies').insert(caseStudyData);
+      // Use server-side API to bypass RLS
+      const response = await fetch('/api/admin/case-studies', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(caseStudyData),
+      });
 
-      if (error) throw error;
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to save case study');
+      }
 
       router.push('/admin/case-studies');
     } catch (error) {

@@ -319,6 +319,7 @@ export default function EditBlogPage() {
     setSaving(true);
     try {
       const postData = {
+        id: postId,
         title,
         slug,
         excerpt,
@@ -334,12 +335,18 @@ export default function EditBlogPage() {
         published_at: status === 'published' ? new Date().toISOString() : null,
       };
 
-      const { error } = await supabase
-        .from('blog_posts')
-        .update(postData)
-        .eq('id', postId);
+      // Use server-side API to bypass RLS
+      const response = await fetch('/api/admin/blogs', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData),
+      });
 
-      if (error) throw error;
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to save post');
+      }
 
       router.push('/admin/blog');
     } catch (error) {

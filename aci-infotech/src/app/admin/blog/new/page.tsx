@@ -433,8 +433,18 @@ export default function NewBlogPostPage() {
         meta_description: metaDescription || excerpt,
       };
 
-      const { error } = await supabase.from('blog_posts').insert(postData);
-      if (error) throw error;
+      // Use server-side API to bypass RLS
+      const response = await fetch('/api/admin/blogs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to save post');
+      }
 
       router.push('/admin/blog');
     } catch (error) {

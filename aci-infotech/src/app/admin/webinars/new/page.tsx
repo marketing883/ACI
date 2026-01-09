@@ -7,14 +7,12 @@ import {
   ArrowLeft,
   Save,
   Loader2,
-  Upload,
   Sparkles,
   Plus,
   Trash2,
   Image as ImageIcon,
   X,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 
 const platforms = ['Zoom', 'Microsoft Teams', 'Webex', 'GoToWebinar', 'Other'];
 const timezones = [
@@ -129,7 +127,7 @@ export default function NewWebinarPage() {
     setSpeakers(speakers.filter((_, i) => i !== index));
   };
 
-  // Image upload
+  // Image upload using server-side API with optimization
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -141,18 +139,22 @@ export default function NewWebinarPage() {
 
     setUploadingImage(true);
     try {
-      const fileName = `webinars/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-      const { error } = await supabase.storage
-        .from('webinar-images')
-        .upload(fileName, file, { upsert: true });
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('bucket', 'webinar-images');
+      formData.append('path', 'webinars');
 
-      if (error) throw error;
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-      const { data: urlData } = supabase.storage
-        .from('webinar-images')
-        .getPublicUrl(fileName);
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to upload image');
+      }
 
-      setFeaturedImage(urlData.publicUrl);
+      setFeaturedImage(result.url);
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Failed to upload image');
@@ -195,11 +197,17 @@ export default function NewWebinarPage() {
         recording_url: null,
       };
 
-      const { error } = await supabase
-        .from('webinars')
-        .insert(webinarData);
+      // Use server-side API to bypass RLS
+      const response = await fetch('/api/admin/webinars', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(webinarData),
+      });
 
-      if (error) throw error;
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to save webinar');
+      }
 
       router.push('/admin/webinars');
     } catch (error) {
