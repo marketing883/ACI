@@ -58,7 +58,7 @@ const newsItems = [
   {
     id: 'salesforce-agentforce',
     title: 'ACI Infotech Accelerates Growth with Exclusive Salesforce-Agentforce Partnership',
-    excerpt: 'Partnership with Salesforce's Agentforce platform positions ACI as a trusted innovation partner for Fortune 500 companies, enabling intelligent agents that act across systems and deliver measurable business value at scale.',
+    excerpt: "Partnership with Salesforce's Agentforce platform positions ACI as a trusted innovation partner for Fortune 500 companies, enabling intelligent agents that act across systems and deliver measurable business value at scale.",
     image_url: '/images/news/salesforce-agentforce.svg',
     source: 'PR Newswire',
     date: 'June 2025',
