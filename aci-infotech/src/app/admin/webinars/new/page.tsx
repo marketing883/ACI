@@ -73,31 +73,42 @@ export default function NewWebinarPage() {
     }
   };
 
-  // AI Generate description
-  const generateDescription = async () => {
+  // AI Generate content
+  const generateContent = async (field: 'description' | 'meta_title' | 'meta_description') => {
     if (!title) {
       alert('Please enter a title first');
       return;
     }
 
-    setGenerating('description');
+    setGenerating(field);
     try {
       const response = await fetch('/api/admin/content-generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'webinar',
-          field: 'description',
-          context: { title, topics },
+          field: field === 'meta_title' ? 'title' : field === 'meta_description' ? 'excerpt' : field,
+          context: { title, topics, description },
         }),
       });
 
       const data = await response.json();
-      if (data.content) {
-        setDescription(data.content);
+      const generated = data.content || data.generated;
+      if (generated) {
+        switch (field) {
+          case 'description':
+            setDescription(generated);
+            break;
+          case 'meta_title':
+            setMetaTitle(generated);
+            break;
+          case 'meta_description':
+            setMetaDescription(generated);
+            break;
+        }
       }
     } catch (error) {
-      console.error('Error generating description:', error);
+      console.error('Error generating content:', error);
     } finally {
       setGenerating(null);
     }
@@ -274,16 +285,16 @@ export default function NewWebinarPage() {
                   Description
                 </label>
                 <button
-                  onClick={generateDescription}
+                  onClick={() => generateContent('description')}
                   disabled={generating === 'description'}
-                  className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                  title="Generate with AI"
                 >
                   {generating === 'description' ? (
-                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   ) : (
-                    <Sparkles className="w-3 h-3" />
+                    <Sparkles className="w-3.5 h-3.5" />
                   )}
-                  Generate with AI
                 </button>
               </div>
               <textarea
@@ -508,9 +519,23 @@ export default function NewWebinarPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Meta Title
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Meta Title
+                </label>
+                <button
+                  onClick={() => generateContent('meta_title')}
+                  disabled={generating === 'meta_title'}
+                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                  title="Generate with AI"
+                >
+                  {generating === 'meta_title' ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              </div>
               <input
                 type="text"
                 value={metaTitle}
@@ -518,12 +543,29 @@ export default function NewWebinarPage() {
                 placeholder={title || 'Page title for search engines'}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                {metaTitle.length || title.length}/60 characters
+              </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Meta Description
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Meta Description
+                </label>
+                <button
+                  onClick={() => generateContent('meta_description')}
+                  disabled={generating === 'meta_description'}
+                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                  title="Generate with AI"
+                >
+                  {generating === 'meta_description' ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              </div>
               <textarea
                 value={metaDescription}
                 onChange={(e) => setMetaDescription(e.target.value)}
@@ -531,6 +573,9 @@ export default function NewWebinarPage() {
                 rows={2}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                {metaDescription.length || description?.substring(0, 160).length || 0}/160 characters
+              </p>
             </div>
           </div>
         </div>

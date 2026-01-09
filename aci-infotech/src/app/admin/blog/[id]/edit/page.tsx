@@ -137,30 +137,34 @@ export default function EditBlogPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'blog',
-          field,
+          field: field === 'meta_title' ? 'title' : field,
           context: {
             title,
             category,
-            targetKeyword,
-            excerpt: field === 'content' ? excerpt : undefined,
+            keyword: targetKeyword,
+            existingContent: field === 'content' ? excerpt : undefined,
           },
         }),
       });
 
       const data = await response.json();
-      if (data.content) {
+      const generated = data.content || data.generated;
+      if (generated) {
         switch (field) {
           case 'title':
-            setTitle(data.content);
+            setTitle(generated);
             break;
           case 'excerpt':
-            setExcerpt(data.content);
+            setExcerpt(generated);
             break;
           case 'content':
-            setContent(data.content);
+            setContent(generated);
+            break;
+          case 'meta_title':
+            setMetaTitle(generated);
             break;
           case 'meta_description':
-            setMetaDescription(data.content);
+            setMetaDescription(generated);
             break;
         }
       }
@@ -289,10 +293,10 @@ export default function EditBlogPage() {
                   <button
                     onClick={() => generateContent('title')}
                     disabled={generating === 'title'}
-                    className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                    className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                    title="Generate with AI"
                   >
-                    {generating === 'title' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                    Generate
+                    {generating === 'title' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
                   </button>
                 </div>
                 <input
@@ -325,10 +329,10 @@ export default function EditBlogPage() {
               <button
                 onClick={() => generateContent('excerpt')}
                 disabled={generating === 'excerpt'}
-                className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                title="Generate with AI"
               >
-                {generating === 'excerpt' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                Generate
+                {generating === 'excerpt' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
               </button>
             </div>
             <textarea
@@ -347,10 +351,11 @@ export default function EditBlogPage() {
               <button
                 onClick={() => generateContent('content')}
                 disabled={generating === 'content'}
-                className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-lg shadow-sm text-sm disabled:opacity-50"
+                title="Generate with AI"
               >
-                {generating === 'content' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                Generate Full Article
+                {generating === 'content' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                Generate Article
               </button>
             </div>
 
@@ -525,7 +530,17 @@ export default function EditBlogPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium text-gray-700">Meta Title</label>
+                  <button
+                    onClick={() => generateContent('meta_title')}
+                    disabled={generating === 'meta_title'}
+                    className="w-6 h-6 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                    title="Generate with AI"
+                  >
+                    {generating === 'meta_title' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                  </button>
+                </div>
                 <input
                   type="text"
                   value={metaTitle}
@@ -542,9 +557,10 @@ export default function EditBlogPage() {
                   <button
                     onClick={() => generateContent('meta_description')}
                     disabled={generating === 'meta_description'}
-                    className="text-xs text-blue-600 hover:text-blue-700"
+                    className="w-6 h-6 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                    title="Generate with AI"
                   >
-                    {generating === 'meta_description' ? 'Generating...' : 'Generate'}
+                    {generating === 'meta_description' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
                   </button>
                 </div>
                 <textarea
