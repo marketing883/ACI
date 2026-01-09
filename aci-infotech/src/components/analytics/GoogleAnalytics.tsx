@@ -115,6 +115,38 @@ export function trackSearch(searchTerm: string, searchLocation: string) {
   });
 }
 
+// Track service page interest - key for B2B targeting
+export function trackServiceInterest(serviceName: string, serviceCategory: string) {
+  gtag('event', 'service_interest', {
+    service_name: serviceName,
+    service_category: serviceCategory,
+  });
+
+  // Set user property for audience building
+  gtag('set', 'user_properties', {
+    interested_service: serviceName,
+    last_service_viewed: serviceName,
+  });
+}
+
+// Track high-value page views (contact, pricing intent)
+export function trackHighIntentPage(pageName: string) {
+  gtag('event', 'high_intent_page_view', {
+    page_name: pageName,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+// Service name mapping for cleaner tracking
+const SERVICE_MAPPING: Record<string, { name: string; category: string }> = {
+  'data-engineering': { name: 'Data Engineering', category: 'Data & Analytics' },
+  'applied-ai-ml': { name: 'Applied AI & ML', category: 'AI & Automation' },
+  'cloud-modernization': { name: 'Cloud Modernization', category: 'Infrastructure' },
+  'martech-cdp': { name: 'MarTech & CDP', category: 'Marketing Technology' },
+  'enterprise-integration': { name: 'Enterprise Integration', category: 'Integration' },
+  'security-compliance': { name: 'Security & Compliance', category: 'Security' },
+};
+
 // Page view tracker component
 function PageViewTracker() {
   const pathname = usePathname();
@@ -141,6 +173,20 @@ function PageViewTracker() {
       } else if (pathname.startsWith('/playbooks/') && pathname.split('/').length > 2) {
         const slug = pathname.split('/').pop();
         if (slug) trackContentView('playbook', slug, document.title, 'playbook');
+      }
+
+      // Track service page interest - crucial for B2B audience building
+      if (pathname.startsWith('/services/')) {
+        const serviceSlug = pathname.split('/').pop();
+        if (serviceSlug && SERVICE_MAPPING[serviceSlug]) {
+          const service = SERVICE_MAPPING[serviceSlug];
+          trackServiceInterest(service.name, service.category);
+        }
+      }
+
+      // Track high-intent pages
+      if (pathname === '/contact') {
+        trackHighIntentPage('contact');
       }
     }
   }, [pathname, searchParams]);
@@ -289,6 +335,85 @@ function CTAClickTracker() {
   return null;
 }
 
+// Engagement scoring tracker - identifies high-value prospects
+function EngagementScoreTracker() {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Initialize or get existing engagement score from session
+    const STORAGE_KEY = 'aci_engagement_score';
+    const PAGES_KEY = 'aci_pages_viewed';
+
+    let score = parseInt(sessionStorage.getItem(STORAGE_KEY) || '0', 10);
+    const pagesViewed = JSON.parse(sessionStorage.getItem(PAGES_KEY) || '[]');
+    const currentPage = window.location.pathname;
+
+    // Don't count admin pages
+    if (currentPage.startsWith('/admin')) return;
+
+    // Score based on page type (only if not already viewed this session)
+    if (!pagesViewed.includes(currentPage)) {
+      pagesViewed.push(currentPage);
+      sessionStorage.setItem(PAGES_KEY, JSON.stringify(pagesViewed));
+
+      // Scoring logic
+      if (currentPage === '/contact') score += 20;
+      else if (currentPage.startsWith('/services/')) score += 10;
+      else if (currentPage.startsWith('/case-studies/')) score += 8;
+      else if (currentPage.startsWith('/whitepapers/')) score += 8;
+      else if (currentPage.startsWith('/playbooks/')) score += 5;
+      else if (currentPage.startsWith('/blog/')) score += 3;
+      else if (currentPage === '/') score += 1;
+      else score += 2;
+
+      sessionStorage.setItem(STORAGE_KEY, score.toString());
+    }
+
+    // Set engagement level as user property
+    let engagementLevel = 'low';
+    if (score >= 50) engagementLevel = 'high';
+    else if (score >= 25) engagementLevel = 'medium';
+
+    gtag('set', 'user_properties', {
+      engagement_score: score,
+      engagement_level: engagementLevel,
+      pages_viewed_count: pagesViewed.length,
+    });
+
+    // Track milestone events for audience triggers
+    const milestones = [25, 50, 75, 100];
+    const reachedMilestones = JSON.parse(sessionStorage.getItem('aci_score_milestones') || '[]');
+
+    milestones.forEach(milestone => {
+      if (score >= milestone && !reachedMilestones.includes(milestone)) {
+        reachedMilestones.push(milestone);
+        sessionStorage.setItem('aci_score_milestones', JSON.stringify(reachedMilestones));
+
+        gtag('event', 'engagement_milestone', {
+          milestone_value: milestone,
+          engagement_level: engagementLevel,
+          pages_viewed: pagesViewed.length,
+        });
+      }
+    });
+
+    // Track "qualified visitor" - high engagement without conversion
+    if (score >= 40 && pagesViewed.length >= 3) {
+      const qualified = sessionStorage.getItem('aci_qualified_tracked');
+      if (!qualified) {
+        sessionStorage.setItem('aci_qualified_tracked', 'true');
+        gtag('event', 'qualified_visitor', {
+          engagement_score: score,
+          pages_viewed: pagesViewed.length,
+          services_viewed: pagesViewed.filter((p: string) => p.startsWith('/services/')).length,
+        });
+      }
+    }
+  }, []);
+
+  return null;
+}
+
 // Main GoogleAnalytics component
 export default function GoogleAnalytics() {
   return (
@@ -327,6 +452,7 @@ export default function GoogleAnalytics() {
       <ScrollDepthTracker />
       <TimeOnPageTracker />
       <CTAClickTracker />
+      <EngagementScoreTracker />
     </>
   );
 }
