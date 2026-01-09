@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Configure sharp for server-side image processing
+  serverExternalPackages: ['sharp'],
   images: {
     // Remote image patterns for external images
     remotePatterns: [

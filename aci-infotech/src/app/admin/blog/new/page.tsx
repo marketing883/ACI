@@ -1219,6 +1219,61 @@ export default function NewBlogPostPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Featured Image - First for visual prominence */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h3 className="font-semibold text-gray-900 mb-4">Featured Image</h3>
+              {featuredImage ? (
+                <div className="relative">
+                  <img src={featuredImage} alt="Featured" className="w-full h-40 object-cover rounded-lg" />
+                  <button
+                    onClick={() => setFeaturedImage('')}
+                    className="absolute top-2 right-2 p-1 bg-white rounded-full shadow hover:bg-gray-100"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <label
+                  className={`flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                    isDragging
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50'
+                  }`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                >
+                  {uploadingImage ? (
+                    <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+                  ) : (
+                    <Upload className="w-8 h-8 text-gray-400" />
+                  )}
+                  <span className="text-sm text-gray-600 text-center">
+                    {uploadingImage ? 'Uploading...' : 'Drag & drop or click to upload'}
+                  </span>
+                  <span className="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileInputChange}
+                    className="hidden"
+                    disabled={uploadingImage}
+                  />
+                </label>
+              )}
+              {/* URL input option */}
+              <div className="mt-3">
+                <p className="text-xs text-gray-500 mb-1">Or paste image URL:</p>
+                <input
+                  type="text"
+                  value={featuredImage}
+                  onChange={(e) => setFeaturedImage(e.target.value)}
+                  placeholder="https://example.com/image.jpg"
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
+                />
+              </div>
+            </div>
+
             {/* Post Settings */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h3 className="font-semibold text-gray-900 mb-4">Post Settings</h3>
@@ -1369,61 +1424,6 @@ export default function NewBlogPostPage() {
               </p>
             </div>
 
-            {/* Featured Image */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Featured Image</h3>
-              {featuredImage ? (
-                <div className="relative">
-                  <img src={featuredImage} alt="Featured" className="w-full h-40 object-cover rounded-lg" />
-                  <button
-                    onClick={() => setFeaturedImage('')}
-                    className="absolute top-2 right-2 p-1 bg-white rounded-full shadow hover:bg-gray-100"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ) : (
-                <label
-                  className={`flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
-                    isDragging
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50'
-                  }`}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                >
-                  {uploadingImage ? (
-                    <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-                  ) : (
-                    <Upload className="w-8 h-8 text-gray-400" />
-                  )}
-                  <span className="text-sm text-gray-600 text-center">
-                    {uploadingImage ? 'Uploading...' : 'Drag & drop or click to upload'}
-                  </span>
-                  <span className="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileInputChange}
-                    className="hidden"
-                    disabled={uploadingImage}
-                  />
-                </label>
-              )}
-              {/* URL input option */}
-              <div className="mt-3">
-                <p className="text-xs text-gray-500 mb-1">Or paste image URL:</p>
-                <input
-                  type="text"
-                  value={featuredImage}
-                  onChange={(e) => setFeaturedImage(e.target.value)}
-                  placeholder="https://example.com/image.jpg"
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-                />
-              </div>
-            </div>
-
             {/* Back Button */}
             <button
               onClick={() => setCurrentStep(2)}
@@ -1435,9 +1435,58 @@ export default function NewBlogPostPage() {
           </div>
         </div>
 
-        {/* Full-width Section: FAQ, SEO Settings, Content Quality */}
+        {/* Full-width Section: SEO Settings, FAQ, Content Quality */}
         <div className="mt-8 grid lg:grid-cols-3 gap-6">
-          {/* FAQ Section */}
+          {/* SEO Settings - First for essential metadata */}
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <h3 className="font-semibold text-gray-900 mb-4">SEO Settings</h3>
+
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">Meta Title</label>
+                <button
+                  onClick={() => generateWithAI('meta_title')}
+                  disabled={isGenerating}
+                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                  title="Generate with AI"
+                >
+                  {generatingField === 'meta_title' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+              <input
+                type="text"
+                value={metaTitle}
+                onChange={(e) => setMetaTitle(e.target.value)}
+                placeholder={title || 'SEO optimized title...'}
+                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
+              />
+              <p className="text-xs text-gray-400 mt-1">{(metaTitle || title).length}/60</p>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">Meta Description</label>
+                <button
+                  onClick={() => generateWithAI('meta_description')}
+                  disabled={isGenerating}
+                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                  title="Generate with AI"
+                >
+                  {generatingField === 'meta_description' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+              <textarea
+                value={metaDescription}
+                onChange={(e) => setMetaDescription(e.target.value)}
+                placeholder={excerpt || 'SEO optimized description...'}
+                rows={3}
+                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] resize-none"
+              />
+              <p className="text-xs text-gray-400 mt-1">{(metaDescription || excerpt).length}/160</p>
+            </div>
+          </div>
+
+          {/* FAQ Section - More space for multiple Q&As */}
           <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-900 flex items-center gap-2">
@@ -1500,55 +1549,6 @@ export default function NewBlogPostPage() {
               <Plus className="w-4 h-4" />
               Add FAQ
             </button>
-          </div>
-
-          {/* SEO Settings */}
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">SEO Settings</h3>
-
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-medium text-gray-700">Meta Title</label>
-                <button
-                  onClick={() => generateWithAI('meta_title')}
-                  disabled={isGenerating}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
-                  title="Generate with AI"
-                >
-                  {generatingField === 'meta_title' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                </button>
-              </div>
-              <input
-                type="text"
-                value={metaTitle}
-                onChange={(e) => setMetaTitle(e.target.value)}
-                placeholder={title || 'SEO optimized title...'}
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-              />
-              <p className="text-xs text-gray-400 mt-1">{(metaTitle || title).length}/60</p>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-medium text-gray-700">Meta Description</label>
-                <button
-                  onClick={() => generateWithAI('meta_description')}
-                  disabled={isGenerating}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
-                  title="Generate with AI"
-                >
-                  {generatingField === 'meta_description' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                </button>
-              </div>
-              <textarea
-                value={metaDescription}
-                onChange={(e) => setMetaDescription(e.target.value)}
-                placeholder={excerpt || 'SEO optimized description...'}
-                rows={3}
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] resize-none"
-              />
-              <p className="text-xs text-gray-400 mt-1">{(metaDescription || excerpt).length}/160</p>
-            </div>
           </div>
 
           {/* SEO/AEO/GEO Quality Assessment - Full Width */}

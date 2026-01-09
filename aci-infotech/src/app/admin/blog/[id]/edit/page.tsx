@@ -769,60 +769,7 @@ export default function EditBlogPage() {
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* SEO Panel */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              SEO Analysis
-            </h3>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Target Keyword
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={targetKeyword}
-                    onChange={(e) => setTargetKeyword(e.target.value)}
-                    placeholder="e.g., data mesh architecture"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                  />
-                  <button
-                    onClick={fetchSEOData}
-                    disabled={loadingSEO || !targetKeyword}
-                    className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                  >
-                    {loadingSEO ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              {seoData && (
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <p className="text-xs text-gray-500">Search Volume</p>
-                    <p className="font-bold text-lg">{seoData.search_volume.toLocaleString()}</p>
-                  </div>
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <p className="text-xs text-gray-500">Difficulty</p>
-                    <p className="font-bold text-lg">{seoData.difficulty}/100</p>
-                  </div>
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <p className="text-xs text-gray-500">CPC</p>
-                    <p className="font-bold text-lg">${seoData.cpc.toFixed(2)}</p>
-                  </div>
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <p className="text-xs text-gray-500">Competition</p>
-                    <p className="font-bold text-lg">{(seoData.competition * 100).toFixed(0)}%</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Featured Image */}
+          {/* Featured Image - First for visual prominence */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h3 className="font-semibold mb-4">Featured Image</h3>
 
@@ -880,6 +827,59 @@ export default function EditBlogPage() {
                 placeholder="https://example.com/image.jpg"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
               />
+            </div>
+          </div>
+
+          {/* SEO Analysis - Keyword Research */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              SEO Analysis
+            </h3>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Target Keyword
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={targetKeyword}
+                    onChange={(e) => setTargetKeyword(e.target.value)}
+                    placeholder="e.g., data mesh architecture"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  />
+                  <button
+                    onClick={fetchSEOData}
+                    disabled={loadingSEO || !targetKeyword}
+                    className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {loadingSEO ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {seoData && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500">Search Volume</p>
+                    <p className="font-bold text-lg">{seoData.search_volume.toLocaleString()}</p>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500">Difficulty</p>
+                    <p className="font-bold text-lg">{seoData.difficulty}/100</p>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500">CPC</p>
+                    <p className="font-bold text-lg">${seoData.cpc.toFixed(2)}</p>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500">Competition</p>
+                    <p className="font-bold text-lg">{(seoData.competition * 100).toFixed(0)}%</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -1031,9 +1031,60 @@ export default function EditBlogPage() {
         </div>
       </div>
 
-      {/* Full-width Section: FAQ, SEO Settings, Content Quality */}
+      {/* Full-width Section: SEO Settings, FAQ, Content Quality */}
       <div className="mt-8 grid lg:grid-cols-3 gap-6">
-        {/* FAQ Section */}
+        {/* SEO Settings - First for essential metadata */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h3 className="font-semibold mb-4">SEO Settings</h3>
+
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium text-gray-700">Meta Title</label>
+                <button
+                  onClick={() => generateContent('meta_title')}
+                  disabled={generating === 'meta_title'}
+                  className="w-6 h-6 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                  title="Generate with AI"
+                >
+                  {generating === 'meta_title' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                </button>
+              </div>
+              <input
+                type="text"
+                value={metaTitle}
+                onChange={(e) => setMetaTitle(e.target.value)}
+                placeholder={title}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              />
+              <p className="text-xs text-gray-500 mt-1">{(metaTitle || title).length}/60</p>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium text-gray-700">Meta Description</label>
+                <button
+                  onClick={() => generateContent('meta_description')}
+                  disabled={generating === 'meta_description'}
+                  className="w-6 h-6 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                  title="Generate with AI"
+                >
+                  {generating === 'meta_description' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                </button>
+              </div>
+              <textarea
+                value={metaDescription}
+                onChange={(e) => setMetaDescription(e.target.value)}
+                placeholder={excerpt?.substring(0, 160)}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              />
+              <p className="text-xs text-gray-500 mt-1">{(metaDescription || excerpt?.substring(0, 160) || '').length}/160</p>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ Section - More space for multiple Q&As */}
         <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold flex items-center gap-2">
@@ -1096,57 +1147,6 @@ export default function EditBlogPage() {
             <Plus className="w-4 h-4" />
             Add FAQ
           </button>
-        </div>
-
-        {/* SEO Settings */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h3 className="font-semibold mb-4">SEO Settings</h3>
-
-          <div className="space-y-4">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-sm font-medium text-gray-700">Meta Title</label>
-                <button
-                  onClick={() => generateContent('meta_title')}
-                  disabled={generating === 'meta_title'}
-                  className="w-6 h-6 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
-                  title="Generate with AI"
-                >
-                  {generating === 'meta_title' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                </button>
-              </div>
-              <input
-                type="text"
-                value={metaTitle}
-                onChange={(e) => setMetaTitle(e.target.value)}
-                placeholder={title}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-              />
-              <p className="text-xs text-gray-500 mt-1">{(metaTitle || title).length}/60</p>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-sm font-medium text-gray-700">Meta Description</label>
-                <button
-                  onClick={() => generateContent('meta_description')}
-                  disabled={generating === 'meta_description'}
-                  className="w-6 h-6 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
-                  title="Generate with AI"
-                >
-                  {generating === 'meta_description' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                </button>
-              </div>
-              <textarea
-                value={metaDescription}
-                onChange={(e) => setMetaDescription(e.target.value)}
-                placeholder={excerpt?.substring(0, 160)}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-              />
-              <p className="text-xs text-gray-500 mt-1">{(metaDescription || excerpt?.substring(0, 160) || '').length}/160</p>
-            </div>
-          </div>
         </div>
 
         {/* SEO/AEO/GEO Quality Assessment - Full Width */}
