@@ -23,6 +23,7 @@ import {
   Upload,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import SEOAssessment from '@/components/admin/SEOAssessment';
 
 interface SEOData {
   search_volume: number;
@@ -765,6 +766,18 @@ export default function EditBlogPage() {
               </div>
             </div>
           </div>
+
+          {/* SEO/AEO/GEO Quality Assessment */}
+          <SEOAssessment
+            title={title}
+            metaDescription={metaDescription || excerpt}
+            content={content}
+            slug={slug}
+            category={category}
+            tags={tags.split(',').map(t => t.trim()).filter(Boolean)}
+            featuredImage={featuredImage}
+            author={authorName}
+          />
         </div>
       </div>
     </div>

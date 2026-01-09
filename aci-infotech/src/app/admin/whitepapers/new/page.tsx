@@ -14,6 +14,7 @@ import {
   X,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import SEOAssessment from '@/components/admin/SEOAssessment';
 
 const categories = [
   'Data & Analytics',
@@ -555,6 +556,17 @@ export default function NewWhitepaperPage() {
             </div>
           </div>
         </div>
+
+        {/* SEO/AEO/GEO Quality Assessment */}
+        <SEOAssessment
+          title={title}
+          metaDescription={metaDescription || description}
+          content={description}
+          slug={slug}
+          category={category}
+          tags={tags.split(',').map(t => t.trim()).filter(Boolean)}
+          featuredImage={coverImage}
+        />
       </div>
     </div>
   );

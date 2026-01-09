@@ -14,6 +14,7 @@ import {
   Plus,
   Trash2,
 } from 'lucide-react';
+import SEOAssessment from '@/components/admin/SEOAssessment';
 
 const industries = [
   'Financial Services',
@@ -885,6 +886,17 @@ export default function NewCaseStudyPage() {
             </div>
           </div>
         </div>
+
+        {/* SEO/AEO/GEO Quality Assessment */}
+        <SEOAssessment
+          title={title}
+          metaDescription={metaDescription || excerpt}
+          content={`${challenge}\n\n${solution}\n\n${results}`}
+          slug={slug}
+          category={clientIndustry}
+          featuredImage={featuredImage}
+          author={clientName}
+        />
       </div>
     </div>
   );

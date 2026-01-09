@@ -32,6 +32,7 @@ import {
   Upload,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import SEOAssessment from '@/components/admin/SEOAssessment';
 
 // Types
 interface KeywordData {
@@ -1111,6 +1112,18 @@ export default function NewBlogPostPage() {
                 <p className="text-xs text-gray-400 mt-1">{(metaDescription || excerpt).length}/160</p>
               </div>
             </div>
+
+            {/* SEO/AEO/GEO Quality Assessment */}
+            <SEOAssessment
+              title={title}
+              metaDescription={metaDescription || excerpt}
+              content={content}
+              slug={slug}
+              category={category}
+              tags={tags}
+              featuredImage={featuredImage}
+              author={author}
+            />
 
             {/* Featured Image */}
             <div className="bg-white rounded-xl shadow-sm p-6">
