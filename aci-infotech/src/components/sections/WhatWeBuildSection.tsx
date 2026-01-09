@@ -187,7 +187,7 @@ function ServiceNode({ service, isHovered, isDirectlyHovered, hoveredId, onHover
         </div>
 
         {/* Name */}
-        <h3 className={`font-semibold text-[#0A1628] leading-tight mb-2 text-[24px]`}>
+        <h3 className={`font-semibold text-[#0A1628] leading-tight mb-2 text-[16px]`}>
           {service.shortName}
         </h3>
 
