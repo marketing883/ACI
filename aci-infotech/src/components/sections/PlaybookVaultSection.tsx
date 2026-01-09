@@ -596,9 +596,18 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
                 <div
                   className={`
                     w-12 h-12 rounded-sm flex items-center justify-center
-                    bg-gradient-to-br ${playbook.gradient}
                     shadow-lg transform group-hover:scale-110 transition-transform duration-300
                   `}
+                  style={{
+                    background: playbook.gradient.includes('violet') ? 'linear-gradient(135deg, #8B5CF6, #9333EA)' :
+                               playbook.gradient.includes('cyan') ? 'linear-gradient(135deg, #06B6D4, #2563EB)' :
+                               playbook.gradient.includes('emerald') ? 'linear-gradient(135deg, #10B981, #0D9488)' :
+                               playbook.gradient.includes('amber') ? 'linear-gradient(135deg, #F59E0B, #EA580C)' :
+                               playbook.gradient.includes('rose') ? 'linear-gradient(135deg, #F43F5E, #EC4899)' :
+                               playbook.gradient.includes('lime') ? 'linear-gradient(135deg, #84CC16, #16A34A)' :
+                               playbook.gradient.includes('blue') ? 'linear-gradient(135deg, #3B82F6, #4F46E5)' :
+                               'linear-gradient(135deg, #D946EF, #9333EA)',
+                  }}
                 >
                   <IconComponent className="w-6 h-6 text-white" strokeWidth={1.5} />
                 </div>
@@ -608,7 +617,7 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
               <span className="text-[#C4FF61] font-mono text-sm font-bold">
                 {playbook.deployments}x
               </span>
-              <span className="text-white/40 text-xs">deployed</span>
+              <span className="text-white/60 text-xs">deployed</span>
             </div>
           </div>
 
@@ -625,7 +634,7 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
                 className="px-2 py-1 rounded-md bg-white/5 border border-white/10"
               >
                 <span className="text-[#C4FF61] font-mono text-xs font-bold">{outcome.metric}</span>
-                <span className="text-white/40 text-[10px] ml-1">{outcome.description}</span>
+                <span className="text-white/70 text-[10px] ml-1">{outcome.description}</span>
               </div>
             ))}
           </div>
@@ -641,7 +650,7 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
               </span>
             ))}
             {playbook.architecture.length > 3 && (
-              <span className="px-2 py-0.5 rounded text-[10px] text-white/40">
+              <span className="px-2 py-0.5 rounded text-[10px] text-white/60">
                 +{playbook.architecture.length - 3}
               </span>
             )}
@@ -649,10 +658,10 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
 
           {/* CTA indicator */}
           <div className="flex items-center justify-between pt-4 border-t border-white/10">
-            <span className="text-white/50 text-xs group-hover:text-white/70 transition-colors">
+            <span className="text-white/70 text-xs group-hover:text-white transition-colors">
               Explore playbook
             </span>
-            <ArrowRight className="w-4 h-4 text-white/30 group-hover:text-[#C4FF61] group-hover:translate-x-1 transition-all duration-300" />
+            <ArrowRight className="w-4 h-4 text-white/50 group-hover:text-[#C4FF61] group-hover:translate-x-1 transition-all duration-300" />
           </div>
         </div>
 
@@ -773,11 +782,17 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
               const IconComponent = IconMap[playbook.iconType];
               return (
                 <div
-                  className={`
-                    w-16 h-16 rounded-sm flex items-center justify-center
-                    bg-gradient-to-br ${playbook.gradient}
-                    shadow-2xl
-                  `}
+                  className="w-16 h-16 rounded-sm flex items-center justify-center shadow-2xl"
+                  style={{
+                    background: playbook.gradient.includes('violet') ? 'linear-gradient(135deg, #8B5CF6, #9333EA)' :
+                               playbook.gradient.includes('cyan') ? 'linear-gradient(135deg, #06B6D4, #2563EB)' :
+                               playbook.gradient.includes('emerald') ? 'linear-gradient(135deg, #10B981, #0D9488)' :
+                               playbook.gradient.includes('amber') ? 'linear-gradient(135deg, #F59E0B, #EA580C)' :
+                               playbook.gradient.includes('rose') ? 'linear-gradient(135deg, #F43F5E, #EC4899)' :
+                               playbook.gradient.includes('lime') ? 'linear-gradient(135deg, #84CC16, #16A34A)' :
+                               playbook.gradient.includes('blue') ? 'linear-gradient(135deg, #3B82F6, #4F46E5)' :
+                               'linear-gradient(135deg, #D946EF, #9333EA)',
+                  }}
                 >
                   <IconComponent className="w-8 h-8 text-white" strokeWidth={1.5} />
                 </div>
