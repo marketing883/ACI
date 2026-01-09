@@ -30,6 +30,10 @@ import {
   Eye,
   Edit3,
   Upload,
+  Plus,
+  Trash2,
+  HelpCircle,
+  User,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import SEOAssessment from '@/components/admin/SEOAssessment';
@@ -46,6 +50,20 @@ interface KeywordData {
   relatedKeywords: { keyword: string; volume: number }[];
   questionsAsked: string[];
   competitorArticles: { title: string; domain: string }[];
+}
+
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
+interface AuthorInfo {
+  name: string;
+  title: string;
+  bio: string;
+  avatar: string;
+  linkedin: string;
+  twitter: string;
 }
 
 // Constants
@@ -98,6 +116,30 @@ const INCLUDE_OPTIONS = [
   { id: 'links', label: 'Internal Links' },
 ];
 
+const ARTICLE_TYPES = [
+  { id: 'how-to', label: 'How-To Guide', description: 'Step-by-step instructions to accomplish a task', icon: '📋' },
+  { id: 'listicle', label: 'Listicle', description: 'Numbered list of tips, tools, or best practices', icon: '📝' },
+  { id: 'industry-analysis', label: 'Industry Analysis', description: 'In-depth market trends and insights', icon: '📊' },
+  { id: 'thought-leadership', label: 'Thought Leadership', description: 'Expert perspectives and forward-thinking ideas', icon: '💡' },
+  { id: 'case-study', label: 'Case Study', description: 'Real-world implementation story with results', icon: '🏆' },
+  { id: 'comparison', label: 'Comparison/Versus', description: 'Side-by-side analysis of tools or approaches', icon: '⚖️' },
+  { id: 'explainer', label: 'Explainer/What Is', description: 'Educational content explaining concepts', icon: '🎓' },
+  { id: 'news-commentary', label: 'News & Commentary', description: 'Analysis of recent industry developments', icon: '📰' },
+  { id: 'ultimate-guide', label: 'Ultimate Guide', description: 'Comprehensive resource on a topic', icon: '📚' },
+  { id: 'interview', label: 'Interview/Q&A', description: 'Expert interview or Q&A format', icon: '🎤' },
+];
+
+const DEFAULT_AUTHORS: AuthorInfo[] = [
+  {
+    name: 'ACI Team',
+    title: 'Engineering Excellence',
+    bio: 'The ACI Infotech team brings decades of combined experience in enterprise data engineering, AI/ML, and cloud architecture.',
+    avatar: '/images/team/aci-team.png',
+    linkedin: 'https://linkedin.com/company/aci-infotech',
+    twitter: '',
+  },
+];
+
 export default function NewBlogPostPage() {
   const router = useRouter();
 
@@ -115,6 +157,7 @@ export default function NewBlogPostPage() {
   const [tone, setTone] = useState('authoritative');
   const [includes, setIncludes] = useState<string[]>(['statistics', 'tips', 'faq']);
   const [customAudience, setCustomAudience] = useState('');
+  const [articleType, setArticleType] = useState('how-to');
 
   // Step 3 & Form state
   const [title, setTitle] = useState('');
@@ -124,11 +167,18 @@ export default function NewBlogPostPage() {
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
-  const [author, setAuthor] = useState('ACI Team');
   const [featuredImage, setFeaturedImage] = useState('');
   const [isFeatured, setIsFeatured] = useState(false);
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
+
+  // Author info
+  const [authorInfo, setAuthorInfo] = useState<AuthorInfo>(DEFAULT_AUTHORS[0]);
+  const [showCustomAuthor, setShowCustomAuthor] = useState(false);
+
+  // FAQs
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [generatingFaqs, setGeneratingFaqs] = useState(false);
 
   // UI state
   const [isSaving, setIsSaving] = useState(false);
@@ -200,6 +250,8 @@ export default function NewBlogPostPage() {
             tone: selectedTone?.label,
             length: selectedLength?.words,
             includes: includes.join(', '),
+            articleType: ARTICLE_TYPES.find(t => t.id === articleType)?.label || articleType,
+            authorName: authorInfo.name,
           },
         }),
       });
@@ -257,6 +309,60 @@ export default function NewBlogPostPage() {
 
   function removeTag(tagToRemove: string) {
     setTags(tags.filter(t => t !== tagToRemove));
+  }
+
+  // FAQ Management
+  function addFaq() {
+    setFaqs([...faqs, { question: '', answer: '' }]);
+  }
+
+  function updateFaq(index: number, field: 'question' | 'answer', value: string) {
+    const updated = [...faqs];
+    updated[index][field] = value;
+    setFaqs(updated);
+  }
+
+  function removeFaq(index: number) {
+    setFaqs(faqs.filter((_, i) => i !== index));
+  }
+
+  async function generateFaqs() {
+    if (!title && !content) {
+      alert('Please add a title or content first');
+      return;
+    }
+
+    setGeneratingFaqs(true);
+    try {
+      const response = await fetch('/api/admin/content-generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'blog',
+          field: 'faqs',
+          context: {
+            keyword: keywordData?.keyword || keyword || title,
+            title,
+            content,
+            category,
+            articleType,
+            existingFaqs: faqs,
+          },
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const generated = data.faqs || data.content;
+        if (Array.isArray(generated)) {
+          setFaqs([...faqs, ...generated]);
+        }
+      }
+    } catch (error) {
+      console.error('Error generating FAQs:', error);
+    } finally {
+      setGeneratingFaqs(false);
+    }
   }
 
   // Insert formatting
@@ -424,7 +530,12 @@ export default function NewBlogPostPage() {
         content,
         category,
         tags,
-        author_name: author,
+        author_name: authorInfo.name,
+        author_title: authorInfo.title,
+        author_bio: authorInfo.bio,
+        author_avatar: authorInfo.avatar,
+        author_linkedin: authorInfo.linkedin,
+        author_twitter: authorInfo.twitter,
         featured_image: featuredImage || null,
         status: publish ? 'published' : 'draft',
         is_featured: isFeatured,
@@ -432,6 +543,8 @@ export default function NewBlogPostPage() {
         read_time_minutes: Math.ceil(content.split(/\s+/).length / 200),
         meta_title: metaTitle || title,
         meta_description: metaDescription || excerpt,
+        article_type: articleType,
+        faqs: faqs.filter(f => f.question && f.answer),
       };
 
       // Use server-side API to bypass RLS
@@ -682,6 +795,32 @@ export default function NewBlogPostPage() {
           <div className="flex items-center gap-2 mb-6">
             <Settings className="w-5 h-5 text-gray-500" />
             <h2 className="text-lg font-semibold">Step 2: Content Settings</h2>
+          </div>
+
+          {/* Article Type */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-3">Article Type</label>
+            <div className="grid grid-cols-2 gap-2">
+              {ARTICLE_TYPES.map((type) => (
+                <button
+                  key={type.id}
+                  onClick={() => setArticleType(type.id)}
+                  className={`flex items-start gap-2 p-3 rounded-lg text-left transition-colors ${
+                    articleType === type.id
+                      ? 'bg-[var(--aci-primary)] text-white'
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  <span className="text-lg">{type.icon}</span>
+                  <div>
+                    <p className="font-medium text-sm">{type.label}</p>
+                    <p className={`text-xs ${articleType === type.id ? 'text-blue-100' : 'text-gray-500'}`}>
+                      {type.description}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Target Audience */}
@@ -1041,17 +1180,6 @@ export default function NewBlogPostPage() {
                 />
               </div>
 
-              {/* Author */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Author</label>
-                <input
-                  type="text"
-                  value={author}
-                  onChange={(e) => setAuthor(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-                />
-              </div>
-
               {/* Featured */}
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
@@ -1062,6 +1190,102 @@ export default function NewBlogPostPage() {
                 />
                 <span className="text-sm text-gray-700">Featured post</span>
               </label>
+            </div>
+
+            {/* Author Info */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Author
+                </h3>
+                <button
+                  onClick={() => setShowCustomAuthor(!showCustomAuthor)}
+                  className="text-sm text-[var(--aci-primary)] hover:underline"
+                >
+                  {showCustomAuthor ? 'Use default' : 'Custom author'}
+                </button>
+              </div>
+
+              {!showCustomAuthor ? (
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="w-10 h-10 bg-[var(--aci-primary)] rounded-full flex items-center justify-center text-white font-bold">
+                    {authorInfo.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">{authorInfo.name}</p>
+                    <p className="text-sm text-gray-500">{authorInfo.title}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Name *</label>
+                    <input
+                      type="text"
+                      value={authorInfo.name}
+                      onChange={(e) => setAuthorInfo({ ...authorInfo, name: e.target.value })}
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg"
+                      placeholder="Author name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Title/Role</label>
+                    <input
+                      type="text"
+                      value={authorInfo.title}
+                      onChange={(e) => setAuthorInfo({ ...authorInfo, title: e.target.value })}
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg"
+                      placeholder="e.g., Senior Data Architect"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Bio</label>
+                    <textarea
+                      value={authorInfo.bio}
+                      onChange={(e) => setAuthorInfo({ ...authorInfo, bio: e.target.value })}
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg resize-none"
+                      rows={3}
+                      placeholder="Short author bio for E-E-A-T signals..."
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">LinkedIn</label>
+                      <input
+                        type="url"
+                        value={authorInfo.linkedin}
+                        onChange={(e) => setAuthorInfo({ ...authorInfo, linkedin: e.target.value })}
+                        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg"
+                        placeholder="LinkedIn URL"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Twitter/X</label>
+                      <input
+                        type="url"
+                        value={authorInfo.twitter}
+                        onChange={(e) => setAuthorInfo({ ...authorInfo, twitter: e.target.value })}
+                        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg"
+                        placeholder="Twitter URL"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Avatar URL</label>
+                    <input
+                      type="url"
+                      value={authorInfo.avatar}
+                      onChange={(e) => setAuthorInfo({ ...authorInfo, avatar: e.target.value })}
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg"
+                      placeholder="Profile image URL"
+                    />
+                  </div>
+                </div>
+              )}
+              <p className="text-xs text-gray-500 mt-3">
+                Author attribution improves E-E-A-T and AI citation likelihood.
+              </p>
             </div>
 
             {/* SEO Settings */}
@@ -1117,13 +1341,78 @@ export default function NewBlogPostPage() {
             <SEOAssessment
               title={title}
               metaDescription={metaDescription || excerpt}
-              content={content}
+              content={content + '\n\n' + faqs.map(f => `Q: ${f.question}\nA: ${f.answer}`).join('\n\n')}
               slug={slug}
               category={category}
               tags={tags}
               featuredImage={featuredImage}
-              author={author}
+              author={authorInfo.name}
             />
+
+            {/* FAQ Section */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <HelpCircle className="w-4 h-4" />
+                  FAQ Section
+                </h3>
+                <button
+                  onClick={generateFaqs}
+                  disabled={generatingFaqs}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-lg shadow-sm disabled:opacity-50"
+                >
+                  {generatingFaqs ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-3.5 h-3.5" />
+                  )}
+                  Generate FAQs
+                </button>
+              </div>
+
+              <p className="text-xs text-gray-500 mb-4">
+                FAQ sections improve featured snippet eligibility and AEO performance.
+              </p>
+
+              <div className="space-y-4">
+                {faqs.map((faq, index) => (
+                  <div key={index} className="p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-start justify-between mb-2">
+                      <label className="block text-xs font-medium text-gray-600">Question {index + 1}</label>
+                      <button
+                        onClick={() => removeFaq(index)}
+                        className="p-1 text-gray-400 hover:text-red-500"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      value={faq.question}
+                      onChange={(e) => updateFaq(index, 'question', e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg mb-2"
+                      placeholder="What is...? How do I...? Why should...?"
+                    />
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Answer</label>
+                    <textarea
+                      value={faq.answer}
+                      onChange={(e) => updateFaq(index, 'answer', e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg resize-none"
+                      rows={3}
+                      placeholder="Provide a clear, concise answer (40-60 words ideal for snippets)..."
+                    />
+                  </div>
+                ))}
+
+                <button
+                  onClick={addFaq}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-[var(--aci-primary)] hover:text-[var(--aci-primary)] transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add FAQ
+                </button>
+              </div>
+            </div>
 
             {/* Featured Image */}
             <div className="bg-white rounded-xl shadow-sm p-6">
