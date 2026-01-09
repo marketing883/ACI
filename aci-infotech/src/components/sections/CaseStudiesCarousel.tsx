@@ -202,7 +202,7 @@ export default function CaseStudiesCarousel({
         <div className="absolute inset-0">
           <Image
             src="/images/case-studies-bg.jpg"
-            alt=""
+            alt="ACI Infotech enterprise data transformation case studies background"
             fill
             className="object-cover"
             priority

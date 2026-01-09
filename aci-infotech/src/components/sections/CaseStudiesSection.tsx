@@ -59,7 +59,7 @@ export default function CaseStudiesSection({
                   {study.logo_url ? (
                     <Image
                       src={study.logo_url}
-                      alt={study.client}
+                      alt={`${study.client} logo - ${study.title} case study`}
                       width={100}
                       height={40}
                       className="object-contain brightness-0 invert opacity-70"
