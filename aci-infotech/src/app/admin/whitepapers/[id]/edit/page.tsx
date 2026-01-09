@@ -241,6 +241,7 @@ export default function EditWhitepaperPage() {
 
     try {
       const whitepaperData: Record<string, unknown> = {
+        id: whitepapershipId,
         title,
         slug,
         description,
@@ -260,20 +261,18 @@ export default function EditWhitepaperPage() {
         whitepaperData.published_at = new Date().toISOString();
       }
 
-      // If setting as featured, unfeature all others first
-      if (featured) {
-        await supabase
-          .from('whitepapers')
-          .update({ featured: false })
-          .neq('id', whitepapershipId);
+      // Use server-side API to bypass RLS
+      const response = await fetch('/api/admin/whitepapers', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(whitepaperData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to update whitepaper');
       }
-
-      const { error } = await supabase
-        .from('whitepapers')
-        .update(whitepaperData)
-        .eq('id', whitepapershipId);
-
-      if (error) throw error;
 
       router.push('/admin/whitepapers');
     } catch (error) {

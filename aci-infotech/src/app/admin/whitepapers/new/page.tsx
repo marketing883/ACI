@@ -202,11 +202,18 @@ export default function NewWhitepaperPage() {
         download_count: 0,
       };
 
-      const { error } = await supabase
-        .from('whitepapers')
-        .insert(whitepaperData);
+      // Use server-side API to bypass RLS
+      const response = await fetch('/api/admin/whitepapers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(whitepaperData),
+      });
 
-      if (error) throw error;
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to save whitepaper');
+      }
 
       router.push('/admin/whitepapers');
     } catch (error) {
