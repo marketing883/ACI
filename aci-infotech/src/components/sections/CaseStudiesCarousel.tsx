@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, BookOpen, Quote } from 'lucide-react';
 
+// Note: Image import kept for background image usage
+
 interface CaseStudyMetric {
   value: string;
   label: string;
@@ -14,8 +16,7 @@ interface CaseStudyMetric {
 interface CaseStudy {
   id: string;
   slug: string;
-  client_name: string;
-  client_logo?: string;
+  title: string; // Short, impactful headline for the case study
   client_industry: string;
   challenge: string;
   metrics: CaseStudyMetric[];
@@ -61,21 +62,10 @@ function CaseStudyCard({ study }: { study: CaseStudy }) {
           {/* Card Header - Compact */}
           <div className="p-4 md:p-5 border-b border-gray-700/50">
             <div className="flex items-center justify-between gap-4 mb-3">
-              <div className="flex items-center gap-3">
-                {study.client_logo ? (
-                  <div className="relative w-16 h-10 bg-white/10 rounded-sm p-1.5">
-                    <Image
-                      src={study.client_logo}
-                      alt={study.client_name}
-                      fill
-                      className="object-contain brightness-0 invert opacity-90"
-                    />
-                  </div>
-                ) : (
-                  <span className="text-xl font-bold text-white">{study.client_name}</span>
-                )}
-              </div>
-              <span className="text-xs text-gray-400 bg-gray-800/50 px-2 py-1 rounded-sm">
+              <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">
+                {study.title}
+              </h3>
+              <span className="text-xs text-gray-400 bg-gray-800/50 px-2 py-1 rounded-sm flex-shrink-0">
                 {study.client_industry}
               </span>
             </div>

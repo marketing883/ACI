@@ -49,13 +49,12 @@ async function getFeaturedCaseStudies(limit: number = 6) {
   return data || [];
 }
 
-// Placeholder data with the new content structure
+// Placeholder data with impactful titles (no client names/logos)
 const placeholderCaseStudies = [
   {
     id: '1',
-    slug: 'msci-data-automation',
-    client_name: 'MSCI',
-    client_logo: '/images/clients/msci-logo.svg',
+    slug: 'post-acquisition-consolidation',
+    title: '$12M Saved in Year One',
     client_industry: 'Financial Services',
     challenge: '40+ finance systems. Post-acquisition chaos. Manual reconciliation eating 200 hours/month.',
     metrics: [
@@ -66,16 +65,15 @@ const placeholderCaseStudies = [
     ],
     technologies: ['SAP S/4HANA', 'Python', 'Azure DevOps'],
     services: ['Data Engineering', 'Enterprise Integration'],
-    testimonial_quote: 'ACI transformed our post-acquisition chaos into a unified, efficient system.',
-    playbook_used: 'Multi-Location Playbook',
-    playbook_count: 47,
+    testimonial_quote: 'They transformed our post-acquisition chaos into a unified, efficient system.',
+    playbook_used: 'Post-Acquisition Playbook',
+    playbook_count: 23,
     cta_text: 'See How It Worked',
   },
   {
     id: '2',
-    slug: 'racetrac-martech',
-    client_name: 'RaceTrac',
-    client_logo: '/images/clients/racetrac-logo.svg',
+    slug: 'real-time-retail-data',
+    title: '600 Locations, Zero Downtime',
     client_industry: 'Retail / Convenience',
     challenge: '600 locations. 18-hour data lag. Marketing flying blind on customer behavior.',
     metrics: [
@@ -86,16 +84,15 @@ const placeholderCaseStudies = [
     ],
     technologies: ['Salesforce', 'Braze', 'AWS'],
     services: ['MarTech & CDP', 'Data Engineering'],
-    testimonial_quote: "They've flawlessly delivered top-tier Digital Data, marking a critical milestone for RaceTrac.",
-    playbook_used: 'Retail MarTech Playbook',
-    playbook_count: 34,
+    testimonial_quote: "They've flawlessly delivered top-tier Digital Data, marking a critical milestone.",
+    playbook_used: 'Multi-Location Playbook',
+    playbook_count: 47,
     cta_text: 'See the Impact',
   },
   {
     id: '3',
-    slug: 'sodexo-unified-data',
-    client_name: 'Sodexo',
-    client_logo: '/images/clients/sodexo-logo.svg',
+    slug: 'global-data-unification',
+    title: '55 Countries, One Truth',
     client_industry: 'Hospitality',
     challenge: '55 countries. Regional data silos. Reporting took 3 weeks of manual work.',
     metrics: [
@@ -107,8 +104,8 @@ const placeholderCaseStudies = [
     technologies: ['Informatica IICS', 'MDM', 'Cloud Integration'],
     services: ['Data Engineering', 'Cloud Modernization'],
     testimonial_quote: 'Their commitment to deliverables without compromising quality is impressive.',
-    playbook_used: 'Global Data Unification Playbook',
-    playbook_count: 22,
+    playbook_used: 'Global Unification Playbook',
+    playbook_count: 31,
     cta_text: 'See the System',
   },
 ];
@@ -131,8 +128,7 @@ export default async function DynamicCaseStudiesSection({
     ? dbCaseStudies.map((cs: CaseStudyDB) => ({
         id: cs.id,
         slug: cs.slug,
-        client_name: cs.client_name,
-        client_logo: cs.client_logo || undefined,
+        title: cs.title, // Use the title field from CMS
         client_industry: cs.client_industry || '',
         challenge: cs.challenge || '',
         metrics: cs.metrics || [],
