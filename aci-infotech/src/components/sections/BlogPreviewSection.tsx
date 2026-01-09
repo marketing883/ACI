@@ -213,29 +213,36 @@ function FeaturedWhitepaperCard({
   whitepaper: Whitepaper;
   onDownloadClick: () => void;
 }) {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <div className="bg-gradient-to-br from-[var(--aci-secondary)] to-[#0a2540] rounded-xl overflow-hidden h-full flex flex-col">
       {/* Cover Image */}
-      {whitepaper.cover_image && (
-        <div className="relative h-40 bg-[#0a2540]">
+      <div className="relative h-40 bg-[#0a2540]">
+        {whitepaper.cover_image && !imageError ? (
           <Image
             src={whitepaper.cover_image}
             alt={whitepaper.title}
             fill
             className="object-cover opacity-80"
+            onError={() => setImageError(true)}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--aci-secondary)]" />
-        </div>
-      )}
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[var(--aci-primary)] to-blue-700">
+            <FileText className="w-16 h-16 text-white/30" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--aci-secondary)]" />
+      </div>
 
       {/* Content */}
-      <div className="p-6 flex flex-col flex-grow text-white">
+      <div className="p-6 flex flex-col flex-grow">
         <div className="flex-grow">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs font-medium mb-4 text-white">
             <FileText className="w-4 h-4" />
             Featured Whitepaper
           </div>
-          <h3 className="text-xl font-bold mb-3">
+          <h3 className="text-xl font-bold mb-3 text-white">
             {whitepaper.title}
           </h3>
           <p className="text-gray-300 text-sm line-clamp-3">

@@ -6,25 +6,10 @@ import Link from 'next/link';
 import { Download, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
-// Whitepaper data for display
-const whitepaperInfo: Record<string, { title: string; description: string }> = {
-  'enterprise-data-strategy-2025': {
-    title: 'Enterprise Data Strategy 2025',
-    description: 'A comprehensive guide to building resilient, AI-ready data platforms.',
-  },
-  'ai-governance-playbook': {
-    title: 'AI Governance Playbook',
-    description: 'How to scale AI responsibly with policy-as-code and observability.',
-  },
-  'cloud-migration-blueprint': {
-    title: 'Cloud Migration Blueprint',
-    description: 'Zero-downtime migration strategies for legacy data platforms.',
-  },
-  'martech-cdp-guide': {
-    title: 'MarTech & CDP Implementation Guide',
-    description: 'Building unified customer experiences across channels.',
-  },
-};
+interface WhitepaperInfo {
+  title: string;
+  description: string;
+}
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
@@ -34,28 +19,42 @@ function ThankYouContent() {
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [hasDownloaded, setHasDownloaded] = useState(false);
-
-  const whitepaper = whitepaperSlug ? whitepaperInfo[whitepaperSlug] : null;
+  const [whitepaper, setWhitepaper] = useState<WhitepaperInfo | null>(null);
 
   useEffect(() => {
-    // Verify token
-    const verifyToken = async () => {
+    // Verify token and fetch whitepaper info
+    const verifyAndFetch = async () => {
       if (!token) {
         setIsValidToken(false);
         return;
       }
 
       try {
-        const response = await fetch(`/api/whitepaper-leads/verify?token=${token}`);
-        const data = await response.json();
-        setIsValidToken(data.valid);
+        // Verify token
+        const tokenResponse = await fetch(`/api/whitepaper-leads/verify?token=${token}`);
+        const tokenData = await tokenResponse.json();
+        setIsValidToken(tokenData.valid);
+
+        // Fetch whitepaper info
+        if (whitepaperSlug) {
+          const wpResponse = await fetch(`/api/whitepapers/${whitepaperSlug}`);
+          if (wpResponse.ok) {
+            const wpData = await wpResponse.json();
+            if (wpData.whitepaper) {
+              setWhitepaper({
+                title: wpData.whitepaper.title,
+                description: wpData.whitepaper.description,
+              });
+            }
+          }
+        }
       } catch {
         setIsValidToken(false);
       }
     };
 
-    verifyToken();
-  }, [token]);
+    verifyAndFetch();
+  }, [token, whitepaperSlug]);
 
   const handleDownload = async () => {
     if (!token || !whitepaperSlug) return;

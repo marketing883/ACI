@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify and mark token as used
-    const { data, error } = await supabase
+    const { data: leadData, error: leadError } = await supabase
       .from('whitepaper_leads')
       .update({ token_used: true, downloaded_at: new Date().toISOString() })
       .eq('download_token', token)
@@ -21,19 +21,28 @@ export async function POST(request: NextRequest) {
       .select('id')
       .single();
 
-    if (error && !error.message?.includes('relation')) {
-      console.error('Token update error:', error);
+    if (leadError && !leadError.message?.includes('relation')) {
+      console.error('Token update error:', leadError);
     }
 
-    // Generate download URL
-    // In production, this would be a signed URL from cloud storage
-    // For now, return the public path
-    const downloadUrl = `/whitepapers/pdfs/${whitepaperSlug}.pdf`;
+    // Fetch the actual file_url from whitepapers table
+    const { data: whitepaper, error: wpError } = await supabase
+      .from('whitepapers')
+      .select('file_url, title')
+      .eq('slug', whitepaperSlug)
+      .single();
+
+    let downloadUrl = `/whitepapers/pdfs/${whitepaperSlug}.pdf`; // Fallback
+
+    if (!wpError && whitepaper?.file_url) {
+      downloadUrl = whitepaper.file_url;
+    }
 
     return NextResponse.json({
       success: true,
       downloadUrl,
-      tokenUsed: !!data
+      title: whitepaper?.title,
+      tokenUsed: !!leadData
     });
   } catch (error) {
     console.error('Download error:', error);
