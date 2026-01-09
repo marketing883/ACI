@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Download, FileText, X, Mail, Building2, User, Loader2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { trackFormSubmission, trackEvent, trackCTAClick } from '@/components/analytics/GoogleAnalytics';
 
 // Whitepaper data - in production, fetch from Supabase
 const allWhitepapers = [
@@ -135,6 +136,13 @@ function DownloadModal({
 
       const data = await response.json();
 
+      // Track successful form submission
+      trackFormSubmission('whitepaper_download', 'whitepapers_page', {
+        whitepaper_slug: whitepaper?.slug || '',
+        whitepaper_title: whitepaper?.title || '',
+        company: formData.company,
+      });
+
       // Redirect to thank you page with download token
       window.location.href = `/whitepapers/thank-you?token=${data.downloadToken}&whitepaper=${whitepaper?.slug}`;
     } catch {
@@ -261,8 +269,8 @@ export default function WhitepapersPage() {
     return selectedCategory === 'All' || wp.category === selectedCategory;
   });
 
-  const featuredWhitepapers = filteredWhitepapers.filter(wp => wp.is_featured);
-  const otherWhitepapers = filteredWhitepapers.filter(wp => !wp.is_featured);
+  const featuredWhitepapers = filteredWhitepapers.filter(wp => wp.featured);
+  const otherWhitepapers = filteredWhitepapers.filter(wp => !wp.featured);
 
   return (
     <main className="min-h-screen">

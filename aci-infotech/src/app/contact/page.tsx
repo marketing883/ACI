@@ -4,6 +4,7 @@ import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle, Globe2, Building2, Star } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleAnalytics';
 
 // Office locations organized by region
 const officeRegions = [
@@ -124,6 +125,19 @@ function ContactForm() {
       if (!response.ok) {
         throw new Error('Failed to submit form');
       }
+
+      // Track successful contact form submission
+      trackFormSubmission('contact_form', 'contact_page', {
+        contact_reason: formData.reason,
+        company: formData.company || 'Not provided',
+      });
+
+      trackEvent('contact_form_submitted', {
+        form_location: 'contact_page',
+        inquiry_type: formData.reason,
+        has_company: formData.company ? 'yes' : 'no',
+        has_phone: formData.phone ? 'yes' : 'no',
+      });
 
       setIsSubmitted(true);
     } catch {

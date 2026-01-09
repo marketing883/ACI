@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: {
@@ -73,6 +74,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased font-sans">
+        <GoogleAnalytics />
         <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>

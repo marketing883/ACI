@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Download, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { trackDownload, trackEvent } from '@/components/analytics/GoogleAnalytics';
 
 interface WhitepaperInfo {
   title: string;
@@ -74,6 +75,18 @@ function ThankYouContent() {
       }
 
       const data = await response.json();
+
+      // Track successful download
+      trackDownload(
+        `${whitepaperSlug}.pdf`,
+        'whitepaper',
+        data.title || whitepaper?.title || whitepaperSlug
+      );
+
+      trackEvent('whitepaper_downloaded', {
+        whitepaper_slug: whitepaperSlug,
+        whitepaper_title: data.title || whitepaper?.title || 'Unknown',
+      });
 
       // Trigger download
       if (data.downloadUrl) {

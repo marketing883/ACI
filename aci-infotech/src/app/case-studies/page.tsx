@@ -543,7 +543,7 @@ function CaseStudyCard({ study, featured }: CaseStudyCardProps) {
           {study.logo_url ? (
             <Image
               src={study.logo_url}
-              alt={`${study.client} logo - ${study.title} case study`}
+              alt={`${study.client} logo - ${study.headline} case study`}
               width={100}
               height={40}
               className="object-contain"

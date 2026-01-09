@@ -266,7 +266,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
             {study.logo_url ? (
               <Image
                 src={study.logo_url}
-                alt={`${study.client} logo - ${study.title} case study`}
+                alt={`${study.client} logo - ${study.headline} case study`}
                 width={120}
                 height={48}
                 className="object-contain brightness-0 invert"
@@ -451,7 +451,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
                     {related.logo_url ? (
                       <Image
                         src={related.logo_url}
-                        alt={`${related.client} logo - ${related.title} case study`}
+                        alt={`${related.client} logo - ${related.headline} case study`}
                         width={80}
                         height={32}
                         className="object-contain"

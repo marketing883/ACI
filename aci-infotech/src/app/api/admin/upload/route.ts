@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
       !file.type.includes('svg') && // Don't optimize SVGs
       !file.type.includes('gif');   // Don't convert GIFs (preserves animation)
 
-    let finalBuffer = buffer;
+    let finalBuffer: Buffer = buffer;
     let contentType = file.type;
     let fileExtension = file.name.split('.').pop() || '';
     let optimizationInfo = null;
