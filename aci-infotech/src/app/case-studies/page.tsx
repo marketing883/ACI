@@ -23,7 +23,7 @@ const allCaseStudies = [
       { metric: 'Zero', description: 'Financial reporting disruptions' },
     ],
     technologies: ['SAP S/4HANA', 'Python', 'Azure DevOps', 'Databricks'],
-    featured: true,
+    is_featured: true,
   },
   {
     slug: 'racetrac-martech',
@@ -40,7 +40,7 @@ const allCaseStudies = [
       { metric: '600+', description: 'Locations with zero downtime' },
     ],
     technologies: ['Salesforce', 'Braze', 'AWS', 'Databricks'],
-    featured: true,
+    is_featured: true,
   },
   {
     slug: 'sodexo-unified-data',
@@ -57,7 +57,7 @@ const allCaseStudies = [
       { metric: '50%', description: 'Faster decision-making' },
     ],
     technologies: ['Informatica IICS', 'MDM', 'Cloud Integration', 'Snowflake'],
-    featured: true,
+    is_featured: true,
   },
   {
     slug: 'fortune-100-retailer-ai',
@@ -73,7 +73,7 @@ const allCaseStudies = [
       { metric: '92%', description: 'Forecast accuracy achieved' },
     ],
     technologies: ['Databricks', 'MLflow', 'Python', 'Azure ML'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'healthcare-cloud-migration',
@@ -89,7 +89,7 @@ const allCaseStudies = [
       { metric: 'Zero', description: 'Compliance incidents' },
     ],
     technologies: ['AWS', 'Terraform', 'Kubernetes', 'CloudWatch'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'finserv-fraud-detection',
@@ -105,7 +105,7 @@ const allCaseStudies = [
       { metric: '<100ms', description: 'Transaction scoring time' },
     ],
     technologies: ['Python', 'TensorFlow', 'Kafka', 'Databricks'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'manufacturing-iot',
@@ -121,7 +121,7 @@ const allCaseStudies = [
       { metric: '12', description: 'Plants connected globally' },
     ],
     technologies: ['Azure IoT', 'Databricks', 'Power BI', 'Python'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'insurance-digital-platform',
@@ -137,7 +137,7 @@ const allCaseStudies = [
       { metric: '5M+', description: 'Active digital users' },
     ],
     technologies: ['React', 'Node.js', 'AWS', 'Salesforce'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'energy-security-overhaul',
@@ -153,7 +153,7 @@ const allCaseStudies = [
       { metric: 'Zero', description: 'Security breaches since implementation' },
     ],
     technologies: ['Splunk', 'CrowdStrike', 'Azure Sentinel', 'Palo Alto'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'pharma-data-lake',
@@ -169,7 +169,7 @@ const allCaseStudies = [
       { metric: '3x', description: 'Increase in researcher productivity' },
     ],
     technologies: ['Snowflake', 'dbt', 'Informatica', 'Tableau'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'retail-personalization',
@@ -185,7 +185,7 @@ const allCaseStudies = [
       { metric: '60%', description: 'Reduction in campaign setup time' },
     ],
     technologies: ['Adobe CDP', 'Braze', 'Databricks', 'AWS'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'logistics-optimization',
@@ -201,7 +201,7 @@ const allCaseStudies = [
       { metric: '22%', description: 'Reduction in carbon emissions' },
     ],
     technologies: ['Python', 'Google OR-Tools', 'AWS', 'Kafka'],
-    featured: false,
+    is_featured: false,
   },
   // ========== PLAYBOOK CASE STUDIES ==========
   {
@@ -218,7 +218,7 @@ const allCaseStudies = [
       { metric: '78%', description: 'Manual effort reduction' },
     ],
     technologies: ['SAP S/4HANA', 'Python ETL', 'Azure/AWS Data Lakes', 'PowerBI', 'Automated Reconciliation'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'real-time-data-platform',
@@ -234,7 +234,7 @@ const allCaseStudies = [
       { metric: 'Zero', description: 'Payment processing disruptions' },
     ],
     technologies: ['Kafka/Kinesis', 'Databricks Lakehouse', 'Delta Lake', 'Salesforce/Braze CDP', 'Dynatrace'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'global-data-unification',
@@ -250,7 +250,7 @@ const allCaseStudies = [
       { metric: '65%', description: 'Duplicate record reduction' },
     ],
     technologies: ['Informatica IICS', 'Master Data Management', 'Cloud Data Lakes', 'API Gateway', 'Global Dashboards'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'self-service-analytics',
@@ -266,7 +266,7 @@ const allCaseStudies = [
       { metric: '2hrs', description: 'Time-to-insight (from 2 weeks)' },
     ],
     technologies: ['Databricks Lakehouse', 'Power BI/Tableau', 'Row-Level Security', 'Real-time Refresh', 'HIPAA Logging'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'healthcare-data-platform',
@@ -282,7 +282,7 @@ const allCaseStudies = [
       { metric: 'Zero', description: 'HIPAA/GDPR violations' },
     ],
     technologies: ['Patient MDM', 'Multi-jurisdiction Compliance', 'Encrypted Storage', 'API Gateway', 'Clinical Integration', 'Audit Logging'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'supply-chain-visibility',
@@ -298,7 +298,7 @@ const allCaseStudies = [
       { metric: '4hrs', description: 'Disruption response time (from 3 days)' },
     ],
     technologies: ['Snowflake/Databricks', 'IoT Integration', 'SAP/Oracle ERP', 'ML Forecasting', 'Tableau/PowerBI', 'Real-time Alerting'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'legacy-cloud-migration',
@@ -314,7 +314,7 @@ const allCaseStudies = [
       { metric: '$3.2M', description: 'Average TCO savings over 3 years' },
     ],
     technologies: ['AWS/Azure/GCP', 'Databricks/Snowflake', 'Automated Migration Tools', 'Data Validation', 'Terraform IaC', 'Cost Optimization'],
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'multi-source-integration',
@@ -330,7 +330,7 @@ const allCaseStudies = [
       { metric: '99.8%', description: 'Pipeline reliability' },
     ],
     technologies: ['Fivetran/Airbyte', 'Informatica/Mulesoft', 'Databricks/Snowflake', 'Great Expectations', 'Unified Data Model', 'Self-healing Pipelines'],
-    featured: false,
+    is_featured: false,
   },
 ];
 
@@ -352,8 +352,8 @@ export default function CaseStudiesPage() {
     return matchesIndustry && matchesService && matchesSearch;
   });
 
-  const featuredStudies = filteredStudies.filter(s => s.featured);
-  const otherStudies = filteredStudies.filter(s => !s.featured);
+  const featuredStudies = filteredStudies.filter(s => s.is_featured);
+  const otherStudies = filteredStudies.filter(s => !s.is_featured);
 
   return (
     <main className="min-h-screen">

@@ -68,7 +68,8 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   view_count INTEGER DEFAULT 0,
   read_time_minutes INTEGER,
   ai_generated BOOLEAN DEFAULT FALSE,
-  ai_metadata JSONB DEFAULT '{}'::jsonb
+  ai_metadata JSONB DEFAULT '{}'::jsonb,
+  is_featured BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS case_studies (
@@ -121,7 +122,8 @@ CREATE TABLE IF NOT EXISTS whitepapers (
   meta_description TEXT,
   requires_registration BOOLEAN DEFAULT TRUE,
   download_count INTEGER DEFAULT 0,
-  status TEXT DEFAULT 'draft'
+  status TEXT DEFAULT 'draft',
+  is_featured BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS whitepaper_downloads (
@@ -313,6 +315,9 @@ BEGIN
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'blog_posts' AND column_name = 'status') THEN
     ALTER TABLE blog_posts ADD COLUMN status TEXT DEFAULT 'draft';
   END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'blog_posts' AND column_name = 'is_featured') THEN
+    ALTER TABLE blog_posts ADD COLUMN is_featured BOOLEAN DEFAULT FALSE;
+  END IF;
 
   -- case_studies
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'case_studies' AND column_name = 'status') THEN
@@ -322,6 +327,9 @@ BEGIN
   -- whitepapers
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'whitepapers' AND column_name = 'status') THEN
     ALTER TABLE whitepapers ADD COLUMN status TEXT DEFAULT 'draft';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'whitepapers' AND column_name = 'is_featured') THEN
+    ALTER TABLE whitepapers ADD COLUMN is_featured BOOLEAN DEFAULT FALSE;
   END IF;
 
   -- webinars

@@ -30,7 +30,7 @@ interface Whitepaper {
   file_url: string | null;
   cover_image: string | null;
   requires_registration: boolean;
-  featured: boolean;
+  is_featured: boolean;
   published_at: string | null;
   created_at: string;
 }
@@ -100,13 +100,13 @@ export default function WhitepapersAdmin() {
       if (!currentFeatured) {
         await supabase
           .from('whitepapers')
-          .update({ featured: false })
+          .update({ is_featured: false })
           .neq('id', id);
       }
 
       const { error } = await supabase
         .from('whitepapers')
-        .update({ featured: !currentFeatured })
+        .update({ is_featured: !currentFeatured })
         .eq('id', id);
 
       if (error) throw error;
@@ -114,7 +114,7 @@ export default function WhitepapersAdmin() {
       // Update local state
       setWhitepapers(whitepapers.map(w => ({
         ...w,
-        featured: w.id === id ? !currentFeatured : (currentFeatured ? w.featured : false)
+        is_featured: w.id === id ? !currentFeatured : (currentFeatured ? w.is_featured : false)
       })));
     } catch (error) {
       console.error('Error updating featured status:', error);
@@ -319,7 +319,7 @@ export default function WhitepapersAdmin() {
                         >
                           {wp.status === 'published' ? 'Published' : 'Draft'}
                         </span>
-                        {wp.featured && (
+                        {wp.is_featured && (
                           <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700 flex items-center gap-1">
                             <Star className="w-3 h-3 fill-current" />
                             Featured
@@ -385,11 +385,11 @@ export default function WhitepapersAdmin() {
                               )}
                             </button>
                             <button
-                              onClick={() => toggleFeatured(wp.id, wp.featured)}
+                              onClick={() => toggleFeatured(wp.id, wp.is_featured)}
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                             >
-                              <Star className={`w-4 h-4 ${wp.featured ? 'fill-amber-500 text-amber-500' : ''}`} />
-                              {wp.featured ? 'Remove from Homepage' : 'Feature on Homepage'}
+                              <Star className={`w-4 h-4 ${wp.is_featured ? 'fill-amber-500 text-amber-500' : ''}`} />
+                              {wp.is_featured ? 'Remove from Homepage' : 'Feature on Homepage'}
                             </button>
                             <button
                               onClick={() => {

@@ -261,8 +261,8 @@ export default function WhitepapersPage() {
     return selectedCategory === 'All' || wp.category === selectedCategory;
   });
 
-  const featuredWhitepapers = filteredWhitepapers.filter(wp => wp.featured);
-  const otherWhitepapers = filteredWhitepapers.filter(wp => !wp.featured);
+  const featuredWhitepapers = filteredWhitepapers.filter(wp => wp.is_featured);
+  const otherWhitepapers = filteredWhitepapers.filter(wp => !wp.is_featured);
 
   return (
     <main className="min-h-screen">

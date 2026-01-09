@@ -7,7 +7,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from('whitepapers')
       .select('id, slug, title, description, cover_image, file_url')
-      .eq('featured', true)
+      .eq('is_featured', true)
       .eq('status', 'published')
       .order('created_at', { ascending: false })
       .limit(1)

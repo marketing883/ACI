@@ -20,7 +20,7 @@ const allBlogPosts = [
     featured_image: '/images/blog/data-mesh.jpg',
     read_time: '12 min read',
     date: '2025-01-03',
-    featured: true,
+    is_featured: true,
   },
   {
     slug: 'ai-governance-enterprise-guide',
@@ -34,7 +34,7 @@ const allBlogPosts = [
     featured_image: '/images/blog/ai-governance.jpg',
     read_time: '10 min read',
     date: '2024-12-18',
-    featured: true,
+    is_featured: true,
   },
   {
     slug: 'databricks-vs-snowflake-2025',
@@ -48,7 +48,7 @@ const allBlogPosts = [
     featured_image: '/images/blog/databricks-snowflake.jpg',
     read_time: '15 min read',
     date: '2024-12-10',
-    featured: true,
+    is_featured: true,
   },
   {
     slug: 'zero-trust-security-implementation',
@@ -62,7 +62,7 @@ const allBlogPosts = [
     featured_image: '/images/blog/zero-trust.jpg',
     read_time: '8 min read',
     date: '2024-12-05',
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'mlops-best-practices-production',
@@ -76,7 +76,7 @@ const allBlogPosts = [
     featured_image: '/images/blog/mlops.jpg',
     read_time: '11 min read',
     date: '2024-11-28',
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'customer-data-platform-selection',
@@ -90,7 +90,7 @@ const allBlogPosts = [
     featured_image: '/images/blog/cdp-selection.jpg',
     read_time: '9 min read',
     date: '2024-11-20',
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'cloud-cost-optimization-strategies',
@@ -104,7 +104,7 @@ const allBlogPosts = [
     featured_image: '/images/blog/cloud-costs.jpg',
     read_time: '7 min read',
     date: '2024-11-15',
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'real-time-analytics-architecture',
@@ -118,7 +118,7 @@ const allBlogPosts = [
     featured_image: '/images/blog/realtime-analytics.jpg',
     read_time: '14 min read',
     date: '2024-11-08',
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'llm-enterprise-integration',
@@ -132,7 +132,7 @@ const allBlogPosts = [
     featured_image: '/images/blog/llm-enterprise.jpg',
     read_time: '13 min read',
     date: '2024-11-01',
-    featured: false,
+    is_featured: false,
   },
   {
     slug: 'data-quality-automation',
@@ -146,7 +146,7 @@ const allBlogPosts = [
     featured_image: '/images/blog/data-quality.jpg',
     read_time: '10 min read',
     date: '2024-10-25',
-    featured: false,
+    is_featured: false,
   },
 ];
 
@@ -170,8 +170,8 @@ export default function BlogPage() {
     return matchesCategory && matchesSearch;
   });
 
-  const featuredPosts = filteredPosts.filter(p => p.featured);
-  const regularPosts = filteredPosts.filter(p => !p.featured);
+  const featuredPosts = filteredPosts.filter(p => p.is_featured);
+  const regularPosts = filteredPosts.filter(p => !p.is_featured);
 
   return (
     <main className="min-h-screen">

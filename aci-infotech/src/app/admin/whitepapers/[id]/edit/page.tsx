@@ -35,7 +35,7 @@ interface WhitepaperData {
   file_url: string | null;
   cover_image: string | null;
   requires_registration: boolean;
-  featured: boolean;
+  is_featured: boolean;
   meta_title: string;
   meta_description: string;
   status: string;
@@ -61,7 +61,7 @@ export default function EditWhitepaperPage() {
   const [fileUrl, setFileUrl] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [requiresRegistration, setRequiresRegistration] = useState(true);
-  const [featured, setFeatured] = useState(false);
+  const [isFeatured, setIsFeatured] = useState(false);
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
@@ -89,7 +89,7 @@ export default function EditWhitepaperPage() {
         setFileUrl(data.file_url || '');
         setCoverImage(data.cover_image || '');
         setRequiresRegistration(data.requires_registration ?? true);
-        setFeatured(data.featured ?? false);
+        setIsFeatured(data.is_featured ?? false);
         setMetaTitle(data.meta_title || '');
         setMetaDescription(data.meta_description || '');
         setStatus(data.status || 'draft');
@@ -250,7 +250,7 @@ export default function EditWhitepaperPage() {
         file_url: fileUrl || null,
         cover_image: coverImage || null,
         requires_registration: requiresRegistration,
-        featured,
+        is_featured: isFeatured,
         meta_title: metaTitle || title,
         meta_description: metaDescription || description?.substring(0, 160),
         status: finalStatus,
@@ -543,8 +543,8 @@ export default function EditWhitepaperPage() {
           <label className="flex items-center gap-3">
             <input
               type="checkbox"
-              checked={featured}
-              onChange={(e) => setFeatured(e.target.checked)}
+              checked={isFeatured}
+              onChange={(e) => setIsFeatured(e.target.checked)}
               className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <div>
