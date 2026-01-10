@@ -43,6 +43,7 @@ interface ChatLead {
   pages_visited: string[] | null;
   lead_score: number;
   status: 'new' | 'contacted' | 'qualified' | 'converted' | 'lost';
+  intelligence?: IntelligenceReport | null;
 }
 
 interface IntelligenceReport {
@@ -190,6 +191,12 @@ export default function ChatLeadsPage() {
   }
 
   async function fetchIntelligence(lead: ChatLead) {
+    // If lead has cached intelligence, use it immediately
+    if (lead.intelligence) {
+      setIntelligence(lead.intelligence);
+      return;
+    }
+
     setLoadingIntelligence(true);
     setIntelligence(null);
 
@@ -216,6 +223,20 @@ export default function ChatLeadsPage() {
       if (response.ok) {
         const data = await response.json();
         setIntelligence(data);
+
+        // Cache the intelligence in the database
+        if (configured && lead.id) {
+          supabase
+            .from('chat_leads')
+            .update({ intelligence: data })
+            .eq('id', lead.id)
+            .then(() => {
+              // Update local state
+              setLeads(prev => prev.map(l =>
+                l.id === lead.id ? { ...l, intelligence: data } : l
+              ));
+            });
+        }
       }
     } catch (error) {
       console.error('Error fetching intelligence:', error);

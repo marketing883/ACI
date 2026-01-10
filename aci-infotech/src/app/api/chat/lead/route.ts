@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { generateIntelligence } from '@/lib/intelligence';
 
 interface ConversationMessage {
   role: 'user' | 'assistant' | 'system';
@@ -126,6 +127,35 @@ export async function POST(request: NextRequest) {
         { error: 'Failed to save lead' },
         { status: 500 }
       );
+    }
+
+    // Generate and store AI intelligence in background (don't block response)
+    if (chatLead?.id) {
+      generateIntelligence({
+        name: leadInfo.name,
+        email: leadInfo.email,
+        company: leadInfo.company,
+        phone: leadInfo.phone,
+        job_title: leadInfo.jobTitle,
+        location: leadInfo.location,
+        service_interest: leadInfo.serviceInterest,
+        requirements: userMessages,
+        conversation: conversation,
+        pages_visited: pagesVisited,
+        entry_page: entryPage,
+      }).then(async (intelligence) => {
+        try {
+          await supabase
+            .from('chat_leads')
+            .update({ intelligence })
+            .eq('id', chatLead.id);
+          console.log('Intelligence generated for chat lead:', chatLead.id);
+        } catch (e) {
+          console.error('Failed to save chat lead intelligence:', e);
+        }
+      }).catch((e) => {
+        console.error('Chat lead intelligence generation failed:', e);
+      });
     }
 
     return NextResponse.json({
