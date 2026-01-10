@@ -80,12 +80,13 @@ export default function PartnersSection({
                   key={`${partner.name}-${index}`}
                   className="flex-shrink-0 flex items-center justify-center p-6"
                 >
-                  <div className="relative h-16 w-44 grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300">
+                  <div className="relative h-16 w-44 hover:scale-105 transition-all duration-300">
                     <Image
                       src={partner.logo_url}
                       alt={partner.name}
                       fill
                       className="object-contain"
+                      unoptimized
                     />
                   </div>
                 </div>
@@ -100,12 +101,13 @@ export default function PartnersSection({
                 key={partner.name}
                 className="flex items-center justify-center p-6"
               >
-                <div className="relative h-16 w-44 grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300">
+                <div className="relative h-16 w-44 hover:scale-105 transition-all duration-300">
                   <Image
                     src={partner.logo_url}
                     alt={partner.name}
                     fill
                     className="object-contain"
+                    unoptimized
                   />
                 </div>
               </div>
