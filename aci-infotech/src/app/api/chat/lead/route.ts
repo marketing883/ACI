@@ -13,8 +13,10 @@ interface LeadInfo {
   company?: string;
   phone?: string;
   jobTitle?: string;
+  location?: string;
   serviceInterest?: string;
   requirements?: string;
+  preferredTime?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -54,10 +56,13 @@ export async function POST(request: NextRequest) {
     let leadScore = 0;
     if (leadInfo.name) leadScore += 15;
     if (leadInfo.email) leadScore += 20;
-    if (leadInfo.company) leadScore += 20;
-    if (leadInfo.phone) leadScore += 10;
-    if (leadInfo.serviceInterest) leadScore += 20;
-    if (conversation.length > 4) leadScore += 15;
+    if (leadInfo.company) leadScore += 15;
+    if (leadInfo.phone) leadScore += 5;
+    if (leadInfo.jobTitle) leadScore += 10;
+    if (leadInfo.location) leadScore += 5;
+    if (leadInfo.serviceInterest) leadScore += 15;
+    if (leadInfo.preferredTime) leadScore += 10; // Shows high intent
+    if (conversation.length > 4) leadScore += 5;
 
     // Save to chat_leads table
     const { data: chatLead, error: chatError } = await supabase
@@ -69,8 +74,10 @@ export async function POST(request: NextRequest) {
         company: leadInfo.company || null,
         phone: leadInfo.phone || null,
         job_title: leadInfo.jobTitle || null,
+        location: leadInfo.location || null,
         service_interest: leadInfo.serviceInterest || null,
         requirements: userMessages || null,
+        preferred_time: leadInfo.preferredTime || null,
         conversation: conversation,
         lead_score: leadScore,
         status: 'new',
@@ -91,7 +98,7 @@ export async function POST(request: NextRequest) {
             company: leadInfo.company || null,
             phone: leadInfo.phone || null,
             inquiry_type: leadInfo.serviceInterest || 'General Inquiry',
-            message: `[Chat Lead]\n\nService Interest: ${leadInfo.serviceInterest || 'Not specified'}\n\nConversation Summary:\n${userMessages}`,
+            message: `[Chat Lead]\n\nService Interest: ${leadInfo.serviceInterest || 'Not specified'}\nJob Title: ${leadInfo.jobTitle || 'Not specified'}\nLocation: ${leadInfo.location || 'Not specified'}\nPreferred Time: ${leadInfo.preferredTime || 'Not specified'}\n\nConversation Summary:\n${userMessages}`,
             source: 'chat_widget',
             status: 'new',
           })

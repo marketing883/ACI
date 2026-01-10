@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 
 interface GenerateRequest {
   type: 'blog' | 'case_study' | 'whitepaper' | 'webinar';
-  field: 'title' | 'excerpt' | 'content' | 'outline' | 'challenge' | 'solution' | 'results' | 'description' | 'meta_title' | 'meta_description' | 'faqs';
+  field: 'title' | 'excerpt' | 'content' | 'outline' | 'challenge' | 'solution' | 'results' | 'description' | 'meta_title' | 'meta_description' | 'faqs' | 'highlights';
   context: {
     keyword?: string;
     title?: string;
@@ -13,6 +13,7 @@ interface GenerateRequest {
     industry?: string;
     technologies?: string[];
     description?: string;
+    excerpt?: string;
     topics?: string;
     // Enhanced AEO/GEO fields
     audience?: string;
