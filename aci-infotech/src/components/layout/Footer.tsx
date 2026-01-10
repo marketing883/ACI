@@ -64,7 +64,7 @@ export default function Footer() {
 
           {/* Column 2: Services */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-white">Services</h3>
+            <h5 className="text-base font-semibold mb-5 text-white">Services</h5>
             <ul className="space-y-3">
               {FOOTER_LINKS.services.map((link) => (
                 <li key={link.href}>
@@ -81,7 +81,7 @@ export default function Footer() {
 
           {/* Column 3: Resources */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-white">Resources</h3>
+            <h5 className="text-base font-semibold mb-5 text-white">Resources</h5>
             <ul className="space-y-3">
               {FOOTER_LINKS.resources.map((link) => (
                 <li key={link.href}>
@@ -98,7 +98,7 @@ export default function Footer() {
 
           {/* Column 4: Company */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-white">Company</h3>
+            <h5 className="text-base font-semibold mb-5 text-white">Company</h5>
             <ul className="space-y-3">
               {FOOTER_LINKS.company.map((link) => (
                 <li key={link.href}>
@@ -115,7 +115,7 @@ export default function Footer() {
 
           {/* Column 5: Connect */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-white">Stay Connected</h3>
+            <h5 className="text-base font-semibold mb-5 text-white">Stay Connected</h5>
 
             {/* Newsletter Form */}
             <div className="mb-6">
@@ -155,11 +155,11 @@ export default function Footer() {
                 <span>+1 (732) 416-7900</span>
               </a>
               <a
-                href="mailto:info@aciinfotech.com"
+                href="mailto:insights@aciinfotech.com"
                 className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
               >
                 <Mail className="w-4 h-4" strokeWidth={1.5} />
-                <span>info@aciinfotech.com</span>
+                <span>insights@aciinfotech.com</span>
               </a>
             </div>
           </div>

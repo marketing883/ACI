@@ -154,19 +154,47 @@ export default function HomePage() {
       />
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-[var(--font-title)]">
-            Get Your Answer in 30 Minutes
+      <section className="relative py-24 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="/images/aci-cta-home-bg.jpg"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-[#0A1628]/85" />
+          {/* Subtle Pattern Overlay */}
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
+        </div>
+
+        {/* Content */}
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 font-[var(--font-title)]">
+            Talk to Someone Who&apos;s Built This Before
           </h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Tell us your challenge. We&apos;ll tell you if we&apos;ve solved it before (and how). No pitch. Just pattern recognition from 246+ deployments.
+          <p className="text-lg md:text-xl text-blue-100/90 mb-10 max-w-2xl mx-auto">
+            Tell us what you&apos;re trying to build. We&apos;ll tell you if we&apos;ve done it before and exactly how it went.
           </p>
 
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-8 mb-10">
-            <span className="text-white/90 text-sm">Talk to architects who&apos;ve built this 10+ times</span>
-            <span className="text-white/90 text-sm">Honest about fit. We&apos;ll say if we&apos;re not right.</span>
-            <span className="text-white/90 text-sm">Walk away with an actual approach, not a proposal.</span>
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-6 sm:gap-10 mb-12 text-left sm:text-center">
+            <div className="flex items-center gap-3 text-white/90">
+              <span className="w-2 h-2 bg-[#C4FF61] rounded-full flex-shrink-0" />
+              <span className="text-sm md:text-base">See similar builds and their outcomes</span>
+            </div>
+            <div className="flex items-center gap-3 text-white/90">
+              <span className="w-2 h-2 bg-[#C4FF61] rounded-full flex-shrink-0" />
+              <span className="text-sm md:text-base">Browse architectures we&apos;ve actually deployed</span>
+            </div>
+            <div className="flex items-center gap-3 text-white/90">
+              <span className="w-2 h-2 bg-[#C4FF61] rounded-full flex-shrink-0" />
+              <span className="text-sm md:text-base">Save months of trial and error</span>
+            </div>
           </div>
 
           <Button href="/contact" variant="secondary-dark" size="lg">

@@ -22,6 +22,7 @@ import {
   HelpCircle,
   ChevronDown,
   Sparkles,
+  Mail,
 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 
@@ -39,6 +40,7 @@ const navItems: NavItem[] = [
       { href: '/admin/chat-leads', label: 'Chat Leads', icon: MessageSquare },
       { href: '/admin/playbook-leads', label: 'Playbook Leads', icon: BookOpen },
       { href: '/admin/whitepaper-leads', label: 'Whitepaper Leads', icon: FileCheck },
+      { href: '/admin/subscribers', label: 'Newsletter Subscribers', icon: Mail },
     ]
   },
   {
