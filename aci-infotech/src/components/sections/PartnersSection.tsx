@@ -15,8 +15,8 @@ interface PartnersSectionProps {
 }
 
 export default function PartnersSection({
-  headline = "Built on Enterprise-Grade Platforms",
-  subheadline = "We're certified experts in the platforms enterprises already trust",
+  headline = "Platform Partners We Trust",
+  subheadline = "The platforms we've mastered. Certified, battle-tested, production-proven across 246+ deployments.",
   partners,
 }: PartnersSectionProps) {
   const isOdd = partners.length % 2 !== 0;
@@ -78,9 +78,9 @@ export default function PartnersSection({
               {displayPartners.map((partner, index) => (
                 <div
                   key={`${partner.name}-${index}`}
-                  className="flex-shrink-0 flex items-center justify-center p-4"
+                  className="flex-shrink-0 flex items-center justify-center p-6"
                 >
-                  <div className="relative h-12 w-32 grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300">
+                  <div className="relative h-16 w-44 grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300">
                     <Image
                       src={partner.logo_url}
                       alt={partner.name}
@@ -93,14 +93,14 @@ export default function PartnersSection({
             </div>
           </div>
         ) : (
-          /* 4x4 Grid for partners */
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 items-center justify-items-center max-w-4xl mx-auto">
+          /* 4-column Grid for partners */
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-10 items-center justify-items-center max-w-5xl mx-auto">
             {partners.map((partner) => (
               <div
                 key={partner.name}
-                className="flex items-center justify-center p-4"
+                className="flex items-center justify-center p-6"
               >
-                <div className="relative h-12 w-32 grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300">
+                <div className="relative h-16 w-44 grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300">
                   <Image
                     src={partner.logo_url}
                     alt={partner.name}

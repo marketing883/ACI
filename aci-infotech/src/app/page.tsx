@@ -126,11 +126,7 @@ export default function HomePage() {
       />
 
       {/* Partners Section */}
-      <PartnersSection
-        headline="Built on Enterprise-Grade Platforms"
-        subheadline="We're certified experts in the platforms enterprises already trust"
-        partners={partners}
-      />
+      <PartnersSection partners={partners} />
 
       {/* News Section */}
       <NewsSection
@@ -140,18 +136,7 @@ export default function HomePage() {
       />
 
       {/* ArqAI Platform Section */}
-      <ArqAISection
-        eyebrow="Introducing ArqAI"
-        headline="Enterprise AI Governance Platform"
-        description="ArqAI is our purpose-built AI governance platform for enterprises scaling AI responsibly. Policy-as-code, model observability, automated compliance reporting, and audit trails that satisfy regulators."
-        features={[
-          { title: 'Automated AI Governance', description: 'Policy enforcement across all ML models, automated compliance checks' },
-          { title: 'Model Observability', description: 'Drift detection, bias monitoring, performance tracking in production' },
-          { title: 'Compliance Ready', description: 'EU AI Act, GDPR, DPDP compliant out of the box, audit-ready logs' },
-        ]}
-        demoUrl="https://demo.thearq.ai"
-        websiteUrl="https://thearq.ai"
-      />
+      <ArqAISection />
 
       {/* Awards Section */}
       <AwardsSection

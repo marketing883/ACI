@@ -1,45 +1,32 @@
 'use client';
 
 import Image from 'next/image';
-import Button from '@/components/ui/Button';
-import { Shield, Eye, CheckCircle } from 'lucide-react';
-
-interface Feature {
-  title: string;
-  description: string;
-}
+import { Shield, FileCheck, Activity } from 'lucide-react';
 
 interface ArqAISectionProps {
-  eyebrow?: string;
-  headline?: string;
-  description?: string;
-  features?: Feature[];
-  demoUrl?: string;
-  websiteUrl?: string;
+  ctaUrl?: string;
 }
 
 export default function ArqAISection({
-  eyebrow = "Introducing ArqAI",
-  headline = "Enterprise AI Governance Platform",
-  description = "ArqAI is our purpose-built AI governance platform for enterprises scaling AI responsibly. Policy-as-code, model observability, automated compliance reporting, and audit trails that satisfy regulators.",
-  features = [
-    {
-      title: "Automated AI Governance",
-      description: "Policy enforcement across all ML models, automated compliance checks",
-    },
-    {
-      title: "Model Observability",
-      description: "Drift detection, bias monitoring, performance tracking in production",
-    },
-    {
-      title: "Compliance Ready",
-      description: "EU AI Act, GDPR, DPDP compliant out of the box, audit-ready logs",
-    },
-  ],
-  demoUrl = "https://demo.thearq.ai",
-  websiteUrl = "https://thearq.ai",
+  ctaUrl = "https://www.thearq.ai",
 }: ArqAISectionProps) {
-  const icons = [Shield, Eye, CheckCircle];
+  const features = [
+    {
+      icon: Shield,
+      title: "Trust-Aware Agent Orchestration",
+      description: "Every agent carries cryptographic identity and scoped authorization. Non-repudiable audit trails for every action.",
+    },
+    {
+      icon: FileCheck,
+      title: "Compliance-Aware Prompt Compiler",
+      description: "Regulatory policies compiled into execution logic, not checked after the fact. Built for HIPAA, GDPR, SOX, PCI-DSS.",
+    },
+    {
+      icon: Activity,
+      title: "Observability-Driven Adaptive RAG",
+      description: "Real-time performance monitoring with automatic, policy-compliant adaptation. Quality and compliance in a closed loop.",
+    },
+  ];
 
   return (
     <section className="py-20 bg-gradient-to-br from-[#0A1628] to-gray-900">
@@ -47,27 +34,46 @@ export default function ArqAISection({
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
           <div>
+            {/* Eyebrow */}
             <span className="text-[#3B6FD4] font-semibold text-sm uppercase tracking-wide">
-              {eyebrow}
+              Introducing
             </span>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-white mt-3 mb-6">
-              {headline}
+            {/* ArqAI Logo */}
+            <div className="mt-4 mb-6">
+              <Image
+                src="/images/arqai/arq-ai-logo-white.svg"
+                alt="ArqAI"
+                width={180}
+                height={50}
+                className="h-12 w-auto"
+              />
+            </div>
+
+            {/* Headline */}
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              The Enterprise Foundry for Trusted AI
             </h2>
 
-            <p className="text-lg text-gray-300 mb-8">{description}</p>
+            {/* Description */}
+            <p className="text-lg text-gray-300 mb-4">
+              ArqAI enables regulated enterprises to build, run, and govern mission-critical agent workforces at production scale. Three patented technologies compile your policies into infrastructure, delivering 30-day deployments with cryptographic audit trails and compliance built into every agent&apos;s DNA.
+            </p>
+            <p className="text-sm text-gray-400 mb-8">
+              Deployed across healthcare, finance, manufacturing, and telecommunications.
+            </p>
 
             {/* Features */}
             <div className="space-y-6 mb-10">
               {features.map((feature, index) => {
-                const Icon = icons[index % icons.length];
+                const Icon = feature.icon;
                 return (
                   <div key={index} className="flex gap-4">
                     <div className="flex-shrink-0 w-10 h-10 bg-[#0052CC]/20 rounded-[6px] flex items-center justify-center">
                       <Icon className="w-5 h-5 text-[#3B6FD4]" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white mb-1">{feature.title}</h3>
+                      <h4 className="font-semibold text-white mb-1">{feature.title}<span className="text-[#3B6FD4]">&trade;</span></h4>
                       <p className="text-sm text-gray-400">{feature.description}</p>
                     </div>
                   </div>
@@ -75,72 +81,33 @@ export default function ArqAISection({
               })}
             </div>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                href={demoUrl}
-                target="_blank"
-                variant="primary"
-                size="lg"
-              >
-                See ArqAI Demo
-              </Button>
-              <Button
-                href={websiteUrl}
-                target="_blank"
-                variant="ghost"
-                size="lg"
-                className="text-white border border-white/30 hover:bg-white/10"
-              >
-                Visit ArqAI.ai
-              </Button>
-            </div>
+            {/* CTA */}
+            <a
+              href={ctaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#0052CC] text-white font-semibold rounded-[6px] hover:bg-[#0052CC]/90 transition-colors"
+            >
+              See ArqAI Live In Action
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
           </div>
 
-          {/* Visual */}
+          {/* Video */}
           <div className="relative">
-            <div className="relative bg-gray-800 rounded-[6px] p-8 shadow-2xl">
-              {/* Mock Dashboard */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <span className="text-sm text-gray-400 ml-2">ArqAI Dashboard</span>
-                </div>
-
-                {/* Stats Row */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="bg-gray-700/50 rounded-[6px] p-4">
-                    <div className="text-2xl font-bold text-white">24</div>
-                    <div className="text-xs text-gray-400">Active Models</div>
-                  </div>
-                  <div className="bg-gray-700/50 rounded-[6px] p-4">
-                    <div className="text-2xl font-bold text-green-400">98%</div>
-                    <div className="text-xs text-gray-400">Compliance</div>
-                  </div>
-                  <div className="bg-gray-700/50 rounded-[6px] p-4">
-                    <div className="text-2xl font-bold text-[#3B6FD4]">0</div>
-                    <div className="text-xs text-gray-400">Drift Alerts</div>
-                  </div>
-                </div>
-
-                {/* Policy Status */}
-                <div className="bg-gray-700/50 rounded-[6px] p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm text-gray-300">Policy Compliance</span>
-                    <span className="text-xs text-green-400">All Passing</span>
-                  </div>
-                  <div className="space-y-2">
-                    {['Data Privacy', 'Bias Detection', 'Model Drift'].map((policy) => (
-                      <div key={policy} className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-400" strokeWidth={1.5} />
-                        <span className="text-xs text-gray-400">{policy}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <div className="relative rounded-[6px] overflow-hidden shadow-2xl">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-auto"
+              >
+                <source src="/video/ArqAI-foundry-v2.webm" type="video/webm" />
+                Your browser does not support the video tag.
+              </video>
             </div>
 
             {/* Glow effect */}
