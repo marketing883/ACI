@@ -163,14 +163,14 @@ h6 { font-size: var(--text-lg); font-weight: 500; }
   h4 { font-size: var(--text-xl); }
 }
 
-/* Link Styles */
-a {
+/* Link Styles - only for text links, not button links */
+a:not([class*="inline-flex"]):not([class*="btn"]):not([class*="Button"]) {
   color: var(--aci-primary);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
-a:hover {
+a:not([class*="inline-flex"]):not([class*="btn"]):not([class*="Button"]):hover {
   color: var(--aci-primary-dark);
 }
 
@@ -210,8 +210,8 @@ a:hover {
 }
 
 .btn-primary:hover {
-  background-color: var(--aci-primary-dark);
-  color: var(--aci-white);
+  background-color: var(--aci-primary);
+  color: var(--aci-lime);
 }
 
 .btn-secondary {
