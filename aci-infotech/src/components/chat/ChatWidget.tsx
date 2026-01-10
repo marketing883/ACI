@@ -1,10 +1,17 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2, CheckCircle2, Calendar } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MessageRenderer from './MessageRenderer';
-import QuickReplies, { type ConversationStage, TimeSlotSuggestions } from './QuickReplies';
+import QuickReplies, {
+  type ConversationStage,
+  type PageContext,
+  TimeSlotSuggestions,
+  getPageInitialMessage,
+  detectPageContext,
+} from './QuickReplies';
 
 interface Message {
   id: string;
@@ -33,18 +40,23 @@ const STORAGE_KEYS = {
   stage: 'aci_chat_stage',
   sessionId: 'aci_chat_sessionId',
   lastActivity: 'aci_chat_lastActivity',
+  entryPage: 'aci_chat_entryPage',
+  pagesVisited: 'aci_chat_pagesVisited',
 };
 
 // Session timeout in milliseconds (24 hours)
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000;
 
-const INITIAL_MESSAGE: Message = {
-  id: '0',
-  role: 'assistant',
-  content: "Hi! I'm the ACI Assistant. I help connect businesses with the right **data**, **AI**, and **cloud** solutions.\n\nWhat brings you here today?",
-  timestamp: new Date(),
-  showQuickReplies: true,
-};
+// Create initial message based on page context
+function createInitialMessage(pageContext: PageContext): Message {
+  return {
+    id: '0',
+    role: 'assistant',
+    content: getPageInitialMessage(pageContext),
+    timestamp: new Date(),
+    showQuickReplies: true,
+  };
+}
 
 // Email validation
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -56,9 +68,10 @@ function isWorkEmail(email: string): boolean {
 }
 
 export default function ChatWidget() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [leadInfo, setLeadInfo] = useState<LeadInfo>({});
@@ -66,6 +79,9 @@ export default function ChatWidget() {
   const [leadSaved, setLeadSaved] = useState(false);
   const [sessionId, setSessionId] = useState('');
   const [showTimeSlots, setShowTimeSlots] = useState(false);
+  const [pageContext, setPageContext] = useState<PageContext>({ path: '/', type: 'home' });
+  const [entryPage, setEntryPage] = useState<string>('/');
+  const [pagesVisited, setPagesVisited] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const isInitialized = useRef(false);
@@ -75,23 +91,38 @@ export default function ChatWidget() {
     if (isInitialized.current) return;
     isInitialized.current = true;
 
+    // Detect current page context
+    const currentPageContext = detectPageContext(pathname);
+    setPageContext(currentPageContext);
+
     try {
       const storedLastActivity = localStorage.getItem(STORAGE_KEYS.lastActivity);
       const lastActivity = storedLastActivity ? parseInt(storedLastActivity, 10) : 0;
       const isExpired = Date.now() - lastActivity > SESSION_TIMEOUT;
 
       if (isExpired) {
-        // Clear old session
+        // Clear old session and start fresh
         Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
         const newSessionId = `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         setSessionId(newSessionId);
         localStorage.setItem(STORAGE_KEYS.sessionId, newSessionId);
+
+        // Set entry page and initial message for new session
+        setEntryPage(pathname);
+        setPagesVisited([pathname]);
+        localStorage.setItem(STORAGE_KEYS.entryPage, pathname);
+        localStorage.setItem(STORAGE_KEYS.pagesVisited, JSON.stringify([pathname]));
+
+        // Create page-aware initial message
+        setMessages([createInitialMessage(currentPageContext)]);
       } else {
         // Restore session
         const storedSessionId = localStorage.getItem(STORAGE_KEYS.sessionId);
         const storedMessages = localStorage.getItem(STORAGE_KEYS.messages);
         const storedLeadInfo = localStorage.getItem(STORAGE_KEYS.leadInfo);
         const storedStage = localStorage.getItem(STORAGE_KEYS.stage);
+        const storedEntryPage = localStorage.getItem(STORAGE_KEYS.entryPage);
+        const storedPagesVisited = localStorage.getItem(STORAGE_KEYS.pagesVisited);
 
         if (storedSessionId) {
           setSessionId(storedSessionId);
@@ -104,6 +135,9 @@ export default function ChatWidget() {
         if (storedMessages) {
           const parsed = JSON.parse(storedMessages);
           setMessages(parsed.map((m: Message) => ({ ...m, timestamp: new Date(m.timestamp) })));
+        } else {
+          // No messages stored, create initial message
+          setMessages([createInitialMessage(currentPageContext)]);
         }
 
         if (storedLeadInfo) {
@@ -113,6 +147,23 @@ export default function ChatWidget() {
         if (storedStage) {
           setStage(storedStage as ConversationStage);
         }
+
+        if (storedEntryPage) {
+          setEntryPage(storedEntryPage);
+        }
+
+        if (storedPagesVisited) {
+          const pages = JSON.parse(storedPagesVisited) as string[];
+          // Add current page if not already visited
+          if (!pages.includes(pathname)) {
+            pages.push(pathname);
+            localStorage.setItem(STORAGE_KEYS.pagesVisited, JSON.stringify(pages));
+          }
+          setPagesVisited(pages);
+        } else {
+          setPagesVisited([pathname]);
+          localStorage.setItem(STORAGE_KEYS.pagesVisited, JSON.stringify([pathname]));
+        }
       }
 
       // Update last activity
@@ -121,8 +172,27 @@ export default function ChatWidget() {
       console.error('Failed to restore chat state:', error);
       const newSessionId = `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       setSessionId(newSessionId);
+      setMessages([createInitialMessage(currentPageContext)]);
     }
-  }, []);
+  }, [pathname]);
+
+  // Track page navigation
+  useEffect(() => {
+    if (!isInitialized.current) return;
+
+    const newPageContext = detectPageContext(pathname);
+    setPageContext(newPageContext);
+
+    // Track pages visited
+    setPagesVisited(prev => {
+      if (!prev.includes(pathname)) {
+        const updated = [...prev, pathname];
+        localStorage.setItem(STORAGE_KEYS.pagesVisited, JSON.stringify(updated));
+        return updated;
+      }
+      return prev;
+    });
+  }, [pathname]);
 
   // Persist state changes to localStorage
   useEffect(() => {
@@ -169,6 +239,9 @@ export default function ChatWidget() {
           })),
           pageUrl: window.location.href,
           referrer: document.referrer,
+          entryPage,
+          pagesVisited,
+          currentPage: pageContext,
         }),
       });
 
@@ -178,7 +251,7 @@ export default function ChatWidget() {
     } catch (error) {
       console.error('Failed to save lead:', error);
     }
-  }, [sessionId, leadSaved]);
+  }, [sessionId, leadSaved, entryPage, pagesVisited, pageContext]);
 
   // Process user response and determine next action
   const processResponse = useCallback((userMessage: string, currentStage: ConversationStage, currentLead: LeadInfo): {
@@ -391,6 +464,11 @@ export default function ChatWidget() {
             })),
             leadInfo: updatedLead,
             stage: nextStage,
+            pageContext: {
+              currentPage: pageContext,
+              entryPage,
+              pagesVisited,
+            },
           }),
         });
 
@@ -584,6 +662,7 @@ export default function ChatWidget() {
                           stage={stage}
                           onSelect={handleSend}
                           leadInfo={leadInfo}
+                          pageContext={pageContext}
                           disabled={isLoading}
                         />
                       )
