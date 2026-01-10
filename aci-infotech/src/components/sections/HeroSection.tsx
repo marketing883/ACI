@@ -264,63 +264,17 @@ export default function HeroSection() {
             {/* Primary Button */}
             <Link
               href="/case-studies"
-              className="group relative inline-flex items-center justify-center overflow-hidden transition-all duration-200"
-              style={{
-                backgroundColor: '#0052CC',
-                color: '#FFFFFF',
-                padding: '18px 36px',
-                borderRadius: '6px',
-                fontSize: '17px',
-                fontWeight: 600,
-                letterSpacing: '0.01em',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#003D99';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 82, 204, 0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#0052CC';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
+              className="group relative inline-flex items-center justify-center gap-3 px-9 py-4 bg-[#0052CC] text-white text-lg font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
             >
               {/* Lime dot accent */}
-              <span
-                className="mr-3 flex-shrink-0"
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  backgroundColor: '#C4FF61',
-                  borderRadius: '50%',
-                }}
-              />
+              <span className="flex-shrink-0 w-1.5 h-1.5 bg-[#C4FF61] rounded-full" />
               See How We Work
             </Link>
 
-            {/* Secondary Button */}
+            {/* Secondary Button - Dark section */}
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center transition-all duration-200"
-              style={{
-                backgroundColor: 'transparent',
-                color: '#FFFFFF',
-                padding: '16px 34px',
-                borderRadius: '6px',
-                fontSize: '17px',
-                fontWeight: 600,
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.8)';
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
+              className="inline-flex items-center justify-center px-9 py-4 bg-transparent text-white text-lg font-semibold rounded-lg border border-white hover:border-[#C4FF61] hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
             >
               Talk to an Architect
             </Link>

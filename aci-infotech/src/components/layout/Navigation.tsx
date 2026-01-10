@@ -223,42 +223,11 @@ export default function Navigation() {
               </Link>
             </div>
 
-            {/* Desktop CTA - New design system */}
+            {/* Desktop CTA - Standard button styling */}
             <div className="hidden lg:flex items-center gap-4">
-              <Link
-                href="/contact?reason=architecture-call"
-                className="inline-flex items-center justify-center transition-all duration-200"
-                style={{
-                  backgroundColor: '#0052CC',
-                  color: '#FFFFFF',
-                  padding: '12px 24px',
-                  borderRadius: '6px',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  letterSpacing: '0.01em',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#003D99';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 82, 204, 0.25)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#0052CC';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              >
-                <span
-                  className="mr-2 flex-shrink-0"
-                  style={{
-                    width: '5px',
-                    height: '5px',
-                    backgroundColor: '#C4FF61',
-                    borderRadius: '50%',
-                  }}
-                />
+              <Button href="/contact?reason=architecture-call" variant="primary" size="md" withLimeDot>
                 Talk to an Architect
-              </Link>
+              </Button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -564,7 +533,7 @@ function ResourcesMegaMenu({ items }: ResourcesMegaMenuProps) {
 
         <Link
           href="/contact?reason=ebook"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-[var(--aci-primary)] rounded-lg font-semibold text-sm hover:bg-blue-50 transition-colors"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#0052CC] text-white rounded-lg font-semibold text-sm hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
         >
           <Download className="w-4 h-4" />
           Download Free
@@ -733,30 +702,15 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
               </Link>
             </div>
 
-            {/* CTA - New design system */}
+            {/* CTA - Standard button styling */}
             <div className="pt-6 px-4 pb-8">
               <Link
                 href="/contact?reason=architecture-call"
                 onClick={onClose}
-                className="w-full inline-flex items-center justify-center transition-all duration-200"
-                style={{
-                  backgroundColor: '#0052CC',
-                  color: '#FFFFFF',
-                  padding: '16px 32px',
-                  borderRadius: '6px',
-                  fontSize: '17px',
-                  fontWeight: 600,
-                  letterSpacing: '0.01em',
-                }}
+                className="w-full inline-flex items-center justify-center gap-2 py-4 px-8 bg-[#0052CC] text-white font-semibold text-lg rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
               >
                 <span
-                  className="mr-2 flex-shrink-0"
-                  style={{
-                    width: '6px',
-                    height: '6px',
-                    backgroundColor: '#C4FF61',
-                    borderRadius: '50%',
-                  }}
+                  className="flex-shrink-0 w-1.5 h-1.5 bg-[#C4FF61] rounded-full"
                 />
                 Talk to an Architect
               </Link>

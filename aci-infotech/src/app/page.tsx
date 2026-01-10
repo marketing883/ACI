@@ -138,12 +138,13 @@ export default function HomePage() {
       {/* ArqAI Platform Section */}
       <ArqAISection />
 
-      {/* Awards Section */}
+      {/* Awards Section - Deactivated for now, may be used later
       <AwardsSection
         headline="Trusted & Certified"
         subheadline="Our work, culture, and capabilities have been validated by global benchmarks"
         badges={badges}
       />
+      */}
 
       {/* Blog Preview Section - Dynamic from Database */}
       <DynamicBlogSection
@@ -168,7 +169,7 @@ export default function HomePage() {
             <span className="text-white/90 text-sm">Walk away with an actual approach, not a proposal.</span>
           </div>
 
-          <Button href="/contact" variant="secondary" size="lg">
+          <Button href="/contact" variant="secondary-dark" size="lg">
             Book 30 Minutes
           </Button>
         </div>

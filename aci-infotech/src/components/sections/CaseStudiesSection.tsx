@@ -108,8 +108,8 @@ export default function CaseStudiesSection({
 
         {/* View All CTA */}
         <div className="text-center mt-12">
-          <Button href={viewAllUrl} variant="secondary" size="lg">
-            {viewAllText} <ArrowRight className="w-4 h-4 ml-2" />
+          <Button href={viewAllUrl} variant="secondary-dark" size="lg" rightIcon={<ArrowRight className="w-4 h-4" />}>
+            {viewAllText}
           </Button>
         </div>
       </div>

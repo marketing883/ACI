@@ -947,15 +947,15 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
           <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-white/10">
             <Link
               href={`/contact?playbook=${playbook.id}`}
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-sm bg-[#0052CC] text-white font-semibold hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,82,204,0.5)] group"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-lg bg-[#0052CC] text-white font-semibold hover:text-[#C4FF61] transition-all duration-300 cursor-pointer group"
             >
               <span className="w-2 h-2 rounded-full bg-[#C4FF61] group-hover:scale-125 transition-transform" />
-              <span className="group-hover:text-[#C4FF61] transition-colors">Talk to the Architect</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 group-hover:text-[#C4FF61] transition-all" />
+              Talk to the Architect
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-all" />
             </Link>
             <Link
               href={`/playbooks/${playbook.slug}`}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-sm border border-white/20 text-white/80 font-medium hover:border-white/40 hover:bg-white/5 transition-all duration-300"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-transparent border border-white text-white font-medium hover:border-[#C4FF61] hover:text-[#C4FF61] transition-all duration-300 cursor-pointer"
             >
               View Full Playbook
             </Link>
@@ -1180,14 +1180,14 @@ export default function PlaybookVaultSection() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-sm bg-[#0052CC] text-white font-semibold hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,82,204,0.4)] group"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-lg bg-[#0052CC] text-white font-semibold hover:text-[#C4FF61] transition-all duration-300 cursor-pointer group"
               >
                 <span className="w-2 h-2 rounded-full bg-[#C4FF61] group-hover:scale-125 transition-transform" />
                 Talk to an Architect
               </Link>
               <Link
                 href="/playbooks"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-sm border border-white/20 text-white/80 font-medium hover:border-white/40 hover:bg-white/5 transition-all duration-300"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-transparent border border-white text-white font-medium hover:border-[#C4FF61] hover:text-[#C4FF61] transition-all duration-300 cursor-pointer"
               >
                 Explore All Playbooks
                 <ArrowRight className="w-4 h-4" />

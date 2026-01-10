@@ -83,7 +83,7 @@ export default function ArqAISection({
               href={ctaUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#0052CC] text-white font-semibold rounded-[6px] hover:bg-[#0052CC]/90 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#0052CC] text-white font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
             >
               See ArqAI Live In Action
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

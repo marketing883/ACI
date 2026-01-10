@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline';
+  variant?: 'primary' | 'secondary' | 'secondary-dark' | 'ghost' | 'danger' | 'outline';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   loading?: boolean;
   disabled?: boolean;
@@ -45,26 +45,31 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
     const baseStyles =
       'inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5';
 
-    // Variant styles - updated with new design system colors and shadows
+    // Variant styles - standard button styling rules
+    // Primary: blue bg, white text | hover: blue bg, lime green text
+    // Secondary (light): transparent, black border & text | hover: blue border & text
+    // Secondary-dark: transparent, white border & text | hover: lime green border & text
     const variantStyles = {
       primary:
-        'bg-[#0052CC] text-white hover:bg-[#003D99] hover:text-[#C4FF61] hover:shadow-[0_4px_12px_rgba(0,82,204,0.25)] focus:ring-[#0052CC]',
+        'bg-[#0052CC] text-white hover:text-[#C4FF61] focus:ring-[#0052CC] cursor-pointer',
       secondary:
-        'bg-white text-[#0A1628] border border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md focus:ring-gray-300',
+        'bg-transparent text-[#0A1628] border border-[#0A1628] hover:border-[#0052CC] hover:text-[#0052CC] focus:ring-[#0052CC] cursor-pointer',
+      'secondary-dark':
+        'bg-transparent text-white border border-white hover:border-[#C4FF61] hover:text-[#C4FF61] focus:ring-white cursor-pointer',
       ghost:
-        'bg-transparent text-[#0052CC] hover:bg-[#0052CC]/10 focus:ring-[#0052CC]',
+        'bg-transparent text-[#0052CC] hover:bg-[#0052CC]/10 focus:ring-[#0052CC] cursor-pointer',
       danger:
-        'bg-red-600 text-white hover:bg-red-700 hover:shadow-[0_4px_12px_rgba(239,68,68,0.25)] focus:ring-red-500',
+        'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 cursor-pointer',
       outline:
-        'bg-transparent text-white border-2 border-white/30 hover:border-white/80 hover:bg-white/5 focus:ring-white/50',
+        'bg-transparent text-white border-2 border-white/30 hover:border-[#C4FF61] hover:text-[#C4FF61] focus:ring-white/50 cursor-pointer',
     };
 
-    // Size styles - updated with sharp corners (rounded-sm = 2px)
+    // Size styles - border radius max 8px (rounded-lg)
     const sizeStyles = {
-      sm: 'px-4 py-2 text-sm rounded-sm',
-      md: 'px-5 py-2.5 text-sm rounded-sm',
-      lg: 'px-6 py-3 text-base rounded-sm',
-      xl: 'px-8 py-4 text-lg rounded-sm',
+      sm: 'px-4 py-2 text-sm rounded-lg',
+      md: 'px-5 py-2.5 text-sm rounded-lg',
+      lg: 'px-6 py-3 text-base rounded-lg',
+      xl: 'px-8 py-4 text-lg rounded-lg',
     };
 
     // Combined class names

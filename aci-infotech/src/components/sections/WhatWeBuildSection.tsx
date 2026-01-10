@@ -362,14 +362,14 @@ function ExpandedServicePanel({ service, onClose }: ExpandedPanelProps) {
           <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
             <Link
               href={service.href}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-sm bg-[#0052CC] text-white font-semibold hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-200 group"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#0052CC] text-white font-semibold hover:text-[#C4FF61] transition-all duration-200 cursor-pointer group"
             >
-              <span className="group-hover:text-[#C4FF61] transition-colors">See {service.shortName} Projects</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 group-hover:text-[#C4FF61] transition-all" />
+              See {service.shortName} Projects
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-all" />
             </Link>
             <Link
               href={`/contact?service=${service.id}`}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-sm border-2 border-[#0052CC]/20 text-[#0A1628] font-semibold hover:border-[#0052CC]/40 hover:bg-gray-50 transition-all duration-200"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-transparent border border-[#0A1628] text-[#0A1628] font-semibold hover:border-[#0052CC] hover:text-[#0052CC] transition-all duration-200 cursor-pointer"
             >
               Talk to Architect
             </Link>

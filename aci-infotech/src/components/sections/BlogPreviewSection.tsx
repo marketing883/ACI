@@ -267,7 +267,7 @@ function FeaturedWhitepaperCard({
         <div className="mt-6">
           <button
             onClick={onDownloadClick}
-            className="w-full py-3 bg-white text-[var(--aci-secondary)] font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 bg-[#0052CC] text-white font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
           >
             <Download className="w-5 h-5" />
             Download Free
@@ -421,8 +421,8 @@ export default function BlogPreviewSection({
 
         {/* View All CTA */}
         <div className="text-center mt-12">
-          <Button href={viewAllUrl} variant="secondary" size="lg">
-            Read All Insights <ArrowRight className="w-4 h-4 ml-2" strokeWidth={1.5} />
+          <Button href={viewAllUrl} variant="secondary" size="lg" rightIcon={<ArrowRight className="w-4 h-4" strokeWidth={1.5} />}>
+            Read All Insights
           </Button>
         </div>
       </div>
