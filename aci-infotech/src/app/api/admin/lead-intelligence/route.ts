@@ -2,16 +2,64 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 
 interface LeadData {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   company?: string | null;
   phone?: string | null;
+  job_title?: string | null;
+  location?: string | null;
   inquiry_type?: string;
   message?: string;
   service_interest?: string;
+  requirements?: string;
+  conversation?: Array<{ role: string; content: string }>;
+  pages_visited?: string[];
+  entry_page?: string;
 }
 
-// Initialize Anthropic client
+interface IntelligenceReport {
+  leadScore: number;
+  person: {
+    summary: string;
+    inferredRole: string;
+    seniority: 'IC' | 'Manager' | 'Director' | 'VP' | 'C-Level' | 'Unknown';
+    decisionMaker: boolean;
+    linkedInSearch: string;
+  };
+  company: {
+    name: string;
+    summary: string;
+    industry: string;
+    size: 'Startup' | 'SMB' | 'Mid-Market' | 'Enterprise' | 'Fortune 500' | 'Unknown';
+    likelyTechStack: string[];
+    challenges: string[];
+    website: string;
+  };
+  opportunity: {
+    painPoints: string[];
+    valueProps: string[];
+    relevantServices: string[];
+    caseStudies: string[];
+    competitors: string;
+  };
+  engagement: {
+    talkingPoints: string[];
+    questions: string[];
+    objections: string[];
+    nextSteps: string[];
+  };
+  signals: {
+    intent: 'Low' | 'Medium' | 'High';
+    urgency: 'Low' | 'Medium' | 'High';
+    budget: string;
+    timeline: string;
+  };
+  research: {
+    sources: string[];
+    confidence: 'Low' | 'Medium' | 'High';
+  };
+}
+
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
@@ -20,160 +68,220 @@ export async function POST(request: NextRequest) {
   try {
     const { lead } = await request.json() as { lead: LeadData };
 
-    if (!lead || !lead.email) {
+    if (!lead || (!lead.email && !lead.company)) {
       return NextResponse.json(
-        { error: 'Lead data is required' },
+        { error: 'Need at least email or company name' },
         { status: 400 }
       );
     }
 
-    // Check if API key is configured
     if (!process.env.ANTHROPIC_API_KEY) {
-      // Return basic analysis without AI
       return NextResponse.json({
         leadScore: calculateBasicScore(lead),
-        analysis: {
-          summary: 'AI analysis unavailable. Configure ANTHROPIC_API_KEY for intelligent lead insights.',
-          companyInsights: null,
-          recommendations: [
-            'Review lead details manually',
-            'Check company website for more context',
-            'Schedule a discovery call',
-          ],
-          talkingPoints: [],
-          similarCaseStudies: [],
-        },
+        error: 'AI not configured - basic scoring only',
       });
     }
 
-    // Generate AI-powered lead intelligence
-    const prompt = `Analyze this sales lead and provide actionable intelligence for the sales team. Be concise and practical.
-
-LEAD INFORMATION:
-- Name: ${lead.name}
-- Email: ${lead.email}
-- Company: ${lead.company || 'Not provided'}
-- Phone: ${lead.phone || 'Not provided'}
-- Service Interest: ${lead.service_interest || lead.inquiry_type || 'Not specified'}
-- Message/Requirements: ${lead.message || 'No message provided'}
-
-Based on the email domain and any company name provided, analyze this lead and provide:
-
-1. LEAD SCORE (0-100): Rate the lead quality based on:
-   - Company size/type (enterprise emails score higher)
-   - Service alignment with ACI's offerings
-   - Completeness of information
-   - Urgency signals in message
-
-2. COMPANY INSIGHTS (2-3 bullet points):
-   - Industry and likely size based on domain
-   - Potential technology stack
-   - Relevant business context
-
-3. RECOMMENDED APPROACH (2-3 bullet points):
-   - Best engagement strategy
-   - Key questions to ask
-   - Potential objections to prepare for
-
-4. TALKING POINTS (2-3 bullet points):
-   - Relevant ACI services to highlight
-   - Value propositions that would resonate
-   - Similar client success stories to mention
-
-5. SIMILAR CASE STUDIES:
-   - List 1-2 relevant ACI case studies (MSCI for data/finance, RaceTrac for retail/MarTech, Sodexo for enterprise data)
-
-Format your response as JSON with this structure:
-{
-  "leadScore": number,
-  "analysis": {
-    "summary": "One sentence summary of the lead opportunity",
-    "companyInsights": ["insight1", "insight2"],
-    "recommendations": ["rec1", "rec2"],
-    "talkingPoints": ["point1", "point2"],
-    "similarCaseStudies": ["MSCI - $12M savings from data consolidation", "etc"]
-  }
-}`;
-
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 800,
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-    });
-
-    // Extract text from response
-    const textContent = response.content.find(block => block.type === 'text');
-    const responseText = textContent && 'text' in textContent ? textContent.text : '';
-
-    // Try to parse JSON from response
-    try {
-      // Find JSON in the response
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0]);
-        return NextResponse.json(parsed);
-      }
-    } catch {
-      console.error('Failed to parse AI response as JSON');
-    }
-
-    // Fallback to basic response
-    return NextResponse.json({
-      leadScore: calculateBasicScore(lead),
-      analysis: {
-        summary: responseText.slice(0, 200) + '...',
-        companyInsights: ['Analysis generated - see summary'],
-        recommendations: ['Contact lead promptly', 'Schedule discovery call'],
-        talkingPoints: ['Highlight relevant services'],
-        similarCaseStudies: ['MSCI - Data automation', 'RaceTrac - MarTech transformation'],
-      },
-    });
+    const report = await generateIntelligence(lead);
+    return NextResponse.json(report);
 
   } catch (error) {
-    console.error('Lead intelligence API error:', error);
+    console.error('Lead intelligence error:', error);
     return NextResponse.json(
-      { error: 'Failed to generate lead intelligence' },
+      { error: 'Failed to generate intelligence' },
       { status: 500 }
     );
   }
 }
 
+function buildContext(lead: LeadData): string {
+  const parts: string[] = [];
+
+  // Basic info
+  if (lead.name) parts.push(`Name: ${lead.name}`);
+  if (lead.email) {
+    parts.push(`Email: ${lead.email}`);
+    const domain = lead.email.split('@')[1];
+    if (domain && !['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'].includes(domain.toLowerCase())) {
+      parts.push(`Company Domain: ${domain}`);
+    }
+  }
+  if (lead.company) parts.push(`Company: ${lead.company}`);
+  if (lead.job_title) parts.push(`Job Title: ${lead.job_title}`);
+  if (lead.location) parts.push(`Location: ${lead.location}`);
+  if (lead.service_interest) parts.push(`Service Interest: ${lead.service_interest}`);
+  if (lead.phone) parts.push(`Phone: ${lead.phone}`);
+
+  // Behavioral data
+  if (lead.entry_page) parts.push(`Entry Page: ${lead.entry_page}`);
+  if (lead.pages_visited?.length) {
+    parts.push(`Pages Visited (${lead.pages_visited.length}): ${lead.pages_visited.join(', ')}`);
+  }
+
+  // Requirements/message
+  if (lead.requirements) parts.push(`\nRequirements/Notes:\n${lead.requirements}`);
+  if (lead.message) parts.push(`\nMessage:\n${lead.message}`);
+
+  // Conversation history
+  if (lead.conversation?.length) {
+    const userMsgs = lead.conversation
+      .filter(m => m.role === 'user')
+      .map(m => `- "${m.content}"`)
+      .join('\n');
+    if (userMsgs) parts.push(`\nWhat they said in chat:\n${userMsgs}`);
+  }
+
+  return parts.join('\n');
+}
+
+async function generateIntelligence(lead: LeadData): Promise<IntelligenceReport> {
+  const context = buildContext(lead);
+
+  const prompt = `You are a B2B sales intelligence analyst for ACI Infotech, an enterprise tech consulting firm.
+
+ACI CONTEXT:
+- 80+ Fortune 500 clients, $500M+ value delivered, 98% retention
+- Services: Data Engineering (Databricks, Snowflake, dbt), AI/ML (MLOps, GenAI, ArqAI), Cloud (AWS, Azure, K8s), MarTech/CDP (Salesforce, Braze), Digital Transformation (SAP S/4HANA, ServiceNow), Cyber Security
+- Case Studies: MSCI ($12M savings, SAP consolidation), RaceTrac (25% promotion lift, MarTech), Sodexo (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
+
+LEAD DATA:
+${context}
+
+Analyze this lead comprehensively. Use your knowledge about companies and roles to make informed inferences.
+
+Return a JSON object with this EXACT structure (no markdown, just JSON):
+{
+  "leadScore": <0-100 based on fit and intent>,
+  "person": {
+    "summary": "<2 sentences about this person - who they are, what they likely do>",
+    "inferredRole": "<their likely responsibilities>",
+    "seniority": "<IC|Manager|Director|VP|C-Level|Unknown>",
+    "decisionMaker": <true/false>,
+    "linkedInSearch": "<search string to find them>"
+  },
+  "company": {
+    "name": "<company name or inferred from domain>",
+    "summary": "<What this company does, any known info>",
+    "industry": "<primary industry>",
+    "size": "<Startup|SMB|Mid-Market|Enterprise|Fortune 500|Unknown>",
+    "likelyTechStack": ["<technologies they likely use>"],
+    "challenges": ["<business/tech challenges common in their industry>"],
+    "website": "<company website URL>"
+  },
+  "opportunity": {
+    "painPoints": ["<specific pain points this lead likely has>"],
+    "valueProps": ["<ACI value props that would resonate>"],
+    "relevantServices": ["<which ACI services to highlight>"],
+    "caseStudies": ["<relevant case studies with brief why>"],
+    "competitors": "<who ACI might compete against>"
+  },
+  "engagement": {
+    "talkingPoints": ["<specific things to say on the call>"],
+    "questions": ["<discovery questions to ask>"],
+    "objections": ["<likely objection: how to handle>"],
+    "nextSteps": ["<recommended actions>"]
+  },
+  "signals": {
+    "intent": "<Low|Medium|High>",
+    "urgency": "<Low|Medium|High>",
+    "budget": "<inference about budget/spend authority>",
+    "timeline": "<inference about project timeline>"
+  },
+  "research": {
+    "sources": ["<where to find more info>"],
+    "confidence": "<Low|Medium|High based on data quality>"
+  }
+}
+
+Be specific, not generic. Make reasonable inferences. If data is sparse, note lower confidence.`;
+
+  try {
+    const response = await anthropic.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 2000,
+      messages: [{ role: 'user', content: prompt }],
+    });
+
+    const textContent = response.content.find(block => block.type === 'text');
+    const text = textContent && 'text' in textContent ? textContent.text : '';
+
+    // Parse JSON
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]) as IntelligenceReport;
+    }
+  } catch (e) {
+    console.error('AI parsing error:', e);
+  }
+
+  // Fallback
+  return createFallbackReport(lead);
+}
+
+function createFallbackReport(lead: LeadData): IntelligenceReport {
+  const domain = lead.email?.split('@')[1] || '';
+
+  return {
+    leadScore: calculateBasicScore(lead),
+    person: {
+      summary: lead.name ? `${lead.name}${lead.job_title ? `, ${lead.job_title}` : ''}` : 'Unknown contact',
+      inferredRole: lead.job_title || 'Unknown',
+      seniority: 'Unknown',
+      decisionMaker: false,
+      linkedInSearch: `${lead.name || ''} ${lead.company || domain}`.trim(),
+    },
+    company: {
+      name: lead.company || domain || 'Unknown',
+      summary: 'Insufficient data for company analysis',
+      industry: 'Unknown',
+      size: 'Unknown',
+      likelyTechStack: [],
+      challenges: [],
+      website: domain ? `https://${domain}` : '',
+    },
+    opportunity: {
+      painPoints: lead.service_interest ? [`Interest in ${lead.service_interest}`] : [],
+      valueProps: ['Senior architects only', 'Production systems with SLAs'],
+      relevantServices: lead.service_interest ? [lead.service_interest] : [],
+      caseStudies: ['MSCI - Enterprise data', 'Sodexo - Scale deployment'],
+      competitors: 'Unknown',
+    },
+    engagement: {
+      talkingPoints: ['Understand their specific challenges', 'Share relevant experience'],
+      questions: ['What is driving this initiative?', 'What does success look like?'],
+      objections: [],
+      nextSteps: ['Schedule discovery call', 'Research company website'],
+    },
+    signals: {
+      intent: 'Medium',
+      urgency: 'Medium',
+      budget: 'Unknown',
+      timeline: 'Unknown',
+    },
+    research: {
+      sources: ['LinkedIn', domain ? `https://${domain}` : 'Company website'],
+      confidence: 'Low',
+    },
+  };
+}
+
 function calculateBasicScore(lead: LeadData): number {
   let score = 0;
 
-  // Name provided
   if (lead.name) score += 10;
-
-  // Email quality
   if (lead.email) {
     score += 10;
     const domain = lead.email.split('@')[1]?.toLowerCase() || '';
-    // Enterprise email domains score higher
-    if (!domain.includes('gmail') && !domain.includes('yahoo') && !domain.includes('hotmail') && !domain.includes('outlook')) {
+    if (!['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'].includes(domain)) {
       score += 20;
     }
-    // Known enterprise domains
-    if (domain.endsWith('.com') && domain.length > 10) {
-      score += 10;
-    }
   }
-
-  // Company provided
-  if (lead.company) score += 20;
-
-  // Phone provided
-  if (lead.phone) score += 10;
-
-  // Service interest specified
-  if (lead.service_interest || lead.inquiry_type) score += 10;
-
-  // Message provided
-  if (lead.message && lead.message.length > 50) score += 10;
+  if (lead.company) score += 15;
+  if (lead.job_title) score += 10;
+  if (lead.phone) score += 5;
+  if (lead.service_interest) score += 15;
+  if (lead.requirements && lead.requirements.length > 50) score += 10;
+  if (lead.pages_visited && lead.pages_visited.length > 2) score += 5;
 
   return Math.min(score, 100);
 }

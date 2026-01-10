@@ -106,7 +106,6 @@ export async function POST(request: NextRequest) {
             inquiry_type: leadInfo.serviceInterest || 'General Inquiry',
             message: `[Chat Lead]\n\nService Interest: ${leadInfo.serviceInterest || 'Not specified'}\nJob Title: ${leadInfo.jobTitle || 'Not specified'}\nLocation: ${leadInfo.location || 'Not specified'}\nPreferred Time: ${leadInfo.preferredTime || 'Not specified'}\nEntry Page: ${entryPage || 'Not tracked'}\nPages Visited: ${pagesVisited?.join(', ') || 'Not tracked'}\n\nConversation Summary:\n${userMessages}`,
             source: 'chat_widget',
-            status: 'new',
           })
           .select()
           .single();

@@ -335,31 +335,31 @@ export function TimeSlotSuggestions({
   );
 }
 
-// Page-specific initial messages
+// Page-specific initial messages - Direct, peer-level voice
 const PAGE_INITIAL_MESSAGES: Record<string, string> = {
-  '/': "Hi! I'm here to help you explore how ACI Infotech can accelerate your data and AI initiatives. What brings you here today?",
-  '/services': "Looking to find the right solution for your business? I can help you navigate our services and find the perfect fit. What challenge are you looking to solve?",
-  '/services/data-engineering': "I see you're exploring our Data Engineering capabilities. We've helped Fortune 500 companies build production-grade data platforms. What's your current data challenge?",
-  '/services/applied-ai-ml': "Interested in AI/ML? We specialize in taking AI from prototype to production at enterprise scale. Are you looking to implement new AI capabilities or optimize existing ones?",
-  '/services/cloud-modernization': "Cloud modernization can transform your business agility. Whether it's migration, optimization, or multi-cloud strategy - I can help guide you. What's your current cloud situation?",
-  '/services/martech-cdp': "MarTech and CDP implementations are our specialty. We've unified customer data for major brands. Are you looking to improve your customer data strategy?",
-  '/services/digital-transformation': "Digital transformation is a journey. From SAP S/4HANA to process automation, we've guided enterprises through it all. What transformation goals do you have in mind?",
-  '/services/cyber-security': "Security is foundational to everything we do. From zero trust to compliance, how can I help secure your digital assets?",
-  '/industries/financial-services': "I see you're in financial services. We understand the unique challenges of regulatory compliance, real-time risk analytics, and data governance. How can we help your organization?",
-  '/industries/healthcare': "Healthcare data presents unique challenges around HIPAA compliance and patient privacy. We've built compliant data platforms for major health systems. What are you working on?",
-  '/industries/retail': "Retail is all about understanding your customer. From Customer 360 to inventory optimization, we've helped major retailers transform. What's your focus area?",
-  '/industries/manufacturing': "Manufacturing analytics can transform operations. From IoT to predictive maintenance, what operational challenges are you looking to solve?",
-  '/industries/energy': "Energy sector analytics require specialized expertise in grid management and sustainability reporting. How can we help your energy organization?",
-  '/platforms/databricks': "You're looking at Databricks - excellent choice for unified analytics. We're a certified Databricks partner with deep implementation experience. Planning a new implementation or migration?",
-  '/platforms/snowflake': "Snowflake is powerful for modern data warehousing. We've helped enterprises maximize their Snowflake investment. What's your Snowflake journey looking like?",
-  '/platforms/aws': "AWS offers tremendous capabilities for data and AI. As AWS partners, we've built scalable platforms on AWS. What are you building?",
-  '/platforms/azure': "Azure's data ecosystem is robust for enterprise needs. We've implemented Azure Synapse, ML, and more. What Azure capabilities interest you?",
-  '/platforms/salesforce': "Salesforce integration and data optimization can unlock customer insights. Are you looking to better leverage your Salesforce data?",
-  '/platforms/sap': "SAP transformations require deep expertise. From S/4HANA migrations to data integration, we've done it all. What's your SAP situation?",
-  '/contact': "I see you're ready to get in touch! I can help you prepare for a productive conversation with our team. What would you like to discuss?",
-  '/case-studies': "Our case studies showcase real results. I can help you find the most relevant examples for your industry or challenge. What kind of outcomes are you looking for?",
-  '/blog': "Great to see you exploring our insights! Is there a specific topic you're researching? I can point you to relevant resources.",
-  '/whitepapers': "Our whitepapers offer deep dives into enterprise data and AI. Looking for guidance on a specific topic?",
+  '/': "Data platforms, AI systems, cloud architecture. Senior architects, production code, real SLAs. What are you working on?",
+  '/services': "We cover the full stack - data, AI, cloud, transformation. What's the problem you're trying to solve?",
+  '/services/data-engineering': "Databricks, Snowflake, data mesh - we've built it all at scale. Evaluating platforms or dealing with a specific data challenge?",
+  '/services/applied-ai-ml': "MLOps, GenAI, LLM deployments, AI governance. Most AI projects fail on data foundation, not the models. Where are you in the journey?",
+  '/services/cloud-modernization': "AWS, Azure, multi-cloud, K8s. Migration, optimization, or architecting something new?",
+  '/services/martech-cdp': "Customer data unification is messy work. Salesforce, Braze, CDPs - what's the integration challenge?",
+  '/services/digital-transformation': "SAP S/4HANA, ServiceNow, MuleSoft. The real question is always change management. What's driving your timeline?",
+  '/services/cyber-security': "Zero trust, DevSecOps, compliance. Security that doesn't slow down engineering. What's the priority?",
+  '/industries/financial-services': "Regulatory compliance, real-time risk, data governance. We know the constraints. What's the initiative?",
+  '/industries/healthcare': "HIPAA, interoperability, clinical analytics. Complexity is the norm here. What are you building?",
+  '/industries/retail': "Customer 360, inventory optimization, omnichannel data. Where's the friction in your current setup?",
+  '/industries/manufacturing': "IoT, predictive maintenance, supply chain analytics. Shop floor to cloud. What's the use case?",
+  '/industries/energy': "Grid analytics, asset management, sustainability reporting. What's driving the project?",
+  '/platforms/databricks': "Certified partner, deep Lakehouse experience. Greenfield implementation or migrating from something?",
+  '/platforms/snowflake': "Data Cloud, data sharing, cost optimization. What's the current state of your Snowflake?",
+  '/platforms/aws': "We've built at scale on AWS - data lakes, ML pipelines, serverless. What's the architecture challenge?",
+  '/platforms/azure': "Synapse, Fabric, ML Studio - the full ecosystem. What are you trying to stand up?",
+  '/platforms/salesforce': "Data integration is where Salesforce gets complicated. Syncing issues or broader data strategy?",
+  '/platforms/sap': "S/4HANA migrations, data extraction, integration. These projects have a way of expanding. What's your scope?",
+  '/contact': "Ready to talk specifics. Anything you want to cover before connecting with the team?",
+  '/case-studies': "Real outcomes, real architectures. Looking for something specific - industry, tech stack, type of result?",
+  '/blog': "Digging into the details. Questions on anything you're reading?",
+  '/whitepapers': "Going deep. What's the research focus?",
 };
 
 // Helper function to get page-specific initial message
@@ -380,19 +380,19 @@ export function getPageInitialMessage(pageContext: PageContext): string {
 
   // Handle dynamic routes by type
   if (pageContext.type === 'case-study') {
-    return `I see you're reading one of our case studies. These showcase real enterprise transformations. Have questions about how we achieved these results or how they might apply to your situation?`;
+    return "Real architecture, real outcomes. Questions on how we approached it, or thinking about something similar?";
   }
 
   if (pageContext.type === 'blog') {
-    return `Great article, right? I can help you dive deeper into this topic or connect you with our experts who specialize in this area. What questions do you have?`;
+    return "Digging into the details - good. What's on your mind?";
   }
 
   if (pageContext.type === 'whitepaper') {
-    return `Whitepapers are great for in-depth knowledge. I can help clarify concepts or discuss how these insights apply to your organization. What interests you most?`;
+    return "Going deep on the topic. Anything specific you're trying to figure out?";
   }
 
   // Default message
-  return "Hi! I'm here to help you explore how ACI Infotech can accelerate your data and AI initiatives. What can I help you with today?";
+  return "Data, AI, cloud, transformation. Senior architects, production systems. What's the challenge?";
 }
 
 // Helper to detect page context from pathname

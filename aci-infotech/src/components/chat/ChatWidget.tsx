@@ -297,7 +297,7 @@ export default function ChatWidget() {
     if (messageLower.includes('schedule') || messageLower.includes('call') || messageLower.includes('meeting') || messageLower.includes('talk to') || messageLower.includes('consultation')) {
       if (!updatedLead.name) {
         nextStage = 'collecting_name';
-        followUp = "I'd love to set that up! First, who do I have the pleasure of speaking with?";
+        followUp = "Let's set that up. Who should we be reaching out to?";
         shouldCallAI = false;
         return { followUp, nextStage, updatedLead, shouldCallAI };
       }
@@ -324,16 +324,16 @@ export default function ChatWidget() {
 
       case 'collecting_name':
         if (messageLower.includes('skip') || messageLower.includes('why')) {
-          followUp = "No problem! Your name just helps me personalize our chat. You can share it anytime, or we can continue exploring how we can help.";
+          followUp = "Fair enough. Let's keep going - what else can I help you with?";
           nextStage = 'general_chat';
           shouldCallAI = false;
         } else if (userMessage.length > 1 && userMessage.length < 50 && !userMessage.includes('@')) {
           updatedLead.name = userMessage.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
           nextStage = 'collecting_email';
-          followUp = `Great to meet you, ${updatedLead.name}! What's the best **work email** to reach you? This helps us send relevant resources and connect you with the right specialist.`;
+          followUp = `${updatedLead.name} - good to connect. Best work email to reach you? Helps us route things to the right team.`;
           shouldCallAI = false;
         } else {
-          followUp = "I'd love to know who I'm chatting with. What's your name?";
+          followUp = "Who am I speaking with?";
           shouldCallAI = false;
         }
         break;
@@ -341,24 +341,24 @@ export default function ChatWidget() {
       case 'collecting_email':
         if (messageLower.includes('skip') || messageLower.includes('prefer') || messageLower.includes('call first')) {
           nextStage = 'scheduling';
-          followUp = "Sure thing! When works best for a quick call? Our architects are available most mornings and afternoons.";
+          followUp = "Works for me. When's good for a call?";
           shouldCallAI = false;
           setShowTimeSlots(true);
         } else if (updatedLead.email) {
           if (!isWorkEmail(updatedLead.email)) {
-            followUp = `Thanks! For the best experience with our enterprise team, could you share your **work email**? We'll keep your info secure and only send relevant content.`;
+            followUp = "Work email would be better for routing to the right team. Mind sharing that instead?";
             updatedLead.email = undefined; // Clear the consumer email
             shouldCallAI = false;
           } else {
             nextStage = 'collecting_company';
-            followUp = "Perfect! And which company are you with?";
+            followUp = "Got it. Which company?";
             shouldCallAI = false;
           }
         } else if (messageLower.includes('why')) {
-          followUp = "Great question! Your email helps us:\n- Send you relevant case studies and resources\n- Connect you with a specialist in your area\n- Keep track of our conversation\n\nWe never spam - just helpful content!";
+          followUp = "Just helps us route things properly - relevant resources, right specialist. We don't spam.";
           shouldCallAI = false;
         } else {
-          followUp = "I didn't catch that. Could you share your work email? It helps us connect you with the right team.";
+          followUp = "Didn't catch that. Work email?";
           shouldCallAI = false;
         }
         break;
@@ -366,15 +366,15 @@ export default function ChatWidget() {
       case 'collecting_company':
         if (messageLower.includes('skip')) {
           nextStage = 'collecting_job_title';
-          followUp = "No worries! What's your role? This helps me understand how we can best support you.";
+          followUp = "Sure. What's your role?";
           shouldCallAI = false;
         } else if (userMessage.length > 1 && userMessage.length < 100) {
           updatedLead.company = userMessage;
           nextStage = 'collecting_job_title';
-          followUp = `${updatedLead.company} - got it! What's your role there? This helps me connect you with the right specialist.`;
+          followUp = `${updatedLead.company}. And your role there?`;
           shouldCallAI = false;
         } else {
-          followUp = "What company or organization are you with?";
+          followUp = "Which company?";
           shouldCallAI = false;
         }
         break;
@@ -382,12 +382,12 @@ export default function ChatWidget() {
       case 'collecting_job_title':
         if (messageLower.includes('skip')) {
           nextStage = 'collecting_location';
-          followUp = "No problem! Last question - where are you based? We have teams across the US and globally.";
+          followUp = "Last one - where are you based?";
           shouldCallAI = false;
         } else if (userMessage.length > 1 && userMessage.length < 100) {
           updatedLead.jobTitle = userMessage;
           nextStage = 'collecting_location';
-          followUp = `${updatedLead.jobTitle} - excellent! Where are you based? We have teams across the US and globally.`;
+          followUp = `Got it. Location? We have teams across the US and globally.`;
           shouldCallAI = false;
         }
         break;
@@ -405,7 +405,7 @@ export default function ChatWidget() {
           updatedLead.preferredTime = userMessage;
           if (!updatedLead.email) {
             nextStage = 'collecting_email';
-            followUp = `Great! I'll note that down. To send you a calendar invite, what's your work email?`;
+            followUp = `Noted. Work email for the calendar invite?`;
             shouldCallAI = false;
             setShowTimeSlots(false);
           } else {
@@ -473,11 +473,11 @@ export default function ChatWidget() {
         });
 
         const data = await response.json();
-        assistantContent = data.message || "I apologize, but I'm having trouble responding. Please try again or [contact us directly](/contact).";
+        assistantContent = data.message || "Something's off on my end. [Reach out directly](/contact) - faster anyway.";
 
         // If in discovery, prompt for info naturally
         if (nextStage === 'collecting_name' && !followUp) {
-          assistantContent += "\n\nBy the way, I'd love to personalize our chat. What's your name?";
+          assistantContent += "\n\nBy the way - who am I talking to?";
         }
       }
 
@@ -502,7 +502,7 @@ export default function ChatWidget() {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: "I apologize, but I'm having trouble connecting. Please try again or [reach out to us directly](/contact).",
+        content: "Connection issue on my end. [Reach out directly](/contact) - it's faster.",
         timestamp: new Date(),
         showQuickReplies: true,
       };
