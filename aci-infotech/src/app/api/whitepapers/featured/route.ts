@@ -6,7 +6,7 @@ export async function GET() {
     // Fetch the latest featured whitepaper from database
     const { data, error } = await supabase
       .from('whitepapers')
-      .select('id, slug, title, description, cover_image, file_url')
+      .select('id, slug, title, excerpt, description, highlights, cover_image, file_url')
       .eq('is_featured', true)
       .eq('status', 'published')
       .order('created_at', { ascending: false })

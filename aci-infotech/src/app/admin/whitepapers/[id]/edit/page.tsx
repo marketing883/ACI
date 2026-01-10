@@ -12,6 +12,8 @@ import {
   FileText,
   Image as ImageIcon,
   X,
+  Plus,
+  Trash2,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -29,7 +31,9 @@ interface WhitepaperData {
   id: string;
   title: string;
   slug: string;
+  excerpt: string | null;
   description: string;
+  highlights: string[] | null;
   category: string;
   tags: string[];
   file_url: string | null;
@@ -55,7 +59,9 @@ export default function EditWhitepaperPage() {
   // Form state
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
+  const [excerpt, setExcerpt] = useState('');
   const [description, setDescription] = useState('');
+  const [highlights, setHighlights] = useState<string[]>(['', '', '']);
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState('');
   const [fileUrl, setFileUrl] = useState('');
@@ -65,6 +71,25 @@ export default function EditWhitepaperPage() {
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
+
+  // Highlight management
+  const updateHighlight = (index: number, value: string) => {
+    const newHighlights = [...highlights];
+    newHighlights[index] = value;
+    setHighlights(newHighlights);
+  };
+
+  const addHighlight = () => {
+    if (highlights.length < 5) {
+      setHighlights([...highlights, '']);
+    }
+  };
+
+  const removeHighlight = (index: number) => {
+    if (highlights.length > 1) {
+      setHighlights(highlights.filter((_, i) => i !== index));
+    }
+  };
 
   useEffect(() => {
     fetchWhitepaper();
@@ -83,7 +108,9 @@ export default function EditWhitepaperPage() {
       if (data) {
         setTitle(data.title || '');
         setSlug(data.slug || '');
+        setExcerpt(data.excerpt || '');
         setDescription(data.description || '');
+        setHighlights(data.highlights?.length > 0 ? data.highlights : ['', '', '']);
         setCategory(data.category || '');
         setTags(data.tags?.join(', ') || '');
         setFileUrl(data.file_url || '');
@@ -244,7 +271,9 @@ export default function EditWhitepaperPage() {
         id: whitepapershipId,
         title,
         slug,
+        excerpt: excerpt || null,
         description,
+        highlights: highlights.filter(h => h.trim()),
         category,
         tags: tags.split(',').map(t => t.trim()).filter(Boolean),
         file_url: fileUrl || null,
@@ -416,6 +445,77 @@ export default function EditWhitepaperPage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Homepage Card Preview */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold mb-2">Homepage Card Content</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            This content appears on the homepage featured whitepaper card. Keep it concise and compelling.
+          </p>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Short Excerpt <span className="text-gray-400 font-normal">(1-2 sentences)</span>
+              </label>
+              <textarea
+                value={excerpt}
+                onChange={(e) => setExcerpt(e.target.value)}
+                placeholder="A brief, compelling summary that makes readers want to download..."
+                rows={2}
+                maxLength={200}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {excerpt.length}/200 characters
+              </p>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Key Takeaways <span className="text-gray-400 font-normal">(What you&apos;ll learn)</span>
+                </label>
+                {highlights.length < 5 && (
+                  <button
+                    type="button"
+                    onClick={addHighlight}
+                    className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add
+                  </button>
+                )}
+              </div>
+              <div className="space-y-2">
+                {highlights.map((highlight, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <span className="text-gray-400 text-sm">•</span>
+                    <input
+                      type="text"
+                      value={highlight}
+                      onChange={(e) => updateHighlight(index, e.target.value)}
+                      placeholder={`Takeaway ${index + 1}, e.g., "Framework for AI-powered inventory management"`}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    {highlights.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeHighlight(index)}
+                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                2-3 bullet points work best for the homepage card
+              </p>
             </div>
           </div>
         </div>

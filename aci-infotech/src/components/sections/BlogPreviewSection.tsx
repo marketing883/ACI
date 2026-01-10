@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Clock, Download, FileText, X, Mail, Building2, User, Loader2 } from 'lucide-react';
+import { ArrowRight, Clock, Download, FileText, X, Mail, Building2, User, Loader2, CheckCircle2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
 interface BlogPost {
@@ -21,7 +21,9 @@ interface Whitepaper {
   id: string;
   slug: string;
   title: string;
+  excerpt?: string;
   description: string;
+  highlights?: string[];
   cover_image?: string;
   file_url?: string;
 }
@@ -245,9 +247,21 @@ function FeaturedWhitepaperCard({
           <h3 className="text-xl font-bold mb-3 text-white">
             {whitepaper.title}
           </h3>
-          <p className="text-gray-300 text-sm line-clamp-3">
-            {whitepaper.description}
+          <p className="text-gray-300 text-sm mb-4">
+            {whitepaper.excerpt || whitepaper.description?.substring(0, 120)}
           </p>
+
+          {/* Key Takeaways */}
+          {whitepaper.highlights && whitepaper.highlights.length > 0 && (
+            <div className="space-y-2">
+              {whitepaper.highlights.slice(0, 3).map((highlight, index) => (
+                <div key={index} className="flex items-start gap-2 text-sm text-gray-300">
+                  <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+                  <span>{highlight}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-6">
@@ -310,7 +324,13 @@ export default function BlogPreviewSection({
     id: 'default',
     slug: 'enterprise-data-strategy-2025',
     title: 'Enterprise Data Strategy 2025',
+    excerpt: 'Build resilient, AI-ready data platforms that scale with your business needs.',
     description: 'A comprehensive guide to building resilient, AI-ready data platforms that scale with your business needs. Learn from 80+ enterprise deployments.',
+    highlights: [
+      'Framework for AI-powered data architecture',
+      'Cost optimization strategies that drive 40% savings',
+      'Real-world case studies from Fortune 500 implementations',
+    ],
     cover_image: '/images/whitepapers/data-strategy-cover.jpg',
   };
 
