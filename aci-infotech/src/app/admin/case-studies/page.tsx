@@ -29,12 +29,15 @@ function getErrorMessage(error: unknown): string {
 interface CaseStudy {
   id: string;
   slug: string;
-  headline: string;
+  title?: string;
+  headline?: string;
   client_name: string;
-  client_industry: string;
-  services: string[];
-  is_published: boolean;
-  is_featured: boolean;
+  client_industry?: string;
+  industry?: string;
+  services?: string[];
+  is_published?: boolean;
+  status?: string;
+  is_featured?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -128,7 +131,7 @@ export default function CaseStudiesAdmin() {
     try {
       const { data, error } = await supabase
         .from('case_studies')
-        .select('id, slug, headline, client_name, client_industry, services, is_published, is_featured, created_at, updated_at')
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -140,29 +143,57 @@ export default function CaseStudiesAdmin() {
     }
   }
 
+  // Helper to get display title (handles both title and headline columns)
+  function getDisplayTitle(cs: CaseStudy): string {
+    return cs.title || cs.headline || cs.slug || 'Untitled';
+  }
+
+  // Helper to check if published (handles both is_published and status columns)
+  function isPublished(cs: CaseStudy): boolean {
+    if (cs.is_published !== undefined) return cs.is_published;
+    if (cs.status) return cs.status === 'published';
+    return false;
+  }
+
+  // Helper to get industry (handles both client_industry and industry columns)
+  function getIndustry(cs: CaseStudy): string {
+    return cs.client_industry || cs.industry || '-';
+  }
+
   async function togglePublished(id: string, currentlyPublished: boolean) {
     const newIsPublished = !currentlyPublished;
+    const currentCs = caseStudies.find(cs => cs.id === id);
+    const usesStatusColumn = currentCs?.status !== undefined;
 
     if (!configured) {
       setCaseStudies(caseStudies.map(cs =>
-        cs.id === id ? { ...cs, is_published: newIsPublished } : cs
+        cs.id === id
+          ? usesStatusColumn
+            ? { ...cs, status: newIsPublished ? 'published' : 'draft' }
+            : { ...cs, is_published: newIsPublished }
+          : cs
       ));
       setActiveMenu(null);
       return;
     }
 
     try {
+      const updateData = usesStatusColumn
+        ? { status: newIsPublished ? 'published' : 'draft' }
+        : { is_published: newIsPublished, published_at: newIsPublished ? new Date().toISOString() : null };
+
       const { error } = await supabase
         .from('case_studies')
-        .update({
-          is_published: newIsPublished,
-          published_at: newIsPublished ? new Date().toISOString() : null
-        })
+        .update(updateData)
         .eq('id', id);
 
       if (error) throw error;
       setCaseStudies(caseStudies.map(cs =>
-        cs.id === id ? { ...cs, is_published: newIsPublished } : cs
+        cs.id === id
+          ? usesStatusColumn
+            ? { ...cs, status: newIsPublished ? 'published' : 'draft' }
+            : { ...cs, is_published: newIsPublished }
+          : cs
       ));
     } catch (error) {
       console.error('Error updating case study:', getErrorMessage(error));
@@ -170,10 +201,12 @@ export default function CaseStudiesAdmin() {
     setActiveMenu(null);
   }
 
-  async function toggleFeatured(id: string, currentStatus: boolean) {
+  async function toggleFeatured(id: string, currentStatus: boolean | undefined) {
+    const newStatus = !currentStatus;
+
     if (!configured) {
       setCaseStudies(caseStudies.map(cs =>
-        cs.id === id ? { ...cs, is_featured: !currentStatus } : cs
+        cs.id === id ? { ...cs, is_featured: newStatus } : cs
       ));
       setActiveMenu(null);
       return;
@@ -182,12 +215,12 @@ export default function CaseStudiesAdmin() {
     try {
       const { error } = await supabase
         .from('case_studies')
-        .update({ is_featured: !currentStatus })
+        .update({ is_featured: newStatus })
         .eq('id', id);
 
       if (error) throw error;
       setCaseStudies(caseStudies.map(cs =>
-        cs.id === id ? { ...cs, is_featured: !currentStatus } : cs
+        cs.id === id ? { ...cs, is_featured: newStatus } : cs
       ));
     } catch (error) {
       console.error('Error updating case study:', getErrorMessage(error));
@@ -222,9 +255,9 @@ export default function CaseStudiesAdmin() {
 
   const filteredCaseStudies = caseStudies.filter((cs) =>
     searchQuery === '' ||
-    cs.client_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    cs.headline?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    cs.client_industry?.toLowerCase().includes(searchQuery.toLowerCase())
+    cs.client_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    getDisplayTitle(cs).toLowerCase().includes(searchQuery.toLowerCase()) ||
+    getIndustry(cs).toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   function formatDate(dateString: string) {
@@ -237,8 +270,8 @@ export default function CaseStudiesAdmin() {
 
   const stats = {
     total: caseStudies.length,
-    published: caseStudies.filter(cs => cs.is_published).length,
-    draft: caseStudies.filter(cs => !cs.is_published).length,
+    published: caseStudies.filter(cs => isPublished(cs)).length,
+    draft: caseStudies.filter(cs => !isPublished(cs)).length,
     featured: caseStudies.filter(cs => cs.is_featured).length,
   };
 
@@ -358,24 +391,24 @@ export default function CaseStudiesAdmin() {
                     <td className="px-6 py-4">
                       <div>
                         <p className="font-medium text-gray-900">{cs.client_name}</p>
-                        <p className="text-sm text-gray-500 line-clamp-1">{cs.headline}</p>
+                        <p className="text-sm text-gray-500 line-clamp-1">{getDisplayTitle(cs)}</p>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{cs.client_industry || '-'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{getIndustry(cs)}</td>
                     <td className="px-6 py-4 text-sm text-gray-600">
-                      {cs.services?.length > 0 ? cs.services.slice(0, 2).join(', ') : '-'}
-                      {cs.services?.length > 2 && ` +${cs.services.length - 2}`}
+                      {cs.services && cs.services.length > 0 ? cs.services.slice(0, 2).join(', ') : '-'}
+                      {cs.services && cs.services.length > 2 && ` +${cs.services.length - 2}`}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${
-                            cs.is_published
+                            isPublished(cs)
                               ? 'bg-green-100 text-green-700'
                               : 'bg-gray-100 text-gray-700'
                           }`}
                         >
-                          {cs.is_published ? 'Published' : 'Draft'}
+                          {isPublished(cs) ? 'Published' : 'Draft'}
                         </span>
                         {cs.is_featured && (
                           <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
@@ -413,10 +446,10 @@ export default function CaseStudiesAdmin() {
                               Edit
                             </Link>
                             <button
-                              onClick={() => togglePublished(cs.id, cs.is_published)}
+                              onClick={() => togglePublished(cs.id, isPublished(cs))}
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                             >
-                              {cs.is_published ? (
+                              {isPublished(cs) ? (
                                 <>
                                   <EyeOff className="w-4 h-4" />
                                   Unpublish
@@ -473,7 +506,7 @@ export default function CaseStudiesAdmin() {
               Are you sure you want to delete this case study?
             </p>
             <p className="font-medium text-gray-900 mb-4 p-3 bg-gray-50 rounded-lg">
-              {deleteModal.client_name}: {deleteModal.headline}
+              {deleteModal.client_name}: {getDisplayTitle(deleteModal)}
             </p>
             <p className="text-sm text-red-600 mb-6">
               This action cannot be undone.
