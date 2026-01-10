@@ -13,18 +13,18 @@ export default function ArqAISection({
   const features = [
     {
       icon: Shield,
-      title: "Trust-Aware Agent Orchestration",
-      description: "Every agent carries cryptographic identity and scoped authorization. Non-repudiable audit trails for every action.",
+      title: "Get Pilots to Production in 30 Days",
+      description: "Not 9 months. Deploy agents that pass Legal, Security, and Compliance review on the first try.",
     },
     {
       icon: FileCheck,
-      title: "Compliance-Aware Prompt Compiler",
-      description: "Regulatory policies compiled into execution logic, not checked after the fact. Built for HIPAA, GDPR, SOX, PCI-DSS.",
+      title: "Zero Shadow AI. Complete Visibility.",
+      description: "Every agent carries cryptographic identity. Every action logged. Every decision auditable.",
     },
     {
       icon: Activity,
-      title: "Observability-Driven Adaptive RAG",
-      description: "Real-time performance monitoring with automatic, policy-compliant adaptation. Quality and compliance in a closed loop.",
+      title: "Compliance That Enables, Not Blocks",
+      description: "Built for HIPAA, GDPR, SOX, PCI-DSS. Policies compiled into infrastructure, not checked after execution.",
     },
   ];
 
@@ -56,11 +56,8 @@ export default function ArqAISection({
             </h2>
 
             {/* Description */}
-            <p className="text-lg text-gray-300 mb-4">
-              ArqAI enables regulated enterprises to build, run, and govern mission-critical agent workforces at production scale. Three patented technologies compile your policies into infrastructure, delivering 30-day deployments with cryptographic audit trails and compliance built into every agent&apos;s DNA.
-            </p>
-            <p className="text-sm text-gray-400 mb-8">
-              Deployed across healthcare, finance, manufacturing, and telecommunications.
+            <p className="text-lg text-gray-300 mb-8">
+              ArqAI is the only platform that lets regulated enterprises deploy autonomous agents at production scale without choosing between innovation and compliance.
             </p>
 
             {/* Features */}
@@ -73,7 +70,7 @@ export default function ArqAISection({
                       <Icon className="w-5 h-5 text-[#3B6FD4]" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-white mb-1">{feature.title}<span className="text-[#3B6FD4]">&trade;</span></h4>
+                      <h4 className="font-semibold text-white mb-1">{feature.title}</h4>
                       <p className="text-sm text-gray-400">{feature.description}</p>
                     </div>
                   </div>
