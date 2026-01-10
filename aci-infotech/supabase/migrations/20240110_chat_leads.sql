@@ -105,11 +105,12 @@ GRANT SELECT ON chat_leads_summary TO authenticated;
 
 -- Optional: Add to existing contacts table if you want to sync
 -- This function creates a contact record when a chat lead is qualified
+-- NOTE: Only enable this if your contacts table has these columns
 CREATE OR REPLACE FUNCTION sync_qualified_lead_to_contacts()
 RETURNS TRIGGER AS $$
 BEGIN
   IF NEW.status = 'qualified' AND OLD.status != 'qualified' THEN
-    INSERT INTO contacts (name, email, company, phone, inquiry_type, message, source, status)
+    INSERT INTO contacts (name, email, company, phone, inquiry_type, message, source)
     VALUES (
       COALESCE(NEW.name, 'Chat Lead'),
       NEW.email,
@@ -122,8 +123,7 @@ BEGIN
         E'\n', COALESCE(NEW.preferred_time, 'N/A'),
         E'\n', NEW.lead_score::text
       ),
-      'chat_widget',
-      'new'
+      'chat_widget'
     )
     ON CONFLICT (email) DO UPDATE SET
       updated_at = NOW();
