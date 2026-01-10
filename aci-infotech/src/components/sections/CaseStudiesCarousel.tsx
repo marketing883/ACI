@@ -63,45 +63,47 @@ function CaseStudyCard({
 }) {
   return (
     <div
-      className="flex-shrink-0 flex items-center justify-center px-4 sm:px-6 lg:px-8 snap-center"
-      style={{
-        width: '100vw',
-        scrollSnapAlign: 'center',
-      }}
+      className="flex-shrink-0 flex items-center justify-center px-4 sm:px-6 lg:px-8"
+      style={{ width: '100vw' }}
     >
       <div
-        className={`w-full max-w-4xl transition-all duration-500 ease-out ${
+        className={`w-full max-w-4xl transition-all duration-700 ease-out ${
           isActive
             ? 'scale-100 opacity-100'
-            : 'scale-[0.92] opacity-60'
+            : 'scale-[0.88] opacity-40'
         }`}
+        style={{
+          transform: isActive ? 'scale(1) translateY(0)' : 'scale(0.88) translateY(10px)',
+          transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
       >
         {/* Card Container with enhanced glassmorphism */}
         <div
-          className={`relative overflow-hidden rounded-2xl transition-all duration-500 ${
-            isActive ? 'shadow-2xl shadow-[#0052CC]/20' : 'shadow-xl'
-          }`}
+          className="relative overflow-hidden rounded-2xl"
           style={{
             background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.85) 100%)',
             backdropFilter: 'blur(20px)',
-            border: isActive ? '1px solid rgba(196, 255, 97, 0.3)' : '1px solid rgba(255, 255, 255, 0.1)',
+            border: isActive ? '1px solid rgba(196, 255, 97, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+            boxShadow: isActive
+              ? '0 25px 50px -12px rgba(0, 82, 204, 0.25), 0 0 0 1px rgba(196, 255, 97, 0.1)'
+              : '0 10px 40px -15px rgba(0, 0, 0, 0.3)',
+            transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           {/* Animated glow effect for active card */}
-          {isActive && (
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: 'radial-gradient(ellipse at 50% 0%, rgba(0, 82, 204, 0.15) 0%, transparent 60%)',
-              }}
-            />
-          )}
+          <div
+            className="absolute inset-0 pointer-events-none transition-opacity duration-700"
+            style={{
+              background: 'radial-gradient(ellipse at 50% 0%, rgba(0, 82, 204, 0.2) 0%, transparent 60%)',
+              opacity: isActive ? 1 : 0,
+            }}
+          />
 
           {/* Card Header - Compact */}
           <div className="relative px-5 py-4 md:px-6 md:py-5 border-b border-white/10">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                {/* Industry Badge + Title in same row on larger screens */}
+                {/* Industry Badge + Playbook in same row */}
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full">
                     <span className="w-1.5 h-1.5 bg-[#C4FF61] rounded-full" />
@@ -203,7 +205,7 @@ function CaseStudyCard({
                   <div className="relative pl-4">
                     <Quote className="absolute left-0 top-0 w-4 h-4 text-[#C4FF61]/40" strokeWidth={1.5} />
                     <p className="text-xs text-gray-400 italic leading-relaxed line-clamp-2">
-                      "{study.testimonial_quote}"
+                      &quot;{study.testimonial_quote}&quot;
                     </p>
                   </div>
                 </div>
@@ -232,53 +234,129 @@ export default function CaseStudiesCarousel({
   caseStudies,
 }: CaseStudiesCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const isScrolling = useRef(false);
+  const [displayProgress, setDisplayProgress] = useState(0);
+  const targetProgressRef = useRef(0);
+  const animationFrameRef = useRef<number | null>(null);
+  const isSnappingRef = useRef(false);
+  const snapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const totalCards = caseStudies.length;
 
-  // Handle horizontal scroll with native scroll-snap
+  // Smooth interpolation using requestAnimationFrame
+  const lerp = (start: number, end: number, factor: number) => {
+    return start + (end - start) * factor;
+  };
+
+  // Animate towards target progress with spring-like easing
+  const animateProgress = useCallback(() => {
+    const diff = Math.abs(targetProgressRef.current - displayProgress);
+
+    if (diff < 0.0001) {
+      setDisplayProgress(targetProgressRef.current);
+      animationFrameRef.current = null;
+      return;
+    }
+
+    // Use different smoothing factors for snapping vs free scrolling
+    const smoothingFactor = isSnappingRef.current ? 0.12 : 0.15;
+    const newProgress = lerp(displayProgress, targetProgressRef.current, smoothingFactor);
+    setDisplayProgress(newProgress);
+
+    animationFrameRef.current = requestAnimationFrame(animateProgress);
+  }, [displayProgress]);
+
+  // Start animation loop when target changes
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
+    if (animationFrameRef.current === null) {
+      animationFrameRef.current = requestAnimationFrame(animateProgress);
+    }
+    return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [animateProgress]);
 
+  // Calculate snapped position for a card
+  const getSnappedProgress = useCallback((rawProgress: number) => {
+    if (totalCards <= 1) return 0;
+    const cardWidth = 1 / (totalCards - 1);
+    const nearestCard = Math.round(rawProgress / cardWidth);
+    return Math.max(0, Math.min(1, nearestCard * cardWidth));
+  }, [totalCards]);
+
+  // Handle vertical scroll
+  useEffect(() => {
     const handleScroll = () => {
-      if (isScrolling.current) return;
+      if (!containerRef.current) return;
 
-      const scrollLeft = scrollContainer.scrollLeft;
-      const cardWidth = scrollContainer.offsetWidth;
-      const newIndex = Math.round(scrollLeft / cardWidth);
+      const container = containerRef.current;
+      const rect = container.getBoundingClientRect();
+      const containerHeight = container.offsetHeight;
+      const viewportHeight = window.innerHeight;
 
-      if (newIndex !== activeIndex && newIndex >= 0 && newIndex < totalCards) {
-        setActiveIndex(newIndex);
+      const scrollableDistance = containerHeight - viewportHeight;
+      const scrolled = -rect.top;
+
+      const rawProgress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+
+      // Update target progress
+      targetProgressRef.current = rawProgress;
+      isSnappingRef.current = false;
+
+      // Calculate active card
+      const cardZoneSize = 1 / totalCards;
+      const newActiveIndex = Math.min(
+        totalCards - 1,
+        Math.floor((rawProgress + cardZoneSize / 2) / cardZoneSize)
+      );
+      setActiveIndex(newActiveIndex);
+
+      // Clear existing snap timeout
+      if (snapTimeoutRef.current) {
+        clearTimeout(snapTimeoutRef.current);
+      }
+
+      // Snap to nearest card after scroll stops
+      snapTimeoutRef.current = setTimeout(() => {
+        isSnappingRef.current = true;
+        targetProgressRef.current = getSnappedProgress(rawProgress);
+      }, 120);
+
+      // Trigger animation if not running
+      if (animationFrameRef.current === null) {
+        animationFrameRef.current = requestAnimationFrame(animateProgress);
       }
     };
 
-    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
-    return () => scrollContainer.removeEventListener('scroll', handleScroll);
-  }, [activeIndex, totalCards]);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
-  // Navigate to specific card with smooth scroll
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (snapTimeoutRef.current) {
+        clearTimeout(snapTimeoutRef.current);
+      }
+    };
+  }, [totalCards, getSnappedProgress, animateProgress]);
+
+  // Navigate to specific card
   const navigateToCard = useCallback((index: number) => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
+    if (!containerRef.current) return;
 
-    isScrolling.current = true;
-    const cardWidth = scrollContainer.offsetWidth;
+    const containerHeight = containerRef.current.offsetHeight;
+    const viewportHeight = window.innerHeight;
+    const scrollableDistance = containerHeight - viewportHeight;
 
-    scrollContainer.scrollTo({
-      left: index * cardWidth,
+    const targetProgress = totalCards > 1 ? index / (totalCards - 1) : 0;
+    const targetScroll = containerRef.current.offsetTop + (targetProgress * scrollableDistance);
+
+    window.scrollTo({
+      top: targetScroll,
       behavior: 'smooth'
     });
-
-    setActiveIndex(index);
-
-    // Reset scrolling flag after animation
-    setTimeout(() => {
-      isScrolling.current = false;
-    }, 500);
-  }, []);
+  }, [totalCards]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -294,174 +372,197 @@ export default function CaseStudiesCarousel({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeIndex, totalCards, navigateToCard]);
 
-  // Touch/drag support for better mobile experience
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    touchEndX.current = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX.current;
-    const threshold = 50;
-
-    if (diff > threshold && activeIndex < totalCards - 1) {
-      navigateToCard(activeIndex + 1);
-    } else if (diff < -threshold && activeIndex > 0) {
-      navigateToCard(activeIndex - 1);
-    }
-  };
+  // Calculate horizontal offset with smooth interpolation
+  const translateX = totalCards > 1 ? -displayProgress * (totalCards - 1) * 100 : 0;
 
   return (
     <div
       ref={containerRef}
-      className="relative py-12 md:py-16 lg:py-20"
+      className="relative"
+      style={{ height: `${Math.max(totalCards * 100, 200)}vh` }}
     >
-      {/* Background Image with enhanced overlay */}
-      <div className="absolute inset-0">
-        <Image
-          src="/images/case-studies-bg.jpg"
-          alt="ACI Infotech enterprise data transformation case studies background"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 backdrop-blur-[3px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/90 via-[#0A1628]/80 to-[#0A1628]/90" />
-      </div>
-
-      {/* Ambient glow effects */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div
-          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-30"
-          style={{
-            background: 'radial-gradient(circle, rgba(0, 82, 204, 0.4) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-        />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full opacity-20"
-          style={{
-            background: 'radial-gradient(circle, rgba(196, 255, 97, 0.3) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-        />
-      </div>
-
-      {/* Content Container */}
-      <div className="relative">
-        {/* Header */}
-        <div className="text-center pb-8 px-4">
-          <p className="text-[#C4FF61] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
-            Success Stories
-          </p>
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
-            {headline}
-          </h2>
-          <p className="text-sm md:text-base text-gray-400 max-w-2xl mx-auto">{subheadline}</p>
+      {/* Sticky Container */}
+      <div className="sticky top-0 h-screen overflow-hidden">
+        {/* Background Image with enhanced overlay */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/case-studies-bg.jpg"
+            alt="ACI Infotech enterprise data transformation case studies background"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/85 via-[#0A1628]/75 to-[#0A1628]/85" />
         </div>
 
-        {/* Cards Carousel with native scroll-snap */}
-        <div
-          ref={scrollContainerRef}
-          className="flex overflow-x-auto scrollbar-hide"
-          style={{
-            scrollSnapType: 'x mandatory',
-            scrollBehavior: 'smooth',
-            WebkitOverflowScrolling: 'touch',
-            msOverflowStyle: 'none',
-            scrollbarWidth: 'none',
-          }}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {caseStudies.map((study, index) => (
-            <CaseStudyCard
-              key={study.id}
-              study={study}
-              isActive={index === activeIndex}
-              index={index}
+        {/* Ambient glow effects */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div
+            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full opacity-25"
+            style={{
+              background: 'radial-gradient(circle, rgba(0, 82, 204, 0.5) 0%, transparent 70%)',
+              filter: 'blur(80px)',
+              transform: `translate(${displayProgress * 100}px, 0)`,
+              transition: 'transform 0.3s ease-out',
+            }}
+          />
+          <div
+            className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full opacity-20"
+            style={{
+              background: 'radial-gradient(circle, rgba(196, 255, 97, 0.4) 0%, transparent 70%)',
+              filter: 'blur(60px)',
+              transform: `translate(${-displayProgress * 80}px, 0)`,
+              transition: 'transform 0.3s ease-out',
+            }}
+          />
+        </div>
+
+        {/* Constellation dots */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[
+            { left: '5%', top: '10%', delay: '0s', duration: '3s' },
+            { left: '15%', top: '80%', delay: '0.5s', duration: '4s' },
+            { left: '25%', top: '30%', delay: '1s', duration: '3.5s' },
+            { left: '55%', top: '85%', delay: '0.3s', duration: '4s' },
+            { left: '85%', top: '25%', delay: '0.8s', duration: '3.3s' },
+            { left: '95%', top: '55%', delay: '1.8s', duration: '4.8s' },
+          ].map((dot, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-white/30 rounded-full animate-pulse"
+              style={{
+                left: dot.left,
+                top: dot.top,
+                animationDelay: dot.delay,
+                animationDuration: dot.duration,
+              }}
             />
           ))}
         </div>
 
-        {/* Navigation Controls */}
-        <div className="pt-6 px-4">
-          {/* Arrow Navigation */}
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <button
-              onClick={() => navigateToCard(Math.max(0, activeIndex - 1))}
-              disabled={activeIndex === 0}
-              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-200 cursor-pointer ${
-                activeIndex === 0
-                  ? 'border-gray-700 text-gray-600 cursor-not-allowed'
-                  : 'border-white/30 text-white hover:border-[#C4FF61] hover:text-[#C4FF61] hover:bg-white/5'
-              }`}
-              aria-label="Previous case study"
-            >
-              <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
-            </button>
+        {/* Content Container */}
+        <div className="relative h-full flex flex-col">
+          {/* Header */}
+          <div className="text-center pt-6 pb-4 px-4">
+            <p className="text-[#C4FF61] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
+              Success Stories
+            </p>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">
+              {headline}
+            </h2>
+            <p className="text-sm md:text-base text-gray-400 max-w-2xl mx-auto">{subheadline}</p>
+          </div>
 
-            {/* Clickable Dots */}
-            <div className="flex items-center gap-2">
-              {caseStudies.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => navigateToCard(index)}
-                  className={`transition-all duration-300 rounded-full cursor-pointer ${
-                    index === activeIndex
-                      ? 'w-8 h-2 bg-[#C4FF61]'
-                      : 'w-2 h-2 bg-gray-600 hover:bg-gray-500'
-                  }`}
-                  aria-label={`Go to case study ${index + 1}`}
+          {/* Cards Strip with smooth transition */}
+          <div className="flex-1 flex items-center overflow-hidden">
+            <div
+              className="flex will-change-transform"
+              style={{
+                transform: `translateX(${translateX}vw)`,
+                width: `${totalCards * 100}vw`,
+              }}
+            >
+              {caseStudies.map((study, index) => (
+                <CaseStudyCard
+                  key={study.id}
+                  study={study}
+                  isActive={index === activeIndex}
+                  index={index}
                 />
               ))}
             </div>
-
-            <button
-              onClick={() => navigateToCard(Math.min(totalCards - 1, activeIndex + 1))}
-              disabled={activeIndex === totalCards - 1}
-              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-200 cursor-pointer ${
-                activeIndex === totalCards - 1
-                  ? 'border-gray-700 text-gray-600 cursor-not-allowed'
-                  : 'border-white/30 text-white hover:border-[#C4FF61] hover:text-[#C4FF61] hover:bg-white/5'
-              }`}
-              aria-label="Next case study"
-            >
-              <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
-            </button>
           </div>
 
-          {/* Card Counter */}
-          <div className="text-center mb-4">
-            <span className="text-sm text-gray-500">
-              <span className="text-[#C4FF61] font-semibold">{String(activeIndex + 1).padStart(2, '0')}</span>
-              <span className="mx-2">/</span>
-              <span>{String(totalCards).padStart(2, '0')}</span>
-            </span>
-          </div>
+          {/* Navigation Controls */}
+          <div className="pb-4 px-4">
+            {/* Progress Bar */}
+            <div className="max-w-md mx-auto mb-4">
+              <div className="h-0.5 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-[#0052CC] to-[#C4FF61] rounded-full"
+                  style={{
+                    width: `${((displayProgress * (totalCards - 1)) + 1) / totalCards * 100}%`,
+                    transition: 'width 0.1s ease-out',
+                  }}
+                />
+              </div>
+            </div>
 
-          {/* Footer CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
-            <p className="text-gray-400 text-sm">
-              Can&apos;t find your exact scenario?
-            </p>
-            <div className="flex gap-3">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#0052CC] text-white text-sm font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
+            {/* Arrow Navigation */}
+            <div className="flex items-center justify-center gap-4 mb-3">
+              <button
+                onClick={() => navigateToCard(Math.max(0, activeIndex - 1))}
+                disabled={activeIndex === 0}
+                className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                  activeIndex === 0
+                    ? 'border-gray-700 text-gray-600 cursor-not-allowed'
+                    : 'border-white/30 text-white hover:border-[#C4FF61] hover:text-[#C4FF61] hover:bg-white/5 hover:scale-110'
+                }`}
+                aria-label="Previous case study"
               >
-                Talk to an Architect
-              </Link>
-              <Link
-                href="/case-studies"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-transparent border border-white text-white text-sm font-semibold rounded-lg hover:border-[#C4FF61] hover:text-[#C4FF61] transition-all duration-200 cursor-pointer group"
+                <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
+              </button>
+
+              {/* Clickable Dots */}
+              <div className="flex items-center gap-2">
+                {caseStudies.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => navigateToCard(index)}
+                    className={`transition-all duration-500 rounded-full cursor-pointer ${
+                      index === activeIndex
+                        ? 'w-8 h-2 bg-[#C4FF61]'
+                        : 'w-2 h-2 bg-gray-600 hover:bg-gray-400 hover:scale-125'
+                    }`}
+                    aria-label={`Go to case study ${index + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={() => navigateToCard(Math.min(totalCards - 1, activeIndex + 1))}
+                disabled={activeIndex === totalCards - 1}
+                className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                  activeIndex === totalCards - 1
+                    ? 'border-gray-700 text-gray-600 cursor-not-allowed'
+                    : 'border-white/30 text-white hover:border-[#C4FF61] hover:text-[#C4FF61] hover:bg-white/5 hover:scale-110'
+                }`}
+                aria-label="Next case study"
               >
-                See All Stories
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-              </Link>
+                <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
+              </button>
+            </div>
+
+            {/* Card Counter */}
+            <div className="text-center mb-3">
+              <span className="text-sm text-gray-500">
+                <span className="text-[#C4FF61] font-semibold text-lg">{String(activeIndex + 1).padStart(2, '0')}</span>
+                <span className="mx-2 text-gray-600">/</span>
+                <span className="text-gray-500">{String(totalCards).padStart(2, '0')}</span>
+              </span>
+            </div>
+
+            {/* Footer CTAs */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
+              <p className="text-gray-400 text-sm">
+                Can&apos;t find your exact scenario?
+              </p>
+              <div className="flex gap-3">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#0052CC] text-white text-sm font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
+                >
+                  Talk to an Architect
+                </Link>
+                <Link
+                  href="/case-studies"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-transparent border border-white text-white text-sm font-semibold rounded-lg hover:border-[#C4FF61] hover:text-[#C4FF61] transition-all duration-200 cursor-pointer group"
+                >
+                  See All Stories
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
