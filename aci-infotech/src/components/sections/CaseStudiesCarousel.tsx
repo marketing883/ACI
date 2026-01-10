@@ -134,9 +134,9 @@ function CaseStudyCard({ study }: { study: CaseStudy }) {
               )}
               <Link
                 href={`/case-studies/${study.slug}`}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#0052CC] text-white text-sm font-semibold rounded-sm hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-200 group flex-shrink-0"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#0052CC] text-white text-sm font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer group flex-shrink-0"
               >
-                {study.cta_text || 'See Full Story'}
+                {study.cta_text || 'See the System'}
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
               </Link>
             </div>
@@ -300,13 +300,13 @@ export default function CaseStudiesCarousel({
               <div className="flex gap-3">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#0052CC] text-white text-sm font-semibold rounded-sm hover:bg-[#003D99] hover:text-[#C4FF61] transition-all duration-200"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#0052CC] text-white text-sm font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
                 >
                   Talk to an Architect
                 </Link>
                 <Link
                   href="/case-studies"
-                  className="inline-flex items-center gap-2 px-4 py-2 border border-gray-600 text-white text-sm font-semibold rounded-sm hover:border-[#C4FF61] hover:text-[#C4FF61] transition-all duration-200 group"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-transparent border border-white text-white text-sm font-semibold rounded-lg hover:border-[#C4FF61] hover:text-[#C4FF61] transition-all duration-200 cursor-pointer group"
                 >
                   See All Stories
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
