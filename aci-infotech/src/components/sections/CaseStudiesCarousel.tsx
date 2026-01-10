@@ -63,39 +63,39 @@ function CaseStudyCard({
 }) {
   return (
     <div
-      className="flex-shrink-0 flex items-center justify-center px-4 sm:px-6 lg:px-8"
+      className="flex-shrink-0 flex items-center justify-center px-4 sm:px-8 lg:px-12"
       style={{ width: '100vw' }}
     >
       <div
-        className={`w-full max-w-4xl transition-all duration-700 ease-out ${
-          isActive
-            ? 'scale-100 opacity-100'
-            : 'scale-[0.88] opacity-40'
-        }`}
+        className="w-full max-w-4xl"
         style={{
-          transform: isActive ? 'scale(1) translateY(0)' : 'scale(0.88) translateY(10px)',
-          transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+          transform: isActive ? 'scale(1) translateY(0)' : 'scale(0.9) translateY(8px)',
+          opacity: isActive ? 1 : 0.5,
+          transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
         {/* Card Container with enhanced glassmorphism */}
         <div
           className="relative overflow-hidden rounded-2xl"
           style={{
-            background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.85) 100%)',
+            background: isActive
+              ? 'linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(10, 22, 40, 0.95) 100%)'
+              : 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%)',
             backdropFilter: 'blur(20px)',
-            border: isActive ? '1px solid rgba(196, 255, 97, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+            border: isActive ? '2px solid rgba(196, 255, 97, 0.5)' : '1px solid rgba(255, 255, 255, 0.1)',
             boxShadow: isActive
-              ? '0 25px 50px -12px rgba(0, 82, 204, 0.25), 0 0 0 1px rgba(196, 255, 97, 0.1)'
-              : '0 10px 40px -15px rgba(0, 0, 0, 0.3)',
-            transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+              ? '0 25px 60px -12px rgba(0, 82, 204, 0.35), 0 0 40px rgba(196, 255, 97, 0.1)'
+              : '0 10px 40px -15px rgba(0, 0, 0, 0.4)',
+            transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           {/* Animated glow effect for active card */}
           <div
-            className="absolute inset-0 pointer-events-none transition-opacity duration-700"
+            className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'radial-gradient(ellipse at 50% 0%, rgba(0, 82, 204, 0.2) 0%, transparent 60%)',
+              background: 'radial-gradient(ellipse at 50% 0%, rgba(0, 82, 204, 0.25) 0%, transparent 60%)',
               opacity: isActive ? 1 : 0,
+              transition: 'opacity 0.6s ease-out',
             }}
           />
 
@@ -237,7 +237,6 @@ export default function CaseStudiesCarousel({
   const [activeIndex, setActiveIndex] = useState(0);
   const [displayProgress, setDisplayProgress] = useState(0);
   const targetProgressRef = useRef(0);
-  const animationFrameRef = useRef<number | null>(null);
   const isSnappingRef = useRef(false);
   const snapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -248,35 +247,31 @@ export default function CaseStudiesCarousel({
     return start + (end - start) * factor;
   };
 
-  // Animate towards target progress with spring-like easing
-  const animateProgress = useCallback(() => {
-    const diff = Math.abs(targetProgressRef.current - displayProgress);
-
-    if (diff < 0.0001) {
-      setDisplayProgress(targetProgressRef.current);
-      animationFrameRef.current = null;
-      return;
-    }
-
-    // Use different smoothing factors for snapping vs free scrolling
-    const smoothingFactor = isSnappingRef.current ? 0.12 : 0.15;
-    const newProgress = lerp(displayProgress, targetProgressRef.current, smoothingFactor);
-    setDisplayProgress(newProgress);
-
-    animationFrameRef.current = requestAnimationFrame(animateProgress);
-  }, [displayProgress]);
-
-  // Start animation loop when target changes
+  // Animation loop - runs continuously while there's movement
   useEffect(() => {
-    if (animationFrameRef.current === null) {
-      animationFrameRef.current = requestAnimationFrame(animateProgress);
-    }
+    let rafId: number | null = null;
+
+    const animate = () => {
+      const diff = Math.abs(targetProgressRef.current - displayProgress);
+
+      if (diff > 0.0001) {
+        // Use different smoothing factors for snapping vs free scrolling
+        const smoothingFactor = isSnappingRef.current ? 0.08 : 0.12;
+        const newProgress = lerp(displayProgress, targetProgressRef.current, smoothingFactor);
+        setDisplayProgress(newProgress);
+      }
+
+      rafId = requestAnimationFrame(animate);
+    };
+
+    rafId = requestAnimationFrame(animate);
+
     return () => {
-      if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
       }
     };
-  }, [animateProgress]);
+  }, [displayProgress]);
 
   // Calculate snapped position for a card
   const getSnappedProgress = useCallback((rawProgress: number) => {
@@ -305,11 +300,12 @@ export default function CaseStudiesCarousel({
       targetProgressRef.current = rawProgress;
       isSnappingRef.current = false;
 
-      // Calculate active card
-      const cardZoneSize = 1 / totalCards;
+      // Calculate active card - must align with translateX calculation
+      // translateX = -progress * (totalCards - 1) * 100vw
+      // So at progress 0.5 with 3 cards, translateX = -100vw (card index 1)
       const newActiveIndex = Math.min(
         totalCards - 1,
-        Math.floor((rawProgress + cardZoneSize / 2) / cardZoneSize)
+        Math.max(0, Math.round(rawProgress * (totalCards - 1)))
       );
       setActiveIndex(newActiveIndex);
 
@@ -322,12 +318,7 @@ export default function CaseStudiesCarousel({
       snapTimeoutRef.current = setTimeout(() => {
         isSnappingRef.current = true;
         targetProgressRef.current = getSnappedProgress(rawProgress);
-      }, 120);
-
-      // Trigger animation if not running
-      if (animationFrameRef.current === null) {
-        animationFrameRef.current = requestAnimationFrame(animateProgress);
-      }
+      }, 150);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -339,7 +330,7 @@ export default function CaseStudiesCarousel({
         clearTimeout(snapTimeoutRef.current);
       }
     };
-  }, [totalCards, getSnappedProgress, animateProgress]);
+  }, [totalCards, getSnappedProgress]);
 
   // Navigate to specific card
   const navigateToCard = useCallback((index: number) => {
