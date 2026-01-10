@@ -162,7 +162,7 @@ export default function AdminLayout({
       </aside>
 
       {/* Main content */}
-      <div className="lg:ml-64 min-h-screen w-full">
+      <div className="lg:ml-64 min-h-screen">
         {/* Top bar */}
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-8">
           <button
