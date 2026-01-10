@@ -283,7 +283,7 @@ export default function QuickReplies({
             onClick={() => onSelect(reply)}
             disabled={disabled}
             className="text-xs px-3 py-1.5 bg-white border border-[#0052CC]/30 text-[#0052CC] rounded-full
-                       hover:bg-[#0052CC] hover:text-white hover:border-[#0052CC]
+                       hover:bg-[#0052CC]/10 hover:text-gray-900 hover:border-[#0052CC]
                        transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
                        shadow-sm hover:shadow-md"
           >
