@@ -38,23 +38,24 @@ export default function AwardsSection({
               className="flex flex-col items-center text-center p-6 bg-[#FAFAFA] rounded-[6px] hover:-translate-y-0.5 transition-all duration-200"
             >
               {badge.image_url ? (
-                <Image
-                  src={badge.image_url}
-                  alt={badge.name}
-                  width={80}
-                  height={80}
-                  className="object-contain mb-4"
-                />
+                <div className="relative w-full h-24 mb-4">
+                  <Image
+                    src={badge.image_url}
+                    alt={badge.name}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
               ) : (
-                <div className="w-20 h-20 bg-gray-200 rounded-[6px] flex items-center justify-center mb-4">
+                <div className="w-24 h-24 bg-gray-200 rounded-[6px] flex items-center justify-center mb-4">
                   <span className="text-2xl font-bold text-gray-400">
                     {badge.name.charAt(0)}
                   </span>
                 </div>
               )}
-              <h3 className="font-semibold text-[#0A1628] text-sm mb-1">
+              <h5 className="font-semibold text-[#0A1628] text-sm mb-1">
                 {badge.name}
-              </h3>
+              </h5>
               <p className="text-xs text-gray-500">{badge.description}</p>
             </div>
           ))}

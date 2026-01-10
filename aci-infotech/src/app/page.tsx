@@ -94,10 +94,10 @@ const newsItems = [
 ];
 
 const badges = [
-  { name: 'Great Place to Work', description: 'Certified 2024-25', image_url: '/images/certifications/gptw.png' },
-  { name: 'ISO 27001:2022', description: 'Information Security Certified', image_url: '/images/certifications/iso27001.png' },
-  { name: 'CMMi Level 3', description: 'Process Maturity Certified', image_url: '/images/certifications/cmmi.png' },
-  { name: '5 Best Data Analytics Companies', description: 'To Watch in 2025', image_url: '/images/certifications/best-data-analytics.png' },
+  { name: 'Great Place to Work', description: 'Certified 2024-25', image_url: '/images/certifications-awards/best-place-to-work.webp' },
+  { name: 'ISO 27001:2022', description: 'Information Security Certified', image_url: '/images/certifications-awards/iso-27001.webp' },
+  { name: 'CMMi Level 3', description: 'Process Maturity Certified', image_url: '/images/certifications-awards/cmmi.webp' },
+  { name: '5 Best Data Analytics Companies', description: 'To Watch in 2025', image_url: '/images/certifications-awards/best-data-analytics-company.webp' },
 ];
 
 
