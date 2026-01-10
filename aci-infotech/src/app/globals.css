@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@import "../styles/design-system.css";
+
+@theme inline {
+  /* ACI Brand Colors - Updated Design System */
+  --color-aci-primary: #0052CC;
+  --color-aci-primary-dark: #003D99;
+  --color-aci-primary-light: #3B6FD4;
+  --color-aci-secondary: #0A1628;
+  --color-aci-secondary-light: #666666;
+  --color-aci-off-white: #FAFAFA;
+  --color-aci-lime: #C4FF61;
+
+  /* Override defaults */
+  --color-background: #ffffff;
+  --color-foreground: #0A1628;
+
+  /* Fonts - Funnel Display for headers, Funnel Sans for body */
+  --font-sans: 'Funnel Sans', system-ui, -apple-system, sans-serif;
+  --font-title: 'Funnel Display', system-ui, -apple-system, sans-serif;
+}
+
+/* Thin line icons globally - Lucide icons */
+.lucide, [class*="lucide-"] {
+  stroke-width: 1.5 !important;
+}
+
+/* Animated counter for hero stats */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-count-up {
+  animation: countUp 0.6s ease-out forwards;
+}
+
+/* Ensure smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove default margins */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Improve font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix for sticky header */
+main {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--aci-gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--aci-gray-400);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--aci-gray-500);
+}
