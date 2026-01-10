@@ -23,6 +23,7 @@ import {
   FileText,
   Lightbulb,
   Shield,
+  Download,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
@@ -303,12 +304,47 @@ export default function ChatLeadsPage() {
     });
   }
 
+  function exportCSV() {
+    const headers = ['Name', 'Email', 'Company', 'Job Title', 'Location', 'Service Interest', 'Requirements', 'Status', 'Lead Score', 'Date'];
+    const rows = filteredLeads.map(l => [
+      l.name || '',
+      l.email,
+      l.company || '',
+      l.job_title || '',
+      l.location || '',
+      l.service_interest || '',
+      l.requirements || '',
+      l.status,
+      l.lead_score,
+      formatDate(l.created_at),
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `chat-leads-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="flex h-[calc(100vh-120px)]">
       {/* Left Panel - Leads List */}
       <div className="w-1/3 border-r border-gray-200 flex flex-col">
         <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-900 mb-4">Chat Leads</h1>
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-xl font-bold text-gray-900">Chat Leads</h1>
+            <button
+              onClick={exportCSV}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+              title="Export to CSV"
+            >
+              <Download className="w-4 h-4" />
+              Export
+            </button>
+          </div>
 
           {/* Stats */}
           <div className="grid grid-cols-4 gap-2 mb-4">

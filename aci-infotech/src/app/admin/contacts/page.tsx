@@ -26,6 +26,7 @@ import {
   ChevronRight,
   Shield,
   MapPin,
+  Download,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
@@ -322,12 +323,46 @@ export default function ContactsPage() {
     return 'text-gray-600 bg-gray-100';
   }
 
+  function exportCSV() {
+    const headers = ['Name', 'Email', 'Company', 'Phone', 'Inquiry Type', 'Status', 'Lead Score', 'Source', 'Date'];
+    const rows = filteredContacts.map(c => [
+      c.name,
+      c.email,
+      c.company || '',
+      c.phone || '',
+      c.inquiry_type,
+      c.status,
+      c.intelligence?.leadScore || c.lead_score || '',
+      sourceLabels[c.source || ''] || c.source || '',
+      formatDate(c.created_at),
+    ].map(v => `"${v}"`).join(','));
+
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `contacts-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="flex h-[calc(100vh-120px)]">
       {/* Left Panel - Contacts List */}
       <div className="w-1/3 border-r border-gray-200 flex flex-col bg-white">
         <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-900 mb-4">Lead Management</h1>
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-xl font-bold text-gray-900">Lead Management</h1>
+            <button
+              onClick={exportCSV}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+              title="Export to CSV"
+            >
+              <Download className="w-4 h-4" />
+              Export
+            </button>
+          </div>
 
           {/* Stats */}
           <div className="grid grid-cols-4 gap-2 mb-4">

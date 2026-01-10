@@ -336,13 +336,8 @@ export default function AdminLayout({
 
         {/* Footer */}
         <footer className="border-t border-gray-100 bg-white px-4 lg:px-8 py-4">
-          <div className="flex items-center justify-between text-xs text-gray-400">
-            <span>© 2024 ACI Infotech. All rights reserved.</span>
-            <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-gray-600 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-gray-600 transition-colors">Terms</a>
-              <a href="#" className="hover:text-gray-600 transition-colors">Support</a>
-            </div>
+          <div className="text-xs text-gray-400">
+            <span>© 2026 ACI Infotech. All rights reserved.</span>
           </div>
         </footer>
       </div>

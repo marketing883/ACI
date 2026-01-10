@@ -29,7 +29,7 @@ function getErrorMessage(error: unknown): string {
 interface CaseStudy {
   id: string;
   slug: string;
-  title: string;
+  headline: string;
   client_name: string;
   client_industry: string;
   services: string[];
@@ -44,7 +44,7 @@ const mockCaseStudies: CaseStudy[] = [
   {
     id: '1',
     slug: 'msci-data-automation',
-    title: 'Consolidating 40+ Finance Systems Post-Acquisition',
+    headline: 'Consolidating 40+ Finance Systems Post-Acquisition',
     client_name: 'MSCI',
     client_industry: 'Financial Services',
     services: ['Data Engineering'],
@@ -56,7 +56,7 @@ const mockCaseStudies: CaseStudy[] = [
   {
     id: '2',
     slug: 'racetrac-martech',
-    title: 'Real-Time Customer Engagement Across 600+ Locations',
+    headline: 'Real-Time Customer Engagement Across 600+ Locations',
     client_name: 'RaceTrac',
     client_industry: 'Retail',
     services: ['MarTech & CDP'],
@@ -68,7 +68,7 @@ const mockCaseStudies: CaseStudy[] = [
   {
     id: '3',
     slug: 'sodexo-unified-data',
-    title: 'Unified Global Data Platform for 400K+ Employees',
+    headline: 'Unified Global Data Platform for 400K+ Employees',
     client_name: 'Sodexo',
     client_industry: 'Hospitality',
     services: ['Data Engineering'],
@@ -80,7 +80,7 @@ const mockCaseStudies: CaseStudy[] = [
   {
     id: '4',
     slug: 'fortune-100-retailer-ai',
-    title: 'AI-Powered Demand Forecasting at Scale',
+    headline: 'AI-Powered Demand Forecasting at Scale',
     client_name: 'Fortune 100 Retailer',
     client_industry: 'Retail',
     services: ['Applied AI & ML'],
@@ -92,7 +92,7 @@ const mockCaseStudies: CaseStudy[] = [
   {
     id: '5',
     slug: 'healthcare-cloud-migration',
-    title: 'HIPAA-Compliant Cloud Migration for 15 Hospitals',
+    headline: 'HIPAA-Compliant Cloud Migration for 15 Hospitals',
     client_name: 'Regional Healthcare System',
     client_industry: 'Healthcare',
     services: ['Cloud Modernization'],
@@ -128,7 +128,7 @@ export default function CaseStudiesAdmin() {
     try {
       const { data, error } = await supabase
         .from('case_studies')
-        .select('id, slug, title, client_name, client_industry, services, is_published, is_featured, created_at, updated_at')
+        .select('id, slug, headline, client_name, client_industry, services, is_published, is_featured, created_at, updated_at')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -223,7 +223,7 @@ export default function CaseStudiesAdmin() {
   const filteredCaseStudies = caseStudies.filter((cs) =>
     searchQuery === '' ||
     cs.client_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    cs.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    cs.headline?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     cs.client_industry?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -358,7 +358,7 @@ export default function CaseStudiesAdmin() {
                     <td className="px-6 py-4">
                       <div>
                         <p className="font-medium text-gray-900">{cs.client_name}</p>
-                        <p className="text-sm text-gray-500 line-clamp-1">{cs.title}</p>
+                        <p className="text-sm text-gray-500 line-clamp-1">{cs.headline}</p>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">{cs.client_industry || '-'}</td>
@@ -473,7 +473,7 @@ export default function CaseStudiesAdmin() {
               Are you sure you want to delete this case study?
             </p>
             <p className="font-medium text-gray-900 mb-4 p-3 bg-gray-50 rounded-lg">
-              {deleteModal.client_name}: {deleteModal.title}
+              {deleteModal.client_name}: {deleteModal.headline}
             </p>
             <p className="text-sm text-red-600 mb-6">
               This action cannot be undone.
