@@ -177,14 +177,18 @@ export default function NewWhitepaperPage() {
     }
   };
 
-  // Save whitepaper
-  const handleSave = async () => {
+  // Save whitepaper - accepts explicit saveStatus to avoid React async state issues
+  const handleSave = async (saveStatus: 'draft' | 'published') => {
     if (!title || !slug) {
       alert('Title and slug are required');
       return;
     }
 
+    setStatus(saveStatus);
     setSaving(true);
+
+    const isPublishing = saveStatus === 'published';
+
     try {
       const whitepaperData = {
         title,
@@ -198,8 +202,8 @@ export default function NewWhitepaperPage() {
         is_featured: isFeatured,
         meta_title: metaTitle || title,
         meta_description: metaDescription || description?.substring(0, 160),
-        status,
-        published_at: status === 'published' ? new Date().toISOString() : null,
+        status: saveStatus,
+        published_at: isPublishing ? new Date().toISOString() : null,
         download_count: 0,
       };
 
@@ -243,14 +247,14 @@ export default function NewWhitepaperPage() {
         </div>
         <div className="flex gap-3">
           <button
-            onClick={() => { setStatus('draft'); handleSave(); }}
+            onClick={() => handleSave('draft')}
             disabled={saving}
             className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
           >
             Save Draft
           </button>
           <button
-            onClick={() => { setStatus('published'); handleSave(); }}
+            onClick={() => handleSave('published')}
             disabled={saving}
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
           >

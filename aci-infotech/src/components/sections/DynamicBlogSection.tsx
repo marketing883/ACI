@@ -11,11 +11,11 @@ interface BlogPostDB {
   excerpt?: string | null;
   author_name?: string | null;
   category?: string | null;
-  featured_image?: string | null;
+  featured_image_url?: string | null;
   read_time_minutes?: number | null;
   published_at?: string | null;
   created_at?: string | null;
-  status?: string;
+  is_published?: boolean;
   [key: string]: unknown;
 }
 
@@ -31,7 +31,7 @@ async function getLatestPosts(limit: number = 3) {
   const { data, error } = await supabase
     .from('blog_posts')
     .select('*')
-    .eq('status', 'published')
+    .eq('is_published', true)
     .order('published_at', { ascending: false })
     .limit(limit);
 
@@ -73,7 +73,7 @@ export default async function DynamicBlogSection({
     author: post.author_name || 'ACI Infotech',
     date: formatDate(post.published_at ?? null),
     category: post.category || 'Insights',
-    featured_image: post.featured_image || undefined,
+    featured_image: post.featured_image_url || undefined,
     read_time: post.read_time_minutes ? `${post.read_time_minutes} min read` : undefined,
   }));
 

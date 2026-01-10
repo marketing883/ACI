@@ -23,7 +23,7 @@ interface CaseStudy {
   client_name: string;
   client_industry: string;
   services: string[];
-  status: string;
+  is_published: boolean;
   is_featured: boolean;
   created_at: string;
   updated_at: string;
@@ -38,7 +38,7 @@ const mockCaseStudies: CaseStudy[] = [
     client_name: 'MSCI',
     client_industry: 'Financial Services',
     services: ['Data Engineering'],
-    status: 'published',
+    is_published: true,
     is_featured: true,
     created_at: '2024-12-01T00:00:00Z',
     updated_at: '2024-12-15T00:00:00Z',
@@ -50,7 +50,7 @@ const mockCaseStudies: CaseStudy[] = [
     client_name: 'RaceTrac',
     client_industry: 'Retail',
     services: ['MarTech & CDP'],
-    status: 'published',
+    is_published: true,
     is_featured: true,
     created_at: '2024-11-15T00:00:00Z',
     updated_at: '2024-12-10T00:00:00Z',
@@ -62,7 +62,7 @@ const mockCaseStudies: CaseStudy[] = [
     client_name: 'Sodexo',
     client_industry: 'Hospitality',
     services: ['Data Engineering'],
-    status: 'published',
+    is_published: true,
     is_featured: true,
     created_at: '2024-11-01T00:00:00Z',
     updated_at: '2024-11-20T00:00:00Z',
@@ -74,7 +74,7 @@ const mockCaseStudies: CaseStudy[] = [
     client_name: 'Fortune 100 Retailer',
     client_industry: 'Retail',
     services: ['Applied AI & ML'],
-    status: 'published',
+    is_published: true,
     is_featured: false,
     created_at: '2024-10-15T00:00:00Z',
     updated_at: '2024-10-20T00:00:00Z',
@@ -86,7 +86,7 @@ const mockCaseStudies: CaseStudy[] = [
     client_name: 'Regional Healthcare System',
     client_industry: 'Healthcare',
     services: ['Cloud Modernization'],
-    status: 'draft',
+    is_published: false,
     is_featured: false,
     created_at: '2024-10-01T00:00:00Z',
     updated_at: '2024-10-05T00:00:00Z',
@@ -118,7 +118,7 @@ export default function CaseStudiesAdmin() {
     try {
       const { data, error } = await supabase
         .from('case_studies')
-        .select('id, slug, title, client_name, client_industry, services, status, is_featured, created_at, updated_at')
+        .select('id, slug, title, client_name, client_industry, services, is_published, is_featured, created_at, updated_at')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -130,12 +130,12 @@ export default function CaseStudiesAdmin() {
     }
   }
 
-  async function togglePublished(id: string, currentStatus: string) {
-    const newStatus = currentStatus === 'published' ? 'draft' : 'published';
+  async function togglePublished(id: string, currentlyPublished: boolean) {
+    const newIsPublished = !currentlyPublished;
 
     if (!configured) {
       setCaseStudies(caseStudies.map(cs =>
-        cs.id === id ? { ...cs, status: newStatus } : cs
+        cs.id === id ? { ...cs, is_published: newIsPublished } : cs
       ));
       setActiveMenu(null);
       return;
@@ -145,14 +145,14 @@ export default function CaseStudiesAdmin() {
       const { error } = await supabase
         .from('case_studies')
         .update({
-          status: newStatus,
-          published_at: newStatus === 'published' ? new Date().toISOString() : null
+          is_published: newIsPublished,
+          published_at: newIsPublished ? new Date().toISOString() : null
         })
         .eq('id', id);
 
       if (error) throw error;
       setCaseStudies(caseStudies.map(cs =>
-        cs.id === id ? { ...cs, status: newStatus } : cs
+        cs.id === id ? { ...cs, is_published: newIsPublished } : cs
       ));
     } catch (error) {
       console.error('Error updating case study:', error);
@@ -227,8 +227,8 @@ export default function CaseStudiesAdmin() {
 
   const stats = {
     total: caseStudies.length,
-    published: caseStudies.filter(cs => cs.status === 'published').length,
-    draft: caseStudies.filter(cs => cs.status === 'draft').length,
+    published: caseStudies.filter(cs => cs.is_published).length,
+    draft: caseStudies.filter(cs => !cs.is_published).length,
     featured: caseStudies.filter(cs => cs.is_featured).length,
   };
 
@@ -360,12 +360,12 @@ export default function CaseStudiesAdmin() {
                       <div className="flex items-center gap-2">
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${
-                            cs.status === 'published'
+                            cs.is_published
                               ? 'bg-green-100 text-green-700'
                               : 'bg-gray-100 text-gray-700'
                           }`}
                         >
-                          {cs.status === 'published' ? 'Published' : 'Draft'}
+                          {cs.is_published ? 'Published' : 'Draft'}
                         </span>
                         {cs.is_featured && (
                           <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
@@ -403,10 +403,10 @@ export default function CaseStudiesAdmin() {
                               Edit
                             </Link>
                             <button
-                              onClick={() => togglePublished(cs.id, cs.status)}
+                              onClick={() => togglePublished(cs.id, cs.is_published)}
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                             >
-                              {cs.status === 'published' ? (
+                              {cs.is_published ? (
                                 <>
                                   <EyeOff className="w-4 h-4" />
                                   Unpublish

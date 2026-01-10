@@ -512,14 +512,19 @@ export default function EditBlogPage() {
     }
   };
 
-  // Save post
-  const handleSave = async () => {
+  // Save post - accepts explicit saveStatus to avoid React async state issues
+  const handleSave = async (saveStatus: 'draft' | 'published') => {
     if (!title || !slug) {
       alert('Title and slug are required');
       return;
     }
 
+    // Update local state to match what we're saving
+    setStatus(saveStatus);
     setSaving(true);
+
+    const isPublishing = saveStatus === 'published';
+
     try {
       const postData = {
         id: postId,
@@ -541,9 +546,9 @@ export default function EditBlogPage() {
         keywords: targetKeyword ? [targetKeyword] : [],
         article_type: articleType,
         faqs: faqs.filter(f => f.question && f.answer),
-        is_published: status === 'published',
+        is_published: isPublishing,
         is_featured: false,
-        published_at: status === 'published' ? new Date().toISOString() : null,
+        published_at: isPublishing ? new Date().toISOString() : null,
         read_time_minutes: Math.ceil(content.split(/\s+/).length / 200),
       };
 
@@ -606,14 +611,14 @@ export default function EditBlogPage() {
             </Link>
           )}
           <button
-            onClick={() => { setStatus('draft'); handleSave(); }}
+            onClick={() => handleSave('draft')}
             disabled={saving}
             className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
           >
             Save Draft
           </button>
           <button
-            onClick={() => { setStatus('published'); handleSave(); }}
+            onClick={() => handleSave('published')}
             disabled={saving}
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
           >

@@ -28,12 +28,12 @@ interface BlogPost {
   excerpt?: string | null;
   author_name?: string | null;
   category?: string | null;
-  status?: string;
+  is_published?: boolean;
   read_time_minutes?: number | null;
   published_at?: string | null;
   created_at?: string;
   updated_at?: string;
-  featured_image?: string | null;
+  featured_image_url?: string | null;
   // Allow any additional fields from the table
   [key: string]: unknown;
 }
@@ -82,16 +82,16 @@ export default function BlogAdmin() {
     }
   }
 
-  async function togglePublished(id: string, currentStatus: string) {
-    const newStatus = currentStatus === 'published' ? 'draft' : 'published';
-    const updates: { status: string; published_at?: string } = { status: newStatus };
-    if (newStatus === 'published') {
+  async function togglePublished(id: string, currentlyPublished: boolean) {
+    const newIsPublished = !currentlyPublished;
+    const updates: { is_published: boolean; published_at?: string | null } = { is_published: newIsPublished };
+    if (newIsPublished) {
       updates.published_at = new Date().toISOString();
     }
 
     if (!configured) {
       setPosts(posts.map(p =>
-        p.id === id ? { ...p, status: newStatus, published_at: updates.published_at || p.published_at } : p
+        p.id === id ? { ...p, is_published: newIsPublished, published_at: updates.published_at || p.published_at } : p
       ));
       setActiveMenu(null);
       return;
@@ -157,7 +157,8 @@ export default function BlogAdmin() {
         post.author_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         post.category?.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesStatus = statusFilter === 'all' || post.status === statusFilter;
+      const postStatus = post.is_published ? 'published' : 'draft';
+      const matchesStatus = statusFilter === 'all' || postStatus === statusFilter;
 
       return matchesSearch && matchesStatus;
     })
@@ -195,8 +196,8 @@ export default function BlogAdmin() {
 
   const stats = {
     total: posts.length,
-    published: posts.filter(p => p.status === 'published').length,
-    draft: posts.filter(p => p.status === 'draft').length,
+    published: posts.filter(p => p.is_published).length,
+    draft: posts.filter(p => !p.is_published).length,
   };
 
   return (
@@ -378,12 +379,12 @@ export default function BlogAdmin() {
                     <td className="px-6 py-4">
                       <span
                         className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          post.status === 'published'
+                          post.is_published
                             ? 'bg-green-100 text-green-700'
                             : 'bg-yellow-100 text-yellow-700'
                         }`}
                       >
-                        {post.status === 'published' ? 'Published' : 'Draft'}
+                        {post.is_published ? 'Published' : 'Draft'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
@@ -399,7 +400,7 @@ export default function BlogAdmin() {
                         </button>
                         {activeMenu === post.id && (
                           <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-10">
-                            {post.status === 'published' && (
+                            {post.is_published && (
                               <Link
                                 href={`/blog/${post.slug}`}
                                 target="_blank"
@@ -417,10 +418,10 @@ export default function BlogAdmin() {
                               Edit
                             </Link>
                             <button
-                              onClick={() => togglePublished(post.id, post.status ?? 'draft')}
+                              onClick={() => togglePublished(post.id, post.is_published ?? false)}
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                             >
-                              {post.status === 'published' ? (
+                              {post.is_published ? (
                                 <>
                                   <EyeOff className="w-4 h-4" />
                                   Unpublish

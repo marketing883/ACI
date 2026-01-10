@@ -253,21 +253,25 @@ export default function NewCaseStudyPage() {
     );
   };
 
-  // Save case study
-  const handleSave = async () => {
+  // Save case study - accepts explicit saveStatus to avoid React async state issues
+  const handleSave = async (saveStatus: 'draft' | 'published') => {
     if (!title || !slug || !clientName) {
       alert('Title, slug, and client name are required');
       return;
     }
 
+    setStatus(saveStatus);
     setSaving(true);
+
+    const isPublishing = saveStatus === 'published';
+
     try {
       const caseStudyData = {
         title,
         slug,
         excerpt,
         client_name: clientName,
-        client_logo: clientLogo || null,
+        client_logo_url: clientLogo || null,
         client_industry: clientIndustry,
         client_size: clientSize,
         client_location: clientLocation,
@@ -280,13 +284,13 @@ export default function NewCaseStudyPage() {
         testimonial_quote: testimonialQuote || null,
         testimonial_author: testimonialAuthor || null,
         testimonial_title: testimonialTitle || null,
-        featured_image: featuredImage || null,
+        featured_image_url: featuredImage || null,
         gallery_images: [],
-        meta_title: metaTitle || title,
-        meta_description: metaDescription || excerpt?.substring(0, 160),
-        status,
+        seo_title: metaTitle || title,
+        seo_description: metaDescription || excerpt?.substring(0, 160),
+        is_published: isPublishing,
         is_featured: isFeatured,
-        published_at: status === 'published' ? new Date().toISOString() : null,
+        published_at: isPublishing ? new Date().toISOString() : null,
       };
 
       // Use server-side API to bypass RLS
@@ -329,20 +333,14 @@ export default function NewCaseStudyPage() {
         </div>
         <div className="flex gap-3">
           <button
-            onClick={() => {
-              setStatus('draft');
-              handleSave();
-            }}
+            onClick={() => handleSave('draft')}
             disabled={saving}
             className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
           >
             Save Draft
           </button>
           <button
-            onClick={() => {
-              setStatus('published');
-              handleSave();
-            }}
+            onClick={() => handleSave('published')}
             disabled={saving}
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
           >
