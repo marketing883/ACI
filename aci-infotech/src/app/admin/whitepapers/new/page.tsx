@@ -87,7 +87,7 @@ export default function NewWhitepaperPage() {
   };
 
   // AI Generate content
-  const generateContent = async (field: 'description' | 'meta_title' | 'meta_description') => {
+  const generateContent = async (field: 'description' | 'meta_title' | 'meta_description' | 'excerpt' | 'highlights') => {
     if (!title) {
       alert('Please enter a title first');
       return;
@@ -101,7 +101,7 @@ export default function NewWhitepaperPage() {
         body: JSON.stringify({
           type: 'whitepaper',
           field,
-          context: { title, category, description },
+          context: { title, category, description, excerpt },
         }),
       });
 
@@ -117,6 +117,18 @@ export default function NewWhitepaperPage() {
             break;
           case 'meta_description':
             setMetaDescription(generated);
+            break;
+          case 'excerpt':
+            setExcerpt(generated);
+            break;
+          case 'highlights':
+            // Parse as array if it's a string with newlines or JSON
+            if (Array.isArray(generated)) {
+              setHighlights(generated.slice(0, 5));
+            } else if (typeof generated === 'string') {
+              const items = generated.split('\n').filter((line: string) => line.trim()).slice(0, 5);
+              setHighlights(items.length > 0 ? items : ['', '', '']);
+            }
             break;
         }
       }
@@ -392,9 +404,23 @@ export default function NewWhitepaperPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Short Excerpt <span className="text-gray-400 font-normal">(1-2 sentences)</span>
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Short Excerpt <span className="text-gray-400 font-normal">(1-2 sentences)</span>
+                </label>
+                <button
+                  onClick={() => generateContent('excerpt')}
+                  disabled={generating === 'excerpt'}
+                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                  title="Generate with AI"
+                >
+                  {generating === 'excerpt' ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              </div>
               <textarea
                 value={excerpt}
                 onChange={(e) => setExcerpt(e.target.value)}
@@ -413,16 +439,30 @@ export default function NewWhitepaperPage() {
                 <label className="block text-sm font-medium text-gray-700">
                   Key Takeaways <span className="text-gray-400 font-normal">(What you&apos;ll learn)</span>
                 </label>
-                {highlights.length < 5 && (
+                <div className="flex items-center gap-2">
                   <button
-                    type="button"
-                    onClick={addHighlight}
-                    className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                    onClick={() => generateContent('highlights')}
+                    disabled={generating === 'highlights'}
+                    className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                    title="Generate with AI"
                   >
-                    <Plus className="w-4 h-4" />
-                    Add
+                    {generating === 'highlights' ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-3.5 h-3.5" />
+                    )}
                   </button>
-                )}
+                  {highlights.length < 5 && (
+                    <button
+                      type="button"
+                      onClick={addHighlight}
+                      className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="space-y-2">
                 {highlights.map((highlight, index) => (

@@ -10,7 +10,7 @@ export async function GET(
 
     const { data, error } = await supabase
       .from('whitepapers')
-      .select('id, slug, title, description, cover_image, file_url, category')
+      .select('id, slug, title, excerpt, description, highlights, cover_image, file_url, category, tags, published_at')
       .eq('slug', slug)
       .eq('status', 'published')
       .single();
@@ -20,7 +20,15 @@ export async function GET(
       return NextResponse.json({ whitepaper: null });
     }
 
-    return NextResponse.json({ whitepaper: data });
+    // Transform data for the detail page - map highlights to key_takeaways for compatibility
+    const whitepaper = data ? {
+      ...data,
+      // Use highlights as key_takeaways if key_takeaways doesn't exist
+      key_takeaways: data.highlights || [],
+      // Also expose excerpt for the card display
+    } : null;
+
+    return NextResponse.json({ whitepaper });
   } catch (error) {
     console.error('Fetch whitepaper error:', error);
     return NextResponse.json({ whitepaper: null });

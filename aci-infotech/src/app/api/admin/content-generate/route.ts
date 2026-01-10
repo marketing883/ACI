@@ -425,6 +425,51 @@ Structure:
 
 Return ONLY the description, nothing else.`;
 
+      case 'excerpt':
+        return `Write a short, compelling excerpt for a whitepaper to display on a homepage card.
+
+Whitepaper Title: "${title}"
+Category: ${category || 'Enterprise Technology'}
+${context.description ? `Full Description: ${context.description}` : ''}
+
+Requirements:
+- Maximum 150 characters (strict limit - this is for a card)
+- One compelling sentence that creates urgency to download
+- Focus on the key benefit or transformation
+- Avoid generic phrases
+- Make it action-oriented
+
+Examples of good excerpts:
+- "Build resilient, AI-ready data platforms that scale with your business needs."
+- "Learn the framework used by Fortune 500 companies to cut data costs by 40%."
+- "Discover proven strategies for real-time analytics at enterprise scale."
+
+Return ONLY the excerpt, nothing else.`;
+
+      case 'highlights':
+        return `Generate 3 key takeaways/highlights for a whitepaper to display on a homepage card.
+
+Whitepaper Title: "${title}"
+Category: ${category || 'Enterprise Technology'}
+${context.description ? `Description: ${context.description}` : ''}
+${context.excerpt ? `Excerpt: ${context.excerpt}` : ''}
+
+Requirements:
+- Exactly 3 bullet points
+- Each bullet: 8-15 words max
+- Start each with an action word or specific benefit
+- Be specific - include numbers, frameworks, or outcomes where possible
+- These appear with checkmarks on the homepage card
+
+Examples of good highlights:
+- "Framework for AI-powered data architecture"
+- "Cost optimization strategies that drive 40% savings"
+- "Real-world case studies from Fortune 500 implementations"
+- "12-step compliance checklist for data governance"
+- "ROI calculator for data platform investments"
+
+Return ONLY 3 highlights, one per line (no bullets, numbers, or dashes).`;
+
       case 'meta_title':
         return `Generate an AEO-optimized meta title for a whitepaper.
 
