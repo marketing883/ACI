@@ -156,34 +156,21 @@ export default function HomePage() {
       <section className="py-20 bg-[var(--aci-primary)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-[var(--font-title)]">
-            Ready to Build Something That Lasts?
+            Get Your Answer in 30 Minutes
           </h2>
           <p className="text-lg text-blue-100 mb-8">
-            Talk to an architect about your specific challenge. No sales pitch.
-            Just an engineering conversation about what's actually possible.
+            Tell us your challenge. We&apos;ll tell you if we&apos;ve solved it before (and how). No pitch. Just pattern recognition from 246+ deployments.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <span className="text-blue-200 text-sm">Talk to senior architects, not sales reps</span>
-            <span className="text-blue-300">|</span>
-            <span className="text-blue-200 text-sm">30-minute technical discussion</span>
-            <span className="text-blue-300">|</span>
-            <span className="text-blue-200 text-sm">We'll tell you if we're not the right fit</span>
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-8 mb-10">
+            <span className="text-white/90 text-sm">Talk to architects who&apos;ve built this 10+ times</span>
+            <span className="text-white/90 text-sm">Honest about fit. We&apos;ll say if we&apos;re not right.</span>
+            <span className="text-white/90 text-sm">Walk away with an actual approach, not a proposal.</span>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact" variant="secondary" size="lg">
-              Start Your Transformation
-            </Button>
-            <Button
-              href="/case-studies"
-              variant="ghost"
-              size="lg"
-              className="text-white border-white hover:bg-white/10 hover:text-[#84cc16]"
-            >
-              See Our Success Stories
-            </Button>
-          </div>
+          <Button href="/contact" variant="secondary" size="lg">
+            Book 30 Minutes
+          </Button>
         </div>
       </section>
     </>
