@@ -93,8 +93,8 @@ export default function PartnersSection({
             </div>
           </div>
         ) : (
-          /* Grid for even number of partners */
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-items-center">
+          /* 4x4 Grid for partners */
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 items-center justify-items-center max-w-4xl mx-auto">
             {partners.map((partner) => (
               <div
                 key={partner.name}
