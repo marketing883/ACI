@@ -1,13 +1,11 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import Badge from '@/components/ui/Badge';
 
 interface Partner {
   name: string;
   logo_url: string;
-  badge?: string;
-  badge_style?: 'gold' | 'silver';
 }
 
 interface PartnersSectionProps {
@@ -21,6 +19,39 @@ export default function PartnersSection({
   subheadline = "We're certified experts in the platforms enterprises already trust",
   partners,
 }: PartnersSectionProps) {
+  const isOdd = partners.length % 2 !== 0;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Auto-scroll for marquee effect when odd number of partners
+  useEffect(() => {
+    if (!isOdd || !scrollRef.current) return;
+
+    const scrollContainer = scrollRef.current;
+    let animationId: number;
+    let scrollPosition = 0;
+    const scrollSpeed = 0.5; // pixels per frame
+
+    const animate = () => {
+      if (!isHovered) {
+        scrollPosition += scrollSpeed;
+        // Reset when we've scrolled through half (the duplicated content)
+        if (scrollPosition >= scrollContainer.scrollWidth / 2) {
+          scrollPosition = 0;
+        }
+        scrollContainer.scrollLeft = scrollPosition;
+      }
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animationId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationId);
+  }, [isOdd, isHovered]);
+
+  // For marquee, duplicate the partners array
+  const displayPartners = isOdd ? [...partners, ...partners] : partners;
+
   return (
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,33 +63,55 @@ export default function PartnersSection({
           <p className="text-gray-600">{subheadline}</p>
         </div>
 
-        {/* Partner Logos Grid */}
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center">
-          {partners.map((partner) => (
+        {isOdd ? (
+          /* Marquee/Carousel for odd number of partners */
+          <div
+            className="overflow-hidden"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
             <div
-              key={partner.name}
-              className="flex flex-col items-center justify-center p-4 group"
+              ref={scrollRef}
+              className="flex gap-12 overflow-x-hidden"
+              style={{ scrollBehavior: 'auto' }}
             >
-              <div className="relative h-12 w-full grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300">
-                {/* Placeholder for partner logo */}
-                <div className="flex items-center justify-center h-full">
-                  <span className="text-sm font-medium text-gray-500 group-hover:text-[#0052CC] transition-colors">
-                    {partner.name}
-                  </span>
+              {displayPartners.map((partner, index) => (
+                <div
+                  key={`${partner.name}-${index}`}
+                  className="flex-shrink-0 flex items-center justify-center p-4"
+                >
+                  <div className="relative h-12 w-32 grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300">
+                    <Image
+                      src={partner.logo_url}
+                      alt={partner.name}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          /* Grid for even number of partners */
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-items-center">
+            {partners.map((partner) => (
+              <div
+                key={partner.name}
+                className="flex items-center justify-center p-4"
+              >
+                <div className="relative h-12 w-32 grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300">
+                  <Image
+                    src={partner.logo_url}
+                    alt={partner.name}
+                    fill
+                    className="object-contain"
+                  />
                 </div>
               </div>
-              {partner.badge && (
-                <Badge
-                  variant={partner.badge_style === 'gold' ? 'warning' : 'info'}
-                  size="sm"
-                  className="mt-2"
-                >
-                  {partner.badge}
-                </Badge>
-              )}
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

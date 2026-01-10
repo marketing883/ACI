@@ -13,18 +13,14 @@ import {
 import PlaybookVaultSection from '@/components/sections/PlaybookVaultSection';
 
 const partners = [
-  { name: 'Databricks', logo_url: '/images/partners/databricks.svg', badge: 'Exclusive Partner', badge_style: 'gold' as const },
-  { name: 'Dynatrace', logo_url: '/images/partners/dynatrace.svg', badge: 'Partner', badge_style: 'silver' as const },
-  { name: 'Salesforce', logo_url: '/images/partners/salesforce.svg', badge: 'Agentforce Exclusive Partner', badge_style: 'gold' as const },
-  { name: 'AWS', logo_url: '/images/partners/aws.svg', badge: 'Partner', badge_style: 'silver' as const },
-  { name: 'Microsoft Azure', logo_url: '/images/partners/azure.svg', badge: 'Solutions Partner', badge_style: 'silver' as const },
-  { name: 'Snowflake', logo_url: '/images/partners/snowflake.svg' },
-  { name: 'SAP', logo_url: '/images/partners/sap.svg' },
-  { name: 'ServiceNow', logo_url: '/images/partners/servicenow.svg' },
-  { name: 'Adobe', logo_url: '/images/partners/adobe.svg' },
-  { name: 'Oracle', logo_url: '/images/partners/oracle.svg' },
-  { name: 'Braze', logo_url: '/images/partners/braze.svg' },
-  { name: 'Mulesoft', logo_url: '/images/partners/mulesoft.svg' },
+  { name: 'Databricks', logo_url: '/images/Solution-Partners/databricks.png' },
+  { name: 'Dynatrace', logo_url: '/images/Solution-Partners/dynatrace.png' },
+  { name: 'Salesforce', logo_url: '/images/Solution-Partners/salesforce.png' },
+  { name: 'AWS', logo_url: '/images/Solution-Partners/aws.png' },
+  { name: 'Microsoft Azure', logo_url: '/images/Solution-Partners/azure.png' },
+  { name: 'SAP', logo_url: '/images/Solution-Partners/sap.png' },
+  { name: 'ServiceNow', logo_url: '/images/Solution-Partners/servicenow.png' },
+  { name: 'Braze', logo_url: '/images/Solution-Partners/braze.png' },
 ];
 
 const testimonials = [

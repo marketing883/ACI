@@ -86,7 +86,7 @@ export default function NewsSection({
                   <a
                     href={item.url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener noreferrer nofollow"
                     className="text-[#0052CC] text-sm font-medium inline-flex items-center gap-1 hover:gap-2 transition-all w-fit"
                   >
                     {item.cta_text || 'Read More'}
