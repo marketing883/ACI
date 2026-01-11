@@ -462,7 +462,7 @@ export default function CaseStudiesCarousel({
         </div>
 
         {/* Content Container */}
-        <div className="relative h-full flex flex-col">
+        <div className="relative z-20 h-full flex flex-col">
           {/* Header */}
           <div className="text-center pt-6 pb-3 px-4 flex-shrink-0">
             <p className="text-[#C4FF61] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
