@@ -1,4 +1,4 @@
-// Supabase Database Types
+// Supabase Database Types - Updated with full SEO/AEO fields
 
 export interface Contact {
   id: string;
@@ -31,7 +31,7 @@ export interface CaseStudy {
   updated_at: string;
   slug: string;
   title: string;
-  // Note: excerpt does NOT exist in the actual database schema
+  excerpt: string | null;
   client_name: string;
   client_logo_url: string | null;
   industry: string;
@@ -48,6 +48,13 @@ export interface CaseStudy {
   is_featured: boolean;
   status: 'draft' | 'published';
   published_at: string | null;
+  // SEO Fields
+  meta_title: string | null;
+  meta_description: string | null;
+  canonical_url: string | null;
+  og_image_url: string | null;
+  keywords: string[] | null;
+  schema_markup: Record<string, unknown> | null;
 }
 
 export interface CaseStudyResult {
@@ -79,8 +86,99 @@ export interface BlogPost {
   is_featured: boolean;
   is_published: boolean;
   published_at: string | null;
+  // SEO Fields
   seo_title: string | null;
   seo_description: string | null;
+  canonical_url: string | null;
+  og_image_url: string | null;
+  schema_markup: Record<string, unknown> | null;
+}
+
+export interface Whitepaper {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  description: string;
+  category: string;
+  tags: string[];
+  thumbnail_url: string | null;
+  pdf_url: string | null;
+  is_featured: boolean;
+  status: 'draft' | 'published';
+  published_at: string | null;
+  download_count: number;
+  // Author Info
+  author_name: string | null;
+  author_title: string | null;
+  author_bio: string | null;
+  author_image_url: string | null;
+  // Content Details
+  page_count: number | null;
+  file_size_mb: number | null;
+  table_of_contents: { title: string; page?: number }[] | null;
+  // Related Content
+  related_services: string[] | null;
+  related_industries: string[] | null;
+  // SEO Fields
+  meta_title: string | null;
+  meta_description: string | null;
+  canonical_url: string | null;
+  og_image_url: string | null;
+  keywords: string[] | null;
+  schema_markup: Record<string, unknown> | null;
+}
+
+export interface Webinar {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  description: string;
+  category: string;
+  tags: string[];
+  thumbnail_url: string | null;
+  is_featured: boolean;
+  status: 'draft' | 'published' | 'upcoming' | 'live' | 'completed';
+  // Schedule
+  scheduled_at: string | null;
+  duration_minutes: number | null;
+  timezone: string | null;
+  // Registration
+  registration_url: string | null;
+  max_attendees: number | null;
+  registered_count: number;
+  // Speakers
+  speakers: {
+    name: string;
+    title: string;
+    bio?: string;
+    image_url?: string;
+    linkedin?: string;
+  }[] | null;
+  // Agenda
+  agenda: {
+    time: string;
+    topic: string;
+    speaker?: string;
+  }[] | null;
+  // Post-webinar
+  recording_url: string | null;
+  slides_url: string | null;
+  // Related Content
+  related_services: string[] | null;
+  related_industries: string[] | null;
+  // SEO Fields
+  meta_title: string | null;
+  meta_description: string | null;
+  canonical_url: string | null;
+  og_image_url: string | null;
+  keywords: string[] | null;
+  schema_markup: Record<string, unknown> | null;
 }
 
 export interface TeamMember {
@@ -141,6 +239,16 @@ export interface Database {
         Row: BlogPost;
         Insert: Omit<BlogPost, 'id' | 'created_at' | 'updated_at'>;
         Update: Partial<Omit<BlogPost, 'id' | 'created_at'>>;
+      };
+      whitepapers: {
+        Row: Whitepaper;
+        Insert: Omit<Whitepaper, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Whitepaper, 'id' | 'created_at'>>;
+      };
+      webinars: {
+        Row: Webinar;
+        Insert: Omit<Webinar, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Webinar, 'id' | 'created_at'>>;
       };
       team_members: {
         Row: TeamMember;

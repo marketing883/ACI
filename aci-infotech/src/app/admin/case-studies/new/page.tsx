@@ -342,11 +342,12 @@ export default function NewCaseStudyPage() {
     const isPublishing = saveStatus === 'published';
 
     try {
-      // Only include columns that exist in the database schema
-      // Note: excerpt, meta_title, meta_description, client_size, client_location do NOT exist in the database
+      // All columns including SEO fields
+      // Run the migration script first: database/migrations/add_seo_fields.sql
       const caseStudyData = {
         title,
         slug,
+        excerpt: excerpt || null,
         client_name: clientName,
         client_logo_url: clientLogo || null,
         industry: clientIndustry,
@@ -363,6 +364,10 @@ export default function NewCaseStudyPage() {
         status: isPublishing ? 'published' : 'draft',
         is_featured: isFeatured,
         published_at: isPublishing ? new Date().toISOString() : null,
+        // SEO Fields
+        meta_title: metaTitle || null,
+        meta_description: metaDescription || null,
+        og_image_url: featuredImage || null,
       };
 
       // Use server-side API to bypass RLS
