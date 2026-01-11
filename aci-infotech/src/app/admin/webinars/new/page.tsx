@@ -141,8 +141,8 @@ export default function NewWebinarPage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('bucket', 'webinar-images');
-      formData.append('path', 'webinars');
+      formData.append('bucket', 'ACI-web');
+      formData.append('folder', 'webinars');
 
       const response = await fetch('/api/admin/upload', {
         method: 'POST',

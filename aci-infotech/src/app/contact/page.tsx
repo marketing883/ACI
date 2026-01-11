@@ -298,14 +298,9 @@ function ContactForm() {
           size="lg"
           className="w-full md:w-auto"
           disabled={isSubmitting}
+          rightIcon={!isSubmitting ? <Send className="w-4 h-4" /> : undefined}
         >
-          {isSubmitting ? (
-            'Sending...'
-          ) : (
-            <>
-              Send Message <Send className="w-4 h-4 ml-2" />
-            </>
-          )}
+          {isSubmitting ? 'Sending...' : 'Send Message'}
         </Button>
       </form>
     </>
@@ -319,7 +314,7 @@ export default function ContactPage() {
       <section className="py-20 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Let's Talk About Your Challenge
             </h1>
             <p className="text-lg text-gray-300">

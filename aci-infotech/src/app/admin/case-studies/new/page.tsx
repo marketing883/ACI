@@ -172,8 +172,8 @@ export default function NewCaseStudyPage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('bucket', 'case-study-images');
-      formData.append('path', 'case-studies');
+      formData.append('bucket', 'ACI-web');
+      formData.append('folder', 'case-studies');
 
       const response = await fetch('/api/admin/upload', {
         method: 'POST',
@@ -207,8 +207,8 @@ export default function NewCaseStudyPage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('bucket', 'case-study-images');
-      formData.append('path', 'logos');
+      formData.append('bucket', 'ACI-web');
+      formData.append('folder', 'logos');
 
       const response = await fetch('/api/admin/upload', {
         method: 'POST',
