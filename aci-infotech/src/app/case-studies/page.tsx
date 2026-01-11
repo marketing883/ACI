@@ -367,6 +367,19 @@ export default function CaseStudiesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRealData, setIsRealData] = useState(false);
 
+  // Helper to parse JSON fields that might be stored as strings
+  const parseJsonField = <T,>(value: T | string | null | undefined, fallback: T): T => {
+    if (!value) return fallback;
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value) as T;
+      } catch {
+        return fallback;
+      }
+    }
+    return value as T;
+  };
+
   // Fetch case studies from database
   useEffect(() => {
     async function fetchCaseStudies() {
@@ -381,7 +394,13 @@ export default function CaseStudiesPage() {
           setCaseStudies(demoCaseStudies);
           setIsRealData(false);
         } else if (result.caseStudies && result.caseStudies.length > 0) {
-          setCaseStudies(result.caseStudies);
+          // Parse JSON fields that might be stored as strings in the database
+          const parsedCaseStudies = result.caseStudies.map((study: CaseStudy & { results?: CaseStudyResult[] | string; technologies?: string[] | string }) => ({
+            ...study,
+            results: parseJsonField<CaseStudyResult[]>(study.results, []),
+            technologies: parseJsonField<string[]>(study.technologies, []),
+          }));
+          setCaseStudies(parsedCaseStudies);
           setIsRealData(true);
         } else if (result.demo) {
           setCaseStudies(demoCaseStudies);

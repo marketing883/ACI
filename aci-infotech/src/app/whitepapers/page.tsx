@@ -284,6 +284,19 @@ export default function WhitepapersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRealData, setIsRealData] = useState(false);
 
+  // Helper to parse JSON fields that might be stored as strings
+  const parseJsonField = <T,>(value: T | string | null | undefined, fallback: T): T => {
+    if (!value) return fallback;
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value) as T;
+      } catch {
+        return fallback;
+      }
+    }
+    return value as T;
+  };
+
   // Fetch whitepapers from database
   useEffect(() => {
     async function fetchWhitepapers() {
@@ -298,7 +311,12 @@ export default function WhitepapersPage() {
           setWhitepapers(demoWhitepapers);
           setIsRealData(false);
         } else if (result.whitepapers && result.whitepapers.length > 0) {
-          setWhitepapers(result.whitepapers);
+          // Parse JSON fields that might be stored as strings in the database
+          const parsedWhitepapers = result.whitepapers.map((wp: Whitepaper & { topics?: string[] | string }) => ({
+            ...wp,
+            topics: parseJsonField<string[]>(wp.topics, []),
+          }));
+          setWhitepapers(parsedWhitepapers);
           setIsRealData(true);
         } else if (result.demo) {
           setWhitepapers(demoWhitepapers);
