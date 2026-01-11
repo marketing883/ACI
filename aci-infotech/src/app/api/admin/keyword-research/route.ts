@@ -18,6 +18,7 @@ interface KeywordResponse {
   alternativeKeywords: {
     keyword: string;
     note: string;
+    volume?: number;
   }[];
   relatedKeywords: {
     keyword: string;
@@ -31,6 +32,7 @@ interface KeywordResponse {
     domain: string;
     url?: string;
     position?: number;
+    description?: string;
   }[];
   serpFeatures?: {
     featuredSnippet: boolean;
@@ -104,13 +106,52 @@ function transformDataForSEOResponse(data: ComprehensiveKeywordData, keyword: st
   const mainKw = data.mainKeyword;
   const difficulty = data.serp?.difficulty || (mainKw?.competition || 50);
 
-  // Generate alternative keyword suggestions based on related keywords
-  const alternativeKeywords = data.relatedKeywords.slice(0, 3).map(kw => ({
+  // Use keyword suggestions for alternative keywords (more diverse than related)
+  // Combine both sources and dedupe
+  const allSuggestions = [
+    ...(data.keywordSuggestions || []),
+    ...(data.relatedKeywords || []),
+  ];
+
+  // Dedupe by keyword
+  const seenKeywords = new Set<string>();
+  const uniqueSuggestions = allSuggestions.filter(kw => {
+    const lower = kw.keyword.toLowerCase();
+    if (seenKeywords.has(lower) || lower === keyword.toLowerCase()) return false;
+    seenKeywords.add(lower);
+    return true;
+  });
+
+  // Pick best alternative keywords (low competition + decent volume)
+  const sortedAlternatives = uniqueSuggestions
+    .filter(kw => kw.searchVolume > 0)
+    .sort((a, b) => {
+      // Score: higher volume + lower competition = better
+      const scoreA = a.searchVolume * (1 - a.competition / 100);
+      const scoreB = b.searchVolume * (1 - b.competition / 100);
+      return scoreB - scoreA;
+    })
+    .slice(0, 5);
+
+  const alternativeKeywords = sortedAlternatives.map(kw => ({
     keyword: kw.keyword,
+    volume: kw.searchVolume,
     note: kw.competition < 30 ? 'Low competition opportunity' :
           kw.searchVolume > (mainKw?.searchVolume || 0) ? 'Higher volume than main keyword' :
-          'Related topic',
+          kw.competition < 50 ? 'Medium competition, good potential' :
+          'Related topic to target',
   }));
+
+  // Use related keywords for the related section
+  const relatedKeywords = (data.relatedKeywords || [])
+    .filter(kw => kw.searchVolume > 0)
+    .slice(0, 10)
+    .map(kw => ({
+      keyword: kw.keyword,
+      volume: kw.searchVolume,
+      cpc: kw.cpc,
+      competition: kw.competition,
+    }));
 
   return {
     keyword: mainKw?.keyword || keyword,
@@ -122,18 +163,14 @@ function transformDataForSEOResponse(data: ComprehensiveKeywordData, keyword: st
     monthlySearches: mainKw?.monthlySearches || [],
     competitionLevel: mainKw?.competitionLevel || 'MEDIUM',
     alternativeKeywords,
-    relatedKeywords: data.relatedKeywords.slice(0, 10).map(kw => ({
-      keyword: kw.keyword,
-      volume: kw.searchVolume,
-      cpc: kw.cpc,
-      competition: kw.competition,
-    })),
-    questionsAsked: data.questions.map(q => q.question).slice(0, 8),
-    competitorArticles: data.competitors.slice(0, 10).map(c => ({
+    relatedKeywords,
+    questionsAsked: (data.questions || []).map(q => q.question).filter(Boolean).slice(0, 8),
+    competitorArticles: (data.competitors || []).slice(0, 10).map(c => ({
       title: c.title,
       domain: c.domain,
       url: c.url,
       position: c.position,
+      description: c.description,
     })),
     serpFeatures: data.serp?.features ? {
       featuredSnippet: data.serp.features.featuredSnippet,

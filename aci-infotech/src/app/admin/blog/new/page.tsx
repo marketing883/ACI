@@ -49,7 +49,7 @@ interface KeywordData {
   alternativeKeywords: { keyword: string; note: string }[];
   relatedKeywords: { keyword: string; volume: number; cpc?: number; competition?: number }[];
   questionsAsked: string[];
-  competitorArticles: { title: string; domain: string; url?: string; position?: number }[];
+  competitorArticles: { title: string; domain: string; url?: string; position?: number; description?: string }[];
   isRealData?: boolean;
   warning?: string;
   serpFeatures?: {
@@ -887,13 +887,29 @@ export default function NewBlogPostPage() {
               {/* Competitor Articles */}
               <div>
                 <h4 className="font-medium text-gray-900 mb-3">Top Competitor Articles</h4>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {keywordData.competitorArticles.map((article, idx) => (
-                    <div key={idx} className="flex items-start gap-3">
-                      <span className="font-bold text-gray-400">{idx + 1}.</span>
-                      <div>
-                        <p className="font-medium text-gray-900">{article.title}</p>
-                        <p className="text-sm text-gray-500">{article.domain}</p>
+                    <div key={idx} className="border-b border-gray-100 pb-3 last:border-0">
+                      <div className="flex items-start gap-3">
+                        <span className="font-bold text-[var(--aci-primary)] mt-0.5">{idx + 1}.</span>
+                        <div className="flex-1">
+                          {article.url ? (
+                            <a
+                              href={article.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-medium text-gray-900 hover:text-[var(--aci-primary)] transition-colors"
+                            >
+                              {article.title}
+                            </a>
+                          ) : (
+                            <p className="font-medium text-gray-900">{article.title}</p>
+                          )}
+                          <p className="text-xs text-green-600 mt-0.5">{article.domain}</p>
+                          {article.description && (
+                            <p className="text-sm text-gray-600 mt-1 line-clamp-2">{article.description}</p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}

@@ -136,10 +136,11 @@ export default function BlogPage() {
       }
 
       try {
+        // Try with 'status' column first (matches actual schema)
         const { data, error } = await supabase
           .from('blog_posts')
           .select('*')
-          .eq('is_published', true)
+          .eq('status', 'published')
           .order('published_at', { ascending: false });
 
         if (error) {

@@ -419,6 +419,7 @@ export interface CompetitorData {
   title: string;
   url: string;
   position: number;
+  description?: string;
   estimatedTraffic?: number;
 }
 
@@ -439,12 +440,76 @@ export async function getCompetitors(keyword: string, location: string = 'United
 // COMPREHENSIVE KEYWORD RESEARCH (combines multiple endpoints)
 // ============================================================
 
+// Target IT services competitor domains to filter SERP results
+const IT_SERVICES_COMPETITORS = [
+  // Big consulting/IT services firms
+  'accenture.com',
+  'infosys.com',
+  'deloitte.com',
+  'capgemini.com',
+  'cognizant.com',
+  'wipro.com',
+  'tcs.com',
+  'hcl.com',
+  'ibm.com',
+  'kpmg.com',
+  'pwc.com',
+  'ey.com',
+  'mckinsey.com',
+  'bain.com',
+  'bcg.com',
+  // Mid-size IT services
+  'epam.com',
+  'persistent.com',
+  'ltimindtree.com',
+  'techmahindra.com',
+  'mphasis.com',
+  'coforge.com',
+  'zensar.com',
+  'birlasoft.com',
+  'hexaware.com',
+  'cyient.com',
+  'niit-tech.com',
+  'mastek.com',
+  // Smaller/specialized firms
+  'trianz.com',
+  'triedence.com',
+  'softchoice.com',
+  'slalom.com',
+  'publicissapient.com',
+  'globant.com',
+  'thoughtworks.com',
+  'dxc.com',
+  'atos.net',
+  'nttdata.com',
+  // Tech platforms (often rank for same keywords)
+  'databricks.com',
+  'snowflake.com',
+  'aws.amazon.com',
+  'azure.microsoft.com',
+  'cloud.google.com',
+  'salesforce.com',
+  'oracle.com',
+  'sap.com',
+  // Industry publications
+  'gartner.com',
+  'forrester.com',
+  'idc.com',
+  'techtarget.com',
+  'infoworld.com',
+  'computerworld.com',
+  'zdnet.com',
+  'techrepublic.com',
+];
+
 export interface ComprehensiveKeywordData {
   mainKeyword: KeywordMetrics | null;
   relatedKeywords: KeywordSuggestion[];
+  keywordSuggestions: KeywordSuggestion[];
   questions: QuestionData[];
   serp: SERPAnalysis | null;
   competitors: CompetitorData[];
+  allSerpResults: CompetitorData[];
 }
 
 export async function comprehensiveKeywordResearch(
@@ -452,24 +517,38 @@ export async function comprehensiveKeywordResearch(
   location: string = 'United States'
 ): Promise<ComprehensiveKeywordData> {
   // Run all requests in parallel for speed
-  const [mainKeyword, relatedKeywords, questions, serp] = await Promise.all([
+  const [mainKeyword, relatedKeywords, keywordSuggestions, questions, serp] = await Promise.all([
     getKeywordData(keyword, location),
     getRelatedKeywords(keyword, location),
+    getKeywordSuggestions(keyword, location),
     getPeopleAlsoAsk(keyword, location),
     analyzeSERP(keyword, location),
   ]);
 
+  const allSerpResults = serp?.organicResults.map(r => ({
+    domain: r.domain,
+    title: r.title,
+    url: r.url,
+    position: r.position,
+    description: r.description,
+  })) || [];
+
+  // Filter competitors to only show IT services/tech companies
+  const competitors = allSerpResults.filter(r =>
+    IT_SERVICES_COMPETITORS.some(domain =>
+      r.domain.includes(domain.replace('www.', '')) ||
+      r.url.includes(domain.replace('www.', ''))
+    )
+  );
+
   return {
     mainKeyword,
     relatedKeywords,
+    keywordSuggestions,
     questions,
     serp,
-    competitors: serp?.organicResults.map(r => ({
-      domain: r.domain,
-      title: r.title,
-      url: r.url,
-      position: r.position,
-    })) || [],
+    competitors: competitors.length > 0 ? competitors : allSerpResults.slice(0, 5),
+    allSerpResults,
   };
 }
 
