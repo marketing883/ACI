@@ -343,10 +343,10 @@ export default function NewCaseStudyPage() {
 
     try {
       // Only include columns that exist in the database schema
+      // Note: excerpt, meta_title, meta_description, client_size, client_location do NOT exist in the database
       const caseStudyData = {
         title,
         slug,
-        excerpt,
         client_name: clientName,
         client_logo_url: clientLogo || null,
         industry: clientIndustry,

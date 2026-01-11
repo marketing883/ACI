@@ -31,7 +31,7 @@ export interface CaseStudy {
   updated_at: string;
   slug: string;
   title: string;
-  excerpt?: string | null;
+  // Note: excerpt does NOT exist in the actual database schema
   client_name: string;
   client_logo_url: string | null;
   industry: string;
