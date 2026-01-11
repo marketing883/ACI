@@ -51,9 +51,12 @@ export async function POST(request: NextRequest) {
 
     const prompt = buildPrompt(type, field, context);
 
+    // Use higher token limit for full content generation
+    const maxTokens = field === 'content' ? 8000 : 2000;
+
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 2000,
+      max_tokens: maxTokens,
       messages: [
         {
           role: 'user',
@@ -189,172 +192,237 @@ AEO Optimization:
 Return ONLY the excerpt, nothing else.`;
 
       case 'outline':
-        return `Create a detailed, AEO/GEO-optimized outline for a ${articleType || 'How-To Guide'} about "${keyword || title}".
+        return `Create a comprehensive, value-packed outline for an EXCEPTIONAL ${articleType || 'How-To Guide'} about "${keyword || title}".
 
-Article Type: ${articleType || 'How-To Guide'}
-Target Word Count: ${length || '1,500-2,000 words'}
-Target Audience: ${audience || 'C-Suite Executives, IT Decision Makers'}
-Tone: ${tone || 'Authoritative & Trustworthy'}
-Include: ${includes || 'Statistics, FAQ Section, Actionable Tips'}
-Category: ${category || 'Enterprise Technology'}
+CONTEXT:
+- Article Type: ${articleType || 'How-To Guide'}
+- Target Word Count: ${length || '1,500-2,000 words'}
+- Target Audience: ${audience || 'C-Suite Executives, IT Decision Makers'}
+- Tone: ${tone || 'Authoritative & Trustworthy'}
+- Must Include: ${includes || 'Statistics, FAQ Section, Actionable Tips'}
+- Category: ${category || 'Enterprise Technology'}
 
-Format as markdown with:
+OUTLINE REQUIREMENTS:
 
-## [Article Type-Specific Structure]
+The outline should be DETAILED enough that it serves as a complete blueprint. Each section should include:
+- The heading (## or ###)
+- 2-3 bullet points of what SPECIFICALLY to cover
+- Any statistics, examples, or case studies to include
+- The key insight or takeaway for that section
 
-For How-To Guides:
-- Introduction with "What you'll learn"
-- Prerequisites section
-- Numbered step-by-step sections
-- Common mistakes to avoid
-- FAQ section
-- Conclusion with next steps
+STRUCTURE BY ARTICLE TYPE:
 
-For Listicles:
-- Introduction with why this matters
-- Numbered items with consistent structure
-- Each item: heading, explanation, example, pro tip
-- FAQ section
-- Conclusion with key takeaways
+${articleType === 'how-to' || !articleType ? `
+## Introduction
+- Opening hook with striking statistic or expert quote
+- The problem/opportunity this solves
+- "In this guide, you'll learn..." (3-4 specific outcomes)
+- Who this is for and estimated reading time
 
-For Industry Analysis:
-- Executive summary
-- Current state of [topic]
-- Key trends (numbered)
-- Expert predictions
-- What this means for your organization
-- FAQ section
-- Action items
+## Why [Topic] Matters Now
+- Current market context
+- The cost of NOT doing this (quantified)
+- Recent developments making this urgent
 
-For Explainers:
-- "What is [X]?" section (definition paragraph 40-60 words)
-- "Why does [X] matter?"
-- "How does [X] work?"
-- "Who should use [X]?"
-- Common misconceptions
-- FAQ section
-- Getting started
+## Prerequisites: What You Need Before Starting
+- Required knowledge/skills
+- Tools/technologies needed
+- Organizational readiness checklist
 
-${AEO_GEO_GUIDELINES}
+## Step 1: [Specific Action]
+- Detailed explanation
+- Specific example or mini case study
+- Common pitfall to avoid
+- Pro tip from practitioner experience
 
-Return the outline in markdown format.`;
+[Continue with Steps 2-5+]
 
-      case 'content':
-        return `Write a comprehensive, AEO/GEO-optimized ${articleType || 'article'} about "${keyword || title}".
+## Common Mistakes That Derail [Topic] Projects
+- Mistake 1 with why it happens and how to avoid
+- Mistake 2...
+- Include: "In our experience, 70% of failures come from..."
 
-Article Type: ${articleType || 'How-To Guide'}
-Target Word Count: ${length || '1,500-2,000 words'}
-Target Audience: ${audience || 'C-Suite Executives, IT Decision Makers'}
-Tone: ${tone || 'Authoritative & Trustworthy'}
-Author: ${authorName || 'ACI Team'}
-Category: ${category || 'Enterprise Technology'}
-Include: ${includes || 'Statistics, FAQ Section, Actionable Tips'}
+## Quick-Reference Checklist
+- Bulleted checklist they can screenshot/print
 
-${AEO_GEO_GUIDELINES}
+## FAQ Section
+- 4-5 questions people actually search for
+- Each answer: 40-60 words, direct and specific
 
-Article Type-Specific Requirements:
-
-${articleType === 'how-to' || articleType === 'How-To Guide' ? `
-HOW-TO GUIDE FORMAT:
-1. Introduction (100-150 words)
-   - Start with the problem/opportunity
-   - "In this guide, you'll learn how to..."
-   - Estimated time/difficulty
-
-2. Prerequisites/Before You Start (if applicable)
-   - What readers need to know/have
-
-3. Step-by-Step Instructions
-   - ## Step 1: [Action Verb] + [What]
-   - Each step: 100-200 words
-   - Include specific examples
-   - Add "Pro tip:" boxes for insider knowledge
-   - Include potential pitfalls
-
-4. Common Mistakes to Avoid
-   - Numbered list with explanations
-
-5. FAQ Section (use ### for each question)
-   - 3-5 relevant questions
-   - Direct answers in 40-60 words
-
-6. Conclusion
-   - Recap key steps
-   - Next actions
-   - CTA
+## What's Next: Taking Action
+- Immediate next step they can take today
+- Resources for deeper learning
+- When to consider expert help
 ` : ''}
 
 ${articleType === 'industry-analysis' || articleType === 'Industry Analysis' ? `
-INDUSTRY ANALYSIS FORMAT:
-1. Executive Summary (150 words)
-   - Key findings upfront
-   - "This analysis reveals..."
+## Executive Summary
+- 3 key findings in bullets
+- The "so what" for decision makers
+- Reading time estimate
 
-2. Current State of [Topic]
-   - Market size/statistics
-   - Key players
-   - Recent developments
+## The Current State of [Topic] in 2025
+- Market size and growth trajectory
+- Key players and their positioning
+- Recent major developments (last 6 months)
 
-3. Key Trends (numbered)
-   - Each trend: 200-300 words
-   - Include data points
-   - Quote or reference sources
+## Trend 1: [Specific Trend Name]
+- What's happening
+- Supporting data (cite Gartner, Forrester, etc.)
+- Real-world example
+- Implication for enterprises
 
-4. Expert Predictions
-   - "According to Gartner/Forrester/McKinsey..."
-   - In our experience working with Fortune 500 clients...
+[Trends 2-5...]
 
-5. What This Means for Your Organization
-   - Practical implications
-   - Risk/opportunity assessment
+## What the Experts Are Saying
+- Quotes/predictions from industry leaders
+- Our own prediction based on client work
 
-6. FAQ Section
+## Risk Assessment: What Could Go Wrong
+- Potential disruptions
+- Regulatory considerations
+- Technology risks
 
-7. Recommended Actions
-   - Prioritized list
+## Opportunity Map: Where to Place Your Bets
+- High-confidence opportunities
+- Emerging opportunities worth watching
+- What to avoid
+
+## Your 90-Day Action Plan
+- Immediate actions (this month)
+- Near-term initiatives (next quarter)
+- Strategic planning (this year)
+
+## FAQ Section
 ` : ''}
 
 ${articleType === 'explainer' || articleType === 'Explainer/What Is' ? `
-EXPLAINER FORMAT:
-1. What is [Topic]? (Definition - exactly 40-60 words for featured snippet)
-   - Clear, concise definition
-   - "[Topic] is a [category] that [function/purpose]..."
+## What is [Topic]? (The 60-Word Definition)
+- Clear, jargon-free definition
+- What category it belongs to
+- Its core purpose/function
 
-2. Why Does [Topic] Matter?
-   - Business impact
-   - Statistics on adoption/results
+## Why [Topic] Has Become Critical in 2025
+- The business drivers
+- Statistics on adoption/impact
+- What's changed recently
 
-3. How Does [Topic] Work?
-   - Technical explanation made accessible
-   - Diagrams/analogies
+## How [Topic] Actually Works
+- The core mechanism (simplified)
+- Key components and how they interact
+- Analogy for non-technical readers
 
-4. Key Benefits
-   - Bulleted list with brief explanations
+## The Real Benefits (Beyond the Hype)
+- Benefit 1 with specific metrics
+- Benefit 2 with use case
+- What vendors won't tell you
 
-5. Common Use Cases
-   - Industry-specific examples
+## [Topic] in Action: 3 Use Cases
+- Use case 1: Industry + specific example
+- Use case 2...
+- Use case 3...
 
-6. [Topic] vs. Alternatives (comparison if relevant)
+## [Topic] vs. [Main Alternative]
+- Head-to-head comparison
+- When to choose which
+- Hybrid approaches
 
-7. FAQ Section
+## Getting Started: A Practical Roadmap
+- Assessment: Are you ready?
+- Phase 1: Quick wins (30 days)
+- Phase 2: Foundation (90 days)
+- Phase 3: Scale (6-12 months)
 
-8. Getting Started
-   - First steps
-   - Resources
+## FAQ Section
 ` : ''}
 
-Content Quality Requirements:
-- Use markdown (## H2, ### H3, **bold**, *italic*)
-- Include 3-5 statistics with context
-- Add "In our experience..." insights (${authorName || 'ACI'} perspective)
-- Reference specific technologies/tools by name
-- Use bullet points and numbered lists liberally
-- Include internal link placeholders: [Related: Topic](/blog/topic-slug)
-- Ensure each major section has snippet-ready paragraphs (40-60 words)
+${AEO_GEO_GUIDELINES}
 
-${existingContent ? `Build upon this existing outline/content:\n${existingContent}` : ''}
+Return a detailed outline in markdown format that serves as a complete blueprint for an exceptional article.`;
 
-Return the full article in markdown format.`;
+      case 'content':
+        return `You are a world-renowned expert in ${category || 'enterprise technology'} and related technologies. You excel at merging cutting-edge technologies with business strategy, providing highly accurate, insightful, and actionable information. You are a master at creating compelling content that resonates deeply with ${audience || 'enterprise decision makers'}.
+
+CRITICAL: Create an EXCEPTIONAL article, NOT a generic fluff piece. Every paragraph must deliver genuine value, unique insights, and actionable intelligence.
+
+PRIMARY CONTEXT:
+- Topic/Keyword: "${keyword || title}"
+- Article Type: ${articleType || 'How-To Guide'}
+- Target Word Count: ${length || '1,500-2,000 words'}
+- Target Audience: ${audience || 'C-Suite Executives, IT Decision Makers'}
+- Tone: ${tone || 'Authoritative & Trustworthy'} (enthusiastic, connecting with the audience)
+- Author Perspective: ${authorName || 'ACI Team'} (enterprise data & AI consultancy)
+- Category: ${category || 'Enterprise Technology'}
+- Must Include: ${includes || 'Statistics, FAQ Section, Actionable Tips'}
+
+${existingContent ? `
+IMPORTANT - FOLLOW THIS OUTLINE EXACTLY:
+The article MUST follow this structure. Each section in the outline below should become a section in the final article:
+
+${existingContent}
+
+---
+` : ''}
+
+${AEO_GEO_GUIDELINES}
+
+CONTENT EXCELLENCE REQUIREMENTS:
+
+1. SENSATIONAL OPENING (Critical):
+   - Start with an engaging, intelligent hook that front-loads value
+   - Consider opening with a powerful, relevant quote from a renowned industry expert (Satya Nadella, Jensen Huang, or similar)
+   - Include a striking statistic that brings home the importance (e.g., "Organizations with mature data strategies see 2.6x revenue growth...")
+   - Set a tone that promises an exciting, value-packed read
+   - First 100 words must establish: why this matters NOW, what's at stake, what they'll gain
+
+2. BODY CONTENT (Deep Value):
+   - Go IN-DEPTH on every point demanded by the topic
+   - Provide REAL solutions, not generic advice
+   - Include SPECIFIC real-world use cases and examples (e.g., "When we helped a Fortune 100 retailer...")
+   - Add industry-specific facts and statistics with context
+   - Provide step-by-step guidance where appropriate
+   - Address the ACTUAL challenges the target audience faces
+   - Share contrarian or non-obvious insights that demonstrate expertise
+   - Use clear headings and subheadings that explain the content (not just label it)
+
+3. UNIQUE VOICE & INSIGHTS:
+   - Include "In our experience working with 80+ Fortune 500 clients..." type insights
+   - Share specific patterns you've observed (e.g., "The #1 mistake we see enterprises make is...")
+   - Provide the "insider perspective" that only practitioners would know
+   - Challenge conventional wisdom where appropriate
+   - Make bold, defensible predictions about the future
+
+4. PRACTICAL & ACTIONABLE:
+   - Every section should answer "So what? What do I do with this?"
+   - Include checklists, frameworks, or decision trees where valuable
+   - Provide specific tool/technology recommendations with reasoning
+   - Add "Pro Tips" or "Insider Notes" with genuinely useful insider knowledge
+   - Include pitfalls to avoid with specific examples of what goes wrong
+
+5. CONCLUSION (Strong Close):
+   - Do NOT start with "In conclusion" or similar
+   - Tie everything together into a coherent narrative
+   - Provide a clear call-to-action or next steps
+   - End with a memorable, resonant closing sentence that stays with the reader
+   - Leave them feeling they've gained significant value
+
+6. FORMATTING & SEO:
+   - Use markdown (## H2, ### H3, **bold**, *italic*)
+   - Include bulleted lists and numbered steps
+   - Use blockquotes for important callouts
+   - Create 40-60 word paragraphs for featured snippet optimization
+   - Include internal link placeholders: [Related: Topic](/blog/topic-slug)
+
+QUALITY CHECKLIST (Self-verify before output):
+- [ ] Would a busy CTO find this genuinely valuable?
+- [ ] Are there at least 5 specific, cited statistics?
+- [ ] Does every section provide actionable takeaways?
+- [ ] Is there at least one non-obvious insight per major section?
+- [ ] Does the opening hook grab attention immediately?
+- [ ] Is the advice specific (not generic platitudes)?
+- [ ] Would someone pay to read this content?
+
+Return the full article in markdown format. Make it EXCEPTIONAL.`;
 
       case 'meta_title':
         return `Generate an AEO-optimized meta title for this ${articleType || 'blog post'}.
