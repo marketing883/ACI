@@ -395,13 +395,60 @@ export default function CaseStudiesPage() {
           setCaseStudies(demoCaseStudies);
           setIsRealData(false);
         } else if (result.caseStudies && result.caseStudies.length > 0) {
-          // Parse JSON fields that might be stored as strings in the database
-          const parsedCaseStudies = result.caseStudies.map((study: CaseStudy & { results?: CaseStudyResult[] | string; technologies?: string[] | string }) => ({
-            ...study,
-            results: parseJsonField<CaseStudyResult[]>(study.results, []),
-            technologies: parseJsonField<string[]>(study.technologies, []),
-          }));
-          setCaseStudies(parsedCaseStudies);
+          // Transform database format to card component format
+          interface DbCaseStudy {
+            id?: string;
+            slug: string;
+            title?: string;
+            client_name?: string;
+            client_logo_url?: string;
+            featured_image_url?: string;
+            industry?: string;
+            services?: string[] | string;
+            challenge?: string;
+            solution?: string;
+            results?: string;
+            metrics?: { label: string; value: string; description?: string }[] | string;
+            technologies?: string[] | string;
+            is_featured?: boolean;
+            status?: string;
+          }
+
+          const transformedCaseStudies = result.caseStudies.map((study: DbCaseStudy) => {
+            // Parse services array
+            const servicesArray = parseJsonField<string[]>(study.services, []);
+
+            // Parse metrics and convert to results format
+            const metricsArray = parseJsonField<{ label: string; value: string; description?: string }[]>(study.metrics, []);
+            const resultsArray = metricsArray.map(m => ({
+              metric: m.value,
+              description: m.label + (m.description ? ` - ${m.description}` : ''),
+            }));
+
+            // Parse technologies
+            const techArray = parseJsonField<string[]>(study.technologies, []);
+
+            return {
+              id: study.id,
+              slug: study.slug,
+              client: study.client_name || 'Enterprise Client',
+              logo_url: study.client_logo_url,
+              featured_image: study.featured_image_url,
+              industry: study.industry || 'Technology',
+              service: servicesArray[0] || 'Data Engineering',
+              headline: study.title || 'Enterprise Transformation',
+              challenge: study.challenge || '',
+              solution: study.solution || '',
+              results: resultsArray.length > 0 ? resultsArray : [
+                { metric: 'Significant', description: 'Business impact achieved' }
+              ],
+              technologies: techArray,
+              is_featured: study.is_featured,
+              is_published: study.status === 'published',
+            };
+          });
+
+          setCaseStudies(transformedCaseStudies);
           setIsRealData(true);
         } else if (result.demo) {
           setCaseStudies(demoCaseStudies);

@@ -513,7 +513,7 @@ function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProp
         <div className="absolute -bottom-2 left-4 right-4 h-4 bg-gradient-to-b from-gray-300 to-gray-200 rounded-b-sm transform skew-x-6 group-hover:skew-x-3 transition-transform duration-300" />
 
         {/* Main book cover */}
-        <div className={`relative aspect-[3/4] rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-2xl ${featured ? 'ring-2 ring-amber-400 ring-offset-2' : ''}`}>
+        <div className={`relative aspect-[4/5] max-h-[280px] rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-2xl ${featured ? 'ring-2 ring-amber-400 ring-offset-2' : ''}`}>
           {whitepaper.cover_image ? (
             <Image
               src={whitepaper.cover_image}
