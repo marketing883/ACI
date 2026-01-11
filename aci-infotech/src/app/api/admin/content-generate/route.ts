@@ -478,16 +478,50 @@ ${AEO_GEO_GUIDELINES}
 Return a detailed outline in markdown format that serves as a complete blueprint for an exceptional article.`;
 
       case 'content':
+        // Parse word count for explicit guidance
+        const wordCountMatch = length?.match(/(\d+)/);
+        const minWords = wordCountMatch ? parseInt(wordCountMatch[1]) : 1500;
+        const maxWords = length?.includes('-') ? parseInt(length.split('-')[1]?.match(/(\d+)/)?.[1] || '2000') : minWords + 500;
+
         return `You are a world-renowned expert in ${category || 'enterprise technology'} and related technologies. You excel at merging cutting-edge technologies with business strategy, providing highly accurate, insightful, and actionable information. You are a master at creating compelling content that resonates deeply with ${audience || 'enterprise decision makers'}.
 
 CRITICAL: Create an EXCEPTIONAL article, NOT a generic fluff piece. Every paragraph must deliver genuine value, unique insights, and actionable intelligence.
 
+═══════════════════════════════════════════════════════════════
+STRICT REQUIREMENTS - YOU MUST FOLLOW THESE:
+═══════════════════════════════════════════════════════════════
+
+📏 WORD COUNT: ${length || '1,500-2,000 words'}
+   - Your article MUST be between ${minWords} and ${maxWords} words
+   - This is NOT a suggestion - it is a strict requirement
+   - Too short = not comprehensive enough
+   - Count your words and ensure you hit the target
+
+👥 TARGET AUDIENCE: ${audience || 'C-Suite Executives, IT Decision Makers'}
+   - Write specifically for THIS audience's concerns, vocabulary, and priorities
+   - ${audience?.toLowerCase().includes('c-suite') || audience?.toLowerCase().includes('executive') ?
+     'Focus on: business impact, ROI, strategic decisions, risk mitigation, competitive advantage' : ''}
+   - ${audience?.toLowerCase().includes('technical') || audience?.toLowerCase().includes('practitioner') ?
+     'Focus on: implementation details, code examples, technical architecture, best practices' : ''}
+   - ${audience?.toLowerCase().includes('it decision') ?
+     'Focus on: vendor evaluation, build vs buy, integration complexity, team capabilities, TCO' : ''}
+   - Use vocabulary and examples that resonate with this specific audience
+   - Address THEIR pain points, not generic ones
+
+🎯 ARTICLE TYPE: ${articleType || 'How-To Guide'}
+   - Follow the structure and conventions of this specific article type
+   - See ARTICLE TYPE-SPECIFIC GUIDANCE below
+
+🎨 TONE: ${tone || 'Authoritative & Trustworthy'}
+   - Maintain this tone consistently throughout
+   - ${tone?.toLowerCase().includes('authoritative') ? 'Be confident, cite data, speak from experience' : ''}
+   - ${tone?.toLowerCase().includes('approachable') ? 'Use conversational language, analogies, relatable examples' : ''}
+   - ${tone?.toLowerCase().includes('technical') ? 'Be precise, use proper terminology, include technical depth' : ''}
+
+═══════════════════════════════════════════════════════════════
+
 PRIMARY CONTEXT:
 - Topic/Keyword: "${keyword || title}"
-- Article Type: ${articleType || 'How-To Guide'}
-- Target Word Count: ${length || '1,500-2,000 words'}
-- Target Audience: ${audience || 'C-Suite Executives, IT Decision Makers'}
-- Tone: ${tone || 'Authoritative & Trustworthy'} (enthusiastic, connecting with the audience)
 - Author Perspective: ${authorName || 'ACI Team'} (enterprise data & AI consultancy)
 - Category: ${category || 'Enterprise Technology'}
 - Must Include: ${includes || 'Statistics, FAQ Section, Actionable Tips'}
@@ -605,15 +639,18 @@ CONTENT EXCELLENCE REQUIREMENTS:
    - Include internal link placeholders: [Related: Topic](/blog/topic-slug)
 
 QUALITY CHECKLIST (Self-verify before output):
-- [ ] Would a busy CTO find this genuinely valuable?
+- [ ] WORD COUNT: Is the article between ${minWords} and ${maxWords} words? (MANDATORY)
+- [ ] AUDIENCE: Is this written specifically for ${audience || 'C-Suite/IT Decision Makers'}? (Not generic)
+- [ ] ARTICLE TYPE: Does it follow ${articleType || 'How-To Guide'} conventions?
+- [ ] TONE: Is the ${tone || 'Authoritative'} tone maintained throughout?
+- [ ] Would a busy CTO/VP find this genuinely valuable?
 - [ ] Are there at least 5 specific, cited statistics?
 - [ ] Does every section provide actionable takeaways?
 - [ ] Is there at least one non-obvious insight per major section?
 - [ ] Does the opening hook grab attention immediately?
 - [ ] Is the advice specific (not generic platitudes)?
-- [ ] Would someone pay to read this content?
 
-Return the full article in markdown format. Make it EXCEPTIONAL.`;
+Return the full article in markdown format. Make it EXCEPTIONAL and ensure it meets ALL requirements above.`;
 
       case 'meta_title':
         return `Generate an AEO-optimized meta title for this ${articleType || 'blog post'}.
