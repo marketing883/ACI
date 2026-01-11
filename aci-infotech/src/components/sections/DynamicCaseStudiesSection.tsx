@@ -21,6 +21,7 @@ interface CaseStudyDB {
   testimonial_quote?: string | null;
   testimonial_author?: string | null;
   testimonial_title?: string | null;
+  featured_image_url?: string | null;
   is_featured?: boolean;
   status?: string;
   [key: string]: unknown;
@@ -69,6 +70,7 @@ const placeholderCaseStudies = [
     playbook_used: 'Post-Acquisition Playbook',
     playbook_count: 23,
     cta_text: 'See How It Worked',
+    featured_image_url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80', // Financial data dashboard
   },
   {
     id: '2',
@@ -88,6 +90,7 @@ const placeholderCaseStudies = [
     playbook_used: 'Multi-Location Playbook',
     playbook_count: 47,
     cta_text: 'See the Impact',
+    featured_image_url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&q=80', // Retail store
   },
   {
     id: '3',
@@ -107,6 +110,7 @@ const placeholderCaseStudies = [
     playbook_used: 'Global Unification Playbook',
     playbook_count: 31,
     cta_text: 'See the System',
+    featured_image_url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80', // Hotel/hospitality
   },
 ];
 
@@ -138,6 +142,7 @@ export default async function DynamicCaseStudiesSection({
         playbook_used: undefined, // Could be added to DB schema later
         playbook_count: undefined,
         cta_text: 'See the Full Story',
+        featured_image_url: cs.featured_image_url || undefined,
       }))
     : placeholderCaseStudies;
 

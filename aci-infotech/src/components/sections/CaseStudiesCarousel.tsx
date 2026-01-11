@@ -24,6 +24,7 @@ interface CaseStudy {
   playbook_used?: string;
   playbook_count?: number;
   cta_text?: string;
+  featured_image_url?: string;
 }
 
 interface CaseStudiesCarouselProps {
@@ -370,17 +371,49 @@ export default function CaseStudiesCarousel({
     >
       {/* Sticky Container */}
       <div className="sticky top-0 h-screen overflow-hidden">
-        {/* Background Image with enhanced overlay */}
+        {/* Dynamic Background Images - fade based on active card */}
         <div className="absolute inset-0">
-          <Image
-            src="/images/case-studies-bg.jpg"
-            alt="ACI Infotech enterprise data transformation case studies background"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/85 via-[#0A1628]/75 to-[#0A1628]/85" />
+          {/* Default background (shown when no featured images) */}
+          <div
+            className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+            style={{
+              opacity: caseStudies.some(cs => cs.featured_image_url) ? 0 : 1
+            }}
+          >
+            <Image
+              src="/images/case-studies-bg.jpg"
+              alt="ACI Infotech enterprise data transformation case studies background"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+
+          {/* Dynamic featured images - stacked, only active one is visible */}
+          {caseStudies.map((study, index) => (
+            study.featured_image_url && (
+              <div
+                key={study.id}
+                className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+                style={{
+                  opacity: index === activeIndex ? 1 : 0,
+                  zIndex: index === activeIndex ? 1 : 0,
+                }}
+              >
+                <Image
+                  src={study.featured_image_url}
+                  alt={`${study.title} background`}
+                  fill
+                  className="object-cover"
+                  priority={index === 0}
+                />
+              </div>
+            )
+          ))}
+
+          {/* Overlay gradients for readability */}
+          <div className="absolute inset-0 backdrop-blur-[2px] z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/85 via-[#0A1628]/75 to-[#0A1628]/85 z-10" />
         </div>
 
         {/* Ambient glow effects */}
