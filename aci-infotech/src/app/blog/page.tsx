@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Search, Calendar, Clock, User, Database } from 'lucide-react';
+import { ArrowRight, Search, Calendar, Clock, User } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
 // Types
@@ -218,51 +218,36 @@ export default function BlogPage() {
       </section>
 
       {/* Filters Section */}
-      <section className="bg-gray-50 py-6 sticky top-20 z-40 border-b">
+      <section className="bg-white py-6 sticky top-20 z-40 border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             {/* Search */}
-            <div className="relative w-full md:w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <div className="relative w-full md:w-96">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search articles..."
+                placeholder="Search articles by title, topic, or tag..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border-0 rounded-full focus:ring-2 focus:ring-[var(--aci-primary)] focus:bg-white transition-all"
               />
             </div>
 
-            {/* Data Source Indicator + Category Filters */}
-            <div className="flex items-center gap-4">
-              {/* Data source indicator */}
-              {!isLoading && (
-                <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${
-                  isRealData
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-yellow-100 text-yellow-800'
-                }`}>
-                  <Database className="w-3 h-3" />
-                  {isRealData ? 'Live Data' : 'Demo Data'}
-                </span>
-              )}
-
-              {/* Category Filters */}
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      selectedCategory === category
-                        ? 'bg-[var(--aci-primary)] text-white'
-                        : 'bg-white text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
+            {/* Category Filters */}
+            <div className="flex flex-wrap gap-2 justify-center">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                    selectedCategory === category
+                      ? 'bg-gradient-to-r from-[var(--aci-primary)] to-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 hover:scale-105'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -284,7 +269,7 @@ export default function BlogPage() {
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Featured Articles</h2>
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="grid lg:grid-cols-3 gap-6 auto-rows-[minmax(280px,auto)]">
               {featuredPosts.slice(0, 3).map((post, index) => (
                 <FeaturedPostCard key={post.slug} post={post} large={index === 0} />
               ))}
@@ -386,16 +371,16 @@ function FeaturedPostCard({ post, large }: PostCardProps) {
     return (
       <Link
         href={`/blog/${post.slug}`}
-        className="group lg:col-span-2 lg:row-span-2 bg-[var(--aci-secondary)] rounded-2xl overflow-hidden relative"
+        className="group lg:col-span-2 lg:row-span-2 bg-[var(--aci-secondary)] rounded-2xl overflow-hidden relative min-h-[400px] lg:min-h-[580px]"
       >
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
-        <div className="aspect-[16/9] lg:aspect-auto lg:h-full relative">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10" />
+        <div className="absolute inset-0">
           {post.featured_image_url ? (
             <Image
               src={post.featured_image_url}
               alt={post.title}
               fill
-              className="object-cover"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 1024px) 100vw, 66vw"
             />
           ) : (
@@ -404,7 +389,7 @@ function FeaturedPostCard({ post, large }: PostCardProps) {
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
           <div className="flex items-center gap-4 mb-4">
-            <span className="px-3 py-1 bg-[var(--aci-primary)] text-white text-sm font-medium rounded">
+            <span className="px-3 py-1.5 bg-[var(--aci-primary)] text-white text-sm font-medium rounded-full">
               {post.category}
             </span>
             <span className="text-gray-300 text-sm">{formatDate(dateStr)}</span>
