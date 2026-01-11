@@ -97,7 +97,17 @@ async function generateThumbnail(buffer: Buffer): Promise<Buffer> {
 
 export async function POST(request: NextRequest) {
   try {
-    const formData = await request.formData();
+    let formData;
+    try {
+      formData = await request.formData();
+    } catch (formError) {
+      console.error('FormData parsing error:', formError);
+      return NextResponse.json(
+        { error: 'Failed to parse form data' },
+        { status: 400 }
+      );
+    }
+
     const file = formData.get('file') as File;
     const folder = formData.get('folder') as string || 'uploads';
     const bucket = formData.get('bucket') as string || 'ACI-web';
@@ -116,16 +126,17 @@ export async function POST(request: NextRequest) {
       const timestamp = Date.now();
       const baseName = file.name.replace(/\.[^.]+$/, '');
       const sanitizedName = baseName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9.-]/g, '');
+      const ext = file.name.split('.').pop() || 'jpg';
 
-      // Return a demo placeholder URL
-      const demoUrl = `/images/demo/${folder}/${timestamp}-${sanitizedName}.webp`;
+      // Return a demo placeholder URL - use a real placeholder image
+      const demoUrl = `https://placehold.co/400x300/1a365d/ffffff?text=${encodeURIComponent(sanitizedName.substring(0, 20))}`;
 
       return NextResponse.json({
         success: true,
         url: demoUrl,
-        path: `${folder}/${timestamp}-${sanitizedName}.webp`,
+        path: `${folder}/${timestamp}-${sanitizedName}.${ext}`,
         demo: true,
-        message: 'Demo mode: File not actually uploaded. Configure Supabase for real uploads.',
+        message: 'Demo mode: Using placeholder. Configure Supabase for real uploads.',
       });
     }
 
