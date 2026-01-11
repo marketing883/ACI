@@ -1,13 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Filter, Search } from 'lucide-react';
+import { ArrowRight, Filter, Search, Loader2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
-// Case study data - in production, fetch from Supabase
-const allCaseStudies = [
+// Types for case studies
+interface CaseStudyResult {
+  metric: string;
+  description: string;
+}
+
+interface CaseStudy {
+  id?: string;
+  slug: string;
+  client: string;
+  logo_url?: string;
+  industry: string;
+  service: string;
+  headline: string;
+  challenge: string;
+  solution: string;
+  results: CaseStudyResult[];
+  technologies: string[];
+  is_featured?: boolean;
+  is_published?: boolean;
+}
+
+// Demo case study data - used as fallback
+const demoCaseStudies: CaseStudy[] = [
   {
     slug: 'msci-data-automation',
     client: 'MSCI',
@@ -341,14 +363,52 @@ export default function CaseStudiesPage() {
   const [selectedIndustry, setSelectedIndustry] = useState('All');
   const [selectedService, setSelectedService] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRealData, setIsRealData] = useState(false);
 
-  const filteredStudies = allCaseStudies.filter((study) => {
+  // Fetch case studies from database
+  useEffect(() => {
+    async function fetchCaseStudies() {
+      setIsLoading(true);
+
+      try {
+        const response = await fetch('/api/admin/case-studies?published=true');
+        const result = await response.json();
+
+        if (result.error) {
+          console.error('Error fetching case studies:', result.error);
+          setCaseStudies(demoCaseStudies);
+          setIsRealData(false);
+        } else if (result.caseStudies && result.caseStudies.length > 0) {
+          setCaseStudies(result.caseStudies);
+          setIsRealData(true);
+        } else if (result.demo) {
+          setCaseStudies(demoCaseStudies);
+          setIsRealData(false);
+        } else {
+          setCaseStudies(demoCaseStudies);
+          setIsRealData(false);
+        }
+      } catch (error) {
+        console.error('Error fetching case studies:', error);
+        setCaseStudies(demoCaseStudies);
+        setIsRealData(false);
+      }
+
+      setIsLoading(false);
+    }
+
+    fetchCaseStudies();
+  }, []);
+
+  const filteredStudies = caseStudies.filter((study) => {
     const matchesIndustry = selectedIndustry === 'All' || study.industry === selectedIndustry;
     const matchesService = selectedService === 'All' || study.service === selectedService;
     const matchesSearch = searchQuery === '' ||
       study.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
       study.headline.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      study.technologies.some(tech => tech.toLowerCase().includes(searchQuery.toLowerCase()));
+      study.technologies?.some(tech => tech.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesIndustry && matchesService && matchesSearch;
   });
 
@@ -443,19 +503,34 @@ export default function CaseStudiesPage() {
         </div>
       </section>
 
+      {/* Loading State */}
+      {isLoading && (
+        <section className="py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center justify-center">
+              <Loader2 className="w-12 h-12 text-[var(--aci-primary)] animate-spin mb-4" />
+              <p className="text-gray-500">Loading case studies...</p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Results Count */}
-      <section className="py-6 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-gray-600">
-            Showing <span className="font-semibold text-[var(--aci-secondary)]">{filteredStudies.length}</span> case studies
-            {selectedIndustry !== 'All' && <span> in <span className="font-semibold">{selectedIndustry}</span></span>}
-            {selectedService !== 'All' && <span> for <span className="font-semibold">{selectedService}</span></span>}
-          </p>
-        </div>
-      </section>
+      {!isLoading && (
+        <section className="py-6 bg-white border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-gray-600">
+              Showing <span className="font-semibold text-[var(--aci-secondary)]">{filteredStudies.length}</span> case studies
+              {selectedIndustry !== 'All' && <span> in <span className="font-semibold">{selectedIndustry}</span></span>}
+              {selectedService !== 'All' && <span> for <span className="font-semibold">{selectedService}</span></span>}
+              {isRealData && <span className="ml-2 text-green-600 text-sm">(Live data)</span>}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* Featured Case Studies */}
-      {featuredStudies.length > 0 && (
+      {!isLoading && featuredStudies.length > 0 && (
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Featured Case Studies</h2>
@@ -469,24 +544,25 @@ export default function CaseStudiesPage() {
       )}
 
       {/* All Case Studies */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {featuredStudies.length > 0 && otherStudies.length > 0 && (
-            <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">More Success Stories</h2>
-          )}
+      {!isLoading && (
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {featuredStudies.length > 0 && otherStudies.length > 0 && (
+              <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">More Success Stories</h2>
+            )}
 
-          {filteredStudies.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">No case studies found matching your criteria.</p>
-              <Button
-                variant="secondary"
-                className="mt-4"
-                onClick={() => {
-                  setSelectedIndustry('All');
-                  setSelectedService('All');
-                  setSearchQuery('');
-                }}
-              >
+            {filteredStudies.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-gray-500 text-lg">No case studies found matching your criteria.</p>
+                <Button
+                  variant="secondary"
+                  className="mt-4"
+                  onClick={() => {
+                    setSelectedIndustry('All');
+                    setSelectedService('All');
+                    setSearchQuery('');
+                  }}
+                >
                 Clear Filters
               </Button>
             </div>
@@ -499,6 +575,7 @@ export default function CaseStudiesPage() {
           )}
         </div>
       </section>
+      )}
 
       {/* CTA Section */}
       <section className="py-20 bg-[var(--aci-primary)]">
@@ -525,7 +602,7 @@ export default function CaseStudiesPage() {
 
 // Case Study Card Component
 interface CaseStudyCardProps {
-  study: typeof allCaseStudies[0];
+  study: CaseStudy;
   featured?: boolean;
 }
 
@@ -569,7 +646,7 @@ function CaseStudyCard({ study, featured }: CaseStudyCardProps) {
       {/* Results */}
       <div className="p-6">
         <div className="space-y-3 mb-6">
-          {study.results.slice(0, 3).map((result, index) => (
+          {study.results?.slice(0, 3).map((result, index) => (
             <div key={index} className="flex items-baseline gap-3">
               <span className="text-xl font-bold text-[var(--aci-primary)]">
                 {result.metric}
@@ -581,7 +658,7 @@ function CaseStudyCard({ study, featured }: CaseStudyCardProps) {
 
         {/* Technologies */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {study.technologies.slice(0, 3).map((tech) => (
+          {study.technologies?.slice(0, 3).map((tech) => (
             <span
               key={tech}
               className="px-2 py-1 bg-gray-100 rounded text-xs text-gray-600"
@@ -589,9 +666,9 @@ function CaseStudyCard({ study, featured }: CaseStudyCardProps) {
               {tech}
             </span>
           ))}
-          {study.technologies.length > 3 && (
+          {(study.technologies?.length || 0) > 3 && (
             <span className="px-2 py-1 text-xs text-gray-400">
-              +{study.technologies.length - 3} more
+              +{(study.technologies?.length || 0) - 3} more
             </span>
           )}
         </div>

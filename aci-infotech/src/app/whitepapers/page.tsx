@@ -1,14 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Download, FileText, X, Mail, Building2, User, Loader2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { trackFormSubmission, trackEvent, trackCTAClick } from '@/components/analytics/GoogleAnalytics';
 
-// Whitepaper data - in production, fetch from Supabase
-const allWhitepapers = [
+// Types for whitepapers
+interface Whitepaper {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  cover_image?: string;
+  category: string;
+  pages?: number;
+  is_featured?: boolean;
+  featured?: boolean;
+  is_published?: boolean;
+  topics?: string[];
+  pdf_url?: string;
+}
+
+// Demo whitepaper data - used as fallback
+const demoWhitepapers: Whitepaper[] = [
   {
     id: '1',
     slug: 'enterprise-data-strategy-2025',
@@ -87,7 +103,7 @@ function DownloadModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  whitepaper: typeof allWhitepapers[0] | null;
+  whitepaper: Whitepaper | null;
 }) {
   const [formData, setFormData] = useState({
     name: '',
@@ -263,14 +279,52 @@ function DownloadModal({
 
 export default function WhitepapersPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [downloadWhitepaper, setDownloadWhitepaper] = useState<typeof allWhitepapers[0] | null>(null);
+  const [downloadWhitepaper, setDownloadWhitepaper] = useState<Whitepaper | null>(null);
+  const [whitepapers, setWhitepapers] = useState<Whitepaper[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRealData, setIsRealData] = useState(false);
 
-  const filteredWhitepapers = allWhitepapers.filter((wp) => {
+  // Fetch whitepapers from database
+  useEffect(() => {
+    async function fetchWhitepapers() {
+      setIsLoading(true);
+
+      try {
+        const response = await fetch('/api/admin/whitepapers?published=true');
+        const result = await response.json();
+
+        if (result.error) {
+          console.error('Error fetching whitepapers:', result.error);
+          setWhitepapers(demoWhitepapers);
+          setIsRealData(false);
+        } else if (result.whitepapers && result.whitepapers.length > 0) {
+          setWhitepapers(result.whitepapers);
+          setIsRealData(true);
+        } else if (result.demo) {
+          setWhitepapers(demoWhitepapers);
+          setIsRealData(false);
+        } else {
+          setWhitepapers(demoWhitepapers);
+          setIsRealData(false);
+        }
+      } catch (error) {
+        console.error('Error fetching whitepapers:', error);
+        setWhitepapers(demoWhitepapers);
+        setIsRealData(false);
+      }
+
+      setIsLoading(false);
+    }
+
+    fetchWhitepapers();
+  }, []);
+
+  const filteredWhitepapers = whitepapers.filter((wp) => {
     return selectedCategory === 'All' || wp.category === selectedCategory;
   });
 
-  const featuredWhitepapers = filteredWhitepapers.filter(wp => wp.featured);
-  const otherWhitepapers = filteredWhitepapers.filter(wp => !wp.featured);
+  const featuredWhitepapers = filteredWhitepapers.filter(wp => wp.is_featured || wp.featured);
+  const otherWhitepapers = filteredWhitepapers.filter(wp => !wp.is_featured && !wp.featured);
 
   return (
     <main className="min-h-screen">
@@ -292,7 +346,7 @@ export default function WhitepapersPage() {
             {/* Stats */}
             <div className="flex flex-wrap justify-center gap-8 mt-12">
               <div className="text-center">
-                <div className="text-4xl font-bold text-white">{allWhitepapers.length}</div>
+                <div className="text-4xl font-bold text-white">{isLoading ? '...' : whitepapers.length || demoWhitepapers.length}</div>
                 <div className="text-gray-400">Whitepapers</div>
               </div>
               <div className="text-center">
@@ -329,8 +383,20 @@ export default function WhitepapersPage() {
         </div>
       </section>
 
+      {/* Loading State */}
+      {isLoading && (
+        <section className="py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center justify-center">
+              <Loader2 className="w-12 h-12 text-[var(--aci-primary)] animate-spin mb-4" />
+              <p className="text-gray-500">Loading whitepapers...</p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Featured Whitepapers */}
-      {featuredWhitepapers.length > 0 && (
+      {!isLoading && featuredWhitepapers.length > 0 && (
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Featured Resources</h2>
@@ -382,18 +448,19 @@ export default function WhitepapersPage() {
       )}
 
       {/* All Whitepapers */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {featuredWhitepapers.length > 0 && otherWhitepapers.length > 0 && (
-            <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">More Resources</h2>
-          )}
+      {!isLoading && (
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {featuredWhitepapers.length > 0 && otherWhitepapers.length > 0 && (
+              <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">More Resources</h2>
+            )}
 
-          {filteredWhitepapers.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">No whitepapers found in this category.</p>
-              <Button
-                variant="secondary"
-                className="mt-4"
+            {filteredWhitepapers.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-gray-500 text-lg">No whitepapers found in this category.</p>
+                <Button
+                  variant="secondary"
+                  className="mt-4"
                 onClick={() => setSelectedCategory('All')}
               >
                 View All
@@ -435,7 +502,7 @@ export default function WhitepapersPage() {
 
                     {/* Topics */}
                     <div className="flex flex-wrap gap-1 mb-4">
-                      {wp.topics.slice(0, 3).map((topic) => (
+                      {wp.topics?.slice(0, 3).map((topic) => (
                         <span
                           key={topic}
                           className="px-2 py-0.5 bg-gray-100 rounded text-xs text-gray-600"
@@ -459,6 +526,7 @@ export default function WhitepapersPage() {
           )}
         </div>
       </section>
+      )}
 
       {/* CTA Section */}
       <section className="py-20 bg-[var(--aci-primary)]">

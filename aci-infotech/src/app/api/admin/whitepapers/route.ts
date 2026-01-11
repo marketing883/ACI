@@ -21,6 +21,85 @@ function getServiceSupabase() {
   return createClient(url, serviceKey);
 }
 
+// READ - Get whitepapers
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const slug = searchParams.get('slug');
+    const publishedOnly = searchParams.get('published') === 'true';
+    const featured = searchParams.get('featured') === 'true';
+    const limit = parseInt(searchParams.get('limit') || '100');
+    const offset = parseInt(searchParams.get('offset') || '0');
+
+    // Demo mode: return empty array when Supabase isn't configured
+    if (!isSupabaseConfigured()) {
+      console.log('Demo mode: Supabase not configured');
+      return NextResponse.json({ whitepapers: [], demo: true });
+    }
+
+    const supabase = getServiceSupabase();
+
+    // If slug is provided, fetch single whitepaper
+    if (slug) {
+      const { data: whitepaper, error } = await supabase
+        .from('whitepapers')
+        .select('*')
+        .eq('slug', slug)
+        .eq('is_published', true)
+        .single();
+
+      if (error) {
+        console.error('Whitepaper fetch error:', error);
+        return NextResponse.json({ whitepaper: null, error: error.message });
+      }
+
+      return NextResponse.json({ whitepaper });
+    }
+
+    // Fetch all whitepapers
+    let query = supabase
+      .from('whitepapers')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false });
+
+    if (publishedOnly) {
+      query = query.eq('is_published', true);
+    }
+
+    if (featured) {
+      query = query.eq('is_featured', true);
+    }
+
+    // Apply pagination
+    query = query.range(offset, offset + limit - 1);
+
+    const { data: whitepapers, error, count } = await query;
+
+    if (error) {
+      console.error('Whitepapers fetch error:', error);
+      return NextResponse.json(
+        { error: error.message, whitepapers: [], total: 0 },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      whitepapers: whitepapers || [],
+      total: count || 0,
+      limit,
+      offset,
+      hasMore: (offset + limit) < (count || 0)
+    });
+  } catch (error) {
+    console.error('Whitepapers GET error:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch whitepapers', whitepapers: [], total: 0 },
+      { status: 500 }
+    );
+  }
+}
+
+// CREATE - New whitepaper
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
