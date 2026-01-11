@@ -441,65 +441,58 @@ export async function getCompetitors(keyword: string, location: string = 'United
 // ============================================================
 
 // Target IT services competitor domains to filter SERP results
+// These are the actual competitors - IT consulting/services firms
 const IT_SERVICES_COMPETITORS = [
-  // Big consulting/IT services firms
+  // Big 4 & Major Consulting
   'accenture.com',
-  'infosys.com',
   'deloitte.com',
-  'capgemini.com',
-  'cognizant.com',
-  'wipro.com',
-  'tcs.com',
-  'hcl.com',
-  'ibm.com',
   'kpmg.com',
   'pwc.com',
   'ey.com',
   'mckinsey.com',
   'bain.com',
   'bcg.com',
-  // Mid-size IT services
-  'epam.com',
-  'persistent.com',
-  'ltimindtree.com',
+  // Large IT Services (Indian heritage)
+  'infosys.com',
+  'wipro.com',
+  'tcs.com',
+  'hcltech.com',
   'techmahindra.com',
+  'ltimindtree.com',
   'mphasis.com',
+  'mindtree.com',
+  // Global IT Services
+  'capgemini.com',
+  'cognizant.com',
+  'ibm.com',
+  'dxc.com',
+  'atos.net',
+  'nttdata.com',
+  'fujitsu.com',
+  // Mid-size IT Services
+  'epam.com',
+  'globant.com',
+  'thoughtworks.com',
+  'slalom.com',
+  'publicissapient.com',
+  'persistent.com',
   'coforge.com',
   'zensar.com',
   'birlasoft.com',
   'hexaware.com',
   'cyient.com',
-  'niit-tech.com',
   'mastek.com',
-  // Smaller/specialized firms
+  'virtusa.com',
+  'softwareag.com',
+  // Smaller/Specialized firms
   'trianz.com',
   'triedence.com',
   'softchoice.com',
-  'slalom.com',
-  'publicissapient.com',
-  'globant.com',
-  'thoughtworks.com',
-  'dxc.com',
-  'atos.net',
-  'nttdata.com',
-  // Tech platforms (often rank for same keywords)
-  'databricks.com',
-  'snowflake.com',
-  'aws.amazon.com',
-  'azure.microsoft.com',
-  'cloud.google.com',
-  'salesforce.com',
-  'oracle.com',
-  'sap.com',
-  // Industry publications
-  'gartner.com',
-  'forrester.com',
-  'idc.com',
-  'techtarget.com',
-  'infoworld.com',
-  'computerworld.com',
-  'zdnet.com',
-  'techrepublic.com',
+  'ness.com',
+  'synechron.com',
+  'nagarro.com',
+  'endava.com',
+  'luxoft.com',
 ];
 
 export interface ComprehensiveKeywordData {
@@ -525,6 +518,14 @@ export async function comprehensiveKeywordResearch(
     analyzeSERP(keyword, location),
   ]);
 
+  // Log API responses for debugging
+  console.log(`[DataForSEO] Keyword: ${keyword}`);
+  console.log(`[DataForSEO] Main keyword data: ${mainKeyword ? 'received' : 'null'}`);
+  console.log(`[DataForSEO] Related keywords: ${relatedKeywords.length} results`);
+  console.log(`[DataForSEO] Keyword suggestions: ${keywordSuggestions.length} results`);
+  console.log(`[DataForSEO] Questions: ${questions.length} results`);
+  console.log(`[DataForSEO] SERP results: ${serp?.organicResults.length || 0} results`);
+
   const allSerpResults = serp?.organicResults.map(r => ({
     domain: r.domain,
     title: r.title,
@@ -533,13 +534,19 @@ export async function comprehensiveKeywordResearch(
     description: r.description,
   })) || [];
 
-  // Filter competitors to only show IT services/tech companies
-  const competitors = allSerpResults.filter(r =>
-    IT_SERVICES_COMPETITORS.some(domain =>
+  // Mark which results are from IT services competitors
+  const competitorResults = allSerpResults.map(r => ({
+    ...r,
+    isCompetitor: IT_SERVICES_COMPETITORS.some(domain =>
       r.domain.includes(domain.replace('www.', '')) ||
       r.url.includes(domain.replace('www.', ''))
-    )
-  );
+    ),
+  }));
+
+  // Filter to only show competitors if any exist
+  const competitors = competitorResults.filter(r => r.isCompetitor);
+
+  console.log(`[DataForSEO] Competitor articles found: ${competitors.length}`);
 
   return {
     mainKeyword,
@@ -547,7 +554,8 @@ export async function comprehensiveKeywordResearch(
     keywordSuggestions,
     questions,
     serp,
-    competitors: competitors.length > 0 ? competitors : allSerpResults.slice(0, 5),
+    // Return all SERP results - let the API route handle the display
+    competitors: allSerpResults,
     allSerpResults,
   };
 }

@@ -33,6 +33,7 @@ interface KeywordResponse {
     url?: string;
     position?: number;
     description?: string;
+    isCompetitor?: boolean;
   }[];
   serpFeatures?: {
     featuredSnippet: boolean;
@@ -101,6 +102,54 @@ function generateMockData(keyword: string): KeywordResponse {
   };
 }
 
+// IT Services competitors for highlighting
+const IT_SERVICES_COMPETITORS = [
+  'accenture.com', 'deloitte.com', 'kpmg.com', 'pwc.com', 'ey.com',
+  'mckinsey.com', 'bain.com', 'bcg.com', 'infosys.com', 'wipro.com',
+  'tcs.com', 'hcltech.com', 'techmahindra.com', 'ltimindtree.com',
+  'mphasis.com', 'capgemini.com', 'cognizant.com', 'ibm.com', 'dxc.com',
+  'atos.net', 'nttdata.com', 'epam.com', 'globant.com', 'thoughtworks.com',
+  'slalom.com', 'publicissapient.com', 'persistent.com', 'coforge.com',
+  'hexaware.com', 'trianz.com', 'triedence.com', 'nagarro.com', 'endava.com',
+];
+
+// Generate fallback keywords based on the main keyword
+function generateFallbackKeywords(keyword: string): { keyword: string; note: string; volume?: number }[] {
+  const words = keyword.split(' ');
+  const suggestions = [
+    { keyword: `${keyword} best practices`, note: 'High intent modifier' },
+    { keyword: `${keyword} implementation`, note: 'Action-oriented' },
+    { keyword: `${keyword} strategy`, note: 'Decision-maker target' },
+    { keyword: `${keyword} solutions`, note: 'Commercial intent' },
+    { keyword: `enterprise ${keyword}`, note: 'Enterprise focus' },
+    { keyword: `${keyword} for business`, note: 'Business audience' },
+    { keyword: `${keyword} architecture`, note: 'Technical depth' },
+    { keyword: `${keyword} migration`, note: 'Project-focused' },
+  ];
+
+  // Add variations if multi-word keyword
+  if (words.length > 1) {
+    suggestions.push({ keyword: words[0], note: 'Broader term' });
+    suggestions.push({ keyword: `${words[0]} ${words[words.length - 1]}`, note: 'Simplified variant' });
+  }
+
+  return suggestions.slice(0, 5);
+}
+
+// Generate fallback questions
+function generateFallbackQuestions(keyword: string): string[] {
+  return [
+    `What is ${keyword}?`,
+    `How does ${keyword} work?`,
+    `What are the benefits of ${keyword}?`,
+    `How to implement ${keyword}?`,
+    `What is the difference between ${keyword} and traditional approaches?`,
+    `Who should use ${keyword}?`,
+    `What are ${keyword} best practices?`,
+    `How much does ${keyword} cost?`,
+  ];
+}
+
 // Transform DataForSEO response to our format
 function transformDataForSEOResponse(data: ComprehensiveKeywordData, keyword: string): KeywordResponse {
   const mainKw = data.mainKeyword;
@@ -133,14 +182,17 @@ function transformDataForSEOResponse(data: ComprehensiveKeywordData, keyword: st
     })
     .slice(0, 5);
 
-  const alternativeKeywords = sortedAlternatives.map(kw => ({
-    keyword: kw.keyword,
-    volume: kw.searchVolume,
-    note: kw.competition < 30 ? 'Low competition opportunity' :
-          kw.searchVolume > (mainKw?.searchVolume || 0) ? 'Higher volume than main keyword' :
-          kw.competition < 50 ? 'Medium competition, good potential' :
-          'Related topic to target',
-  }));
+  // Use API data if available, otherwise generate fallbacks
+  const alternativeKeywords = sortedAlternatives.length > 0
+    ? sortedAlternatives.map(kw => ({
+        keyword: kw.keyword,
+        volume: kw.searchVolume,
+        note: kw.competition < 30 ? 'Low competition opportunity' :
+              kw.searchVolume > (mainKw?.searchVolume || 0) ? 'Higher volume than main keyword' :
+              kw.competition < 50 ? 'Medium competition, good potential' :
+              'Related topic to target',
+      }))
+    : generateFallbackKeywords(keyword);
 
   // Use related keywords for the related section
   const relatedKeywords = (data.relatedKeywords || [])
@@ -153,6 +205,25 @@ function transformDataForSEOResponse(data: ComprehensiveKeywordData, keyword: st
       competition: kw.competition,
     }));
 
+  // Use API questions if available, otherwise generate fallbacks
+  const apiQuestions = (data.questions || []).map(q => q.question).filter(Boolean);
+  const questionsAsked = apiQuestions.length > 0
+    ? apiQuestions.slice(0, 8)
+    : generateFallbackQuestions(keyword);
+
+  // Process competitor articles with isCompetitor flag
+  const competitorArticles = (data.competitors || []).slice(0, 10).map(c => ({
+    title: c.title,
+    domain: c.domain,
+    url: c.url,
+    position: c.position,
+    description: c.description,
+    isCompetitor: IT_SERVICES_COMPETITORS.some(domain =>
+      c.domain.includes(domain.replace('www.', '')) ||
+      c.url?.includes(domain.replace('www.', ''))
+    ),
+  }));
+
   return {
     keyword: mainKw?.keyword || keyword,
     searchVolume: mainKw?.searchVolume || 0,
@@ -164,14 +235,8 @@ function transformDataForSEOResponse(data: ComprehensiveKeywordData, keyword: st
     competitionLevel: mainKw?.competitionLevel || 'MEDIUM',
     alternativeKeywords,
     relatedKeywords,
-    questionsAsked: (data.questions || []).map(q => q.question).filter(Boolean).slice(0, 8),
-    competitorArticles: (data.competitors || []).slice(0, 10).map(c => ({
-      title: c.title,
-      domain: c.domain,
-      url: c.url,
-      position: c.position,
-      description: c.description,
-    })),
+    questionsAsked,
+    competitorArticles,
     serpFeatures: data.serp?.features ? {
       featuredSnippet: data.serp.features.featuredSnippet,
       peopleAlsoAsk: data.serp.features.peopleAlsoAsk,

@@ -49,7 +49,7 @@ interface KeywordData {
   alternativeKeywords: { keyword: string; note: string }[];
   relatedKeywords: { keyword: string; volume: number; cpc?: number; competition?: number }[];
   questionsAsked: string[];
-  competitorArticles: { title: string; domain: string; url?: string; position?: number; description?: string }[];
+  competitorArticles: { title: string; domain: string; url?: string; position?: number; description?: string; isCompetitor?: boolean }[];
   isRealData?: boolean;
   warning?: string;
   serpFeatures?: {
@@ -886,26 +886,49 @@ export default function NewBlogPostPage() {
 
               {/* Competitor Articles */}
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">Top Competitor Articles</h4>
+                <h4 className="font-medium text-gray-900 mb-3">
+                  SERP Results
+                  <span className="text-xs text-gray-500 font-normal ml-2">
+                    (IT Services competitors highlighted)
+                  </span>
+                </h4>
                 <div className="space-y-4">
                   {keywordData.competitorArticles.map((article, idx) => (
-                    <div key={idx} className="border-b border-gray-100 pb-3 last:border-0">
+                    <div
+                      key={idx}
+                      className={`border-b pb-3 last:border-0 ${
+                        article.isCompetitor
+                          ? 'border-l-4 border-l-orange-500 pl-3 bg-orange-50/50 -ml-3 pr-3'
+                          : 'border-gray-100'
+                      }`}
+                    >
                       <div className="flex items-start gap-3">
-                        <span className="font-bold text-[var(--aci-primary)] mt-0.5">{idx + 1}.</span>
+                        <span className={`font-bold mt-0.5 ${article.isCompetitor ? 'text-orange-600' : 'text-[var(--aci-primary)]'}`}>
+                          {idx + 1}.
+                        </span>
                         <div className="flex-1">
-                          {article.url ? (
-                            <a
-                              href={article.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-medium text-gray-900 hover:text-[var(--aci-primary)] transition-colors"
-                            >
-                              {article.title}
-                            </a>
-                          ) : (
-                            <p className="font-medium text-gray-900">{article.title}</p>
-                          )}
-                          <p className="text-xs text-green-600 mt-0.5">{article.domain}</p>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {article.url ? (
+                              <a
+                                href={article.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-medium text-gray-900 hover:text-[var(--aci-primary)] transition-colors"
+                              >
+                                {article.title}
+                              </a>
+                            ) : (
+                              <span className="font-medium text-gray-900">{article.title}</span>
+                            )}
+                            {article.isCompetitor && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800">
+                                Competitor
+                              </span>
+                            )}
+                          </div>
+                          <p className={`text-xs mt-0.5 ${article.isCompetitor ? 'text-orange-600 font-medium' : 'text-green-600'}`}>
+                            {article.domain}
+                          </p>
                           {article.description && (
                             <p className="text-sm text-gray-600 mt-1 line-clamp-2">{article.description}</p>
                           )}
