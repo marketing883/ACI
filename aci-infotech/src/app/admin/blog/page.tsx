@@ -227,10 +227,10 @@ export default function BlogAdmin() {
           </Link>
           <Link
             href="/admin/blog/new"
-            className="flex items-center gap-2 px-4 py-2 bg-[var(--aci-primary)] text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="group flex items-center gap-2 px-4 py-2 bg-[var(--aci-primary)] rounded-lg hover:bg-[var(--aci-primary-dark)] transition-colors"
           >
-            <Plus className="w-5 h-5" />
-            New Post
+            <Plus className="w-5 h-5 text-white group-hover:text-lime-400" />
+            <span className="text-white group-hover:text-lime-400">New Post</span>
           </Link>
         </div>
       </div>

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Search, Calendar, Clock, User, Database } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 // Types
 interface BlogPost {
@@ -127,29 +126,22 @@ export default function BlogPage() {
     async function fetchBlogs() {
       setIsLoading(true);
 
-      if (!isSupabaseConfigured()) {
-        console.log('Supabase not configured, using demo data');
-        setBlogPosts(demoBlogPosts);
-        setIsRealData(false);
-        setIsLoading(false);
-        return;
-      }
-
       try {
-        // Query published posts using is_published boolean field
-        const { data, error } = await supabase
-          .from('blog_posts')
-          .select('*')
-          .eq('is_published', true)
-          .order('published_at', { ascending: false });
+        // Use API endpoint that bypasses RLS
+        const response = await fetch('/api/admin/blogs?published=true');
+        const result = await response.json();
 
-        if (error) {
-          console.error('Error fetching blogs:', error);
+        if (result.error) {
+          console.error('Error fetching blogs:', result.error);
           setBlogPosts(demoBlogPosts);
           setIsRealData(false);
-        } else if (data && data.length > 0) {
-          setBlogPosts(data);
+        } else if (result.posts && result.posts.length > 0) {
+          setBlogPosts(result.posts);
           setIsRealData(true);
+        } else if (result.demo) {
+          // Demo mode
+          setBlogPosts(demoBlogPosts);
+          setIsRealData(false);
         } else {
           // No data in database, use demo
           setBlogPosts(demoBlogPosts);

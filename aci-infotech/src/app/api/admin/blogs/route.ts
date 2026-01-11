@@ -21,6 +21,68 @@ function getServiceSupabase() {
   return createClient(url, serviceKey);
 }
 
+// READ - Get published blog posts (uses service role to bypass RLS)
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const publishedOnly = searchParams.get('published') === 'true';
+    const slug = searchParams.get('slug');
+
+    // Demo mode: return empty array when Supabase isn't configured
+    if (!isSupabaseConfigured()) {
+      console.log('Demo mode: Supabase not configured');
+      return NextResponse.json({ posts: [], demo: true });
+    }
+
+    const supabase = getServiceSupabase();
+
+    // If slug is provided, fetch single post
+    if (slug) {
+      const { data: post, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('slug', slug)
+        .eq('is_published', true)
+        .single();
+
+      if (error) {
+        console.error('Blog fetch error:', error);
+        return NextResponse.json({ post: null, error: error.message });
+      }
+
+      return NextResponse.json({ post });
+    }
+
+    // Fetch all posts (optionally filtered by published status)
+    let query = supabase
+      .from('blog_posts')
+      .select('*')
+      .order('published_at', { ascending: false });
+
+    if (publishedOnly) {
+      query = query.eq('is_published', true);
+    }
+
+    const { data: posts, error } = await query;
+
+    if (error) {
+      console.error('Blog fetch error:', error);
+      return NextResponse.json(
+        { error: error.message, posts: [] },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ posts: posts || [] });
+  } catch (error) {
+    console.error('Blog GET error:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch blog posts', posts: [] },
+      { status: 500 }
+    );
+  }
+}
+
 // CREATE - New blog post
 export async function POST(request: NextRequest) {
   try {
