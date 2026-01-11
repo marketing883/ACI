@@ -45,11 +45,20 @@ interface KeywordData {
   difficulty: number;
   difficultyLabel: 'Easy' | 'Medium' | 'Hard';
   cpc: number;
-  trend: number;
+  trend: number | number[];
   alternativeKeywords: { keyword: string; note: string }[];
-  relatedKeywords: { keyword: string; volume: number }[];
+  relatedKeywords: { keyword: string; volume: number; cpc?: number; competition?: number }[];
   questionsAsked: string[];
-  competitorArticles: { title: string; domain: string }[];
+  competitorArticles: { title: string; domain: string; url?: string; position?: number }[];
+  isRealData?: boolean;
+  warning?: string;
+  serpFeatures?: {
+    featuredSnippet: boolean;
+    peopleAlsoAsk: boolean;
+    localPack: boolean;
+    images: boolean;
+    videos: boolean;
+  };
 }
 
 interface FAQ {
@@ -751,6 +760,39 @@ export default function NewBlogPostPage() {
 
           {keywordData && (
             <div className="space-y-6 mt-6">
+              {/* Data Source Indicator */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {keywordData.isRealData ? (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                      Live DataForSEO Data
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
+                      Estimated Data
+                    </span>
+                  )}
+                  {keywordData.warning && (
+                    <span className="text-xs text-gray-500">{keywordData.warning}</span>
+                  )}
+                </div>
+                {keywordData.serpFeatures && (
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    {keywordData.serpFeatures.featuredSnippet && (
+                      <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded">Featured Snippet</span>
+                    )}
+                    {keywordData.serpFeatures.peopleAlsoAsk && (
+                      <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded">PAA</span>
+                    )}
+                    {keywordData.serpFeatures.videos && (
+                      <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded">Videos</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
               {/* SEO Metrics */}
               <div className="grid grid-cols-4 gap-4">
                 <div className="bg-gray-50 rounded-lg p-4">
@@ -773,10 +815,20 @@ export default function NewBlogPostPage() {
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-xs text-gray-500 mb-1">Trend</p>
-                  <p className={`text-2xl font-bold flex items-center gap-1 ${keywordData.trend >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    <TrendingUp className={`w-5 h-5 ${keywordData.trend < 0 ? 'rotate-180' : ''}`} />
-                    {keywordData.trend >= 0 ? '+' : ''}{keywordData.trend}%
-                  </p>
+                  {(() => {
+                    // Handle trend as number or array
+                    const trendValue = Array.isArray(keywordData.trend)
+                      ? (keywordData.trend.length >= 2
+                        ? Math.round(((keywordData.trend[keywordData.trend.length - 1] - keywordData.trend[0]) / keywordData.trend[0]) * 100)
+                        : 0)
+                      : keywordData.trend;
+                    return (
+                      <p className={`text-2xl font-bold flex items-center gap-1 ${trendValue >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <TrendingUp className={`w-5 h-5 ${trendValue < 0 ? 'rotate-180' : ''}`} />
+                        {trendValue >= 0 ? '+' : ''}{trendValue}%
+                      </p>
+                    );
+                  })()}
                 </div>
               </div>
 
