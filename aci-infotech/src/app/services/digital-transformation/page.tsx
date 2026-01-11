@@ -19,7 +19,7 @@ const offerings = [
   {
     id: 'servicenow',
     title: 'ServiceNow Implementation',
-    description: 'ITSM, HRSD, Customer Service Management—workflows that actually get used.',
+    description: 'ITSM, HRSD, Customer Service Management, workflows that actually get used.',
     icon: Workflow,
     technologies: ['ServiceNow', 'ITSM', 'HRSD', 'CSM'],
     outcomes: ['50% faster ticket resolution', 'Self-service adoption', 'Unified service experience'],
@@ -27,7 +27,7 @@ const offerings = [
   {
     id: 'rpa',
     title: 'Robotic Process Automation',
-    description: 'UiPath, Power Automate, Automation Anywhere—bots that free humans for higher-value work.',
+    description: 'UiPath, Power Automate, Automation Anywhere, bots that free humans for higher-value work.',
     icon: Bot,
     technologies: ['UiPath', 'Power Automate', 'Automation Anywhere'],
     outcomes: ['80% reduction in manual work', '24/7 processing', 'Zero-error execution'],
@@ -139,7 +139,7 @@ const faqs = [
   },
   {
     question: 'What about change management?',
-    answer: "Automation changes how people work. We include change management in every project—communication, training, and support to ensure adoption.",
+    answer: "Automation changes how people work. We include change management in every project, communication, training, and support to ensure adoption.",
   },
   {
     question: 'How do you measure automation ROI?',

@@ -19,7 +19,7 @@ const offerings = [
   {
     id: 'cloud-migration',
     title: 'Cloud Migration',
-    description: 'Lift and shift, replatform, or refactor—we migrate your workloads to AWS, Azure, or GCP with zero downtime.',
+    description: 'Lift and shift, replatform, or refactor, we migrate your workloads to AWS, Azure, or GCP with zero downtime.',
     icon: Cloud,
     technologies: ['AWS', 'Azure', 'GCP', 'VMware Cloud'],
     outcomes: ['Zero-downtime migration', '30-50% cost reduction', 'Legacy decommissioning'],
@@ -355,7 +355,7 @@ export default function CloudModernizationPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Modernize Your Cloud?</h2>
           <p className="text-lg text-blue-100 mb-8">
-            Talk to a cloud architect about your specific challenge. No sales pitch—just an engineering conversation.
+            Talk to a cloud architect about your specific challenge. No sales pitch, just an engineering conversation.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

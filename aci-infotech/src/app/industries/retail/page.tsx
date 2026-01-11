@@ -110,7 +110,7 @@ export default function RetailPage() {
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
             From convenience stores to department store chains, we help retailers harness data
             to deliver personalized experiences, optimize inventory, and drive growth. Our solutions
-            span the entire customer journey—from acquisition to loyalty.
+            span the entire customer journey, from acquisition to loyalty.
           </p>
 
           <div className="flex flex-wrap gap-4">

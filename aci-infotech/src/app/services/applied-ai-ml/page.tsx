@@ -365,7 +365,7 @@ export default function AppliedAIMLPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Ship AI to Production?</h2>
           <p className="text-lg text-blue-100 mb-8">
-            Talk to an AI architect about your specific use case. No sales pitch—just an engineering conversation about what's actually possible.
+            Talk to an AI architect about your specific use case. No sales pitch, just an engineering conversation about what's actually possible.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

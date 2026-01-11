@@ -110,7 +110,7 @@ export default function FinancialServicesPage() {
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
             From global asset managers to regional banks, we help financial institutions
             modernize their technology infrastructure, implement AI at scale, and meet
-            evolving regulatory requirements—all while maintaining the security and
+            evolving regulatory requirements, all while maintaining the security and
             reliability your operations demand.
           </p>
 

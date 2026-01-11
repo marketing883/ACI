@@ -69,7 +69,7 @@ const DATA_SERVICE: ServiceData = {
   name: 'Data Engineering',
   shortName: 'Data',
   tagline: 'Platforms that feed AI',
-  description: 'Databricks lakehouses, Snowflake warehouses, real-time Kafka pipelines. Not data swamps—governed, observable systems with Dynatrace monitoring and automated quality gates.',
+  description: 'Databricks lakehouses, Snowflake warehouses, real-time Kafka pipelines. Not data swamps, governed, observable systems with Dynatrace monitoring and automated quality gates.',
   deployments: '100+',
   deploymentsLabel: 'deployments',
   techStack: ['Databricks', 'Snowflake', 'Kafka', 'Dynatrace', 'dbt'],
@@ -83,7 +83,7 @@ const AI_SERVICE: ServiceData = {
   name: 'Applied AI & ML',
   shortName: 'AI & ML',
   tagline: 'GenAI to production ML',
-  description: 'GenAI chatbots, forecasting engines, recommendation systems. Not POCs that die—production ML with MLOps, model monitoring, and governance that passes audits.',
+  description: 'GenAI chatbots, forecasting engines, recommendation systems. Not POCs that die, production ML with MLOps, model monitoring, and governance that passes audits.',
   deployments: '50',
   deploymentsLabel: 'deployments',
   techStack: ['OpenAI', 'Databricks ML', 'SageMaker', 'MLflow', 'ArqAI'],
@@ -97,7 +97,7 @@ const MARTECH_SERVICE: ServiceData = {
   name: 'MarTech & CDP',
   shortName: 'MarTech',
   tagline: 'Customer 360 that works',
-  description: 'Salesforce Marketing Cloud, Adobe Experience Platform, Braze. Real-time personalization at scale—not siloed campaigns that miss the customer standing in your store.',
+  description: 'Salesforce Marketing Cloud, Adobe Experience Platform, Braze. Real-time personalization at scale, not siloed campaigns that miss the customer standing in your store.',
   deployments: '34',
   deploymentsLabel: 'deployments',
   techStack: ['Salesforce', 'Adobe AEP', 'Braze', 'Segment', 'Twilio'],
@@ -112,7 +112,7 @@ const DIGITAL_SERVICE: ServiceData = {
   name: 'Digital Transformation',
   shortName: 'Digital',
   tagline: 'Intelligent process automation',
-  description: 'ServiceNow workflows, RPA, document processing. Automate what humans shouldn\'t do manually—not vanity projects, but processes that move the P&L.',
+  description: 'ServiceNow workflows, RPA, document processing. Automate what humans shouldn\'t do manually, not vanity projects, but processes that move the P&L.',
   deployments: '40',
   deploymentsLabel: 'deployments',
   techStack: ['ServiceNow', 'UiPath', 'Power Automate', 'Appian', 'Camunda'],
@@ -127,7 +127,7 @@ const SECURITY_SERVICE: ServiceData = {
   name: 'Cyber Security',
   shortName: 'Security',
   tagline: 'Built in, not bolted on',
-  description: 'DevSecOps, observability, compliance automation. SOC 2, ISO 27001, HIPAA compliant architectures from day one. Security isn\'t a phase—it\'s embedded in every layer.',
+  description: 'DevSecOps, observability, compliance automation. SOC 2, ISO 27001, HIPAA compliant architectures from day one. Security isn\'t a phase, it\'s embedded in every layer.',
   deployments: '82',
   deploymentsLabel: 'clients protected',
   techStack: ['Dynatrace', 'Splunk', 'CrowdStrike', 'HashiCorp Vault', 'Snyk'],
@@ -572,7 +572,7 @@ export default function WhatWeBuildSection() {
             {/* Security annotation */}
             <div className="mt-6 pt-4 border-t border-[#0052CC]/15 text-center">
               <p className="text-sm text-gray-500">
-                <span className="text-[#0052CC] font-semibold">Security</span> wraps all layers — SOC 2, ISO 27001, HIPAA compliant from day one
+                <span className="text-[#0052CC] font-semibold">Security</span> wraps all layers ,  SOC 2, ISO 27001, HIPAA compliant from day one
               </p>
             </div>
           </div>

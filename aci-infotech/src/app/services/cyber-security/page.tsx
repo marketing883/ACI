@@ -118,7 +118,7 @@ const differentiators = [
   },
   {
     title: 'Compliance Expertise',
-    description: 'SOC 2, ISO 27001, HIPAA, PCI-DSS—we know the frameworks and how to implement them efficiently.',
+    description: 'SOC 2, ISO 27001, HIPAA, PCI-DSS, we know the frameworks and how to implement them efficiently.',
     proof: 'Multiple compliance certifications',
   },
   {
@@ -139,7 +139,7 @@ const faqs = [
   },
   {
     question: 'What about existing security tools?',
-    answer: 'We integrate with your existing stack. Most enterprises have multiple security tools—we help you rationalize, integrate, and get value from your investments.',
+    answer: 'We integrate with your existing stack. Most enterprises have multiple security tools, we help you rationalize, integrate, and get value from your investments.',
   },
   {
     question: 'Do you provide ongoing security support?',

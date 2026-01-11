@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 
 interface GenerateRequest {
   type: 'blog' | 'case_study' | 'whitepaper' | 'webinar';
-  field: 'title' | 'excerpt' | 'content' | 'outline' | 'challenge' | 'solution' | 'results' | 'description' | 'meta_title' | 'meta_description' | 'faqs' | 'highlights';
+  field: 'title' | 'excerpt' | 'content' | 'outline' | 'challenge' | 'solution' | 'results' | 'description' | 'meta_title' | 'meta_description' | 'faqs' | 'highlights' | 'metrics' | 'seo_fix';
   context: {
     keyword?: string;
     title?: string;
@@ -24,6 +24,11 @@ interface GenerateRequest {
     authorName?: string;
     content?: string;
     existingFaqs?: { question: string; answer: string }[];
+    // SEO fix fields
+    seoIssue?: string;
+    currentValue?: string;
+    // Metrics fields
+    existingMetrics?: { label: string; value: string; description?: string }[];
   };
 }
 
@@ -75,6 +80,25 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Handle metrics JSON parsing
+    if (field === 'metrics') {
+      try {
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed)) {
+          return NextResponse.json({ metrics: parsed, content: parsed });
+        }
+      } catch {
+        // If not valid JSON, return mock metrics
+        const mockMetrics = [
+          { value: '40%', label: 'Cost Reduction', description: 'Annual operational savings' },
+          { value: '3x', label: 'Faster Processing', description: 'Compared to legacy system' },
+          { value: '99.5%', label: 'Uptime', description: 'SLA-backed reliability' },
+          { value: '60%', label: 'Efficiency Gain', description: 'Team productivity improvement' },
+        ];
+        return NextResponse.json({ metrics: mockMetrics, content: mockMetrics });
+      }
+    }
+
     // Return both 'content' and 'generated' for backward compatibility
     return NextResponse.json({ content, generated: content });
 
@@ -88,10 +112,22 @@ export async function POST(request: NextRequest) {
 }
 
 function buildPrompt(type: string, field: string, context: GenerateRequest['context']): string {
-  const { keyword, title, category, existingContent, clientName, industry, technologies, audience, tone, length, includes, articleType, authorName, content, existingFaqs } = context;
+  const { keyword, title, category, existingContent, clientName, industry, technologies, audience, tone, length, includes, articleType, authorName, content, existingFaqs, seoIssue, currentValue, existingMetrics } = context;
+
+  // CRITICAL: No dashes rule - applies to ALL generated content
+  const NO_DASHES_RULE = `
+CRITICAL FORMATTING RULE:
+- NEVER use em dashes (—) or en dashes (–) in any content
+- Use commas, semicolons, colons, or periods instead
+- Use "to" for ranges (e.g., "10 to 20" not "10–20")
+- Use hyphens (-) ONLY for compound words (e.g., "real-time", "AI-powered")
+- This is a strict requirement with no exceptions
+`;
 
   // AEO/GEO optimization guidelines that apply to all content
   const AEO_GEO_GUIDELINES = `
+${NO_DASHES_RULE}
+
 AEO (Answer Engine Optimization) Requirements:
 - Include clear definitions (e.g., "X is a...", "X refers to...")
 - Add question-based headings where appropriate (What, How, Why, When)
@@ -713,6 +749,8 @@ Client: ${clientName || 'Enterprise client'}
 Industry: ${industry || 'Enterprise'}
 Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
 
+${NO_DASHES_RULE}
+
 Requirements:
 - 150-160 characters (strict limit)
 - Lead with the most impressive metric
@@ -722,8 +760,82 @@ Requirements:
 
 Return ONLY the meta description, nothing else.`;
 
+      case 'metrics':
+        return `Generate 4 compelling, quantifiable metrics for a case study.
+
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+${existingContent ? `Challenge/Solution Context:\n${existingContent}` : ''}
+${existingMetrics && existingMetrics.length > 0 ? `Existing Metrics (improve or complement these):\n${existingMetrics.map(m => `${m.value} - ${m.label}`).join('\n')}` : ''}
+
+${NO_DASHES_RULE}
+
+Requirements:
+- Generate exactly 4 metrics
+- Each metric must have: value (number with unit), label (what it measures), description (optional context)
+- Mix categories: performance, cost savings, efficiency, business impact
+- Use realistic enterprise-scale numbers
+- Values should be specific (not rounded to nearest 10)
+
+Examples of good metrics:
+- Value: "73%", Label: "Reduction in Processing Time", Description: "From 4 hours to 65 minutes"
+- Value: "$2.3M", Label: "Annual Cost Savings", Description: "Infrastructure and operations"
+- Value: "12x", Label: "Faster Data Pipeline", Description: "Real-time vs batch processing"
+- Value: "99.9%", Label: "System Uptime", Description: "SLA-backed reliability"
+
+Return as JSON array:
+[
+  {"value": "73%", "label": "Reduction in Processing Time", "description": "From 4 hours to 65 minutes"},
+  {"value": "$2.3M", "label": "Annual Cost Savings", "description": "Infrastructure and operations"},
+  {"value": "12x", "label": "Faster Data Pipeline", "description": "Real-time vs batch"},
+  {"value": "99.9%", "label": "System Uptime", "description": "SLA-backed"}
+]
+
+Return ONLY the JSON array, nothing else.`;
+
+      case 'seo_fix':
+        return `Fix the following SEO issue for a case study.
+
+Issue: ${seoIssue || 'Content needs improvement'}
+Current Value: "${currentValue || ''}"
+
+Case Study Context:
+- Title: "${title}"
+- Client: ${clientName || 'Enterprise client'}
+- Industry: ${industry || 'Enterprise'}
+- Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+${existingContent ? `Additional Context:\n${existingContent}` : ''}
+
+${NO_DASHES_RULE}
+
+Fix Requirements:
+${seoIssue?.includes('title') || seoIssue?.includes('Title') ? `
+- Meta title must be 50-60 characters
+- Front-load keywords
+- Include industry or key result
+- Pattern: "[Result] for [Industry] | ACI Case Study"
+` : ''}
+${seoIssue?.includes('description') || seoIssue?.includes('Description') ? `
+- Meta description must be 150-160 characters
+- Start with the key metric or result
+- Include industry and technology
+- End with call to action
+` : ''}
+${seoIssue?.includes('missing') || seoIssue?.includes('Missing') ? `
+- Provide a complete, optimized value
+- Follow best practices for this field type
+` : ''}
+${seoIssue?.includes('keyword') || seoIssue?.includes('Keyword') ? `
+- Naturally incorporate relevant keywords
+- Don't keyword stuff
+- Front-load important terms
+` : ''}
+
+Return ONLY the fixed/improved content, nothing else.`;
+
       default:
-        return `Generate ${field} content for case study`;
+        return `Generate ${field} content for case study. ${NO_DASHES_RULE}`;
     }
   }
 

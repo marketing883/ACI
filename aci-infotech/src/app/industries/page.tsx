@@ -103,7 +103,7 @@ export default function IndustriesPage() {
               <span className="text-[var(--aci-primary-light)]"> Industries That Matter</span>
             </h1>
             <p className="text-xl text-gray-400 mb-8">
-              We don't just understand technology—we understand your business. Our consultants bring
+              We don't just understand technology, we understand your business. Our consultants bring
               industry-specific expertise to every engagement, speaking your language and solving
               your unique challenges.
             </p>

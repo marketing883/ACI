@@ -24,7 +24,7 @@ const services = [
     icon: Brain,
     title: 'Applied AI & ML',
     tagline: 'AI That Ships to Production',
-    description: 'From predictive models to generative AI, we build AI systems that deliver measurable business outcomes—not PowerPoint demos.',
+    description: 'From predictive models to generative AI, we build AI systems that deliver measurable business outcomes, not PowerPoint demos.',
     capabilities: ['MLOps & Model Deployment', 'Predictive Analytics', 'GenAI & LLM Integration', 'AI Governance (ArqAI)'],
     technologies: ['Python', 'MLflow', 'TensorFlow', 'LangChain', 'Azure ML'],
     href: '/services/applied-ai-ml',
@@ -54,7 +54,7 @@ const services = [
     icon: Zap,
     title: 'Digital Transformation',
     tagline: 'Transform Operations, Not Just Slides',
-    description: 'End-to-end digital transformation that modernizes processes, systems, and capabilities—delivered with the rigor of enterprise engineering.',
+    description: 'End-to-end digital transformation that modernizes processes, systems, and capabilities, delivered with the rigor of enterprise engineering.',
     capabilities: ['Process Automation', 'System Integration', 'ERP Modernization', 'Digital Strategy'],
     technologies: ['SAP', 'ServiceNow', 'MuleSoft', 'Power Platform', 'Workato'],
     href: '/services/digital-transformation',
@@ -254,7 +254,7 @@ export default function ServicesPage() {
           </h2>
           <p className="text-xl text-blue-100 mb-8">
             Schedule a 30-minute architecture call with one of our senior consultants.
-            No sales pitch—just an honest assessment of your needs.
+            No sales pitch, just an honest assessment of your needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">

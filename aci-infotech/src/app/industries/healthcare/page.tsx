@@ -110,7 +110,7 @@ export default function HealthcarePage() {
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
             From hospital systems to pharmaceutical companies, we help healthcare organizations
             harness data to improve patient outcomes, accelerate research, and maintain
-            compliance—all while ensuring the highest levels of security and privacy.
+            compliance, all while ensuring the highest levels of security and privacy.
           </p>
 
           <div className="flex flex-wrap gap-4">

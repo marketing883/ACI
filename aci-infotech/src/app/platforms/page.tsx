@@ -98,7 +98,7 @@ export default function PlatformsPage() {
               <span className="text-[var(--aci-primary-light)]"> Enterprises Trust</span>
             </h1>
             <p className="text-xl text-gray-400 mb-8">
-              We're not just consultants—we're certified partners with deep expertise in the platforms
+              We're not just consultants, we're certified partners with deep expertise in the platforms
               that power Fortune 500 operations. Our teams hold advanced certifications and have
               delivered hundreds of enterprise implementations.
             </p>

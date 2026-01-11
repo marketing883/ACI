@@ -133,7 +133,7 @@ export default function AboutPage() {
             </h1>
             <p className="text-lg md:text-xl text-gray-300">
               We're the 1,250-person technical team between your strategy and your operations.
-              We build data platforms, deploy AI systems, and stabilize cloud architectures—then
+              We build data platforms, deploy AI systems, and stabilize cloud architectures, then
               we stand behind them with SLAs. We're the team that answers the 2am call.
             </p>
           </div>
@@ -163,7 +163,7 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-gray-600">
                 <p>
-                  ACI Infotech isn't trying to be the next Accenture. We're the alternative—large
+                  ACI Infotech isn't trying to be the next Accenture. We're the alternative: large
                   enough to staff Fortune 500 projects, small enough to make decisions in days not
                   months, and focused enough to deliver deep expertise in the platforms enterprises
                   actually use.
@@ -399,7 +399,7 @@ export default function AboutPage() {
             Ready to Discuss Your Challenge?
           </h2>
           <p className="text-lg text-blue-100 mb-8">
-            Talk to an architect about your specific needs. No sales pitch—just an
+            Talk to an architect about your specific needs. No sales pitch, just an
             engineering conversation about what's actually possible.
           </p>
 

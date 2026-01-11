@@ -174,7 +174,7 @@ const faqs = [
   },
   {
     question: 'Do we need to migrate everything at once?',
-    answer: "No. We use a phased approach—critical systems first, then expand. You'll see value within 3-4 months.",
+    answer: "No. We use a phased approach, critical systems first, then expand. You'll see value within 3-4 months.",
   },
   {
     question: 'Can you work with our existing cloud provider?',
@@ -199,7 +199,7 @@ export default function DataEngineeringPage() {
               <p className="text-lg text-gray-300 mb-8">
                 Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability.
                 We build data platforms that feed AI, power analytics, and run 24/7 with SLAs.
-                Not architecture diagrams—production code that handles millions of records per second.
+                Not architecture diagrams, production code that handles millions of records per second.
               </p>
 
               {/* Key Outcomes */}
@@ -283,7 +283,7 @@ export default function DataEngineeringPage() {
             <div className="space-y-4 text-gray-600">
               <p>
                 We build data platforms on Databricks, Snowflake, and AWS/Azure cloud data services.
-                This isn't abstract architecture—it's production code that handles your data volumes,
+                This isn't abstract architecture, it's production code that handles your data volumes,
                 meets your SLAs, and feeds your AI models.
               </p>
               <p>
@@ -509,7 +509,7 @@ export default function DataEngineeringPage() {
           </h2>
           <p className="text-lg text-blue-100 mb-8">
             Schedule a 30-minute technical call with one of our data architects.
-            No sales pitch—just an engineering conversation about your specific data challenges.
+            No sales pitch, just an engineering conversation about your specific data challenges.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-8">

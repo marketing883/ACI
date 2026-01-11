@@ -318,7 +318,7 @@ export default function ContactPage() {
               Let's Talk About Your Challenge
             </h1>
             <p className="text-lg text-gray-300">
-              Talk to a senior architect about your specific needs. No sales pitch—just an
+              Talk to a senior architect about your specific needs. No sales pitch, just an
               engineering conversation about what's actually possible.
             </p>
           </div>
@@ -566,7 +566,7 @@ export default function ContactPage() {
             </a>
           </p>
           <p className="text-sm text-blue-200">
-            Business hours: Monday–Friday, 9am–6pm EST | 24/7 support for existing clients
+            Business hours: Monday to Friday, 9am to 6pm EST | 24/7 support for existing clients
           </p>
         </div>
       </section>
