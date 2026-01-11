@@ -136,11 +136,11 @@ export default function BlogPage() {
       }
 
       try {
-        // Try with 'status' column first (matches actual schema)
+        // Query published posts using is_published boolean field
         const { data, error } = await supabase
           .from('blog_posts')
           .select('*')
-          .eq('status', 'published')
+          .eq('is_published', true)
           .order('published_at', { ascending: false });
 
         if (error) {
