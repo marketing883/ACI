@@ -348,7 +348,7 @@ export default function NewCaseStudyPage() {
         excerpt,
         client_name: clientName,
         client_logo: clientLogo || null,
-        client_industry: clientIndustry,
+        industry: clientIndustry,
         client_size: clientSize,
         client_location: clientLocation,
         challenge,
