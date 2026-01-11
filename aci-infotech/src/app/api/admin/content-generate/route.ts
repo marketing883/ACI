@@ -896,5 +896,34 @@ function getMockContent(type: string, field: string, context: GenerateRequest['c
     }
   }
 
+  if (type === 'case_study') {
+    const clientName = context.clientName || 'Enterprise Client';
+    const industry = context.industry || 'Technology';
+    switch (field) {
+      case 'excerpt':
+        return `${clientName} achieved 40% cost reduction and 3x faster processing through a comprehensive data modernization initiative, transforming legacy systems into a unified, cloud-native platform.`;
+      case 'challenge':
+        return `${clientName} faced significant challenges with fragmented data systems across multiple business units. Legacy infrastructure was causing delays, inconsistencies, and mounting operational costs. The organization needed a unified approach to data management that could scale with business growth while maintaining compliance and security standards.`;
+      case 'solution':
+        return `ACI Infotech implemented a comprehensive data modernization strategy, leveraging cloud-native technologies and modern data architecture patterns. The solution included automated data pipelines, real-time analytics capabilities, and a unified data governance framework. Our team worked closely with ${clientName}'s stakeholders to ensure seamless adoption and knowledge transfer.`;
+      case 'results':
+        return `The transformation delivered measurable business outcomes: 40% reduction in operational costs, 3x faster data processing, 99.9% system uptime, and significantly improved data quality. ${clientName} now has a scalable, future-ready data platform that supports advanced analytics and AI initiatives.`;
+      case 'meta_title':
+        return `${industry} Data Transformation: 40% Cost Reduction | ACI`;
+      case 'meta_description':
+        return `See how ${clientName} achieved 40% cost savings and 3x faster processing with ACI's data modernization. Read the full ${industry.toLowerCase()} case study.`;
+      case 'seo_fix':
+        // Return appropriate fix based on the issue type
+        if (context.seoIssue?.toLowerCase().includes('title')) {
+          return `${industry} Success: ${clientName} Data Platform | ACI`;
+        } else if (context.seoIssue?.toLowerCase().includes('description')) {
+          return `Discover how ${clientName} achieved 40% cost reduction and 3x faster processing with ACI's enterprise data solutions. Read the case study.`;
+        }
+        return context.currentValue || 'Optimized SEO content';
+      default:
+        return 'Generated case study content placeholder';
+    }
+  }
+
   return 'Generated content placeholder';
 }

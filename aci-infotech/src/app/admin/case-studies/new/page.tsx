@@ -1004,7 +1004,7 @@ export default function NewCaseStudyPage() {
 
         {/* SEO/AEO/GEO Quality Assessment */}
         <SEOAssessment
-          title={title}
+          title={metaTitle || title}
           metaDescription={metaDescription || excerpt}
           content={`${challenge}\n\n${solution}\n\n${results}`}
           slug={slug}
