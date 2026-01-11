@@ -30,12 +30,9 @@ interface CaseStudy {
   id: string;
   slug: string;
   title?: string;
-  headline?: string;
   client_name: string;
-  client_industry?: string;
   industry?: string;
   services?: string[];
-  is_published?: boolean;
   status?: string;
   is_featured?: boolean;
   created_at: string;
@@ -47,11 +44,11 @@ const mockCaseStudies: CaseStudy[] = [
   {
     id: '1',
     slug: 'msci-data-automation',
-    headline: 'Consolidating 40+ Finance Systems Post-Acquisition',
+    title: 'Consolidating 40+ Finance Systems Post-Acquisition',
     client_name: 'MSCI',
-    client_industry: 'Financial Services',
+    industry: 'Financial Services',
     services: ['Data Engineering'],
-    is_published: true,
+    status: 'published',
     is_featured: true,
     created_at: '2024-12-01T00:00:00Z',
     updated_at: '2024-12-15T00:00:00Z',
@@ -59,11 +56,11 @@ const mockCaseStudies: CaseStudy[] = [
   {
     id: '2',
     slug: 'racetrac-martech',
-    headline: 'Real-Time Customer Engagement Across 600+ Locations',
+    title: 'Real-Time Customer Engagement Across 600+ Locations',
     client_name: 'RaceTrac',
-    client_industry: 'Retail',
+    industry: 'Retail',
     services: ['MarTech & CDP'],
-    is_published: true,
+    status: 'published',
     is_featured: true,
     created_at: '2024-11-15T00:00:00Z',
     updated_at: '2024-12-10T00:00:00Z',
@@ -71,11 +68,11 @@ const mockCaseStudies: CaseStudy[] = [
   {
     id: '3',
     slug: 'sodexo-unified-data',
-    headline: 'Unified Global Data Platform for 400K+ Employees',
+    title: 'Unified Global Data Platform for 400K+ Employees',
     client_name: 'Sodexo',
-    client_industry: 'Hospitality',
+    industry: 'Hospitality',
     services: ['Data Engineering'],
-    is_published: true,
+    status: 'published',
     is_featured: true,
     created_at: '2024-11-01T00:00:00Z',
     updated_at: '2024-11-20T00:00:00Z',
@@ -83,11 +80,11 @@ const mockCaseStudies: CaseStudy[] = [
   {
     id: '4',
     slug: 'fortune-100-retailer-ai',
-    headline: 'AI-Powered Demand Forecasting at Scale',
+    title: 'AI-Powered Demand Forecasting at Scale',
     client_name: 'Fortune 100 Retailer',
-    client_industry: 'Retail',
+    industry: 'Retail',
     services: ['Applied AI & ML'],
-    is_published: true,
+    status: 'published',
     is_featured: false,
     created_at: '2024-10-15T00:00:00Z',
     updated_at: '2024-10-20T00:00:00Z',
@@ -95,11 +92,11 @@ const mockCaseStudies: CaseStudy[] = [
   {
     id: '5',
     slug: 'healthcare-cloud-migration',
-    headline: 'HIPAA-Compliant Cloud Migration for 15 Hospitals',
+    title: 'HIPAA-Compliant Cloud Migration for 15 Hospitals',
     client_name: 'Regional Healthcare System',
-    client_industry: 'Healthcare',
+    industry: 'Healthcare',
     services: ['Cloud Modernization'],
-    is_published: false,
+    status: 'draft',
     is_featured: false,
     created_at: '2024-10-01T00:00:00Z',
     updated_at: '2024-10-05T00:00:00Z',
@@ -143,57 +140,41 @@ export default function CaseStudiesAdmin() {
     }
   }
 
-  // Helper to get display title (handles both title and headline columns)
+  // Helper to get display title
   function getDisplayTitle(cs: CaseStudy): string {
-    return cs.title || cs.headline || cs.slug || 'Untitled';
+    return cs.title || cs.slug || 'Untitled';
   }
 
-  // Helper to check if published (handles both is_published and status columns)
+  // Helper to check if published (uses status column)
   function isPublished(cs: CaseStudy): boolean {
-    if (cs.is_published !== undefined) return cs.is_published;
-    if (cs.status) return cs.status === 'published';
-    return false;
+    return cs.status === 'published';
   }
 
-  // Helper to get industry (handles both client_industry and industry columns)
+  // Helper to get industry
   function getIndustry(cs: CaseStudy): string {
-    return cs.client_industry || cs.industry || '-';
+    return cs.industry || '-';
   }
 
   async function togglePublished(id: string, currentlyPublished: boolean) {
-    const newIsPublished = !currentlyPublished;
-    const currentCs = caseStudies.find(cs => cs.id === id);
-    const usesStatusColumn = currentCs?.status !== undefined;
+    const newStatus = currentlyPublished ? 'draft' : 'published';
 
     if (!configured) {
       setCaseStudies(caseStudies.map(cs =>
-        cs.id === id
-          ? usesStatusColumn
-            ? { ...cs, status: newIsPublished ? 'published' : 'draft' }
-            : { ...cs, is_published: newIsPublished }
-          : cs
+        cs.id === id ? { ...cs, status: newStatus } : cs
       ));
       setActiveMenu(null);
       return;
     }
 
     try {
-      const updateData = usesStatusColumn
-        ? { status: newIsPublished ? 'published' : 'draft' }
-        : { is_published: newIsPublished, published_at: newIsPublished ? new Date().toISOString() : null };
-
       const { error } = await supabase
         .from('case_studies')
-        .update(updateData)
+        .update({ status: newStatus })
         .eq('id', id);
 
       if (error) throw error;
       setCaseStudies(caseStudies.map(cs =>
-        cs.id === id
-          ? usesStatusColumn
-            ? { ...cs, status: newIsPublished ? 'published' : 'draft' }
-            : { ...cs, is_published: newIsPublished }
-          : cs
+        cs.id === id ? { ...cs, status: newStatus } : cs
       ));
     } catch (error) {
       console.error('Error updating case study:', getErrorMessage(error));

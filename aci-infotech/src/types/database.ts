@@ -30,24 +30,24 @@ export interface CaseStudy {
   created_at: string;
   updated_at: string;
   slug: string;
+  title: string;
+  excerpt?: string | null;
   client_name: string;
   client_logo_url: string | null;
   industry: string;
-  service_category: string;
-  headline: string;
   challenge: string;
   solution: string;
-  results: CaseStudyResult[];
+  results: string;
+  metrics: { label: string; value: string; description?: string }[];
   technologies: string[];
+  services: string[];
   testimonial_quote: string | null;
   testimonial_author: string | null;
   testimonial_title: string | null;
   featured_image_url: string | null;
   is_featured: boolean;
-  is_published: boolean;
+  status: 'draft' | 'published';
   published_at: string | null;
-  seo_title: string | null;
-  seo_description: string | null;
 }
 
 export interface CaseStudyResult {

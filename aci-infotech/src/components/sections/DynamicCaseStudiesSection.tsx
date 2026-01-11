@@ -10,8 +10,8 @@ interface CaseStudyDB {
   slug: string;
   title: string;
   client_name: string;
-  client_logo?: string | null;
-  client_industry?: string | null;
+  client_logo_url?: string | null;
+  industry?: string | null;
   challenge?: string | null;
   solution?: string | null;
   results?: string | null;
@@ -129,7 +129,7 @@ export default async function DynamicCaseStudiesSection({
         id: cs.id,
         slug: cs.slug,
         title: cs.title, // Use the title field from CMS
-        client_industry: cs.client_industry || '',
+        client_industry: cs.industry || '',
         challenge: cs.challenge || '',
         metrics: cs.metrics || [],
         technologies: cs.technologies || [],
