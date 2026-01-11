@@ -356,9 +356,22 @@ export default function WhitepaperDetailPage() {
                 {whitepaper.title}
               </h1>
 
-              <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-                {whitepaper.description}
+              {/* Short intro line */}
+              <p className="text-xl text-blue-100 mb-6">
+                {whitepaper.description?.split('.')[0]?.trim() || 'Essential insights for enterprise leaders'}.
               </p>
+
+              {/* 3 Key highlights */}
+              {whitepaper.key_takeaways && whitepaper.key_takeaways.length > 0 && (
+                <ul className="space-y-2 mb-8">
+                  {whitepaper.key_takeaways.slice(0, 3).map((takeaway, index) => (
+                    <li key={index} className="flex items-start gap-2 text-blue-100">
+                      <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                      <span>{takeaway}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
               <div className="flex flex-wrap gap-4 mb-8">
                 <div className="flex items-center gap-2 text-blue-200">
