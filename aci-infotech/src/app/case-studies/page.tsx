@@ -17,6 +17,7 @@ interface CaseStudy {
   slug: string;
   client: string;
   logo_url?: string;
+  featured_image?: string;
   industry: string;
   service: string;
   headline: string;
@@ -550,10 +551,13 @@ export default function CaseStudiesPage() {
 
       {/* Featured Case Studies */}
       {!isLoading && featuredStudies.length > 0 && (
-        <section className="py-16 bg-white">
+        <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Featured Case Studies</h2>
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">Featured Case Studies</h2>
+              <p className="text-gray-600">Transformative results from our flagship engagements</p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredStudies.map((study) => (
                 <CaseStudyCard key={study.slug} study={study} featured />
               ))}
@@ -564,10 +568,13 @@ export default function CaseStudiesPage() {
 
       {/* All Case Studies */}
       {!isLoading && (
-        <section className="py-16 bg-gray-50">
+        <section className="py-20 bg-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {featuredStudies.length > 0 && otherStudies.length > 0 && (
-              <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">More Success Stories</h2>
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">More Success Stories</h2>
+                <p className="text-gray-600">Explore our complete portfolio of enterprise transformations</p>
+              </div>
             )}
 
             {filteredStudies.length === 0 ? (
@@ -586,7 +593,7 @@ export default function CaseStudiesPage() {
               </Button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {(featuredStudies.length > 0 ? otherStudies : filteredStudies).map((study) => (
                 <CaseStudyCard key={study.slug} study={study} />
               ))}
@@ -629,73 +636,110 @@ function CaseStudyCard({ study, featured }: CaseStudyCardProps) {
   return (
     <Link
       href={`/case-studies/${study.slug}`}
-      className={`group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 ${
-        featured ? 'ring-2 ring-[var(--aci-primary)]' : ''
-      }`}
+      className="group relative block rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
     >
-      {/* Header */}
-      <div className="p-6 border-b border-gray-100">
-        <div className="flex items-center justify-between mb-3">
-          {study.logo_url ? (
-            <Image
-              src={study.logo_url}
-              alt={`${study.client} logo - ${study.headline} case study`}
-              width={100}
-              height={40}
-              className="object-contain"
-            />
-          ) : (
-            <span className="text-lg font-bold text-[var(--aci-secondary)]">{study.client}</span>
-          )}
+      {/* Background Image with Gradient Overlay */}
+      <div className="absolute inset-0">
+        {study.featured_image ? (
+          <Image
+            src={study.featured_image}
+            alt={study.headline}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-[var(--aci-secondary)] via-[#1a3a5c] to-[#0a2540]" />
+        )}
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--aci-secondary)] via-[var(--aci-secondary)]/80 to-transparent" />
+      </div>
+
+      {/* Glass Card Content */}
+      <div className="relative min-h-[420px] flex flex-col justify-end p-6">
+        {/* Top badges */}
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+          <div className="flex gap-2">
+            <span className="px-3 py-1.5 bg-white/10 backdrop-blur-md text-white text-xs font-medium rounded-full border border-white/20">
+              {study.industry}
+            </span>
+            <span className="px-3 py-1.5 bg-[var(--aci-primary)]/80 backdrop-blur-md text-white text-xs font-medium rounded-full">
+              {study.service}
+            </span>
+          </div>
           {featured && (
-            <span className="px-2 py-1 bg-[var(--aci-primary)] text-white text-xs font-medium rounded">
+            <span className="px-3 py-1.5 bg-amber-500/90 backdrop-blur-md text-white text-xs font-bold rounded-full flex items-center gap-1">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
               Featured
             </span>
           )}
         </div>
-        <div className="flex gap-2 mb-3">
-          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">{study.industry}</span>
-          <span className="px-2 py-1 bg-blue-50 text-[var(--aci-primary)] text-xs rounded">{study.service}</span>
+
+        {/* Client Logo/Name */}
+        <div className="mb-4">
+          {study.logo_url ? (
+            <div className="h-8 w-auto relative">
+              <Image
+                src={study.logo_url}
+                alt={`${study.client} logo`}
+                width={120}
+                height={32}
+                className="object-contain brightness-0 invert opacity-80"
+              />
+            </div>
+          ) : (
+            <span className="text-white/70 text-sm font-medium uppercase tracking-wider">
+              {study.client}
+            </span>
+          )}
         </div>
-        <h3 className="text-lg font-semibold text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors line-clamp-2">
+
+        {/* Headline */}
+        <h3 className="text-xl font-bold text-white mb-4 line-clamp-2 group-hover:text-[var(--aci-primary-light)] transition-colors">
           {study.headline}
         </h3>
-      </div>
 
-      {/* Results */}
-      <div className="p-6">
-        <div className="space-y-3 mb-6">
-          {study.results?.slice(0, 3).map((result, index) => (
-            <div key={index} className="flex items-baseline gap-3">
-              <span className="text-xl font-bold text-[var(--aci-primary)]">
-                {result.metric}
-              </span>
-              <span className="text-sm text-gray-600">{result.description}</span>
+        {/* Results - Glass Panel */}
+        {study.results && study.results.length > 0 && (
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 mb-4 border border-white/10">
+            <div className="grid grid-cols-3 gap-3">
+              {study.results.slice(0, 3).map((result, index) => (
+                <div key={index} className="text-center">
+                  <div className="text-lg font-bold text-[var(--aci-primary-light)]">
+                    {result.metric}
+                  </div>
+                  <div className="text-[10px] text-white/60 leading-tight line-clamp-2">
+                    {result.description}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
 
         {/* Technologies */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {study.technologies?.slice(0, 3).map((tech) => (
+          {study.technologies?.slice(0, 4).map((tech) => (
             <span
               key={tech}
-              className="px-2 py-1 bg-gray-100 rounded text-xs text-gray-600"
+              className="px-2.5 py-1 bg-white/5 backdrop-blur-sm rounded-md text-xs text-white/70 border border-white/10"
             >
               {tech}
             </span>
           ))}
-          {(study.technologies?.length || 0) > 3 && (
-            <span className="px-2 py-1 text-xs text-gray-400">
-              +{(study.technologies?.length || 0) - 3} more
+          {(study.technologies?.length || 0) > 4 && (
+            <span className="px-2.5 py-1 text-xs text-white/40">
+              +{(study.technologies?.length || 0) - 4}
             </span>
           )}
         </div>
 
         {/* CTA */}
-        <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-          Read Full Case Study <ArrowRight className="w-4 h-4" />
-        </span>
+        <div className="flex items-center gap-2 text-white font-medium group-hover:text-[var(--aci-primary-light)] transition-colors">
+          <span className="text-sm">Read Case Study</span>
+          <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+        </div>
       </div>
     </Link>
   );

@@ -415,50 +415,15 @@ export default function WhitepapersPage() {
 
       {/* Featured Whitepapers */}
       {!isLoading && featuredWhitepapers.length > 0 && (
-        <section className="py-16 bg-white">
+        <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Featured Resources</h2>
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">Featured Resources</h2>
+              <p className="text-gray-600">In-depth guides from our enterprise architects</p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
               {featuredWhitepapers.map((wp) => (
-                <div
-                  key={wp.id}
-                  className="bg-gradient-to-br from-[var(--aci-secondary)] to-[#0a2540] rounded-xl overflow-hidden flex flex-col md:flex-row"
-                >
-                  {/* Cover Image */}
-                  <div className="relative w-full md:w-48 h-48 md:h-auto flex-shrink-0 bg-[#0a2540]">
-                    {wp.cover_image ? (
-                      <Image
-                        src={wp.cover_image}
-                        alt={wp.title}
-                        fill
-                        className="object-cover opacity-60"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full">
-                        <FileText className="w-16 h-16 text-white/30" />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6 flex flex-col flex-grow text-white">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="px-2 py-1 bg-white/10 rounded text-xs font-medium">
-                        {wp.category}
-                      </span>
-                      <span className="text-white/60 text-xs">{wp.pages} pages</span>
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">{wp.title}</h3>
-                    <p className="text-gray-300 text-sm mb-4 flex-grow">{wp.description}</p>
-                    <button
-                      onClick={() => setDownloadWhitepaper(wp)}
-                      className="w-full py-3 bg-white text-[var(--aci-secondary)] font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <Download className="w-5 h-5" />
-                      Download Free
-                    </button>
-                  </div>
-                </div>
+                <WhitepaperCard key={wp.id} whitepaper={wp} onDownload={setDownloadWhitepaper} featured />
               ))}
             </div>
           </div>
@@ -467,10 +432,13 @@ export default function WhitepapersPage() {
 
       {/* All Whitepapers */}
       {!isLoading && (
-        <section className="py-16 bg-gray-50">
+        <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {featuredWhitepapers.length > 0 && otherWhitepapers.length > 0 && (
-              <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">More Resources</h2>
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">More Resources</h2>
+                <p className="text-gray-600">Explore our complete library of technical guides</p>
+              </div>
             )}
 
             {filteredWhitepapers.length === 0 ? (
@@ -485,60 +453,9 @@ export default function WhitepapersPage() {
               </Button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
               {(featuredWhitepapers.length > 0 ? otherWhitepapers : filteredWhitepapers).map((wp) => (
-                <div
-                  key={wp.id}
-                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100"
-                >
-                  {/* Cover */}
-                  <div className="relative h-40 bg-gray-100">
-                    {wp.cover_image ? (
-                      <Image
-                        src={wp.cover_image}
-                        alt={wp.title}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full bg-gradient-to-br from-[var(--aci-secondary)] to-[#0a2540]">
-                        <FileText className="w-12 h-12 text-white/30" />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="px-2 py-1 bg-[var(--aci-primary)]/10 text-[var(--aci-primary)] rounded text-xs font-medium">
-                        {wp.category}
-                      </span>
-                      <span className="text-gray-400 text-xs">{wp.pages} pages</span>
-                    </div>
-                    <h3 className="text-lg font-bold text-[var(--aci-secondary)] mb-2">{wp.title}</h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{wp.description}</p>
-
-                    {/* Topics */}
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {wp.topics?.slice(0, 3).map((topic) => (
-                        <span
-                          key={topic}
-                          className="px-2 py-0.5 bg-gray-100 rounded text-xs text-gray-600"
-                        >
-                          {topic}
-                        </span>
-                      ))}
-                    </div>
-
-                    <button
-                      onClick={() => setDownloadWhitepaper(wp)}
-                      className="w-full py-2.5 bg-[var(--aci-primary)] text-white font-semibold rounded-lg hover:bg-[var(--aci-primary-dark)] transition-colors flex items-center justify-center gap-2"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download
-                    </button>
-                  </div>
-                </div>
+                <WhitepaperCard key={wp.id} whitepaper={wp} onDownload={setDownloadWhitepaper} />
               ))}
             </div>
           )}
@@ -573,5 +490,114 @@ export default function WhitepapersPage() {
         whitepaper={downloadWhitepaper}
       />
     </main>
+  );
+}
+
+// Ebook-style Whitepaper Card Component
+interface WhitepaperCardProps {
+  whitepaper: Whitepaper;
+  onDownload: (wp: Whitepaper) => void;
+  featured?: boolean;
+}
+
+function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProps) {
+  return (
+    <div className="group flex flex-col">
+      {/* Book Cover - Vertical orientation */}
+      <div
+        className="relative cursor-pointer"
+        onClick={() => onDownload(whitepaper)}
+      >
+        {/* Book shadow effect */}
+        <div className="absolute -right-2 top-4 bottom-4 w-4 bg-gradient-to-r from-gray-300 to-gray-200 rounded-r-sm transform skew-y-6 group-hover:skew-y-3 transition-transform duration-300" />
+        <div className="absolute -bottom-2 left-4 right-4 h-4 bg-gradient-to-b from-gray-300 to-gray-200 rounded-b-sm transform skew-x-6 group-hover:skew-x-3 transition-transform duration-300" />
+
+        {/* Main book cover */}
+        <div className={`relative aspect-[3/4] rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-2xl ${featured ? 'ring-2 ring-amber-400 ring-offset-2' : ''}`}>
+          {whitepaper.cover_image ? (
+            <Image
+              src={whitepaper.cover_image}
+              alt={whitepaper.title}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-[var(--aci-secondary)] via-[#1a3a5c] to-[var(--aci-primary)] flex flex-col items-center justify-center p-6 text-center">
+              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-4">
+                <FileText className="w-8 h-8 text-white/70" />
+              </div>
+              <h4 className="text-white font-bold text-sm leading-tight line-clamp-3">{whitepaper.title}</h4>
+              <div className="mt-auto pt-4">
+                <span className="text-white/60 text-xs">ACI Infotech</span>
+              </div>
+            </div>
+          )}
+
+          {/* Overlay on hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+            <span className="px-4 py-2 bg-white rounded-full text-[var(--aci-secondary)] text-sm font-semibold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+              <Download className="w-4 h-4" />
+              Download
+            </span>
+          </div>
+
+          {/* Featured badge */}
+          {featured && (
+            <div className="absolute top-3 right-3">
+              <span className="px-2 py-1 bg-amber-500 text-white text-xs font-bold rounded-md flex items-center gap-1 shadow-lg">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </span>
+            </div>
+          )}
+
+          {/* Page count badge */}
+          {whitepaper.pages && (
+            <div className="absolute bottom-3 left-3">
+              <span className="px-2 py-1 bg-black/60 backdrop-blur-sm text-white text-xs rounded-md">
+                {whitepaper.pages} pages
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Book Details - Below the cover */}
+      <div className="mt-5 px-1">
+        {/* Category badge */}
+        <span className="inline-block px-2.5 py-1 bg-[var(--aci-primary)]/10 text-[var(--aci-primary)] text-xs font-medium rounded-full mb-2">
+          {whitepaper.category}
+        </span>
+
+        {/* Title */}
+        <h3
+          className="text-[var(--aci-secondary)] font-bold text-base leading-tight mb-2 line-clamp-2 cursor-pointer hover:text-[var(--aci-primary)] transition-colors"
+          onClick={() => onDownload(whitepaper)}
+        >
+          {whitepaper.title}
+        </h3>
+
+        {/* Description */}
+        <p className="text-gray-600 text-sm line-clamp-2 mb-3">{whitepaper.description}</p>
+
+        {/* Topics */}
+        {whitepaper.topics && whitepaper.topics.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {whitepaper.topics.slice(0, 2).map((topic) => (
+              <span
+                key={topic}
+                className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-md"
+              >
+                {topic}
+              </span>
+            ))}
+            {whitepaper.topics.length > 2 && (
+              <span className="text-gray-400 text-xs">+{whitepaper.topics.length - 2}</span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
