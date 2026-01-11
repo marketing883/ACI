@@ -421,7 +421,7 @@ export default function WhitepapersPage() {
               <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">Featured Resources</h2>
               <p className="text-gray-600">In-depth guides from our enterprise architects</p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredWhitepapers.map((wp) => (
                 <WhitepaperCard key={wp.id} whitepaper={wp} onDownload={setDownloadWhitepaper} featured />
               ))}
@@ -453,7 +453,7 @@ export default function WhitepapersPage() {
               </Button>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {(featuredWhitepapers.length > 0 ? otherWhitepapers : filteredWhitepapers).map((wp) => (
                 <WhitepaperCard key={wp.id} whitepaper={wp} onDownload={setDownloadWhitepaper} />
               ))}
@@ -503,13 +503,13 @@ interface WhitepaperCardProps {
 function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProps) {
   return (
     <div className="group flex flex-col">
-      {/* Clean Glass Card Cover */}
+      {/* Clean Glass Card Cover - Image Only */}
       <div
         className="relative cursor-pointer"
         onClick={() => onDownload(whitepaper)}
       >
-        {/* Main cover - clean glass card style */}
-        <div className={`relative aspect-[4/5] max-h-[280px] rounded-xl overflow-hidden bg-white/80 backdrop-blur-sm shadow-md transform transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl ${featured ? 'ring-2 ring-amber-400' : ''}`}>
+        {/* Main cover - larger image only */}
+        <div className={`relative aspect-[3/4] rounded-xl overflow-hidden bg-white/80 backdrop-blur-sm shadow-md transform transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-2xl ${featured ? 'ring-2 ring-amber-400' : ''}`}>
           {whitepaper.cover_image ? (
             <Image
               src={whitepaper.cover_image}
@@ -518,20 +518,20 @@ function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProp
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-[var(--aci-secondary)] via-[#1a3a5c] to-[var(--aci-primary)] flex flex-col items-center justify-center p-6 text-center">
-              <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center mb-3">
-                <FileText className="w-7 h-7 text-white/80" />
+            <div className="w-full h-full bg-gradient-to-br from-[var(--aci-secondary)] via-[#1a3a5c] to-[var(--aci-primary)] flex flex-col items-center justify-center p-8 text-center">
+              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-4">
+                <FileText className="w-8 h-8 text-white/80" />
               </div>
-              <h4 className="text-white font-bold text-sm leading-tight line-clamp-3">{whitepaper.title}</h4>
-              <div className="mt-auto pt-3">
-                <span className="text-white/60 text-xs">ACI Infotech</span>
+              <h4 className="text-white font-bold text-lg leading-tight line-clamp-3">{whitepaper.title}</h4>
+              <div className="mt-auto pt-4">
+                <span className="text-white/60 text-sm">ACI Infotech</span>
               </div>
             </div>
           )}
 
           {/* Subtle overlay on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-5">
-            <span className="px-4 py-2 bg-white rounded-full text-[var(--aci-secondary)] text-sm font-semibold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+            <span className="px-5 py-2.5 bg-white rounded-full text-[var(--aci-secondary)] text-sm font-semibold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
               <Download className="w-4 h-4" />
               Download
             </span>
@@ -557,45 +557,6 @@ function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProp
             </div>
           )}
         </div>
-      </div>
-
-      {/* Content Below Image */}
-      <div className="mt-4">
-        {/* Category badge */}
-        <span className="inline-block px-2.5 py-1 bg-[var(--aci-primary)]/10 text-[var(--aci-primary)] text-xs font-medium rounded-full mb-2">
-          {whitepaper.category}
-        </span>
-
-        {/* Title */}
-        <h3
-          className="text-[var(--aci-secondary)] font-bold text-base leading-tight mb-2 cursor-pointer hover:text-[var(--aci-primary)] transition-colors"
-          onClick={() => onDownload(whitepaper)}
-        >
-          {whitepaper.title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-gray-600 text-sm leading-relaxed mb-3">{whitepaper.description}</p>
-
-        {/* Why You Should Read This */}
-        {whitepaper.topics && whitepaper.topics.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">You&apos;ll Learn About</p>
-            <div className="flex flex-wrap gap-1.5">
-              {whitepaper.topics.slice(0, 3).map((topic) => (
-                <span
-                  key={topic}
-                  className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-md"
-                >
-                  {topic}
-                </span>
-              ))}
-              {whitepaper.topics.length > 3 && (
-                <span className="text-gray-400 text-xs">+{whitepaper.topics.length - 3}</span>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
