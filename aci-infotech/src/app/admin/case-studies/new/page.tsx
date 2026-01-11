@@ -323,7 +323,7 @@ export default function NewCaseStudyPage() {
         slug,
         excerpt,
         client_name: clientName,
-        client_logo_url: clientLogo || null,
+        client_logo: clientLogo || null,
         client_industry: clientIndustry,
         client_size: clientSize,
         client_location: clientLocation,
@@ -340,7 +340,7 @@ export default function NewCaseStudyPage() {
         gallery_images: [],
         seo_title: metaTitle || title,
         seo_description: metaDescription || excerpt?.substring(0, 160),
-        is_published: isPublishing,
+        status: isPublishing ? 'published' : 'draft',
         is_featured: isFeatured,
         published_at: isPublishing ? new Date().toISOString() : null,
       };
