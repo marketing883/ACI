@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get('slug');
-    const publishedOnly = searchParams.get('published') === 'true';
     const featured = searchParams.get('featured') === 'true';
     const limit = parseInt(searchParams.get('limit') || '100');
     const offset = parseInt(searchParams.get('offset') || '0');
@@ -45,7 +44,6 @@ export async function GET(request: NextRequest) {
         .from('case_studies')
         .select('*')
         .eq('slug', slug)
-        .eq('is_published', true)
         .single();
 
       if (error) {
@@ -56,15 +54,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ caseStudy });
     }
 
-    // Fetch all case studies
+    // Fetch all case studies (no is_published column in this table)
     let query = supabase
       .from('case_studies')
       .select('*', { count: 'exact' })
       .order('created_at', { ascending: false });
-
-    if (publishedOnly) {
-      query = query.eq('is_published', true);
-    }
 
     if (featured) {
       query = query.eq('is_featured', true);

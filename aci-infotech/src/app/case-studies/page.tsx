@@ -373,7 +373,7 @@ export default function CaseStudiesPage() {
       setIsLoading(true);
 
       try {
-        const response = await fetch('/api/admin/case-studies?published=true');
+        const response = await fetch('/api/admin/case-studies');
         const result = await response.json();
 
         if (result.error) {

@@ -290,7 +290,7 @@ export default function WhitepapersPage() {
       setIsLoading(true);
 
       try {
-        const response = await fetch('/api/admin/whitepapers?published=true');
+        const response = await fetch('/api/admin/whitepapers');
         const result = await response.json();
 
         if (result.error) {
