@@ -27,6 +27,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const publishedOnly = searchParams.get('published') === 'true';
     const slug = searchParams.get('slug');
+    const limit = parseInt(searchParams.get('limit') || '50');
+    const offset = parseInt(searchParams.get('offset') || '0');
+    const featured = searchParams.get('featured') === 'true';
 
     // Demo mode: return empty array when Supabase isn't configured
     if (!isSupabaseConfigured()) {
@@ -56,28 +59,41 @@ export async function GET(request: NextRequest) {
     // Fetch all posts (optionally filtered by published status)
     let query = supabase
       .from('blog_posts')
-      .select('*')
+      .select('*', { count: 'exact' })
       .order('published_at', { ascending: false });
 
     if (publishedOnly) {
       query = query.eq('is_published', true);
     }
 
-    const { data: posts, error } = await query;
+    if (featured) {
+      query = query.eq('is_featured', true);
+    }
+
+    // Apply pagination
+    query = query.range(offset, offset + limit - 1);
+
+    const { data: posts, error, count } = await query;
 
     if (error) {
       console.error('Blog fetch error:', error);
       return NextResponse.json(
-        { error: error.message, posts: [] },
+        { error: error.message, posts: [], total: 0 },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ posts: posts || [] });
+    return NextResponse.json({
+      posts: posts || [],
+      total: count || 0,
+      limit,
+      offset,
+      hasMore: (offset + limit) < (count || 0)
+    });
   } catch (error) {
     console.error('Blog GET error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch blog posts', posts: [] },
+      { error: 'Failed to fetch blog posts', posts: [], total: 0 },
       { status: 500 }
     );
   }

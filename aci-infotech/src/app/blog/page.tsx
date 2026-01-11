@@ -119,7 +119,12 @@ export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isRealData, setIsRealData] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [total, setTotal] = useState(0);
+
+  const POSTS_PER_PAGE = 12;
 
   // Fetch blogs from database
   useEffect(() => {
@@ -127,8 +132,8 @@ export default function BlogPage() {
       setIsLoading(true);
 
       try {
-        // Use API endpoint that bypasses RLS
-        const response = await fetch('/api/admin/blogs?published=true');
+        // Use API endpoint that bypasses RLS with pagination
+        const response = await fetch(`/api/admin/blogs?published=true&limit=${POSTS_PER_PAGE}&offset=0`);
         const result = await response.json();
 
         if (result.error) {
@@ -138,6 +143,8 @@ export default function BlogPage() {
         } else if (result.posts && result.posts.length > 0) {
           setBlogPosts(result.posts);
           setIsRealData(true);
+          setHasMore(result.hasMore || false);
+          setTotal(result.total || result.posts.length);
         } else if (result.demo) {
           // Demo mode
           setBlogPosts(demoBlogPosts);
@@ -158,6 +165,26 @@ export default function BlogPage() {
 
     fetchBlogs();
   }, []);
+
+  // Load more posts
+  async function loadMorePosts() {
+    if (isLoadingMore || !hasMore) return;
+
+    setIsLoadingMore(true);
+    try {
+      const response = await fetch(`/api/admin/blogs?published=true&limit=${POSTS_PER_PAGE}&offset=${blogPosts.length}`);
+      const result = await response.json();
+
+      if (result.posts && result.posts.length > 0) {
+        setBlogPosts(prev => [...prev, ...result.posts]);
+        setHasMore(result.hasMore || false);
+      }
+    } catch (error) {
+      console.error('Error loading more posts:', error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }
 
   const filteredPosts = blogPosts.filter((post) => {
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
@@ -289,11 +316,29 @@ export default function BlogPage() {
                 </Button>
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {(selectedCategory === 'All' && searchQuery === '' && featuredPosts.length > 0 ? regularPosts : filteredPosts).map((post) => (
-                  <BlogPostCard key={post.slug} post={post} />
-                ))}
-              </div>
+              <>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {(selectedCategory === 'All' && searchQuery === '' && featuredPosts.length > 0 ? regularPosts : filteredPosts).map((post) => (
+                    <BlogPostCard key={post.slug} post={post} />
+                  ))}
+                </div>
+
+                {/* Load More Button */}
+                {hasMore && isRealData && selectedCategory === 'All' && searchQuery === '' && (
+                  <div className="mt-12 text-center">
+                    <p className="text-sm text-gray-500 mb-4">
+                      Showing {blogPosts.length} of {total} articles
+                    </p>
+                    <Button
+                      variant="secondary"
+                      onClick={loadMorePosts}
+                      disabled={isLoadingMore}
+                    >
+                      {isLoadingMore ? 'Loading...' : 'Load More Articles'}
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </section>

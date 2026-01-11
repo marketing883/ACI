@@ -19,7 +19,7 @@ import {
   ChevronDown,
   ChevronsUpDown,
 } from 'lucide-react';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 // Helper to extract meaningful error messages from Supabase errors
 function getErrorMessage(error: unknown): string {
@@ -77,16 +77,19 @@ export default function BlogAdmin() {
 
   async function fetchPosts() {
     try {
-      // Use * to select all available columns - works with any table structure
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .order('created_at', { ascending: false });
+      // Use API endpoint that bypasses RLS
+      const response = await fetch('/api/admin/blogs?limit=500');
+      const result = await response.json();
 
-      if (error) throw error;
-      setPosts(data || []);
+      if (result.error) {
+        console.error('Error fetching posts:', result.error);
+        setPosts([]);
+      } else {
+        setPosts(result.posts || []);
+      }
     } catch (error) {
       console.error('Error fetching posts:', getErrorMessage(error));
+      setPosts([]);
     } finally {
       setLoading(false);
     }
@@ -94,7 +97,10 @@ export default function BlogAdmin() {
 
   async function togglePublished(id: string, currentlyPublished: boolean) {
     const newIsPublished = !currentlyPublished;
-    const updates: { is_published: boolean; published_at?: string | null } = { is_published: newIsPublished };
+    const updates: { id: string; is_published: boolean; published_at?: string | null } = {
+      id,
+      is_published: newIsPublished
+    };
     if (newIsPublished) {
       updates.published_at = new Date().toISOString();
     }
@@ -108,13 +114,16 @@ export default function BlogAdmin() {
     }
 
     try {
-      const { error } = await supabase
-        .from('blog_posts')
-        .update(updates)
-        .eq('id', id);
+      const response = await fetch('/api/admin/blogs', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
 
-      if (error) throw error;
-      setPosts(posts.map(p => p.id === id ? { ...p, ...updates } : p));
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Failed to update');
+
+      setPosts(posts.map(p => p.id === id ? { ...p, is_published: newIsPublished, published_at: updates.published_at || p.published_at } : p));
     } catch (error) {
       console.error('Error updating post:', getErrorMessage(error));
     }
@@ -124,12 +133,13 @@ export default function BlogAdmin() {
   async function deletePost(post: BlogPost) {
     setIsDeleting(true);
     try {
-      const { error } = await supabase
-        .from('blog_posts')
-        .delete()
-        .eq('id', post.id);
+      const response = await fetch(`/api/admin/blogs?id=${post.id}`, {
+        method: 'DELETE',
+      });
 
-      if (error) throw error;
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Failed to delete');
+
       setPosts(posts.filter(p => p.id !== post.id));
       setDeleteModal(null);
     } catch (error) {
