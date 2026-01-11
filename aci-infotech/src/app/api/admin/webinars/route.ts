@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { randomUUID } from 'crypto';
+
+// Check if Supabase is configured
+function isSupabaseConfigured(): boolean {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return !!(url && serviceKey);
+}
 
 // Server-side Supabase client with service role key (bypasses RLS)
 function getServiceSupabase() {
@@ -17,6 +25,24 @@ function getServiceSupabase() {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
+
+    // Demo mode: return mock response when Supabase isn't configured
+    if (!isSupabaseConfigured()) {
+      console.log('Demo mode: Supabase not configured, returning mock webinar');
+      const mockWebinar = {
+        id: randomUUID(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        ...data,
+      };
+      return NextResponse.json({
+        success: true,
+        webinar: mockWebinar,
+        demo: true,
+        message: 'Demo mode: Webinar not actually saved. Configure Supabase for real storage.',
+      });
+    }
+
     const supabase = getServiceSupabase();
 
     const { data: webinar, error } = await supabase
@@ -53,6 +79,22 @@ export async function PUT(request: NextRequest) {
         { error: 'Webinar ID is required' },
         { status: 400 }
       );
+    }
+
+    // Demo mode: return mock response when Supabase isn't configured
+    if (!isSupabaseConfigured()) {
+      console.log('Demo mode: Supabase not configured, returning mock update');
+      const mockWebinar = {
+        id,
+        updated_at: new Date().toISOString(),
+        ...data,
+      };
+      return NextResponse.json({
+        success: true,
+        webinar: mockWebinar,
+        demo: true,
+        message: 'Demo mode: Webinar not actually updated. Configure Supabase for real storage.',
+      });
     }
 
     const supabase = getServiceSupabase();
@@ -93,6 +135,16 @@ export async function DELETE(request: NextRequest) {
         { error: 'Webinar ID is required' },
         { status: 400 }
       );
+    }
+
+    // Demo mode: return success when Supabase isn't configured
+    if (!isSupabaseConfigured()) {
+      console.log('Demo mode: Supabase not configured, returning mock delete');
+      return NextResponse.json({
+        success: true,
+        demo: true,
+        message: 'Demo mode: Webinar not actually deleted. Configure Supabase for real storage.',
+      });
     }
 
     const supabase = getServiceSupabase();

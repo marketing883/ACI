@@ -11,6 +11,13 @@ const IMAGE_CONFIG = {
   thumbnailQuality: 75,     // Slightly lower quality for thumbnails
 };
 
+// Check if Supabase is configured
+function isSupabaseConfigured(): boolean {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return !!(url && serviceKey);
+}
+
 // Server-side Supabase client with service role key (bypasses RLS)
 function getServiceSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -101,6 +108,25 @@ export async function POST(request: NextRequest) {
         { error: 'No file provided' },
         { status: 400 }
       );
+    }
+
+    // Demo mode: return placeholder URL when Supabase isn't configured
+    if (!isSupabaseConfigured()) {
+      console.log('Demo mode: Supabase not configured, returning placeholder URL');
+      const timestamp = Date.now();
+      const baseName = file.name.replace(/\.[^.]+$/, '');
+      const sanitizedName = baseName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9.-]/g, '');
+
+      // Return a demo placeholder URL
+      const demoUrl = `/images/demo/${folder}/${timestamp}-${sanitizedName}.webp`;
+
+      return NextResponse.json({
+        success: true,
+        url: demoUrl,
+        path: `${folder}/${timestamp}-${sanitizedName}.webp`,
+        demo: true,
+        message: 'Demo mode: File not actually uploaded. Configure Supabase for real uploads.',
+      });
     }
 
     // Validate file type based on folder
