@@ -123,11 +123,25 @@ export default function NewCaseStudyPage() {
         body: JSON.stringify({
           type: 'case_study',
           field,
-          context: { title, clientName, industry: clientIndustry, technologies: technologies.split(',').map(t => t.trim()) },
+          context: {
+            title,
+            clientName,
+            industry: clientIndustry,
+            technologies: technologies.split(',').map(t => t.trim()),
+            existingContent: `${challenge}\n\n${solution}\n\n${results}`,
+            existingMetrics: metrics.filter(m => m.label && m.value),
+          },
         }),
       });
 
       const data = await response.json();
+
+      // Handle metrics as JSON array
+      if (field === 'metrics' && data.metrics) {
+        setMetrics(data.metrics);
+        return;
+      }
+
       const generated = data.content || data.generated;
       if (generated) {
         switch (field) {
@@ -153,6 +167,44 @@ export default function NewCaseStudyPage() {
       }
     } catch (error) {
       console.error('Error generating content:', error);
+    } finally {
+      setGenerating(null);
+    }
+  };
+
+  // AI Fix SEO issue
+  const fixSeoIssue = async (issue: string, currentValue: string, targetField: 'meta_title' | 'meta_description') => {
+    setGenerating(`seo_fix_${targetField}`);
+    try {
+      const response = await fetch('/api/admin/content-generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'case_study',
+          field: 'seo_fix',
+          context: {
+            title,
+            clientName,
+            industry: clientIndustry,
+            technologies: technologies.split(',').map(t => t.trim()),
+            seoIssue: issue,
+            currentValue,
+            existingContent: `${challenge}\n\n${solution}\n\n${results}`,
+          },
+        }),
+      });
+
+      const data = await response.json();
+      const fixed = data.content || data.generated;
+      if (fixed) {
+        if (targetField === 'meta_title') {
+          setMetaTitle(fixed);
+        } else {
+          setMetaDescription(fixed);
+        }
+      }
+    } catch (error) {
+      console.error('Error fixing SEO:', error);
     } finally {
       setGenerating(null);
     }
@@ -634,7 +686,21 @@ export default function NewCaseStudyPage() {
         {/* Key Metrics */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Key Metrics</h2>
+            <div className="flex items-center gap-3">
+              <h2 className="text-lg font-semibold">Key Metrics</h2>
+              <button
+                onClick={() => generateContent('metrics')}
+                disabled={generating === 'metrics'}
+                className="w-7 h-7 flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm disabled:opacity-50"
+                title="Generate metrics with AI"
+              >
+                {generating === 'metrics' ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3.5 h-3.5" />
+                )}
+              </button>
+            </div>
             <button
               onClick={addMetric}
               className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
@@ -894,6 +960,17 @@ export default function NewCaseStudyPage() {
           category={clientIndustry}
           featuredImage={featuredImage}
           author={clientName}
+          onAIFix={async (fixType, currentValue) => {
+            // Handle title and meta_description fixes
+            if (fixType === 'title' || fixType === 'meta_description') {
+              const targetField = fixType === 'title' ? 'meta_title' : 'meta_description';
+              const issueDesc = fixType === 'title'
+                ? `Title length issue: current title is "${currentValue}" (${currentValue.length} chars). Need 50-60 characters.`
+                : `Meta description issue: current value is "${currentValue}" (${currentValue.length} chars). Need 150-160 characters.`;
+              await fixSeoIssue(issueDesc, currentValue, targetField);
+            }
+            return null;
+          }}
         />
       </div>
     </div>
