@@ -342,6 +342,7 @@ export default function NewCaseStudyPage() {
     const isPublishing = saveStatus === 'published';
 
     try {
+      // Only include columns that exist in the database schema
       const caseStudyData = {
         title,
         slug,
@@ -349,8 +350,6 @@ export default function NewCaseStudyPage() {
         client_name: clientName,
         client_logo: clientLogo || null,
         industry: clientIndustry,
-        client_size: clientSize,
-        client_location: clientLocation,
         challenge,
         solution,
         results,
@@ -361,9 +360,6 @@ export default function NewCaseStudyPage() {
         testimonial_author: testimonialAuthor || null,
         testimonial_title: testimonialTitle || null,
         featured_image_url: featuredImage || null,
-        gallery_images: [],
-        seo_title: metaTitle || title,
-        seo_description: metaDescription || excerpt?.substring(0, 160),
         status: isPublishing ? 'published' : 'draft',
         is_featured: isFeatured,
         published_at: isPublishing ? new Date().toISOString() : null,
