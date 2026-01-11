@@ -604,7 +604,7 @@ export default function CaseStudiesPage() {
               <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">Featured Case Studies</h2>
               <p className="text-gray-600">Transformative results from our flagship engagements</p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 gap-8">
               {featuredStudies.map((study) => (
                 <CaseStudyCard key={study.slug} study={study} featured />
               ))}
@@ -640,7 +640,7 @@ export default function CaseStudiesPage() {
               </Button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 gap-8">
               {(featuredStudies.length > 0 ? otherStudies : filteredStudies).map((study) => (
                 <CaseStudyCard key={study.slug} study={study} />
               ))}
@@ -702,9 +702,9 @@ function CaseStudyCard({ study, featured }: CaseStudyCardProps) {
       </div>
 
       {/* Glass Card Content */}
-      <div className="relative min-h-[420px] flex flex-col justify-end p-6">
+      <div className="relative min-h-[480px] flex flex-col justify-end p-8">
         {/* Top badges */}
-        <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+        <div className="absolute top-5 left-5 right-5 flex items-center justify-between">
           <div className="flex gap-2">
             <span className="px-3 py-1.5 bg-white/10 backdrop-blur-md text-white text-xs font-medium rounded-full border border-white/20">
               {study.industry}
@@ -723,40 +723,28 @@ function CaseStudyCard({ study, featured }: CaseStudyCardProps) {
           )}
         </div>
 
-        {/* Client Logo/Name */}
-        <div className="mb-4">
-          {study.logo_url ? (
-            <div className="h-8 w-auto relative">
-              <Image
-                src={study.logo_url}
-                alt={`${study.client} logo`}
-                width={120}
-                height={32}
-                className="object-contain brightness-0 invert opacity-80"
-              />
-            </div>
-          ) : (
-            <span className="text-white/70 text-sm font-medium uppercase tracking-wider">
-              {study.client}
-            </span>
-          )}
+        {/* Client Name */}
+        <div className="mb-3">
+          <span className="text-white/80 text-sm font-semibold uppercase tracking-wider">
+            {study.client}
+          </span>
         </div>
 
         {/* Headline */}
-        <h3 className="text-xl font-bold text-white mb-4 line-clamp-2 group-hover:text-[var(--aci-primary-light)] transition-colors">
+        <h3 className="text-2xl font-bold text-white mb-5 group-hover:text-[var(--aci-primary-light)] transition-colors">
           {study.headline}
         </h3>
 
         {/* Results - Glass Panel */}
         {study.results && study.results.length > 0 && (
-          <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 mb-4 border border-white/10">
-            <div className="grid grid-cols-3 gap-3">
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-5 mb-5 border border-white/10">
+            <div className="grid grid-cols-3 gap-4">
               {study.results.slice(0, 3).map((result, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-lg font-bold text-[var(--aci-primary-light)]">
+                  <div className="text-xl font-bold text-[var(--aci-primary-light)]">
                     {result.metric}
                   </div>
-                  <div className="text-[10px] text-white/60 leading-tight line-clamp-2">
+                  <div className="text-xs text-white/70 leading-snug mt-1">
                     {result.description}
                   </div>
                 </div>

@@ -503,17 +503,13 @@ interface WhitepaperCardProps {
 function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProps) {
   return (
     <div className="group flex flex-col">
-      {/* Book Cover - Vertical orientation */}
+      {/* Clean Glass Card Cover */}
       <div
         className="relative cursor-pointer"
         onClick={() => onDownload(whitepaper)}
       >
-        {/* Book shadow effect */}
-        <div className="absolute -right-2 top-4 bottom-4 w-4 bg-gradient-to-r from-gray-300 to-gray-200 rounded-r-sm transform skew-y-6 group-hover:skew-y-3 transition-transform duration-300" />
-        <div className="absolute -bottom-2 left-4 right-4 h-4 bg-gradient-to-b from-gray-300 to-gray-200 rounded-b-sm transform skew-x-6 group-hover:skew-x-3 transition-transform duration-300" />
-
-        {/* Main book cover */}
-        <div className={`relative aspect-[4/5] max-h-[280px] rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-2xl ${featured ? 'ring-2 ring-amber-400 ring-offset-2' : ''}`}>
+        {/* Main cover - clean glass card style */}
+        <div className={`relative aspect-[4/5] max-h-[280px] rounded-xl overflow-hidden bg-white/80 backdrop-blur-sm shadow-md transform transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl ${featured ? 'ring-2 ring-amber-400' : ''}`}>
           {whitepaper.cover_image ? (
             <Image
               src={whitepaper.cover_image}
@@ -523,18 +519,18 @@ function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProp
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-[var(--aci-secondary)] via-[#1a3a5c] to-[var(--aci-primary)] flex flex-col items-center justify-center p-6 text-center">
-              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-4">
-                <FileText className="w-8 h-8 text-white/70" />
+              <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center mb-3">
+                <FileText className="w-7 h-7 text-white/80" />
               </div>
               <h4 className="text-white font-bold text-sm leading-tight line-clamp-3">{whitepaper.title}</h4>
-              <div className="mt-auto pt-4">
+              <div className="mt-auto pt-3">
                 <span className="text-white/60 text-xs">ACI Infotech</span>
               </div>
             </div>
           )}
 
-          {/* Overlay on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+          {/* Subtle overlay on hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-5">
             <span className="px-4 py-2 bg-white rounded-full text-[var(--aci-secondary)] text-sm font-semibold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
               <Download className="w-4 h-4" />
               Download
@@ -544,7 +540,7 @@ function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProp
           {/* Featured badge */}
           {featured && (
             <div className="absolute top-3 right-3">
-              <span className="px-2 py-1 bg-amber-500 text-white text-xs font-bold rounded-md flex items-center gap-1 shadow-lg">
+              <span className="px-2 py-1 bg-amber-500 text-white text-xs font-bold rounded-md flex items-center gap-1">
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
@@ -555,7 +551,7 @@ function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProp
           {/* Page count badge */}
           {whitepaper.pages && (
             <div className="absolute bottom-3 left-3">
-              <span className="px-2 py-1 bg-black/60 backdrop-blur-sm text-white text-xs rounded-md">
+              <span className="px-2 py-1 bg-black/50 backdrop-blur-sm text-white text-xs rounded-md">
                 {whitepaper.pages} pages
               </span>
             </div>
@@ -563,8 +559,8 @@ function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProp
         </div>
       </div>
 
-      {/* Book Details - Below the cover */}
-      <div className="mt-5 px-1">
+      {/* Content Below Image */}
+      <div className="mt-4">
         {/* Category badge */}
         <span className="inline-block px-2.5 py-1 bg-[var(--aci-primary)]/10 text-[var(--aci-primary)] text-xs font-medium rounded-full mb-2">
           {whitepaper.category}
@@ -572,29 +568,32 @@ function WhitepaperCard({ whitepaper, onDownload, featured }: WhitepaperCardProp
 
         {/* Title */}
         <h3
-          className="text-[var(--aci-secondary)] font-bold text-base leading-tight mb-2 line-clamp-2 cursor-pointer hover:text-[var(--aci-primary)] transition-colors"
+          className="text-[var(--aci-secondary)] font-bold text-base leading-tight mb-2 cursor-pointer hover:text-[var(--aci-primary)] transition-colors"
           onClick={() => onDownload(whitepaper)}
         >
           {whitepaper.title}
         </h3>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm line-clamp-2 mb-3">{whitepaper.description}</p>
+        <p className="text-gray-600 text-sm leading-relaxed mb-3">{whitepaper.description}</p>
 
-        {/* Topics */}
+        {/* Why You Should Read This */}
         {whitepaper.topics && whitepaper.topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {whitepaper.topics.slice(0, 2).map((topic) => (
-              <span
-                key={topic}
-                className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-md"
-              >
-                {topic}
-              </span>
-            ))}
-            {whitepaper.topics.length > 2 && (
-              <span className="text-gray-400 text-xs">+{whitepaper.topics.length - 2}</span>
-            )}
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">You&apos;ll Learn About</p>
+            <div className="flex flex-wrap gap-1.5">
+              {whitepaper.topics.slice(0, 3).map((topic) => (
+                <span
+                  key={topic}
+                  className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-md"
+                >
+                  {topic}
+                </span>
+              ))}
+              {whitepaper.topics.length > 3 && (
+                <span className="text-gray-400 text-xs">+{whitepaper.topics.length - 3}</span>
+              )}
+            </div>
           </div>
         )}
       </div>
