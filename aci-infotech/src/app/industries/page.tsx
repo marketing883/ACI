@@ -2,10 +2,16 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Building2, ShoppingCart, Heart, Factory, Zap, Truck, Utensils } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { BreadcrumbSchema } from '@/components/seo/StructuredData';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'Industries We Serve',
   description: 'ACI Infotech serves Fortune 500 companies across Financial Services, Retail, Healthcare, Manufacturing, Energy, and more with enterprise technology solutions.',
+  alternates: {
+    canonical: `${siteUrl}/industries`,
+  },
 };
 
 const industries = [
@@ -91,6 +97,14 @@ const industries = [
 export default function IndustriesPage() {
   return (
     <main className="min-h-screen">
+      {/* Structured Data for SEO */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Industries', url: '/industries' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

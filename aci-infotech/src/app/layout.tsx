@@ -3,6 +3,7 @@ import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import CookieConsent from "@/components/CookieConsent";
+import GlobalStructuredData from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
   title: {
@@ -75,6 +76,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased font-sans">
+        <GlobalStructuredData />
         <GoogleAnalytics />
         <ConditionalLayout>{children}</ConditionalLayout>
         <CookieConsent />

@@ -1,11 +1,17 @@
 import { Metadata } from 'next';
 import { ArrowRight, CheckCircle, ChevronDown, Cloud, Server, RefreshCw, Lock, Gauge, Container } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'Cloud Modernization Services | ACI Infotech',
   description: 'AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with proven playbooks. 200+ cloud migrations, zero downtime deployments.',
   keywords: 'cloud modernization, AWS migration, Azure migration, cloud consulting, kubernetes, multi-cloud',
+  alternates: {
+    canonical: `${siteUrl}/services/cloud-modernization`,
+  },
 };
 
 const keyOutcomes = [
@@ -150,6 +156,22 @@ const faqs = [
 export default function CloudModernizationPage() {
   return (
     <>
+      {/* Structured Data for SEO/AEO */}
+      <ServiceSchema
+        name="Cloud Modernization Services"
+        description="AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with proven playbooks."
+        url="/services/cloud-modernization"
+        serviceType="Cloud Computing Consulting"
+      />
+      <FAQSchema faqs={faqs} />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Services', url: '/services' },
+          { name: 'Cloud Modernization', url: '/services/cloud-modernization' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

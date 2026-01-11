@@ -2,10 +2,16 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Award } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { BreadcrumbSchema } from '@/components/seo/StructuredData';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'Technology Platforms',
   description: 'ACI Infotech is a certified partner for Databricks, Snowflake, Salesforce, AWS, Azure, SAP, and more. Enterprise-grade implementations by senior architects.',
+  alternates: {
+    canonical: `${siteUrl}/platforms`,
+  },
 };
 
 const platforms = [
@@ -86,6 +92,14 @@ const platforms = [
 export default function PlatformsPage() {
   return (
     <main className="min-h-screen">
+      {/* Structured Data for SEO */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Platforms', url: '/platforms' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

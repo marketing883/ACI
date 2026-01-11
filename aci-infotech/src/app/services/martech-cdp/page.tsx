@@ -1,11 +1,17 @@
 import { Metadata } from 'next';
 import { ArrowRight, CheckCircle, ChevronDown, Users, Target, BarChart3, Mail, Sparkles, Database } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'MarTech & CDP Services | ACI Infotech',
   description: 'Customer 360 that actually works. Salesforce Marketing Cloud, Adobe Experience Platform, Braze implementations. Real-time personalization at scale.',
   keywords: 'CDP implementation, Salesforce Marketing Cloud, Adobe Experience Platform, Braze, customer data platform, martech consulting',
+  alternates: {
+    canonical: `${siteUrl}/services/martech-cdp`,
+  },
 };
 
 const keyOutcomes = [
@@ -150,6 +156,22 @@ const faqs = [
 export default function MarTechCDPPage() {
   return (
     <>
+      {/* Structured Data for SEO/AEO */}
+      <ServiceSchema
+        name="MarTech & CDP Services"
+        description="Customer 360 that actually works. Salesforce Marketing Cloud, Adobe Experience Platform, Braze implementations."
+        url="/services/martech-cdp"
+        serviceType="Marketing Technology Consulting"
+      />
+      <FAQSchema faqs={faqs} />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Services', url: '/services' },
+          { name: 'MarTech & CDP', url: '/services/martech-cdp' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

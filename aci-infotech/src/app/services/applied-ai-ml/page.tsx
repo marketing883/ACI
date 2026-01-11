@@ -1,11 +1,17 @@
 import { Metadata } from 'next';
 import { ArrowRight, CheckCircle, ChevronDown, Brain, Cpu, BarChart3, Bot, Shield, Sparkles } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'Applied AI & ML Services | ACI Infotech',
   description: 'From GenAI pilots to production ML. GenAI chatbots, forecasting engines, recommendation systems. With MLOps, governance, and SLAs. 50+ AI deployments.',
   keywords: 'AI consulting, machine learning services, GenAI implementation, MLOps, AI governance, enterprise AI',
+  alternates: {
+    canonical: `${siteUrl}/services/applied-ai-ml`,
+  },
 };
 
 const keyOutcomes = [
@@ -150,6 +156,22 @@ const faqs = [
 export default function AppliedAIMLPage() {
   return (
     <>
+      {/* Structured Data for SEO/AEO */}
+      <ServiceSchema
+        name="Applied AI & ML Services"
+        description="From GenAI pilots to production ML. GenAI chatbots, forecasting engines, recommendation systems with MLOps, governance, and SLAs."
+        url="/services/applied-ai-ml"
+        serviceType="AI & Machine Learning Consulting"
+      />
+      <FAQSchema faqs={faqs} />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Services', url: '/services' },
+          { name: 'Applied AI & ML', url: '/services/applied-ai-ml' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

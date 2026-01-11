@@ -2,11 +2,17 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle, ChevronDown, Database, Zap, Eye, Shield, Settings, Cloud } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'Data Engineering Services | ACI Infotech',
   description: 'Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. 40+ deployments, 30%+ latency reduction.',
   keywords: 'data engineering services, databricks consulting, snowflake implementation, data lakehouse, real-time data pipelines, enterprise data platform',
+  alternates: {
+    canonical: `${siteUrl}/services/data-engineering`,
+  },
 };
 
 // Service data
@@ -185,6 +191,22 @@ const faqs = [
 export default function DataEngineeringPage() {
   return (
     <>
+      {/* Structured Data for SEO/AEO */}
+      <ServiceSchema
+        name="Data Engineering Services"
+        description="Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability."
+        url="/services/data-engineering"
+        serviceType="Data Engineering Consulting"
+      />
+      <FAQSchema faqs={faqs} />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Services', url: '/services' },
+          { name: 'Data Engineering', url: '/services/data-engineering' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

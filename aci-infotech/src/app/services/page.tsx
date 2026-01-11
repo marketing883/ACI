@@ -2,10 +2,16 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import { ArrowRight, Database, Brain, Cloud, Users, Shield, Zap, CheckCircle2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { BreadcrumbSchema } from '@/components/seo/StructuredData';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'Enterprise Technology Services',
   description: 'Data Engineering, AI/ML, Cloud Modernization, MarTech, Digital Transformation, and Cyber Security services for Fortune 500 companies.',
+  alternates: {
+    canonical: `${siteUrl}/services`,
+  },
 };
 
 const services = [
@@ -74,6 +80,14 @@ const services = [
 export default function ServicesPage() {
   return (
     <main className="min-h-screen">
+      {/* Structured Data for SEO */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Services', url: '/services' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

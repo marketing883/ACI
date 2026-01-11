@@ -3,11 +3,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Linkedin, CheckCircle } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { BreadcrumbSchema } from '@/components/seo/StructuredData';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'About ACI Infotech | The Engineers Behind Enterprise Modernization',
   description: '1,250+ engineers building data platforms, AI systems, and cloud architectures for 80+ Fortune 500 clients. 19 years of production-grade engineering. We answer the 2am call.',
   keywords: 'enterprise technology consulting, data engineering company, AI ML consulting, Fortune 500 technology partner, production-grade engineering',
+  alternates: {
+    canonical: `${siteUrl}/about`,
+  },
 };
 
 // About page data
@@ -124,6 +130,14 @@ const trackRecord = [
 export default function AboutPage() {
   return (
     <>
+      {/* Structured Data for SEO */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'About', url: '/about' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

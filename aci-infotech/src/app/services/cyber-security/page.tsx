@@ -1,11 +1,17 @@
 import { Metadata } from 'next';
 import { ArrowRight, CheckCircle, ChevronDown, Shield, Eye, Lock, AlertTriangle, FileCheck, Server } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'Cyber Security Services | ACI Infotech',
   description: 'Security built in, not bolted on. DevSecOps, observability, compliance. SOC 2, ISO 27001 compliant architectures from day one.',
   keywords: 'cyber security, DevSecOps, SOC 2, ISO 27001, security compliance, enterprise security',
+  alternates: {
+    canonical: `${siteUrl}/services/cyber-security`,
+  },
 };
 
 const keyOutcomes = [
@@ -150,6 +156,22 @@ const faqs = [
 export default function CyberSecurityPage() {
   return (
     <>
+      {/* Structured Data for SEO/AEO */}
+      <ServiceSchema
+        name="Cyber Security Services"
+        description="Security built in, not bolted on. DevSecOps, observability, compliance. SOC 2, ISO 27001 compliant architectures."
+        url="/services/cyber-security"
+        serviceType="Cybersecurity Consulting"
+      />
+      <FAQSchema faqs={faqs} />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Services', url: '/services' },
+          { name: 'Cyber Security', url: '/services/cyber-security' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
