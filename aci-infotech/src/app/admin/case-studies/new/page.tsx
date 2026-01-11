@@ -65,6 +65,8 @@ export default function NewCaseStudyPage() {
   const [generating, setGenerating] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [draggingImage, setDraggingImage] = useState(false);
+  const [draggingLogo, setDraggingLogo] = useState(false);
 
   // Form state
   const [title, setTitle] = useState('');
@@ -211,10 +213,7 @@ export default function NewCaseStudyPage() {
   };
 
   // Image upload handlers using server-side API with optimization
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const uploadImage = async (file: File) => {
     if (!file.type.startsWith('image/')) {
       alert('Please upload an image file');
       return;
@@ -246,10 +245,19 @@ export default function NewCaseStudyPage() {
     }
   };
 
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (file) uploadImage(file);
+  };
 
+  const handleImageDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDraggingImage(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) uploadImage(file);
+  };
+
+  const uploadLogo = async (file: File) => {
     if (!file.type.startsWith('image/')) {
       alert('Please upload an image file');
       return;
@@ -279,6 +287,22 @@ export default function NewCaseStudyPage() {
     } finally {
       setUploadingLogo(false);
     }
+  };
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) uploadLogo(file);
+  };
+
+  const handleLogoDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDraggingLogo(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) uploadLogo(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
   };
 
   // Metrics management
@@ -573,23 +597,38 @@ export default function NewCaseStudyPage() {
                   </button>
                 </div>
               ) : (
-                <label className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 w-fit">
-                  {uploadingLogo ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Upload className="w-4 h-4" />
-                  )}
-                  <span className="text-sm">
-                    {uploadingLogo ? 'Uploading...' : 'Upload logo'}
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLogoUpload}
-                    className="hidden"
-                    disabled={uploadingLogo}
-                  />
-                </label>
+                <div
+                  onDrop={handleLogoDrop}
+                  onDragOver={handleDragOver}
+                  onDragEnter={() => setDraggingLogo(true)}
+                  onDragLeave={() => setDraggingLogo(false)}
+                  className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                    draggingLogo
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  <label className="flex flex-col items-center gap-2 cursor-pointer">
+                    {uploadingLogo ? (
+                      <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+                    ) : (
+                      <Upload className="w-8 h-8 text-gray-400" />
+                    )}
+                    <span className="text-sm text-gray-600">
+                      {uploadingLogo ? 'Uploading...' : 'Drop logo here or click to upload'}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      PNG, JPG, SVG up to 2MB
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                      className="hidden"
+                      disabled={uploadingLogo}
+                    />
+                  </label>
+                </div>
               )}
             </div>
           </div>
@@ -858,26 +897,38 @@ export default function NewCaseStudyPage() {
               </button>
             </div>
           ) : (
-            <label className="flex flex-col items-center justify-center gap-2 p-8 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
-              {uploadingImage ? (
-                <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-              ) : (
-                <ImageIcon className="w-8 h-8 text-gray-400" />
-              )}
-              <span className="text-sm text-gray-600">
-                {uploadingImage ? 'Uploading...' : 'Upload featured image'}
-              </span>
-              <span className="text-xs text-gray-400">
-                Recommended: 1200x630px
-              </span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                disabled={uploadingImage}
-              />
-            </label>
+            <div
+              onDrop={handleImageDrop}
+              onDragOver={handleDragOver}
+              onDragEnter={() => setDraggingImage(true)}
+              onDragLeave={() => setDraggingImage(false)}
+              className={`border-2 border-dashed rounded-lg transition-colors ${
+                draggingImage
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50'
+              }`}
+            >
+              <label className="flex flex-col items-center justify-center gap-2 p-8 cursor-pointer">
+                {uploadingImage ? (
+                  <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+                ) : (
+                  <ImageIcon className="w-8 h-8 text-gray-400" />
+                )}
+                <span className="text-sm text-gray-600">
+                  {uploadingImage ? 'Uploading...' : 'Drop image here or click to upload'}
+                </span>
+                <span className="text-xs text-gray-400">
+                  Recommended: 1200x630px
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  disabled={uploadingImage}
+                />
+              </label>
+            </div>
           )}
         </div>
 
