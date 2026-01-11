@@ -117,6 +117,28 @@ export async function POST(request: NextRequest) {
 function buildPrompt(type: string, field: string, context: GenerateRequest['context']): string {
   const { keyword, title, category, existingContent, clientName, industry, technologies, audience, tone, length, includes, articleType, authorName, content, existingFaqs, seoIssue, currentValue, existingMetrics } = context;
 
+  // Helper to check article type (handles both ID and label formats)
+  const isArticleType = (types: string[]): boolean => {
+    if (!articleType) return false;
+    const normalized = articleType.toLowerCase();
+    return types.some(t =>
+      normalized === t.toLowerCase() ||
+      normalized.includes(t.toLowerCase()) ||
+      t.toLowerCase().includes(normalized.replace(/[^a-z]/g, ''))
+    );
+  };
+
+  const isHowTo = isArticleType(['how-to', 'how to', 'how-to guide']);
+  const isListicle = isArticleType(['listicle', 'list']);
+  const isIndustryAnalysis = isArticleType(['industry-analysis', 'industry analysis', 'analysis']);
+  const isThoughtLeadership = isArticleType(['thought-leadership', 'thought leadership']);
+  const isCaseStudy = isArticleType(['case-study', 'case study']);
+  const isComparison = isArticleType(['comparison', 'versus', 'vs']);
+  const isExplainer = isArticleType(['explainer', 'what is', 'what-is']);
+  const isNews = isArticleType(['news', 'commentary']);
+  const isUltimateGuide = isArticleType(['ultimate-guide', 'ultimate guide', 'comprehensive']);
+  const isInterview = isArticleType(['interview', 'q&a', 'qa']);
+
   // CRITICAL: No dashes rule - applies to ALL generated content
   const NO_DASHES_RULE = `
 CRITICAL FORMATTING RULE:
@@ -212,7 +234,9 @@ The outline should be DETAILED enough that it serves as a complete blueprint. Ea
 
 STRUCTURE BY ARTICLE TYPE:
 
-${articleType === 'how-to' || !articleType ? `
+${isHowTo || isUltimateGuide || !articleType ? `
+FOR: ${articleType || 'How-To Guide'}
+
 ## Introduction
 - Opening hook with striking statistic or expert quote
 - The problem/opportunity this solves
@@ -255,7 +279,9 @@ ${articleType === 'how-to' || !articleType ? `
 - When to consider expert help
 ` : ''}
 
-${articleType === 'industry-analysis' || articleType === 'Industry Analysis' ? `
+${isIndustryAnalysis || isThoughtLeadership ? `
+FOR: ${articleType}
+
 ## Executive Summary
 - 3 key findings in bullets
 - The "so what" for decision makers
@@ -296,7 +322,9 @@ ${articleType === 'industry-analysis' || articleType === 'Industry Analysis' ? `
 ## FAQ Section
 ` : ''}
 
-${articleType === 'explainer' || articleType === 'Explainer/What Is' ? `
+${isExplainer ? `
+FOR: ${articleType}
+
 ## What is [Topic]? (The 60-Word Definition)
 - Clear, jargon-free definition
 - What category it belongs to
@@ -336,6 +364,115 @@ ${articleType === 'explainer' || articleType === 'Explainer/What Is' ? `
 ## FAQ Section
 ` : ''}
 
+${isListicle ? `
+FOR: ${articleType}
+
+## Introduction: Why This List Matters
+- Hook with the problem/opportunity
+- Why these specific items were chosen
+- What readers will gain
+
+## 1. [First Item] - [Key Benefit]
+- What it is and why it matters
+- Specific example or case study
+- Pro tip for implementation
+- When to use/avoid
+
+## 2. [Second Item] - [Key Benefit]
+[Same structure...]
+
+[Continue for 7-10 items]
+
+## Quick Comparison Table
+- Side-by-side summary of all items
+- Best for X, Best for Y recommendations
+
+## FAQ Section
+
+## Your Next Step
+- How to choose which one to start with
+- Resources for deeper exploration
+` : ''}
+
+${isComparison ? `
+FOR: ${articleType}
+
+## Introduction: The Decision You're Facing
+- Why this comparison matters
+- What's at stake
+- Who this guide is for
+
+## Quick Verdict (TL;DR)
+- The bottom line recommendation by use case
+- "Choose X if..., Choose Y if..."
+
+## What is [Option A]?
+- Definition and core purpose
+- Key strengths
+- Ideal use cases
+
+## What is [Option B]?
+- Definition and core purpose
+- Key strengths
+- Ideal use cases
+
+## Head-to-Head Comparison
+### Performance
+### Cost
+### Ease of Implementation
+### Scalability
+### Vendor Support/Ecosystem
+
+## Real-World Decision Framework
+- Decision tree or flowchart logic
+- "If you have X, choose Y"
+
+## Migration Considerations
+- Switching costs
+- Compatibility issues
+- Hybrid approaches
+
+## FAQ Section
+
+## Making Your Decision
+- Summary of key differentiators
+- Recommended next steps
+` : ''}
+
+${isNews ? `
+FOR: ${articleType}
+
+## The News: What Happened
+- The key development in one paragraph
+- Why it's significant
+- Initial market/industry reaction
+
+## Context: Why This Matters
+- Background leading to this development
+- Historical perspective
+- Market conditions
+
+## Analysis: What It Really Means
+- Expert interpretation
+- Hidden implications
+- Who wins and loses
+
+## Impact Assessment
+### For Enterprise IT Teams
+### For Business Leaders
+### For the Industry
+
+## What to Watch Next
+- Key indicators to monitor
+- Timeline of expected developments
+
+## Our Take
+- ACI's perspective based on client experience
+- How we're advising clients to respond
+
+## FAQ Section
+` : ''}
+
 ${AEO_GEO_GUIDELINES}
 
 Return a detailed outline in markdown format that serves as a complete blueprint for an exceptional article.`;
@@ -365,6 +502,60 @@ ${existingContent}
 ` : ''}
 
 ${AEO_GEO_GUIDELINES}
+
+ARTICLE TYPE-SPECIFIC GUIDANCE:
+${isHowTo || isUltimateGuide ? `
+You are writing a ${articleType}. This format requires:
+- Step-by-step numbered instructions with clear action verbs
+- Prerequisites section before the steps
+- Each step should include: the action, why it matters, an example, and a common pitfall
+- Include a troubleshooting or "Common Mistakes" section
+- End with a quick-reference checklist
+` : ''}
+${isListicle ? `
+You are writing a ${articleType}. This format requires:
+- A clear number in the title (e.g., "7 Best...", "10 Ways to...")
+- Each item should follow the same structure: heading, explanation, example, pro tip
+- Items should be ranked or ordered logically
+- Include a comparison table summarizing all items
+- Make items scannable with bold key points
+` : ''}
+${isIndustryAnalysis || isThoughtLeadership ? `
+You are writing a ${articleType}. This format requires:
+- Executive summary with 3 key findings upfront
+- Data-driven insights with specific statistics and sources
+- Expert quotes or references (Gartner, Forrester, McKinsey)
+- Bold predictions backed by reasoning
+- Clear implications for different stakeholders
+- Action items prioritized by impact and effort
+` : ''}
+${isExplainer ? `
+You are writing a ${articleType}. This format requires:
+- A crystal-clear definition in the first paragraph (40-60 words for featured snippets)
+- "Why it matters" section with business impact
+- "How it works" section with technical details made accessible
+- Real-world use cases by industry
+- Comparison with alternatives or traditional approaches
+- Getting started roadmap
+` : ''}
+${isComparison ? `
+You are writing a ${articleType}. This format requires:
+- Quick verdict/TL;DR near the top
+- Fair, balanced assessment of both options
+- Clear comparison criteria (performance, cost, scalability, etc.)
+- Specific scenarios where each option wins
+- Decision framework or flowchart logic
+- Migration considerations if switching
+` : ''}
+${isNews ? `
+You are writing a ${articleType}. This format requires:
+- Lead with the news in the first paragraph
+- Provide context and background
+- Expert analysis of implications
+- Impact assessment for different audiences
+- What to watch next / future implications
+- Your organization's perspective
+` : ''}
 
 CONTENT EXCELLENCE REQUIREMENTS:
 
