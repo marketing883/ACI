@@ -26,7 +26,6 @@ import {
   HelpCircle,
   User,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import SEOAssessment from '@/components/admin/SEOAssessment';
 
 interface SEOData {
@@ -129,14 +128,15 @@ export default function EditBlogPage() {
   useEffect(() => {
     async function loadPost() {
       try {
-        const { data, error } = await supabase
-          .from('blog_posts')
-          .select('*')
-          .eq('id', postId)
-          .single();
+        // Use server-side API to bypass RLS
+        const response = await fetch(`/api/admin/blogs?id=${postId}`);
+        const result = await response.json();
 
-        if (error) throw error;
+        if (!response.ok || result.error) {
+          throw new Error(result.error || 'Failed to fetch post');
+        }
 
+        const data = result.post;
         if (data) {
           setTitle(data.title || '');
           setSlug(data.slug || '');
@@ -167,10 +167,12 @@ export default function EditBlogPage() {
                             data.author_title !== DEFAULT_AUTHORS[0].title;
             setShowCustomAuthor(isCustom);
           }
+        } else {
+          throw new Error('Post not found');
         }
       } catch (error) {
-        console.error('Error loading post:', error);
-        alert('Failed to load post');
+        console.error('Error loading post:', error instanceof Error ? error.message : error);
+        alert(error instanceof Error ? error.message : 'Failed to load post');
       } finally {
         setLoading(false);
       }

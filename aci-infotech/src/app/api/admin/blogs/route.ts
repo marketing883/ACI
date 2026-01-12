@@ -39,7 +39,24 @@ export async function GET(request: NextRequest) {
 
     const supabase = getServiceSupabase();
 
-    // If slug is provided, fetch single post
+    // If id is provided, fetch single post by ID (for admin editing)
+    const id = searchParams.get('id');
+    if (id) {
+      const { data: post, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error('Blog fetch by ID error:', error);
+        return NextResponse.json({ post: null, error: error.message }, { status: 404 });
+      }
+
+      return NextResponse.json({ post });
+    }
+
+    // If slug is provided, fetch single post by slug
     if (slug) {
       const { data: post, error } = await supabase
         .from('blog_posts')
