@@ -186,6 +186,7 @@ export default function BlogPage() {
     }
   }
 
+  // Filter posts based on category and search - maintain published_at DESC order from API
   const filteredPosts = blogPosts.filter((post) => {
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
     const matchesSearch = searchQuery === '' ||
@@ -195,8 +196,10 @@ export default function BlogPage() {
     return matchesCategory && matchesSearch;
   });
 
-  const featuredPosts = filteredPosts.filter(p => p.is_featured);
-  const regularPosts = filteredPosts.filter(p => !p.is_featured);
+  // Latest posts for hero section (first 3 posts by published_at DESC)
+  const latestPosts = filteredPosts.slice(0, 3);
+  // Remaining posts for grid
+  const remainingPosts = filteredPosts.slice(3);
 
   return (
     <main className="min-h-screen">
@@ -264,13 +267,13 @@ export default function BlogPage() {
         </section>
       )}
 
-      {/* Featured Posts */}
-      {!isLoading && featuredPosts.length > 0 && selectedCategory === 'All' && searchQuery === '' && (
+      {/* Latest Posts Hero - Shows 3 most recent articles prominently */}
+      {!isLoading && latestPosts.length > 0 && selectedCategory === 'All' && searchQuery === '' && (
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Featured Articles</h2>
+            <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Latest Articles</h2>
             <div className="grid lg:grid-cols-3 gap-6 auto-rows-[minmax(280px,auto)]">
-              {featuredPosts.slice(0, 3).map((post, index) => (
+              {latestPosts.map((post, index) => (
                 <FeaturedPostCard key={post.slug} post={post} large={index === 0} />
               ))}
             </div>
@@ -282,8 +285,8 @@ export default function BlogPage() {
       {!isLoading && (
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {(selectedCategory === 'All' && searchQuery === '' && featuredPosts.length > 0) && (
-              <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Latest Articles</h2>
+            {(selectedCategory === 'All' && searchQuery === '' && latestPosts.length > 0 && remainingPosts.length > 0) && (
+              <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">More Articles</h2>
             )}
 
             {filteredPosts.length === 0 ? (
@@ -303,7 +306,7 @@ export default function BlogPage() {
             ) : (
               <>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {(selectedCategory === 'All' && searchQuery === '' && featuredPosts.length > 0 ? regularPosts : filteredPosts).map((post) => (
+                  {(selectedCategory === 'All' && searchQuery === '' && latestPosts.length > 0 ? remainingPosts : filteredPosts).map((post) => (
                     <BlogPostCard key={post.slug} post={post} />
                   ))}
                 </div>

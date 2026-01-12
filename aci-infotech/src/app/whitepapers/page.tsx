@@ -337,12 +337,15 @@ export default function WhitepapersPage() {
     fetchWhitepapers();
   }, []);
 
+  // Filter whitepapers - maintain chronological order from API (created_at DESC)
   const filteredWhitepapers = whitepapers.filter((wp) => {
     return selectedCategory === 'All' || wp.category === selectedCategory;
   });
 
-  const featuredWhitepapers = filteredWhitepapers.filter(wp => wp.is_featured || wp.featured);
-  const otherWhitepapers = filteredWhitepapers.filter(wp => !wp.is_featured && !wp.featured);
+  // Latest whitepapers for hero section (first 3 by created_at DESC)
+  const latestWhitepapers = filteredWhitepapers.slice(0, 3);
+  // Remaining whitepapers for grid
+  const remainingWhitepapers = filteredWhitepapers.slice(3);
 
   return (
     <main className="min-h-screen">
@@ -413,17 +416,17 @@ export default function WhitepapersPage() {
         </section>
       )}
 
-      {/* Featured Whitepapers */}
-      {!isLoading && featuredWhitepapers.length > 0 && (
+      {/* Latest Whitepapers Hero */}
+      {!isLoading && latestWhitepapers.length > 0 && selectedCategory === 'All' && (
         <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">Featured Resources</h2>
+              <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">Latest Resources</h2>
               <p className="text-gray-600">In-depth guides from our enterprise architects</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredWhitepapers.map((wp) => (
-                <WhitepaperCard key={wp.id} whitepaper={wp} onDownload={setDownloadWhitepaper} featured />
+              {latestWhitepapers.map((wp) => (
+                <WhitepaperCard key={wp.id} whitepaper={wp} onDownload={setDownloadWhitepaper} featured={wp.is_featured || wp.featured} />
               ))}
             </div>
           </div>
@@ -434,7 +437,7 @@ export default function WhitepapersPage() {
       {!isLoading && (
         <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {featuredWhitepapers.length > 0 && otherWhitepapers.length > 0 && (
+            {(selectedCategory === 'All' && latestWhitepapers.length > 0 && remainingWhitepapers.length > 0) && (
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">More Resources</h2>
                 <p className="text-gray-600">Explore our complete library of technical guides</p>
@@ -454,8 +457,8 @@ export default function WhitepapersPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(featuredWhitepapers.length > 0 ? otherWhitepapers : filteredWhitepapers).map((wp) => (
-                <WhitepaperCard key={wp.id} whitepaper={wp} onDownload={setDownloadWhitepaper} />
+              {(selectedCategory === 'All' && latestWhitepapers.length > 0 ? remainingWhitepapers : filteredWhitepapers).map((wp) => (
+                <WhitepaperCard key={wp.id} whitepaper={wp} onDownload={setDownloadWhitepaper} featured={wp.is_featured || wp.featured} />
               ))}
             </div>
           )}

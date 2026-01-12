@@ -469,6 +469,7 @@ export default function CaseStudiesPage() {
     fetchCaseStudies();
   }, []);
 
+  // Filter studies - maintain chronological order from API (created_at DESC)
   const filteredStudies = caseStudies.filter((study) => {
     const matchesIndustry = selectedIndustry === 'All' || study.industry === selectedIndustry;
     const matchesService = selectedService === 'All' || study.service === selectedService;
@@ -479,8 +480,10 @@ export default function CaseStudiesPage() {
     return matchesIndustry && matchesService && matchesSearch;
   });
 
-  const featuredStudies = filteredStudies.filter(s => s.is_featured);
-  const otherStudies = filteredStudies.filter(s => !s.is_featured);
+  // Latest case studies for hero section (first 3 by created_at DESC)
+  const latestStudies = filteredStudies.slice(0, 3);
+  // Remaining case studies for grid
+  const remainingStudies = filteredStudies.slice(3);
 
   return (
     <main className="min-h-screen">
@@ -596,17 +599,17 @@ export default function CaseStudiesPage() {
         </section>
       )}
 
-      {/* Featured Case Studies */}
-      {!isLoading && featuredStudies.length > 0 && (
+      {/* Latest Case Studies Hero */}
+      {!isLoading && latestStudies.length > 0 && selectedIndustry === 'All' && selectedService === 'All' && searchQuery === '' && (
         <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">Featured Case Studies</h2>
-              <p className="text-gray-600">Transformative results from our flagship engagements</p>
+              <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">Latest Case Studies</h2>
+              <p className="text-gray-600">Our most recent enterprise transformations</p>
             </div>
             <div className="grid md:grid-cols-2 gap-8">
-              {featuredStudies.map((study) => (
-                <CaseStudyCard key={study.slug} study={study} featured />
+              {latestStudies.map((study) => (
+                <CaseStudyCard key={study.slug} study={study} featured={study.is_featured} />
               ))}
             </div>
           </div>
@@ -617,7 +620,7 @@ export default function CaseStudiesPage() {
       {!isLoading && (
         <section className="py-20 bg-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {featuredStudies.length > 0 && otherStudies.length > 0 && (
+            {(selectedIndustry === 'All' && selectedService === 'All' && searchQuery === '' && latestStudies.length > 0 && remainingStudies.length > 0) && (
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-3">More Success Stories</h2>
                 <p className="text-gray-600">Explore our complete portfolio of enterprise transformations</p>
@@ -641,8 +644,8 @@ export default function CaseStudiesPage() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-8">
-              {(featuredStudies.length > 0 ? otherStudies : filteredStudies).map((study) => (
-                <CaseStudyCard key={study.slug} study={study} />
+              {(selectedIndustry === 'All' && selectedService === 'All' && searchQuery === '' && latestStudies.length > 0 ? remainingStudies : filteredStudies).map((study) => (
+                <CaseStudyCard key={study.slug} study={study} featured={study.is_featured} />
               ))}
             </div>
           )}
