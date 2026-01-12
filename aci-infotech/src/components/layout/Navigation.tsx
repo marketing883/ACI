@@ -434,11 +434,11 @@ interface IndustriesMegaMenuProps {
 
 function IndustriesMegaMenu({ items }: IndustriesMegaMenuProps) {
   return (
-    <div className="p-6 w-[400px] bg-gradient-to-br from-gray-50 to-white">
+    <div className="p-6 w-[520px] bg-gradient-to-br from-gray-50 to-white">
       <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
         Industries We Serve
       </div>
-      <div className="space-y-1">
+      <div className="grid grid-cols-2 gap-2">
         {items.map((item) => {
           const Icon = item.icon;
           return (
