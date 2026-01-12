@@ -19,32 +19,32 @@ const industries = [
     id: 'financial-services',
     name: 'Financial Services',
     icon: Building2,
-    tagline: 'Data-Driven Finance at Scale',
-    description: 'Banks, insurance companies, asset managers, and fintech. We help financial institutions modernize infrastructure, implement AI for fraud detection, and meet regulatory requirements.',
-    challenges: ['Legacy system modernization', 'Real-time fraud detection', 'Regulatory compliance', 'Data consolidation post-M&A'],
-    clients: ['MSCI', 'Gen II', 'Major investment banks'],
-    caseStudy: { metric: '$25M', description: 'Fraud loss reduction with ML detection' },
+    tagline: 'Turn Data Into Competitive Advantage',
+    description: 'Your data is fragmented across legacy systems while fraud evolves faster than your defenses. We consolidate your infrastructure, deploy real-time ML detection, and build the governance frameworks regulators demand—so you can innovate without compliance risk.',
+    challenges: ['40+ legacy systems consolidated', 'Sub-second fraud scoring', 'Audit-ready data lineage', 'M&A data integration'],
+    clients: ['MSCI', 'Gen II', 'Top 10 Investment Banks'],
+    caseStudy: { metric: '$25M', description: 'Fraud losses eliminated annually' },
     href: '/industries/financial-services',
   },
   {
     id: 'retail',
     name: 'Retail & Consumer',
     icon: ShoppingCart,
-    tagline: 'Omnichannel Excellence',
-    description: 'Retailers, convenience stores, and consumer brands. We build customer data platforms, implement personalization engines, and optimize supply chains with AI.',
-    challenges: ['Unified customer view', 'Real-time personalization', 'Demand forecasting', 'Supply chain optimization'],
-    clients: ['RaceTrac', 'Fortune 100 retailers'],
-    caseStudy: { metric: '$18M', description: 'Annual savings from AI demand forecasting' },
+    tagline: 'Know Your Customer, Everywhere',
+    description: 'Customers expect personalization at every touchpoint—but your data sits in silos. We build unified customer profiles that power real-time recommendations, optimize inventory with AI, and turn every interaction into revenue.',
+    challenges: ['Single customer view', 'Real-time personalization', 'AI demand forecasting', 'Inventory optimization'],
+    clients: ['RaceTrac', 'Fortune 100 Retailers'],
+    caseStudy: { metric: '$18M', description: 'Saved with AI demand forecasting' },
     href: '/industries/retail',
   },
   {
     id: 'healthcare',
     name: 'Healthcare & Life Sciences',
     icon: Heart,
-    tagline: 'HIPAA-Compliant Innovation',
-    description: 'Hospital systems, pharmaceutical companies, and healthcare payers. We implement compliant data platforms, accelerate research, and improve patient outcomes.',
-    challenges: ['HIPAA compliance', 'Clinical data integration', 'Drug discovery acceleration', 'Interoperability'],
-    clients: ['Regional healthcare systems', 'Global pharma companies'],
+    tagline: 'Accelerate Research, Protect Patients',
+    description: 'Clinical breakthroughs are buried in data you can\'t access. We build HIPAA-compliant platforms that unify patient records, accelerate drug discovery timelines, and enable the analytics that improve outcomes—without compromising privacy.',
+    challenges: ['HIPAA-compliant analytics', 'Clinical data unification', 'Research acceleration', 'EHR interoperability'],
+    clients: ['Regional Health Systems', 'Global Pharma Leaders'],
     caseStudy: { metric: '40%', description: 'Faster research data access' },
     href: '/industries/healthcare',
   },
@@ -52,21 +52,21 @@ const industries = [
     id: 'hospitality',
     name: 'Hospitality & Food Services',
     icon: Utensils,
-    tagline: 'Global Operations, Unified Data',
-    description: 'Hotels, restaurants, and food service companies. We unify data across global operations, implement customer engagement platforms, and optimize supply chains.',
-    challenges: ['Global data consolidation', 'Supply chain visibility', 'Customer loyalty programs', 'Operational efficiency'],
-    clients: ['Sodexo', 'Major hotel chains'],
-    caseStudy: { metric: 'Global', description: 'Unified platform for 400K+ employees' },
+    tagline: 'One Platform, Global Operations',
+    description: 'Your 400,000 employees across 50 countries generate data you can\'t see. We unify global operations onto a single platform—enabling real-time workforce analytics, personalized guest experiences, and supply chain visibility that reduces waste.',
+    challenges: ['Global data unification', 'Real-time operations', 'Guest personalization', 'Supply chain optimization'],
+    clients: ['Sodexo', 'Leading Hotel Chains'],
+    caseStudy: { metric: '400K+', description: 'Employees on unified platform' },
     href: '/industries/hospitality',
   },
   {
     id: 'manufacturing',
     name: 'Manufacturing',
     icon: Factory,
-    tagline: 'Industry 4.0 Enabled',
-    description: 'Discrete and process manufacturers. We implement IoT analytics, predictive maintenance, and smart factory solutions that reduce downtime and improve quality.',
-    challenges: ['Predictive maintenance', 'Quality analytics', 'Supply chain visibility', 'IoT data integration'],
-    clients: ['Global manufacturers', 'Industrial equipment companies'],
+    tagline: 'Predict Problems Before They Cost You',
+    description: 'Unplanned downtime costs you millions while quality issues slip through. We deploy IoT analytics and predictive maintenance that catch failures before they happen, optimize production lines, and deliver the visibility Industry 4.0 promises.',
+    challenges: ['Predictive maintenance', 'Quality anomaly detection', 'Production optimization', 'IoT data at scale'],
+    clients: ['Global Manufacturers', 'Industrial OEMs'],
     caseStudy: { metric: '67%', description: 'Reduction in unplanned downtime' },
     href: '/industries/manufacturing',
   },
@@ -74,21 +74,21 @@ const industries = [
     id: 'energy',
     name: 'Energy & Utilities',
     icon: Zap,
-    tagline: 'Secure, Compliant, Resilient',
-    description: 'Energy companies, utilities, and renewables. We implement secure infrastructure, NERC CIP compliance, and analytics for grid optimization.',
-    challenges: ['NERC CIP compliance', 'Grid optimization', 'Renewable integration', 'Cybersecurity'],
-    clients: ['Energy utilities', 'Oil & gas companies'],
-    caseStudy: { metric: '100%', description: 'NERC CIP compliance achieved' },
+    tagline: 'Secure Infrastructure, Reliable Grid',
+    description: 'NERC CIP audits loom while renewables complicate your grid. We implement the secure infrastructure and compliance frameworks regulators require, plus the analytics that optimize generation, predict demand, and integrate clean energy sources.',
+    challenges: ['NERC CIP compliance', 'Grid load optimization', 'Renewable integration', 'Critical infrastructure security'],
+    clients: ['Regional Utilities', 'Energy Producers'],
+    caseStudy: { metric: '100%', description: 'NERC CIP audit compliance' },
     href: '/industries/energy',
   },
   {
     id: 'transportation',
     name: 'Transportation & Logistics',
     icon: Truck,
-    tagline: 'Optimize Every Mile',
-    description: 'Logistics companies, freight carriers, and supply chain operators. We implement route optimization, real-time tracking, and predictive analytics.',
-    challenges: ['Route optimization', 'Real-time visibility', 'Fuel cost reduction', 'Carbon footprint'],
-    clients: ['Fortune 500 logistics companies'],
+    tagline: 'Visibility That Drives Profitability',
+    description: 'Fuel costs rise while empty miles erode margins. We deploy AI route optimization that cuts costs, real-time tracking that customers demand, and predictive maintenance that keeps your fleet moving—turning logistics into competitive advantage.',
+    challenges: ['AI route optimization', 'Fleet visibility', 'Predictive maintenance', 'Carbon tracking & ESG'],
+    clients: ['Fortune 500 Logistics Leaders'],
     caseStudy: { metric: '$30M', description: 'Annual fuel cost savings' },
     href: '/industries/transportation',
   },
@@ -177,9 +177,9 @@ export default function IndustriesPage() {
 
                       {/* Challenges */}
                       <div className="mb-6">
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                        <h4 className="text-sm font-semibold text-gray-500 capitalize mb-3">
                           Challenges We Solve
-                        </h3>
+                        </h4>
                         <div className="flex flex-wrap gap-2">
                           {industry.challenges.map((challenge) => (
                             <span
@@ -194,9 +194,9 @@ export default function IndustriesPage() {
 
                       {/* Clients */}
                       <div className="mb-6">
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                        <h4 className="text-sm font-semibold text-gray-500 capitalize mb-2">
                           Representative Clients
-                        </h3>
+                        </h4>
                         <p className="text-gray-600 text-sm">{industry.clients.join(' • ')}</p>
                       </div>
 
