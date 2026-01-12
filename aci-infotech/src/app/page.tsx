@@ -75,7 +75,7 @@ const newsItems = [
     id: 'jag-kanumuri-ai',
     title: 'Jag Kanumuri: Helping Enterprises Turn AI from Ambition into Advantage',
     excerpt: 'Outlook India profiles ACI Infotech CEO Jag Kanumuri on pioneering AI-native enterprises and shaping a technopreneurial era where change is built into the DNA of business.',
-    image_url: '/images/news/Jag-post-CIO_post.jpg',
+    image_url: '/images/news/Outlook-India.jpg',
     source: 'Outlook India',
     date: 'May 2025',
     url: 'https://www.outlookindia.com/hub4business/jag-kanumuri-helping-enterprises-turn-ai-from-ambition-into-advantage',
