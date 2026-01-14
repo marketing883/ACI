@@ -64,7 +64,7 @@ function AnimatedCounter({ end, prefix = '', suffix = '', duration = 2000 }: Cou
       ref={ref}
       className="font-bold text-white font-[var(--font-title)]"
       style={{
-        fontSize: 'clamp(72px, 10vw, 120px)',
+        fontSize: 'clamp(36px, 8vw, 120px)',
         letterSpacing: '-0.03em',
         lineHeight: 1,
       }}
@@ -218,13 +218,13 @@ export default function HeroSection() {
           </p>
 
           {/* Stats Row */}
-          <div className="flex flex-wrap gap-12 md:gap-16 lg:gap-24 mb-[50px]">
-            <div>
+          <div className="flex flex-nowrap gap-6 sm:gap-8 md:gap-16 lg:gap-24 mb-[50px]">
+            <div className="flex-shrink-0">
               <AnimatedCounter end={700} prefix="$" suffix="M" duration={1500} />
               <div
-                className="mt-2 uppercase font-medium"
+                className="mt-2 uppercase font-medium whitespace-nowrap"
                 style={{
-                  fontSize: '14px',
+                  fontSize: 'clamp(10px, 1.2vw, 14px)',
                   letterSpacing: '0.05em',
                   color: 'rgba(255, 255, 255, 0.7)',
                 }}
@@ -232,12 +232,12 @@ export default function HeroSection() {
                 Value Delivered
               </div>
             </div>
-            <div>
+            <div className="flex-shrink-0">
               <AnimatedCounter end={1250} suffix="+" duration={2000} />
               <div
-                className="mt-2 uppercase font-medium"
+                className="mt-2 uppercase font-medium whitespace-nowrap"
                 style={{
-                  fontSize: '14px',
+                  fontSize: 'clamp(10px, 1.2vw, 14px)',
                   letterSpacing: '0.05em',
                   color: 'rgba(255, 255, 255, 0.7)',
                 }}
@@ -245,12 +245,12 @@ export default function HeroSection() {
                 Engineers Worldwide
               </div>
             </div>
-            <div>
+            <div className="flex-shrink-0">
               <AnimatedCounter end={19} duration={1800} />
               <div
-                className="mt-2 uppercase font-medium"
+                className="mt-2 uppercase font-medium whitespace-nowrap"
                 style={{
-                  fontSize: '14px',
+                  fontSize: 'clamp(10px, 1.2vw, 14px)',
                   letterSpacing: '0.05em',
                   color: 'rgba(255, 255, 255, 0.7)',
                 }}
