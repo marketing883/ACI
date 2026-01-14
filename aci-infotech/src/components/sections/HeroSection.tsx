@@ -5,11 +5,12 @@ import Link from 'next/link';
 
 interface CounterProps {
   end: number;
+  prefix?: string;
   suffix?: string;
   duration?: number;
 }
 
-function AnimatedCounter({ end, suffix = '', duration = 2000 }: CounterProps) {
+function AnimatedCounter({ end, prefix = '', suffix = '', duration = 2000 }: CounterProps) {
   const [count, setCount] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -68,7 +69,7 @@ function AnimatedCounter({ end, suffix = '', duration = 2000 }: CounterProps) {
         lineHeight: 1,
       }}
     >
-      {count.toLocaleString()}{suffix}
+      {prefix}{count.toLocaleString()}{suffix}
     </div>
   );
 }
@@ -158,7 +159,7 @@ export default function HeroSection() {
               className="hidden md:block flex-shrink-0 mt-4"
               style={{
                 width: '4px',
-                height: '100px',
+                height: '170px',
                 backgroundColor: '#C4FF61',
               }}
             />
@@ -219,7 +220,7 @@ export default function HeroSection() {
           {/* Stats Row */}
           <div className="flex flex-wrap gap-12 md:gap-16 lg:gap-24 mb-[50px]">
             <div>
-              <AnimatedCounter end={80} suffix="+" duration={1500} />
+              <AnimatedCounter end={700} prefix="$" suffix="M" duration={1500} />
               <div
                 className="mt-2 uppercase font-medium"
                 style={{
@@ -228,7 +229,7 @@ export default function HeroSection() {
                   color: 'rgba(255, 255, 255, 0.7)',
                 }}
               >
-                Fortune 500 Clients
+                Value Delivered
               </div>
             </div>
             <div>
