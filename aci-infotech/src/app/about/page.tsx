@@ -456,13 +456,13 @@ export default function AboutPage() {
             <h3 className="text-2xl font-bold text-[var(--aci-secondary)] text-center mb-10">
               Leadership Team
             </h3>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {leadershipTeam.map((member) => (
                 <div
                   key={member.name}
                   className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100"
                 >
-                  <div className="h-72 bg-gray-200 relative">
+                  <div className="h-56 bg-gray-200 relative">
                     {member.photo_url ? (
                       <picture>
                         <source srcSet={member.photo_webp || undefined} type="image/webp" />
@@ -470,8 +470,8 @@ export default function AboutPage() {
                           src={member.photo_url}
                           alt={member.name}
                           fill
-                          className="object-cover object-[center_20%]"
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover object-[center_15%]"
+                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                         />
                       </picture>
                     ) : (
