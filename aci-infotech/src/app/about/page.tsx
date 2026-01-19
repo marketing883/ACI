@@ -533,9 +533,9 @@ export default function AboutPage() {
                     className="object-contain"
                   />
                 </div>
-                <h3 className="font-semibold text-[var(--aci-secondary)] text-sm mb-1">
+                <h5 className="font-semibold text-[var(--aci-secondary)] text-sm mb-1">
                   {cert.name}
-                </h3>
+                </h5>
                 <p className="text-xs text-gray-500">{cert.description}</p>
               </div>
             ))}
