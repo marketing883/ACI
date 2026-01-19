@@ -156,10 +156,10 @@ const leadershipTeam = [
 ];
 
 const certifications = [
-  { name: 'Great Place to Work', description: 'Certified 2024-25', logo_url: '/images/certifications/gptw.png' },
-  { name: 'ISO 27001:2022', description: 'Information Security Certified', logo_url: '/images/certifications/iso27001.png' },
-  { name: 'CMMi Level 3', description: 'Process Maturity Certified', logo_url: '/images/certifications/cmmi.png' },
-  { name: 'SOC 2 Type II', description: 'Security & Privacy Controls', logo_url: '/images/certifications/soc2.png' },
+  { name: 'Great Place to Work', description: 'Certified 2024-25', logo_url: '/images/certifications-awards/best-place-to-work.webp' },
+  { name: 'ISO 27001:2022', description: 'Information Security Certified', logo_url: '/images/certifications-awards/iso-27001.webp' },
+  { name: 'CMMi Level 3', description: 'Process Maturity Certified', logo_url: '/images/certifications-awards/cmmi.webp' },
+  { name: '5 Best Data Analytics', description: 'Industry Recognition', logo_url: '/images/certifications-awards/best-data-analytics-company.webp' },
 ];
 
 const trackRecord = [
@@ -522,12 +522,15 @@ export default function AboutPage() {
             {certifications.map((cert) => (
               <div
                 key={cert.name}
-                className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-xl"
+                className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-sm"
               >
-                <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-2xl font-bold text-gray-400">
-                    {cert.name.charAt(0)}
-                  </span>
+                <div className="relative w-24 h-24 mb-4">
+                  <Image
+                    src={cert.logo_url}
+                    alt={cert.name}
+                    fill
+                    className="object-contain"
+                  />
                 </div>
                 <h3 className="font-semibold text-[var(--aci-secondary)] text-sm mb-1">
                   {cert.name}
