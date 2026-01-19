@@ -24,8 +24,8 @@ CREATE TABLE case_studies (
   client_name VARCHAR(255) NOT NULL,
   client_logo_url TEXT,
   industry VARCHAR(100),
-  client_size TEXT,
-  client_location TEXT,
+  client_size VARCHAR(100),
+  client_location VARCHAR(255),
 
   -- Story Content
   challenge TEXT,
