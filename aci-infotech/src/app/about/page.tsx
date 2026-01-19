@@ -114,10 +114,10 @@ const leadershipTeam = [
   {
     name: 'Habib Mehmoodi',
     title: 'VP - Strategy & Innovation',
-    photo_url: '/images/about-team/Habib--1--1.png',
-    photo_webp: '/images/about-team/Habib--1--1.png',
+    photo_url: '/images/about-team/Habib.png',
+    photo_webp: '/images/about-team/Habib.webp',
     linkedin_url: 'https://www.linkedin.com/in/hmehmoodi/',
-    imageClass: 'object-contain object-top',
+    imageClass: 'object-contain',
   },
   {
     name: 'Amit Alshaikh',
