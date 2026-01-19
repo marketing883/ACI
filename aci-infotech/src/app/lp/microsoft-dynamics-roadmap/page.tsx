@@ -220,8 +220,10 @@ export default function MSDynamicsRoadmapPage() {
         }),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to submit form');
+        throw new Error(result.error || 'Failed to submit form');
       }
 
       trackFormSubmission('roadmap_session', 'lp_ms_dynamics', {
@@ -234,8 +236,8 @@ export default function MSDynamicsRoadmapPage() {
       });
 
       setIsSubmitted(true);
-    } catch {
-      setError('Something went wrong. Please try again or call us directly.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again or call us directly.');
     } finally {
       setIsSubmitting(false);
     }

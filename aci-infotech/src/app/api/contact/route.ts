@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('Supabase error:', error);
       return NextResponse.json(
-        { error: 'Failed to submit form' },
+        { error: error.message || 'Failed to submit form', details: error.code },
         { status: 500 }
       );
     }
