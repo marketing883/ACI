@@ -595,7 +595,7 @@ export default function AboutPage() {
               size="lg"
               className="border-2 border-[var(--aci-lime)] text-[var(--aci-lime)] hover:bg-[var(--aci-lime)]/10"
             >
-              Let's Build Something
+              Discuss Your Challenge
             </Button>
           </div>
         </div>
