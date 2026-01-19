@@ -462,7 +462,7 @@ export default function AboutPage() {
                   key={member.name}
                   className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100"
                 >
-                  <div className="h-56 bg-gray-200 relative">
+                  <div className="h-72 bg-gray-200 relative">
                     {member.photo_url ? (
                       <picture>
                         <source srcSet={member.photo_webp || undefined} type="image/webp" />
@@ -470,7 +470,7 @@ export default function AboutPage() {
                           src={member.photo_url}
                           alt={member.name}
                           fill
-                          className="object-cover object-top"
+                          className="object-cover object-[center_20%]"
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         />
                       </picture>
