@@ -856,20 +856,23 @@ export default function MSDynamicsRoadmapPage() {
           FINAL CTA
           ============================================ */}
       <section className="py-24 bg-gradient-to-br from-[#0052CC] to-[#0078D4] relative overflow-hidden">
-        {/* Animated particles */}
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${2 + Math.random() * 2}s`,
-              }}
-            />
-          ))}
+        {/* Animated particles - fixed positions to avoid hydration mismatch */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '10%', top: '20%', animationDelay: '0s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '25%', top: '60%', animationDelay: '0.5s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '40%', top: '30%', animationDelay: '1s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '55%', top: '70%', animationDelay: '1.5s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '70%', top: '15%', animationDelay: '2s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '85%', top: '45%', animationDelay: '2.5s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '15%', top: '80%', animationDelay: '0.3s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '30%', top: '10%', animationDelay: '0.8s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '60%', top: '85%', animationDelay: '1.3s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '75%', top: '55%', animationDelay: '1.8s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '90%', top: '25%', animationDelay: '2.3s' }} />
+          <div className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ left: '5%', top: '50%', animationDelay: '0.7s' }} />
+          <div className="absolute w-3 h-3 bg-white/10 rounded-full animate-pulse" style={{ left: '20%', top: '35%', animationDelay: '1.2s' }} />
+          <div className="absolute w-3 h-3 bg-white/10 rounded-full animate-pulse" style={{ left: '50%', top: '90%', animationDelay: '1.7s' }} />
+          <div className="absolute w-3 h-3 bg-white/10 rounded-full animate-pulse" style={{ left: '80%', top: '75%', animationDelay: '2.2s' }} />
         </div>
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
