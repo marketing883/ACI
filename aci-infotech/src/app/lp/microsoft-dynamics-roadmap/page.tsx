@@ -751,7 +751,7 @@ export default function MSDynamicsRoadmapPage() {
                 <div className="w-14 h-14 bg-[#0078D4]/10 group-hover:bg-[#0078D4]/20 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-colors">
                   <cap.icon className="w-7 h-7 text-[#0078D4]" />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1">{cap.title}</h3>
+                <h5 className="font-semibold text-gray-900 mb-1">{cap.title}</h5>
                 <p className="text-xs text-gray-500">{cap.desc}</p>
               </div>
             ))}
@@ -797,17 +797,6 @@ export default function MSDynamicsRoadmapPage() {
             ))}
           </div>
 
-          {/* Trust logos placeholder */}
-          <div className="mt-16 pt-16 border-t border-gray-200">
-            <p className="text-center text-sm text-gray-500 mb-8">Trusted by industry leaders</p>
-            <div className="flex flex-wrap justify-center items-center gap-8 opacity-50 grayscale">
-              {['Fortune 500 Retailer', 'Global Bank', 'Healthcare System', 'Manufacturing Co.'].map((name) => (
-                <div key={name} className="px-6 py-3 bg-gray-100 rounded-lg">
-                  <span className="text-gray-600 font-medium">{name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 
