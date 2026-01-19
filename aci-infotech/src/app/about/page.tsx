@@ -593,9 +593,9 @@ export default function AboutPage() {
               href="/contact"
               variant="ghost"
               size="lg"
-              className="border-[var(--aci-lime)] text-[var(--aci-lime)] hover:bg-[var(--aci-lime)]/10"
+              className="border-2 border-[var(--aci-lime)] text-[var(--aci-lime)] hover:bg-[var(--aci-lime)]/10"
             >
-              Schedule Architecture Call
+              Let's Build Something
             </Button>
           </div>
         </div>
