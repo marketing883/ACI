@@ -388,7 +388,7 @@ export default function NewCaseStudyPage() {
       router.push('/admin/case-studies');
     } catch (error) {
       console.error('Error saving case study:', error);
-      alert('Failed to save case study');
+      alert(error instanceof Error ? error.message : 'Failed to save case study');
     } finally {
       setSaving(false);
     }
