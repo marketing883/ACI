@@ -117,6 +117,7 @@ const leadershipTeam = [
     photo_url: '/images/about-team/Habib.png',
     photo_webp: '/images/about-team/Habib.webp',
     linkedin_url: 'https://www.linkedin.com/in/hmehmoodi/',
+    imageClass: 'scale-[0.85] object-[center_25%]',
   },
   {
     name: 'Amit Alshaikh',
@@ -470,7 +471,7 @@ export default function AboutPage() {
                           src={member.photo_url}
                           alt={member.name}
                           fill
-                          className="object-cover object-[center_15%]"
+                          className={`object-cover ${member.imageClass || 'object-[center_15%]'}`}
                           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                         />
                       </picture>
