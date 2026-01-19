@@ -25,6 +25,7 @@ function getServiceSupabase() {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
     const slug = searchParams.get('slug');
     const featured = searchParams.get('featured') === 'true';
     const limit = parseInt(searchParams.get('limit') || '100');
@@ -38,7 +39,23 @@ export async function GET(request: NextRequest) {
 
     const supabase = getServiceSupabase();
 
-    // If slug is provided, fetch single case study
+    // If id is provided, fetch single case study by ID
+    if (id) {
+      const { data: caseStudy, error } = await supabase
+        .from('case_studies')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error('Case study fetch error:', error);
+        return NextResponse.json({ caseStudy: null, error: error.message });
+      }
+
+      return NextResponse.json({ caseStudy });
+    }
+
+    // If slug is provided, fetch single case study by slug
     if (slug) {
       const { data: caseStudy, error } = await supabase
         .from('case_studies')
