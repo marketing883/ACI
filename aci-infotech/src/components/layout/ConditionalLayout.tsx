@@ -12,9 +12,10 @@ export default function ConditionalLayout({
 }) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith('/admin');
+  const isLandingPage = pathname?.startsWith('/lp');
 
-  // Admin routes have their own layout - don't show main site navigation
-  if (isAdminRoute) {
+  // Admin routes and landing pages have their own layouts
+  if (isAdminRoute || isLandingPage) {
     return <>{children}</>;
   }
 
