@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    const { name, email, company, phone, reason, message } = data;
+    const { name, email, company, phone, reason, message, source } = data;
 
     // Validate required fields
     if (!name || !email || !reason || !message) {
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
           phone: phone || null,
           inquiry_type: reason,
           message,
-          source: 'website_contact_form',
+          source: source || 'website_contact_form',
           status: 'new',
         },
       ])

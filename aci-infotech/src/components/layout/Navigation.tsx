@@ -86,6 +86,7 @@ const NAV_DATA = {
     { label: 'Snowflake', href: '/platforms/snowflake', icon: Snowflake, color: 'text-[#29B5E8]' },
     { label: 'AWS', href: '/platforms/aws', icon: Cloud, color: 'text-[#FF9900]' },
     { label: 'Azure', href: '/platforms/azure', icon: Cloud, color: 'text-[#0078D4]' },
+    { label: 'Microsoft Dynamics', href: '/platforms/microsoft-dynamics', icon: Workflow, color: 'text-[#0078D4]' },
     { label: 'Salesforce', href: '/platforms/salesforce', icon: Users, color: 'text-[#00A1E0]' },
     { label: 'SAP', href: '/platforms/sap', icon: Server, color: 'text-[#0FAAFF]' },
     { label: 'ServiceNow', href: '/platforms/servicenow', icon: Workflow, color: 'text-[#81B5A1]' },

@@ -117,6 +117,9 @@ const sourceLabels: Record<string, string> = {
   chat_widget: 'Chat',
   newsletter: 'Newsletter',
   website_footer: 'Website',
+  lp_ms_dynamics_roadmap: 'LP: MS Dynamics',
+  lp_data_engineering: 'LP: Data Engineering',
+  lp_ai_ml: 'LP: AI/ML',
 };
 
 // Mock data for demo
