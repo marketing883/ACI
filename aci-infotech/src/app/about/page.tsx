@@ -588,17 +588,14 @@ export default function AboutPage() {
             <span className="text-blue-200 text-sm">No pressure, no obligation</span>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact" variant="secondary" size="lg">
-              Schedule Architecture Call
-            </Button>
+          <div className="flex justify-center">
             <Button
-              href="/resources/capabilities-deck"
+              href="/contact"
               variant="ghost"
               size="lg"
-              className="text-white border-white hover:bg-white/10"
+              className="border-[var(--aci-lime)] text-[var(--aci-lime)] hover:bg-[var(--aci-lime)]/10"
             >
-              Download Capabilities Overview
+              Schedule Architecture Call
             </Button>
           </div>
         </div>
