@@ -88,25 +88,70 @@ const capabilities = [
   },
 ];
 
-const teamMembers = [
+// CEO Data
+const ceo = {
+  name: 'Jag Kanumuri',
+  title: 'Founder & CEO',
+  vision: `At ACI Infotech, our purpose is to drive enterprise excellence through innovation and intelligence. We partner with organizations to help them reimagine their business models, modernize operations, and unlock value through technology.
+
+Under Jag's leadership, ACI has grown from a small team of passionate engineers to a 1,250+ strong global organization serving 80+ Fortune 500 clients. His vision is simple yet powerful: deliver production-grade systems that create measurable business value, backed by engineers who take ownership and stay accountable.
+
+"We don't just deliver projects—we build partnerships. When your system goes down at 2am, we're the team that answers the phone. That's not a policy. That's who we are."`,
+  photo_url: '/images/about-team/Jag.png',
+  photo_webp: '/images/about-team/Jag.webp',
+  linkedin_url: 'https://www.linkedin.com/in/jagannadhkanumuri/',
+};
+
+// Leadership Team Data
+const leadershipTeam = [
   {
-    name: 'Jag Kanumuri',
-    title: 'Founder & CEO',
-    bio: 'At ACI Infotech, our purpose is to drive enterprise excellence through innovation and intelligence. We partner with organizations to help them reimagine their business models, modernize operations, and unlock value through technology.',
-    photo_url: '/images/team/jag-kanumuri.jpg',
-    linkedin_url: 'https://linkedin.com/in/jagkanumuri',
+    name: 'Krish Karanam',
+    title: 'SVP - Global Resources',
+    photo_url: '/images/about-team/Krish.png',
+    photo_webp: '/images/about-team/Krish.webp',
+    linkedin_url: 'https://www.linkedin.com/in/krish-karanam-423783113/',
   },
   {
     name: 'Habib Mehmoodi',
-    title: 'VP Strategy & Innovation',
-    bio: 'Drives strategic initiatives and innovation programs across the enterprise portfolio.',
-    photo_url: '/images/team/habib-mehmoodi.jpg',
+    title: 'VP - Strategy & Innovation',
+    photo_url: '/images/about-team/Habib.png',
+    photo_webp: '/images/about-team/Habib.webp',
+    linkedin_url: 'https://www.linkedin.com/in/hmehmoodi/',
+  },
+  {
+    name: 'Amit Alshaikh',
+    title: 'VP - Client Success',
+    photo_url: '/images/about-team/Amit-A.png',
+    photo_webp: '/images/about-team/Amit-A.webp',
+    linkedin_url: 'https://www.linkedin.com/in/amitalshaikh/',
   },
   {
     name: 'Narayanan Nanjan',
-    title: 'VP Head of Delivery',
-    bio: 'Leads delivery operations ensuring Fortune 500 projects meet timelines, budgets, and SLAs.',
-    photo_url: '/images/team/narayanan-nanjan.jpg',
+    title: 'VP - Project Delivery',
+    photo_url: '/images/about-team/Narayanan.png',
+    photo_webp: '/images/about-team/Narayanan.webp',
+    linkedin_url: 'https://www.linkedin.com/in/narayanan-nanjan-5b655433/',
+  },
+  {
+    name: 'Thomas George',
+    title: 'AVP - Strategic Partnerships',
+    photo_url: null,
+    photo_webp: null,
+    linkedin_url: 'https://www.linkedin.com/in/thomas-george-25bb5a61/',
+  },
+  {
+    name: 'Amit Khare',
+    title: 'AVP - Client Success, APAC',
+    photo_url: '/images/about-team/Amit-K.png',
+    photo_webp: '/images/about-team/Amit-K.webp',
+    linkedin_url: 'https://www.linkedin.com/in/amit-khare-27850a186/',
+  },
+  {
+    name: 'Madhu Noone',
+    title: 'Director - Sales',
+    photo_url: '/images/about-team/Madhu.png',
+    photo_webp: '/images/about-team/Madhu.webp',
+    linkedin_url: 'https://www.linkedin.com/in/madhu-n-mis-mba-9a546b117/',
   },
 ];
 
@@ -341,52 +386,122 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Leadership Section */}
+      {/* Leadership Section - CEO Featured */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Meet the Team
+              Our Leadership
             </h2>
             <p className="text-lg text-gray-600">
               Leadership that's built enterprise systems, not just managed them
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {teamMembers.map((member) => (
-              <div
-                key={member.name}
-                className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow"
-              >
-                <div className="h-64 bg-gray-200 relative">
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--aci-primary)] to-[var(--aci-primary-dark)]">
-                    <span className="text-white text-4xl font-bold opacity-30">
-                      {member.name.split(' ').map(n => n[0]).join('')}
-                    </span>
+          {/* CEO Featured Section */}
+          <div className="mb-20">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 lg:p-12 shadow-sm border border-gray-100">
+              {/* CEO Photo - Left Side */}
+              <div className="flex justify-center lg:justify-start">
+                <div className="relative">
+                  <div className="w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden shadow-xl">
+                    <picture>
+                      <source srcSet={ceo.photo_webp} type="image/webp" />
+                      <Image
+                        src={ceo.photo_url}
+                        alt={ceo.name}
+                        width={400}
+                        height={400}
+                        className="w-full h-full object-cover"
+                      />
+                    </picture>
                   </div>
+                  {/* Decorative accent */}
+                  <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-[var(--aci-primary)]/10 rounded-xl -z-10" />
                 </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-lg text-[var(--aci-secondary)]">
-                      {member.name}
+              </div>
+
+              {/* CEO Info - Right Side */}
+              <div>
+                <div className="flex items-center gap-4 mb-4">
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)]">
+                      {ceo.name}
                     </h3>
-                    {member.linkedin_url && (
+                    <p className="text-lg text-[var(--aci-primary)] font-medium">{ceo.title}</p>
+                  </div>
+                  <a
+                    href={ceo.linkedin_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-auto p-2 bg-[#0077B5] text-white rounded-lg hover:bg-[#006396] transition-colors"
+                    aria-label={`${ceo.name}'s LinkedIn profile`}
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                </div>
+                <div className="space-y-4 text-gray-600 leading-relaxed">
+                  {ceo.vision.split('\n\n').map((paragraph, idx) => (
+                    <p key={idx} className={idx === 2 ? 'italic text-[var(--aci-secondary)] font-medium' : ''}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Leadership Team Grid */}
+          <div>
+            <h3 className="text-2xl font-bold text-[var(--aci-secondary)] text-center mb-10">
+              Leadership Team
+            </h3>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {leadershipTeam.map((member) => (
+                <div
+                  key={member.name}
+                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100"
+                >
+                  <div className="h-56 bg-gray-200 relative">
+                    {member.photo_url ? (
+                      <picture>
+                        <source srcSet={member.photo_webp || undefined} type="image/webp" />
+                        <Image
+                          src={member.photo_url}
+                          alt={member.name}
+                          fill
+                          className="object-cover object-top"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                      </picture>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--aci-primary)] to-[var(--aci-primary-dark)]">
+                        <span className="text-white text-4xl font-bold opacity-50">
+                          {member.name.split(' ').map(n => n[0]).join('')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <div className="flex items-center justify-between mb-1">
+                      <h4 className="font-semibold text-lg text-[var(--aci-secondary)]">
+                        {member.name}
+                      </h4>
                       <a
                         href={member.linkedin_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-[var(--aci-primary)]"
+                        className="text-[#0077B5] hover:text-[#006396] transition-colors"
+                        aria-label={`${member.name}'s LinkedIn profile`}
                       >
                         <Linkedin className="w-5 h-5" />
                       </a>
-                    )}
+                    </div>
+                    <p className="text-sm text-[var(--aci-primary)]">{member.title}</p>
                   </div>
-                  <div className="text-sm text-[var(--aci-primary)] mb-3">{member.title}</div>
-                  <p className="text-sm text-gray-600">{member.bio}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
