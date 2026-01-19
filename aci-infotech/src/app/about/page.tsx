@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Linkedin, CheckCircle } from 'lucide-react';
+import { ArrowRight, Linkedin, CheckCircle, Target, Eye } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
+import ParallaxBalloons from '@/components/about/ParallaxBalloons';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
@@ -167,8 +168,55 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Who We Are Section */}
+      {/* Vision & Mission Section */}
       <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
+            {/* Vision */}
+            <div className="relative p-8 lg:p-10 bg-gradient-to-br from-[var(--aci-primary)]/5 to-[var(--aci-primary)]/10 rounded-2xl border border-[var(--aci-primary)]/20">
+              <div className="absolute -top-5 left-8">
+                <div className="w-10 h-10 bg-[var(--aci-primary)] rounded-xl flex items-center justify-center shadow-lg">
+                  <Eye className="w-5 h-5 text-white" />
+                </div>
+              </div>
+              <div className="pt-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)] mb-4">
+                  Our Vision
+                </h2>
+                <p className="text-lg md:text-xl text-gray-700 leading-relaxed font-medium">
+                  To be the engineering partner that Fortune 500s trust to turn ambitious technology strategies into production-grade reality, while setting the standard for what a modern, agile enterprise consultancy can achieve.
+                </p>
+                <p className="mt-4 text-gray-600">
+                  We envision a world where enterprises don't have to choose between scale and speed, between capability and cost. We're building that alternative.
+                </p>
+              </div>
+            </div>
+
+            {/* Mission */}
+            <div className="relative p-8 lg:p-10 bg-gradient-to-br from-[var(--aci-secondary)]/5 to-[var(--aci-secondary)]/10 rounded-2xl border border-[var(--aci-secondary)]/20">
+              <div className="absolute -top-5 left-8">
+                <div className="w-10 h-10 bg-[var(--aci-secondary)] rounded-xl flex items-center justify-center shadow-lg">
+                  <Target className="w-5 h-5 text-white" />
+                </div>
+              </div>
+              <div className="pt-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)] mb-4">
+                  Our Mission
+                </h2>
+                <p className="text-lg md:text-xl text-gray-700 leading-relaxed font-medium">
+                  To deliver production-grade data platforms, AI systems, and cloud architectures that drive measurable business outcomes, backed by SLAs and supported by engineers who stay.
+                </p>
+                <p className="mt-4 text-gray-600">
+                  Every system we build runs in production, carries accountability, and creates value you can measure. That's not a tagline. That's our operating model.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Who We Are Section */}
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -198,17 +246,13 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-            <div className="relative h-80 lg:h-96 bg-gray-100 rounded-xl overflow-hidden">
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--aci-primary)] to-[var(--aci-primary-dark)]">
-                <span className="text-white text-6xl font-bold opacity-20">ACI</span>
-              </div>
-            </div>
+            <ParallaxBalloons />
           </div>
         </div>
       </section>
 
       {/* How We Work Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
@@ -247,7 +291,7 @@ export default function AboutPage() {
       </section>
 
       {/* Capabilities Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
@@ -298,7 +342,7 @@ export default function AboutPage() {
       </section>
 
       {/* Leadership Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
@@ -348,7 +392,7 @@ export default function AboutPage() {
       </section>
 
       {/* Certifications Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)] mb-3">
