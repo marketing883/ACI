@@ -135,8 +135,8 @@ const leadershipTeam = [
   {
     name: 'Thomas George',
     title: 'AVP - Strategic Partnerships',
-    photo_url: null,
-    photo_webp: null,
+    photo_url: '/images/about-team/Thomas.png',
+    photo_webp: '/images/about-team/Thomas.webp',
     linkedin_url: 'https://www.linkedin.com/in/thomas-george-25bb5a61/',
   },
   {
