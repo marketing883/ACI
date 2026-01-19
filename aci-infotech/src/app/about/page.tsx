@@ -96,7 +96,7 @@ const ceo = {
 
 Under Jag's leadership, ACI has grown from a small team of passionate engineers to a 1,250+ strong global organization serving 80+ Fortune 500 clients. His vision is simple yet powerful: deliver production-grade systems that create measurable business value, backed by engineers who take ownership and stay accountable.
 
-"We don't just deliver projects—we build partnerships. When your system goes down at 2am, we're the team that answers the phone. That's not a policy. That's who we are."`,
+"We don't just deliver projects. We build partnerships. When your system goes down at 2am, we're the team that answers the phone. That's not a policy. That's who we are."`,
   photo_url: '/images/about-team/Jag.png',
   photo_webp: '/images/about-team/Jag.webp',
   linkedin_url: 'https://www.linkedin.com/in/jagannadhkanumuri/',

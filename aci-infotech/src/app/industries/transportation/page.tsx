@@ -109,8 +109,8 @@ export default function TransportationPage() {
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
             From global freight carriers to regional delivery fleets, we help transportation
-            and logistics companies optimize every mile—reducing costs, improving visibility,
-            and delivering the insights you need to stay competitive in a demanding market.
+            and logistics companies optimize every mile. We reduce costs, improve visibility,
+            and deliver the insights you need to stay competitive in a demanding market.
           </p>
 
           <div className="flex flex-wrap gap-4">

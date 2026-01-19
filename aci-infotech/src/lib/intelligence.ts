@@ -231,7 +231,9 @@ Return a JSON object with this EXACT structure (no markdown, just JSON):
   }
 }
 
-Be specific, not generic. Make reasonable inferences. If data is sparse, note lower confidence.`;
+Be specific, not generic. Make reasonable inferences. If data is sparse, note lower confidence.
+
+CRITICAL FORMATTING: Never use em dashes (—) or en dashes (–) in any text content. Use commas, semicolons, colons, or periods instead. Use "to" for ranges. Use hyphens only for compound words.`;
 
   try {
     const anthropic = new Anthropic({

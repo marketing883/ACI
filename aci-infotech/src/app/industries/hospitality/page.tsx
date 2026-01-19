@@ -110,7 +110,7 @@ export default function HospitalityPage() {
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
             From global food service operators to boutique hotel groups, we help hospitality
             companies unify their data, personalize guest experiences, and optimize operations
-            across every location—delivering the insights you need to serve customers better.
+            across every location. We deliver the insights you need to serve customers better.
           </p>
 
           <div className="flex flex-wrap gap-4">
