@@ -366,7 +366,6 @@ export default function CaseStudiesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isRealData, setIsRealData] = useState(false);
 
   // Helper to parse JSON fields that might be stored as strings
   const parseJsonField = <T,>(value: T | string | null | undefined, fallback: T): T => {
@@ -393,7 +392,6 @@ export default function CaseStudiesPage() {
         if (result.error) {
           console.error('Error fetching case studies:', result.error);
           setCaseStudies(demoCaseStudies);
-          setIsRealData(false);
         } else if (result.caseStudies && result.caseStudies.length > 0) {
           // Transform database format to card component format
           interface DbCaseStudy {
@@ -449,18 +447,14 @@ export default function CaseStudiesPage() {
           });
 
           setCaseStudies(transformedCaseStudies);
-          setIsRealData(true);
         } else if (result.demo) {
           setCaseStudies(demoCaseStudies);
-          setIsRealData(false);
         } else {
           setCaseStudies(demoCaseStudies);
-          setIsRealData(false);
         }
       } catch (error) {
         console.error('Error fetching case studies:', error);
         setCaseStudies(demoCaseStudies);
-        setIsRealData(false);
       }
 
       setIsLoading(false);
@@ -585,20 +579,7 @@ export default function CaseStudiesPage() {
         </section>
       )}
 
-      {/* Results Count */}
-      {!isLoading && (
-        <section className="py-6 bg-white border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-gray-600">
-              Showing <span className="font-semibold text-[var(--aci-secondary)]">{filteredStudies.length}</span> case studies
-              {selectedIndustry !== 'All' && <span> in <span className="font-semibold">{selectedIndustry}</span></span>}
-              {selectedService !== 'All' && <span> for <span className="font-semibold">{selectedService}</span></span>}
-              {isRealData && <span className="ml-2 text-green-600 text-sm">(Live data)</span>}
-            </p>
-          </div>
-        </section>
-      )}
-
+      
       {/* Latest Case Studies Hero */}
       {!isLoading && latestStudies.length > 0 && selectedIndustry === 'All' && selectedService === 'All' && searchQuery === '' && (
         <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
