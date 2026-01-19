@@ -117,7 +117,7 @@ const leadershipTeam = [
     photo_url: '/images/about-team/Habib--1--1.png',
     photo_webp: '/images/about-team/Habib--1--1.png',
     linkedin_url: 'https://www.linkedin.com/in/hmehmoodi/',
-    imageClass: 'scale-[0.85] object-[center_25%]',
+    imageClass: 'scale-[0.75] object-[center_10%]',
   },
   {
     name: 'Amit Alshaikh',
