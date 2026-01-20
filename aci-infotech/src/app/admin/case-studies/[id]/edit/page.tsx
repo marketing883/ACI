@@ -177,6 +177,29 @@ export default function EditCaseStudyPage() {
       return;
     }
 
+    // Get the current value of the field being enhanced
+    let currentFieldValue = '';
+    switch (field) {
+      case 'excerpt':
+        currentFieldValue = excerpt;
+        break;
+      case 'challenge':
+        currentFieldValue = challenge;
+        break;
+      case 'solution':
+        currentFieldValue = solution;
+        break;
+      case 'results':
+        currentFieldValue = results;
+        break;
+      case 'meta_title':
+        currentFieldValue = metaTitle;
+        break;
+      case 'meta_description':
+        currentFieldValue = metaDescription;
+        break;
+    }
+
     setGenerating(field);
     try {
       const response = await fetch('/api/admin/content-generate', {
@@ -192,6 +215,8 @@ export default function EditCaseStudyPage() {
             technologies: technologies.split(',').map(t => t.trim()),
             existingContent: `${challenge}\n\n${solution}\n\n${results}`,
             existingMetrics: metrics.filter(m => m.label && m.value),
+            // Pass the current field value for enhancement
+            currentFieldValue: currentFieldValue.trim(),
           },
         }),
       });

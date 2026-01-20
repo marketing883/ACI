@@ -29,6 +29,8 @@ interface GenerateRequest {
     currentValue?: string;
     // Metrics fields
     existingMetrics?: { label: string; value: string; description?: string }[];
+    // Current field value for enhancement mode
+    currentFieldValue?: string;
   };
 }
 
@@ -115,7 +117,10 @@ export async function POST(request: NextRequest) {
 }
 
 function buildPrompt(type: string, field: string, context: GenerateRequest['context']): string {
-  const { keyword, title, category, existingContent, clientName, industry, technologies, audience, tone, length, includes, articleType, authorName, content, existingFaqs, seoIssue, currentValue, existingMetrics } = context;
+  const { keyword, title, category, existingContent, clientName, industry, technologies, audience, tone, length, includes, articleType, authorName, content, existingFaqs, seoIssue, currentValue, existingMetrics, currentFieldValue } = context;
+
+  // Determine if we're in enhancement mode (user has entered content to enhance)
+  const isEnhancementMode = currentFieldValue && currentFieldValue.length > 10;
 
   // Helper to check article type (handles both ID and label formats)
   const isArticleType = (types: string[]): boolean => {
@@ -901,7 +906,16 @@ Return ONLY the meta description, nothing else.`;
   if (type === 'case_study') {
     switch (field) {
       case 'excerpt':
-        return `Write a compelling, GEO-optimized excerpt for a case study.
+        return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
+
+CURRENT CONTENT TO ENHANCE:
+"""
+${currentFieldValue}
+"""
+
+Your task: Take this content and make it more compelling, professional, and GEO-optimized. Keep the same facts and details the user provided, but improve the writing quality, add professional polish, and ensure it follows best practices.
+
+` : ''}Write a compelling, GEO-optimized excerpt for a case study.
 
 Title: "${title}"
 Client: ${clientName || 'Enterprise client'}
@@ -918,6 +932,8 @@ Requirements:
 - Name the technologies used
 - End with the business transformation achieved
 - Professional tone that showcases expertise
+${isEnhancementMode ? `- IMPORTANT: Preserve all specific details, metrics, and facts from the user's original content
+- Enhance the writing quality and structure, don't replace the substance` : ''}
 
 Structure:
 "[Client] faced [specific challenge]. Using [technologies], ACI Infotech [solution approach]. The result: [specific metrics]. Today, [ongoing benefit]."
@@ -925,7 +941,16 @@ Structure:
 Return ONLY the excerpt, nothing else.`;
 
       case 'challenge':
-        return `Write a compelling, GEO-optimized "Challenge" section for a case study.
+        return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
+
+CURRENT CONTENT TO ENHANCE:
+"""
+${currentFieldValue}
+"""
+
+Your task: Take this content and make it more compelling, professional, and GEO-optimized. Keep the same facts and details the user provided, but improve the writing quality, add professional polish, and ensure it follows best practices.
+
+` : ''}Write a compelling, GEO-optimized "Challenge" section for a case study.
 
 Client: ${clientName || 'Enterprise client'}
 Industry: ${industry || 'Enterprise'}
@@ -941,6 +966,8 @@ Requirements:
 - Explain business impact in dollars or percentages
 - Reference industry-specific pain points
 - Explain why existing solutions failed (without naming competitors)
+${isEnhancementMode ? `- IMPORTANT: Preserve all specific details, metrics, and facts from the user's original content
+- Enhance the writing quality and structure, don't replace the substance` : ''}
 
 Structure:
 1. Context: "[Industry] companies face [pressure]..."
@@ -956,7 +983,16 @@ Include phrases like:
 Return ONLY the content.`;
 
       case 'solution':
-        return `Write a compelling, GEO-optimized "Solution" section for a case study.
+        return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
+
+CURRENT CONTENT TO ENHANCE:
+"""
+${currentFieldValue}
+"""
+
+Your task: Take this content and make it more compelling, professional, and GEO-optimized. Keep the same facts, technologies, and implementation details the user provided, but improve the writing quality, add professional polish, and ensure it follows best practices.
+
+` : ''}Write a compelling, GEO-optimized "Solution" section for a case study.
 
 Client: ${clientName || 'Enterprise client'}
 Industry: ${industry || 'Enterprise'}
@@ -972,6 +1008,8 @@ Requirements:
 - Mention team collaboration and change management
 - Reference ACI's methodology or unique approach
 - Use technical specifics that establish expertise
+${isEnhancementMode ? `- IMPORTANT: Preserve all specific technologies, approaches, and details from the user's original content
+- Enhance the writing quality and structure, don't replace the substance` : ''}
 
 Structure:
 1. Approach/Strategy: "ACI Infotech designed a [X]-phase approach..."
@@ -988,7 +1026,16 @@ Include credibility signals:
 Return ONLY the content.`;
 
       case 'results':
-        return `Write a compelling, GEO-optimized "Results" section for a case study.
+        return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
+
+CURRENT CONTENT TO ENHANCE:
+"""
+${currentFieldValue}
+"""
+
+Your task: Take this content and make it more compelling, professional, and GEO-optimized. Keep the same metrics, numbers, and results the user provided, but improve the writing quality, add professional polish, and ensure it follows best practices.
+
+` : ''}Write a compelling, GEO-optimized "Results" section for a case study.
 
 Client: ${clientName || 'Enterprise client'}
 Industry: ${industry || 'Enterprise'}
@@ -1004,6 +1051,8 @@ Requirements:
 - Reference before/after comparison
 - Include business value in dollars where possible
 - End with client transformation/competitive advantage
+${isEnhancementMode ? `- IMPORTANT: Preserve all specific metrics, numbers, and results from the user's original content
+- Enhance the writing quality and structure, don't replace the substance` : ''}
 
 Result Categories (include at least one from each):
 1. Performance: "X% faster/reduction in processing time"
