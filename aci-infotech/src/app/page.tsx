@@ -28,25 +28,21 @@ const testimonials = [
     quote: "I'm thrilled with our Data Team's achievement at ACI Infotech. They've flawlessly delivered top-tier Digital Data to Altria, marking a critical milestone for RaceTrac. Their dedication and expertise have made ACI Infotech a valuable partner to RaceTrac.",
     author: 'Director of Data and MarTech',
     company: 'RaceTrac',
-    company_logo: '/images/clients/racetrac-logo.svg',
   },
   {
     quote: "I'm extremely satisfied with ACI Infotech, especially their work on IICS Informatica and MDM integrations. Their commitment to deliverables without compromising quality is impressive. It's a pleasure working with such a dedicated, professional team.",
     author: 'Senior Director',
     company: 'Sodexo',
-    company_logo: '/images/clients/sodexo-logo.svg',
   },
   {
     quote: "It was truly a pleasure working with ACI Infotech. I am really impressed by the quality of the services Arcadia University received from ACI. Jag and the team have significantly contributed to the process of identifying the best ways to add values to the institution.",
     author: 'Interim CIO',
     company: 'Arcadia University',
-    company_logo: '/images/clients/arcadia-logo.svg',
   },
   {
     quote: "ACI Infotech's dedicated resources consistently deliver excellent work quality, exceeding our expectations. Their dedicated onshore and onsite resources have been commendable, consistently demonstrating excellence.",
     author: 'Director',
     company: 'Gen II',
-    company_logo: '/images/clients/genii-logo.svg',
   },
 ];
 
