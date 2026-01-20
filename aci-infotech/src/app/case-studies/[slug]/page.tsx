@@ -4,8 +4,35 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, CheckCircle2, Quote, ExternalLink } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { createClient } from '@supabase/supabase-js';
 
-// Case study data - in production, fetch from Supabase
+// Supabase client for server-side fetching
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+// Fetch case study from Supabase by slug
+async function getCaseStudyBySlug(slug: string) {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return null;
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+  const { data, error } = await supabase
+    .from('case_studies')
+    .select('*')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return data;
+}
+
+// Legacy hardcoded case study data (fallback for old URLs)
 const caseStudiesData: Record<string, CaseStudyDetail> = {
   'msci-data-automation': {
     slug: 'msci-data-automation',
@@ -203,6 +230,17 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+
+  // First try Supabase
+  const dbStudy = await getCaseStudyBySlug(slug);
+  if (dbStudy) {
+    return {
+      title: dbStudy.meta_title || `${dbStudy.client_name} Case Study | ${dbStudy.title} | ACI Infotech`,
+      description: dbStudy.meta_description || dbStudy.excerpt || dbStudy.challenge?.substring(0, 160),
+    };
+  }
+
+  // Fallback to hardcoded data
   const study = caseStudiesData[slug];
 
   if (!study) {
@@ -219,6 +257,234 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CaseStudyPage({ params }: PageProps) {
   const { slug } = await params;
+
+  // First try to fetch from Supabase (CMS-created case studies)
+  const dbStudy = await getCaseStudyBySlug(slug);
+
+  // If found in Supabase, render the CMS version
+  if (dbStudy) {
+    // Parse metrics if stored as JSON string
+    const metrics = Array.isArray(dbStudy.metrics)
+      ? dbStudy.metrics
+      : typeof dbStudy.metrics === 'string'
+        ? JSON.parse(dbStudy.metrics)
+        : [];
+
+    // Parse technologies if stored as array or string
+    const technologies = Array.isArray(dbStudy.technologies)
+      ? dbStudy.technologies
+      : typeof dbStudy.technologies === 'string'
+        ? dbStudy.technologies.split(',').map((t: string) => t.trim())
+        : [];
+
+    // Parse services if stored as array
+    const services = Array.isArray(dbStudy.services) ? dbStudy.services : [];
+
+    return (
+      <main className="min-h-screen">
+        {/* Hero Section */}
+        <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Breadcrumb */}
+            <Link
+              href="/case-studies"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Case Studies
+            </Link>
+
+            <div className="flex items-center gap-4 mb-6">
+              {dbStudy.client_logo_url ? (
+                <Image
+                  src={dbStudy.client_logo_url}
+                  alt={`${dbStudy.client_name} logo`}
+                  width={120}
+                  height={48}
+                  className="object-contain brightness-0 invert"
+                />
+              ) : (
+                <span className="text-2xl font-bold text-white">{dbStudy.client_name}</span>
+              )}
+              <div className="flex gap-2">
+                {dbStudy.industry && (
+                  <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm rounded">{dbStudy.industry}</span>
+                )}
+                {services[0] && (
+                  <span className="px-3 py-1 bg-[var(--aci-primary)] text-white text-sm rounded">{services[0]}</span>
+                )}
+              </div>
+            </div>
+
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              {dbStudy.title}
+            </h1>
+            {dbStudy.excerpt && (
+              <p className="text-xl text-gray-400">
+                {dbStudy.excerpt}
+              </p>
+            )}
+
+            {/* Quick Stats */}
+            {metrics.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 pt-8 border-t border-gray-700">
+                {metrics.slice(0, 4).map((metric: { value: string; label: string }, index: number) => (
+                  <div key={index}>
+                    <div className="text-2xl font-bold text-[var(--aci-primary-light)]">{metric.value}</div>
+                    <div className="text-sm text-gray-400">{metric.label}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Results Highlight */}
+        {metrics.length > 0 && (
+          <section className="py-16 bg-[var(--aci-primary)]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-center text-white text-lg font-medium mb-8">Key Results</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                {metrics.slice(0, 4).map((metric: { value: string; label: string; description?: string }, index: number) => (
+                  <div key={index} className="text-center">
+                    <div className="text-4xl md:text-5xl font-bold text-white mb-2">{metric.value}</div>
+                    <div className="text-blue-100">{metric.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Challenge Section */}
+        {dbStudy.challenge && (
+          <section className="py-20 bg-white">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                  <span className="text-2xl">🎯</span>
+                </div>
+                <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">The Challenge</h2>
+              </div>
+              <div className="text-lg text-gray-600 prose prose-lg max-w-none">
+                {dbStudy.challenge.split('\n').map((paragraph: string, index: number) => (
+                  <p key={index} className="mb-4">{paragraph}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Solution Section */}
+        {dbStudy.solution && (
+          <section className="py-20 bg-gray-50">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                  <span className="text-2xl">💡</span>
+                </div>
+                <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Our Solution</h2>
+              </div>
+              <div className="text-lg text-gray-600 prose prose-lg max-w-none">
+                {dbStudy.solution.split('\n').map((paragraph: string, index: number) => (
+                  <p key={index} className="mb-4">{paragraph}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Technologies */}
+        {technologies.length > 0 && (
+          <section className="py-16 bg-white border-y">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-6">Technologies Used</h2>
+              <div className="flex flex-wrap gap-3">
+                {technologies.map((tech: string) => (
+                  <span
+                    key={tech}
+                    className="px-4 py-2 bg-gray-100 rounded-lg text-gray-700 font-medium"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Results Section */}
+        {dbStudy.results && (
+          <section className="py-20 bg-gray-50">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <span className="text-2xl">📊</span>
+                </div>
+                <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Results & Impact</h2>
+              </div>
+              <div className="text-lg text-gray-600 prose prose-lg max-w-none">
+                {dbStudy.results.split('\n').map((paragraph: string, index: number) => (
+                  <p key={index} className="mb-4">{paragraph}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Testimonial */}
+        {dbStudy.testimonial_quote && (
+          <section className="py-20 bg-[var(--aci-secondary)]">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="relative">
+                <Quote className="w-16 h-16 text-[var(--aci-primary)] opacity-50 mb-6" />
+                <blockquote className="text-2xl md:text-3xl text-white font-light leading-relaxed mb-8">
+                  "{dbStudy.testimonial_quote}"
+                </blockquote>
+                {(dbStudy.testimonial_author || dbStudy.testimonial_title) && (
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-[var(--aci-primary)] rounded-full flex items-center justify-center text-white font-bold">
+                      {dbStudy.testimonial_author?.charAt(0) || 'C'}
+                    </div>
+                    <div>
+                      {dbStudy.testimonial_author && (
+                        <div className="font-semibold text-white">{dbStudy.testimonial_author}</div>
+                      )}
+                      {dbStudy.testimonial_title && (
+                        <div className="text-gray-400">{dbStudy.testimonial_title}</div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* CTA Section */}
+        <section className="py-20 bg-[var(--aci-primary)]">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              Ready to Achieve Similar Results?
+            </h2>
+            <p className="text-xl text-blue-100 mb-8">
+              Let's discuss how we can apply our expertise to your challenges.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
+                Schedule Architecture Call
+              </Button>
+              <Button href="/case-studies" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
+                View More Case Studies
+              </Button>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  // Fallback to hardcoded data for legacy case studies
   const study = caseStudiesData[slug];
 
   if (!study) {
