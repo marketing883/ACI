@@ -296,7 +296,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
             </Link>
 
             <div className="flex items-center gap-4 mb-6">
-              {dbStudy.client_logo_url ? (
+              {dbStudy.client_logo_url && dbStudy.client_logo_url.trim() !== '' && dbStudy.client_logo_url.startsWith('http') ? (
                 <Image
                   src={dbStudy.client_logo_url}
                   alt={`${dbStudy.client_name} logo`}

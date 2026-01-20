@@ -25,53 +25,53 @@ import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleAn
 
 const capabilities = [
   {
-    icon: Database,
-    title: 'Dynamics 365',
-    items: ['Sales', 'Customer Service', 'Field Service', 'Finance & Operations', 'Business Central'],
-  },
-  {
-    icon: BarChart3,
-    title: 'Power BI',
-    items: ['Interactive Dashboards', 'Real-time Analytics', 'Embedded Reports', 'AI Insights'],
-  },
-  {
-    icon: Zap,
-    title: 'Power Apps',
-    items: ['Custom Business Apps', 'Model-driven Apps', 'Canvas Apps', 'Portals'],
-  },
-  {
-    icon: Workflow,
-    title: 'Power Automate',
-    items: ['Workflow Automation', 'RPA Bots', 'Business Process Flows', 'Approvals'],
-  },
-  {
     icon: Bot,
-    title: 'Power Virtual Agents',
-    items: ['AI Chatbots', 'Customer Self-service', 'Internal Help Desk', 'Copilot Integration'],
+    title: 'Microsoft Copilot',
+    items: ['Copilot for Dynamics 365', 'Copilot Studio', 'Copilot for Power Platform', 'Custom AI Agents'],
+  },
+  {
+    icon: Database,
+    title: 'Dynamics 365 AI ERP',
+    items: ['Finance & Supply Chain', 'Business Central', 'Customer Insights', 'Intelligent Order Management'],
   },
   {
     icon: TrendingUp,
-    title: 'Integration',
-    items: ['Azure Services', 'Dataverse', 'Third-party Connectors', 'Custom APIs'],
+    title: 'Dynamics 365 CRM',
+    items: ['Sales', 'Customer Service', 'Field Service', 'Marketing'],
+  },
+  {
+    icon: BarChart3,
+    title: 'Microsoft Fabric',
+    items: ['Unified Data Platform', 'Real-time Analytics', 'Data Warehouse', 'Power BI Integration'],
+  },
+  {
+    icon: Zap,
+    title: 'Power Platform',
+    items: ['Power Apps', 'Power Automate', 'Power Pages', 'Power Virtual Agents'],
+  },
+  {
+    icon: Workflow,
+    title: 'Integration & AI',
+    items: ['Azure OpenAI Service', 'Dataverse', 'Azure Integration Services', 'Custom Connectors'],
   },
 ];
 
 const sessionDeliverables = [
   {
     title: 'Current State Assessment',
-    description: 'We map your existing systems, pain points, and process gaps',
+    description: 'We map your existing systems, AI readiness, and process gaps',
   },
   {
     title: '90-Day Implementation Roadmap',
-    description: 'A prioritized action plan with clear milestones and quick wins',
+    description: 'A prioritized action plan with Copilot quick wins and milestones',
   },
   {
     title: 'Technology Recommendations',
-    description: 'Which Dynamics 365 and Power Platform components fit your needs',
+    description: 'Which Dynamics 365, Copilot, and Fabric components fit your needs',
   },
   {
     title: 'Budget Guidance',
-    description: 'Realistic cost ranges based on your specific requirements',
+    description: 'Realistic cost ranges including AI licensing considerations',
   },
 ];
 
@@ -171,12 +171,12 @@ export default function MicrosoftDynamicsPage() {
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                Microsoft Dynamics &<br />
-                <span className="text-[#00A4EF]">Power Platform</span>
+                Microsoft Dynamics,<br />
+                <span className="text-[#00A4EF]">Copilot & Power Platform</span>
               </h1>
 
               <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-                Stop guessing. Get a clear roadmap for your Power Platform implementation
+                Accelerate with AI. Get a clear roadmap for Dynamics 365, Copilot, and Power Platform
                 in a 30-minute strategy session with our senior architects.
               </p>
 
@@ -403,7 +403,7 @@ export default function MicrosoftDynamicsPage() {
               Our Microsoft Practice
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              End-to-end implementation across the entire Microsoft business applications ecosystem.
+              End-to-end implementation across Dynamics 365, Copilot, Fabric, and the entire Microsoft AI-powered business ecosystem.
             </p>
           </div>
 
