@@ -937,13 +937,12 @@ ${isEnhancementMode ? `- IMPORTANT: Preserve all specific details, metrics, and 
 
 Follow this general flow: Client faced challenge. Using technologies, ACI Infotech implemented solution. The result: specific metrics. Today, ongoing benefit.
 
-CRITICAL FORMATTING RULES:
-- Do NOT use any Markdown formatting (no #, ##, **, *, -, bullet points, etc.)
-- Write in plain prose only
-- No headers, titles, or lists
-- Just a flowing paragraph
+FORMATTING GUIDELINES:
+- Write in plain prose for excerpts (1-2 paragraphs)
+- You may use **bold** to emphasize key metrics or results
+- Keep it concise and scannable
 
-Return ONLY plain text content with no formatting whatsoever.`;
+Return ONLY the excerpt content.`;
 
       case 'challenge':
         return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
@@ -974,20 +973,20 @@ Requirements:
 ${isEnhancementMode ? `- IMPORTANT: Preserve all specific details, metrics, and facts from the user's original content
 - Enhance the writing quality and structure, don't replace the substance` : ''}
 
-Write in flowing prose paragraphs. Cover these points naturally:
+Cover these points in your content:
 - Context about industry pressures
 - Specific technical limitations and their business impact
 - Operational inefficiencies and costs
 - Competitive/market pressures
 
-CRITICAL FORMATTING RULES:
-- Do NOT use any Markdown formatting (no #, ##, **, *, -, bullet points, etc.)
-- Do NOT use headers or titles
-- Write in plain prose paragraphs ONLY
-- No lists of any kind
-- Just flowing, professional paragraphs separated by line breaks
+FORMATTING GUIDELINES:
+- You may use Markdown formatting for better readability
+- Use **bold** to emphasize key challenges or metrics
+- Use bullet points or numbered lists to organize multiple challenges
+- Use ### subheadings if covering distinct challenge areas
+- Keep paragraphs focused and scannable
 
-Return ONLY plain text content with no formatting whatsoever.`;
+Return the formatted content.`;
 
       case 'solution':
         return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
@@ -1018,21 +1017,21 @@ Requirements:
 ${isEnhancementMode ? `- IMPORTANT: Preserve all specific technologies, approaches, and details from the user's original content
 - Enhance the writing quality and structure, don't replace the substance` : ''}
 
-Write in flowing prose paragraphs. Cover these points naturally:
+Cover these points in your content:
 - The approach and strategy ACI Infotech designed
 - Technology architecture and how it was configured
 - Implementation milestones and challenges overcome
 - What made this solution unique
 - How ACI collaborated with client teams
 
-CRITICAL FORMATTING RULES:
-- Do NOT use any Markdown formatting (no #, ##, **, *, -, bullet points, etc.)
-- Do NOT use headers or titles
-- Write in plain prose paragraphs ONLY
-- No lists of any kind
-- Just flowing, professional paragraphs separated by line breaks
+FORMATTING GUIDELINES:
+- You may use Markdown formatting for better readability
+- Use **bold** to emphasize key technologies or approaches
+- Use bullet points or numbered lists to organize solution components
+- Use ### subheadings for distinct phases or aspects of the solution
+- Keep paragraphs focused and scannable
 
-Return ONLY plain text content with no formatting whatsoever.`;
+Return the formatted content.`;
 
       case 'results':
         return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
@@ -1063,21 +1062,20 @@ Requirements:
 ${isEnhancementMode ? `- IMPORTANT: Preserve all specific metrics, numbers, and results from the user's original content
 - Enhance the writing quality and structure, don't replace the substance` : ''}
 
-Write in flowing prose paragraphs. Include results from these categories naturally:
+Include results from these categories:
 - Performance improvements (speed, processing time)
 - Cost savings (annual savings, operational costs)
 - Efficiency gains (hours saved, productivity)
 - Business impact (revenue enabled, time to market)
 
-CRITICAL FORMATTING RULES:
-- Do NOT use any Markdown formatting (no #, ##, **, *, -, bullet points, etc.)
-- Do NOT use headers or titles
-- Write in plain prose paragraphs ONLY
-- No lists of any kind
-- Just flowing, professional paragraphs separated by line breaks
-- Mention metrics naturally within sentences, not as formatted highlights
+FORMATTING GUIDELINES:
+- You may use Markdown formatting for better readability
+- Use **bold** to emphasize key metrics and results (e.g., **40% reduction**, **$2M savings**)
+- Use bullet points or numbered lists to organize distinct results
+- Use ### subheadings to categorize results (e.g., Performance, Cost Savings, Business Impact)
+- Keep the content scannable and impactful
 
-Return ONLY plain text content with no formatting whatsoever.`;
+Return the formatted content.`;
 
       case 'meta_title':
         return `Generate an AEO-optimized meta title for a case study.

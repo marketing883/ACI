@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, CheckCircle2, Quote, ExternalLink } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { createClient } from '@supabase/supabase-js';
+import ReactMarkdown from 'react-markdown';
 
 // Supabase client for server-side fetching
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -366,10 +367,8 @@ export default async function CaseStudyPage({ params }: PageProps) {
                 </div>
                 <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">The Challenge</h2>
               </div>
-              <div className="text-lg text-gray-600 prose prose-lg max-w-none">
-                {dbStudy.challenge.split('\n').map((paragraph: string, index: number) => (
-                  <p key={index} className="mb-4">{paragraph}</p>
-                ))}
+              <div className="text-lg text-gray-600 prose prose-lg max-w-none prose-headings:text-[var(--aci-secondary)] prose-headings:font-bold prose-strong:text-gray-800 prose-ul:list-disc prose-ol:list-decimal prose-li:text-gray-600">
+                <ReactMarkdown>{dbStudy.challenge}</ReactMarkdown>
               </div>
             </div>
           </section>
@@ -385,10 +384,8 @@ export default async function CaseStudyPage({ params }: PageProps) {
                 </div>
                 <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Our Solution</h2>
               </div>
-              <div className="text-lg text-gray-600 prose prose-lg max-w-none">
-                {dbStudy.solution.split('\n').map((paragraph: string, index: number) => (
-                  <p key={index} className="mb-4">{paragraph}</p>
-                ))}
+              <div className="text-lg text-gray-600 prose prose-lg max-w-none prose-headings:text-[var(--aci-secondary)] prose-headings:font-bold prose-strong:text-gray-800 prose-ul:list-disc prose-ol:list-decimal prose-li:text-gray-600">
+                <ReactMarkdown>{dbStudy.solution}</ReactMarkdown>
               </div>
             </div>
           </section>
@@ -423,10 +420,8 @@ export default async function CaseStudyPage({ params }: PageProps) {
                 </div>
                 <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Results & Impact</h2>
               </div>
-              <div className="text-lg text-gray-600 prose prose-lg max-w-none">
-                {dbStudy.results.split('\n').map((paragraph: string, index: number) => (
-                  <p key={index} className="mb-4">{paragraph}</p>
-                ))}
+              <div className="text-lg text-gray-600 prose prose-lg max-w-none prose-headings:text-[var(--aci-secondary)] prose-headings:font-bold prose-strong:text-gray-800 prose-ul:list-disc prose-ol:list-decimal prose-li:text-gray-600">
+                <ReactMarkdown>{dbStudy.results}</ReactMarkdown>
               </div>
             </div>
           </section>

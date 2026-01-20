@@ -458,8 +458,8 @@ export default function MicrosoftDynamicsPage() {
                   href="#"
                   variant="primary"
                   size="lg"
-                  onClick={(e: React.MouseEvent) => {
-                    e.preventDefault();
+                  onClick={(e) => {
+                    e?.preventDefault();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
@@ -484,8 +484,8 @@ export default function MicrosoftDynamicsPage() {
             href="#"
             variant="secondary"
             size="lg"
-            onClick={(e: React.MouseEvent) => {
-              e.preventDefault();
+            onClick={(e) => {
+              e?.preventDefault();
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >

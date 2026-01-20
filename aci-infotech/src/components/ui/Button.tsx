@@ -12,7 +12,7 @@ export interface ButtonProps {
   fullWidth?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent) => void;
   href?: string;
   target?: '_blank' | '_self';
   type?: 'button' | 'submit' | 'reset';
