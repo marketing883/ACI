@@ -485,7 +485,8 @@ export default function CaseStudiesPage() {
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               80+ Enterprise Transformations.
-              <span className="text-[var(--aci-primary-light)]"> Real Results.</span>
+              <br />
+              <span className="text-[var(--aci-primary-light)]">Real Results.</span>
             </h1>
             <p className="text-xl text-gray-400 mb-8">
               Explore how we've helped Fortune 500 companies and industry leaders
