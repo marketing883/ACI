@@ -935,10 +935,15 @@ Requirements:
 ${isEnhancementMode ? `- IMPORTANT: Preserve all specific details, metrics, and facts from the user's original content
 - Enhance the writing quality and structure, don't replace the substance` : ''}
 
-Structure:
-"[Client] faced [specific challenge]. Using [technologies], ACI Infotech [solution approach]. The result: [specific metrics]. Today, [ongoing benefit]."
+Follow this general flow: Client faced challenge. Using technologies, ACI Infotech implemented solution. The result: specific metrics. Today, ongoing benefit.
 
-Return ONLY the excerpt, nothing else.`;
+CRITICAL FORMATTING RULES:
+- Do NOT use any Markdown formatting (no #, ##, **, *, -, bullet points, etc.)
+- Write in plain prose only
+- No headers, titles, or lists
+- Just a flowing paragraph
+
+Return ONLY plain text content with no formatting whatsoever.`;
 
       case 'challenge':
         return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
@@ -969,18 +974,20 @@ Requirements:
 ${isEnhancementMode ? `- IMPORTANT: Preserve all specific details, metrics, and facts from the user's original content
 - Enhance the writing quality and structure, don't replace the substance` : ''}
 
-Structure:
-1. Context: "[Industry] companies face [pressure]..."
-2. Challenge 1: Specific technical limitation + business impact
-3. Challenge 2: Operational inefficiency + cost
-4. Challenge 3: Competitive/market pressure
+Write in flowing prose paragraphs. Cover these points naturally:
+- Context about industry pressures
+- Specific technical limitations and their business impact
+- Operational inefficiencies and costs
+- Competitive/market pressures
 
-Include phrases like:
-- "Legacy systems were costing the company X in [downtime/manual effort]"
-- "Data silos meant Y decisions took Z days instead of hours"
-- "Without [capability], they were losing $X in [specific area]"
+CRITICAL FORMATTING RULES:
+- Do NOT use any Markdown formatting (no #, ##, **, *, -, bullet points, etc.)
+- Do NOT use headers or titles
+- Write in plain prose paragraphs ONLY
+- No lists of any kind
+- Just flowing, professional paragraphs separated by line breaks
 
-Return ONLY the content.`;
+Return ONLY plain text content with no formatting whatsoever.`;
 
       case 'solution':
         return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
@@ -1011,19 +1018,21 @@ Requirements:
 ${isEnhancementMode ? `- IMPORTANT: Preserve all specific technologies, approaches, and details from the user's original content
 - Enhance the writing quality and structure, don't replace the substance` : ''}
 
-Structure:
-1. Approach/Strategy: "ACI Infotech designed a [X]-phase approach..."
-2. Technology Architecture: "[Specific tech stack] configured for [use case]"
-3. Implementation: Key milestones and how challenges were overcome
-4. Innovation: What made this solution unique
-5. Collaboration: How ACI worked with client teams
+Write in flowing prose paragraphs. Cover these points naturally:
+- The approach and strategy ACI Infotech designed
+- Technology architecture and how it was configured
+- Implementation milestones and challenges overcome
+- What made this solution unique
+- How ACI collaborated with client teams
 
-Include credibility signals:
-- "Our team of [X] engineers..."
-- "Using our proven [methodology name]..."
-- "Based on patterns from 80+ similar implementations..."
+CRITICAL FORMATTING RULES:
+- Do NOT use any Markdown formatting (no #, ##, **, *, -, bullet points, etc.)
+- Do NOT use headers or titles
+- Write in plain prose paragraphs ONLY
+- No lists of any kind
+- Just flowing, professional paragraphs separated by line breaks
 
-Return ONLY the content.`;
+Return ONLY plain text content with no formatting whatsoever.`;
 
       case 'results':
         return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
@@ -1054,19 +1063,21 @@ Requirements:
 ${isEnhancementMode ? `- IMPORTANT: Preserve all specific metrics, numbers, and results from the user's original content
 - Enhance the writing quality and structure, don't replace the substance` : ''}
 
-Result Categories (include at least one from each):
-1. Performance: "X% faster/reduction in processing time"
-2. Cost: "$Xm annual savings" or "Y% reduction in operational costs"
-3. Efficiency: "Z hours saved per week" or "Team productivity up X%"
-4. Business: "New capability enabled $X in revenue" or "Time to market reduced by Y%"
+Write in flowing prose paragraphs. Include results from these categories naturally:
+- Performance improvements (speed, processing time)
+- Cost savings (annual savings, operational costs)
+- Efficiency gains (hours saved, productivity)
+- Business impact (revenue enabled, time to market)
 
-Format with specific metrics:
-- "**73% reduction** in data pipeline failures"
-- "**$2.3M annual savings** in infrastructure costs"
-- "**90% faster** report generation (from 4 hours to 24 minutes)"
-- "**40% improvement** in data engineer productivity"
+CRITICAL FORMATTING RULES:
+- Do NOT use any Markdown formatting (no #, ##, **, *, -, bullet points, etc.)
+- Do NOT use headers or titles
+- Write in plain prose paragraphs ONLY
+- No lists of any kind
+- Just flowing, professional paragraphs separated by line breaks
+- Mention metrics naturally within sentences, not as formatted highlights
 
-Return ONLY the content.`;
+Return ONLY plain text content with no formatting whatsoever.`;
 
       case 'meta_title':
         return `Generate an AEO-optimized meta title for a case study.
