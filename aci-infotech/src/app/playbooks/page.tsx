@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Download, Filter, BookOpen } from 'lucide-react';
+import { ArrowRight, Filter, BookOpen } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
 // Playbook data - matches PlaybookVaultSection
@@ -431,8 +431,8 @@ function PlaybookCard({ playbook }: PlaybookCardProps) {
           <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
             <BookOpen className="w-4 h-4" /> View Playbook
           </span>
-          <span className="text-gray-400 text-sm inline-flex items-center gap-1">
-            <Download className="w-4 h-4" /> PDF Available
+          <span className="text-gray-400 text-sm inline-flex items-center gap-1 group-hover:text-[var(--aci-primary)] transition-colors">
+            <ArrowRight className="w-4 h-4" />
           </span>
         </div>
       </div>
