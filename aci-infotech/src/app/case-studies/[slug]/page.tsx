@@ -296,17 +296,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
             </Link>
 
             <div className="flex items-center gap-4 mb-6">
-              {dbStudy.client_logo_url && dbStudy.client_logo_url.trim() !== '' && dbStudy.client_logo_url.startsWith('http') ? (
-                <Image
-                  src={dbStudy.client_logo_url}
-                  alt={`${dbStudy.client_name} logo`}
-                  width={120}
-                  height={48}
-                  className="object-contain brightness-0 invert"
-                />
-              ) : (
-                <span className="text-2xl font-bold text-white">{dbStudy.client_name}</span>
-              )}
+              <span className="text-2xl font-bold text-white">{dbStudy.client_name}</span>
               <div className="flex gap-2">
                 {dbStudy.industry && (
                   <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm rounded">{dbStudy.industry}</span>
@@ -321,9 +311,9 @@ export default async function CaseStudyPage({ params }: PageProps) {
               {dbStudy.title}
             </h1>
             {dbStudy.excerpt && (
-              <p className="text-xl text-gray-400">
-                {dbStudy.excerpt}
-              </p>
+              <div className="text-xl text-gray-400 prose prose-lg prose-invert max-w-none prose-strong:text-gray-300">
+                <ReactMarkdown>{dbStudy.excerpt}</ReactMarkdown>
+              </div>
             )}
 
             {/* Quick Stats */}
