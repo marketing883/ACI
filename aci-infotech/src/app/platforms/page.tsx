@@ -52,6 +52,18 @@ const platforms = [
     href: '/platforms/salesforce',
   },
   {
+    id: 'microsoft-dynamics',
+    name: 'Microsoft Dynamics',
+    logo: '/images/partners/microsoft.svg',
+    tagline: 'Copilot & Power Platform Experts',
+    description: 'Dynamics 365, Copilot, Power Platform, and Microsoft Fabric implementations. AI-powered business applications at enterprise scale.',
+    partnership: 'Microsoft Partner',
+    partnershipLevel: 'gold',
+    capabilities: ['Dynamics 365 CRM & ERP', 'Microsoft Copilot', 'Power Platform', 'Microsoft Fabric', 'Azure Integration'],
+    caseStudy: { client: 'Global Enterprise', result: '60% faster business processes' },
+    href: '/platforms/microsoft-dynamics',
+  },
+  {
     id: 'aws',
     name: 'Amazon Web Services',
     logo: '/images/partners/aws.svg',
@@ -86,6 +98,30 @@ const platforms = [
     capabilities: ['S/4HANA Migration', 'Integration Services', 'Data Migration', 'Change Management', 'Support Services'],
     caseStudy: { client: 'MSCI', result: '$12M operational savings' },
     href: '/platforms/sap',
+  },
+  {
+    id: 'servicenow',
+    name: 'ServiceNow',
+    logo: '/images/partners/servicenow.svg',
+    tagline: 'Digital Workflow Automation',
+    description: 'ServiceNow implementations for IT service management, HR, and enterprise workflows. Streamline operations with intelligent automation.',
+    partnership: 'Partner',
+    partnershipLevel: 'silver',
+    capabilities: ['ITSM Implementation', 'HR Service Delivery', 'Custom App Development', 'Integration Hub', 'AI-Powered Workflows'],
+    caseStudy: { client: 'Fortune 500 Company', result: '45% reduction in ticket resolution time' },
+    href: '/platforms/servicenow',
+  },
+  {
+    id: 'braze',
+    name: 'Braze',
+    logo: '/images/partners/braze.svg',
+    tagline: 'Customer Engagement Platform',
+    description: 'Braze implementations for personalized customer engagement across email, push, in-app, and more. Drive retention and lifetime value.',
+    partnership: 'Partner',
+    partnershipLevel: 'silver',
+    capabilities: ['Campaign Orchestration', 'Personalization', 'Data Integration', 'Analytics & Reporting', 'Cross-Channel Messaging'],
+    caseStudy: { client: 'Retail Brand', result: '35% increase in customer engagement' },
+    href: '/platforms/braze',
   },
 ];
 
@@ -166,9 +202,9 @@ export default function PlatformsPage() {
 
                 {/* Capabilities */}
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                  <h5 className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-3">
                     Key Capabilities
-                  </h3>
+                  </h5>
                   <div className="flex flex-wrap gap-2">
                     {platform.capabilities.map((cap) => (
                       <span key={cap} className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
@@ -203,7 +239,7 @@ export default function PlatformsPage() {
             We Also Work With
           </h2>
           <div className="flex flex-wrap justify-center gap-8">
-            {['ServiceNow', 'Adobe', 'Braze', 'Informatica', 'MuleSoft', 'Kafka', 'Terraform', 'Kubernetes'].map((name) => (
+            {['Informatica', 'MuleSoft', 'Kafka', 'Terraform', 'Kubernetes', 'Adobe', 'Tableau', 'dbt'].map((name) => (
               <div key={name} className="px-6 py-3 bg-gray-100 rounded-xl text-gray-700 font-medium">
                 {name}
               </div>
