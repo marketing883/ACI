@@ -985,6 +985,7 @@ FORMATTING GUIDELINES:
 - Use bullet points or numbered lists to organize multiple challenges
 - Use ### subheadings if covering distinct challenge areas
 - Keep paragraphs focused and scannable
+- IMPORTANT: Do NOT start with a heading like "The Challenge:" or "Challenge:" - the page already has section titles. Jump straight into the content.
 
 Return the formatted content.`;
 
@@ -1030,6 +1031,7 @@ FORMATTING GUIDELINES:
 - Use bullet points or numbered lists to organize solution components
 - Use ### subheadings for distinct phases or aspects of the solution
 - Keep paragraphs focused and scannable
+- IMPORTANT: Do NOT start with a heading like "The Solution:" or "Our Solution:" - the page already has section titles. Jump straight into the content.
 
 Return the formatted content.`;
 
@@ -1074,6 +1076,7 @@ FORMATTING GUIDELINES:
 - Use bullet points or numbered lists to organize distinct results
 - Use ### subheadings to categorize results (e.g., Performance, Cost Savings, Business Impact)
 - Keep the content scannable and impactful
+- IMPORTANT: Do NOT start with a heading like "Results:" or "The Results:" - the page already has section titles. Jump straight into the content.
 
 Return the formatted content.`;
 
