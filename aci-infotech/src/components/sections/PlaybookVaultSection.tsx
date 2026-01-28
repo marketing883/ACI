@@ -594,22 +594,9 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
               const IconComponent = IconMap[playbook.iconType];
               return (
                 <div
-                  className={`
-                    w-12 h-12 rounded-sm flex items-center justify-center
-                    shadow-lg transform group-hover:scale-110 transition-transform duration-300
-                  `}
-                  style={{
-                    background: playbook.gradient.includes('violet') ? 'linear-gradient(135deg, #8B5CF6, #9333EA)' :
-                               playbook.gradient.includes('cyan') ? 'linear-gradient(135deg, #06B6D4, #2563EB)' :
-                               playbook.gradient.includes('emerald') ? 'linear-gradient(135deg, #10B981, #0D9488)' :
-                               playbook.gradient.includes('amber') ? 'linear-gradient(135deg, #F59E0B, #EA580C)' :
-                               playbook.gradient.includes('rose') ? 'linear-gradient(135deg, #F43F5E, #EC4899)' :
-                               playbook.gradient.includes('lime') ? 'linear-gradient(135deg, #84CC16, #16A34A)' :
-                               playbook.gradient.includes('blue') ? 'linear-gradient(135deg, #3B82F6, #4F46E5)' :
-                               'linear-gradient(135deg, #D946EF, #9333EA)',
-                  }}
+                  className="w-10 h-10 rounded-lg flex items-center justify-center bg-white/5 border border-white/10 group-hover:border-white/20 transition-all duration-300"
                 >
-                  <IconComponent className="w-6 h-6 text-white" strokeWidth={1.5} />
+                  <IconComponent className="w-5 h-5 text-white/80 group-hover:text-white transition-colors" strokeWidth={1.5} />
                 </div>
               );
             })()}
@@ -622,9 +609,9 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
           </div>
 
           {/* Title */}
-          <h3 className="text-white font-semibold text-sm mb-2 group-hover:text-[#C4FF61] transition-colors duration-300">
+          <h5 className="text-white font-medium text-xs leading-tight mb-3 group-hover:text-[#C4FF61] transition-colors duration-300">
             {playbook.displayTitle}
-          </h3>
+          </h5>
 
           {/* Quick stats */}
           <div className="flex gap-2 mb-4">
@@ -782,19 +769,9 @@ function ExpandedPanel({ playbook, onClose }: ExpandedPanelProps) {
               const IconComponent = IconMap[playbook.iconType];
               return (
                 <div
-                  className="w-16 h-16 rounded-sm flex items-center justify-center shadow-2xl"
-                  style={{
-                    background: playbook.gradient.includes('violet') ? 'linear-gradient(135deg, #8B5CF6, #9333EA)' :
-                               playbook.gradient.includes('cyan') ? 'linear-gradient(135deg, #06B6D4, #2563EB)' :
-                               playbook.gradient.includes('emerald') ? 'linear-gradient(135deg, #10B981, #0D9488)' :
-                               playbook.gradient.includes('amber') ? 'linear-gradient(135deg, #F59E0B, #EA580C)' :
-                               playbook.gradient.includes('rose') ? 'linear-gradient(135deg, #F43F5E, #EC4899)' :
-                               playbook.gradient.includes('lime') ? 'linear-gradient(135deg, #84CC16, #16A34A)' :
-                               playbook.gradient.includes('blue') ? 'linear-gradient(135deg, #3B82F6, #4F46E5)' :
-                               'linear-gradient(135deg, #D946EF, #9333EA)',
-                  }}
+                  className="w-14 h-14 rounded-xl flex items-center justify-center bg-white/5 border border-white/10"
                 >
-                  <IconComponent className="w-8 h-8 text-white" strokeWidth={1.5} />
+                  <IconComponent className="w-7 h-7 text-white/90" strokeWidth={1.5} />
                 </div>
               );
             })()}
