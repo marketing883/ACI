@@ -166,7 +166,7 @@ export default function HeroSection() {
 
             {/* Two-line headline with staggered animation */}
             <div className="flex flex-col">
-              {/* Line 1: We're BUILT Different - 84px */}
+              {/* Line 1: Modernizing the */}
               <h1
                 className="font-bold text-white font-[var(--font-title)]"
                 style={{
@@ -179,23 +179,24 @@ export default function HeroSection() {
                   transition: 'opacity 200ms ease-out, transform 200ms ease-out',
                 }}
               >
-                We're <span style={{ color: '#C4FF61' }}>BUILT</span> Different
+                Modernizing the
               </h1>
 
-              {/* Line 2: We BUILD Different - 96px */}
+              {/* Line 2: Global Enterprise. - lime green */}
               <h1
-                className="font-bold text-white font-[var(--font-title)]"
+                className="font-bold font-[var(--font-title)]"
                 style={{
                   fontSize: 'clamp(48px, 8vw, 96px)',
                   lineHeight: 1.1,
                   letterSpacing: '-0.02em',
                   WebkitFontSmoothing: 'antialiased',
+                  color: '#C4FF61',
                   opacity: animationStarted ? 1 : 0,
                   transform: animationStarted ? 'translateY(0)' : 'translateY(20px)',
                   transition: 'opacity 200ms ease-out 100ms, transform 200ms ease-out 100ms',
                 }}
               >
-                We <span style={{ color: '#C4FF61' }}>BUILD Different</span>
+                Global Enterprise.
               </h1>
             </div>
           </div>
@@ -220,7 +221,7 @@ export default function HeroSection() {
           {/* Stats Row */}
           <div className="flex flex-nowrap gap-6 sm:gap-8 md:gap-16 lg:gap-24 mb-[50px]">
             <div className="flex-shrink-0">
-              <AnimatedCounter end={700} prefix="$" suffix="M" duration={1500} />
+              <AnimatedCounter end={1} prefix="$" suffix="B+" duration={1500} />
               <div
                 className="mt-2 uppercase font-medium whitespace-nowrap"
                 style={{
@@ -229,11 +230,11 @@ export default function HeroSection() {
                   color: 'rgba(255, 255, 255, 0.7)',
                 }}
               >
-                Value Delivered
+                Value Delivered to Clients
               </div>
             </div>
             <div className="flex-shrink-0">
-              <AnimatedCounter end={1250} suffix="+" duration={2000} />
+              <AnimatedCounter end={6250} suffix="+" duration={2000} />
               <div
                 className="mt-2 uppercase font-medium whitespace-nowrap"
                 style={{
@@ -246,7 +247,7 @@ export default function HeroSection() {
               </div>
             </div>
             <div className="flex-shrink-0">
-              <AnimatedCounter end={19} duration={1800} />
+              <AnimatedCounter end={80} suffix="+" duration={1800} />
               <div
                 className="mt-2 uppercase font-medium whitespace-nowrap"
                 style={{
@@ -255,7 +256,7 @@ export default function HeroSection() {
                   color: 'rgba(255, 255, 255, 0.7)',
                 }}
               >
-                Years in Production
+                Fortune 500 Clients Served
               </div>
             </div>
           </div>
@@ -264,20 +265,20 @@ export default function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-6">
             {/* Primary Button */}
             <Link
-              href="/case-studies"
+              href="/contact"
               className="group relative inline-flex items-center justify-center gap-3 px-9 py-4 bg-[#0052CC] text-white text-lg font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
             >
               {/* Lime dot accent */}
               <span className="flex-shrink-0 w-1.5 h-1.5 bg-[#C4FF61] rounded-full" />
-              See How We Work
+              Strategic Engagements
             </Link>
 
             {/* Secondary Button - Dark section */}
             <Link
-              href="/contact"
+              href="/about"
               className="inline-flex items-center justify-center px-9 py-4 bg-transparent text-white text-lg font-semibold rounded-lg border border-white hover:border-[#C4FF61] hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
             >
-              Talk to an Architect
+              Our 20-Year Legacy
             </Link>
           </div>
         </div>
