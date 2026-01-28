@@ -265,7 +265,7 @@ export default function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-6">
             {/* Primary Button */}
             <Link
-              href="/contact"
+              href="/case-studies"
               className="group relative inline-flex items-center justify-center gap-3 px-9 py-4 bg-[#0052CC] text-white text-lg font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
             >
               {/* Lime dot accent */}
