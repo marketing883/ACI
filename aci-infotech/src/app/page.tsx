@@ -105,7 +105,7 @@ export default function HomePage() {
 
       {/* Testimonials Section - Light relief between dark sections */}
       <TestimonialsSection
-        headline="What Fortune 500 Leaders Say"
+        headline="What Enterprise Leaders Say"
         testimonials={testimonials}
       />
 
