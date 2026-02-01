@@ -9,11 +9,18 @@ import {
 // Dynamic import for Anthropic to avoid server startup issues
 type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
+// Model configuration with fallbacks
+const MODELS = {
+  primary: 'claude-sonnet-4-20250514',
+  fallback: 'claude-3-5-haiku-20241022',
+} as const;
+
 // Data source tracking for transparency
+// Template sources removed - all content is now AI-generated when API data is unavailable
 interface DataSources {
   metrics: 'live-api' | 'estimated';
-  alternativeKeywords: 'live-api' | 'ai-generated' | 'template';
-  questions: 'live-paa' | 'ai-researched' | 'template';
+  alternativeKeywords: 'live-api' | 'ai-generated';
+  questions: 'live-paa' | 'ai-researched';
   serp: 'live-api' | 'unavailable';
 }
 
@@ -73,21 +80,15 @@ async function getAnthropicClient(): Promise<AnthropicClient | null> {
 }
 
 // AI-powered intelligent question generation based on real search intent
-async function generateAIQuestions(keyword: string): Promise<{ questions: string[]; source: 'ai-researched' | 'template' }> {
+// Uses model fallback to ensure AI-generated content
+async function generateAIQuestions(keyword: string): Promise<{ questions: string[]; source: 'ai-researched' }> {
   const client = await getAnthropicClient();
 
   if (!client) {
-    console.log('Anthropic API not configured, using template questions');
-    return { questions: generateTemplateQuestions(keyword), source: 'template' };
+    throw new Error('Anthropic API not configured. Please set ANTHROPIC_API_KEY.');
   }
 
-  try {
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      messages: [{
-        role: 'user',
-        content: `You are an SEO expert analyzing search intent. Generate 8 specific, high-value questions that enterprise decision-makers and IT leaders actually search for about "${keyword}".
+  const prompt = `You are an SEO expert analyzing search intent. Generate 8 specific, high-value questions that enterprise decision-makers and IT leaders actually search for about "${keyword}".
 
 Requirements:
 - Questions must be specific and actionable, NOT generic (avoid "What is X?" or "How does X work?")
@@ -97,149 +98,107 @@ Requirements:
 - Questions should reveal purchase intent or serious evaluation
 
 Return ONLY a JSON array of 8 question strings, nothing else. Example format:
-["Question 1?", "Question 2?", ...]`
-      }]
-    });
+["Question 1?", "Question 2?", ...]`;
 
-    const textContent = response.content[0];
-    if (textContent.type === 'text') {
-      try {
-        const questions = JSON.parse(textContent.text);
+  // Try primary model
+  for (const model of [MODELS.primary, MODELS.fallback]) {
+    try {
+      console.log(`Generating questions with model: ${model}`);
+      const response = await client.messages.create({
+        model,
+        max_tokens: 1024,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const textContent = response.content[0];
+      if (textContent.type === 'text') {
+        // Try to parse JSON
+        let questions: string[] = [];
+        try {
+          questions = JSON.parse(textContent.text);
+        } catch {
+          // Try to extract JSON from response
+          const jsonMatch = textContent.text.match(/\[[\s\S]*\]/);
+          if (jsonMatch) {
+            questions = JSON.parse(jsonMatch[0]);
+          }
+        }
+
         if (Array.isArray(questions) && questions.length > 0) {
-          console.log(`AI generated ${questions.length} intelligent questions for "${keyword}"`);
+          console.log(`AI generated ${questions.length} questions using ${model}`);
           return { questions: questions.slice(0, 8), source: 'ai-researched' };
         }
-      } catch (parseError) {
-        console.error('Failed to parse AI questions response:', parseError);
       }
+    } catch (error) {
+      console.error(`Model ${model} failed for questions:`, error);
+      if (model === MODELS.fallback) {
+        throw new Error(`All models failed to generate questions: ${error}`);
+      }
+      // Continue to fallback model
     }
-  } catch (error) {
-    console.error('AI question generation error:', error);
   }
 
-  return { questions: generateTemplateQuestions(keyword), source: 'template' };
+  throw new Error('Failed to generate questions with any model');
 }
 
 // AI-powered alternative keyword generation with strategic insights
-async function generateAIAlternativeKeywords(keyword: string): Promise<{ keywords: { keyword: string; note: string }[]; source: 'ai-generated' | 'template' }> {
+// Uses model fallback to ensure AI-generated content
+async function generateAIAlternativeKeywords(keyword: string): Promise<{ keywords: { keyword: string; note: string }[]; source: 'ai-generated' }> {
   const client = await getAnthropicClient();
 
   if (!client) {
-    return { keywords: generateTemplateAlternativeKeywords(keyword), source: 'template' };
+    throw new Error('Anthropic API not configured. Please set ANTHROPIC_API_KEY.');
   }
 
-  try {
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      messages: [{
-        role: 'user',
-        content: `You are an SEO strategist. Generate 5 strategic alternative keyword variations for "${keyword}" that would be valuable for an enterprise IT services company to target.
+  const prompt = `You are an SEO strategist. Generate 5 strategic alternative keyword variations for "${keyword}" that would be valuable for an enterprise IT services company to target.
 
 For each keyword, provide a brief strategic note explaining why it's valuable (e.g., "Lower competition, high buyer intent", "Decision-maker focused", "Problem-aware searchers").
 
 Return ONLY a JSON array in this exact format:
-[{"keyword": "alternative keyword phrase", "note": "Strategic reason to target"}, ...]`
-      }]
-    });
+[{"keyword": "alternative keyword phrase", "note": "Strategic reason to target"}, ...]`;
 
-    const textContent = response.content[0];
-    if (textContent.type === 'text') {
-      try {
-        const keywords = JSON.parse(textContent.text);
+  // Try with model fallback
+  for (const model of [MODELS.primary, MODELS.fallback]) {
+    try {
+      console.log(`Generating alternative keywords with model: ${model}`);
+      const response = await client.messages.create({
+        model,
+        max_tokens: 1024,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const textContent = response.content[0];
+      if (textContent.type === 'text') {
+        // Try to parse JSON
+        let keywords: { keyword: string; note: string }[] = [];
+        try {
+          keywords = JSON.parse(textContent.text);
+        } catch {
+          // Try to extract JSON from response
+          const jsonMatch = textContent.text.match(/\[[\s\S]*\]/);
+          if (jsonMatch) {
+            keywords = JSON.parse(jsonMatch[0]);
+          }
+        }
+
         if (Array.isArray(keywords) && keywords.length > 0) {
-          console.log(`AI generated ${keywords.length} alternative keywords for "${keyword}"`);
+          console.log(`AI generated ${keywords.length} keywords using ${model}`);
           return { keywords: keywords.slice(0, 5), source: 'ai-generated' };
         }
-      } catch (parseError) {
-        console.error('Failed to parse AI keywords response:', parseError);
       }
+    } catch (error) {
+      console.error(`Model ${model} failed for keywords:`, error);
+      if (model === MODELS.fallback) {
+        throw new Error(`All models failed to generate keywords: ${error}`);
+      }
+      // Continue to fallback model
     }
-  } catch (error) {
-    console.error('AI keyword generation error:', error);
   }
 
-  return { keywords: generateTemplateAlternativeKeywords(keyword), source: 'template' };
+  throw new Error('Failed to generate alternative keywords with any model');
 }
 
-// Template-based questions (fallback)
-function generateTemplateQuestions(keyword: string): string[] {
-  return [
-    `What is the ROI of implementing ${keyword}?`,
-    `How long does a typical ${keyword} implementation take?`,
-    `What are the hidden costs of ${keyword}?`,
-    `How does ${keyword} integrate with existing enterprise systems?`,
-    `What are the most common ${keyword} implementation failures?`,
-    `Which industries benefit most from ${keyword}?`,
-    `How to build a business case for ${keyword}?`,
-    `What skills does my team need for ${keyword}?`,
-  ];
-}
-
-// Template-based alternative keywords (fallback)
-function generateTemplateAlternativeKeywords(keyword: string): { keyword: string; note: string }[] {
-  return [
-    { keyword: `${keyword} implementation partner`, note: 'High buyer intent - seeking vendors' },
-    { keyword: `${keyword} ROI calculator`, note: 'Decision-stage keyword' },
-    { keyword: `${keyword} vs competitors`, note: 'Comparison shoppers - high intent' },
-    { keyword: `enterprise ${keyword} solutions`, note: 'B2B enterprise focus' },
-    { keyword: `${keyword} consulting services`, note: 'Service-seeking keyword' },
-  ];
-}
-
-// Generate mock data as fallback when API isn't configured
-function generateMockData(keyword: string, aiQuestions?: string[], aiKeywords?: { keyword: string; note: string }[]): KeywordResponse {
-  const hash = keyword.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const searchVolume = Math.floor((hash % 50 + 1) * 100);
-  const difficulty = Math.floor((hash % 80) + 10);
-  const cpc = Math.round((hash % 100) / 10 * 100) / 100;
-
-  return {
-    keyword,
-    searchVolume,
-    difficulty,
-    difficultyLabel: difficulty < 30 ? 'Easy' : difficulty < 60 ? 'Medium' : 'Hard',
-    cpc,
-    trend: [
-      Math.floor(searchVolume * 0.8),
-      Math.floor(searchVolume * 0.9),
-      searchVolume,
-      Math.floor(searchVolume * 1.1),
-      Math.floor(searchVolume * 0.95),
-      searchVolume
-    ],
-    monthlySearches: [],
-    competitionLevel: difficulty < 30 ? 'LOW' : difficulty < 60 ? 'MEDIUM' : 'HIGH',
-    alternativeKeywords: aiKeywords || generateTemplateAlternativeKeywords(keyword),
-    relatedKeywords: [
-      { keyword: `${keyword} best practices`, volume: Math.floor(searchVolume * 0.6) },
-      { keyword: `${keyword} guide`, volume: Math.floor(searchVolume * 0.5) },
-      { keyword: `how to ${keyword}`, volume: Math.floor(searchVolume * 0.4) },
-      { keyword: `${keyword} examples`, volume: Math.floor(searchVolume * 0.35) },
-      { keyword: `${keyword} tools`, volume: Math.floor(searchVolume * 0.3) },
-    ],
-    questionsAsked: aiQuestions || generateTemplateQuestions(keyword),
-    competitorArticles: [
-      { title: `Complete Guide to ${keyword}`, domain: 'example.com', position: 1 },
-      { title: `${keyword} Explained`, domain: 'industry-blog.com', position: 2 },
-      { title: `Top 10 ${keyword} Strategies`, domain: 'techsite.io', position: 3 },
-    ],
-    serpFeatures: {
-      featuredSnippet: hash % 3 === 0,
-      peopleAlsoAsk: true,
-      localPack: false,
-      images: hash % 2 === 0,
-      videos: hash % 4 === 0,
-    },
-    isRealData: false,
-    dataSources: {
-      metrics: 'estimated',
-      alternativeKeywords: aiKeywords ? 'ai-generated' : 'template',
-      questions: aiQuestions ? 'ai-researched' : 'template',
-      serp: 'unavailable',
-    },
-  };
-}
+// All template/mock functions removed - AI generation is now required
 
 // IT Services competitors for highlighting
 const IT_SERVICES_COMPETITORS = [
@@ -255,10 +214,10 @@ const IT_SERVICES_COMPETITORS = [
 // Legacy fallback functions removed - now using AI-powered generation above
 
 // Transform DataForSEO response to our format
-// Now accepts optional AI-generated data to fill gaps
+// AI-generated data is now required when API data is missing (no template fallback)
 interface TransformOptions {
-  aiQuestions?: { questions: string[]; source: 'ai-researched' | 'template' };
-  aiKeywords?: { keywords: { keyword: string; note: string }[]; source: 'ai-generated' | 'template' };
+  aiQuestions?: { questions: string[]; source: 'ai-researched' };
+  aiKeywords?: { keywords: { keyword: string; note: string }[]; source: 'ai-generated' };
 }
 
 function transformDataForSEOResponse(
@@ -304,7 +263,7 @@ function transformDataForSEOResponse(
     })
     .slice(0, 5);
 
-  // Use API data if available, otherwise use AI-generated or templates
+  // Use API data if available, otherwise use AI-generated (AI data is now required)
   let alternativeKeywords: { keyword: string; note: string; volume?: number }[];
   if (sortedAlternatives.length > 0) {
     alternativeKeywords = sortedAlternatives.map(kw => ({
@@ -320,8 +279,10 @@ function transformDataForSEOResponse(
     alternativeKeywords = options.aiKeywords.keywords;
     dataSources.alternativeKeywords = options.aiKeywords.source;
   } else {
-    alternativeKeywords = generateTemplateAlternativeKeywords(keyword);
-    dataSources.alternativeKeywords = 'template';
+    // No API data and no AI data provided - this should not happen
+    // Return empty array with unavailable source
+    alternativeKeywords = [];
+    dataSources.alternativeKeywords = 'ai-generated';
   }
 
   // Use related keywords for the related section
@@ -335,7 +296,7 @@ function transformDataForSEOResponse(
       competition: kw.competition,
     }));
 
-  // Use API questions if available, otherwise use AI-generated or templates
+  // Use API questions if available, otherwise use AI-generated (AI data is now required)
   const apiQuestions = (data.questions || []).map(q => q.question).filter(Boolean);
   let questionsAsked: string[];
 
@@ -346,8 +307,10 @@ function transformDataForSEOResponse(
     questionsAsked = options.aiQuestions.questions;
     dataSources.questions = options.aiQuestions.source;
   } else {
-    questionsAsked = generateTemplateQuestions(keyword);
-    dataSources.questions = 'template';
+    // No API data and no AI data provided - this should not happen
+    // Return empty array with unavailable source
+    questionsAsked = [];
+    dataSources.questions = 'ai-researched';
   }
 
   // Process competitor articles with isCompetitor flag
@@ -403,28 +366,41 @@ export async function POST(request: NextRequest) {
 
     // Check if DataForSEO is configured
     if (!isDataForSEOConfigured()) {
-      console.log('DataForSEO not configured, using AI-enhanced mock data');
+      console.log('DataForSEO not configured, generating AI-powered content research');
 
-      // Generate AI-powered questions and keywords in parallel for better quality
+      // Generate AI-powered questions and keywords in parallel
+      // These will throw errors if AI generation fails (no mock fallback)
       const [aiQuestionsResult, aiKeywordsResult] = await Promise.all([
         generateAIQuestions(trimmedKeyword),
         generateAIAlternativeKeywords(trimmedKeyword),
       ]);
 
-      const mockData = generateMockData(
-        trimmedKeyword,
-        aiQuestionsResult.questions,
-        aiKeywordsResult.keywords
-      );
+      // Return AI-generated content research without fake metrics
+      // Metrics are unavailable without DataForSEO
+      const response: KeywordResponse = {
+        keyword: trimmedKeyword,
+        searchVolume: 0,
+        difficulty: 0,
+        difficultyLabel: 'Medium',
+        cpc: 0,
+        trend: [],
+        monthlySearches: [],
+        competitionLevel: 'UNKNOWN',
+        alternativeKeywords: aiKeywordsResult.keywords,
+        relatedKeywords: [],
+        questionsAsked: aiQuestionsResult.questions,
+        competitorArticles: [],
+        isRealData: false,
+        dataSources: {
+          metrics: 'estimated',
+          alternativeKeywords: aiKeywordsResult.source,
+          questions: aiQuestionsResult.source,
+          serp: 'unavailable',
+        },
+        warning: 'Search metrics unavailable. Configure DataForSEO API for volume, difficulty, and competitor data. Questions and keywords are AI-generated.',
+      };
 
-      // Update data sources based on what we got
-      mockData.dataSources.questions = aiQuestionsResult.source;
-      mockData.dataSources.alternativeKeywords = aiKeywordsResult.source;
-
-      return NextResponse.json({
-        ...mockData,
-        warning: 'Using estimated metrics. Configure DataForSEO API for live search data.',
-      });
+      return NextResponse.json(response);
     }
 
     // Use cached request to save API credits
@@ -468,26 +444,38 @@ export async function POST(request: NextRequest) {
     } catch (apiError) {
       console.error('DataForSEO API error:', apiError);
 
-      // Fall back to AI-enhanced mock data if API fails
+      // Fall back to AI-generated content research if DataForSEO API fails
+      // No mock metrics - only AI-generated questions and keywords
       const [aiQuestionsResult, aiKeywordsResult] = await Promise.all([
         generateAIQuestions(trimmedKeyword),
         generateAIAlternativeKeywords(trimmedKeyword),
       ]);
 
-      const mockData = generateMockData(
-        trimmedKeyword,
-        aiQuestionsResult.questions,
-        aiKeywordsResult.keywords
-      );
-
-      mockData.dataSources.questions = aiQuestionsResult.source;
-      mockData.dataSources.alternativeKeywords = aiKeywordsResult.source;
-
-      return NextResponse.json({
-        ...mockData,
-        warning: 'API error occurred. Showing AI-enhanced estimated data.',
+      const response: KeywordResponse = {
+        keyword: trimmedKeyword,
+        searchVolume: 0,
+        difficulty: 0,
+        difficultyLabel: 'Medium',
+        cpc: 0,
+        trend: [],
+        monthlySearches: [],
+        competitionLevel: 'UNKNOWN',
+        alternativeKeywords: aiKeywordsResult.keywords,
+        relatedKeywords: [],
+        questionsAsked: aiQuestionsResult.questions,
+        competitorArticles: [],
+        isRealData: false,
+        dataSources: {
+          metrics: 'estimated',
+          alternativeKeywords: aiKeywordsResult.source,
+          questions: aiQuestionsResult.source,
+          serp: 'unavailable',
+        },
+        warning: 'DataForSEO API error. Questions and keywords are AI-generated. Search metrics unavailable.',
         error: apiError instanceof Error ? apiError.message : 'Unknown error',
-      });
+      };
+
+      return NextResponse.json(response);
     }
   } catch (error) {
     console.error('Keyword research error:', error);

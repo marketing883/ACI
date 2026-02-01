@@ -3,6 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 // Dynamic import type for Anthropic
 type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
+// Model configuration with fallbacks for 100% AI-generated content
+const MODELS = {
+  primary: 'claude-sonnet-4-20250514',
+  fallback: 'claude-3-5-haiku-20241022',
+} as const;
+
 interface LeadData {
   name?: string;
   email?: string;
@@ -88,10 +94,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (!process.env.ANTHROPIC_API_KEY) {
-      return NextResponse.json({
-        leadScore: calculateBasicScore(lead),
-        error: 'AI not configured - basic scoring only',
-      });
+      return NextResponse.json(
+        { error: 'Anthropic API not configured. Please set ANTHROPIC_API_KEY for AI-powered lead intelligence.' },
+        { status: 503 }
+      );
     }
 
     const report = await generateIntelligence(lead);
@@ -149,7 +155,7 @@ function buildContext(lead: LeadData): string {
 async function generateIntelligence(lead: LeadData): Promise<IntelligenceReport> {
   const anthropic = await getAnthropicClient();
   if (!anthropic) {
-    return createFallbackReport(lead);
+    throw new Error('Anthropic API not configured');
   }
 
   const context = buildContext(lead);
@@ -214,93 +220,40 @@ Be specific, not generic. Make reasonable inferences. If data is sparse, note lo
 
 CRITICAL FORMATTING: Never use em dashes (—) or en dashes (–) in any text content. Use commas, semicolons, colons, or periods instead. Use "to" for ranges. Use hyphens only for compound words.`;
 
-  try {
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 2000,
-      messages: [{ role: 'user', content: prompt }],
-    });
+  // Try primary model, then fallback model
+  let lastError: Error | null = null;
 
-    const textContent = response.content.find(block => block.type === 'text');
-    const text = textContent && 'text' in textContent ? textContent.text : '';
+  for (const model of [MODELS.primary, MODELS.fallback]) {
+    try {
+      console.log(`Generating lead intelligence with model: ${model}`);
+      const response = await anthropic.messages.create({
+        model,
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: prompt }],
+      });
 
-    // Parse JSON
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]) as IntelligenceReport;
-    }
-  } catch (e) {
-    console.error('AI parsing error:', e);
-  }
+      const textContent = response.content.find(block => block.type === 'text');
+      const text = textContent && 'text' in textContent ? textContent.text : '';
 
-  // Fallback
-  return createFallbackReport(lead);
-}
+      // Parse JSON
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
+        console.log(`Lead intelligence generated successfully with ${model}`);
+        return report;
+      }
 
-function createFallbackReport(lead: LeadData): IntelligenceReport {
-  const domain = lead.email?.split('@')[1] || '';
-
-  return {
-    leadScore: calculateBasicScore(lead),
-    person: {
-      summary: lead.name ? `${lead.name}${lead.job_title ? `, ${lead.job_title}` : ''}` : 'Unknown contact',
-      inferredRole: lead.job_title || 'Unknown',
-      seniority: 'Unknown',
-      decisionMaker: false,
-      linkedInSearch: `${lead.name || ''} ${lead.company || domain}`.trim(),
-    },
-    company: {
-      name: lead.company || domain || 'Unknown',
-      summary: 'Insufficient data for company analysis',
-      industry: 'Unknown',
-      size: 'Unknown',
-      likelyTechStack: [],
-      challenges: [],
-      website: domain ? `https://${domain}` : '',
-    },
-    opportunity: {
-      painPoints: lead.service_interest ? [`Interest in ${lead.service_interest}`] : [],
-      valueProps: ['Senior architects only', 'Production systems with SLAs'],
-      relevantServices: lead.service_interest ? [lead.service_interest] : [],
-      caseStudies: ['MSCI - Enterprise data', 'Sodexo - Scale deployment'],
-      competitors: 'Unknown',
-    },
-    engagement: {
-      talkingPoints: ['Understand their specific challenges', 'Share relevant experience'],
-      questions: ['What is driving this initiative?', 'What does success look like?'],
-      objections: [],
-      nextSteps: ['Schedule discovery call', 'Research company website'],
-    },
-    signals: {
-      intent: 'Medium',
-      urgency: 'Medium',
-      budget: 'Unknown',
-      timeline: 'Unknown',
-    },
-    research: {
-      sources: ['LinkedIn', domain ? `https://${domain}` : 'Company website'],
-      confidence: 'Low',
-    },
-  };
-}
-
-function calculateBasicScore(lead: LeadData): number {
-  let score = 0;
-
-  if (lead.name) score += 10;
-  if (lead.email) {
-    score += 10;
-    const domain = lead.email.split('@')[1]?.toLowerCase() || '';
-    if (!['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'].includes(domain)) {
-      score += 20;
+      // If we got a response but couldn't parse it, try next model
+      console.warn(`Model ${model} returned unparseable response, trying next model`);
+    } catch (error) {
+      console.error(`Model ${model} failed for lead intelligence:`, error);
+      lastError = error instanceof Error ? error : new Error(String(error));
+      // Continue to fallback model
     }
   }
-  if (lead.company) score += 15;
-  if (lead.job_title) score += 10;
-  if (lead.phone) score += 5;
-  if (lead.service_interest) score += 15;
-  if (lead.requirements && lead.requirements.length > 50) score += 10;
-  if (lead.pages_visited && lead.pages_visited.length > 2) score += 5;
 
-  return Math.min(score, 100);
+  // All models failed
+  throw new Error(`All AI models failed to generate lead intelligence: ${lastError?.message || 'Unknown error'}`);
 }
+
+// Template/fallback functions removed - all content is now AI-generated

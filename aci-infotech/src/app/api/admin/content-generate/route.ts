@@ -3,6 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 // Dynamic import type for Anthropic
 type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
+// Model configuration with fallbacks
+const MODELS = {
+  primary: 'claude-sonnet-4-20250514',
+  fallback: 'claude-3-5-haiku-20241022',
+} as const;
+
 interface GenerateRequest {
   type: 'blog' | 'case_study' | 'whitepaper' | 'webinar';
   field: 'title' | 'excerpt' | 'content' | 'outline' | 'challenge' | 'solution' | 'results' | 'description' | 'meta_title' | 'meta_description' | 'faqs' | 'highlights' | 'metrics' | 'seo_fix';
@@ -39,7 +45,10 @@ interface GenerateRequest {
 // Initialize Anthropic client with dynamic import to prevent server startup issues
 async function getAnthropicClient(): Promise<AnthropicClient | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return null;
+  if (!apiKey) {
+    console.error('ANTHROPIC_API_KEY is not configured');
+    return null;
+  }
 
   try {
     const { default: Anthropic } = await import('@anthropic-ai/sdk');
@@ -47,6 +56,51 @@ async function getAnthropicClient(): Promise<AnthropicClient | null> {
   } catch (error) {
     console.error('Failed to load Anthropic SDK:', error);
     return null;
+  }
+}
+
+// Generate content with model fallback
+async function generateWithFallback(
+  anthropic: AnthropicClient,
+  prompt: string,
+  maxTokens: number
+): Promise<{ content: string; model: string }> {
+  // Try primary model first
+  try {
+    console.log(`Attempting generation with primary model: ${MODELS.primary}`);
+    const response = await anthropic.messages.create({
+      model: MODELS.primary,
+      max_tokens: maxTokens,
+      messages: [{ role: 'user', content: prompt }],
+    });
+
+    const textContent = response.content.find(block => block.type === 'text');
+    if (textContent && 'text' in textContent && textContent.text.trim()) {
+      return { content: textContent.text, model: MODELS.primary };
+    }
+    throw new Error('Empty response from primary model');
+  } catch (primaryError) {
+    console.error(`Primary model (${MODELS.primary}) failed:`, primaryError);
+
+    // Try fallback model
+    try {
+      console.log(`Attempting generation with fallback model: ${MODELS.fallback}`);
+      const response = await anthropic.messages.create({
+        model: MODELS.fallback,
+        max_tokens: maxTokens,
+        messages: [{ role: 'user', content: prompt }],
+      });
+
+      const textContent = response.content.find(block => block.type === 'text');
+      if (textContent && 'text' in textContent && textContent.text.trim()) {
+        console.log(`Fallback model (${MODELS.fallback}) succeeded`);
+        return { content: textContent.text, model: MODELS.fallback };
+      }
+      throw new Error('Empty response from fallback model');
+    } catch (fallbackError) {
+      console.error(`Fallback model (${MODELS.fallback}) also failed:`, fallbackError);
+      throw new Error(`All models failed. Primary: ${primaryError}, Fallback: ${fallbackError}`);
+    }
   }
 }
 
@@ -58,12 +112,12 @@ export async function POST(request: NextRequest) {
     // Get Anthropic client (returns null if not configured)
     const anthropic = await getAnthropicClient();
 
-    // Check if API is available
+    // Check if API is available - NO MOCK FALLBACK
     if (!anthropic) {
-      console.log('Anthropic API not configured, using mock content');
-      return NextResponse.json({
-        generated: getMockContent(type, field, context),
-      });
+      return NextResponse.json(
+        { error: 'AI service is not configured. Please set ANTHROPIC_API_KEY environment variable.' },
+        { status: 503 }
+      );
     }
 
     const prompt = buildPrompt(type, field, context);
@@ -71,32 +125,33 @@ export async function POST(request: NextRequest) {
     // Use higher token limit for full content generation
     const maxTokens = field === 'content' ? 8000 : 2000;
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens,
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-    });
+    // Generate with fallback support
+    const { content, model } = await generateWithFallback(anthropic, prompt, maxTokens);
 
-    // Extract text from response
-    const textContent = response.content.find(block => block.type === 'text');
-    let content = textContent && 'text' in textContent ? textContent.text : getMockContent(type, field, context);
+    console.log(`Content generated successfully using model: ${model}`);
 
     // Handle FAQ JSON parsing
     if (field === 'faqs') {
       try {
-        // Try to parse as JSON array
         const parsed = JSON.parse(content);
         if (Array.isArray(parsed)) {
-          return NextResponse.json({ faqs: parsed, content: parsed });
+          return NextResponse.json({ faqs: parsed, content: parsed, model });
         }
       } catch {
-        // If not valid JSON, return mock FAQs
-        return NextResponse.json({ faqs: getMockFaqs(context), content: getMockFaqs(context) });
+        // Try to extract JSON from the response
+        const jsonMatch = content.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          try {
+            const parsed = JSON.parse(jsonMatch[0]);
+            return NextResponse.json({ faqs: parsed, content: parsed, model });
+          } catch {
+            // Fall through to error
+          }
+        }
+        return NextResponse.json(
+          { error: 'Failed to parse FAQ response as JSON' },
+          { status: 500 }
+        );
       }
     }
 
@@ -105,22 +160,28 @@ export async function POST(request: NextRequest) {
       try {
         const parsed = JSON.parse(content);
         if (Array.isArray(parsed)) {
-          return NextResponse.json({ metrics: parsed, content: parsed });
+          return NextResponse.json({ metrics: parsed, content: parsed, model });
         }
       } catch {
-        // If not valid JSON, return mock metrics
-        const mockMetrics = [
-          { value: '40%', label: 'Cost Reduction', description: 'Annual operational savings' },
-          { value: '3x', label: 'Faster Processing', description: 'Compared to legacy system' },
-          { value: '99.5%', label: 'Uptime', description: 'SLA-backed reliability' },
-          { value: '60%', label: 'Efficiency Gain', description: 'Team productivity improvement' },
-        ];
-        return NextResponse.json({ metrics: mockMetrics, content: mockMetrics });
+        // Try to extract JSON from the response
+        const jsonMatch = content.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          try {
+            const parsed = JSON.parse(jsonMatch[0]);
+            return NextResponse.json({ metrics: parsed, content: parsed, model });
+          } catch {
+            // Fall through to error
+          }
+        }
+        return NextResponse.json(
+          { error: 'Failed to parse metrics response as JSON' },
+          { status: 500 }
+        );
       }
     }
 
     // Return both 'content' and 'generated' for backward compatibility
-    return NextResponse.json({ content, generated: content });
+    return NextResponse.json({ content, generated: content, model });
 
   } catch (error) {
     console.error('Content generation error:', error);
@@ -1214,88 +1275,4 @@ Return ONLY the fixed/improved content, nothing else.`;
   return `Generate ${field} content for ${type}`;
 }
 
-function getMockFaqs(context: GenerateRequest['context']): { question: string; answer: string }[] {
-  const topic = context.keyword || context.title || 'this topic';
-  return [
-    {
-      question: `What is ${topic}?`,
-      answer: `${topic} refers to the strategic approach enterprises use to manage and leverage their data assets. It encompasses data architecture, governance, quality, and integration practices that enable organizations to derive actionable insights and drive business value.`
-    },
-    {
-      question: `Why is ${topic} important for enterprises?`,
-      answer: `${topic} is critical because it directly impacts an organization's ability to make data-driven decisions. Companies with mature data strategies see 40% higher ROI on analytics investments and can respond to market changes 3x faster than competitors.`
-    },
-    {
-      question: `How long does it take to implement ${topic}?`,
-      answer: `Implementation timelines vary based on organizational complexity. Typically, foundational capabilities can be established in 3-6 months, with full maturity achieved over 12-24 months. At ACI, we've accelerated this through proven frameworks and reusable components.`
-    },
-    {
-      question: `What are the common challenges with ${topic}?`,
-      answer: `The most common challenges include data silos across business units, legacy system integration, lack of governance frameworks, and skills gaps. Organizations also struggle with balancing innovation speed against compliance requirements.`
-    }
-  ];
-}
-
-function getMockContent(type: string, field: string, context: GenerateRequest['context']): string {
-  const { keyword, title, category } = context;
-
-  if (type === 'whitepaper') {
-    if (field === 'description') {
-      return `This comprehensive whitepaper explores ${title || 'enterprise technology strategies'} and provides actionable insights for technology leaders. You'll discover proven methodologies used by Fortune 500 companies, learn from real-world case studies, and gain practical frameworks you can implement immediately. Whether you're modernizing legacy systems or building new capabilities, this guide will help you navigate complexity and deliver measurable business outcomes.`;
-    }
-    return 'Generated whitepaper content placeholder';
-  }
-
-  if (type === 'webinar') {
-    if (field === 'description') {
-      return `Join our expert panel as they dive deep into ${title || 'enterprise technology'}. This session will cover the latest trends, best practices, and practical strategies for ${category || 'digital transformation'}. Attendees will learn from real implementation experiences, get answers to their specific questions, and walk away with actionable insights they can apply immediately. Reserve your spot now to gain a competitive edge.`;
-    }
-    return 'Generated webinar content placeholder';
-  }
-
-  if (type === 'blog') {
-    switch (field) {
-      case 'title':
-        return `Enterprise Guide to ${keyword || title || 'Modern Data Architecture'}: Best Practices for 2025`;
-      case 'excerpt':
-        return `Discover how leading enterprises are transforming their ${keyword || 'data infrastructure'} with proven strategies that drive measurable business outcomes.`;
-      case 'outline':
-        return `## Introduction\n- Hook with industry statistics\n- Overview of key challenges\n\n## Understanding ${keyword || 'the Problem'}\n- Current landscape\n- Common pitfalls\n\n## Best Practices\n- Strategy 1\n- Strategy 2\n- Strategy 3\n\n## Implementation Guide\n- Step-by-step approach\n- Tools and technologies\n\n## Conclusion\n- Key takeaways\n- Call to action`;
-      case 'content':
-        return `# ${title || 'Enterprise Guide'}\n\nIn today's rapidly evolving technology landscape, enterprises face unprecedented challenges in managing their ${keyword || 'digital infrastructure'}...\n\n## The Challenge\n\nModern organizations must balance innovation with operational stability...\n\n## Our Approach\n\nAt ACI Infotech, we've helped Fortune 500 companies transform their operations through strategic technology implementations...\n\n## Key Takeaways\n\n- Point 1\n- Point 2\n- Point 3\n\n## Conclusion\n\nSuccess in the digital age requires a partner who understands both technology and business outcomes.`;
-      default:
-        return 'Generated content placeholder';
-    }
-  }
-
-  if (type === 'case_study') {
-    const clientName = context.clientName || 'Enterprise Client';
-    const industry = context.industry || 'Technology';
-    switch (field) {
-      case 'excerpt':
-        return `${clientName} achieved 40% cost reduction and 3x faster processing through a comprehensive data modernization initiative, transforming legacy systems into a unified, cloud-native platform.`;
-      case 'challenge':
-        return `${clientName} faced significant challenges with fragmented data systems across multiple business units. Legacy infrastructure was causing delays, inconsistencies, and mounting operational costs. The organization needed a unified approach to data management that could scale with business growth while maintaining compliance and security standards.`;
-      case 'solution':
-        return `ACI Infotech implemented a comprehensive data modernization strategy, leveraging cloud-native technologies and modern data architecture patterns. The solution included automated data pipelines, real-time analytics capabilities, and a unified data governance framework. Our team worked closely with ${clientName}'s stakeholders to ensure seamless adoption and knowledge transfer.`;
-      case 'results':
-        return `The transformation delivered measurable business outcomes: 40% reduction in operational costs, 3x faster data processing, 99.9% system uptime, and significantly improved data quality. ${clientName} now has a scalable, future-ready data platform that supports advanced analytics and AI initiatives.`;
-      case 'meta_title':
-        return `${industry} Data Transformation: 40% Cost Reduction | ACI`;
-      case 'meta_description':
-        return `See how ${clientName} achieved 40% cost savings and 3x faster processing with ACI's data modernization. Read the full ${industry.toLowerCase()} case study.`;
-      case 'seo_fix':
-        // Return appropriate fix based on the issue type
-        if (context.seoIssue?.toLowerCase().includes('title')) {
-          return `${industry} Success: ${clientName} Data Platform | ACI`;
-        } else if (context.seoIssue?.toLowerCase().includes('description')) {
-          return `Discover how ${clientName} achieved 40% cost reduction and 3x faster processing with ACI's enterprise data solutions. Read the case study.`;
-        }
-        return context.currentValue || 'Optimized SEO content';
-      default:
-        return 'Generated case study content placeholder';
-    }
-  }
-
-  return 'Generated content placeholder';
-}
+// Mock functions removed - all content is now AI-generated with model fallback

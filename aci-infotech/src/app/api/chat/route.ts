@@ -3,6 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 // Dynamic import type for Anthropic
 type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
+// Model configuration with fallbacks for 100% AI-generated responses
+const MODELS = {
+  primary: 'claude-sonnet-4-20250514',
+  fallback: 'claude-3-5-haiku-20241022',
+} as const;
+
 // ACI company context for the AI assistant - Thoughtful guide voice
 const ACI_CONTEXT = `You are ACI's digital guide. Warm, thoughtful, quietly confident. You're here to understand and help - not to pitch or overwhelm.
 
@@ -252,38 +258,63 @@ export async function POST(request: NextRequest) {
       personalizedContext += `\n\nThey want to schedule. Be efficient - clarify timing preference if needed, then confirm. No excessive enthusiasm.`;
     }
 
-    // Call Claude API
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 150,
-      system: personalizedContext,
-      messages: messages.map((m: ChatMessage) => ({
-        role: m.role,
-        content: m.content,
-      })),
-    });
+    // Call Claude API with model fallback
+    let messageText: string | null = null;
+    let lastError: Error | null = null;
 
-    // Extract text from response
-    const textContent = response.content.find(block => block.type === 'text');
-    const messageText = textContent && 'text' in textContent ? textContent.text : "Something went wrong on my end. [Reach out directly](/contact) - faster anyway.";
+    for (const model of [MODELS.primary, MODELS.fallback]) {
+      try {
+        console.log(`Chat: trying model ${model}`);
+        const response = await anthropic.messages.create({
+          model,
+          max_tokens: 150,
+          system: personalizedContext,
+          messages: messages.map((m: ChatMessage) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        });
 
-    return NextResponse.json({ message: messageText });
-  } catch (error) {
-    console.error('Chat API error:', error);
+        // Extract text from response
+        const textContent = response.content.find(block => block.type === 'text');
+        messageText = textContent && 'text' in textContent ? textContent.text : null;
+
+        if (messageText) {
+          console.log(`Chat: successfully generated with ${model}`);
+          break; // Success - exit loop
+        }
+      } catch (error) {
+        console.error(`Chat: model ${model} failed:`, error);
+        lastError = error instanceof Error ? error : new Error(String(error));
+        // Continue to fallback model
+      }
+    }
+
+    if (messageText) {
+      return NextResponse.json({ message: messageText });
+    }
+
+    // All models failed
+    console.error('Chat: all models failed', lastError);
 
     // Handle specific error types (check for status property on API errors)
-    const apiError = error as { status?: number };
-    if (apiError.status === 401) {
+    const apiError = lastError as { status?: number } | null;
+    if (apiError?.status === 401) {
       return NextResponse.json(
         { message: "Technical issue on our end. [Contact us directly](/contact) - we'll sort it out." },
       );
     }
-    if (apiError.status === 429) {
+    if (apiError?.status === 429) {
       return NextResponse.json(
         { message: "High traffic right now. Try again in a moment, or [reach out directly](/contact)." },
       );
     }
 
+    return NextResponse.json(
+      { message: "Something's off on my end. [Reach out directly](/contact) and we'll take it from there." },
+    );
+  } catch (error) {
+    console.error('Chat API error:', error);
     return NextResponse.json(
       { message: "Something's off on my end. [Reach out directly](/contact) and we'll take it from there." },
     );
