@@ -1,4 +1,46 @@
-import Anthropic from '@anthropic-ai/sdk';
+// Dynamic import types to avoid server startup issues
+type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
+type OpenAIClient = InstanceType<typeof import('openai').default>;
+
+// Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
+const MODELS = {
+  anthropic: {
+    primary: 'claude-sonnet-4-20250514',
+    fallback: 'claude-3-5-haiku-20241022',
+  },
+  openai: {
+    primary: 'gpt-4o',
+    fallback: 'gpt-4o-mini',
+  },
+} as const;
+
+// Initialize Anthropic client with dynamic import
+async function getAnthropicClient(): Promise<AnthropicClient | null> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const { default: Anthropic } = await import('@anthropic-ai/sdk');
+    return new Anthropic({ apiKey });
+  } catch (error) {
+    console.error('Failed to load Anthropic SDK:', error);
+    return null;
+  }
+}
+
+// Initialize OpenAI client with dynamic import
+async function getOpenAIClient(): Promise<OpenAIClient | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const { default: OpenAI } = await import('openai');
+    return new OpenAI({ apiKey });
+  } catch (error) {
+    console.error('Failed to load OpenAI SDK:', error);
+    return null;
+  }
+}
 
 export interface LeadData {
   name?: string;
@@ -168,8 +210,11 @@ function createFallbackReport(lead: LeadData): IntelligenceReport {
 }
 
 export async function generateIntelligence(lead: LeadData): Promise<IntelligenceReport> {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.log('No ANTHROPIC_API_KEY - returning fallback intelligence');
+  const anthropic = await getAnthropicClient();
+  const openai = await getOpenAIClient();
+
+  if (!anthropic && !openai) {
+    console.log('No AI API configured - returning fallback intelligence');
     return createFallbackReport(lead);
   }
 
@@ -235,29 +280,66 @@ Be specific, not generic. Make reasonable inferences. If data is sparse, note lo
 
 CRITICAL FORMATTING: Never use em dashes (—) or en dashes (–) in any text content. Use commas, semicolons, colons, or periods instead. Use "to" for ranges. Use hyphens only for compound words.`;
 
-  try {
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-    });
+  const errors: string[] = [];
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 2000,
-      messages: [{ role: 'user', content: prompt }],
-    });
+  // Try Anthropic models first (Claude Sonnet -> Claude Haiku)
+  if (anthropic) {
+    for (const model of [MODELS.anthropic.primary, MODELS.anthropic.fallback]) {
+      try {
+        console.log(`Intelligence: trying Anthropic model ${model}`);
+        const response = await anthropic.messages.create({
+          model,
+          max_tokens: 2000,
+          messages: [{ role: 'user', content: prompt }],
+        });
 
-    const textContent = response.content.find(block => block.type === 'text');
-    const text = textContent && 'text' in textContent ? textContent.text : '';
+        const textContent = response.content.find(block => block.type === 'text');
+        const text = textContent && 'text' in textContent ? textContent.text : '';
 
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
-      report.generatedAt = new Date().toISOString();
-      return report;
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
+          report.generatedAt = new Date().toISOString();
+          console.log(`Intelligence: successfully generated with ${model}`);
+          return report;
+        }
+        console.warn(`Intelligence: ${model} returned unparseable response`);
+      } catch (error) {
+        console.error(`Intelligence: Anthropic model ${model} failed:`, error);
+        errors.push(`${model}: ${error}`);
+      }
     }
-  } catch (e) {
-    console.error('AI intelligence generation error:', e);
   }
 
+  // Try OpenAI models as fallback (GPT-4o -> GPT-4o-mini)
+  if (openai) {
+    for (const model of [MODELS.openai.primary, MODELS.openai.fallback]) {
+      try {
+        console.log(`Intelligence: trying OpenAI model ${model}`);
+        const response = await openai.chat.completions.create({
+          model,
+          max_tokens: 2000,
+          messages: [{ role: 'user', content: prompt }],
+        });
+
+        const content = response.choices[0]?.message?.content;
+        if (content) {
+          const jsonMatch = content.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
+            report.generatedAt = new Date().toISOString();
+            console.log(`Intelligence: successfully generated with OpenAI ${model}`);
+            return report;
+          }
+        }
+        console.warn(`Intelligence: OpenAI ${model} returned unparseable response`);
+      } catch (error) {
+        console.error(`Intelligence: OpenAI model ${model} failed:`, error);
+        errors.push(`OpenAI ${model}: ${error}`);
+      }
+    }
+  }
+
+  console.error('All AI models failed for intelligence:', errors);
   return createFallbackReport(lead);
 }
