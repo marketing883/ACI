@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Dynamic import type for Anthropic
-type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
-
-// Dynamic import type for OpenAI
-type OpenAIClient = InstanceType<typeof import('openai').default>;
+import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 
 // Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
@@ -153,32 +149,18 @@ const PAGE_CONTEXT_MAP: Record<string, string> = {
   '/contact': 'The user is on the contact page - they are ready to engage! Be responsive and helpful.',
 };
 
-// Dynamic import for Anthropic to prevent server startup issues
-async function getAnthropicClient(): Promise<AnthropicClient | null> {
+// Initialize Anthropic client
+function getAnthropicClient(): Anthropic | null {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
-
-  try {
-    const { default: Anthropic } = await import('@anthropic-ai/sdk');
-    return new Anthropic({ apiKey });
-  } catch (error) {
-    console.error('Failed to load Anthropic SDK:', error);
-    return null;
-  }
+  return new Anthropic({ apiKey });
 }
 
-// Dynamic import for OpenAI fallback
-async function getOpenAIClient(): Promise<OpenAIClient | null> {
+// Initialize OpenAI client
+function getOpenAIClient(): OpenAI | null {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return null;
-
-  try {
-    const { default: OpenAI } = await import('openai');
-    return new OpenAI({ apiKey });
-  } catch (error) {
-    console.error('Failed to load OpenAI SDK:', error);
-    return null;
-  }
+  return new OpenAI({ apiKey });
 }
 
 export async function POST(request: NextRequest) {
@@ -198,8 +180,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get AI clients (at least one should be available)
-    const anthropic = await getAnthropicClient();
-    const openai = await getOpenAIClient();
+    const anthropic = getAnthropicClient();
+    const openai = getOpenAIClient();
 
     // Check if at least one API is available
     if (!anthropic && !openai) {

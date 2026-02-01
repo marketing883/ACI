@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 import {
   isDataForSEOConfigured,
   comprehensiveKeywordResearch,
   cachedRequest,
   type ComprehensiveKeywordData,
 } from '@/lib/dataforseo';
-
-// Dynamic import for Anthropic to avoid server startup issues
-type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
-
-// Dynamic import type for OpenAI
-type OpenAIClient = InstanceType<typeof import('openai').default>;
 
 // Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
@@ -75,39 +71,25 @@ interface KeywordResponse {
   error?: string;
 }
 
-// Initialize Anthropic client for AI-powered question generation (dynamic import)
-async function getAnthropicClient(): Promise<AnthropicClient | null> {
+// Initialize Anthropic client
+function getAnthropicClient(): Anthropic | null {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
-
-  try {
-    const { default: Anthropic } = await import('@anthropic-ai/sdk');
-    return new Anthropic({ apiKey });
-  } catch (error) {
-    console.error('Failed to load Anthropic SDK:', error);
-    return null;
-  }
+  return new Anthropic({ apiKey });
 }
 
-// Initialize OpenAI client for fallback (dynamic import)
-async function getOpenAIClient(): Promise<OpenAIClient | null> {
+// Initialize OpenAI client
+function getOpenAIClient(): OpenAI | null {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return null;
-
-  try {
-    const { default: OpenAI } = await import('openai');
-    return new OpenAI({ apiKey });
-  } catch (error) {
-    console.error('Failed to load OpenAI SDK:', error);
-    return null;
-  }
+  return new OpenAI({ apiKey });
 }
 
 // AI-powered intelligent question generation based on real search intent
 // Uses 4-layer model fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 async function generateAIQuestions(keyword: string): Promise<{ questions: string[]; source: 'ai-researched' }> {
-  const anthropic = await getAnthropicClient();
-  const openai = await getOpenAIClient();
+  const anthropic = getAnthropicClient();
+  const openai = getOpenAIClient();
 
   console.log(`generateAIQuestions: Anthropic configured: ${!!anthropic}, OpenAI configured: ${!!openai}`);
 
@@ -205,8 +187,8 @@ Return ONLY a JSON array of 8 question strings, nothing else. Example format:
 // AI-powered alternative keyword generation with strategic insights
 // Uses 4-layer model fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 async function generateAIAlternativeKeywords(keyword: string): Promise<{ keywords: { keyword: string; note: string }[]; source: 'ai-generated' }> {
-  const anthropic = await getAnthropicClient();
-  const openai = await getOpenAIClient();
+  const anthropic = getAnthropicClient();
+  const openai = getOpenAIClient();
 
   if (!anthropic && !openai) {
     throw new Error('No AI API configured. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY.');

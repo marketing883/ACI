@@ -1,6 +1,5 @@
-// Dynamic import types to avoid server startup issues
-type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
-type OpenAIClient = InstanceType<typeof import('openai').default>;
+import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 
 // Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
@@ -14,32 +13,18 @@ const MODELS = {
   },
 } as const;
 
-// Initialize Anthropic client with dynamic import
-async function getAnthropicClient(): Promise<AnthropicClient | null> {
+// Initialize Anthropic client
+function getAnthropicClient(): Anthropic | null {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
-
-  try {
-    const { default: Anthropic } = await import('@anthropic-ai/sdk');
-    return new Anthropic({ apiKey });
-  } catch (error) {
-    console.error('Failed to load Anthropic SDK:', error);
-    return null;
-  }
+  return new Anthropic({ apiKey });
 }
 
-// Initialize OpenAI client with dynamic import
-async function getOpenAIClient(): Promise<OpenAIClient | null> {
+// Initialize OpenAI client
+function getOpenAIClient(): OpenAI | null {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return null;
-
-  try {
-    const { default: OpenAI } = await import('openai');
-    return new OpenAI({ apiKey });
-  } catch (error) {
-    console.error('Failed to load OpenAI SDK:', error);
-    return null;
-  }
+  return new OpenAI({ apiKey });
 }
 
 export interface LeadData {

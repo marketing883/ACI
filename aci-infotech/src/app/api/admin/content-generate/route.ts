@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Dynamic import type for Anthropic
-type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
-
-// Dynamic import type for OpenAI
-type OpenAIClient = InstanceType<typeof import('openai').default>;
+import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 
 // Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
@@ -51,43 +47,23 @@ interface GenerateRequest {
   };
 }
 
-// Initialize Anthropic client with dynamic import to prevent server startup issues
-async function getAnthropicClient(): Promise<AnthropicClient | null> {
+// Initialize Anthropic client
+function getAnthropicClient(): Anthropic | null {
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    console.error('ANTHROPIC_API_KEY is not configured');
-    return null;
-  }
-
-  try {
-    const { default: Anthropic } = await import('@anthropic-ai/sdk');
-    return new Anthropic({ apiKey });
-  } catch (error) {
-    console.error('Failed to load Anthropic SDK:', error);
-    return null;
-  }
+  if (!apiKey) return null;
+  return new Anthropic({ apiKey });
 }
 
-// Initialize OpenAI client with dynamic import for fallback
-async function getOpenAIClient(): Promise<OpenAIClient | null> {
+// Initialize OpenAI client
+function getOpenAIClient(): OpenAI | null {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    console.error('OPENAI_API_KEY is not configured');
-    return null;
-  }
-
-  try {
-    const { default: OpenAI } = await import('openai');
-    return new OpenAI({ apiKey });
-  } catch (error) {
-    console.error('Failed to load OpenAI SDK:', error);
-    return null;
-  }
+  if (!apiKey) return null;
+  return new OpenAI({ apiKey });
 }
 
 // Generate content with 4-layer model fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 async function generateWithFallback(
-  anthropic: AnthropicClient | null,
+  anthropic: Anthropic | null,
   prompt: string,
   maxTokens: number
 ): Promise<{ content: string; model: string }> {
@@ -118,7 +94,7 @@ async function generateWithFallback(
   }
 
   // Try OpenAI models as fallback (GPT-4o -> GPT-4o-mini)
-  const openai = await getOpenAIClient();
+  const openai = getOpenAIClient();
   if (openai) {
     for (const model of [MODELS.openai.primary, MODELS.openai.fallback]) {
       try {
@@ -154,8 +130,8 @@ export async function POST(request: NextRequest) {
     const { type, field, context } = body;
 
     // Get AI clients (may return null if not configured)
-    const anthropic = await getAnthropicClient();
-    const openai = await getOpenAIClient();
+    const anthropic = getAnthropicClient();
+    const openai = getOpenAIClient();
 
     // Check if at least one AI service is available - NO MOCK FALLBACK
     if (!anthropic && !openai) {
