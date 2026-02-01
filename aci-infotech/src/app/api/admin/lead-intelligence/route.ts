@@ -3,10 +3,18 @@ import { NextRequest, NextResponse } from 'next/server';
 // Dynamic import type for Anthropic
 type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
-// Model configuration with fallbacks for 100% AI-generated content
+// Dynamic import type for OpenAI
+type OpenAIClient = InstanceType<typeof import('openai').default>;
+
+// Model configuration with triple-layer fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
 const MODELS = {
-  primary: 'claude-sonnet-4-20250514',
-  fallback: 'claude-3-5-haiku-20241022',
+  anthropic: {
+    primary: 'claude-sonnet-4-20250514',
+    fallback: 'claude-3-5-haiku-20241022',
+  },
+  openai: {
+    fallback: 'gpt-4o',
+  },
 } as const;
 
 interface LeadData {
@@ -82,6 +90,20 @@ async function getAnthropicClient(): Promise<AnthropicClient | null> {
   }
 }
 
+// Dynamic import for OpenAI fallback
+async function getOpenAIClient(): Promise<OpenAIClient | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const { default: OpenAI } = await import('openai');
+    return new OpenAI({ apiKey });
+  } catch (error) {
+    console.error('Failed to load OpenAI SDK:', error);
+    return null;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { lead } = await request.json() as { lead: LeadData };
@@ -93,9 +115,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.ANTHROPIC_API_KEY) {
+    if (!process.env.ANTHROPIC_API_KEY && !process.env.OPENAI_API_KEY) {
       return NextResponse.json(
-        { error: 'Anthropic API not configured. Please set ANTHROPIC_API_KEY for AI-powered lead intelligence.' },
+        { error: 'No AI API configured. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY for AI-powered lead intelligence.' },
         { status: 503 }
       );
     }
@@ -154,8 +176,10 @@ function buildContext(lead: LeadData): string {
 
 async function generateIntelligence(lead: LeadData): Promise<IntelligenceReport> {
   const anthropic = await getAnthropicClient();
-  if (!anthropic) {
-    throw new Error('Anthropic API not configured');
+  const openai = await getOpenAIClient();
+
+  if (!anthropic && !openai) {
+    throw new Error('No AI API configured');
   }
 
   const context = buildContext(lead);
@@ -220,40 +244,64 @@ Be specific, not generic. Make reasonable inferences. If data is sparse, note lo
 
 CRITICAL FORMATTING: Never use em dashes (—) or en dashes (–) in any text content. Use commas, semicolons, colons, or periods instead. Use "to" for ranges. Use hyphens only for compound words.`;
 
-  // Try primary model, then fallback model
-  let lastError: Error | null = null;
+  const errors: string[] = [];
 
-  for (const model of [MODELS.primary, MODELS.fallback]) {
+  // Try Claude models first
+  if (anthropic) {
+    for (const model of [MODELS.anthropic.primary, MODELS.anthropic.fallback]) {
+      try {
+        console.log(`Generating lead intelligence with model: ${model}`);
+        const response = await anthropic.messages.create({
+          model,
+          max_tokens: 2000,
+          messages: [{ role: 'user', content: prompt }],
+        });
+
+        const textContent = response.content.find(block => block.type === 'text');
+        const text = textContent && 'text' in textContent ? textContent.text : '';
+
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
+          console.log(`Lead intelligence generated successfully with ${model}`);
+          return report;
+        }
+
+        console.warn(`Model ${model} returned unparseable response, trying next model`);
+      } catch (error) {
+        console.error(`Model ${model} failed for lead intelligence:`, error);
+        errors.push(`${model}: ${error}`);
+      }
+    }
+  }
+
+  // Try OpenAI as final fallback
+  if (openai) {
     try {
-      console.log(`Generating lead intelligence with model: ${model}`);
-      const response = await anthropic.messages.create({
-        model,
+      console.log(`Generating lead intelligence with OpenAI model: ${MODELS.openai.fallback}`);
+      const response = await openai.chat.completions.create({
+        model: MODELS.openai.fallback,
         max_tokens: 2000,
         messages: [{ role: 'user', content: prompt }],
       });
 
-      const textContent = response.content.find(block => block.type === 'text');
-      const text = textContent && 'text' in textContent ? textContent.text : '';
-
-      // Parse JSON
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
-        console.log(`Lead intelligence generated successfully with ${model}`);
-        return report;
+      const content = response.choices[0]?.message?.content;
+      if (content) {
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
+          console.log(`Lead intelligence generated successfully with OpenAI ${MODELS.openai.fallback}`);
+          return report;
+        }
       }
-
-      // If we got a response but couldn't parse it, try next model
-      console.warn(`Model ${model} returned unparseable response, trying next model`);
+      console.warn('OpenAI returned unparseable response');
     } catch (error) {
-      console.error(`Model ${model} failed for lead intelligence:`, error);
-      lastError = error instanceof Error ? error : new Error(String(error));
-      // Continue to fallback model
+      console.error(`OpenAI model failed for lead intelligence:`, error);
+      errors.push(`OpenAI GPT-4o: ${error}`);
     }
   }
 
-  // All models failed
-  throw new Error(`All AI models failed to generate lead intelligence: ${lastError?.message || 'Unknown error'}`);
+  throw new Error(`All AI models failed to generate lead intelligence. ${errors.join('; ')}`);
 }
 
 // Template/fallback functions removed - all content is now AI-generated

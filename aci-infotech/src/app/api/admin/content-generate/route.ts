@@ -3,10 +3,18 @@ import { NextRequest, NextResponse } from 'next/server';
 // Dynamic import type for Anthropic
 type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
-// Model configuration with fallbacks
+// Dynamic import type for OpenAI
+type OpenAIClient = InstanceType<typeof import('openai').default>;
+
+// Model configuration with fallbacks (Claude primary -> Claude Haiku -> OpenAI GPT-4o)
 const MODELS = {
-  primary: 'claude-sonnet-4-20250514',
-  fallback: 'claude-3-5-haiku-20241022',
+  anthropic: {
+    primary: 'claude-sonnet-4-20250514',
+    fallback: 'claude-3-5-haiku-20241022',
+  },
+  openai: {
+    fallback: 'gpt-4o',
+  },
 } as const;
 
 interface GenerateRequest {
@@ -59,49 +67,99 @@ async function getAnthropicClient(): Promise<AnthropicClient | null> {
   }
 }
 
-// Generate content with model fallback
+// Initialize OpenAI client with dynamic import for fallback
+async function getOpenAIClient(): Promise<OpenAIClient | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    console.error('OPENAI_API_KEY is not configured');
+    return null;
+  }
+
+  try {
+    const { default: OpenAI } = await import('openai');
+    return new OpenAI({ apiKey });
+  } catch (error) {
+    console.error('Failed to load OpenAI SDK:', error);
+    return null;
+  }
+}
+
+// Generate content with triple-layer model fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
 async function generateWithFallback(
-  anthropic: AnthropicClient,
+  anthropic: AnthropicClient | null,
   prompt: string,
   maxTokens: number
 ): Promise<{ content: string; model: string }> {
-  // Try primary model first
-  try {
-    console.log(`Attempting generation with primary model: ${MODELS.primary}`);
-    const response = await anthropic.messages.create({
-      model: MODELS.primary,
-      max_tokens: maxTokens,
-      messages: [{ role: 'user', content: prompt }],
-    });
+  const errors: string[] = [];
 
-    const textContent = response.content.find(block => block.type === 'text');
-    if (textContent && 'text' in textContent && textContent.text.trim()) {
-      return { content: textContent.text, model: MODELS.primary };
-    }
-    throw new Error('Empty response from primary model');
-  } catch (primaryError) {
-    console.error(`Primary model (${MODELS.primary}) failed:`, primaryError);
-
-    // Try fallback model
+  // Try Claude Sonnet (primary)
+  if (anthropic) {
     try {
-      console.log(`Attempting generation with fallback model: ${MODELS.fallback}`);
+      console.log(`Attempting generation with primary model: ${MODELS.anthropic.primary}`);
       const response = await anthropic.messages.create({
-        model: MODELS.fallback,
+        model: MODELS.anthropic.primary,
         max_tokens: maxTokens,
         messages: [{ role: 'user', content: prompt }],
       });
 
       const textContent = response.content.find(block => block.type === 'text');
       if (textContent && 'text' in textContent && textContent.text.trim()) {
-        console.log(`Fallback model (${MODELS.fallback}) succeeded`);
-        return { content: textContent.text, model: MODELS.fallback };
+        return { content: textContent.text, model: MODELS.anthropic.primary };
       }
-      throw new Error('Empty response from fallback model');
+      throw new Error('Empty response from primary model');
+    } catch (primaryError) {
+      console.error(`Primary model (${MODELS.anthropic.primary}) failed:`, primaryError);
+      errors.push(`Claude Sonnet: ${primaryError}`);
+    }
+
+    // Try Claude Haiku (first fallback)
+    try {
+      console.log(`Attempting generation with fallback model: ${MODELS.anthropic.fallback}`);
+      const response = await anthropic.messages.create({
+        model: MODELS.anthropic.fallback,
+        max_tokens: maxTokens,
+        messages: [{ role: 'user', content: prompt }],
+      });
+
+      const textContent = response.content.find(block => block.type === 'text');
+      if (textContent && 'text' in textContent && textContent.text.trim()) {
+        console.log(`Fallback model (${MODELS.anthropic.fallback}) succeeded`);
+        return { content: textContent.text, model: MODELS.anthropic.fallback };
+      }
+      throw new Error('Empty response from Claude fallback model');
     } catch (fallbackError) {
-      console.error(`Fallback model (${MODELS.fallback}) also failed:`, fallbackError);
-      throw new Error(`All models failed. Primary: ${primaryError}, Fallback: ${fallbackError}`);
+      console.error(`Fallback model (${MODELS.anthropic.fallback}) failed:`, fallbackError);
+      errors.push(`Claude Haiku: ${fallbackError}`);
     }
   }
+
+  // Try OpenAI GPT-4o (second fallback)
+  const openai = await getOpenAIClient();
+  if (openai) {
+    try {
+      console.log(`Attempting generation with OpenAI fallback model: ${MODELS.openai.fallback}`);
+      const response = await openai.chat.completions.create({
+        model: MODELS.openai.fallback,
+        max_tokens: maxTokens,
+        messages: [{ role: 'user', content: prompt }],
+      });
+
+      const content = response.choices[0]?.message?.content;
+      if (content && content.trim()) {
+        console.log(`OpenAI fallback model (${MODELS.openai.fallback}) succeeded`);
+        return { content, model: MODELS.openai.fallback };
+      }
+      throw new Error('Empty response from OpenAI model');
+    } catch (openaiError) {
+      console.error(`OpenAI model (${MODELS.openai.fallback}) failed:`, openaiError);
+      errors.push(`OpenAI GPT-4o: ${openaiError}`);
+    }
+  } else {
+    errors.push('OpenAI: API key not configured');
+  }
+
+  // All models failed
+  throw new Error(`All AI models failed. ${errors.join('; ')}`);
 }
 
 export async function POST(request: NextRequest) {
@@ -109,13 +167,14 @@ export async function POST(request: NextRequest) {
     const body = await request.json() as GenerateRequest;
     const { type, field, context } = body;
 
-    // Get Anthropic client (returns null if not configured)
+    // Get AI clients (may return null if not configured)
     const anthropic = await getAnthropicClient();
+    const openai = await getOpenAIClient();
 
-    // Check if API is available - NO MOCK FALLBACK
-    if (!anthropic) {
+    // Check if at least one AI service is available - NO MOCK FALLBACK
+    if (!anthropic && !openai) {
       return NextResponse.json(
-        { error: 'AI service is not configured. Please set ANTHROPIC_API_KEY environment variable.' },
+        { error: 'No AI service configured. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY environment variable.' },
         { status: 503 }
       );
     }

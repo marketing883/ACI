@@ -3,10 +3,18 @@ import { NextRequest, NextResponse } from 'next/server';
 // Dynamic import type for Anthropic
 type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
-// Model configuration with fallbacks for 100% AI-generated responses
+// Dynamic import type for OpenAI
+type OpenAIClient = InstanceType<typeof import('openai').default>;
+
+// Model configuration with triple-layer fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
 const MODELS = {
-  primary: 'claude-sonnet-4-20250514',
-  fallback: 'claude-3-5-haiku-20241022',
+  anthropic: {
+    primary: 'claude-sonnet-4-20250514',
+    fallback: 'claude-3-5-haiku-20241022',
+  },
+  openai: {
+    fallback: 'gpt-4o',
+  },
 } as const;
 
 // ACI company context for the AI assistant - Thoughtful guide voice
@@ -158,6 +166,20 @@ async function getAnthropicClient(): Promise<AnthropicClient | null> {
   }
 }
 
+// Dynamic import for OpenAI fallback
+async function getOpenAIClient(): Promise<OpenAIClient | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const { default: OpenAI } = await import('openai');
+    return new OpenAI({ apiKey });
+  } catch (error) {
+    console.error('Failed to load OpenAI SDK:', error);
+    return null;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { messages, leadInfo, stage, pageContext } = await request.json() as {
@@ -174,11 +196,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get Anthropic client
+    // Get AI clients (at least one should be available)
     const anthropic = await getAnthropicClient();
+    const openai = await getOpenAIClient();
 
-    // Check if API is available
-    if (!anthropic) {
+    // Check if at least one API is available
+    if (!anthropic && !openai) {
       return NextResponse.json(
         { message: "I apologize, but the chat service is not fully configured yet. Please [contact us directly](/contact) to reach our team." },
       );
@@ -258,53 +281,80 @@ export async function POST(request: NextRequest) {
       personalizedContext += `\n\nThey want to schedule. Be efficient - clarify timing preference if needed, then confirm. No excessive enthusiasm.`;
     }
 
-    // Call Claude API with model fallback
+    // Call AI API with triple-layer model fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
     let messageText: string | null = null;
-    let lastError: Error | null = null;
+    const errors: string[] = [];
 
-    for (const model of [MODELS.primary, MODELS.fallback]) {
-      try {
-        console.log(`Chat: trying model ${model}`);
-        const response = await anthropic.messages.create({
-          model,
-          max_tokens: 150,
-          system: personalizedContext,
-          messages: messages.map((m: ChatMessage) => ({
-            role: m.role,
-            content: m.content,
-          })),
-        });
+    // Try Claude models first
+    if (anthropic) {
+      for (const model of [MODELS.anthropic.primary, MODELS.anthropic.fallback]) {
+        try {
+          console.log(`Chat: trying model ${model}`);
+          const response = await anthropic.messages.create({
+            model,
+            max_tokens: 150,
+            system: personalizedContext,
+            messages: messages.map((m: ChatMessage) => ({
+              role: m.role,
+              content: m.content,
+            })),
+          });
 
-        // Extract text from response
-        const textContent = response.content.find(block => block.type === 'text');
-        messageText = textContent && 'text' in textContent ? textContent.text : null;
+          const textContent = response.content.find(block => block.type === 'text');
+          messageText = textContent && 'text' in textContent ? textContent.text : null;
 
-        if (messageText) {
-          console.log(`Chat: successfully generated with ${model}`);
-          break; // Success - exit loop
+          if (messageText) {
+            console.log(`Chat: successfully generated with ${model}`);
+            return NextResponse.json({ message: messageText });
+          }
+        } catch (error) {
+          console.error(`Chat: model ${model} failed:`, error);
+          errors.push(`${model}: ${error}`);
         }
-      } catch (error) {
-        console.error(`Chat: model ${model} failed:`, error);
-        lastError = error instanceof Error ? error : new Error(String(error));
-        // Continue to fallback model
       }
     }
 
-    if (messageText) {
-      return NextResponse.json({ message: messageText });
+    // Try OpenAI as final fallback
+    if (openai) {
+      try {
+        console.log(`Chat: trying OpenAI model ${MODELS.openai.fallback}`);
+        const response = await openai.chat.completions.create({
+          model: MODELS.openai.fallback,
+          max_tokens: 150,
+          messages: [
+            { role: 'system', content: personalizedContext },
+            ...messages.map((m: ChatMessage) => ({
+              role: m.role as 'user' | 'assistant',
+              content: m.content,
+            })),
+          ],
+        });
+
+        messageText = response.choices[0]?.message?.content || null;
+
+        if (messageText) {
+          console.log(`Chat: successfully generated with OpenAI ${MODELS.openai.fallback}`);
+          return NextResponse.json({ message: messageText });
+        }
+      } catch (error) {
+        console.error(`Chat: OpenAI model failed:`, error);
+        errors.push(`OpenAI GPT-4o: ${error}`);
+      }
     }
 
     // All models failed
-    console.error('Chat: all models failed', lastError);
+    console.error('Chat: all models failed', errors);
 
-    // Handle specific error types (check for status property on API errors)
-    const apiError = lastError as { status?: number } | null;
-    if (apiError?.status === 401) {
+    // Check for specific error types
+    const hasAuthError = errors.some(e => e.includes('401'));
+    const hasRateLimitError = errors.some(e => e.includes('429'));
+
+    if (hasAuthError) {
       return NextResponse.json(
         { message: "Technical issue on our end. [Contact us directly](/contact) - we'll sort it out." },
       );
     }
-    if (apiError?.status === 429) {
+    if (hasRateLimitError) {
       return NextResponse.json(
         { message: "High traffic right now. Try again in a moment, or [reach out directly](/contact)." },
       );

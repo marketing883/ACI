@@ -9,10 +9,18 @@ import {
 // Dynamic import for Anthropic to avoid server startup issues
 type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
-// Model configuration with fallbacks
+// Dynamic import type for OpenAI
+type OpenAIClient = InstanceType<typeof import('openai').default>;
+
+// Model configuration with triple-layer fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
 const MODELS = {
-  primary: 'claude-sonnet-4-20250514',
-  fallback: 'claude-3-5-haiku-20241022',
+  anthropic: {
+    primary: 'claude-sonnet-4-20250514',
+    fallback: 'claude-3-5-haiku-20241022',
+  },
+  openai: {
+    fallback: 'gpt-4o',
+  },
 } as const;
 
 // Data source tracking for transparency
@@ -79,13 +87,28 @@ async function getAnthropicClient(): Promise<AnthropicClient | null> {
   }
 }
 
-// AI-powered intelligent question generation based on real search intent
-// Uses model fallback to ensure AI-generated content
-async function generateAIQuestions(keyword: string): Promise<{ questions: string[]; source: 'ai-researched' }> {
-  const client = await getAnthropicClient();
+// Initialize OpenAI client for fallback (dynamic import)
+async function getOpenAIClient(): Promise<OpenAIClient | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
 
-  if (!client) {
-    throw new Error('Anthropic API not configured. Please set ANTHROPIC_API_KEY.');
+  try {
+    const { default: OpenAI } = await import('openai');
+    return new OpenAI({ apiKey });
+  } catch (error) {
+    console.error('Failed to load OpenAI SDK:', error);
+    return null;
+  }
+}
+
+// AI-powered intelligent question generation based on real search intent
+// Uses triple-layer model fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
+async function generateAIQuestions(keyword: string): Promise<{ questions: string[]; source: 'ai-researched' }> {
+  const anthropic = await getAnthropicClient();
+  const openai = await getOpenAIClient();
+
+  if (!anthropic && !openai) {
+    throw new Error('No AI API configured. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY.');
   }
 
   const prompt = `You are an SEO expert analyzing search intent. Generate 8 specific, high-value questions that enterprise decision-makers and IT leaders actually search for about "${keyword}".
@@ -100,54 +123,87 @@ Requirements:
 Return ONLY a JSON array of 8 question strings, nothing else. Example format:
 ["Question 1?", "Question 2?", ...]`;
 
-  // Try primary model
-  for (const model of [MODELS.primary, MODELS.fallback]) {
+  const errors: string[] = [];
+
+  // Try Claude models first
+  if (anthropic) {
+    for (const model of [MODELS.anthropic.primary, MODELS.anthropic.fallback]) {
+      try {
+        console.log(`Generating questions with model: ${model}`);
+        const response = await anthropic.messages.create({
+          model,
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }]
+        });
+
+        const textContent = response.content[0];
+        if (textContent.type === 'text') {
+          let questions: string[] = [];
+          try {
+            questions = JSON.parse(textContent.text);
+          } catch {
+            const jsonMatch = textContent.text.match(/\[[\s\S]*\]/);
+            if (jsonMatch) {
+              questions = JSON.parse(jsonMatch[0]);
+            }
+          }
+
+          if (Array.isArray(questions) && questions.length > 0) {
+            console.log(`AI generated ${questions.length} questions using ${model}`);
+            return { questions: questions.slice(0, 8), source: 'ai-researched' };
+          }
+        }
+      } catch (error) {
+        console.error(`Model ${model} failed for questions:`, error);
+        errors.push(`${model}: ${error}`);
+      }
+    }
+  }
+
+  // Try OpenAI as final fallback
+  if (openai) {
     try {
-      console.log(`Generating questions with model: ${model}`);
-      const response = await client.messages.create({
-        model,
+      console.log(`Generating questions with OpenAI model: ${MODELS.openai.fallback}`);
+      const response = await openai.chat.completions.create({
+        model: MODELS.openai.fallback,
         max_tokens: 1024,
         messages: [{ role: 'user', content: prompt }]
       });
 
-      const textContent = response.content[0];
-      if (textContent.type === 'text') {
-        // Try to parse JSON
+      const content = response.choices[0]?.message?.content;
+      if (content) {
         let questions: string[] = [];
         try {
-          questions = JSON.parse(textContent.text);
+          questions = JSON.parse(content);
         } catch {
-          // Try to extract JSON from response
-          const jsonMatch = textContent.text.match(/\[[\s\S]*\]/);
+          const jsonMatch = content.match(/\[[\s\S]*\]/);
           if (jsonMatch) {
             questions = JSON.parse(jsonMatch[0]);
           }
         }
 
         if (Array.isArray(questions) && questions.length > 0) {
-          console.log(`AI generated ${questions.length} questions using ${model}`);
+          console.log(`OpenAI generated ${questions.length} questions using ${MODELS.openai.fallback}`);
           return { questions: questions.slice(0, 8), source: 'ai-researched' };
         }
       }
     } catch (error) {
-      console.error(`Model ${model} failed for questions:`, error);
-      if (model === MODELS.fallback) {
-        throw new Error(`All models failed to generate questions: ${error}`);
-      }
-      // Continue to fallback model
+      console.error(`OpenAI model failed for questions:`, error);
+      errors.push(`OpenAI GPT-4o: ${error}`);
     }
   }
 
-  throw new Error('Failed to generate questions with any model');
+  throw new Error(`All AI models failed to generate questions. ${errors.join('; ')}`);
 }
 
 // AI-powered alternative keyword generation with strategic insights
-// Uses model fallback to ensure AI-generated content
+// Uses triple-layer model fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
 async function generateAIAlternativeKeywords(keyword: string): Promise<{ keywords: { keyword: string; note: string }[]; source: 'ai-generated' }> {
-  const client = await getAnthropicClient();
+  const anthropic = await getAnthropicClient();
+  const openai = await getOpenAIClient();
 
-  if (!client) {
-    throw new Error('Anthropic API not configured. Please set ANTHROPIC_API_KEY.');
+  if (!anthropic && !openai) {
+    throw new Error('No AI API configured. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY.');
   }
 
   const prompt = `You are an SEO strategist. Generate 5 strategic alternative keyword variations for "${keyword}" that would be valuable for an enterprise IT services company to target.
@@ -157,45 +213,77 @@ For each keyword, provide a brief strategic note explaining why it's valuable (e
 Return ONLY a JSON array in this exact format:
 [{"keyword": "alternative keyword phrase", "note": "Strategic reason to target"}, ...]`;
 
-  // Try with model fallback
-  for (const model of [MODELS.primary, MODELS.fallback]) {
+  const errors: string[] = [];
+
+  // Try Claude models first
+  if (anthropic) {
+    for (const model of [MODELS.anthropic.primary, MODELS.anthropic.fallback]) {
+      try {
+        console.log(`Generating alternative keywords with model: ${model}`);
+        const response = await anthropic.messages.create({
+          model,
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }]
+        });
+
+        const textContent = response.content[0];
+        if (textContent.type === 'text') {
+          let keywords: { keyword: string; note: string }[] = [];
+          try {
+            keywords = JSON.parse(textContent.text);
+          } catch {
+            const jsonMatch = textContent.text.match(/\[[\s\S]*\]/);
+            if (jsonMatch) {
+              keywords = JSON.parse(jsonMatch[0]);
+            }
+          }
+
+          if (Array.isArray(keywords) && keywords.length > 0) {
+            console.log(`AI generated ${keywords.length} keywords using ${model}`);
+            return { keywords: keywords.slice(0, 5), source: 'ai-generated' };
+          }
+        }
+      } catch (error) {
+        console.error(`Model ${model} failed for keywords:`, error);
+        errors.push(`${model}: ${error}`);
+      }
+    }
+  }
+
+  // Try OpenAI as final fallback
+  if (openai) {
     try {
-      console.log(`Generating alternative keywords with model: ${model}`);
-      const response = await client.messages.create({
-        model,
+      console.log(`Generating alternative keywords with OpenAI model: ${MODELS.openai.fallback}`);
+      const response = await openai.chat.completions.create({
+        model: MODELS.openai.fallback,
         max_tokens: 1024,
         messages: [{ role: 'user', content: prompt }]
       });
 
-      const textContent = response.content[0];
-      if (textContent.type === 'text') {
-        // Try to parse JSON
+      const content = response.choices[0]?.message?.content;
+      if (content) {
         let keywords: { keyword: string; note: string }[] = [];
         try {
-          keywords = JSON.parse(textContent.text);
+          keywords = JSON.parse(content);
         } catch {
-          // Try to extract JSON from response
-          const jsonMatch = textContent.text.match(/\[[\s\S]*\]/);
+          const jsonMatch = content.match(/\[[\s\S]*\]/);
           if (jsonMatch) {
             keywords = JSON.parse(jsonMatch[0]);
           }
         }
 
         if (Array.isArray(keywords) && keywords.length > 0) {
-          console.log(`AI generated ${keywords.length} keywords using ${model}`);
+          console.log(`OpenAI generated ${keywords.length} keywords using ${MODELS.openai.fallback}`);
           return { keywords: keywords.slice(0, 5), source: 'ai-generated' };
         }
       }
     } catch (error) {
-      console.error(`Model ${model} failed for keywords:`, error);
-      if (model === MODELS.fallback) {
-        throw new Error(`All models failed to generate keywords: ${error}`);
-      }
-      // Continue to fallback model
+      console.error(`OpenAI model failed for keywords:`, error);
+      errors.push(`OpenAI GPT-4o: ${error}`);
     }
   }
 
-  throw new Error('Failed to generate alternative keywords with any model');
+  throw new Error(`All AI models failed to generate keywords. ${errors.join('; ')}`);
 }
 
 // All template/mock functions removed - AI generation is now required
