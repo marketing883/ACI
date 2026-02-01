@@ -107,6 +107,8 @@ async function generateAIQuestions(keyword: string): Promise<{ questions: string
   const anthropic = await getAnthropicClient();
   const openai = await getOpenAIClient();
 
+  console.log(`generateAIQuestions: Anthropic configured: ${!!anthropic}, OpenAI configured: ${!!openai}`);
+
   if (!anthropic && !openai) {
     throw new Error('No AI API configured. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY.');
   }
@@ -440,6 +442,14 @@ function transformDataForSEOResponse(
 }
 
 export async function POST(request: NextRequest) {
+  // Diagnostic logging for API configuration
+  console.log('=== Keyword Research API Debug ===');
+  console.log('ANTHROPIC_API_KEY set:', !!process.env.ANTHROPIC_API_KEY);
+  console.log('OPENAI_API_KEY set:', !!process.env.OPENAI_API_KEY);
+  console.log('DATAFORSEO_LOGIN set:', !!process.env.DATAFORSEO_LOGIN);
+  console.log('DATAFORSEO_PASSWORD set:', !!process.env.DATAFORSEO_PASSWORD);
+  console.log('=================================');
+
   try {
     const { keyword, location = 'United States' } = await request.json();
 
