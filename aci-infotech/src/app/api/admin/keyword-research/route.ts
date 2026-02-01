@@ -72,6 +72,7 @@ interface KeywordResponse {
   isRealData: boolean;
   dataSources: DataSources;
   warning?: string;
+  error?: string;
 }
 
 // Initialize Anthropic client for AI-powered question generation (dynamic import)
