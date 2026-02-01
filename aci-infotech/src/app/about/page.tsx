@@ -10,7 +10,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'About ACI Infotech | The Engineers Behind Enterprise Modernization',
-  description: '1,250+ engineers building data platforms, AI systems, and cloud architectures for 80+ Fortune 500 clients. 19 years of production-grade engineering. We answer the 2am call.',
+  description: '6,250+ engineers building data platforms, AI systems, and cloud architectures for 80+ Fortune 500 clients. 19 years of production-grade engineering. We answer the 2am call.',
   keywords: 'enterprise technology consulting, data engineering company, AI ML consulting, Fortune 500 technology partner, production-grade engineering',
   alternates: {
     canonical: `${siteUrl}/about`,
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
 const stats = [
   { number: '19', unit: 'Years', description: 'Founded 2006' },
   { number: '80+', unit: 'Fortune 500', description: 'Clients served' },
-  { number: '$650M+', unit: 'Value', description: 'Delivered to clients' },
-  { number: '1,250+', unit: 'Engineers', description: 'Technologists globally' },
+  { number: '$1B+', unit: 'Value', description: 'Delivered to clients' },
+  { number: '6,250+', unit: 'Engineers', description: 'Technologists globally' },
   { number: '10', unit: 'Countries', description: 'Global delivery' },
 ];
 
@@ -94,7 +94,7 @@ const ceo = {
   title: 'Founder & CEO',
   vision: `At ACI Infotech, our purpose is to drive enterprise excellence through innovation and intelligence. We partner with organizations to help them reimagine their business models, modernize operations, and unlock value through technology.
 
-Under Jag's leadership, ACI has grown from a small team of passionate engineers to a 1,250+ strong global organization serving 80+ Fortune 500 clients. His vision is simple yet powerful: deliver production-grade systems that create measurable business value, backed by engineers who take ownership and stay accountable.
+Under Jag's leadership, ACI has grown from a small team of passionate engineers to a 6,250+ strong global organization serving 80+ Fortune 500 clients. His vision is simple yet powerful: deliver production-grade systems that create measurable business value, backed by engineers who take ownership and stay accountable.
 
 "We don't just deliver projects. We build partnerships. When your system goes down at 2am, we're the team that answers the phone. That's not a policy. That's who we are."`,
   photo_url: '/images/about-team/Jag.png',
@@ -164,10 +164,10 @@ const certifications = [
 ];
 
 const trackRecord = [
-  { number: '$650M+', label: 'Total value delivered to clients', context: 'Measurable ROI, not estimated' },
+  { number: '$1B+', label: 'Total value delivered to clients', context: 'Measurable ROI, not estimated' },
   { number: '80+', label: 'Fortune 500 clients served', context: 'Across banking, healthcare, retail, manufacturing' },
   { number: '19 Years', label: 'In business since 2006', context: 'Stable, growing, here for the long term' },
-  { number: '1,250+', label: 'Technologists globally', context: 'Engineers, architects, data scientists' },
+  { number: '6,250+', label: 'Technologists globally', context: 'Engineers, architects, data scientists' },
   { number: '10 Countries', label: 'Global delivery centers', context: 'US, India, and beyond' },
   { number: '85%+', label: 'Client retention rate', context: 'Clients come back because we deliver' },
   { number: '70%', label: 'Senior engineers (10+ years)', context: 'Not junior analysts learning on your dime' },
@@ -193,7 +193,7 @@ export default function AboutPage() {
               The Engineers Behind Enterprise Modernization
             </h1>
             <p className="text-lg md:text-xl text-gray-300">
-              We're the 1,250-person technical team between your strategy and your operations.
+              We're the 6,250-person technical team between your strategy and your operations.
               We build data platforms, deploy AI systems, and stabilize cloud architectures, then
               we stand behind them with SLAs. We're the team that answers the 2am call.
             </p>

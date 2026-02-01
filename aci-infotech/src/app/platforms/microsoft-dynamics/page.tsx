@@ -112,10 +112,20 @@ export default function MicrosoftDynamicsPage() {
           </p>
 
           <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
+            <Button
+              href="/contact?reason=architecture-call"
+              variant="secondary"
+              size="lg"
+              className="!bg-[#C4FF61] !text-[#0A1628] hover:!bg-white hover:!text-[#0A1628] !border-[#C4FF61] font-semibold"
+            >
               Schedule Architecture Call
             </Button>
-            <Button href="/case-studies" variant="outline" size="lg">
+            <Button
+              href="/case-studies"
+              variant="outline"
+              size="lg"
+              className="!bg-transparent !text-blue-200 !border-blue-300/40 hover:!bg-blue-900/30 hover:!text-white hover:!border-blue-200/60"
+            >
               View Case Studies
             </Button>
           </div>

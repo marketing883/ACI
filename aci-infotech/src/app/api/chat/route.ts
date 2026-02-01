@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+
+// Dynamic import type for Anthropic
+type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
 // ACI company context for the AI assistant - Thoughtful guide voice
 const ACI_CONTEXT = `You are ACI's digital guide. Warm, thoughtful, quietly confident. You're here to understand and help - not to pitch or overwhelm.
@@ -136,10 +138,19 @@ const PAGE_CONTEXT_MAP: Record<string, string> = {
   '/contact': 'The user is on the contact page - they are ready to engage! Be responsive and helpful.',
 };
 
-// Initialize Anthropic client
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// Dynamic import for Anthropic to prevent server startup issues
+async function getAnthropicClient(): Promise<AnthropicClient | null> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const { default: Anthropic } = await import('@anthropic-ai/sdk');
+    return new Anthropic({ apiKey });
+  } catch (error) {
+    console.error('Failed to load Anthropic SDK:', error);
+    return null;
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -157,8 +168,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if API key is configured
-    if (!process.env.ANTHROPIC_API_KEY) {
+    // Get Anthropic client
+    const anthropic = await getAnthropicClient();
+
+    // Check if API is available
+    if (!anthropic) {
       return NextResponse.json(
         { message: "I apologize, but the chat service is not fully configured yet. Please [contact us directly](/contact) to reach our team." },
       );
@@ -257,18 +271,17 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Chat API error:', error);
 
-    // Handle specific error types
-    if (error instanceof Anthropic.APIError) {
-      if (error.status === 401) {
-        return NextResponse.json(
-          { message: "Technical issue on our end. [Contact us directly](/contact) - we'll sort it out." },
-        );
-      }
-      if (error.status === 429) {
-        return NextResponse.json(
-          { message: "High traffic right now. Try again in a moment, or [reach out directly](/contact)." },
-        );
-      }
+    // Handle specific error types (check for status property on API errors)
+    const apiError = error as { status?: number };
+    if (apiError.status === 401) {
+      return NextResponse.json(
+        { message: "Technical issue on our end. [Contact us directly](/contact) - we'll sort it out." },
+      );
+    }
+    if (apiError.status === 429) {
+      return NextResponse.json(
+        { message: "High traffic right now. Try again in a moment, or [reach out directly](/contact)." },
+      );
     }
 
     return NextResponse.json(

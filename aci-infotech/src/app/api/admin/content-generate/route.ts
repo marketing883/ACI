@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+
+// Dynamic import type for Anthropic
+type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
 interface GenerateRequest {
   type: 'blog' | 'case_study' | 'whitepaper' | 'webinar';
@@ -34,18 +36,31 @@ interface GenerateRequest {
   };
 }
 
-// Initialize Anthropic client
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// Initialize Anthropic client with dynamic import to prevent server startup issues
+async function getAnthropicClient(): Promise<AnthropicClient | null> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const { default: Anthropic } = await import('@anthropic-ai/sdk');
+    return new Anthropic({ apiKey });
+  } catch (error) {
+    console.error('Failed to load Anthropic SDK:', error);
+    return null;
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json() as GenerateRequest;
     const { type, field, context } = body;
 
-    // Check if API key is configured
-    if (!process.env.ANTHROPIC_API_KEY) {
+    // Get Anthropic client (returns null if not configured)
+    const anthropic = await getAnthropicClient();
+
+    // Check if API is available
+    if (!anthropic) {
+      console.log('Anthropic API not configured, using mock content');
       return NextResponse.json({
         generated: getMockContent(type, field, context),
       });

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+
+// Dynamic import type for Anthropic
+type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
 interface LeadData {
   name?: string;
@@ -60,9 +62,19 @@ interface IntelligenceReport {
   };
 }
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// Dynamic import for Anthropic to prevent server startup issues
+async function getAnthropicClient(): Promise<AnthropicClient | null> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const { default: Anthropic } = await import('@anthropic-ai/sdk');
+    return new Anthropic({ apiKey });
+  } catch (error) {
+    console.error('Failed to load Anthropic SDK:', error);
+    return null;
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -135,6 +147,11 @@ function buildContext(lead: LeadData): string {
 }
 
 async function generateIntelligence(lead: LeadData): Promise<IntelligenceReport> {
+  const anthropic = await getAnthropicClient();
+  if (!anthropic) {
+    return createFallbackReport(lead);
+  }
+
   const context = buildContext(lead);
 
   const prompt = `You are a B2B sales intelligence analyst for ACI Infotech, an enterprise tech consulting firm.
