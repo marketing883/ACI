@@ -529,16 +529,26 @@ export async function POST(request: NextRequest) {
       let aiQuestionsResult: { questions: string[]; source: 'ai-researched' } | undefined;
       let aiKeywordsResult: { keywords: { keyword: string; note: string }[]; source: 'ai-generated' } | undefined;
 
-      // If PAA data is missing, generate AI questions
+      // If PAA data is missing, TRY to generate AI questions (optional enhancement)
       if (!hasPAAData) {
-        console.log('No PAA data from API, generating AI-powered questions');
-        aiQuestionsResult = await generateAIQuestions(trimmedKeyword);
+        try {
+          console.log('No PAA data from API, generating AI-powered questions');
+          aiQuestionsResult = await generateAIQuestions(trimmedKeyword);
+        } catch (aiError) {
+          console.warn('AI question generation failed, continuing with DataForSEO data only:', aiError);
+          // Continue without AI questions - DataForSEO data is still valid
+        }
       }
 
-      // If alternative keywords are missing, generate AI suggestions
+      // If alternative keywords are missing, TRY to generate AI suggestions (optional enhancement)
       if (!hasAlternativeData) {
-        console.log('No alternative keywords from API, generating AI suggestions');
-        aiKeywordsResult = await generateAIAlternativeKeywords(trimmedKeyword);
+        try {
+          console.log('No alternative keywords from API, generating AI suggestions');
+          aiKeywordsResult = await generateAIAlternativeKeywords(trimmedKeyword);
+        } catch (aiError) {
+          console.warn('AI keyword generation failed, continuing with DataForSEO data only:', aiError);
+          // Continue without AI keywords - DataForSEO data is still valid
+        }
       }
 
       const response = transformDataForSEOResponse(data, trimmedKeyword, {
