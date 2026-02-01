@@ -6,14 +6,15 @@ type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 // Dynamic import type for OpenAI
 type OpenAIClient = InstanceType<typeof import('openai').default>;
 
-// Model configuration with triple-layer fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
+// Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
   anthropic: {
     primary: 'claude-sonnet-4-20250514',
     fallback: 'claude-3-5-haiku-20241022',
   },
   openai: {
-    fallback: 'gpt-4o',
+    primary: 'gpt-4o',
+    fallback: 'gpt-4o-mini',
   },
 } as const;
 
@@ -314,31 +315,33 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Try OpenAI as final fallback
+    // Try OpenAI models as final fallback (GPT-4o -> GPT-4o-mini)
     if (openai) {
-      try {
-        console.log(`Chat: trying OpenAI model ${MODELS.openai.fallback}`);
-        const response = await openai.chat.completions.create({
-          model: MODELS.openai.fallback,
-          max_tokens: 150,
-          messages: [
-            { role: 'system', content: personalizedContext },
-            ...messages.map((m: ChatMessage) => ({
-              role: m.role as 'user' | 'assistant',
-              content: m.content,
-            })),
-          ],
-        });
+      for (const model of [MODELS.openai.primary, MODELS.openai.fallback]) {
+        try {
+          console.log(`Chat: trying OpenAI model ${model}`);
+          const response = await openai.chat.completions.create({
+            model,
+            max_tokens: 150,
+            messages: [
+              { role: 'system', content: personalizedContext },
+              ...messages.map((m: ChatMessage) => ({
+                role: m.role as 'user' | 'assistant',
+                content: m.content,
+              })),
+            ],
+          });
 
-        messageText = response.choices[0]?.message?.content || null;
+          messageText = response.choices[0]?.message?.content || null;
 
-        if (messageText) {
-          console.log(`Chat: successfully generated with OpenAI ${MODELS.openai.fallback}`);
-          return NextResponse.json({ message: messageText });
+          if (messageText) {
+            console.log(`Chat: successfully generated with OpenAI ${model}`);
+            return NextResponse.json({ message: messageText });
+          }
+        } catch (error) {
+          console.error(`Chat: OpenAI model ${model} failed:`, error);
+          errors.push(`OpenAI ${model}: ${error}`);
         }
-      } catch (error) {
-        console.error(`Chat: OpenAI model failed:`, error);
-        errors.push(`OpenAI GPT-4o: ${error}`);
       }
     }
 

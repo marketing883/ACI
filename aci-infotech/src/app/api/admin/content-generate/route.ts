@@ -6,14 +6,15 @@ type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 // Dynamic import type for OpenAI
 type OpenAIClient = InstanceType<typeof import('openai').default>;
 
-// Model configuration with fallbacks (Claude primary -> Claude Haiku -> OpenAI GPT-4o)
+// Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
   anthropic: {
     primary: 'claude-sonnet-4-20250514',
     fallback: 'claude-3-5-haiku-20241022',
   },
   openai: {
-    fallback: 'gpt-4o',
+    primary: 'gpt-4o',
+    fallback: 'gpt-4o-mini',
   },
 } as const;
 
@@ -84,7 +85,7 @@ async function getOpenAIClient(): Promise<OpenAIClient | null> {
   }
 }
 
-// Generate content with triple-layer model fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
+// Generate content with 4-layer model fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 async function generateWithFallback(
   anthropic: AnthropicClient | null,
   prompt: string,
@@ -92,67 +93,52 @@ async function generateWithFallback(
 ): Promise<{ content: string; model: string }> {
   const errors: string[] = [];
 
-  // Try Claude Sonnet (primary)
+  // Try Claude models first (Sonnet -> Haiku)
   if (anthropic) {
-    try {
-      console.log(`Attempting generation with primary model: ${MODELS.anthropic.primary}`);
-      const response = await anthropic.messages.create({
-        model: MODELS.anthropic.primary,
-        max_tokens: maxTokens,
-        messages: [{ role: 'user', content: prompt }],
-      });
+    for (const model of [MODELS.anthropic.primary, MODELS.anthropic.fallback]) {
+      try {
+        console.log(`Attempting generation with Anthropic model: ${model}`);
+        const response = await anthropic.messages.create({
+          model,
+          max_tokens: maxTokens,
+          messages: [{ role: 'user', content: prompt }],
+        });
 
-      const textContent = response.content.find(block => block.type === 'text');
-      if (textContent && 'text' in textContent && textContent.text.trim()) {
-        return { content: textContent.text, model: MODELS.anthropic.primary };
+        const textContent = response.content.find(block => block.type === 'text');
+        if (textContent && 'text' in textContent && textContent.text.trim()) {
+          console.log(`Anthropic model (${model}) succeeded`);
+          return { content: textContent.text, model };
+        }
+        throw new Error(`Empty response from ${model}`);
+      } catch (error) {
+        console.error(`Anthropic model (${model}) failed:`, error);
+        errors.push(`${model}: ${error}`);
       }
-      throw new Error('Empty response from primary model');
-    } catch (primaryError) {
-      console.error(`Primary model (${MODELS.anthropic.primary}) failed:`, primaryError);
-      errors.push(`Claude Sonnet: ${primaryError}`);
-    }
-
-    // Try Claude Haiku (first fallback)
-    try {
-      console.log(`Attempting generation with fallback model: ${MODELS.anthropic.fallback}`);
-      const response = await anthropic.messages.create({
-        model: MODELS.anthropic.fallback,
-        max_tokens: maxTokens,
-        messages: [{ role: 'user', content: prompt }],
-      });
-
-      const textContent = response.content.find(block => block.type === 'text');
-      if (textContent && 'text' in textContent && textContent.text.trim()) {
-        console.log(`Fallback model (${MODELS.anthropic.fallback}) succeeded`);
-        return { content: textContent.text, model: MODELS.anthropic.fallback };
-      }
-      throw new Error('Empty response from Claude fallback model');
-    } catch (fallbackError) {
-      console.error(`Fallback model (${MODELS.anthropic.fallback}) failed:`, fallbackError);
-      errors.push(`Claude Haiku: ${fallbackError}`);
     }
   }
 
-  // Try OpenAI GPT-4o (second fallback)
+  // Try OpenAI models as fallback (GPT-4o -> GPT-4o-mini)
   const openai = await getOpenAIClient();
   if (openai) {
-    try {
-      console.log(`Attempting generation with OpenAI fallback model: ${MODELS.openai.fallback}`);
-      const response = await openai.chat.completions.create({
-        model: MODELS.openai.fallback,
-        max_tokens: maxTokens,
-        messages: [{ role: 'user', content: prompt }],
-      });
+    for (const model of [MODELS.openai.primary, MODELS.openai.fallback]) {
+      try {
+        console.log(`Attempting generation with OpenAI model: ${model}`);
+        const response = await openai.chat.completions.create({
+          model,
+          max_tokens: maxTokens,
+          messages: [{ role: 'user', content: prompt }],
+        });
 
-      const content = response.choices[0]?.message?.content;
-      if (content && content.trim()) {
-        console.log(`OpenAI fallback model (${MODELS.openai.fallback}) succeeded`);
-        return { content, model: MODELS.openai.fallback };
+        const content = response.choices[0]?.message?.content;
+        if (content && content.trim()) {
+          console.log(`OpenAI model (${model}) succeeded`);
+          return { content, model };
+        }
+        throw new Error(`Empty response from ${model}`);
+      } catch (error) {
+        console.error(`OpenAI model (${model}) failed:`, error);
+        errors.push(`OpenAI ${model}: ${error}`);
       }
-      throw new Error('Empty response from OpenAI model');
-    } catch (openaiError) {
-      console.error(`OpenAI model (${MODELS.openai.fallback}) failed:`, openaiError);
-      errors.push(`OpenAI GPT-4o: ${openaiError}`);
     }
   } else {
     errors.push('OpenAI: API key not configured');

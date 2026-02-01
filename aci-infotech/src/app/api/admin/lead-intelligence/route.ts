@@ -6,14 +6,15 @@ type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 // Dynamic import type for OpenAI
 type OpenAIClient = InstanceType<typeof import('openai').default>;
 
-// Model configuration with triple-layer fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
+// Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
   anthropic: {
     primary: 'claude-sonnet-4-20250514',
     fallback: 'claude-3-5-haiku-20241022',
   },
   openai: {
-    fallback: 'gpt-4o',
+    primary: 'gpt-4o',
+    fallback: 'gpt-4o-mini',
   },
 } as const;
 
@@ -275,29 +276,31 @@ CRITICAL FORMATTING: Never use em dashes (—) or en dashes (–) in any text co
     }
   }
 
-  // Try OpenAI as final fallback
+  // Try OpenAI models as final fallback (GPT-4o -> GPT-4o-mini)
   if (openai) {
-    try {
-      console.log(`Generating lead intelligence with OpenAI model: ${MODELS.openai.fallback}`);
-      const response = await openai.chat.completions.create({
-        model: MODELS.openai.fallback,
-        max_tokens: 2000,
-        messages: [{ role: 'user', content: prompt }],
-      });
+    for (const model of [MODELS.openai.primary, MODELS.openai.fallback]) {
+      try {
+        console.log(`Generating lead intelligence with OpenAI model: ${model}`);
+        const response = await openai.chat.completions.create({
+          model,
+          max_tokens: 2000,
+          messages: [{ role: 'user', content: prompt }],
+        });
 
-      const content = response.choices[0]?.message?.content;
-      if (content) {
-        const jsonMatch = content.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
-          console.log(`Lead intelligence generated successfully with OpenAI ${MODELS.openai.fallback}`);
-          return report;
+        const content = response.choices[0]?.message?.content;
+        if (content) {
+          const jsonMatch = content.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
+            console.log(`Lead intelligence generated successfully with OpenAI ${model}`);
+            return report;
+          }
         }
+        console.warn(`OpenAI ${model} returned unparseable response, trying next model`);
+      } catch (error) {
+        console.error(`OpenAI model ${model} failed for lead intelligence:`, error);
+        errors.push(`OpenAI ${model}: ${error}`);
       }
-      console.warn('OpenAI returned unparseable response');
-    } catch (error) {
-      console.error(`OpenAI model failed for lead intelligence:`, error);
-      errors.push(`OpenAI GPT-4o: ${error}`);
     }
   }
 

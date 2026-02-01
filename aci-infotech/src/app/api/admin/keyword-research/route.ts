@@ -12,14 +12,15 @@ type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 // Dynamic import type for OpenAI
 type OpenAIClient = InstanceType<typeof import('openai').default>;
 
-// Model configuration with triple-layer fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
+// Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
   anthropic: {
     primary: 'claude-sonnet-4-20250514',
     fallback: 'claude-3-5-haiku-20241022',
   },
   openai: {
-    fallback: 'gpt-4o',
+    primary: 'gpt-4o',
+    fallback: 'gpt-4o-mini',
   },
 } as const;
 
@@ -102,7 +103,7 @@ async function getOpenAIClient(): Promise<OpenAIClient | null> {
 }
 
 // AI-powered intelligent question generation based on real search intent
-// Uses triple-layer model fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
+// Uses 4-layer model fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 async function generateAIQuestions(keyword: string): Promise<{ questions: string[]; source: 'ai-researched' }> {
   const anthropic = await getAnthropicClient();
   const openai = await getOpenAIClient();
@@ -162,36 +163,38 @@ Return ONLY a JSON array of 8 question strings, nothing else. Example format:
     }
   }
 
-  // Try OpenAI as final fallback
+  // Try OpenAI models as final fallback (GPT-4o -> GPT-4o-mini)
   if (openai) {
-    try {
-      console.log(`Generating questions with OpenAI model: ${MODELS.openai.fallback}`);
-      const response = await openai.chat.completions.create({
-        model: MODELS.openai.fallback,
-        max_tokens: 1024,
-        messages: [{ role: 'user', content: prompt }]
-      });
+    for (const model of [MODELS.openai.primary, MODELS.openai.fallback]) {
+      try {
+        console.log(`Generating questions with OpenAI model: ${model}`);
+        const response = await openai.chat.completions.create({
+          model,
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }]
+        });
 
-      const content = response.choices[0]?.message?.content;
-      if (content) {
-        let questions: string[] = [];
-        try {
-          questions = JSON.parse(content);
-        } catch {
-          const jsonMatch = content.match(/\[[\s\S]*\]/);
-          if (jsonMatch) {
-            questions = JSON.parse(jsonMatch[0]);
+        const content = response.choices[0]?.message?.content;
+        if (content) {
+          let questions: string[] = [];
+          try {
+            questions = JSON.parse(content);
+          } catch {
+            const jsonMatch = content.match(/\[[\s\S]*\]/);
+            if (jsonMatch) {
+              questions = JSON.parse(jsonMatch[0]);
+            }
+          }
+
+          if (Array.isArray(questions) && questions.length > 0) {
+            console.log(`OpenAI generated ${questions.length} questions using ${model}`);
+            return { questions: questions.slice(0, 8), source: 'ai-researched' };
           }
         }
-
-        if (Array.isArray(questions) && questions.length > 0) {
-          console.log(`OpenAI generated ${questions.length} questions using ${MODELS.openai.fallback}`);
-          return { questions: questions.slice(0, 8), source: 'ai-researched' };
-        }
+      } catch (error) {
+        console.error(`OpenAI model ${model} failed for questions:`, error);
+        errors.push(`OpenAI ${model}: ${error}`);
       }
-    } catch (error) {
-      console.error(`OpenAI model failed for questions:`, error);
-      errors.push(`OpenAI GPT-4o: ${error}`);
     }
   }
 
@@ -199,7 +202,7 @@ Return ONLY a JSON array of 8 question strings, nothing else. Example format:
 }
 
 // AI-powered alternative keyword generation with strategic insights
-// Uses triple-layer model fallback (Claude Sonnet -> Claude Haiku -> OpenAI GPT-4o)
+// Uses 4-layer model fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 async function generateAIAlternativeKeywords(keyword: string): Promise<{ keywords: { keyword: string; note: string }[]; source: 'ai-generated' }> {
   const anthropic = await getAnthropicClient();
   const openai = await getOpenAIClient();
@@ -252,36 +255,38 @@ Return ONLY a JSON array in this exact format:
     }
   }
 
-  // Try OpenAI as final fallback
+  // Try OpenAI models as final fallback (GPT-4o -> GPT-4o-mini)
   if (openai) {
-    try {
-      console.log(`Generating alternative keywords with OpenAI model: ${MODELS.openai.fallback}`);
-      const response = await openai.chat.completions.create({
-        model: MODELS.openai.fallback,
-        max_tokens: 1024,
-        messages: [{ role: 'user', content: prompt }]
-      });
+    for (const model of [MODELS.openai.primary, MODELS.openai.fallback]) {
+      try {
+        console.log(`Generating alternative keywords with OpenAI model: ${model}`);
+        const response = await openai.chat.completions.create({
+          model,
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }]
+        });
 
-      const content = response.choices[0]?.message?.content;
-      if (content) {
-        let keywords: { keyword: string; note: string }[] = [];
-        try {
-          keywords = JSON.parse(content);
-        } catch {
-          const jsonMatch = content.match(/\[[\s\S]*\]/);
-          if (jsonMatch) {
-            keywords = JSON.parse(jsonMatch[0]);
+        const content = response.choices[0]?.message?.content;
+        if (content) {
+          let keywords: { keyword: string; note: string }[] = [];
+          try {
+            keywords = JSON.parse(content);
+          } catch {
+            const jsonMatch = content.match(/\[[\s\S]*\]/);
+            if (jsonMatch) {
+              keywords = JSON.parse(jsonMatch[0]);
+            }
+          }
+
+          if (Array.isArray(keywords) && keywords.length > 0) {
+            console.log(`OpenAI generated ${keywords.length} keywords using ${model}`);
+            return { keywords: keywords.slice(0, 5), source: 'ai-generated' };
           }
         }
-
-        if (Array.isArray(keywords) && keywords.length > 0) {
-          console.log(`OpenAI generated ${keywords.length} keywords using ${MODELS.openai.fallback}`);
-          return { keywords: keywords.slice(0, 5), source: 'ai-generated' };
-        }
+      } catch (error) {
+        console.error(`OpenAI model ${model} failed for keywords:`, error);
+        errors.push(`OpenAI ${model}: ${error}`);
       }
-    } catch (error) {
-      console.error(`OpenAI model failed for keywords:`, error);
-      errors.push(`OpenAI GPT-4o: ${error}`);
     }
   }
 
