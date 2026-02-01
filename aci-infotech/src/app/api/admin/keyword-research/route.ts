@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
 import {
   isDataForSEOConfigured,
   comprehensiveKeywordResearch,
   cachedRequest,
   type ComprehensiveKeywordData,
 } from '@/lib/dataforseo';
+
+// Dynamic import for Anthropic to avoid server startup issues
+type AnthropicClient = InstanceType<typeof import('@anthropic-ai/sdk').default>;
 
 // Data source tracking for transparency
 interface DataSources {
@@ -56,16 +58,23 @@ interface KeywordResponse {
   warning?: string;
 }
 
-// Initialize Anthropic client for AI-powered question generation
-function getAnthropicClient(): Anthropic | null {
+// Initialize Anthropic client for AI-powered question generation (dynamic import)
+async function getAnthropicClient(): Promise<AnthropicClient | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
-  return new Anthropic({ apiKey });
+
+  try {
+    const { default: Anthropic } = await import('@anthropic-ai/sdk');
+    return new Anthropic({ apiKey });
+  } catch (error) {
+    console.error('Failed to load Anthropic SDK:', error);
+    return null;
+  }
 }
 
 // AI-powered intelligent question generation based on real search intent
 async function generateAIQuestions(keyword: string): Promise<{ questions: string[]; source: 'ai-researched' | 'template' }> {
-  const client = getAnthropicClient();
+  const client = await getAnthropicClient();
 
   if (!client) {
     console.log('Anthropic API not configured, using template questions');
@@ -113,7 +122,7 @@ Return ONLY a JSON array of 8 question strings, nothing else. Example format:
 
 // AI-powered alternative keyword generation with strategic insights
 async function generateAIAlternativeKeywords(keyword: string): Promise<{ keywords: { keyword: string; note: string }[]; source: 'ai-generated' | 'template' }> {
-  const client = getAnthropicClient();
+  const client = await getAnthropicClient();
 
   if (!client) {
     return { keywords: generateTemplateAlternativeKeywords(keyword), source: 'template' };
