@@ -580,10 +580,11 @@ ${AEO_GEO_GUIDELINES}
 Return a detailed outline in markdown format that serves as a complete blueprint for an exceptional article.`;
 
       case 'content':
-        // Parse word count for explicit guidance
-        const wordCountMatch = length?.match(/(\d+)/);
+        // Parse word count for explicit guidance (handles formats like "1,500-2,000 words" or "1500-2000")
+        const cleanLength = length?.replace(/,/g, '') || '1500-2000'; // Remove commas
+        const wordCountMatch = cleanLength.match(/(\d+)/);
         const minWords = wordCountMatch ? parseInt(wordCountMatch[1]) : 1500;
-        const maxWords = length?.includes('-') ? parseInt(length.split('-')[1]?.match(/(\d+)/)?.[1] || '2000') : minWords + 500;
+        const maxWords = cleanLength.includes('-') ? parseInt(cleanLength.split('-')[1]?.match(/(\d+)/)?.[1] || '2000') : minWords + 500;
 
         return `You are a world-renowned expert in ${category || 'enterprise technology'} and related technologies. You excel at merging cutting-edge technologies with business strategy, providing highly accurate, insightful, and actionable information. You are a master at creating compelling content that resonates deeply with ${audience || 'enterprise decision makers'}.
 
