@@ -39,6 +39,13 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import SEOAssessment from '@/components/admin/SEOAssessment';
 
 // Types
+interface DataSources {
+  metrics: 'live-api' | 'estimated';
+  alternativeKeywords: 'live-api' | 'ai-generated' | 'template';
+  questions: 'live-paa' | 'ai-researched' | 'template';
+  serp: 'live-api' | 'unavailable';
+}
+
 interface KeywordData {
   keyword: string;
   searchVolume: number;
@@ -46,12 +53,13 @@ interface KeywordData {
   difficultyLabel: 'Easy' | 'Medium' | 'Hard';
   cpc: number;
   trend: number | number[];
-  alternativeKeywords: { keyword: string; note: string }[];
+  alternativeKeywords: { keyword: string; note: string; volume?: number }[];
   relatedKeywords: { keyword: string; volume: number; cpc?: number; competition?: number }[];
   questionsAsked: string[];
   competitorArticles: { title: string; domain: string; url?: string; position?: number; description?: string; isCompetitor?: boolean }[];
   isRealData?: boolean;
   warning?: string;
+  dataSources?: DataSources;
   serpFeatures?: {
     featuredSnippet: boolean;
     peopleAlsoAsk: boolean;
@@ -59,6 +67,26 @@ interface KeywordData {
     images: boolean;
     videos: boolean;
   };
+}
+
+// Helper to get data source badge
+function getDataSourceBadge(source: string): { label: string; color: string; icon: string } {
+  switch (source) {
+    case 'live-api':
+    case 'live-paa':
+      return { label: 'Live Data', color: 'bg-green-100 text-green-800', icon: '●' };
+    case 'ai-researched':
+    case 'ai-generated':
+      return { label: 'AI Research', color: 'bg-purple-100 text-purple-800', icon: '✦' };
+    case 'estimated':
+      return { label: 'Estimated', color: 'bg-yellow-100 text-yellow-800', icon: '○' };
+    case 'template':
+      return { label: 'Template', color: 'bg-gray-100 text-gray-600', icon: '◇' };
+    case 'unavailable':
+      return { label: 'Unavailable', color: 'bg-gray-100 text-gray-500', icon: '—' };
+    default:
+      return { label: source, color: 'bg-gray-100 text-gray-600', icon: '?' };
+  }
 }
 
 interface FAQ {
@@ -198,16 +226,23 @@ export default function NewBlogPostPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Research keyword
-  async function researchKeyword() {
-    if (!keyword.trim()) return;
+  // Research keyword - can be called with a specific keyword or uses current state
+  async function researchKeyword(targetKeyword?: string) {
+    const keywordToResearch = targetKeyword || keyword;
+    if (!keywordToResearch.trim()) return;
+
+    // Update the input field if a different keyword was passed
+    if (targetKeyword && targetKeyword !== keyword) {
+      setKeyword(targetKeyword);
+    }
 
     setIsResearching(true);
+    setKeywordData(null); // Clear old data immediately for visual feedback
     try {
       const response = await fetch('/api/admin/keyword-research', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keyword: keyword.trim() }),
+        body: JSON.stringify({ keyword: keywordToResearch.trim() }),
       });
 
       if (response.ok) {
@@ -761,9 +796,9 @@ export default function NewBlogPostPage() {
           {keywordData && (
             <div className="space-y-6 mt-6">
               {/* Data Source Indicator */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  {keywordData.isRealData ? (
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  {keywordData.dataSources?.metrics === 'live-api' ? (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                       Live DataForSEO Data
@@ -771,7 +806,13 @@ export default function NewBlogPostPage() {
                   ) : (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                       <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
-                      Estimated Data
+                      Estimated Metrics
+                    </span>
+                  )}
+                  {keywordData.dataSources?.questions === 'ai-researched' && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                      <span>✦</span>
+                      AI-Researched Questions
                     </span>
                   )}
                   {keywordData.warning && (
@@ -834,9 +875,16 @@ export default function NewBlogPostPage() {
 
               {/* Alternative Keywords */}
               <div className="bg-purple-50 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Sparkles className="w-4 h-4 text-purple-600" />
-                  <h4 className="font-medium text-purple-900">Alternative Keywords</h4>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-purple-600" />
+                    <h4 className="font-medium text-purple-900">Alternative Keywords</h4>
+                  </div>
+                  {keywordData.dataSources?.alternativeKeywords && (
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${getDataSourceBadge(keywordData.dataSources.alternativeKeywords).color}`}>
+                      {getDataSourceBadge(keywordData.dataSources.alternativeKeywords).icon} {getDataSourceBadge(keywordData.dataSources.alternativeKeywords).label}
+                    </span>
+                  )}
                 </div>
                 {keywordData.alternativeKeywords.map((alt, idx) => (
                   <div key={idx} className="flex items-center justify-between py-2 border-b border-purple-100 last:border-0">
@@ -845,10 +893,11 @@ export default function NewBlogPostPage() {
                       <p className="text-sm text-gray-500">{alt.note}</p>
                     </div>
                     <button
-                      onClick={() => setKeyword(alt.keyword)}
-                      className="px-3 py-1 text-sm bg-white text-purple-600 rounded border border-purple-200 hover:bg-purple-100"
+                      onClick={() => researchKeyword(alt.keyword)}
+                      disabled={isResearching}
+                      className="px-3 py-1 text-sm bg-white text-purple-600 rounded border border-purple-200 hover:bg-purple-100 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Use This
+                      {isResearching ? 'Loading...' : 'Use This'}
                     </button>
                   </div>
                 ))}
@@ -861,11 +910,15 @@ export default function NewBlogPostPage() {
                   {keywordData.relatedKeywords.map((rel, idx) => (
                     <button
                       key={idx}
-                      onClick={() => setKeyword(rel.keyword)}
-                      className="flex items-center justify-between w-full p-2 text-left hover:bg-gray-50 rounded-lg"
+                      onClick={() => researchKeyword(rel.keyword)}
+                      disabled={isResearching}
+                      className="flex items-center justify-between w-full p-2 text-left hover:bg-gray-50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed group"
                     >
-                      <span className="text-gray-700">{rel.keyword}</span>
-                      <span className="text-sm text-gray-400">({rel.volume})</span>
+                      <span className="text-gray-700 group-hover:text-[var(--aci-primary)]">{rel.keyword}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-400">{rel.volume?.toLocaleString()}/mo</span>
+                        <span className="text-xs text-purple-600 opacity-0 group-hover:opacity-100 transition-opacity">→ Research</span>
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -873,25 +926,46 @@ export default function NewBlogPostPage() {
 
               {/* Questions People Ask */}
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">Questions People Ask</h4>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-gray-900">Questions People Ask</h4>
+                  {keywordData.dataSources?.questions && (
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${getDataSourceBadge(keywordData.dataSources.questions).color}`}>
+                      {getDataSourceBadge(keywordData.dataSources.questions).icon} {getDataSourceBadge(keywordData.dataSources.questions).label}
+                    </span>
+                  )}
+                </div>
                 <ul className="space-y-2">
                   {keywordData.questionsAsked.map((q, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-gray-700">
-                      <span className="text-gray-400">•</span>
-                      {q}
+                    <li key={idx} className="flex items-start gap-2 text-gray-700 p-2 hover:bg-gray-50 rounded-lg cursor-pointer group">
+                      <span className="text-purple-500 mt-0.5">?</span>
+                      <span className="flex-1">{q}</span>
+                      <span className="text-xs text-purple-600 opacity-0 group-hover:opacity-100 transition-opacity">Use in FAQ</span>
                     </li>
                   ))}
                 </ul>
+                {keywordData.dataSources?.questions === 'ai-researched' && (
+                  <p className="text-xs text-purple-600 mt-3 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3" />
+                    AI-researched questions based on enterprise search intent patterns
+                  </p>
+                )}
               </div>
 
               {/* Competitor Articles */}
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">
-                  SERP Results
-                  <span className="text-xs text-gray-500 font-normal ml-2">
-                    (IT Services competitors highlighted)
-                  </span>
-                </h4>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-gray-900">
+                    SERP Results
+                    <span className="text-xs text-gray-500 font-normal ml-2">
+                      (IT Services competitors highlighted)
+                    </span>
+                  </h4>
+                  {keywordData.dataSources?.serp && (
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${getDataSourceBadge(keywordData.dataSources.serp).color}`}>
+                      {getDataSourceBadge(keywordData.dataSources.serp).icon} {getDataSourceBadge(keywordData.dataSources.serp).label}
+                    </span>
+                  )}
+                </div>
                 <div className="space-y-4">
                   {keywordData.competitorArticles.map((article, idx) => (
                     <div
