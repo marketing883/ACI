@@ -783,7 +783,7 @@ export default function NewBlogPostPage() {
                 className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
               />
               <button
-                onClick={researchKeyword}
+                onClick={() => researchKeyword()}
                 disabled={isResearching || !keyword.trim()}
                 className="flex items-center gap-2 px-6 py-3 bg-[var(--aci-primary)] text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
