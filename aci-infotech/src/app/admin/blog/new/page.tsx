@@ -245,9 +245,15 @@ export default function NewBlogPostPage() {
         body: JSON.stringify({ keyword: keywordToResearch.trim() }),
       });
 
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
         setKeywordData(data);
+      } else {
+        console.error('Keyword research API error:', data.error || 'Unknown error');
+        // Still set data if there's partial data with a warning
+        if (data.warning) {
+          setKeywordData(data);
+        }
       }
     } catch (error) {
       console.error('Keyword research error:', error);

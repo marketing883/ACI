@@ -456,39 +456,50 @@ export async function POST(request: NextRequest) {
     if (!isDataForSEOConfigured()) {
       console.log('DataForSEO not configured, generating AI-powered content research');
 
-      // Generate AI-powered questions and keywords in parallel
-      // These will throw errors if AI generation fails (no mock fallback)
-      const [aiQuestionsResult, aiKeywordsResult] = await Promise.all([
-        generateAIQuestions(trimmedKeyword),
-        generateAIAlternativeKeywords(trimmedKeyword),
-      ]);
+      try {
+        // Generate AI-powered questions and keywords in parallel
+        // These will throw errors if AI generation fails (no mock fallback)
+        const [aiQuestionsResult, aiKeywordsResult] = await Promise.all([
+          generateAIQuestions(trimmedKeyword),
+          generateAIAlternativeKeywords(trimmedKeyword),
+        ]);
 
-      // Return AI-generated content research without fake metrics
-      // Metrics are unavailable without DataForSEO
-      const response: KeywordResponse = {
-        keyword: trimmedKeyword,
-        searchVolume: 0,
-        difficulty: 0,
-        difficultyLabel: 'Medium',
-        cpc: 0,
-        trend: [],
-        monthlySearches: [],
-        competitionLevel: 'UNKNOWN',
-        alternativeKeywords: aiKeywordsResult.keywords,
-        relatedKeywords: [],
-        questionsAsked: aiQuestionsResult.questions,
-        competitorArticles: [],
-        isRealData: false,
-        dataSources: {
-          metrics: 'estimated',
-          alternativeKeywords: aiKeywordsResult.source,
-          questions: aiQuestionsResult.source,
-          serp: 'unavailable',
-        },
-        warning: 'Search metrics unavailable. Configure DataForSEO API for volume, difficulty, and competitor data. Questions and keywords are AI-generated.',
-      };
+        // Return AI-generated content research without fake metrics
+        // Metrics are unavailable without DataForSEO
+        const response: KeywordResponse = {
+          keyword: trimmedKeyword,
+          searchVolume: 0,
+          difficulty: 0,
+          difficultyLabel: 'Medium',
+          cpc: 0,
+          trend: [],
+          monthlySearches: [],
+          competitionLevel: 'UNKNOWN',
+          alternativeKeywords: aiKeywordsResult.keywords,
+          relatedKeywords: [],
+          questionsAsked: aiQuestionsResult.questions,
+          competitorArticles: [],
+          isRealData: false,
+          dataSources: {
+            metrics: 'estimated',
+            alternativeKeywords: aiKeywordsResult.source,
+            questions: aiQuestionsResult.source,
+            serp: 'unavailable',
+          },
+          warning: 'Search metrics unavailable. Configure DataForSEO API for volume, difficulty, and competitor data. Questions and keywords are AI-generated.',
+        };
 
-      return NextResponse.json(response);
+        return NextResponse.json(response);
+      } catch (aiError) {
+        console.error('AI generation failed:', aiError);
+        return NextResponse.json(
+          {
+            error: 'AI generation failed. Please check ANTHROPIC_API_KEY or OPENAI_API_KEY configuration.',
+            details: aiError instanceof Error ? aiError.message : 'Unknown error'
+          },
+          { status: 503 }
+        );
+      }
     }
 
     // Use cached request to save API credits
@@ -505,8 +516,8 @@ export async function POST(request: NextRequest) {
       const hasPAAData = (data.questions || []).length > 0;
       const hasAlternativeData = (data.keywordSuggestions || []).length > 0 || (data.relatedKeywords || []).length > 0;
 
-      let aiQuestionsResult: { questions: string[]; source: 'ai-researched' | 'template' } | undefined;
-      let aiKeywordsResult: { keywords: { keyword: string; note: string }[]; source: 'ai-generated' | 'template' } | undefined;
+      let aiQuestionsResult: { questions: string[]; source: 'ai-researched' } | undefined;
+      let aiKeywordsResult: { keywords: { keyword: string; note: string }[]; source: 'ai-generated' } | undefined;
 
       // If PAA data is missing, generate AI questions
       if (!hasPAAData) {
@@ -534,41 +545,56 @@ export async function POST(request: NextRequest) {
 
       // Fall back to AI-generated content research if DataForSEO API fails
       // No mock metrics - only AI-generated questions and keywords
-      const [aiQuestionsResult, aiKeywordsResult] = await Promise.all([
-        generateAIQuestions(trimmedKeyword),
-        generateAIAlternativeKeywords(trimmedKeyword),
-      ]);
+      try {
+        const [aiQuestionsResult, aiKeywordsResult] = await Promise.all([
+          generateAIQuestions(trimmedKeyword),
+          generateAIAlternativeKeywords(trimmedKeyword),
+        ]);
 
-      const response: KeywordResponse = {
-        keyword: trimmedKeyword,
-        searchVolume: 0,
-        difficulty: 0,
-        difficultyLabel: 'Medium',
-        cpc: 0,
-        trend: [],
-        monthlySearches: [],
-        competitionLevel: 'UNKNOWN',
-        alternativeKeywords: aiKeywordsResult.keywords,
-        relatedKeywords: [],
-        questionsAsked: aiQuestionsResult.questions,
-        competitorArticles: [],
-        isRealData: false,
-        dataSources: {
-          metrics: 'estimated',
-          alternativeKeywords: aiKeywordsResult.source,
-          questions: aiQuestionsResult.source,
-          serp: 'unavailable',
-        },
-        warning: 'DataForSEO API error. Questions and keywords are AI-generated. Search metrics unavailable.',
-        error: apiError instanceof Error ? apiError.message : 'Unknown error',
-      };
+        const response: KeywordResponse = {
+          keyword: trimmedKeyword,
+          searchVolume: 0,
+          difficulty: 0,
+          difficultyLabel: 'Medium',
+          cpc: 0,
+          trend: [],
+          monthlySearches: [],
+          competitionLevel: 'UNKNOWN',
+          alternativeKeywords: aiKeywordsResult.keywords,
+          relatedKeywords: [],
+          questionsAsked: aiQuestionsResult.questions,
+          competitorArticles: [],
+          isRealData: false,
+          dataSources: {
+            metrics: 'estimated',
+            alternativeKeywords: aiKeywordsResult.source,
+            questions: aiQuestionsResult.source,
+            serp: 'unavailable',
+          },
+          warning: 'DataForSEO API error. Questions and keywords are AI-generated. Search metrics unavailable.',
+          error: apiError instanceof Error ? apiError.message : 'Unknown error',
+        };
 
-      return NextResponse.json(response);
+        return NextResponse.json(response);
+      } catch (aiError) {
+        console.error('AI generation also failed:', aiError);
+        return NextResponse.json(
+          {
+            error: 'DataForSEO API failed and AI generation also failed. Please check API configurations.',
+            dataForSeoError: apiError instanceof Error ? apiError.message : 'Unknown error',
+            aiError: aiError instanceof Error ? aiError.message : 'Unknown error'
+          },
+          { status: 503 }
+        );
+      }
     }
   } catch (error) {
     console.error('Keyword research error:', error);
     return NextResponse.json(
-      { error: 'Failed to research keyword' },
+      {
+        error: 'Failed to research keyword',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
