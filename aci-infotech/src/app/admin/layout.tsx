@@ -145,12 +145,12 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-72 bg-white border-r border-gray-200/80 transform transition-transform lg:translate-x-0 shadow-sm ${
+        className={`fixed top-0 left-0 z-50 h-full w-72 bg-white border-r border-gray-200/80 transform transition-transform lg:translate-x-0 shadow-sm flex flex-col ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Sidebar Header */}
-        <div className="flex items-center justify-between h-16 px-5 border-b border-gray-100">
+        <div className="flex-shrink-0 flex items-center justify-between h-16 px-5 border-b border-gray-100">
           <Link href="/admin" className="flex items-center gap-3">
             <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-sm">
               <Sparkles className="w-5 h-5 text-white" />
@@ -168,7 +168,7 @@ export default function AdminLayout({
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+        <nav className="flex-1 min-h-0 px-4 py-6 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             if ('href' in item) {
               const Icon = item.icon;
@@ -243,7 +243,7 @@ export default function AdminLayout({
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="border-t border-gray-100 p-4 space-y-2">
+        <div className="flex-shrink-0 border-t border-gray-100 p-4 space-y-2">
           {/* User Info Card */}
           {userEmail && (
             <div className="px-4 py-3 bg-gray-50 rounded-xl mb-3">
