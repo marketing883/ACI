@@ -62,12 +62,12 @@ async function getJobs(): Promise<Job[]> {
 
 const departments = [
   { name: 'All Departments', value: 'all' },
-  { name: 'Data Engineering', value: 'Data Engineering', icon: '📊', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-  { name: 'AI & ML', value: 'AI & ML', icon: '🤖', color: 'bg-purple-100 text-purple-700 border-purple-200' },
-  { name: 'Cloud', value: 'Cloud', icon: '☁️', color: 'bg-cyan-100 text-cyan-700 border-cyan-200' },
-  { name: 'MarTech', value: 'MarTech', icon: '📈', color: 'bg-green-100 text-green-700 border-green-200' },
-  { name: 'Cybersecurity', value: 'Cybersecurity', icon: '🔒', color: 'bg-red-100 text-red-700 border-red-200' },
-  { name: 'Digital Transformation', value: 'Digital Transformation', icon: '🚀', color: 'bg-orange-100 text-orange-700 border-orange-200' },
+  { name: 'Data Engineering', value: 'Data Engineering', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+  { name: 'AI & ML', value: 'AI & ML', color: 'bg-purple-100 text-purple-700 border-purple-200' },
+  { name: 'Cloud', value: 'Cloud', color: 'bg-cyan-100 text-cyan-700 border-cyan-200' },
+  { name: 'MarTech', value: 'MarTech', color: 'bg-green-100 text-green-700 border-green-200' },
+  { name: 'Cybersecurity', value: 'Cybersecurity', color: 'bg-red-100 text-red-700 border-red-200' },
+  { name: 'Digital Transformation', value: 'Digital Transformation', color: 'bg-orange-100 text-orange-700 border-orange-200' },
 ];
 
 const locationTypes = [
@@ -309,7 +309,6 @@ export default async function CareersPage() {
                                 : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
                             }`}
                           >
-                            {dept.icon && <span className="mr-1">{dept.icon}</span>}
                             {dept.name}
                             <span className="ml-1 text-xs opacity-70">({count})</span>
                           </button>

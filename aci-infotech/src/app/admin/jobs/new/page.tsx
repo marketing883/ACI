@@ -178,7 +178,7 @@ export default function NewJobPage() {
         <div className="col-span-2 space-y-6">
           {/* Basic Info */}
           <div className="bg-white p-6 rounded-lg border space-y-4">
-            <h2 className="font-semibold text-gray-900">Basic Information</h2>
+            <h5 className="text-sm font-semibold text-gray-900">Basic Information</h5>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -241,7 +241,7 @@ export default function NewJobPage() {
 
           {/* Responsibilities */}
           <div className="bg-white p-6 rounded-lg border space-y-4">
-            <h2 className="font-semibold text-gray-900">Responsibilities</h2>
+            <h5 className="text-sm font-semibold text-gray-900">Responsibilities</h5>
             {form.responsibilities.map((item, index) => (
               <div key={index} className="flex gap-2">
                 <input
@@ -271,7 +271,7 @@ export default function NewJobPage() {
 
           {/* Requirements */}
           <div className="bg-white p-6 rounded-lg border space-y-4">
-            <h2 className="font-semibold text-gray-900">Requirements</h2>
+            <h5 className="text-sm font-semibold text-gray-900">Requirements</h5>
             {form.requirements.map((item, index) => (
               <div key={index} className="flex gap-2">
                 <input
@@ -301,7 +301,7 @@ export default function NewJobPage() {
 
           {/* Nice to Have */}
           <div className="bg-white p-6 rounded-lg border space-y-4">
-            <h2 className="font-semibold text-gray-900">Nice to Have (Optional)</h2>
+            <h5 className="text-sm font-semibold text-gray-900">Nice to Have (Optional)</h5>
             {form.nice_to_have.map((item, index) => (
               <div key={index} className="flex gap-2">
                 <input
@@ -331,7 +331,7 @@ export default function NewJobPage() {
 
           {/* Skills */}
           <div className="bg-white p-6 rounded-lg border space-y-4">
-            <h2 className="font-semibold text-gray-900">Required Skills / Technologies</h2>
+            <h5 className="text-sm font-semibold text-gray-900">Required Skills / Technologies</h5>
             <div className="flex flex-wrap gap-2">
               {form.skills.map((skill, index) => (
                 <div key={index} className="flex items-center gap-1 bg-gray-100 rounded-full px-3 py-1">
@@ -364,7 +364,7 @@ export default function NewJobPage() {
         <div className="space-y-6">
           {/* Location */}
           <div className="bg-white p-6 rounded-lg border space-y-4">
-            <h2 className="font-semibold text-gray-900">Location</h2>
+            <h5 className="text-sm font-semibold text-gray-900">Location</h5>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -418,7 +418,7 @@ export default function NewJobPage() {
 
           {/* Compensation */}
           <div className="bg-white p-6 rounded-lg border space-y-4">
-            <h2 className="font-semibold text-gray-900">Compensation</h2>
+            <h5 className="text-sm font-semibold text-gray-900">Compensation</h5>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -456,7 +456,7 @@ export default function NewJobPage() {
 
           {/* Benefits */}
           <div className="bg-white p-6 rounded-lg border space-y-4">
-            <h2 className="font-semibold text-gray-900">Benefits</h2>
+            <h5 className="text-sm font-semibold text-gray-900">Benefits</h5>
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {form.benefits.map((benefit, index) => (
                 <label key={index} className="flex items-start gap-2">
@@ -474,7 +474,7 @@ export default function NewJobPage() {
 
           {/* Settings */}
           <div className="bg-white p-6 rounded-lg border space-y-4">
-            <h2 className="font-semibold text-gray-900">Settings</h2>
+            <h5 className="text-sm font-semibold text-gray-900">Settings</h5>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -491,7 +491,7 @@ export default function NewJobPage() {
 
           {/* SEO */}
           <div className="bg-white p-6 rounded-lg border space-y-4">
-            <h2 className="font-semibold text-gray-900">SEO</h2>
+            <h5 className="text-sm font-semibold text-gray-900">SEO</h5>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
