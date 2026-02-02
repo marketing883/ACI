@@ -34,7 +34,6 @@ const demoCaseStudies: CaseStudy[] = [
   {
     slug: 'msci-data-automation',
     client: 'MSCI',
-    logo_url: '/images/clients/msci-logo.svg',
     industry: 'Financial Services',
     service: 'Data Engineering',
     headline: 'Consolidating 40+ Finance Systems Post-Acquisition',
@@ -51,7 +50,6 @@ const demoCaseStudies: CaseStudy[] = [
   {
     slug: 'racetrac-martech',
     client: 'RaceTrac',
-    logo_url: '/images/clients/racetrac-logo.svg',
     industry: 'Retail',
     service: 'MarTech & CDP',
     headline: 'Real-Time Customer Engagement Across 600+ Locations',
@@ -68,7 +66,6 @@ const demoCaseStudies: CaseStudy[] = [
   {
     slug: 'sodexo-unified-data',
     client: 'Sodexo',
-    logo_url: '/images/clients/sodexo-logo.svg',
     industry: 'Hospitality',
     service: 'Data Engineering',
     headline: 'Unified Global Data Platform for 400K+ Employees',

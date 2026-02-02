@@ -328,7 +328,25 @@ export default function ChatWidget() {
           nextStage = 'general_chat';
           shouldCallAI = false;
         } else if (userMessage.length > 1 && userMessage.length < 50 && !userMessage.includes('@')) {
-          updatedLead.name = userMessage.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+          // Extract name from common patterns like "I'm Habib", "My name is John", "It's Sarah", "Call me Mike"
+          let extractedName = userMessage;
+
+          // Common name introduction patterns (case-insensitive)
+          const namePatterns = [
+            /^(?:i'?m|i am|my name is|this is|it'?s|call me|hey,? i'?m|hi,? i'?m|hello,? i'?m)\s+(.+)$/i,
+            /^(.+?)(?:\s+here|\s+speaking)$/i,
+          ];
+
+          for (const pattern of namePatterns) {
+            const match = userMessage.match(pattern);
+            if (match && match[1]) {
+              extractedName = match[1].trim();
+              break;
+            }
+          }
+
+          // Capitalize each word properly
+          updatedLead.name = extractedName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
           nextStage = 'collecting_email';
           followUp = `${updatedLead.name} - good to connect. Best work email to reach you? Helps us route things to the right team.`;
           shouldCallAI = false;

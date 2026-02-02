@@ -18,7 +18,7 @@ const platforms = [
   {
     id: 'databricks',
     name: 'Databricks',
-    logo: '/images/partners/databricks.svg',
+    logo: '/images/Solution-Partners/databricks.png',
     tagline: 'Lakehouse Architecture Experts',
     description: 'Build unified analytics platforms with Delta Lake, MLflow, and Spark. We help enterprises implement data lakehouses that scale.',
     partnership: 'Exclusive Partner',
@@ -30,7 +30,6 @@ const platforms = [
   {
     id: 'snowflake',
     name: 'Snowflake',
-    logo: '/images/partners/snowflake.svg',
     tagline: 'Data Cloud Specialists',
     description: 'Design and implement Snowflake data warehouses with optimal architecture, governance, and cost efficiency.',
     partnership: 'Partner',
@@ -42,7 +41,7 @@ const platforms = [
   {
     id: 'salesforce',
     name: 'Salesforce',
-    logo: '/images/partners/salesforce.svg',
+    logo: '/images/Solution-Partners/salesforce.png',
     tagline: 'Agentforce & Data Cloud Experts',
     description: 'End-to-end Salesforce implementations including Data Cloud, Marketing Cloud, and the new Agentforce AI platform.',
     partnership: 'Agentforce Exclusive Partner',
@@ -54,7 +53,6 @@ const platforms = [
   {
     id: 'microsoft-dynamics',
     name: 'Microsoft Dynamics',
-    logo: '/images/partners/microsoft.svg',
     tagline: 'Copilot & Power Platform Experts',
     description: 'Dynamics 365, Copilot, Power Platform, and Microsoft Fabric implementations. AI-powered business applications at enterprise scale.',
     partnership: 'Microsoft Partner',
@@ -66,7 +64,7 @@ const platforms = [
   {
     id: 'aws',
     name: 'Amazon Web Services',
-    logo: '/images/partners/aws.svg',
+    logo: '/images/Solution-Partners/aws.png',
     tagline: 'Cloud Migration & Optimization',
     description: 'AWS migrations, architecture design, and cost optimization. From lift-and-shift to cloud-native transformation.',
     partnership: 'Advanced Partner',
@@ -78,7 +76,7 @@ const platforms = [
   {
     id: 'azure',
     name: 'Microsoft Azure',
-    logo: '/images/partners/azure.svg',
+    logo: '/images/Solution-Partners/azure.png',
     tagline: 'Enterprise Cloud Solutions',
     description: 'Azure implementations for enterprises already invested in the Microsoft ecosystem. Synapse, Fabric, and hybrid cloud.',
     partnership: 'Solutions Partner',
@@ -90,7 +88,7 @@ const platforms = [
   {
     id: 'sap',
     name: 'SAP',
-    logo: '/images/partners/sap.svg',
+    logo: '/images/Solution-Partners/sap.png',
     tagline: 'S/4HANA Transformation',
     description: 'SAP S/4HANA implementations and migrations. We help enterprises modernize their ERP with minimal disruption.',
     partnership: 'Partner',
@@ -102,7 +100,7 @@ const platforms = [
   {
     id: 'servicenow',
     name: 'ServiceNow',
-    logo: '/images/partners/servicenow.svg',
+    logo: '/images/Solution-Partners/servicenow.png',
     tagline: 'Digital Workflow Automation',
     description: 'ServiceNow implementations for IT service management, HR, and enterprise workflows. Streamline operations with intelligent automation.',
     partnership: 'Partner',
@@ -114,7 +112,7 @@ const platforms = [
   {
     id: 'braze',
     name: 'Braze',
-    logo: '/images/partners/braze.svg',
+    logo: '/images/Solution-Partners/braze.png',
     tagline: 'Customer Engagement Platform',
     description: 'Braze implementations for personalized customer engagement across email, push, in-app, and more. Drive retention and lifetime value.',
     partnership: 'Partner',

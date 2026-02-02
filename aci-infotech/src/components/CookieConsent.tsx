@@ -106,7 +106,7 @@ export default function CookieConsent() {
                     We use cookies to enhance your browsing experience, provide personalized content,
                     and analyze our traffic. By clicking &quot;Accept All&quot;, you consent to our use of cookies.
                     You can manage your preferences or learn more in our{' '}
-                    <Link href="/privacy" className="text-[#0052CC] hover:underline">
+                    <Link href="/privacy-policy" className="text-[#0052CC] hover:underline">
                       Privacy Policy
                     </Link>.
                   </p>
@@ -230,10 +230,10 @@ export default function CookieConsent() {
             <div className="px-4 md:px-6 py-3 bg-gray-50 border-t border-gray-200">
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-gray-500">
                 <div className="flex items-center gap-4">
-                  <Link href="/privacy" className="hover:text-[#0052CC] transition-colors">
+                  <Link href="/privacy-policy" className="hover:text-[#0052CC] transition-colors">
                     Privacy Policy
                   </Link>
-                  <Link href="/terms" className="hover:text-[#0052CC] transition-colors">
+                  <Link href="/terms-of-service" className="hover:text-[#0052CC] transition-colors">
                     Terms of Service
                   </Link>
                 </div>
