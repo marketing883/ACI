@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { checkRateLimit } from '@/lib/rate-limit';
+import { logAuditEvent, computeChanges } from '@/lib/audit-log';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -38,6 +40,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PUT - Update job
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
+    // Rate limiting
+    const rateLimited = await checkRateLimit(request, 'standard');
+    if (rateLimited) return rateLimited;
+
     const { id } = await params;
     const supabase = getSupabase();
     const body = await request.json();
@@ -112,6 +118,15 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Failed to update job' }, { status: 500 });
     }
 
+    // Audit log the update
+    logAuditEvent({
+      action: 'update',
+      resource_type: 'job',
+      resource_id: id,
+      resource_title: data.title,
+      changes: computeChanges(currentJob, data),
+    }, request);
+
     return NextResponse.json({ job: data });
   } catch (error) {
     console.error('Error in PUT /api/admin/jobs/[id]:', error);
@@ -122,8 +137,19 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // DELETE - Delete job
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
+    // Rate limiting
+    const rateLimited = await checkRateLimit(request, 'standard');
+    if (rateLimited) return rateLimited;
+
     const { id } = await params;
     const supabase = getSupabase();
+
+    // Get job details before deletion for audit log
+    const { data: jobToDelete } = await supabase
+      .from('jobs')
+      .select('title')
+      .eq('id', id)
+      .single();
 
     const { error } = await supabase
       .from('jobs')
@@ -134,6 +160,14 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       console.error('Error deleting job:', error);
       return NextResponse.json({ error: 'Failed to delete job' }, { status: 500 });
     }
+
+    // Audit log the deletion
+    logAuditEvent({
+      action: 'delete',
+      resource_type: 'job',
+      resource_id: id,
+      resource_title: jobToDelete?.title,
+    }, request);
 
     return NextResponse.json({ success: true });
   } catch (error) {

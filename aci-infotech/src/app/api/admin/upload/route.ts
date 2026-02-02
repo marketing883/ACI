@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import sharp from 'sharp';
+import { checkRateLimit } from '@/lib/rate-limit';
+import { logAuditEvent } from '@/lib/audit-log';
 
 // Image optimization settings
 const IMAGE_CONFIG = {
@@ -102,6 +104,10 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB max
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting for uploads (more restrictive)
+    const rateLimited = await checkRateLimit(request, 'upload');
+    if (rateLimited) return rateLimited;
+
     let formData;
     try {
       formData = await request.formData();
@@ -257,6 +263,21 @@ export async function POST(request: NextRequest) {
     const { data: urlData } = supabase.storage
       .from(bucket)
       .getPublicUrl(fileName);
+
+    // Audit log the upload
+    logAuditEvent({
+      action: 'upload',
+      resource_type: 'file',
+      resource_id: fileName,
+      resource_title: file.name,
+      metadata: {
+        bucket,
+        folder,
+        contentType,
+        size: finalBuffer.length,
+        optimization: optimizationInfo,
+      },
+    }, request);
 
     return NextResponse.json({
       success: true,
