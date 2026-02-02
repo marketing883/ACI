@@ -50,14 +50,18 @@ export async function middleware(request: NextRequest) {
 
   // If user is not logged in and trying to access admin pages (except login)
   if (!user && isAdminPage && !isAuthPage) {
-    const redirectUrl = new URL('/admin/login', request.url);
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/admin/login';
     redirectUrl.searchParams.set('redirect', request.nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
   // If user is logged in and trying to access login page, redirect to admin
   if (user && isAuthPage) {
-    return NextResponse.redirect(new URL('/admin', request.url));
+    const adminUrl = request.nextUrl.clone();
+    adminUrl.pathname = '/admin';
+    adminUrl.search = '';
+    return NextResponse.redirect(adminUrl);
   }
 
   return supabaseResponse;
