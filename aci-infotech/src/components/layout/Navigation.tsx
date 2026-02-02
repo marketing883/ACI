@@ -477,72 +477,33 @@ interface ResourcesMegaMenuProps {
 
 function ResourcesMegaMenu({ items }: ResourcesMegaMenuProps) {
   return (
-    <div className="flex w-[580px]">
-      {/* Resources List */}
-      <div className="flex-1 p-6 bg-gradient-to-br from-gray-50 to-white">
-        <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
-          Resources
-        </div>
-        <div className="space-y-1">
-          {items.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="group flex items-center gap-3 p-3 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200"
-              >
-                <div className="w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-blue-50 flex items-center justify-center transition-colors">
-                  <Icon className="w-5 h-5 text-[var(--aci-primary)] transition-transform group-hover:scale-110" />
-                </div>
-                <div>
-                  <div className="font-medium text-[15px] text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
-                    {item.label}
-                  </div>
-                  {item.description && (
-                    <div className="text-sm text-gray-500">{item.description}</div>
-                  )}
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+    <div className="p-6 w-[320px] bg-gradient-to-br from-gray-50 to-white">
+      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+        Resources
       </div>
-
-      {/* Ebook Promo Section */}
-      <div className="w-[260px] bg-gradient-to-br from-[var(--aci-primary)] to-blue-700 p-6 flex flex-col">
-        <div className="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-3">
-          Free Download
-        </div>
-        <h3 className="text-lg font-bold text-white mb-2">
-          2025 Enterprise Data Strategy Guide
-        </h3>
-        <p className="text-sm text-blue-100 mb-4 flex-1">
-          Learn how leading companies are building modern data platforms
-        </p>
-
-        {/* Ebook Visual */}
-        <div className="relative mb-4">
-          <div className="bg-white rounded-lg shadow-xl p-4 transform -rotate-3 hover:rotate-0 transition-transform">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center">
-                <FileText className="w-6 h-6 text-white" />
+      <div className="space-y-1">
+        {items.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group flex items-center gap-3 p-3 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200"
+            >
+              <div className="w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-blue-50 flex items-center justify-center transition-colors">
+                <Icon className="w-5 h-5 text-[var(--aci-primary)] transition-transform group-hover:scale-110" />
               </div>
               <div>
-                <div className="text-xs font-medium text-gray-800">PDF Guide</div>
-                <div className="text-xs text-gray-500">32 pages</div>
+                <div className="font-medium text-[15px] text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
+                  {item.label}
+                </div>
+                {item.description && (
+                  <div className="text-sm text-gray-500">{item.description}</div>
+                )}
               </div>
-            </div>
-          </div>
-        </div>
-
-        <Link
-          href="/contact?reason=ebook"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#0052CC] text-white rounded-lg font-semibold text-sm hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
-        >
-          <Download className="w-4 h-4" />
-          Download Free
-        </Link>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
