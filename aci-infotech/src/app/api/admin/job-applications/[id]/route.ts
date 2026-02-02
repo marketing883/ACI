@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { checkRateLimit } from '@/lib/rate-limit';
+import { logAuditEvent } from '@/lib/audit-log';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -15,6 +17,10 @@ interface RouteParams {
 // GET - Get single application
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
+    // Rate limiting
+    const rateLimited = await checkRateLimit(request, 'read');
+    if (rateLimited) return rateLimited;
+
     const { id } = await params;
     const supabase = getSupabase();
 
@@ -47,6 +53,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PUT - Update application (status, notes, rating)
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
+    // Rate limiting
+    const rateLimited = await checkRateLimit(request, 'standard');
+    if (rateLimited) return rateLimited;
+
     const { id } = await params;
     const supabase = getSupabase();
     const body = await request.json();
@@ -82,8 +92,19 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // DELETE - Delete application
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
+    // Rate limiting
+    const rateLimited = await checkRateLimit(request, 'standard');
+    if (rateLimited) return rateLimited;
+
     const { id } = await params;
     const supabase = getSupabase();
+
+    // Get application details before deletion for audit log
+    const { data: appToDelete } = await supabase
+      .from('job_applications')
+      .select('first_name, last_name, email, job_id')
+      .eq('id', id)
+      .single();
 
     const { error } = await supabase
       .from('job_applications')
@@ -94,6 +115,15 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       console.error('Error deleting application:', error);
       return NextResponse.json({ error: 'Failed to delete application' }, { status: 500 });
     }
+
+    // Audit log the deletion
+    logAuditEvent({
+      action: 'delete',
+      resource_type: 'job_application',
+      resource_id: id,
+      resource_title: appToDelete ? `${appToDelete.first_name} ${appToDelete.last_name}` : undefined,
+      metadata: appToDelete ? { email: appToDelete.email, job_id: appToDelete.job_id } : undefined,
+    }, request);
 
     return NextResponse.json({ success: true });
   } catch (error) {
