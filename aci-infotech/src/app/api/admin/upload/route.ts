@@ -95,6 +95,11 @@ async function generateThumbnail(buffer: Buffer): Promise<Buffer> {
     .toBuffer();
 }
 
+// Security: Allowed buckets and folders
+const ALLOWED_BUCKETS = ['ACI-web'];
+const ALLOWED_FOLDER_PREFIXES = ['uploads', 'blog-covers', 'case-study-covers', 'whitepaper-covers', 'whitepapers', 'images'];
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB max
+
 export async function POST(request: NextRequest) {
   try {
     let formData;
@@ -116,6 +121,34 @@ export async function POST(request: NextRequest) {
     if (!file) {
       return NextResponse.json(
         { error: 'No file provided' },
+        { status: 400 }
+      );
+    }
+
+    // Security: Validate bucket name
+    if (!ALLOWED_BUCKETS.includes(bucket)) {
+      return NextResponse.json(
+        { error: 'Invalid bucket specified' },
+        { status: 400 }
+      );
+    }
+
+    // Security: Validate folder (prevent path traversal)
+    const sanitizedFolder = folder.replace(/\.\./g, '').replace(/^\/+/, '');
+    const isValidFolder = ALLOWED_FOLDER_PREFIXES.some(prefix =>
+      sanitizedFolder === prefix || sanitizedFolder.startsWith(prefix + '/')
+    );
+    if (!isValidFolder) {
+      return NextResponse.json(
+        { error: 'Invalid folder specified' },
+        { status: 400 }
+      );
+    }
+
+    // Security: Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: `File too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB` },
         { status: 400 }
       );
     }

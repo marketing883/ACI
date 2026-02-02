@@ -41,11 +41,20 @@ export async function middleware(request: NextRequest) {
 
   const isAuthPage = request.nextUrl.pathname === '/admin/login';
   const isAdminPage = request.nextUrl.pathname.startsWith('/admin');
-  const isApiRoute = request.nextUrl.pathname.startsWith('/api');
+  const isAdminApiRoute = request.nextUrl.pathname.startsWith('/api/admin');
+  const isPublicApiRoute = request.nextUrl.pathname.startsWith('/api') && !isAdminApiRoute;
 
-  // Skip middleware for API routes and public pages
-  if (isApiRoute || !isAdminPage) {
+  // Skip middleware for public API routes and non-admin pages
+  if (isPublicApiRoute || (!isAdminPage && !isAdminApiRoute)) {
     return supabaseResponse;
+  }
+
+  // Protect admin API routes - return 401 if not authenticated
+  if (isAdminApiRoute && !user) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Authentication required' },
+      { status: 401 }
+    );
   }
 
   // If user is not logged in and trying to access admin pages (except login)
