@@ -1,6 +1,26 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+// Helper to get the actual host from forwarded headers or request
+function getPublicUrl(request: NextRequest, pathname: string, searchParams?: URLSearchParams): string {
+  // Try forwarded headers first (set by nginx/reverse proxy)
+  const forwardedHost = request.headers.get('x-forwarded-host');
+  const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
+
+  // Fall back to host header
+  const host = forwardedHost || request.headers.get('host') || 'aciinfotech.com';
+
+  // Build the URL - always use the public host, never localhost
+  const publicHost = host.includes('localhost') ? 'aciinfotech.com' : host;
+  const protocol = forwardedProto === 'http' ? 'http' : 'https';
+
+  let url = `${protocol}://${publicHost}${pathname}`;
+  if (searchParams && searchParams.toString()) {
+    url += `?${searchParams.toString()}`;
+  }
+  return url;
+}
+
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -50,17 +70,15 @@ export async function middleware(request: NextRequest) {
 
   // If user is not logged in and trying to access admin pages (except login)
   if (!user && isAdminPage && !isAuthPage) {
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = '/admin/login';
-    redirectUrl.searchParams.set('redirect', request.nextUrl.pathname);
+    const searchParams = new URLSearchParams();
+    searchParams.set('redirect', request.nextUrl.pathname);
+    const redirectUrl = getPublicUrl(request, '/admin/login', searchParams);
     return NextResponse.redirect(redirectUrl);
   }
 
   // If user is logged in and trying to access login page, redirect to admin
   if (user && isAuthPage) {
-    const adminUrl = request.nextUrl.clone();
-    adminUrl.pathname = '/admin';
-    adminUrl.search = '';
+    const adminUrl = getPublicUrl(request, '/admin');
     return NextResponse.redirect(adminUrl);
   }
 
