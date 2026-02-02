@@ -133,73 +133,52 @@ export default function AdminDashboard() {
 
   async function fetchDashboardData() {
     try {
-      // Fetch contacts stats
-      const { count: totalContacts } = await supabase
-        .from('contacts')
-        .select('*', { count: 'exact', head: true });
+      // Helper to safely query with fallback for missing columns
+      const safeCount = async (table: string, filter?: { column: string; value: unknown }) => {
+        try {
+          let query = supabase.from(table).select('*', { count: 'exact', head: true });
+          if (filter) {
+            query = query.eq(filter.column, filter.value);
+          }
+          const { count, error } = await query;
+          if (error) return 0;
+          return count || 0;
+        } catch {
+          return 0;
+        }
+      };
 
-      const { count: newContacts } = await supabase
-        .from('contacts')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'new');
+      // Fetch contacts stats
+      const totalContacts = await safeCount('contacts');
+      const newContacts = await safeCount('contacts', { column: 'status', value: 'new' });
 
       // Fetch chat leads stats
-      const { count: totalChatLeads } = await supabase
-        .from('chat_leads')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: newChatLeads } = await supabase
-        .from('chat_leads')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'new');
+      const totalChatLeads = await safeCount('chat_leads');
+      const newChatLeads = await safeCount('chat_leads', { column: 'status', value: 'new' });
 
       // Fetch playbook leads stats
-      const { count: totalPlaybookLeads } = await supabase
-        .from('playbook_leads')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: newPlaybookLeads } = await supabase
-        .from('playbook_leads')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'new');
+      const totalPlaybookLeads = await safeCount('playbook_leads');
+      const newPlaybookLeads = await safeCount('playbook_leads', { column: 'status', value: 'new' });
 
       // Fetch whitepaper leads stats
-      const { count: totalWhitepaperLeads } = await supabase
-        .from('whitepaper_leads')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: newWhitepaperLeads } = await supabase
-        .from('whitepaper_leads')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'new');
+      const totalWhitepaperLeads = await safeCount('whitepaper_leads');
+      const newWhitepaperLeads = await safeCount('whitepaper_leads', { column: 'status', value: 'new' });
 
       // Fetch case studies stats
-      const { count: totalCaseStudies } = await supabase
-        .from('case_studies')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: publishedCaseStudies } = await supabase
-        .from('case_studies')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_published', true);
+      const totalCaseStudies = await safeCount('case_studies');
+      const publishedCaseStudies = await safeCount('case_studies', { column: 'is_published', value: true });
 
       // Fetch blog stats
-      const { count: totalBlog } = await supabase
-        .from('blog_posts')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: publishedBlog } = await supabase
-        .from('blog_posts')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_published', true);
+      const totalBlog = await safeCount('blog_posts');
+      const publishedBlog = await safeCount('blog_posts', { column: 'is_published', value: true });
 
       setStats({
-        contacts: { total: totalContacts || 0, new: newContacts || 0 },
-        chatLeads: { total: totalChatLeads || 0, new: newChatLeads || 0 },
-        playbookLeads: { total: totalPlaybookLeads || 0, new: newPlaybookLeads || 0 },
-        whitepaperLeads: { total: totalWhitepaperLeads || 0, new: newWhitepaperLeads || 0 },
-        caseStudies: { total: totalCaseStudies || 0, published: publishedCaseStudies || 0 },
-        blogPosts: { total: totalBlog || 0, published: publishedBlog || 0 },
+        contacts: { total: totalContacts, new: newContacts },
+        chatLeads: { total: totalChatLeads, new: newChatLeads },
+        playbookLeads: { total: totalPlaybookLeads, new: newPlaybookLeads },
+        whitepaperLeads: { total: totalWhitepaperLeads, new: newWhitepaperLeads },
+        caseStudies: { total: totalCaseStudies, published: publishedCaseStudies },
+        blogPosts: { total: totalBlog, published: publishedBlog },
       });
 
       // Fetch recent leads from all sources
