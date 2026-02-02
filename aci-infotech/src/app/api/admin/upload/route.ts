@@ -99,7 +99,7 @@ async function generateThumbnail(buffer: Buffer): Promise<Buffer> {
 
 // Security: Allowed buckets and folders
 const ALLOWED_BUCKETS = ['ACI-web'];
-const ALLOWED_FOLDER_PREFIXES = ['uploads', 'blog-covers', 'case-study-covers', 'whitepaper-covers', 'whitepapers', 'images'];
+const ALLOWED_FOLDER_PREFIXES = ['uploads', 'blog-covers', 'case-study-covers', 'whitepaper-covers', 'whitepapers', 'images', 'news-images'];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB max
 
 export async function POST(request: NextRequest) {

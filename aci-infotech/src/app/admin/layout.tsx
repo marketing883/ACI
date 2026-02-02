@@ -25,6 +25,7 @@ import {
   Mail,
   Briefcase,
   UserCheck,
+  Newspaper,
 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 
@@ -53,6 +54,7 @@ const navItems: NavItem[] = [
       { href: '/admin/blog', label: 'Blog Posts', icon: BookOpen },
       { href: '/admin/whitepapers', label: 'Whitepapers', icon: FileCheck },
       { href: '/admin/webinars', label: 'Webinars', icon: Video },
+      { href: '/admin/news', label: 'News & Press', icon: Newspaper },
     ]
   },
   {
