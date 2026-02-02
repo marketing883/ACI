@@ -23,6 +23,8 @@ import {
   ChevronDown,
   Sparkles,
   Mail,
+  Briefcase,
+  UserCheck,
 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 
@@ -53,6 +55,14 @@ const navItems: NavItem[] = [
       { href: '/admin/webinars', label: 'Webinars', icon: Video },
     ]
   },
+  {
+    label: 'Hiring',
+    icon: Briefcase,
+    children: [
+      { href: '/admin/jobs', label: 'Job Listings', icon: Briefcase },
+      { href: '/admin/job-applications', label: 'Applications', icon: UserCheck },
+    ]
+  },
 ];
 
 export default function AdminLayout({
@@ -61,7 +71,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<string[]>(['Leads', 'Content']);
+  const [expandedSections, setExpandedSections] = useState<string[]>(['Leads', 'Content', 'Hiring']);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
