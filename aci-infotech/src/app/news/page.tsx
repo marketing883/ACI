@@ -4,6 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ExternalLink, FileText, ArrowLeft } from 'lucide-react';
 
+// Revalidate every 60 seconds for fresh content
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: 'News & Press',
   description: 'Latest news, press releases, and media coverage about ACI Infotech - enterprise data engineering, AI, and cloud transformation.',

@@ -3,6 +3,33 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Configure sharp for server-side image processing
   serverExternalPackages: ['sharp'],
+
+  // Cache control headers - prevent long caching of HTML pages
+  async headers() {
+    return [
+      {
+        // Apply to all HTML pages (not static assets)
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+        ],
+      },
+      {
+        // Allow longer caching for static assets
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+
   images: {
     // Remote image patterns for external images
     remotePatterns: [

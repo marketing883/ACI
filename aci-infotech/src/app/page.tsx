@@ -1,3 +1,6 @@
+// Revalidate every 60 seconds for fresh content
+export const revalidate = 60;
+
 import Button from '@/components/ui/Button';
 import {
   HeroSection,

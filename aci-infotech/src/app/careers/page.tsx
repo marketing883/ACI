@@ -4,6 +4,9 @@ import { createClient } from '@supabase/supabase-js';
 import { MapPin, Clock, Briefcase, ArrowRight, Heart, Building2, Users, Globe, Zap, Award, Coffee, TrendingUp, Search, Filter } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+// Revalidate every 60 seconds for fresh content
+export const revalidate = 60;
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
