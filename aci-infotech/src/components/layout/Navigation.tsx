@@ -32,6 +32,8 @@ import {
   Award,
   Download,
   Play,
+  Briefcase,
+  Newspaper,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
@@ -106,6 +108,11 @@ const NAV_DATA = {
     { label: 'Whitepapers', href: '/whitepapers', icon: Download, description: 'In-depth guides & reports' },
     { label: 'Case Studies', href: '/case-studies', icon: Award, description: 'Real results from real clients' },
     { label: 'Blog', href: '/blog', icon: BookOpen, description: 'Insights and thought leadership' },
+  ],
+  about: [
+    { label: 'About Us', href: '/about', icon: Users, description: 'Our story and mission' },
+    { label: 'Careers', href: '/careers', icon: Briefcase, description: 'Join our growing team' },
+    { label: 'News', href: '/news', icon: Newspaper, description: 'Latest company updates' },
   ],
 };
 
@@ -211,13 +218,15 @@ export default function Navigation() {
                 <ResourcesMegaMenu items={NAV_DATA.resources} />
               </NavDropdown>
 
-              {/* About Link */}
-              <Link
-                href="/about"
-                className="px-4 py-2 text-[15px] font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
+              {/* About Dropdown */}
+              <NavDropdown
+                label="About"
+                isActive={activeDropdown === 'about'}
+                onMouseEnter={() => setActiveDropdown('about')}
+                onMouseLeave={() => setActiveDropdown(null)}
               >
-                About
-              </Link>
+                <AboutMegaMenu items={NAV_DATA.about} />
+              </NavDropdown>
 
               {/* Contact Link */}
               <Link
@@ -509,6 +518,45 @@ function ResourcesMegaMenu({ items }: ResourcesMegaMenuProps) {
   );
 }
 
+// About Mega Menu
+interface AboutMegaMenuProps {
+  items: typeof NAV_DATA.about;
+}
+
+function AboutMegaMenu({ items }: AboutMegaMenuProps) {
+  return (
+    <div className="p-6 w-[280px] bg-gradient-to-br from-gray-50 to-white">
+      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+        Company
+      </div>
+      <div className="space-y-1">
+        {items.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group flex items-center gap-3 p-3 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200"
+            >
+              <div className="w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-blue-50 flex items-center justify-center transition-colors">
+                <Icon className="w-5 h-5 text-[var(--aci-primary)] transition-transform group-hover:scale-110" />
+              </div>
+              <div>
+                <div className="font-medium text-[15px] text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors">
+                  {item.label}
+                </div>
+                {item.description && (
+                  <div className="text-sm text-gray-500">{item.description}</div>
+                )}
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // Mobile Menu
 interface MobileMenuProps {
   isOpen: boolean;
@@ -647,17 +695,35 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
               })}
             </MobileAccordion>
 
+            {/* About */}
+            <MobileAccordion
+              title="About"
+              isExpanded={expandedSection === 'about'}
+              onToggle={() => setExpandedSection(expandedSection === 'about' ? null : 'about')}
+            >
+              {navData.about.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-[var(--aci-primary)] hover:bg-gray-50 rounded-lg"
+                  >
+                    <Icon className="w-5 h-5 text-[var(--aci-primary)]" />
+                    <div>
+                      <div>{item.label}</div>
+                      {item.description && (
+                        <div className="text-xs text-gray-400">{item.description}</div>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </MobileAccordion>
+
             {/* Direct Links */}
             <div className="border-t border-gray-100 pt-4 mt-4">
-              <Link
-                href="/about"
-                onClick={onClose}
-                className="flex items-center gap-3 px-4 py-4 text-lg font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)]"
-              >
-                <Users className="w-5 h-5" />
-                About Us
-              </Link>
-
               <Link
                 href="/contact"
                 onClick={onClose}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Linkedin, Twitter, Youtube, Mail, Phone } from 'lucide-react';
+import { Linkedin, Twitter, Youtube, Mail } from 'lucide-react';
 import NewsletterForm from '@/components/forms/NewsletterForm';
 
 const FOOTER_LINKS = {
@@ -20,8 +20,9 @@ const FOOTER_LINKS = {
   ],
   company: [
     { label: 'About Us', href: '/about' },
-    { label: 'Contact', href: '/contact' },
     { label: 'Careers', href: '/careers' },
+    { label: 'News', href: '/news' },
+    { label: 'Contact', href: '/contact' },
   ],
 };
 
@@ -146,14 +147,7 @@ export default function Footer() {
             </div>
 
             {/* Contact Info */}
-            <div className="mt-6 space-y-3">
-              <a
-                href="tel:+17324167900"
-                className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
-              >
-                <Phone className="w-4 h-4" strokeWidth={1.5} />
-                <span>+1 (732) 416-7900</span>
-              </a>
+            <div className="mt-6">
               <a
                 href="mailto:insights@aciinfotech.com"
                 className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
