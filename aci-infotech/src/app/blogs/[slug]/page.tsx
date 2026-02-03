@@ -101,7 +101,7 @@ export default function BlogPostPage() {
             <p className="text-xl text-gray-400 mb-8">
               {error || "The article you're looking for doesn't exist or has been removed."}
             </p>
-            <Button href="/blog" variant="secondary">
+            <Button href="/blogs" variant="secondary">
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Blog
             </Button>
           </div>
@@ -120,7 +120,7 @@ export default function BlogPostPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <Link
-            href="/blog"
+            href="/blogs"
             className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -354,7 +354,7 @@ export default function BlogPostPage() {
             <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
               Schedule Architecture Call
             </Button>
-            <Button href="/blog" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
+            <Button href="/blogs" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
               Read More Articles
             </Button>
           </div>

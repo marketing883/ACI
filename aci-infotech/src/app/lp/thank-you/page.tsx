@@ -16,42 +16,42 @@ function ThankYouContent() {
   const getRelevantResources = (service: string) => {
     const resourceMap: Record<string, { blog: string; playbook?: string }> = {
       'data-engineering': {
-        blog: '/blog',
+        blog: '/blogs',
         playbook: '/playbooks/data-modernization-playbook',
       },
       'data-analytics': {
-        blog: '/blog',
+        blog: '/blogs',
         playbook: '/playbooks/analytics-maturity-playbook',
       },
       'cloud-modernization': {
-        blog: '/blog',
+        blog: '/blogs',
         playbook: '/playbooks/cloud-migration-playbook',
       },
       'dynamics-365': {
-        blog: '/blog',
+        blog: '/blogs',
       },
       'gen-ai': {
-        blog: '/blog',
+        blog: '/blogs',
         playbook: '/playbooks/gen-ai-readiness-playbook',
       },
       'ai-ml': {
-        blog: '/blog',
+        blog: '/blogs',
       },
       'agentic-ai': {
-        blog: '/blog',
+        blog: '/blogs',
       },
       'data-integration': {
-        blog: '/blog',
+        blog: '/blogs',
       },
       'data-observability': {
-        blog: '/blog',
+        blog: '/blogs',
       },
       'erp-transformation': {
-        blog: '/blog',
+        blog: '/blogs',
       },
     };
 
-    return resourceMap[service] || { blog: '/blog' };
+    return resourceMap[service] || { blog: '/blogs' };
   };
 
   const resources = getRelevantResources(serviceCluster);

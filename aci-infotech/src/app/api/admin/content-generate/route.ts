@@ -265,7 +265,7 @@ function buildPrompt(type: string, field: string, context: GenerateRequest['cont
 OUTPUT FORMAT: HTML
 - Output content as clean, semantic HTML
 - Use proper HTML tags: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <a>, <blockquote>
-- For links, use: <a href="/blog/slug">anchor text</a>
+- For links, use: <a href="/blogs/slug">anchor text</a>
 - For emphasis, use: <strong>bold</strong> and <em>italic</em>
 - For lists, use: <ul><li>item</li></ul> or <ol><li>item</li></ol>
 - For blockquotes: <blockquote>quote text</blockquote>
@@ -274,7 +274,7 @@ OUTPUT FORMAT: HTML
 ` : `
 OUTPUT FORMAT: MARKDOWN
 - Use markdown formatting (## H2, ### H3, **bold**, *italic*)
-- For links, use: [anchor text](/blog/slug)
+- For links, use: [anchor text](/blogs/slug)
 - For lists, use: - bullet or 1. numbered
 - For blockquotes, use: > quote text
 `;
@@ -810,13 +810,13 @@ ${existingPosts.length > 0 ? `
 7. INTERNAL LINKS (REQUIRED):
    You MUST include 3-5 internal links to related articles from our blog. Use these existing posts:
 
-${existingPosts.slice(0, 20).map(p => `   - "${p.title}" → /blog/${p.slug} (Category: ${p.category})`).join('\n')}
+${existingPosts.slice(0, 20).map(p => `   - "${p.title}" → /blogs/${p.slug} (Category: ${p.category})`).join('\n')}
 
    IMPORTANT:
    - Add internal links naturally within the content where relevant
    - Use descriptive anchor text (not "click here" or "read more")
-   - Format as: [descriptive text](/blog/slug)
-   - Example: "For more on data governance, see our guide on [building enterprise data platforms](/blog/enterprise-data-platforms)"
+   - Format as: [descriptive text](/blogs/slug)
+   - Example: "For more on data governance, see our guide on [building enterprise data platforms](/blogs/enterprise-data-platforms)"
    - Distribute links throughout the article, not just at the end
    - Only link to posts that are genuinely relevant to the context
 ` : ''}

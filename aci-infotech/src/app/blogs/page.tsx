@@ -373,7 +373,7 @@ function FeaturedPostCard({ post, large }: PostCardProps) {
   if (large) {
     return (
       <Link
-        href={`/blog/${post.slug}`}
+        href={`/blogs/${post.slug}`}
         className="group lg:col-span-2 lg:row-span-2 bg-[var(--aci-secondary)] rounded-2xl overflow-hidden relative min-h-[400px] lg:min-h-[580px]"
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10" />
@@ -427,7 +427,7 @@ function FeaturedPostCard({ post, large }: PostCardProps) {
 
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={`/blogs/${post.slug}`}
       className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all"
     >
       <div className="aspect-video relative">
@@ -469,7 +469,7 @@ function BlogPostCard({ post }: PostCardProps) {
 
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={`/blogs/${post.slug}`}
       className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all hover:-translate-y-1"
     >
       {/* Image */}

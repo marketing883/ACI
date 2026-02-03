@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
         // Handle dynamic routes
         if (currentPath.startsWith('/case-studies/')) {
           personalizedContext += `\n\nCURRENT PAGE CONTEXT:\nThe user is reading a specific case study. Be ready to discuss the results and how similar outcomes can be achieved for their organization.`;
-        } else if (currentPath.startsWith('/blog/')) {
+        } else if (currentPath.startsWith('/blogs/')) {
           personalizedContext += `\n\nCURRENT PAGE CONTEXT:\nThe user is reading a blog article. Offer to dive deeper into the topic or connect them with experts in this area.`;
         } else if (currentPath.startsWith('/whitepapers/') || currentPath.startsWith('/playbooks/')) {
           personalizedContext += `\n\nCURRENT PAGE CONTEXT:\nThe user is viewing a whitepaper/playbook. They're researching and likely have specific questions. Be helpful and knowledgeable.`;

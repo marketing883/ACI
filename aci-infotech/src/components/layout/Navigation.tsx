@@ -107,7 +107,7 @@ const NAV_DATA = {
     { label: 'Playbooks', href: '/playbooks', icon: FileText, description: 'Proven architecture patterns' },
     { label: 'Whitepapers', href: '/whitepapers', icon: Download, description: 'In-depth guides & reports' },
     { label: 'Case Studies', href: '/case-studies', icon: Award, description: 'Real results from real clients' },
-    { label: 'Blog', href: '/blog', icon: BookOpen, description: 'Insights and thought leadership' },
+    { label: 'Blog', href: '/blogs', icon: BookOpen, description: 'Insights and thought leadership' },
   ],
   about: [
     { label: 'About Us', href: '/about', icon: Users, description: 'Our story and mission' },

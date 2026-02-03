@@ -161,7 +161,7 @@ function PageViewTracker() {
       trackPageView(url);
 
       // Track content type based on URL pattern
-      if (pathname.startsWith('/blog/') && pathname.split('/').length > 2) {
+      if (pathname.startsWith('/blogs/') && pathname.split('/').length > 2) {
         const slug = pathname.split('/').pop();
         if (slug) trackContentView('blog_post', slug, document.title, 'blog');
       } else if (pathname.startsWith('/whitepapers/') && pathname.split('/').length > 2) {
@@ -365,7 +365,7 @@ function EngagementScoreTracker() {
       else if (currentPage.startsWith('/case-studies/')) score += 8;
       else if (currentPage.startsWith('/whitepapers/')) score += 8;
       else if (currentPage.startsWith('/playbooks/')) score += 5;
-      else if (currentPage.startsWith('/blog/')) score += 3;
+      else if (currentPage.startsWith('/blogs/')) score += 3;
       else if (currentPage === '/') score += 1;
       else score += 2;
 

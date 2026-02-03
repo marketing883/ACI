@@ -223,8 +223,8 @@ export default function EditBlogPage() {
 
     const linkText = selectedText || post.title;
     const link = contentFormat === 'html'
-      ? `<a href="/blog/${post.slug}">${linkText}</a>`
-      : `[${linkText}](/blog/${post.slug})`;
+      ? `<a href="/blogs/${post.slug}">${linkText}</a>`
+      : `[${linkText}](/blogs/${post.slug})`;
 
     const newContent = content.substring(0, start) + link + content.substring(end);
     setContent(newContent);
@@ -662,7 +662,7 @@ export default function EditBlogPage() {
         <div className="flex gap-3">
           {status === 'published' && (
             <Link
-              href={`/blog/${slug}`}
+              href={`/blogs/${slug}`}
               target="_blank"
               className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
             >
@@ -717,7 +717,7 @@ export default function EditBlogPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">URL Slug *</label>
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-500 text-sm">/blog/</span>
+                  <span className="text-gray-500 text-sm">/blogs/</span>
                   <input
                     type="text"
                     value={slug}
@@ -840,8 +840,8 @@ export default function EditBlogPage() {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder={contentFormat === 'html'
-                    ? "Write or paste your HTML content here...\n\nExample:\n<h2>Section Title</h2>\n<p>Your paragraph here with <strong>bold</strong> and <a href=\"/blog/post-slug\">links</a>.</p>"
-                    : "Write your article content in Markdown...\n\nExample:\n## Section Title\nYour paragraph here with **bold** and [links](/blog/post-slug)."
+                    ? "Write or paste your HTML content here...\n\nExample:\n<h2>Section Title</h2>\n<p>Your paragraph here with <strong>bold</strong> and <a href=\"/blogs/post-slug\">links</a>.</p>"
+                    : "Write your article content in Markdown...\n\nExample:\n## Section Title\nYour paragraph here with **bold** and [links](/blogs/post-slug)."
                   }
                   rows={20}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
@@ -961,7 +961,7 @@ export default function EditBlogPage() {
                         className="w-full text-left p-2 text-sm hover:bg-blue-50 rounded-lg border border-gray-100 transition-colors"
                       >
                         <span className="font-medium text-gray-900 block truncate">{post.title}</span>
-                        <span className="text-xs text-gray-500">{post.category} &middot; /blog/{post.slug}</span>
+                        <span className="text-xs text-gray-500">{post.category} &middot; /blogs/{post.slug}</span>
                       </button>
                     ))
                   }

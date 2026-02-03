@@ -15,7 +15,7 @@ const FOOTER_LINKS = {
   resources: [
     { label: 'Case Studies', href: '/case-studies' },
     { label: 'Playbooks', href: '/playbooks' },
-    { label: 'Blog', href: '/blog' },
+    { label: 'Blog', href: '/blogs' },
     { label: 'Whitepapers', href: '/whitepapers' },
   ],
   company: [

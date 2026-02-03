@@ -422,7 +422,7 @@ export default function BlogAdmin() {
                           <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-10">
                             {post.is_published && (
                               <Link
-                                href={`/blog/${post.slug}`}
+                                href={`/blogs/${post.slug}`}
                                 target="_blank"
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                               >

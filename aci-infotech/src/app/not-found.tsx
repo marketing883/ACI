@@ -63,7 +63,7 @@ export default function NotFound() {
               <p className="text-sm text-gray-500">See our client success stories</p>
             </Link>
             <Link
-              href="/blog"
+              href="/blogs"
               className="p-4 rounded-lg border border-gray-200 hover:border-[var(--aci-primary)] hover:bg-blue-50 transition-colors group"
             >
               <h3 className="font-medium text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)]">

@@ -7,16 +7,15 @@ const nextConfig: NextConfig = {
   // Redirects for legacy URLs
   async redirects() {
     return [
-      // Redirect old /blogs/* URLs to /blog/*
+      // Redirect /blog/* to /blogs/* (canonical URL is /blogs)
       {
-        source: '/blogs/:slug',
-        destination: '/blog/:slug',
+        source: '/blog/:slug',
+        destination: '/blogs/:slug',
         permanent: true, // 301 redirect for SEO
       },
-      // Also redirect /blogs to /blog
       {
-        source: '/blogs',
-        destination: '/blog',
+        source: '/blog',
+        destination: '/blogs',
         permanent: true,
       },
     ];

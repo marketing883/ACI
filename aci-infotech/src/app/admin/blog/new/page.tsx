@@ -566,8 +566,8 @@ export default function NewBlogPostPage() {
 
     const linkText = selectedText || post.title;
     const link = contentFormat === 'html'
-      ? `<a href="/blog/${post.slug}">${linkText}</a>`
-      : `[${linkText}](/blog/${post.slug})`;
+      ? `<a href="/blogs/${post.slug}">${linkText}</a>`
+      : `[${linkText}](/blogs/${post.slug})`;
 
     const newContent = content.substring(0, start) + link + content.substring(end);
     setContent(newContent);
@@ -1452,8 +1452,8 @@ export default function NewBlogPostPage() {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder={contentFormat === 'html'
-                      ? "Write or paste your HTML content here...\n\nExample:\n<h2>Section Title</h2>\n<p>Your paragraph here with <strong>bold</strong> and <a href=\"/blog/post-slug\">links</a>.</p>"
-                      : "Write your article content in Markdown...\n\nExample:\n## Section Title\nYour paragraph here with **bold** and [links](/blog/post-slug)."
+                      ? "Write or paste your HTML content here...\n\nExample:\n<h2>Section Title</h2>\n<p>Your paragraph here with <strong>bold</strong> and <a href=\"/blogs/post-slug\">links</a>.</p>"
+                      : "Write your article content in Markdown...\n\nExample:\n## Section Title\nYour paragraph here with **bold** and [links](/blogs/post-slug)."
                     }
                     rows={20}
                     className="w-full px-4 py-3 border border-gray-200 rounded-b-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent font-mono text-sm resize-none"
@@ -1567,7 +1567,7 @@ export default function NewBlogPostPage() {
                           className="w-full text-left p-2 text-sm hover:bg-blue-50 rounded-lg border border-gray-100 transition-colors"
                         >
                           <span className="font-medium text-gray-900 block truncate">{post.title}</span>
-                          <span className="text-xs text-gray-500">{post.category} &middot; /blog/{post.slug}</span>
+                          <span className="text-xs text-gray-500">{post.category} &middot; /blogs/{post.slug}</span>
                         </button>
                       ))
                     }

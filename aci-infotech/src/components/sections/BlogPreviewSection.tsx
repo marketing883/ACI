@@ -288,7 +288,7 @@ export default function BlogPreviewSection({
   headline = "Thoughts and Insights",
   subheadline = "Technical depth from engineers who've been there",
   posts,
-  viewAllUrl = "/blog",
+  viewAllUrl = "/blogs",
   showWhitepaper = true,
 }: BlogPreviewSectionProps) {
   const [featuredWhitepaper, setFeaturedWhitepaper] = useState<Whitepaper | null>(null);
@@ -353,7 +353,7 @@ export default function BlogPreviewSection({
               {posts.slice(0, showWhitepaper ? 4 : posts.length).map((post) => (
                 <Link
                   key={post.slug}
-                  href={`/blog/${post.slug}`}
+                  href={`/blogs/${post.slug}`}
                   className="group bg-white rounded-[6px] overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
                 >
                   {/* Image */}

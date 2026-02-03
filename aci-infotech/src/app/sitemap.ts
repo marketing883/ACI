@@ -29,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Resource listings
     { url: `${baseUrl}/case-studies`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/blogs`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
     { url: `${baseUrl}/whitepapers`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
     { url: `${baseUrl}/playbooks`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
 
@@ -134,7 +134,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     if (blogPosts) {
       blogEntries = blogPosts.map(post => ({
-        url: `${baseUrl}/blog/${post.slug}`,
+        url: `${baseUrl}/blogs/${post.slug}`,
         lastModified: new Date(post.updated_at || post.created_at),
         changeFrequency: 'weekly' as const,
         priority: 0.6,
