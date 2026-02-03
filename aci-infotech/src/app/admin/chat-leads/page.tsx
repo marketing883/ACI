@@ -24,6 +24,7 @@ import {
   Lightbulb,
   Shield,
   Download,
+  Trash2,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
@@ -272,6 +273,33 @@ export default function ChatLeadsPage() {
     }
   }
 
+  async function deleteLead(id: string) {
+    if (!confirm('Are you sure you want to delete this lead? This action cannot be undone.')) {
+      return;
+    }
+
+    if (!configured) {
+      setLeads(leads.filter(l => l.id !== id));
+      setSelectedLead(null);
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('chat_leads')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setLeads(leads.filter(l => l.id !== id));
+      setSelectedLead(null);
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+      alert('Failed to delete lead. Please try again.');
+    }
+  }
+
   function handleSelectLead(lead: ChatLead) {
     setSelectedLead(lead);
     setIntelligence(null);
@@ -472,6 +500,13 @@ export default function ChatLeadsPage() {
                     <option value="converted">Converted</option>
                     <option value="lost">Lost</option>
                   </select>
+                  <button
+                    onClick={() => deleteLead(selectedLead.id)}
+                    className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Delete lead"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
 

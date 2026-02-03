@@ -16,6 +16,7 @@ import {
   ExternalLink,
   FileText,
   Eye,
+  Trash2,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
@@ -139,6 +140,31 @@ export default function PlaybookLeadsPage() {
       setLeads(mockLeads);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function deleteLead(id: string) {
+    if (!confirm('Are you sure you want to delete this lead? This action cannot be undone.')) {
+      return;
+    }
+
+    if (!configured) {
+      // Demo mode - just remove from local state
+      setLeads(leads.filter(l => l.id !== id));
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('playbook_leads')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      setLeads(leads.filter(l => l.id !== id));
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+      alert('Failed to delete lead. Please try again.');
     }
   }
 
@@ -388,6 +414,13 @@ export default function PlaybookLeadsPage() {
                         >
                           <Eye className="w-4 h-4" />
                         </a>
+                        <button
+                          onClick={() => deleteLead(lead.id)}
+                          className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50"
+                          title="Delete Lead"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
                     </td>
                   </tr>

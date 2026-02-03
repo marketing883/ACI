@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
+  Trash2,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
@@ -135,6 +136,31 @@ export default function SubscribersPage() {
       console.error('Error fetching subscribers:', error);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function deleteSubscriber(id: string) {
+    if (!confirm('Are you sure you want to delete this subscriber? This action cannot be undone.')) {
+      return;
+    }
+
+    if (!configured) {
+      // Demo mode - just remove from local state
+      setSubscribers(subscribers.filter(s => s.id !== id));
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('newsletter_subscribers')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      setSubscribers(subscribers.filter(s => s.id !== id));
+    } catch (error) {
+      console.error('Error deleting subscriber:', error);
+      alert('Failed to delete subscriber. Please try again.');
     }
   }
 
@@ -304,6 +330,9 @@ export default function SubscribersPage() {
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Subscribed
                   </th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -332,6 +361,15 @@ export default function SubscribersPage() {
                           <Clock className="w-4 h-4" />
                           {formatDate(sub.created_at)}
                         </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button
+                          onClick={() => deleteSubscriber(sub.id)}
+                          className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50"
+                          title="Delete Subscriber"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </td>
                     </tr>
                   );

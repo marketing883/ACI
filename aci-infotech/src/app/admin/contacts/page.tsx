@@ -27,6 +27,7 @@ import {
   Shield,
   MapPin,
   Download,
+  Trash2,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
@@ -282,6 +283,33 @@ export default function ContactsPage() {
       }
     } catch (error) {
       console.error('Error updating contact:', error);
+    }
+  }
+
+  async function deleteContact(id: string) {
+    if (!confirm('Are you sure you want to delete this lead? This action cannot be undone.')) {
+      return;
+    }
+
+    if (!configured) {
+      setContacts(contacts.filter(c => c.id !== id));
+      setSelectedContact(null);
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('contacts')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setContacts(contacts.filter(c => c.id !== id));
+      setSelectedContact(null);
+    } catch (error) {
+      console.error('Error deleting contact:', error);
+      alert('Failed to delete contact. Please try again.');
     }
   }
 
@@ -565,6 +593,13 @@ export default function ContactsPage() {
                     Mark Contacted
                   </button>
                 )}
+                <button
+                  onClick={() => deleteContact(selectedContact.id)}
+                  className="flex items-center gap-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors text-sm"
+                  title="Delete lead"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
