@@ -611,14 +611,9 @@ export default function CaseStudiesPage() {
           <p className="text-xl text-blue-100 mb-8">
             Let's discuss how we can help transform your business with enterprise-grade solutions.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-              Schedule Architecture Call
-            </Button>
-            <Button href="/services" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              Explore Our Services
-            </Button>
-          </div>
+          <Button href="/contact?reason=architecture-call" variant="lime" size="lg">
+            Discuss Your Project
+          </Button>
         </div>
       </section>
     </main>

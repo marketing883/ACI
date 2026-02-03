@@ -542,19 +542,9 @@ export default function DataEngineeringPage() {
             <span className="text-blue-200 text-sm">We'll tell you if we're not the right fit</span>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?service=data-engineering" variant="secondary" size="lg">
-              Talk to a Data Architect
-            </Button>
-            <Button
-              href="/case-studies?service=data-engineering"
-              variant="ghost"
-              size="lg"
-              className="text-white border-white hover:bg-white/10"
-            >
-              See Data Engineering Case Studies
-            </Button>
-          </div>
+          <Button href="/contact?service=data-engineering" variant="lime" size="lg">
+            Talk to a Data Architect
+          </Button>
         </div>
       </section>
     </>

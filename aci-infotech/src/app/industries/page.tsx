@@ -239,14 +239,9 @@ export default function IndustriesPage() {
             We work with enterprises across many sectors. Let's discuss how our expertise
             can apply to your specific challenges.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-              Schedule Architecture Call
-            </Button>
-            <Button href="/services" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              View Our Services
-            </Button>
-          </div>
+          <Button href="/contact?reason=architecture-call" variant="lime" size="lg">
+            Schedule Architecture Call
+          </Button>
         </div>
       </section>
     </main>

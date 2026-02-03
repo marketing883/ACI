@@ -381,12 +381,9 @@ export default function MarTechCDPPage() {
             Talk to a MarTech architect about your customer data challenges.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?service=martech-cdp" variant="secondary" size="lg">Talk to a MarTech Architect</Button>
-            <Button href="/case-studies?service=martech-cdp" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              See MarTech Case Studies
-            </Button>
-          </div>
+          <Button href="/contact?service=martech-cdp" variant="lime" size="lg">
+            Talk to a MarTech Architect
+          </Button>
         </div>
       </section>
     </>

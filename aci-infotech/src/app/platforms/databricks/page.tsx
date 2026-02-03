@@ -225,14 +225,9 @@ export default function DatabricksPage() {
           <p className="text-xl text-red-100 mb-8">
             Schedule a free assessment with our Databricks experts to discuss your data challenges.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-              Schedule Free Assessment
-            </Button>
-            <Button href="/platforms" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              Explore Other Platforms
-            </Button>
-          </div>
+          <Button href="/contact?platform=databricks" variant="lime" size="lg">
+            Talk to Databricks Expert
+          </Button>
         </div>
       </section>
     </main>

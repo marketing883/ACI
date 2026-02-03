@@ -379,12 +379,9 @@ export default function DigitalTransformationPage() {
             Talk to an automation architect about your process challenges.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?service=digital-transformation" variant="secondary" size="lg">Talk to an Automation Architect</Button>
-            <Button href="/case-studies?service=digital-transformation" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              See Automation Case Studies
-            </Button>
-          </div>
+          <Button href="/contact?service=digital-transformation" variant="lime" size="lg">
+            Talk to an Automation Architect
+          </Button>
         </div>
       </section>
     </>

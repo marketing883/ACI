@@ -227,14 +227,9 @@ export default function MicrosoftDynamicsPage() {
           <p className="text-xl text-blue-100 mb-8">
             Our certified architects can help you build a roadmap for Dynamics 365, Copilot, and Power Platform.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-              Schedule Architecture Call
-            </Button>
-            <Button href="/case-studies" variant="outline" size="lg" className="text-white border-white hover:bg-white/10">
-              View Case Studies
-            </Button>
-          </div>
+          <Button href="/contact?platform=microsoft-dynamics" variant="lime" size="lg">
+            Talk to Microsoft Expert
+          </Button>
         </div>
       </section>
     </main>

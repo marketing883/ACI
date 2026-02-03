@@ -890,20 +890,9 @@ export default function PlaybookPage() {
           <p className="text-xl text-blue-100 mb-8">
             Talk to an architect who has deployed this pattern {playbook.deployments} times.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href={`/contact?playbook=${playbook.id}`} variant="secondary" size="lg">
-              Talk to the Architect
-            </Button>
-            {playbook.downloadAvailable && (
-              <button
-                onClick={() => setShowDownloadModal(true)}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/10 text-white font-semibold rounded-lg border border-white/30 hover:bg-white/20 transition-colors"
-              >
-                <Download className="w-5 h-5" />
-                Download PDF
-              </button>
-            )}
-          </div>
+          <Button href={`/contact?playbook=${playbook.id}`} variant="lime" size="lg">
+            Talk to the Architect
+          </Button>
         </div>
       </section>
 

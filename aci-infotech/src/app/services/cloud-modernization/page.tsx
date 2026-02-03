@@ -380,12 +380,9 @@ export default function CloudModernizationPage() {
             Talk to a cloud architect about your specific challenge. No sales pitch, just an engineering conversation.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?service=cloud-modernization" variant="secondary" size="lg">Talk to a Cloud Architect</Button>
-            <Button href="/case-studies?service=cloud-modernization" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              See Cloud Case Studies
-            </Button>
-          </div>
+          <Button href="/contact?service=cloud-modernization" variant="lime" size="lg">
+            Talk to a Cloud Architect
+          </Button>
         </div>
       </section>
     </>

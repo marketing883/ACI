@@ -390,12 +390,9 @@ export default function AppliedAIMLPage() {
             Talk to an AI architect about your specific use case. No sales pitch, just an engineering conversation about what's actually possible.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?service=applied-ai-ml" variant="secondary" size="lg">Talk to an AI Architect</Button>
-            <Button href="/case-studies?service=applied-ai-ml" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              See AI Case Studies
-            </Button>
-          </div>
+          <Button href="/contact?service=applied-ai-ml" variant="lime" size="lg">
+            Talk to an AI Architect
+          </Button>
         </div>
       </section>
     </>

@@ -588,16 +588,9 @@ export default function AboutPage() {
             <span className="text-blue-200 text-sm">No pressure, no obligation</span>
           </div>
 
-          <div className="flex justify-center">
-            <Button
-              href="/contact"
-              variant="ghost"
-              size="lg"
-              className="border-2 border-[var(--aci-lime)] text-[var(--aci-lime)] hover:bg-[var(--aci-lime)]/10"
-            >
-              Discuss Your Challenge
-            </Button>
-          </div>
+          <Button href="/contact" variant="lime" size="lg">
+            Discuss Your Challenge
+          </Button>
         </div>
       </section>
     </>

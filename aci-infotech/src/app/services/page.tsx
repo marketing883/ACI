@@ -270,14 +270,9 @@ export default function ServicesPage() {
             Schedule a 30-minute architecture call with one of our senior consultants.
             No sales pitch, just an honest assessment of your needs.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-              Schedule Architecture Call
-            </Button>
-            <Button href="/case-studies" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              View Case Studies
-            </Button>
-          </div>
+          <Button href="/contact?reason=architecture-call" variant="lime" size="lg">
+            Schedule Architecture Call
+          </Button>
         </div>
       </section>
     </main>

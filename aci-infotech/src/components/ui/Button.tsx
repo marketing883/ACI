@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'secondary-dark' | 'ghost' | 'danger' | 'outline';
+  variant?: 'primary' | 'secondary' | 'secondary-dark' | 'ghost' | 'danger' | 'outline' | 'lime';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   loading?: boolean;
   disabled?: boolean;
@@ -62,6 +62,8 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
         'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 cursor-pointer',
       outline:
         'bg-transparent text-white border-2 border-white/30 hover:border-[#C4FF61] hover:text-[#C4FF61] focus:ring-white/50 cursor-pointer',
+      lime:
+        'bg-[#C4FF61] text-[#0A1628] hover:bg-[#d4ff8a] focus:ring-[#C4FF61] cursor-pointer font-semibold',
     };
 
     // Size styles - border radius max 8px (rounded-lg)

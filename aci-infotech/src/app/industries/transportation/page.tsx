@@ -306,14 +306,9 @@ export default function TransportationPage() {
           <p className="text-xl text-blue-100 mb-8">
             Schedule a consultation with our transportation technology experts to discuss your challenges.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-              Schedule Consultation
-            </Button>
-            <Button href="/industries" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              Explore Other Industries
-            </Button>
-          </div>
+          <Button href="/contact?industry=transportation" variant="lime" size="lg">
+            Talk to Logistics Expert
+          </Button>
         </div>
       </section>
     </main>

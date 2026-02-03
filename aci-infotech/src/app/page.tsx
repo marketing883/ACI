@@ -189,7 +189,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <Button href="/contact" variant="secondary-dark" size="lg">
+          <Button href="/contact" variant="lime" size="lg">
             Book 30 Minutes
           </Button>
         </div>

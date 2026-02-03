@@ -336,14 +336,9 @@ export default function PlaybooksPage() {
             We've documented 100+ patterns beyond these featured playbooks.
             Talk to an architect who can help identify the right approach for your specific challenge.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule Architecture Call
-            </Button>
-            <Button href="/case-studies" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              View Case Studies
-            </Button>
-          </div>
+          <Button href="/contact?reason=architecture-call" variant="lime" size="lg">
+            Schedule Architecture Call
+          </Button>
         </div>
       </section>
     </main>

@@ -248,14 +248,9 @@ export default function BrazePage() {
           <p className="text-xl text-red-100 mb-8">
             Schedule a free assessment with our Braze certified consultants.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-              Schedule Free Assessment
-            </Button>
-            <Button href="/platforms" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              Explore Other Platforms
-            </Button>
-          </div>
+          <Button href="/contact?platform=braze" variant="lime" size="lg">
+            Talk to Braze Expert
+          </Button>
         </div>
       </section>
     </main>

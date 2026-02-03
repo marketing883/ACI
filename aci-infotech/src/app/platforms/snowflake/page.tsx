@@ -225,14 +225,9 @@ export default function SnowflakePage() {
           <p className="text-xl text-cyan-100 mb-8">
             Schedule a free assessment with our Snowflake experts to discuss your data strategy.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-              Schedule Free Assessment
-            </Button>
-            <Button href="/platforms" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              Explore Other Platforms
-            </Button>
-          </div>
+          <Button href="/contact?platform=snowflake" variant="lime" size="lg">
+            Talk to Snowflake Expert
+          </Button>
         </div>
       </section>
     </main>

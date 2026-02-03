@@ -382,12 +382,9 @@ export default function CyberSecurityPage() {
             Talk to a security architect about your compliance and security challenges.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?service=cyber-security" variant="secondary" size="lg">Talk to a Security Architect</Button>
-            <Button href="/case-studies?service=cyber-security" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              See Security Case Studies
-            </Button>
-          </div>
+          <Button href="/contact?service=cyber-security" variant="lime" size="lg">
+            Talk to a Security Architect
+          </Button>
         </div>
       </section>
     </>

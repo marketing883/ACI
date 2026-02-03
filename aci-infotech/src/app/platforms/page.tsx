@@ -255,14 +255,9 @@ export default function PlatformsPage() {
           <p className="text-xl text-blue-100 mb-8">
             Our certified experts can help you get the most out of your technology investments.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-              Schedule Architecture Call
-            </Button>
-            <Button href="/case-studies" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              View Case Studies
-            </Button>
-          </div>
+          <Button href="/contact?reason=architecture-call" variant="lime" size="lg">
+            Schedule Architecture Call
+          </Button>
         </div>
       </section>
     </main>
