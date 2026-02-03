@@ -17,12 +17,19 @@ export async function GET() {
     }
   });
 
-  // Get ALL posts (including unpublished) to debug
+  // Get ALL posts ordered by published_at to find newest
   const { data: allPosts, error } = await supabase
     .from('blog_posts')
     .select('id, slug, title, published_at, created_at, is_published')
-    .order('created_at', { ascending: false })
+    .order('published_at', { ascending: false, nullsFirst: false })
     .limit(30);
+
+  // Also search for specific posts by title
+  const { data: searchPosts } = await supabase
+    .from('blog_posts')
+    .select('id, slug, title, published_at, created_at, is_published')
+    .or('title.ilike.%data management%,title.ilike.%lakehouse strategy%,title.ilike.%feb%,title.ilike.%jan 14%')
+    .limit(10);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -31,11 +38,17 @@ export async function GET() {
   return NextResponse.json({
     timestamp: new Date().toISOString(),
     totalPosts: allPosts?.length || 0,
-    allPostsByCreatedDate: allPosts?.slice(0, 15).map(p => ({
+    newestByPublishedAt: allPosts?.slice(0, 10).map(p => ({
       title: p.title?.substring(0, 50),
       published_at: p.published_at,
       created_at: p.created_at,
       is_published: p.is_published
-    }))
+    })),
+    searchResults: searchPosts?.map(p => ({
+      title: p.title?.substring(0, 50),
+      published_at: p.published_at,
+      created_at: p.created_at,
+      is_published: p.is_published
+    })) || []
   });
 }
