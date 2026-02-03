@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { unstable_noStore as noStore } from 'next/cache';
 import BlogPreviewSection from './BlogPreviewSection';
 
 // Server-side Supabase client
@@ -20,20 +21,31 @@ interface BlogPostDB {
 }
 
 async function getLatestPosts(limit: number = 3) {
+  // Opt out of caching to ensure fresh data
+  noStore();
+
   if (!supabaseUrl || !supabaseAnonKey) {
     return [];
   }
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  // Create client with no-cache fetch option to bypass Next.js cache
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    global: {
+      fetch: (url, options = {}) => fetch(url, { ...options, cache: 'no-store' })
+    }
+  });
 
-  // Fetch all published posts, order by published_at (nulls last), then created_at
+  // Fetch more posts than needed so JS sort can find the truly newest
+  // (Supabase ordering with nulls can be unpredictable)
+  const fetchLimit = Math.max(limit * 5, 20);
+
   const { data, error } = await supabase
     .from('blog_posts')
     .select('*')
     .eq('is_published', true)
     .order('published_at', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false })
-    .limit(limit);
+    .limit(fetchLimit);
 
   if (error) {
     console.error('Error fetching blog posts:', error);

@@ -1,5 +1,6 @@
-// Revalidate every 60 seconds for fresh content
-export const revalidate = 60;
+// Force dynamic rendering to always fetch fresh blog data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 import Button from '@/components/ui/Button';
 import {
