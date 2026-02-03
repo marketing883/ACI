@@ -123,7 +123,7 @@ export default async function DynamicBlogSection({
         headline={headline}
         subheadline={subheadline}
         posts={placeholderPosts}
-        viewAllUrl="/blog"
+        viewAllUrl="/blogs"
         showWhitepaper={true}
       />
     );
@@ -134,7 +134,7 @@ export default async function DynamicBlogSection({
       headline={headline}
       subheadline={subheadline}
       posts={posts}
-      viewAllUrl="/blog"
+      viewAllUrl="/blogs"
       showWhitepaper={true}
     />
   );
