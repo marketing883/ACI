@@ -5443,6 +5443,1045 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     certifications: ['Collibra Partner', 'Alation Partner', 'Atlan Partner', 'Purview Certified'],
   },
+
+  // ==========================================
+  // PLATFORM LPs: SALESFORCE
+  // ==========================================
+  'salesforce-implementation': {
+    slug: 'salesforce-implementation',
+    serviceCluster: 'salesforce',
+    keyword: 'salesforce implementation partner',
+
+    metaTitle: 'Salesforce Implementation Services | Certified Partner | ACI Infotech',
+    metaDescription: 'Expert Salesforce implementation services from a certified partner. Sales Cloud, Service Cloud, and platform customization.',
+
+    headline: 'Maximize Your Salesforce Investment',
+    subheadline: 'Certified Salesforce partner delivering implementations that drive adoption and ROI.',
+    ctoText: 'Get Your Salesforce Assessment',
+    ctoSecondaryText: 'See Implementation Approach',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Low User Adoption',
+        description: 'Salesforce deployed but sales team not using it effectively.',
+        icon: 'users',
+      },
+      {
+        title: 'Messy Data',
+        description: 'Duplicate accounts, incomplete records, and data nobody trusts.',
+        icon: 'database',
+      },
+      {
+        title: 'Complex Customizations',
+        description: 'Over-customized org that\'s hard to maintain and upgrade.',
+        icon: 'settings',
+      },
+      {
+        title: 'Integration Gaps',
+        description: 'Salesforce not connected to ERP, marketing, or other key systems.',
+        icon: 'unlink',
+      },
+    ],
+
+    solutionHeadline: 'Salesforce Done Right',
+    solutionDescription: 'We implement Salesforce with a focus on adoption, data quality, and sustainable architecture.',
+    processSteps: [
+      { step: '01', title: 'Discover', description: 'Understand your sales process and CRM requirements.' },
+      { step: '02', title: 'Design', description: 'Architect solution using Salesforce best practices.' },
+      { step: '03', title: 'Build', description: 'Configure, customize, integrate, and migrate data.' },
+      { step: '04', title: 'Adopt', description: 'Train users and drive adoption with change management.' },
+    ],
+
+    stats: [
+      { value: '150+', label: 'Salesforce Projects' },
+      { value: '90%', label: 'User Adoption Rate' },
+      { value: '40%', label: 'Increase in Sales Productivity' },
+      { value: 'Summit', label: 'Salesforce Partner Tier' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Adoption Focus',
+        description: 'Implementation designed for user adoption, not just features.',
+        icon: 'users',
+      },
+      {
+        title: 'Clean Data',
+        description: 'Data migration with cleansing and deduplication.',
+        icon: 'check-circle',
+      },
+      {
+        title: 'Scalable Architecture',
+        description: 'Best-practice design that grows with your business.',
+        icon: 'layers',
+      },
+      {
+        title: 'Integration Ready',
+        description: 'Connected to your other systems from day one.',
+        icon: 'link',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '95% User Adoption',
+        description: 'Implemented Sales Cloud for a 500-person sales team achieving 95% adoption in 90 days.',
+        industry: 'technology',
+      },
+      {
+        headline: 'Service Cloud Transformation',
+        description: 'Deployed Service Cloud reducing average case resolution time by 40%.',
+        industry: 'retail',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Are you a certified Salesforce partner?',
+        answer: 'Yes, we\'re a Salesforce Summit Partner with certified administrators, developers, and consultants.',
+      },
+      {
+        question: 'Which Salesforce clouds do you implement?',
+        answer: 'We implement Sales Cloud, Service Cloud, Marketing Cloud, Commerce Cloud, and Experience Cloud.',
+      },
+      {
+        question: 'Can you fix our existing Salesforce?',
+        answer: 'Absolutely. We frequently rescue struggling implementations with health checks and remediation.',
+      },
+      {
+        question: 'How do you ensure user adoption?',
+        answer: 'We include change management, training, and adoption tracking as core parts of every implementation.',
+      },
+    ],
+
+    certifications: ['Salesforce Summit Partner', 'Sales Cloud Certified', 'Service Cloud Certified', 'Platform Developer'],
+
+    industryVariants: {
+      finance: {
+        headline: 'Salesforce for Financial Services',
+        subheadline: 'Financial Services Cloud implementation for banks, wealth management, and insurance.',
+        painPoints: [
+          {
+            title: 'Client 360 Gaps',
+            description: 'No unified view of client across products and relationships.',
+            icon: 'users',
+          },
+          {
+            title: 'Compliance Requirements',
+            description: 'Regulatory requirements for data handling and audit trails.',
+            icon: 'shield',
+          },
+          {
+            title: 'Advisor Productivity',
+            description: 'Advisors spending too much time on admin, not clients.',
+            icon: 'clock',
+          },
+          {
+            title: 'Referral Tracking',
+            description: 'Can\'t track and manage referrals effectively.',
+            icon: 'git-branch',
+          },
+        ],
+        stats: [
+          { value: '360°', label: 'Client View' },
+          { value: '100%', label: 'Compliance' },
+          { value: '35%', label: 'Advisor Productivity Gain' },
+          { value: '50%', label: 'Faster Onboarding' },
+        ],
+      },
+      healthcare: {
+        headline: 'Salesforce Health Cloud Implementation',
+        subheadline: 'Health Cloud for patient engagement, care coordination, and provider relationships.',
+        painPoints: [
+          {
+            title: 'Patient Engagement',
+            description: 'Difficulty engaging patients across their healthcare journey.',
+            icon: 'users',
+          },
+          {
+            title: 'Care Coordination',
+            description: 'Care teams can\'t collaborate effectively on patient care.',
+            icon: 'activity',
+          },
+          {
+            title: 'Provider Relationships',
+            description: 'No system to manage provider network relationships.',
+            icon: 'link',
+          },
+          {
+            title: 'HIPAA Compliance',
+            description: 'Need PHI protection built into CRM.',
+            icon: 'shield',
+          },
+        ],
+        stats: [
+          { value: '100%', label: 'HIPAA Compliant' },
+          { value: '40%', label: 'Better Patient Engagement' },
+          { value: '360°', label: 'Patient View' },
+          { value: '30%', label: 'Care Coordination Improvement' },
+        ],
+      },
+    },
+  },
+
+  'salesforce-integration': {
+    slug: 'salesforce-integration',
+    serviceCluster: 'salesforce',
+    keyword: 'salesforce integration services',
+
+    metaTitle: 'Salesforce Integration Services | API & MuleSoft | ACI Infotech',
+    metaDescription: 'Expert Salesforce integration services. Connect Salesforce to ERP, marketing, and business systems with MuleSoft and APIs.',
+
+    headline: 'Connect Salesforce to Your Entire Business',
+    subheadline: 'Seamless integration between Salesforce and your ERP, marketing, support, and data systems.',
+    ctoText: 'Get Your Integration Architecture Review',
+    ctoSecondaryText: 'See Integration Patterns',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Data Silos',
+        description: 'Salesforce data disconnected from ERP, marketing, and other systems.',
+        icon: 'database',
+      },
+      {
+        title: 'Manual Data Entry',
+        description: 'Teams re-entering data between Salesforce and other systems.',
+        icon: 'edit-3',
+      },
+      {
+        title: 'Stale Information',
+        description: 'Customer data in Salesforce not reflecting latest from other systems.',
+        icon: 'clock',
+      },
+      {
+        title: 'Integration Failures',
+        description: 'Point-to-point integrations that break and require constant fixes.',
+        icon: 'alert-triangle',
+      },
+    ],
+
+    solutionHeadline: 'Enterprise Salesforce Integration',
+    solutionDescription: 'We build robust integrations using MuleSoft, APIs, and middleware to connect your entire ecosystem.',
+    processSteps: [
+      { step: '01', title: 'Map', description: 'Document systems, data flows, and integration requirements.' },
+      { step: '02', title: 'Architect', description: 'Design integration patterns and data synchronization strategy.' },
+      { step: '03', title: 'Build', description: 'Implement integrations with proper error handling and monitoring.' },
+      { step: '04', title: 'Operate', description: 'Deploy with monitoring, alerting, and support.' },
+    ],
+
+    stats: [
+      { value: '200+', label: 'Salesforce Integrations' },
+      { value: '99.9%', label: 'Integration Uptime' },
+      { value: 'Real-Time', label: 'Data Sync' },
+      { value: '70%', label: 'Reduction in Manual Work' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Connected Systems',
+        description: 'Salesforce integrated with ERP, marketing, support, and more.',
+        icon: 'link',
+      },
+      {
+        title: 'Real-Time Data',
+        description: 'Synchronized data across systems for accurate information.',
+        icon: 'zap',
+      },
+      {
+        title: 'Automated Workflows',
+        description: 'Cross-system processes that work automatically.',
+        icon: 'settings',
+      },
+      {
+        title: 'Reliable Integration',
+        description: 'Enterprise-grade integration with monitoring and error handling.',
+        icon: 'shield',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'SAP-Salesforce Integration',
+        description: 'Integrated Salesforce with SAP for real-time order visibility and customer data sync.',
+        industry: 'manufacturing',
+      },
+      {
+        headline: 'Marketing Automation Connect',
+        description: 'Connected Salesforce to Marketo for seamless lead handoff and campaign attribution.',
+        industry: 'technology',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What systems do you integrate with Salesforce?',
+        answer: 'We integrate ERP (SAP, Oracle, NetSuite), marketing (Marketo, HubSpot), support, data warehouses, and custom systems.',
+      },
+      {
+        question: 'Do you use MuleSoft?',
+        answer: 'Yes, we\'re a MuleSoft partner and frequently use it for Salesforce integration, especially for complex enterprise scenarios.',
+      },
+      {
+        question: 'Can you do real-time integration?',
+        answer: 'Absolutely. We implement real-time, near-real-time, and batch integration patterns based on your requirements.',
+      },
+      {
+        question: 'How do you handle integration errors?',
+        answer: 'We implement comprehensive error handling, retry logic, dead letter queues, and alerting for all integrations.',
+      },
+    ],
+
+    certifications: ['Salesforce Summit Partner', 'MuleSoft Partner', 'Integration Architecture Certified'],
+  },
+
+  'salesforce-marketing-cloud': {
+    slug: 'salesforce-marketing-cloud',
+    serviceCluster: 'salesforce',
+    keyword: 'salesforce marketing cloud implementation',
+
+    metaTitle: 'Salesforce Marketing Cloud Implementation | Email & Journey | ACI Infotech',
+    metaDescription: 'Expert Salesforce Marketing Cloud implementation. Email Studio, Journey Builder, and personalization at scale.',
+
+    headline: 'Personalized Marketing at Scale with Marketing Cloud',
+    subheadline: 'Implement Salesforce Marketing Cloud for automated, personalized customer journeys.',
+    ctoText: 'Get Your Marketing Cloud Assessment',
+    ctoSecondaryText: 'See Journey Examples',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Batch & Blast Email',
+        description: 'Sending the same message to everyone instead of personalized content.',
+        icon: 'mail',
+      },
+      {
+        title: 'Manual Campaigns',
+        description: 'Marketing team manually executing campaigns that should be automated.',
+        icon: 'edit-3',
+      },
+      {
+        title: 'Disconnected Channels',
+        description: 'Email, SMS, and advertising not coordinated across channels.',
+        icon: 'git-branch',
+      },
+      {
+        title: 'Limited Personalization',
+        description: 'Can\'t personalize based on behavior, preferences, or lifecycle stage.',
+        icon: 'users',
+      },
+    ],
+
+    solutionHeadline: 'Marketing Cloud Excellence',
+    solutionDescription: 'We implement Marketing Cloud with Journey Builder, personalization, and cross-channel orchestration.',
+    processSteps: [
+      { step: '01', title: 'Strategy', description: 'Define customer journeys and personalization strategy.' },
+      { step: '02', title: 'Configure', description: 'Set up Email Studio, Journey Builder, and data extensions.' },
+      { step: '03', title: 'Integrate', description: 'Connect to Sales Cloud, data sources, and other channels.' },
+      { step: '04', title: 'Activate', description: 'Launch journeys, train team, and optimize based on results.' },
+    ],
+
+    stats: [
+      { value: '50+', label: 'Marketing Cloud Implementations' },
+      { value: '3x', label: 'Email Engagement Lift' },
+      { value: '40%', label: 'Increase in Conversions' },
+      { value: '80%', label: 'Reduction in Manual Work' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Automated Journeys',
+        description: 'Customer journeys that trigger based on behavior and data.',
+        icon: 'git-branch',
+      },
+      {
+        title: 'Personalization',
+        description: 'Dynamic content based on preferences, behavior, and profile.',
+        icon: 'users',
+      },
+      {
+        title: 'Cross-Channel',
+        description: 'Coordinated messaging across email, SMS, and advertising.',
+        icon: 'smartphone',
+      },
+      {
+        title: 'Analytics',
+        description: 'Campaign analytics and attribution for optimization.',
+        icon: 'bar-chart',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '45% Email Revenue Increase',
+        description: 'Implemented personalized journeys that increased email-driven revenue by 45%.',
+        industry: 'retail',
+      },
+      {
+        headline: 'Lifecycle Marketing Automation',
+        description: 'Built 25 automated customer journeys reducing marketing team manual work by 60%.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Which Marketing Cloud products do you implement?',
+        answer: 'We implement Email Studio, Journey Builder, Mobile Studio, Advertising Studio, and Marketing Cloud Personalization.',
+      },
+      {
+        question: 'Can you integrate with our CRM?',
+        answer: 'Yes, we implement Marketing Cloud Connector for Sales Cloud and custom integrations for other CRMs.',
+      },
+      {
+        question: 'Do you help with email deliverability?',
+        answer: 'Absolutely. We configure authentication, warm-up IP addresses, and implement deliverability best practices.',
+      },
+      {
+        question: 'Can you migrate from other ESPs?',
+        answer: 'Yes, we migrate from Mailchimp, HubSpot, Marketo, Klaviyo, and other platforms.',
+      },
+    ],
+
+    certifications: ['Salesforce Marketing Cloud Certified', 'Email Specialist', 'Marketing Cloud Administrator'],
+  },
+
+  // ==========================================
+  // PLATFORM LPs: SERVICENOW
+  // ==========================================
+  'servicenow-implementation': {
+    slug: 'servicenow-implementation',
+    serviceCluster: 'servicenow',
+    keyword: 'servicenow implementation partner',
+
+    metaTitle: 'ServiceNow Implementation Services | Certified Partner | ACI Infotech',
+    metaDescription: 'Expert ServiceNow implementation services. ITSM, ITOM, and workflow automation from a certified ServiceNow partner.',
+
+    headline: 'Transform IT Service Management with ServiceNow',
+    subheadline: 'Certified ServiceNow partner delivering implementations that modernize IT and business operations.',
+    ctoText: 'Get Your ServiceNow Assessment',
+    ctoSecondaryText: 'See Implementation Approach',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Legacy ITSM Tools',
+        description: 'Outdated ticketing systems that frustrate users and IT alike.',
+        icon: 'server',
+      },
+      {
+        title: 'Manual IT Processes',
+        description: 'IT spending too much time on manual tasks instead of innovation.',
+        icon: 'edit-3',
+      },
+      {
+        title: 'Poor User Experience',
+        description: 'Employees frustrated with how to request IT help and services.',
+        icon: 'users',
+      },
+      {
+        title: 'No Visibility',
+        description: 'Can\'t see IT performance, SLAs, or where issues are occurring.',
+        icon: 'eye-off',
+      },
+    ],
+
+    solutionHeadline: 'ServiceNow, Implemented Right',
+    solutionDescription: 'We implement ServiceNow following best practices with a focus on adoption and measurable outcomes.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Evaluate current state and define ServiceNow vision.' },
+      { step: '02', title: 'Design', description: 'Configure ServiceNow using ITIL best practices.' },
+      { step: '03', title: 'Build', description: 'Implement modules, workflows, and integrations.' },
+      { step: '04', title: 'Adopt', description: 'Train users, drive adoption, and optimize.' },
+    ],
+
+    stats: [
+      { value: '75+', label: 'ServiceNow Implementations' },
+      { value: '50%', label: 'Reduction in Ticket Volume' },
+      { value: '40%', label: 'Faster Resolution Time' },
+      { value: 'Elite', label: 'ServiceNow Partner' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Modern ITSM',
+        description: 'ITIL-aligned service management that just works.',
+        icon: 'check-circle',
+      },
+      {
+        title: 'Self-Service Portal',
+        description: 'User-friendly portal for requests and knowledge.',
+        icon: 'layout',
+      },
+      {
+        title: 'Automation',
+        description: 'Workflows that automate routine IT tasks.',
+        icon: 'zap',
+      },
+      {
+        title: 'Visibility',
+        description: 'Dashboards and reports for IT performance.',
+        icon: 'bar-chart',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '60% Faster Incident Resolution',
+        description: 'Implemented ServiceNow ITSM reducing mean time to resolution by 60%.',
+        industry: 'finance',
+      },
+      {
+        headline: 'Self-Service Transformation',
+        description: 'Deployed service portal achieving 70% self-service resolution rate.',
+        industry: 'healthcare',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Are you a certified ServiceNow partner?',
+        answer: 'Yes, we\'re an Elite ServiceNow partner with certified administrators, developers, and implementation specialists.',
+      },
+      {
+        question: 'Which ServiceNow modules do you implement?',
+        answer: 'We implement ITSM, ITOM, ITBM, HR Service Delivery, Customer Service Management, and custom apps.',
+      },
+      {
+        question: 'Can you migrate from our current ITSM tool?',
+        answer: 'Yes, we migrate from BMC Remedy, Jira Service Management, Cherwell, and other ITSM platforms.',
+      },
+      {
+        question: 'How long does implementation take?',
+        answer: 'A focused ITSM implementation typically takes 8-12 weeks. Enterprise deployments with multiple modules take longer.',
+      },
+    ],
+
+    certifications: ['ServiceNow Elite Partner', 'ITSM Certified', 'ITOM Certified', 'CSA Certified'],
+  },
+
+  'servicenow-itsm': {
+    slug: 'servicenow-itsm',
+    serviceCluster: 'servicenow',
+    keyword: 'servicenow itsm implementation',
+
+    metaTitle: 'ServiceNow ITSM Implementation | IT Service Management | ACI Infotech',
+    metaDescription: 'ServiceNow ITSM implementation services. Incident, problem, change, and service catalog for modern IT operations.',
+
+    headline: 'Modern IT Service Management with ServiceNow ITSM',
+    subheadline: 'ITIL-aligned ITSM implementation that improves service quality and reduces operational costs.',
+    ctoText: 'Get Your ITSM Maturity Assessment',
+    ctoSecondaryText: 'See ITSM Best Practices',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Incident Overload',
+        description: 'IT drowning in tickets without proper triage and automation.',
+        icon: 'alert-circle',
+      },
+      {
+        title: 'Recurring Problems',
+        description: 'Same issues happening over and over without root cause resolution.',
+        icon: 'refresh-cw',
+      },
+      {
+        title: 'Change Risk',
+        description: 'Changes causing outages due to poor planning and approval.',
+        icon: 'alert-triangle',
+      },
+      {
+        title: 'Service Catalog Gaps',
+        description: 'Users don\'t know what services IT offers or how to request them.',
+        icon: 'help-circle',
+      },
+    ],
+
+    solutionHeadline: 'ITIL-Aligned ServiceNow ITSM',
+    solutionDescription: 'We implement ServiceNow ITSM with incident, problem, change, and service catalog following ITIL best practices.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Evaluate current ITSM processes and maturity.' },
+      { step: '02', title: 'Design', description: 'Define target state processes aligned with ITIL.' },
+      { step: '03', title: 'Implement', description: 'Configure ServiceNow modules with workflows and automation.' },
+      { step: '04', title: 'Optimize', description: 'Continuous improvement based on metrics and feedback.' },
+    ],
+
+    stats: [
+      { value: '50%', label: 'Reduction in Incidents' },
+      { value: '40%', label: 'Faster Resolution' },
+      { value: '80%', label: 'Change Success Rate' },
+      { value: '70%', label: 'Self-Service Adoption' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Incident Management',
+        description: 'Streamlined incident handling with automation and SLA tracking.',
+        icon: 'alert-circle',
+      },
+      {
+        title: 'Problem Management',
+        description: 'Root cause analysis to eliminate recurring issues.',
+        icon: 'search',
+      },
+      {
+        title: 'Change Management',
+        description: 'Controlled changes with proper risk assessment and approval.',
+        icon: 'git-branch',
+      },
+      {
+        title: 'Service Catalog',
+        description: 'User-friendly catalog of IT services and requests.',
+        icon: 'shopping-cart',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'ITIL Transformation',
+        description: 'Implemented ITIL-aligned ITSM achieving 50% reduction in major incidents.',
+        industry: 'finance',
+      },
+      {
+        headline: 'Service Catalog Success',
+        description: 'Deployed 150+ service catalog items with automated fulfillment workflows.',
+        industry: 'healthcare',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Do we need to be ITIL mature to use ServiceNow?',
+        answer: 'No, ServiceNow can help you mature ITIL processes. We implement at your current maturity and help you improve.',
+      },
+      {
+        question: 'Can ServiceNow integrate with our monitoring tools?',
+        answer: 'Yes, we integrate with Splunk, Datadog, Dynatrace, and other monitoring tools for event-driven incident creation.',
+      },
+      {
+        question: 'How do you handle ITSM customization?',
+        answer: 'We balance out-of-box functionality with necessary customization, avoiding the trap of over-customization.',
+      },
+      {
+        question: 'What about Virtual Agent / chatbot?',
+        answer: 'We implement ServiceNow Virtual Agent for automated incident resolution and service requests.',
+      },
+    ],
+
+    certifications: ['ServiceNow ITSM Certified', 'ITIL Foundation', 'ServiceNow CSA'],
+  },
+
+  'servicenow-hr-service-delivery': {
+    slug: 'servicenow-hr-service-delivery',
+    serviceCluster: 'servicenow',
+    keyword: 'servicenow hr service delivery',
+
+    metaTitle: 'ServiceNow HR Service Delivery | Employee Experience | ACI Infotech',
+    metaDescription: 'ServiceNow HR Service Delivery implementation. Transform employee experience with automated HR services.',
+
+    headline: 'Transform Employee Experience with ServiceNow HRSD',
+    subheadline: 'Modern HR service delivery that makes life easier for employees and HR teams.',
+    ctoText: 'Get Your HR Service Delivery Assessment',
+    ctoSecondaryText: 'See Employee Experience Solutions',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'HR Inbox Overload',
+        description: 'HR team drowning in emails for routine questions and requests.',
+        icon: 'inbox',
+      },
+      {
+        title: 'Employee Frustration',
+        description: 'Employees don\'t know who to contact or how to get HR help.',
+        icon: 'users',
+      },
+      {
+        title: 'Manual Onboarding',
+        description: 'New hire onboarding requiring dozens of manual tasks.',
+        icon: 'edit-3',
+      },
+      {
+        title: 'Case Tracking Gaps',
+        description: 'No visibility into HR case status or employee issues.',
+        icon: 'eye-off',
+      },
+    ],
+
+    solutionHeadline: 'ServiceNow HR Service Delivery',
+    solutionDescription: 'We implement HRSD with case management, knowledge base, and workflow automation for modern HR operations.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Map HR services and employee journey pain points.' },
+      { step: '02', title: 'Design', description: 'Define HR service catalog and case management processes.' },
+      { step: '03', title: 'Implement', description: 'Configure HRSD, knowledge base, and automation.' },
+      { step: '04', title: 'Launch', description: 'Deploy portal, train HR team, and communicate to employees.' },
+    ],
+
+    stats: [
+      { value: '60%', label: 'Reduction in HR Inquiries' },
+      { value: '70%', label: 'Self-Service Resolution' },
+      { value: '50%', label: 'Faster Onboarding' },
+      { value: '90%', label: 'Employee Satisfaction' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Employee Portal',
+        description: 'Single place for employees to find answers and request help.',
+        icon: 'layout',
+      },
+      {
+        title: 'Case Management',
+        description: 'Track and resolve employee inquiries efficiently.',
+        icon: 'inbox',
+      },
+      {
+        title: 'Automated Onboarding',
+        description: 'Workflows that coordinate IT, HR, and manager tasks.',
+        icon: 'user-plus',
+      },
+      {
+        title: 'HR Knowledge Base',
+        description: 'Searchable answers to common HR questions.',
+        icon: 'book',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'HR Transformation',
+        description: 'Implemented HRSD reducing HR case volume by 50% while improving employee satisfaction.',
+        industry: 'technology',
+      },
+      {
+        headline: 'Onboarding Excellence',
+        description: 'Automated onboarding workflow coordinating 15 departments for new hires.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Does this replace our HRIS?',
+        answer: 'No, HRSD complements your HRIS (Workday, SAP SuccessFactors, etc.) by providing service delivery capabilities.',
+      },
+      {
+        question: 'Can you integrate with our HR systems?',
+        answer: 'Yes, we integrate with Workday, SuccessFactors, Oracle HCM, and other HRIS platforms.',
+      },
+      {
+        question: 'What about employee document management?',
+        answer: 'HRSD includes document management for employee files with appropriate security and retention.',
+      },
+      {
+        question: 'How do you handle sensitive HR cases?',
+        answer: 'We configure appropriate security, confidential case handling, and approval workflows for sensitive matters.',
+      },
+    ],
+
+    certifications: ['ServiceNow HRSD Certified', 'ServiceNow CSA', 'HR Transformation Specialist'],
+  },
+
+  // ==========================================
+  // PLATFORM LPs: BRAZE
+  // ==========================================
+  'braze-implementation': {
+    slug: 'braze-implementation',
+    serviceCluster: 'martech',
+    keyword: 'braze implementation partner',
+
+    metaTitle: 'Braze Implementation Services | Customer Engagement | ACI Infotech',
+    metaDescription: 'Expert Braze implementation services. Customer engagement platform setup for email, push, in-app, and cross-channel campaigns.',
+
+    headline: 'Engage Customers Everywhere with Braze',
+    subheadline: 'Certified Braze partner delivering implementation for personalized, cross-channel customer engagement.',
+    ctoText: 'Get Your Braze Implementation Plan',
+    ctoSecondaryText: 'See Braze Capabilities',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Channel Silos',
+        description: 'Email, push, and SMS managed separately without coordination.',
+        icon: 'git-branch',
+      },
+      {
+        title: 'Batch Messaging',
+        description: 'Can\'t send real-time, behavior-triggered messages.',
+        icon: 'clock',
+      },
+      {
+        title: 'Personalization Limits',
+        description: 'Can\'t personalize based on real-time behavior and preferences.',
+        icon: 'users',
+      },
+      {
+        title: 'Mobile Engagement',
+        description: 'No good solution for push notifications and in-app messaging.',
+        icon: 'smartphone',
+      },
+    ],
+
+    solutionHeadline: 'Cross-Channel Engagement with Braze',
+    solutionDescription: 'We implement Braze for real-time, personalized engagement across email, push, SMS, in-app, and more.',
+    processSteps: [
+      { step: '01', title: 'Strategy', description: 'Define engagement strategy and use cases.' },
+      { step: '02', title: 'Implement', description: 'Set up Braze, SDKs, and data integrations.' },
+      { step: '03', title: 'Configure', description: 'Build segments, campaigns, and Canvas journeys.' },
+      { step: '04', title: 'Optimize', description: 'Launch, measure, and continuously optimize.' },
+    ],
+
+    stats: [
+      { value: '40+', label: 'Braze Implementations' },
+      { value: '3x', label: 'Engagement Lift' },
+      { value: '50%', label: 'Increase in Retention' },
+      { value: 'Certified', label: 'Braze Partner' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Real-Time Triggers',
+        description: 'Messages triggered by behavior as it happens.',
+        icon: 'zap',
+      },
+      {
+        title: 'Cross-Channel',
+        description: 'Coordinated messaging across email, push, SMS, in-app.',
+        icon: 'smartphone',
+      },
+      {
+        title: 'Personalization',
+        description: 'Dynamic content based on user data and behavior.',
+        icon: 'users',
+      },
+      {
+        title: 'Canvas Journeys',
+        description: 'Sophisticated multi-step customer journeys.',
+        icon: 'git-branch',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '50% Retention Improvement',
+        description: 'Implemented Braze lifecycle campaigns improving 30-day retention by 50%.',
+        industry: 'retail',
+      },
+      {
+        headline: 'Cross-Channel Personalization',
+        description: 'Deployed real-time personalization across 5 channels for a fintech app.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Are you a certified Braze partner?',
+        answer: 'Yes, we\'re a Braze Alloys certified partner with trained consultants and developers.',
+      },
+      {
+        question: 'How long does Braze implementation take?',
+        answer: 'Basic implementation takes 4-6 weeks. Full implementation with SDK, data, and campaigns typically takes 8-12 weeks.',
+      },
+      {
+        question: 'Can you integrate Braze with our CDP?',
+        answer: 'Yes, we integrate with Segment, mParticle, Tealium, and other CDPs for unified customer data.',
+      },
+      {
+        question: 'Do you help with mobile SDK implementation?',
+        answer: 'Absolutely. We implement iOS, Android, and web SDKs for full cross-platform engagement.',
+      },
+    ],
+
+    certifications: ['Braze Alloys Certified Partner', 'Braze Certified Professional'],
+
+    industryVariants: {
+      retail: {
+        headline: 'Braze for Retail & E-commerce',
+        subheadline: 'Drive repeat purchases and loyalty with personalized, real-time customer engagement.',
+        painPoints: [
+          {
+            title: 'Cart Abandonment',
+            description: 'No effective way to recover abandoned carts in real-time.',
+            icon: 'shopping-cart',
+          },
+          {
+            title: 'App Engagement',
+            description: 'Mobile app users not engaging or converting.',
+            icon: 'smartphone',
+          },
+          {
+            title: 'Loyalty Fatigue',
+            description: 'Loyalty program not driving incremental behavior.',
+            icon: 'heart',
+          },
+          {
+            title: 'Seasonal Campaigns',
+            description: 'Difficulty scaling personalized campaigns for peak seasons.',
+            icon: 'calendar',
+          },
+        ],
+        stats: [
+          { value: '25%', label: 'Cart Recovery Rate' },
+          { value: '3x', label: 'App Engagement' },
+          { value: '40%', label: 'Loyalty Participation' },
+          { value: '50%', label: 'Campaign Velocity' },
+        ],
+      },
+      finance: {
+        headline: 'Braze for Financial Services',
+        subheadline: 'Compliant customer engagement that drives product adoption and lifetime value.',
+        painPoints: [
+          {
+            title: 'Onboarding Drop-Off',
+            description: 'New customers not completing account setup or activation.',
+            icon: 'user-plus',
+          },
+          {
+            title: 'Product Adoption',
+            description: 'Customers not discovering or using additional products.',
+            icon: 'package',
+          },
+          {
+            title: 'Compliance Constraints',
+            description: 'Regulatory requirements limiting marketing capabilities.',
+            icon: 'shield',
+          },
+          {
+            title: 'App Engagement',
+            description: 'Low engagement with mobile banking features.',
+            icon: 'smartphone',
+          },
+        ],
+        stats: [
+          { value: '40%', label: 'Onboarding Completion' },
+          { value: '25%', label: 'Cross-Sell Lift' },
+          { value: '100%', label: 'Compliance' },
+          { value: '3x', label: 'App Sessions' },
+        ],
+      },
+    },
+  },
+
+  'braze-customer-engagement': {
+    slug: 'braze-customer-engagement',
+    serviceCluster: 'martech',
+    keyword: 'braze customer engagement platform',
+
+    metaTitle: 'Braze Customer Engagement Services | Lifecycle Marketing | ACI Infotech',
+    metaDescription: 'Braze customer engagement services. Build lifecycle campaigns, retention programs, and personalized journeys.',
+
+    headline: 'Build Customer Relationships That Last',
+    subheadline: 'Strategic customer engagement using Braze to drive retention, loyalty, and lifetime value.',
+    ctoText: 'Get Your Engagement Strategy Assessment',
+    ctoSecondaryText: 'See Engagement Playbooks',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'High Churn',
+        description: 'Customers leaving without intervention or retention efforts.',
+        icon: 'trending-down',
+      },
+      {
+        title: 'Low Engagement',
+        description: 'Users not engaging with your app or returning after install.',
+        icon: 'activity',
+      },
+      {
+        title: 'One-Size-Fits-All',
+        description: 'Same messages to all users regardless of behavior or stage.',
+        icon: 'users',
+      },
+      {
+        title: 'Manual Campaigns',
+        description: 'Marketing team manually building each campaign from scratch.',
+        icon: 'edit-3',
+      },
+    ],
+
+    solutionHeadline: 'Lifecycle Customer Engagement',
+    solutionDescription: 'We build Braze engagement programs that nurture customers from acquisition through loyalty.',
+    processSteps: [
+      { step: '01', title: 'Analyze', description: 'Map customer lifecycle and identify engagement gaps.' },
+      { step: '02', title: 'Strategize', description: 'Define engagement programs for each lifecycle stage.' },
+      { step: '03', title: 'Build', description: 'Create segments, campaigns, and Canvas journeys in Braze.' },
+      { step: '04', title: 'Optimize', description: 'Test, measure, and continuously improve engagement.' },
+    ],
+
+    stats: [
+      { value: '35%', label: 'Reduction in Churn' },
+      { value: '2x', label: 'Customer Lifetime Value' },
+      { value: '50%', label: 'Increase in Engagement' },
+      { value: '10+', label: 'Automated Journeys' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Onboarding Journeys',
+        description: 'Automated sequences that activate new users.',
+        icon: 'user-plus',
+      },
+      {
+        title: 'Re-Engagement Campaigns',
+        description: 'Win back lapsed users before they churn.',
+        icon: 'refresh-cw',
+      },
+      {
+        title: 'Loyalty Programs',
+        description: 'Engagement that rewards and retains best customers.',
+        icon: 'heart',
+      },
+      {
+        title: 'Lifecycle Optimization',
+        description: 'Continuous testing and improvement of engagement.',
+        icon: 'trending-up',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '40% Churn Reduction',
+        description: 'Built predictive churn campaigns that reduced customer churn by 40%.',
+        industry: 'subscription',
+      },
+      {
+        headline: 'Onboarding Excellence',
+        description: 'Implemented 7-day onboarding journey increasing activation by 60%.',
+        industry: 'fintech',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What lifecycle stages do you address?',
+        answer: 'We build engagement for onboarding, activation, engagement, retention, win-back, and loyalty.',
+      },
+      {
+        question: 'How do you measure engagement success?',
+        answer: 'We define KPIs for each stage: activation rate, engagement frequency, retention rate, LTV, and program-specific metrics.',
+      },
+      {
+        question: 'Can you help with personalization strategy?',
+        answer: 'Yes, we define personalization approach based on your data, segments, and business objectives.',
+      },
+      {
+        question: 'Do you provide ongoing optimization?',
+        answer: 'We offer ongoing engagement optimization services including A/B testing, analysis, and journey improvements.',
+      },
+    ],
+
+    certifications: ['Braze Alloys Certified Partner', 'Braze Certified Professional', 'Customer Engagement Specialist'],
+  },
 };
 
 // Get content for a specific landing page with personalization applied
