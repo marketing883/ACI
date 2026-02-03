@@ -732,8 +732,580 @@ export const LP_CONTENT: Record<string, LPContent> = {
     certifications: ['OpenAI Partner', 'Azure AI Partner', 'AWS ML Competency'],
   },
 
-  // Add more service clusters...
-  // (AI/ML, Agentic AI, Data Integration, Data Observability, ERP Transformation)
+  // ==========================================
+  // AI/ML SERVICES
+  // ==========================================
+  'ai-ml-implementation': {
+    slug: 'ai-ml-implementation',
+    serviceCluster: 'ai-ml',
+    keyword: 'ai ml implementation services',
+
+    metaTitle: 'AI & Machine Learning Implementation Services | ACI Infotech',
+    metaDescription: 'Enterprise AI/ML implementation services. From strategy to production ML models that drive real business outcomes.',
+
+    headline: 'Turn Your Data Into Intelligent Decisions',
+    subheadline: 'Production-ready AI and ML solutions that automate processes and uncover hidden insights.',
+    ctoText: 'Get Your AI Opportunity Assessment',
+    ctoSecondaryText: 'See Your Automation Potential',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Manual Decision Making',
+        description: 'Critical business decisions still rely on gut instinct instead of data-driven predictions.',
+        icon: 'help-circle',
+      },
+      {
+        title: 'Pilot Purgatory',
+        description: 'AI projects stuck in POC phase, never making it to production with real business impact.',
+        icon: 'alert-circle',
+      },
+      {
+        title: 'Data Science Talent Gap',
+        description: 'Struggling to hire and retain ML engineers and data scientists in a competitive market.',
+        icon: 'users',
+      },
+      {
+        title: 'Model Drift & Maintenance',
+        description: 'Deployed models degrading over time with no monitoring or retraining strategy.',
+        icon: 'trending-down',
+      },
+    ],
+
+    solutionHeadline: 'Enterprise AI/ML, Production-Ready',
+    solutionDescription: 'We build, deploy, and maintain ML solutions that deliver measurable business value.',
+    processSteps: [
+      { step: '01', title: 'Discover', description: 'Identify high-impact ML use cases aligned with business objectives.' },
+      { step: '02', title: 'Develop', description: 'Build and train models using your data with rigorous validation.' },
+      { step: '03', title: 'Deploy', description: 'Production deployment with MLOps best practices and monitoring.' },
+      { step: '04', title: 'Optimize', description: 'Continuous improvement through monitoring, retraining, and optimization.' },
+    ],
+
+    stats: [
+      { value: '100+', label: 'ML Models in Production' },
+      { value: '35%', label: 'Average Efficiency Gain' },
+      { value: '92%', label: 'Model Accuracy Achieved' },
+      { value: '6 Weeks', label: 'Average Time to POC' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Production ML',
+        description: 'Models that work in the real world, not just in notebooks.',
+        icon: 'check-circle',
+      },
+      {
+        title: 'MLOps Foundation',
+        description: 'Automated pipelines for training, deployment, and monitoring.',
+        icon: 'settings',
+      },
+      {
+        title: 'Explainable AI',
+        description: 'Understand why models make decisions for compliance and trust.',
+        icon: 'eye',
+      },
+      {
+        title: 'Team Enablement',
+        description: 'Knowledge transfer to build your internal AI capabilities.',
+        icon: 'users',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '35% Reduction in Customer Churn',
+        description: 'A telecom company deployed predictive churn models that identified at-risk customers 3 months in advance, enabling proactive retention.',
+        industry: 'technology',
+      },
+      {
+        headline: '$2M Annual Savings',
+        description: 'A manufacturing firm implemented predictive maintenance ML, reducing unplanned downtime by 45% and saving $2M annually.',
+        industry: 'manufacturing',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Do we need a lot of data to start with AI/ML?',
+        answer: 'It depends on the use case. Some solutions work with limited data, others need significant volumes. We assess your data readiness upfront.',
+      },
+      {
+        question: 'How do you ensure models perform well in production?',
+        answer: 'We implement comprehensive MLOps including automated testing, monitoring, alerting, and retraining pipelines to catch and fix drift.',
+      },
+      {
+        question: 'Can you work with our existing data infrastructure?',
+        answer: 'Yes, we integrate with Snowflake, Databricks, AWS, Azure, GCP, and on-premise systems. We meet you where your data lives.',
+      },
+      {
+        question: 'What industries do you have experience with?',
+        answer: 'We have deep experience in healthcare, financial services, manufacturing, retail, and logistics with industry-specific model libraries.',
+      },
+    ],
+
+    certifications: ['AWS ML Competency', 'Azure AI Partner', 'Databricks Partner', 'Google Cloud ML Partner'],
+  },
+
+  // ==========================================
+  // AGENTIC AI
+  // ==========================================
+  'agentic-ai-development': {
+    slug: 'agentic-ai-development',
+    serviceCluster: 'agentic-ai',
+    keyword: 'agentic ai development',
+
+    metaTitle: 'Agentic AI Development Services | Autonomous AI Agents | ACI Infotech',
+    metaDescription: 'Build intelligent AI agents that autonomously execute complex workflows. Enterprise-grade agentic AI solutions.',
+
+    headline: 'Build AI Agents That Work For You',
+    subheadline: 'Autonomous AI systems that reason, plan, and execute complex tasks without constant human oversight.',
+    ctoText: 'Get Your AI Agent Feasibility Report',
+    ctoSecondaryText: 'Map Your Automation Opportunities',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Complex Manual Workflows',
+        description: 'Multi-step processes that require human coordination across systems and decisions.',
+        icon: 'git-branch',
+      },
+      {
+        title: 'Chatbot Limitations',
+        description: 'Current AI assistants can answer questions but can\'t take meaningful action.',
+        icon: 'message-circle',
+      },
+      {
+        title: 'Integration Complexity',
+        description: 'Automating workflows requires connecting dozens of systems and handling edge cases.',
+        icon: 'puzzle',
+      },
+      {
+        title: 'Scaling Operations',
+        description: 'Growing business demands more people doing repetitive knowledge work.',
+        icon: 'trending-up',
+      },
+    ],
+
+    solutionHeadline: 'Autonomous AI That Takes Action',
+    solutionDescription: 'We build AI agents that can reason through problems, use tools, and execute multi-step workflows autonomously.',
+    processSteps: [
+      { step: '01', title: 'Map', description: 'Identify workflows suitable for autonomous AI agents.' },
+      { step: '02', title: 'Design', description: 'Architect agent systems with appropriate guardrails and oversight.' },
+      { step: '03', title: 'Build', description: 'Develop agents with tool use, memory, and reasoning capabilities.' },
+      { step: '04', title: 'Govern', description: 'Deploy with monitoring, audit trails, and human-in-the-loop controls.' },
+    ],
+
+    stats: [
+      { value: '80%', label: 'Task Automation Rate' },
+      { value: '10x', label: 'Throughput Improvement' },
+      { value: '24/7', label: 'Autonomous Operation' },
+      { value: '95%', label: 'Accuracy with Oversight' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'True Automation',
+        description: 'Agents that complete entire workflows, not just individual tasks.',
+        icon: 'zap',
+      },
+      {
+        title: 'Enterprise Controls',
+        description: 'Guardrails, approvals, and audit trails for regulated environments.',
+        icon: 'shield',
+      },
+      {
+        title: 'Tool Integration',
+        description: 'Agents that interact with your existing systems, APIs, and databases.',
+        icon: 'link',
+      },
+      {
+        title: 'Continuous Learning',
+        description: 'Agents that improve performance based on feedback and outcomes.',
+        icon: 'refresh-cw',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '90% Reduction in Processing Time',
+        description: 'An insurance company deployed AI agents for claims processing, reducing average handling time from 2 days to 4 hours.',
+        industry: 'finance',
+      },
+      {
+        headline: 'Autonomous Research Agents',
+        description: 'A consulting firm built research agents that autonomously gather, synthesize, and report on market intelligence.',
+        industry: 'technology',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What\'s the difference between agentic AI and regular AI?',
+        answer: 'Regular AI responds to prompts. Agentic AI can autonomously plan, use tools, make decisions, and execute multi-step workflows toward a goal.',
+      },
+      {
+        question: 'How do you ensure agents don\'t make mistakes?',
+        answer: 'We implement confidence thresholds, human approval gates for critical actions, comprehensive logging, and continuous monitoring.',
+      },
+      {
+        question: 'What tasks are best suited for AI agents?',
+        answer: 'Multi-step workflows with clear rules, research and synthesis tasks, data processing pipelines, and customer service escalations.',
+      },
+      {
+        question: 'Can agents work with our existing systems?',
+        answer: 'Yes, we build agents that integrate via APIs, can interact with UIs when needed, and work with your existing tech stack.',
+      },
+    ],
+
+    certifications: ['OpenAI Partner', 'Anthropic Partner', 'LangChain Certified'],
+  },
+
+  // ==========================================
+  // DATA INTEGRATION
+  // ==========================================
+  'data-integration-services': {
+    slug: 'data-integration-services',
+    serviceCluster: 'data-integration',
+    keyword: 'data integration services',
+
+    metaTitle: 'Enterprise Data Integration Services | ETL & API Integration | ACI Infotech',
+    metaDescription: 'Unify your data landscape with enterprise data integration services. ETL, API integration, and real-time data pipelines.',
+
+    headline: 'Connect Your Data, Unlock Its Value',
+    subheadline: 'Seamlessly integrate data across systems for a unified, real-time view of your business.',
+    ctoText: 'Receive Your Integration Architecture Plan',
+    ctoSecondaryText: 'Unify Your Data Landscape',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Data Silos',
+        description: 'Critical data trapped in separate systems with no way to get a complete picture.',
+        icon: 'database',
+      },
+      {
+        title: 'Manual Data Movement',
+        description: 'Teams spending hours on manual exports, imports, and reconciliation spreadsheets.',
+        icon: 'edit-3',
+      },
+      {
+        title: 'Stale Information',
+        description: 'Decisions made on outdated data because synchronization takes too long.',
+        icon: 'clock',
+      },
+      {
+        title: 'Integration Fragility',
+        description: 'Point-to-point integrations that break frequently and are hard to maintain.',
+        icon: 'alert-triangle',
+      },
+    ],
+
+    solutionHeadline: 'Enterprise-Grade Data Integration',
+    solutionDescription: 'We build scalable, maintainable integration architectures that connect all your data sources.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Map your current data landscape, systems, and integration needs.' },
+      { step: '02', title: 'Architect', description: 'Design a modern integration architecture with appropriate patterns.' },
+      { step: '03', title: 'Implement', description: 'Build ETL/ELT pipelines, APIs, and real-time integrations.' },
+      { step: '04', title: 'Monitor', description: 'Deploy monitoring, alerting, and self-healing capabilities.' },
+    ],
+
+    stats: [
+      { value: '200+', label: 'Integrations Delivered' },
+      { value: '99.9%', label: 'Data Sync Reliability' },
+      { value: '60%', label: 'Reduction in Manual Work' },
+      { value: '<5 min', label: 'Average Sync Latency' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Unified Data',
+        description: 'Single source of truth across all your systems and applications.',
+        icon: 'layers',
+      },
+      {
+        title: 'Real-Time Sync',
+        description: 'Near real-time data synchronization for timely decision making.',
+        icon: 'zap',
+      },
+      {
+        title: 'Scalable Architecture',
+        description: 'Integration patterns that scale with your data volumes and systems.',
+        icon: 'trending-up',
+      },
+      {
+        title: 'Self-Healing',
+        description: 'Automated error handling, retries, and alerting for reliability.',
+        icon: 'shield',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '47 Systems Unified',
+        description: 'A retail enterprise unified 47 disparate data sources into a centralized data platform, enabling company-wide analytics.',
+        industry: 'retail',
+      },
+      {
+        headline: 'Real-Time Customer 360',
+        description: 'A financial services firm achieved real-time customer data synchronization across CRM, core banking, and marketing systems.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What integration patterns do you use?',
+        answer: 'We use the right pattern for each need: ETL/ELT for batch, event-driven for real-time, API-led connectivity, and CDC for low-latency sync.',
+      },
+      {
+        question: 'Can you integrate with legacy systems?',
+        answer: 'Yes, we have extensive experience with legacy systems including mainframes, AS/400, and older databases using various connectivity methods.',
+      },
+      {
+        question: 'How do you handle data quality during integration?',
+        answer: 'We implement data validation, cleansing, and quality rules at ingestion. Bad data is quarantined and flagged for review.',
+      },
+      {
+        question: 'What tools and platforms do you use?',
+        answer: 'We work with Informatica, Talend, Fivetran, Airbyte, MuleSoft, Dell Boomi, and cloud-native services on AWS, Azure, and GCP.',
+      },
+    ],
+
+    certifications: ['MuleSoft Partner', 'Informatica Partner', 'Fivetran Partner', 'AWS Data Partner'],
+  },
+
+  // ==========================================
+  // DATA OBSERVABILITY
+  // ==========================================
+  'data-observability-platform': {
+    slug: 'data-observability-platform',
+    serviceCluster: 'data-observability',
+    keyword: 'data observability platform',
+
+    metaTitle: 'Data Observability Services | Data Quality Monitoring | ACI Infotech',
+    metaDescription: 'Enterprise data observability solutions. Monitor data quality, detect anomalies, and ensure data reliability at scale.',
+
+    headline: 'Trust Your Data With Complete Visibility',
+    subheadline: 'Detect data quality issues before they impact your business with enterprise-grade data observability.',
+    ctoText: 'Receive Your Data Health Scorecard',
+    ctoSecondaryText: 'Identify Your Data Blind Spots',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Silent Data Failures',
+        description: 'Data pipelines fail silently, and you find out from angry stakeholders, not monitoring.',
+        icon: 'alert-triangle',
+      },
+      {
+        title: 'Quality Firefighting',
+        description: 'Data team spends more time fixing issues than building value-adding capabilities.',
+        icon: 'flame',
+      },
+      {
+        title: 'Unknown Data Lineage',
+        description: 'Can\'t trace where data comes from or understand downstream impact of changes.',
+        icon: 'help-circle',
+      },
+      {
+        title: 'Compliance Risk',
+        description: 'No audit trail or documentation for how data is processed and transformed.',
+        icon: 'shield-off',
+      },
+    ],
+
+    solutionHeadline: 'Full-Stack Data Observability',
+    solutionDescription: 'We implement comprehensive observability covering freshness, volume, schema, distribution, and lineage.',
+    processSteps: [
+      { step: '01', title: 'Baseline', description: 'Profile your data to establish normal patterns and thresholds.' },
+      { step: '02', title: 'Instrument', description: 'Deploy monitors across pipelines, warehouses, and dashboards.' },
+      { step: '03', title: 'Alert', description: 'Configure intelligent alerting with appropriate routing and escalation.' },
+      { step: '04', title: 'Govern', description: 'Implement lineage tracking, documentation, and governance workflows.' },
+    ],
+
+    stats: [
+      { value: '90%', label: 'Issues Caught Proactively' },
+      { value: '70%', label: 'Reduction in Data Incidents' },
+      { value: '100%', label: 'Pipeline Coverage' },
+      { value: '<15 min', label: 'Average Detection Time' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Proactive Detection',
+        description: 'Catch data issues before they impact downstream consumers.',
+        icon: 'eye',
+      },
+      {
+        title: 'Complete Lineage',
+        description: 'End-to-end visibility from source to consumption.',
+        icon: 'git-branch',
+      },
+      {
+        title: 'Smart Alerting',
+        description: 'ML-powered anomaly detection that reduces alert fatigue.',
+        icon: 'bell',
+      },
+      {
+        title: 'Compliance Ready',
+        description: 'Audit trails and documentation for regulatory requirements.',
+        icon: 'file-text',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '90% Fewer Data Incidents',
+        description: 'A healthcare organization reduced data quality incidents by 90% within 3 months of implementing observability.',
+        industry: 'healthcare',
+      },
+      {
+        headline: 'Complete Audit Trail',
+        description: 'A financial services firm achieved SOX compliance with end-to-end data lineage and automated documentation.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What\'s the difference between monitoring and observability?',
+        answer: 'Monitoring checks known metrics. Observability helps you understand unknown issues through comprehensive data about your data\'s behavior.',
+      },
+      {
+        question: 'Which data observability tools do you work with?',
+        answer: 'We implement Monte Carlo, Atlan, Collibra, Great Expectations, dbt tests, and custom solutions depending on your stack.',
+      },
+      {
+        question: 'How long does implementation take?',
+        answer: 'Basic observability can be live in 2-4 weeks. Comprehensive implementation with lineage typically takes 8-12 weeks.',
+      },
+      {
+        question: 'Will this create alert fatigue?',
+        answer: 'We implement ML-based anomaly detection with tunable thresholds and intelligent alert routing to prevent fatigue.',
+      },
+    ],
+
+    certifications: ['Monte Carlo Partner', 'Atlan Partner', 'dbt Partner', 'Snowflake Partner'],
+  },
+
+  // ==========================================
+  // ERP TRANSFORMATION
+  // ==========================================
+  'erp-modernization-services': {
+    slug: 'erp-modernization-services',
+    serviceCluster: 'erp-transformation',
+    keyword: 'erp modernization services',
+
+    metaTitle: 'ERP Modernization Services | Legacy ERP Migration | ACI Infotech',
+    metaDescription: 'Transform your legacy ERP systems. Expert ERP modernization, migration, and cloud transformation services.',
+
+    headline: 'Modernize Your ERP Without Disrupting Operations',
+    subheadline: 'Transform legacy ERP systems into agile, cloud-ready platforms that power modern business processes.',
+    ctoText: 'Get Your ERP Modernization Roadmap',
+    ctoSecondaryText: 'See Your Process Efficiency Gains',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Legacy System Burden',
+        description: 'Outdated ERP requiring expensive maintenance, specialized skills, and limiting business agility.',
+        icon: 'server',
+      },
+      {
+        title: 'Integration Nightmares',
+        description: 'ERP doesn\'t connect well with modern cloud apps, analytics tools, or partner systems.',
+        icon: 'unlink',
+      },
+      {
+        title: 'Process Rigidity',
+        description: 'Business processes locked into ERP workflows that don\'t match how you need to operate.',
+        icon: 'lock',
+      },
+      {
+        title: 'Hidden Costs',
+        description: 'Total cost of ownership keeps growing with licensing, infrastructure, and workarounds.',
+        icon: 'dollar-sign',
+      },
+    ],
+
+    solutionHeadline: 'Strategic ERP Transformation',
+    solutionDescription: 'We modernize ERP systems with minimal disruption using proven methodologies and deep platform expertise.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Evaluate current state, pain points, and business requirements.' },
+      { step: '02', title: 'Strategize', description: 'Define target state architecture and transformation approach.' },
+      { step: '03', title: 'Execute', description: 'Implement changes incrementally with thorough testing.' },
+      { step: '04', title: 'Optimize', description: 'Fine-tune processes and enable new capabilities.' },
+    ],
+
+    stats: [
+      { value: '50+', label: 'ERP Transformations' },
+      { value: '40%', label: 'Average TCO Reduction' },
+      { value: '99.9%', label: 'Migration Success Rate' },
+      { value: '30%', label: 'Process Efficiency Gain' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Cloud-Ready ERP',
+        description: 'Modern architecture that leverages cloud scalability and economics.',
+        icon: 'cloud',
+      },
+      {
+        title: 'Process Optimization',
+        description: 'Streamlined workflows aligned with best practices and your needs.',
+        icon: 'settings',
+      },
+      {
+        title: 'Seamless Integration',
+        description: 'Connect ERP with all your systems through modern APIs.',
+        icon: 'link',
+      },
+      {
+        title: 'Future-Proof',
+        description: 'Platform positioned for AI, automation, and continuous innovation.',
+        icon: 'rocket',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'SAP to Cloud in 8 Months',
+        description: 'A manufacturing company migrated from SAP ECC to S/4HANA Cloud, reducing TCO by 35% and enabling real-time analytics.',
+        industry: 'manufacturing',
+      },
+      {
+        headline: 'Legacy Oracle Modernization',
+        description: 'A distribution company modernized Oracle EBS, reducing close cycle from 10 days to 3 days with automated workflows.',
+        industry: 'logistics',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Should we migrate to cloud ERP or modernize on-premise?',
+        answer: 'It depends on your requirements, compliance needs, and timeline. We assess both paths and recommend based on your specific situation.',
+      },
+      {
+        question: 'How do you minimize business disruption during migration?',
+        answer: 'We use phased approaches, parallel running, comprehensive testing, and carefully planned cutovers during low-impact periods.',
+      },
+      {
+        question: 'What ERP platforms do you work with?',
+        answer: 'We have deep expertise in SAP (S/4HANA, ECC), Oracle (Cloud, EBS), Microsoft Dynamics, NetSuite, and Infor.',
+      },
+      {
+        question: 'How long does ERP modernization typically take?',
+        answer: 'Timelines vary widely based on scope. Targeted modernization can take 4-6 months; full transformations typically span 12-24 months.',
+      },
+    ],
+
+    certifications: ['SAP Partner', 'Oracle Partner', 'Microsoft Partner', 'NetSuite Partner'],
+  },
 };
 
 // Get content for a specific landing page with personalization applied
