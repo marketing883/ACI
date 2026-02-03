@@ -1,6 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client for fetching related content
+function getSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
+
+// Fetch existing blog posts for internal linking
+async function fetchExistingBlogPosts(): Promise<{ title: string; slug: string; category: string }[]> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
+
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('title, slug, category')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (error) {
+      console.error('Error fetching blog posts for internal links:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    return [];
+  }
+}
 
 // Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
@@ -44,6 +78,8 @@ interface GenerateRequest {
     existingMetrics?: { label: string; value: string; description?: string }[];
     // Current field value for enhancement mode
     currentFieldValue?: string;
+    // Output format
+    outputFormat?: 'markdown' | 'html';
   };
 }
 
@@ -141,7 +177,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const prompt = buildPrompt(type, field, context);
+    // Fetch existing blog posts for internal linking if needed
+    let existingPosts: { title: string; slug: string; category: string }[] = [];
+    if (type === 'blog' && field === 'content' && context.includes?.toLowerCase().includes('internal links')) {
+      existingPosts = await fetchExistingBlogPosts();
+      console.log(`Fetched ${existingPosts.length} existing blog posts for internal linking`);
+    }
+
+    const prompt = buildPrompt(type, field, context, existingPosts);
 
     // Use higher token limit for full content generation
     const maxTokens = field === 'content' ? 8000 : 2000;
@@ -213,8 +256,28 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function buildPrompt(type: string, field: string, context: GenerateRequest['context']): string {
-  const { keyword, title, category, existingContent, clientName, industry, technologies, audience, tone, length, includes, articleType, authorName, content, existingFaqs, seoIssue, currentValue, existingMetrics, currentFieldValue } = context;
+function buildPrompt(type: string, field: string, context: GenerateRequest['context'], existingPosts: { title: string; slug: string; category: string }[] = []): string {
+  const { keyword, title, category, existingContent, clientName, industry, technologies, audience, tone, length, includes, articleType, authorName, content, existingFaqs, seoIssue, currentValue, existingMetrics, currentFieldValue, outputFormat } = context;
+
+  // HTML output format instructions
+  const isHtmlOutput = outputFormat === 'html';
+  const FORMAT_INSTRUCTIONS = isHtmlOutput ? `
+OUTPUT FORMAT: HTML
+- Output content as clean, semantic HTML
+- Use proper HTML tags: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <a>, <blockquote>
+- For links, use: <a href="/blog/slug">anchor text</a>
+- For emphasis, use: <strong>bold</strong> and <em>italic</em>
+- For lists, use: <ul><li>item</li></ul> or <ol><li>item</li></ol>
+- For blockquotes: <blockquote>quote text</blockquote>
+- Do NOT include <html>, <head>, <body> tags - just the content HTML
+- Do NOT use markdown syntax at all
+` : `
+OUTPUT FORMAT: MARKDOWN
+- Use markdown formatting (## H2, ### H3, **bold**, *italic*)
+- For links, use: [anchor text](/blog/slug)
+- For lists, use: - bullet or 1. numbered
+- For blockquotes, use: > quote text
+`;
 
   // Determine if we're in enhancement mode (user has entered content to enhance)
   const isEnhancementMode = currentFieldValue && currentFieldValue.length > 10;
@@ -739,11 +802,24 @@ CONTENT EXCELLENCE REQUIREMENTS:
    - Leave them feeling they've gained significant value
 
 6. FORMATTING & SEO:
-   - Use markdown (## H2, ### H3, **bold**, *italic*)
+${FORMAT_INSTRUCTIONS}
    - Include bulleted lists and numbered steps
    - Use blockquotes for important callouts
    - Create 40-60 word paragraphs for featured snippet optimization
-   - Include internal link placeholders: [Related: Topic](/blog/topic-slug)
+${existingPosts.length > 0 ? `
+7. INTERNAL LINKS (REQUIRED):
+   You MUST include 3-5 internal links to related articles from our blog. Use these existing posts:
+
+${existingPosts.slice(0, 20).map(p => `   - "${p.title}" → /blog/${p.slug} (Category: ${p.category})`).join('\n')}
+
+   IMPORTANT:
+   - Add internal links naturally within the content where relevant
+   - Use descriptive anchor text (not "click here" or "read more")
+   - Format as: [descriptive text](/blog/slug)
+   - Example: "For more on data governance, see our guide on [building enterprise data platforms](/blog/enterprise-data-platforms)"
+   - Distribute links throughout the article, not just at the end
+   - Only link to posts that are genuinely relevant to the context
+` : ''}
 
 QUALITY CHECKLIST (Self-verify before output):
 - [ ] WORD COUNT: Is the article between ${minWords} and ${maxWords} words? (MANDATORY)
@@ -756,8 +832,9 @@ QUALITY CHECKLIST (Self-verify before output):
 - [ ] Is there at least one non-obvious insight per major section?
 - [ ] Does the opening hook grab attention immediately?
 - [ ] Is the advice specific (not generic platitudes)?
+${existingPosts.length > 0 ? `- [ ] INTERNAL LINKS: Did you include 3-5 internal links to related blog posts? (MANDATORY when requested)` : ''}
 
-Return the full article in markdown format. Make it EXCEPTIONAL and ensure it meets ALL requirements above.`;
+Return the full article in ${isHtmlOutput ? 'HTML' : 'markdown'} format. Make it EXCEPTIONAL and ensure it meets ALL requirements above.`;
 
       case 'meta_title':
         return `Generate an AEO-optimized meta title for this ${articleType || 'blog post'}.

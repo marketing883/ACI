@@ -14,6 +14,7 @@ interface BlogPost {
   title: string;
   excerpt?: string;
   content: string;
+  content_format?: 'markdown' | 'html';
   author_name: string;
   author_title?: string;
   author_bio?: string;
@@ -199,40 +200,47 @@ export default function BlogPostPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Prose content */}
           <div className="prose prose-lg max-w-none prose-headings:text-[var(--aci-secondary)] prose-a:text-[var(--aci-primary)] prose-strong:text-[var(--aci-secondary)]">
-            <ReactMarkdown
-              components={{
-                h1: ({ children }) => <h1 className="text-3xl font-bold mt-12 mb-6 text-[var(--aci-secondary)]">{children}</h1>,
-                h2: ({ children }) => <h2 className="text-2xl font-bold mt-10 mb-4 text-[var(--aci-secondary)]">{children}</h2>,
-                h3: ({ children }) => <h3 className="text-xl font-semibold mt-8 mb-3 text-[var(--aci-secondary)]">{children}</h3>,
-                p: ({ children }) => <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>,
-                ul: ({ children }) => <ul className="list-disc pl-6 mb-4 space-y-2">{children}</ul>,
-                ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 space-y-2">{children}</ol>,
-                li: ({ children }) => <li className="text-gray-700">{children}</li>,
-                blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-[var(--aci-primary)] pl-4 italic text-gray-600 my-6">
-                    {children}
-                  </blockquote>
-                ),
-                code: ({ children }) => (
-                  <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-[var(--aci-primary)]">
-                    {children}
-                  </code>
-                ),
-                pre: ({ children }) => (
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-6">
-                    {children}
-                  </pre>
-                ),
-                a: ({ href, children }) => (
-                  <a href={href} className="text-[var(--aci-primary)] hover:underline">
-                    {children}
-                  </a>
-                ),
-                hr: () => <hr className="my-8 border-gray-200" />,
-              }}
-            >
-              {post.content}
-            </ReactMarkdown>
+            {post.content_format === 'html' ? (
+              <div
+                dangerouslySetInnerHTML={{ __html: post.content }}
+                className="blog-html-content [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-12 [&_h1]:mb-6 [&_h1]:text-[var(--aci-secondary)] [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:text-[var(--aci-secondary)] [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:text-[var(--aci-secondary)] [&_p]:mb-4 [&_p]:text-gray-700 [&_p]:leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:space-y-2 [&_li]:text-gray-700 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--aci-primary)] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_blockquote]:my-6 [&_code]:bg-gray-100 [&_code]:px-2 [&_code]:py-1 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono [&_code]:text-[var(--aci-primary)] [&_pre]:bg-gray-900 [&_pre]:text-gray-100 [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:overflow-x-auto [&_pre]:my-6 [&_a]:text-[var(--aci-primary)] [&_a]:hover:underline [&_hr]:my-8 [&_hr]:border-gray-200"
+              />
+            ) : (
+              <ReactMarkdown
+                components={{
+                  h1: ({ children }) => <h1 className="text-3xl font-bold mt-12 mb-6 text-[var(--aci-secondary)]">{children}</h1>,
+                  h2: ({ children }) => <h2 className="text-2xl font-bold mt-10 mb-4 text-[var(--aci-secondary)]">{children}</h2>,
+                  h3: ({ children }) => <h3 className="text-xl font-semibold mt-8 mb-3 text-[var(--aci-secondary)]">{children}</h3>,
+                  p: ({ children }) => <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>,
+                  ul: ({ children }) => <ul className="list-disc pl-6 mb-4 space-y-2">{children}</ul>,
+                  ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 space-y-2">{children}</ol>,
+                  li: ({ children }) => <li className="text-gray-700">{children}</li>,
+                  blockquote: ({ children }) => (
+                    <blockquote className="border-l-4 border-[var(--aci-primary)] pl-4 italic text-gray-600 my-6">
+                      {children}
+                    </blockquote>
+                  ),
+                  code: ({ children }) => (
+                    <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-[var(--aci-primary)]">
+                      {children}
+                    </code>
+                  ),
+                  pre: ({ children }) => (
+                    <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-6">
+                      {children}
+                    </pre>
+                  ),
+                  a: ({ href, children }) => (
+                    <a href={href} className="text-[var(--aci-primary)] hover:underline">
+                      {children}
+                    </a>
+                  ),
+                  hr: () => <hr className="my-8 border-gray-200" />,
+                }}
+              >
+                {post.content}
+              </ReactMarkdown>
+            )}
           </div>
 
           {/* FAQs */}

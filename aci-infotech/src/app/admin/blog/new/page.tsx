@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -217,6 +217,14 @@ export default function NewBlogPostPage() {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [generatingFaqs, setGeneratingFaqs] = useState(false);
 
+  // Content format
+  const [contentFormat, setContentFormat] = useState<'markdown' | 'html'>('html');
+
+  // Internal links
+  const [existingPosts, setExistingPosts] = useState<{ title: string; slug: string; category: string }[]>([]);
+  const [showInternalLinks, setShowInternalLinks] = useState(false);
+  const [linkSearchQuery, setLinkSearchQuery] = useState('');
+
   // UI state
   const [isSaving, setIsSaving] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -225,6 +233,13 @@ export default function NewBlogPostPage() {
   const [previewMode, setPreviewMode] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+
+  // Fetch existing posts when reaching step 3 for internal linking
+  useEffect(() => {
+    if (currentStep === 3 && existingPosts.length === 0) {
+      fetchExistingPosts();
+    }
+  }, [currentStep]);
 
   // Research keyword - can be called with a specific keyword or uses current state
   async function researchKeyword(targetKeyword?: string) {
@@ -302,6 +317,7 @@ export default function NewBlogPostPage() {
             includes: includes.join(', '),
             articleType: ARTICLE_TYPES.find(t => t.id === articleType)?.label || articleType,
             authorName: authorInfo.name,
+            outputFormat: contentFormat,
           },
         }),
       });
@@ -522,6 +538,47 @@ export default function NewBlogPostPage() {
     setContent(newContent);
   }
 
+  // Fetch existing blog posts for internal linking
+  async function fetchExistingPosts() {
+    try {
+      const response = await fetch('/api/admin/blogs?published=true&limit=50');
+      if (response.ok) {
+        const data = await response.json();
+        setExistingPosts(data.posts?.map((p: { title: string; slug: string; category: string }) => ({
+          title: p.title,
+          slug: p.slug,
+          category: p.category || 'Uncategorized'
+        })) || []);
+      }
+    } catch (error) {
+      console.error('Error fetching existing posts:', error);
+    }
+  }
+
+  // Insert internal link at cursor position
+  function insertInternalLink(post: { title: string; slug: string }) {
+    const textarea = document.getElementById('content-editor') as HTMLTextAreaElement;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+
+    const linkText = selectedText || post.title;
+    const link = contentFormat === 'html'
+      ? `<a href="/blog/${post.slug}">${linkText}</a>`
+      : `[${linkText}](/blog/${post.slug})`;
+
+    const newContent = content.substring(0, start) + link + content.substring(end);
+    setContent(newContent);
+
+    // Focus back on textarea
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + link.length;
+    }, 0);
+  }
+
   // Render markdown to HTML preview
   function renderMarkdown(text: string) {
     if (!text) return '<p class="text-gray-400 italic">No content yet. Start writing or generate content with AI.</p>';
@@ -658,6 +715,7 @@ export default function NewBlogPostPage() {
         slug,
         excerpt: excerpt || metaDescription,
         content,
+        content_format: contentFormat,
         category,
         tags,
         author_name: authorInfo.name,
@@ -1306,7 +1364,28 @@ export default function NewBlogPostPage() {
             {/* Content Editor */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex items-center justify-between mb-3">
-                <label className="font-semibold text-gray-900">Content</label>
+                <div className="flex items-center gap-4">
+                  <label className="font-semibold text-gray-900">Content</label>
+                  {/* Format Toggle */}
+                  <div className="flex items-center gap-1 p-1 bg-blue-50 rounded-lg border border-blue-200">
+                    <button
+                      onClick={() => setContentFormat('html')}
+                      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                        contentFormat === 'html' ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-100'
+                      }`}
+                    >
+                      HTML
+                    </button>
+                    <button
+                      onClick={() => setContentFormat('markdown')}
+                      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                        contentFormat === 'markdown' ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-100'
+                      }`}
+                    >
+                      Markdown
+                    </button>
+                  </div>
+                </div>
                 {/* Write/Preview Toggle */}
                 <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
                   <button
@@ -1372,7 +1451,10 @@ export default function NewBlogPostPage() {
                     id="content-editor"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    placeholder="Write your article content in Markdown..."
+                    placeholder={contentFormat === 'html'
+                      ? "Write or paste your HTML content here...\n\nExample:\n<h2>Section Title</h2>\n<p>Your paragraph here with <strong>bold</strong> and <a href=\"/blog/post-slug\">links</a>.</p>"
+                      : "Write your article content in Markdown...\n\nExample:\n## Section Title\nYour paragraph here with **bold** and [links](/blog/post-slug)."
+                    }
                     rows={20}
                     className="w-full px-4 py-3 border border-gray-200 rounded-b-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent font-mono text-sm resize-none"
                   />
@@ -1380,7 +1462,11 @@ export default function NewBlogPostPage() {
               ) : (
                 /* Preview Mode */
                 <div className="border border-gray-200 rounded-lg p-6 min-h-[500px] bg-white prose prose-sm max-w-none overflow-auto">
-                  <div dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
+                  {contentFormat === 'html' ? (
+                    <div dangerouslySetInnerHTML={{ __html: content }} />
+                  ) : (
+                    <div dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
+                  )}
                 </div>
               )}
               <p className="text-xs text-gray-400 mt-1">
@@ -1444,6 +1530,58 @@ export default function NewBlogPostPage() {
                   className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
                 />
               </div>
+            </div>
+
+            {/* Internal Links Helper */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-gray-900">Internal Links</h3>
+                <button
+                  onClick={() => setShowInternalLinks(!showInternalLinks)}
+                  className="text-xs text-blue-600 hover:underline"
+                >
+                  {showInternalLinks ? 'Hide' : 'Show'} ({existingPosts.length})
+                </button>
+              </div>
+              {showInternalLinks && (
+                <>
+                  <input
+                    type="text"
+                    value={linkSearchQuery}
+                    onChange={(e) => setLinkSearchQuery(e.target.value)}
+                    placeholder="Search posts to link..."
+                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] mb-3"
+                  />
+                  <div className="max-h-60 overflow-y-auto space-y-2">
+                    {existingPosts
+                      .filter(p =>
+                        linkSearchQuery === '' ||
+                        p.title.toLowerCase().includes(linkSearchQuery.toLowerCase()) ||
+                        p.category.toLowerCase().includes(linkSearchQuery.toLowerCase())
+                      )
+                      .slice(0, 15)
+                      .map((post) => (
+                        <button
+                          key={post.slug}
+                          onClick={() => insertInternalLink(post)}
+                          className="w-full text-left p-2 text-sm hover:bg-blue-50 rounded-lg border border-gray-100 transition-colors"
+                        >
+                          <span className="font-medium text-gray-900 block truncate">{post.title}</span>
+                          <span className="text-xs text-gray-500">{post.category} &middot; /blog/{post.slug}</span>
+                        </button>
+                      ))
+                    }
+                    {existingPosts.length === 0 && (
+                      <p className="text-sm text-gray-500 text-center py-2">
+                        No published posts yet
+                      </p>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-400 mt-3">
+                    Click a post to insert a link at cursor position in the editor
+                  </p>
+                </>
+              )}
             </div>
 
             {/* Post Settings */}

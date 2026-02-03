@@ -119,6 +119,14 @@ export default function EditBlogPage() {
   const [seoData, setSeoData] = useState<SEOData | null>(null);
   const [loadingSEO, setLoadingSEO] = useState(false);
 
+  // Content format
+  const [contentFormat, setContentFormat] = useState<'markdown' | 'html'>('html');
+
+  // Internal links
+  const [existingPosts, setExistingPosts] = useState<{ title: string; slug: string; category: string }[]>([]);
+  const [showInternalLinks, setShowInternalLinks] = useState(false);
+  const [linkSearchQuery, setLinkSearchQuery] = useState('');
+
   // UI state
   const [previewMode, setPreviewMode] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -151,6 +159,7 @@ export default function EditBlogPage() {
           setTargetKeyword(data.keywords?.[0] || '');
           setArticleType(data.article_type || 'how-to');
           setFaqs(data.faqs || []);
+          setContentFormat(data.content_format || 'markdown');
 
           // Load author info
           if (data.author_name || data.author_title || data.author_bio) {
@@ -180,6 +189,52 @@ export default function EditBlogPage() {
 
     loadPost();
   }, [postId]);
+
+  // Fetch existing posts for internal linking
+  useEffect(() => {
+    fetchExistingPosts();
+  }, []);
+
+  // Fetch existing blog posts for internal linking
+  async function fetchExistingPosts() {
+    try {
+      const response = await fetch('/api/admin/blogs?published=true&limit=50');
+      if (response.ok) {
+        const data = await response.json();
+        setExistingPosts(data.posts?.map((p: { title: string; slug: string; category: string }) => ({
+          title: p.title,
+          slug: p.slug,
+          category: p.category || 'Uncategorized'
+        })) || []);
+      }
+    } catch (error) {
+      console.error('Error fetching existing posts:', error);
+    }
+  }
+
+  // Insert internal link at cursor position
+  function insertInternalLink(post: { title: string; slug: string }) {
+    const textarea = document.querySelector('textarea[name="content"]') as HTMLTextAreaElement;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+
+    const linkText = selectedText || post.title;
+    const link = contentFormat === 'html'
+      ? `<a href="/blog/${post.slug}">${linkText}</a>`
+      : `[${linkText}](/blog/${post.slug})`;
+
+    const newContent = content.substring(0, start) + link + content.substring(end);
+    setContent(newContent);
+
+    // Focus back on textarea
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + link.length;
+    }, 0);
+  }
 
   // Fetch SEO data
   const fetchSEOData = async () => {
@@ -220,6 +275,7 @@ export default function EditBlogPage() {
             category,
             keyword: targetKeyword,
             existingContent: field === 'content' ? excerpt : field === 'meta_description' ? excerpt : undefined,
+            outputFormat: contentFormat,
           },
         }),
       });
@@ -317,6 +373,7 @@ export default function EditBlogPage() {
         keyword: targetKeyword,
         existingContent: currentContent,
         articleType,
+        outputFormat: contentFormat,
       };
 
       // Handle special fix types
@@ -534,6 +591,7 @@ export default function EditBlogPage() {
         slug,
         excerpt,
         content,
+        content_format: contentFormat,
         category,
         tags: tags.split(',').map(t => t.trim()).filter(Boolean),
         author_name: authorInfo.name || 'ACI Infotech',
@@ -696,7 +754,28 @@ export default function EditBlogPage() {
           {/* Content Editor */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-gray-700">Content</label>
+              <div className="flex items-center gap-4">
+                <label className="block text-sm font-medium text-gray-700">Content</label>
+                {/* Format Toggle */}
+                <div className="flex items-center gap-1 p-1 bg-blue-50 rounded-lg border border-blue-200">
+                  <button
+                    onClick={() => setContentFormat('html')}
+                    className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                      contentFormat === 'html' ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-100'
+                    }`}
+                  >
+                    HTML
+                  </button>
+                  <button
+                    onClick={() => setContentFormat('markdown')}
+                    className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                      contentFormat === 'markdown' ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-100'
+                    }`}
+                  >
+                    Markdown
+                  </button>
+                </div>
+              </div>
               <div className="flex items-center gap-3">
                 {/* Write/Preview Toggle */}
                 <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
@@ -757,9 +836,13 @@ export default function EditBlogPage() {
 
                 <textarea
                   name="content"
+                  id="content-editor"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="Write your article content in Markdown or HTML..."
+                  placeholder={contentFormat === 'html'
+                    ? "Write or paste your HTML content here...\n\nExample:\n<h2>Section Title</h2>\n<p>Your paragraph here with <strong>bold</strong> and <a href=\"/blog/post-slug\">links</a>.</p>"
+                    : "Write your article content in Markdown...\n\nExample:\n## Section Title\nYour paragraph here with **bold** and [links](/blog/post-slug)."
+                  }
                   rows={20}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
                 />
@@ -767,7 +850,11 @@ export default function EditBlogPage() {
             ) : (
               /* Preview Mode */
               <div className="border border-gray-200 rounded-lg p-6 min-h-[500px] bg-white prose prose-sm max-w-none overflow-auto">
-                <div dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
+                {contentFormat === 'html' ? (
+                  <div dangerouslySetInnerHTML={{ __html: content }} />
+                ) : (
+                  <div dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
+                )}
               </div>
             )}
             <p className="text-xs text-gray-400 mt-1">
@@ -837,6 +924,58 @@ export default function EditBlogPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
               />
             </div>
+          </div>
+
+          {/* Internal Links Helper */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-gray-900">Internal Links</h3>
+              <button
+                onClick={() => setShowInternalLinks(!showInternalLinks)}
+                className="text-xs text-blue-600 hover:underline"
+              >
+                {showInternalLinks ? 'Hide' : 'Show'} ({existingPosts.length})
+              </button>
+            </div>
+            {showInternalLinks && (
+              <>
+                <input
+                  type="text"
+                  value={linkSearchQuery}
+                  onChange={(e) => setLinkSearchQuery(e.target.value)}
+                  placeholder="Search posts to link..."
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 mb-3"
+                />
+                <div className="max-h-60 overflow-y-auto space-y-2">
+                  {existingPosts
+                    .filter(p =>
+                      linkSearchQuery === '' ||
+                      p.title.toLowerCase().includes(linkSearchQuery.toLowerCase()) ||
+                      p.category.toLowerCase().includes(linkSearchQuery.toLowerCase())
+                    )
+                    .slice(0, 15)
+                    .map((post) => (
+                      <button
+                        key={post.slug}
+                        onClick={() => insertInternalLink(post)}
+                        className="w-full text-left p-2 text-sm hover:bg-blue-50 rounded-lg border border-gray-100 transition-colors"
+                      >
+                        <span className="font-medium text-gray-900 block truncate">{post.title}</span>
+                        <span className="text-xs text-gray-500">{post.category} &middot; /blog/{post.slug}</span>
+                      </button>
+                    ))
+                  }
+                  {existingPosts.length === 0 && (
+                    <p className="text-sm text-gray-500 text-center py-2">
+                      No published posts yet
+                    </p>
+                  )}
+                </div>
+                <p className="text-xs text-gray-400 mt-3">
+                  Click a post to insert a link at cursor position in the editor
+                </p>
+              </>
+            )}
           </div>
 
           {/* SEO Analysis - Keyword Research */}
