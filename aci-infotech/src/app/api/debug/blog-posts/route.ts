@@ -17,38 +17,25 @@ export async function GET() {
     }
   });
 
-  // Get all published posts
+  // Get ALL posts (including unpublished) to debug
   const { data: allPosts, error } = await supabase
     .from('blog_posts')
     .select('id, slug, title, published_at, created_at, is_published')
-    .eq('is_published', true)
-    .order('published_at', { ascending: false, nullsFirst: false })
-    .limit(20);
+    .order('created_at', { ascending: false })
+    .limit(30);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Sort in JS
-  const sortedPosts = (allPosts || []).sort((a, b) => {
-    const dateA = new Date(a.published_at || a.created_at || 0).getTime();
-    const dateB = new Date(b.published_at || b.created_at || 0).getTime();
-    return dateB - dateA;
-  });
-
   return NextResponse.json({
     timestamp: new Date().toISOString(),
-    totalPublished: allPosts?.length || 0,
-    rawFromSupabase: allPosts?.slice(0, 10).map(p => ({
+    totalPosts: allPosts?.length || 0,
+    allPostsByCreatedDate: allPosts?.slice(0, 15).map(p => ({
       title: p.title?.substring(0, 50),
       published_at: p.published_at,
       created_at: p.created_at,
       is_published: p.is_published
-    })),
-    afterJSSort: sortedPosts.slice(0, 10).map(p => ({
-      title: p.title?.substring(0, 50),
-      published_at: p.published_at,
-      created_at: p.created_at
     }))
   });
 }
