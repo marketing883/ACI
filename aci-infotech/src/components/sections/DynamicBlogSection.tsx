@@ -2,9 +2,9 @@ import { createClient } from '@supabase/supabase-js';
 import { unstable_noStore as noStore } from 'next/cache';
 import BlogPreviewSection from './BlogPreviewSection';
 
-// Server-side Supabase client
+// Server-side Supabase client - use service role to bypass RLS
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 interface BlogPostDB {
   slug: string;
@@ -24,12 +24,12 @@ async function getLatestPosts(limit: number = 3) {
   // Opt out of caching to ensure fresh data
   noStore();
 
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!supabaseUrl || !supabaseServiceKey) {
     return [];
   }
 
-  // Create client with no-cache fetch option to bypass Next.js cache
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  // Create client with service role key to bypass RLS and no-cache fetch
+  const supabase = createClient(supabaseUrl, supabaseServiceKey, {
     global: {
       fetch: (url, options = {}) => fetch(url, { ...options, cache: 'no-store' })
     }

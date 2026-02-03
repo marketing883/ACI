@@ -17,11 +17,12 @@ export async function GET() {
     warning: !supabaseServiceKey ? 'SUPABASE_SERVICE_ROLE_KEY is missing - CMS is in DEMO MODE and posts are NOT being saved!' : null
   };
 
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!supabaseUrl || !supabaseServiceKey) {
     return NextResponse.json({ error: 'Missing Supabase credentials', configStatus }, { status: 500 });
   }
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  // Use SERVICE ROLE KEY to bypass RLS (same as CMS admin)
+  const supabase = createClient(supabaseUrl, supabaseServiceKey, {
     global: {
       fetch: (url, options = {}) => fetch(url, { ...options, cache: 'no-store' })
     }
