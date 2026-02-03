@@ -256,6 +256,134 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { value: '50%', label: 'Faster Trade Settlement' },
         ],
       },
+      manufacturing: {
+        headline: 'Data Engineering for Smart Manufacturing',
+        subheadline: 'Unify IoT sensor data, production systems, and supply chain for real-time visibility and predictive insights.',
+        painPoints: [
+          {
+            title: 'Siloed Production Data',
+            description: 'MES, ERP, and IoT systems don\'t talk to each other, preventing holistic operational visibility.',
+            icon: 'database',
+          },
+          {
+            title: 'IoT Data Overload',
+            description: 'Millions of sensor data points with no infrastructure to process and derive insights.',
+            icon: 'activity',
+          },
+          {
+            title: 'Batch Reporting Delays',
+            description: 'Production reports arrive hours or days late, missing opportunities to optimize in real-time.',
+            icon: 'clock',
+          },
+          {
+            title: 'Quality Traceability',
+            description: 'Unable to trace quality issues back to specific batches, machines, or suppliers.',
+            icon: 'search',
+          },
+        ],
+        stats: [
+          { value: '45%', label: 'Reduction in Downtime' },
+          { value: 'Real-Time', label: 'Production Visibility' },
+          { value: '30%', label: 'Quality Cost Reduction' },
+          { value: '99.9%', label: 'Data Pipeline Reliability' },
+        ],
+      },
+      oil_gas: {
+        headline: 'Data Engineering for Oil & Gas Operations',
+        subheadline: 'Integrate SCADA, drilling, and reservoir data for operational intelligence and asset optimization.',
+        painPoints: [
+          {
+            title: 'Scattered Operational Data',
+            description: 'SCADA, drilling, and production data in separate systems with no unified view.',
+            icon: 'database',
+          },
+          {
+            title: 'Remote Asset Monitoring',
+            description: 'Offshore and remote assets generating data that\'s difficult to collect and analyze.',
+            icon: 'radio',
+          },
+          {
+            title: 'Regulatory Compliance',
+            description: 'HSE reporting and environmental compliance requiring data from multiple sources.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Legacy OT Systems',
+            description: 'Operational technology systems that are decades old and hard to integrate.',
+            icon: 'server',
+          },
+        ],
+        stats: [
+          { value: '25%', label: 'Improved Asset Uptime' },
+          { value: '40%', label: 'Faster Regulatory Reporting' },
+          { value: 'Real-Time', label: 'Production Monitoring' },
+          { value: '35%', label: 'Data Processing Cost Savings' },
+        ],
+      },
+      retail: {
+        headline: 'Data Engineering for Retail Excellence',
+        subheadline: 'Unify POS, inventory, and customer data for omnichannel insights and demand forecasting.',
+        painPoints: [
+          {
+            title: 'Fragmented Customer Data',
+            description: 'Online, in-store, and loyalty data in silos preventing true customer 360 view.',
+            icon: 'users',
+          },
+          {
+            title: 'Inventory Blind Spots',
+            description: 'No real-time visibility into inventory across stores, warehouses, and fulfillment centers.',
+            icon: 'package',
+          },
+          {
+            title: 'Slow Demand Signals',
+            description: 'Sales data arrives too late to optimize pricing, promotions, and replenishment.',
+            icon: 'clock',
+          },
+          {
+            title: 'Scaling for Peak Seasons',
+            description: 'Data infrastructure struggles during holiday peaks and promotional events.',
+            icon: 'trending-up',
+          },
+        ],
+        stats: [
+          { value: 'Real-Time', label: 'Inventory Visibility' },
+          { value: '35%', label: 'Improved Demand Forecast' },
+          { value: '20%', label: 'Reduction in Stockouts' },
+          { value: '10x', label: 'Faster Insights to Action' },
+        ],
+      },
+      logistics: {
+        headline: 'Data Engineering for Logistics & Supply Chain',
+        subheadline: 'Build real-time visibility across your supply chain with unified logistics data.',
+        painPoints: [
+          {
+            title: 'Supply Chain Blind Spots',
+            description: 'No real-time visibility into shipments, inventory in transit, or partner data.',
+            icon: 'eye-off',
+          },
+          {
+            title: 'Disparate Systems',
+            description: 'TMS, WMS, and carrier systems don\'t share data effectively.',
+            icon: 'unlink',
+          },
+          {
+            title: 'Manual Tracking',
+            description: 'Teams spending hours manually tracking shipments and compiling reports.',
+            icon: 'edit-3',
+          },
+          {
+            title: 'EDI Complexity',
+            description: 'Managing EDI connections with dozens of trading partners is fragile and error-prone.',
+            icon: 'alert-triangle',
+          },
+        ],
+        stats: [
+          { value: '50%', label: 'Faster Order-to-Delivery' },
+          { value: 'Real-Time', label: 'Shipment Tracking' },
+          { value: '30%', label: 'Reduction in Manual Work' },
+          { value: '99.5%', label: 'Partner Data Accuracy' },
+        ],
+      },
     },
 
     roleVariants: {
@@ -385,6 +513,201 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     certifications: ['Microsoft Gold Partner', 'Power BI Certified', 'Azure Partner'],
+
+    industryVariants: {
+      healthcare: {
+        headline: 'Healthcare Analytics Dashboards with Power BI',
+        subheadline: 'HIPAA-compliant dashboards for patient outcomes, operational efficiency, and clinical insights.',
+        painPoints: [
+          {
+            title: 'Scattered Clinical Data',
+            description: 'Patient metrics, quality measures, and operational data spread across dozens of reports.',
+            icon: 'file-spreadsheet',
+          },
+          {
+            title: 'Compliance Reporting Burden',
+            description: 'Manual effort to compile CMS quality reports, HEDIS measures, and regulatory submissions.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Limited Self-Service',
+            description: 'Clinicians and administrators can\'t access the data they need without IT help.',
+            icon: 'lock',
+          },
+          {
+            title: 'Data Security Concerns',
+            description: 'PHI protection requirements making analytics deployment complex.',
+            icon: 'shield',
+          },
+        ],
+        stats: [
+          { value: '70%', label: 'Faster Quality Reporting' },
+          { value: '100%', label: 'HIPAA Compliant' },
+          { value: '85%', label: 'Clinical User Adoption' },
+          { value: 'Real-Time', label: 'Patient Flow Visibility' },
+        ],
+      },
+      finance: {
+        headline: 'Financial Analytics & Reporting with Power BI',
+        subheadline: 'Real-time financial dashboards for executives, controllers, and analysts with complete audit trails.',
+        painPoints: [
+          {
+            title: 'Month-End Reporting Delays',
+            description: 'Financial close reports taking days to compile from multiple systems.',
+            icon: 'clock',
+          },
+          {
+            title: 'Excel Dependency',
+            description: 'Critical financial analysis trapped in spreadsheets with no governance.',
+            icon: 'file-spreadsheet',
+          },
+          {
+            title: 'Audit Trail Gaps',
+            description: 'Can\'t trace report numbers back to source transactions for auditors.',
+            icon: 'search',
+          },
+          {
+            title: 'Fragmented Views',
+            description: 'Different P&L versions across departments with no single source of truth.',
+            icon: 'git-branch',
+          },
+        ],
+        stats: [
+          { value: '80%', label: 'Faster Month-End Close' },
+          { value: '100%', label: 'Audit Trail Coverage' },
+          { value: 'Real-Time', label: 'Cash Flow Visibility' },
+          { value: '90%', label: 'Finance Team Adoption' },
+        ],
+      },
+      manufacturing: {
+        headline: 'Manufacturing Analytics with Power BI',
+        subheadline: 'Real-time production dashboards connecting shop floor to executive insights.',
+        painPoints: [
+          {
+            title: 'Production Blindness',
+            description: 'No real-time visibility into OEE, throughput, and quality across lines and plants.',
+            icon: 'eye-off',
+          },
+          {
+            title: 'Delayed Reporting',
+            description: 'Production reports arrive the next day, missing real-time optimization opportunities.',
+            icon: 'clock',
+          },
+          {
+            title: 'Disconnected Systems',
+            description: 'MES, ERP, and quality data in different systems with no unified view.',
+            icon: 'unlink',
+          },
+          {
+            title: 'Manual Data Collection',
+            description: 'Operators still logging data on paper or spreadsheets.',
+            icon: 'edit-3',
+          },
+        ],
+        stats: [
+          { value: 'Real-Time', label: 'OEE Visibility' },
+          { value: '25%', label: 'Improvement in Uptime' },
+          { value: '40%', label: 'Faster Root Cause Analysis' },
+          { value: '90%', label: 'Shop Floor Adoption' },
+        ],
+      },
+      oil_gas: {
+        headline: 'Oil & Gas Analytics with Power BI',
+        subheadline: 'Unified operational dashboards for production, HSE, and asset performance monitoring.',
+        painPoints: [
+          {
+            title: 'Scattered Operational Data',
+            description: 'Production, safety, and maintenance data in separate systems and spreadsheets.',
+            icon: 'database',
+          },
+          {
+            title: 'Remote Asset Visibility',
+            description: 'Limited insight into offshore and remote asset performance.',
+            icon: 'radio',
+          },
+          {
+            title: 'HSE Reporting Manual Effort',
+            description: 'Safety and environmental reports compiled manually from multiple sources.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Executive Reporting Delays',
+            description: 'Leadership waiting days for consolidated operational reports.',
+            icon: 'clock',
+          },
+        ],
+        stats: [
+          { value: 'Real-Time', label: 'Production Monitoring' },
+          { value: '60%', label: 'Faster HSE Reporting' },
+          { value: '35%', label: 'Improved Decision Speed' },
+          { value: '100%', label: 'Asset Coverage' },
+        ],
+      },
+      retail: {
+        headline: 'Retail Analytics Dashboards with Power BI',
+        subheadline: 'Real-time visibility into sales, inventory, and customer behavior across all channels.',
+        painPoints: [
+          {
+            title: 'Channel Silos',
+            description: 'Online and in-store data in separate reports with no unified view.',
+            icon: 'git-branch',
+          },
+          {
+            title: 'Inventory Blind Spots',
+            description: 'Can\'t see real-time inventory across stores and distribution centers.',
+            icon: 'package',
+          },
+          {
+            title: 'Slow Promotional Insights',
+            description: 'Promotion performance analysis available days after campaigns end.',
+            icon: 'clock',
+          },
+          {
+            title: 'Store Manager Data Access',
+            description: 'Store managers can\'t access the metrics they need to optimize performance.',
+            icon: 'lock',
+          },
+        ],
+        stats: [
+          { value: 'Real-Time', label: 'Sales Visibility' },
+          { value: '30%', label: 'Better Inventory Turns' },
+          { value: '85%', label: 'Store Manager Adoption' },
+          { value: '50%', label: 'Faster Promo Analysis' },
+        ],
+      },
+      professional_services: {
+        headline: 'Professional Services Analytics with Power BI',
+        subheadline: 'Project profitability, utilization, and pipeline dashboards for services firms.',
+        painPoints: [
+          {
+            title: 'Utilization Opacity',
+            description: 'No clear visibility into consultant utilization and capacity.',
+            icon: 'users',
+          },
+          {
+            title: 'Project Profitability Blind Spots',
+            description: 'Don\'t know which projects are profitable until they\'re complete.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'Pipeline Fragmentation',
+            description: 'Sales pipeline data scattered across CRM, spreadsheets, and email.',
+            icon: 'git-branch',
+          },
+          {
+            title: 'Manual Time Reporting',
+            description: 'Time data compiled manually with delays and inaccuracies.',
+            icon: 'clock',
+          },
+        ],
+        stats: [
+          { value: 'Real-Time', label: 'Utilization Tracking' },
+          { value: '15%', label: 'Improved Margins' },
+          { value: '40%', label: 'Faster Invoicing' },
+          { value: '95%', label: 'Partner Adoption' },
+        ],
+      },
+    },
   },
 
   // ==========================================
@@ -500,6 +823,201 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     certifications: ['AWS Advanced Partner', 'Azure Expert MSP', 'Google Cloud Partner', 'VMware Partner'],
+
+    industryVariants: {
+      healthcare: {
+        headline: 'HIPAA-Compliant Cloud Migration for Healthcare',
+        subheadline: 'Modernize your healthcare IT infrastructure while maintaining strict compliance and patient data security.',
+        painPoints: [
+          {
+            title: 'Compliance Complexity',
+            description: 'HIPAA, HITRUST requirements creating barriers to cloud adoption.',
+            icon: 'shield',
+          },
+          {
+            title: 'Legacy Clinical Systems',
+            description: 'Critical EHR and clinical applications that seem impossible to modernize.',
+            icon: 'server',
+          },
+          {
+            title: 'Interoperability Challenges',
+            description: 'Need to maintain HL7/FHIR integrations during and after migration.',
+            icon: 'link',
+          },
+          {
+            title: 'Uptime Requirements',
+            description: 'Clinical systems requiring near-zero downtime for patient care.',
+            icon: 'clock',
+          },
+        ],
+        stats: [
+          { value: '100%', label: 'HIPAA Compliance' },
+          { value: 'Zero', label: 'Patient Care Disruption' },
+          { value: '40%', label: 'Infrastructure Cost Savings' },
+          { value: '99.99%', label: 'System Availability' },
+        ],
+      },
+      finance: {
+        headline: 'Secure Cloud Migration for Financial Services',
+        subheadline: 'Migrate with confidence while meeting SOX, PCI, and regulatory requirements.',
+        painPoints: [
+          {
+            title: 'Regulatory Scrutiny',
+            description: 'SOX, PCI-DSS, and regulator expectations creating cloud hesitancy.',
+            icon: 'shield',
+          },
+          {
+            title: 'Core Banking Systems',
+            description: 'Mission-critical core systems that have run on-premise for decades.',
+            icon: 'server',
+          },
+          {
+            title: 'Data Sovereignty',
+            description: 'Requirements for data residency and geographic restrictions.',
+            icon: 'globe',
+          },
+          {
+            title: 'Third-Party Risk',
+            description: 'Vendor due diligence and concentration risk concerns.',
+            icon: 'alert-circle',
+          },
+        ],
+        stats: [
+          { value: '100%', label: 'Regulatory Compliance' },
+          { value: '50%', label: 'Faster Audit Cycles' },
+          { value: '35%', label: 'TCO Reduction' },
+          { value: '99.999%', label: 'Core System Uptime' },
+        ],
+      },
+      manufacturing: {
+        headline: 'Cloud Migration for Manufacturing Operations',
+        subheadline: 'Modernize your manufacturing IT while ensuring OT/IT convergence and production continuity.',
+        painPoints: [
+          {
+            title: 'OT/IT Convergence',
+            description: 'Need to connect shop floor systems to cloud without security risks.',
+            icon: 'link',
+          },
+          {
+            title: 'Production Continuity',
+            description: 'Can\'t afford downtime in MES, ERP, or production systems.',
+            icon: 'clock',
+          },
+          {
+            title: 'Edge Requirements',
+            description: 'Low-latency needs for plant floor applications.',
+            icon: 'zap',
+          },
+          {
+            title: 'Global Distribution',
+            description: 'Plants across multiple regions with varied connectivity.',
+            icon: 'globe',
+          },
+        ],
+        stats: [
+          { value: 'Zero', label: 'Production Downtime' },
+          { value: '40%', label: 'Infrastructure Savings' },
+          { value: '60%', label: 'Faster Deployment' },
+          { value: '100%', label: 'Plant Connectivity' },
+        ],
+      },
+      oil_gas: {
+        headline: 'Cloud Migration for Oil & Gas Operations',
+        subheadline: 'Modernize upstream, midstream, and downstream operations with secure, scalable cloud infrastructure.',
+        painPoints: [
+          {
+            title: 'Remote Operations',
+            description: 'Offshore and field locations with limited connectivity.',
+            icon: 'radio',
+          },
+          {
+            title: 'SCADA Integration',
+            description: 'Need to connect legacy SCADA and control systems securely.',
+            icon: 'server',
+          },
+          {
+            title: 'Data Volumes',
+            description: 'Massive seismic, sensor, and production data to process.',
+            icon: 'database',
+          },
+          {
+            title: 'HSE Requirements',
+            description: 'Safety and environmental compliance requirements.',
+            icon: 'shield',
+          },
+        ],
+        stats: [
+          { value: '50%', label: 'Data Processing Cost Savings' },
+          { value: 'Global', label: 'Operations Visibility' },
+          { value: '100%', label: 'HSE Compliance' },
+          { value: '10x', label: 'Seismic Processing Speed' },
+        ],
+      },
+      retail: {
+        headline: 'Cloud Migration for Retail & E-commerce',
+        subheadline: 'Scale your retail infrastructure for peak seasons and omnichannel operations.',
+        painPoints: [
+          {
+            title: 'Peak Season Scaling',
+            description: 'Infrastructure struggling during Black Friday and holiday peaks.',
+            icon: 'trending-up',
+          },
+          {
+            title: 'Omnichannel Requirements',
+            description: 'Need unified platform for online, in-store, and fulfillment.',
+            icon: 'shopping-cart',
+          },
+          {
+            title: 'Legacy POS/OMS',
+            description: 'Critical retail systems that are difficult to modernize.',
+            icon: 'server',
+          },
+          {
+            title: 'Speed to Market',
+            description: 'Competitors innovating faster while you manage infrastructure.',
+            icon: 'clock',
+          },
+        ],
+        stats: [
+          { value: 'Unlimited', label: 'Peak Scaling' },
+          { value: '60%', label: 'Infrastructure Savings' },
+          { value: '10x', label: 'Faster Feature Releases' },
+          { value: '99.99%', label: 'E-commerce Uptime' },
+        ],
+      },
+      government: {
+        headline: 'FedRAMP-Ready Cloud Migration for Government',
+        subheadline: 'Modernize government IT with secure, compliant cloud infrastructure.',
+        painPoints: [
+          {
+            title: 'FedRAMP Compliance',
+            description: 'Federal security requirements creating migration complexity.',
+            icon: 'shield',
+          },
+          {
+            title: 'Legacy Systems',
+            description: 'Decades-old systems that agencies depend on for critical services.',
+            icon: 'server',
+          },
+          {
+            title: 'Budget Constraints',
+            description: 'Need to show clear ROI and cost savings for appropriations.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'Citizen Experience',
+            description: 'Pressure to modernize services for better citizen experience.',
+            icon: 'users',
+          },
+        ],
+        stats: [
+          { value: '100%', label: 'FedRAMP Compliance' },
+          { value: '45%', label: 'Cost Savings' },
+          { value: '70%', label: 'Faster Service Delivery' },
+          { value: 'Zero', label: 'Security Incidents' },
+        ],
+      },
+    },
   },
 
   // ==========================================
@@ -615,6 +1133,137 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     certifications: ['Microsoft Gold Partner', 'Dynamics 365 Certified', 'Power Platform Partner'],
+
+    industryVariants: {
+      manufacturing: {
+        headline: 'Dynamics 365 for Manufacturing Excellence',
+        subheadline: 'Unified ERP and CRM for production planning, supply chain, and customer engagement.',
+        painPoints: [
+          {
+            title: 'Disconnected Operations',
+            description: 'Production, sales, and finance running on separate systems.',
+            icon: 'unlink',
+          },
+          {
+            title: 'Supply Chain Visibility',
+            description: 'No real-time view into inventory, suppliers, and demand.',
+            icon: 'eye-off',
+          },
+          {
+            title: 'Manual Production Planning',
+            description: 'Spreadsheet-based MRP that can\'t keep up with demand changes.',
+            icon: 'edit-3',
+          },
+          {
+            title: 'Quality Traceability',
+            description: 'Can\'t trace products back to components and suppliers.',
+            icon: 'search',
+          },
+        ],
+        stats: [
+          { value: '40%', label: 'Inventory Reduction' },
+          { value: '25%', label: 'Faster Order-to-Delivery' },
+          { value: '99%', label: 'On-Time Delivery' },
+          { value: '30%', label: 'Production Efficiency Gain' },
+        ],
+      },
+      retail: {
+        headline: 'Dynamics 365 for Retail & Commerce',
+        subheadline: 'Unified commerce platform for seamless omnichannel customer experiences.',
+        painPoints: [
+          {
+            title: 'Channel Silos',
+            description: 'Online, in-store, and call center running on different systems.',
+            icon: 'git-branch',
+          },
+          {
+            title: 'Inventory Disconnect',
+            description: 'Can\'t see or sell inventory across all locations.',
+            icon: 'package',
+          },
+          {
+            title: 'Fragmented Customer Data',
+            description: 'No single view of customer across all touchpoints.',
+            icon: 'users',
+          },
+          {
+            title: 'Promotion Complexity',
+            description: 'Managing pricing and promotions across channels manually.',
+            icon: 'tag',
+          },
+        ],
+        stats: [
+          { value: '360°', label: 'Customer View' },
+          { value: '30%', label: 'Increase in AOV' },
+          { value: '50%', label: 'Faster Checkout' },
+          { value: '25%', label: 'Improved Inventory Turns' },
+        ],
+      },
+      distribution: {
+        headline: 'Dynamics 365 for Distribution & Wholesale',
+        subheadline: 'Streamline order management, warehouse operations, and customer relationships.',
+        painPoints: [
+          {
+            title: 'Order Management Chaos',
+            description: 'Manual order processing with errors and delays.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Warehouse Inefficiency',
+            description: 'Picking, packing, and shipping not optimized.',
+            icon: 'package',
+          },
+          {
+            title: 'Customer Visibility',
+            description: 'Customers can\'t track orders or self-serve.',
+            icon: 'eye-off',
+          },
+          {
+            title: 'Rebate Complexity',
+            description: 'Managing vendor and customer rebates manually.',
+            icon: 'dollar-sign',
+          },
+        ],
+        stats: [
+          { value: '50%', label: 'Faster Order Processing' },
+          { value: '30%', label: 'Warehouse Productivity' },
+          { value: '99.5%', label: 'Order Accuracy' },
+          { value: '40%', label: 'Reduced DSO' },
+        ],
+      },
+      professional_services: {
+        headline: 'Dynamics 365 for Professional Services',
+        subheadline: 'End-to-end project management from opportunity to invoice.',
+        painPoints: [
+          {
+            title: 'Project Profitability Blindness',
+            description: 'Don\'t know project margins until after completion.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'Resource Scheduling',
+            description: 'Manual scheduling leading to under/over utilization.',
+            icon: 'calendar',
+          },
+          {
+            title: 'Time & Expense Friction',
+            description: 'Consultants frustrated with time entry and approvals.',
+            icon: 'clock',
+          },
+          {
+            title: 'Billing Delays',
+            description: 'Weeks between work completion and invoicing.',
+            icon: 'file-text',
+          },
+        ],
+        stats: [
+          { value: '85%', label: 'Utilization Achieved' },
+          { value: '60%', label: 'Faster Invoicing' },
+          { value: '15%', label: 'Margin Improvement' },
+          { value: '100%', label: 'Project Visibility' },
+        ],
+      },
+    },
   },
 
   // ==========================================
@@ -730,6 +1379,169 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     certifications: ['OpenAI Partner', 'Azure AI Partner', 'AWS ML Competency'],
+
+    industryVariants: {
+      healthcare: {
+        headline: 'Generative AI for Healthcare Innovation',
+        subheadline: 'HIPAA-compliant AI solutions for clinical documentation, patient engagement, and operational efficiency.',
+        painPoints: [
+          {
+            title: 'Clinical Documentation Burden',
+            description: 'Physicians spending hours on notes instead of patient care.',
+            icon: 'edit-3',
+          },
+          {
+            title: 'PHI Security Concerns',
+            description: 'Can\'t use public AI tools with patient information.',
+            icon: 'shield',
+          },
+          {
+            title: 'Prior Authorization Delays',
+            description: 'Manual prior auth processes delaying patient care.',
+            icon: 'clock',
+          },
+          {
+            title: 'Medical Coding Accuracy',
+            description: 'Coding errors leading to revenue leakage and compliance risk.',
+            icon: 'alert-circle',
+          },
+        ],
+        stats: [
+          { value: '70%', label: 'Reduction in Documentation Time' },
+          { value: '100%', label: 'HIPAA Compliant' },
+          { value: '50%', label: 'Faster Prior Auth' },
+          { value: '95%', label: 'Coding Accuracy' },
+        ],
+      },
+      finance: {
+        headline: 'Generative AI for Financial Services',
+        subheadline: 'Secure AI solutions for document processing, customer service, and regulatory compliance.',
+        painPoints: [
+          {
+            title: 'Document Processing Backlog',
+            description: 'Loans, claims, and applications stuck in manual review.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Regulatory Compliance',
+            description: 'AI outputs need audit trails and explainability.',
+            icon: 'shield',
+          },
+          {
+            title: 'Customer Service Volume',
+            description: 'Call centers overwhelmed with routine inquiries.',
+            icon: 'phone',
+          },
+          {
+            title: 'KYC/AML Manual Review',
+            description: 'Compliance teams drowning in false positives.',
+            icon: 'search',
+          },
+        ],
+        stats: [
+          { value: '80%', label: 'Faster Document Processing' },
+          { value: '100%', label: 'Audit Trail Coverage' },
+          { value: '60%', label: 'Call Deflection' },
+          { value: '70%', label: 'Reduction in False Positives' },
+        ],
+      },
+      legal: {
+        headline: 'Generative AI for Legal Services',
+        subheadline: 'AI-powered contract analysis, research, and document drafting for law firms and legal departments.',
+        painPoints: [
+          {
+            title: 'Contract Review Backlog',
+            description: 'Associates spending hours on routine contract review.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Research Time',
+            description: 'Legal research taking days instead of hours.',
+            icon: 'search',
+          },
+          {
+            title: 'Document Drafting',
+            description: 'Starting from scratch on similar agreements.',
+            icon: 'edit-3',
+          },
+          {
+            title: 'Due Diligence Volume',
+            description: 'M&A data rooms with thousands of documents to review.',
+            icon: 'database',
+          },
+        ],
+        stats: [
+          { value: '70%', label: 'Faster Contract Review' },
+          { value: '10x', label: 'Research Speed' },
+          { value: '50%', label: 'Reduction in Drafting Time' },
+          { value: '90%', label: 'Issue Identification Accuracy' },
+        ],
+      },
+      manufacturing: {
+        headline: 'Generative AI for Manufacturing Operations',
+        subheadline: 'AI copilots for maintenance, quality, and knowledge management on the shop floor.',
+        painPoints: [
+          {
+            title: 'Tribal Knowledge Loss',
+            description: 'Expert knowledge walking out the door with retiring workers.',
+            icon: 'users',
+          },
+          {
+            title: 'Maintenance Documentation',
+            description: 'Technicians struggling to find repair procedures.',
+            icon: 'search',
+          },
+          {
+            title: 'Quality Issue Resolution',
+            description: 'Root cause analysis taking too long.',
+            icon: 'alert-triangle',
+          },
+          {
+            title: 'Training Time',
+            description: 'New employees take months to become productive.',
+            icon: 'clock',
+          },
+        ],
+        stats: [
+          { value: '40%', label: 'Faster Problem Resolution' },
+          { value: '50%', label: 'Reduction in Training Time' },
+          { value: '100%', label: 'Knowledge Captured' },
+          { value: '30%', label: 'Maintenance Efficiency Gain' },
+        ],
+      },
+      retail: {
+        headline: 'Generative AI for Retail & E-commerce',
+        subheadline: 'AI-powered product content, personalization, and customer engagement at scale.',
+        painPoints: [
+          {
+            title: 'Product Content at Scale',
+            description: 'Thousands of SKUs needing descriptions and attributes.',
+            icon: 'edit-3',
+          },
+          {
+            title: 'Customer Service Volume',
+            description: 'Support teams overwhelmed during peak seasons.',
+            icon: 'message-circle',
+          },
+          {
+            title: 'Personalization Gaps',
+            description: 'Generic recommendations missing customer context.',
+            icon: 'users',
+          },
+          {
+            title: 'Marketing Content Velocity',
+            description: 'Can\'t produce enough content for all channels.',
+            icon: 'zap',
+          },
+        ],
+        stats: [
+          { value: '10x', label: 'Faster Content Creation' },
+          { value: '50%', label: 'Customer Service Automation' },
+          { value: '35%', label: 'Increase in Conversions' },
+          { value: '80%', label: 'Reduction in Content Costs' },
+        ],
+      },
+    },
   },
 
   // ==========================================
@@ -845,6 +1657,169 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     certifications: ['AWS ML Competency', 'Azure AI Partner', 'Databricks Partner', 'Google Cloud ML Partner'],
+
+    industryVariants: {
+      healthcare: {
+        headline: 'AI & Machine Learning for Healthcare',
+        subheadline: 'Predictive models for clinical outcomes, operations, and population health management.',
+        painPoints: [
+          {
+            title: 'Reactive Care Models',
+            description: 'Identifying high-risk patients too late for effective intervention.',
+            icon: 'clock',
+          },
+          {
+            title: 'Readmission Penalties',
+            description: 'CMS penalties for preventable readmissions costing millions.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'Resource Allocation',
+            description: 'Staffing and bed management based on intuition, not prediction.',
+            icon: 'users',
+          },
+          {
+            title: 'Claims Denials',
+            description: 'Preventable denials due to documentation and coding issues.',
+            icon: 'file-text',
+          },
+        ],
+        stats: [
+          { value: '30%', label: 'Reduction in Readmissions' },
+          { value: '25%', label: 'Fewer Denials' },
+          { value: '40%', label: 'Better Resource Utilization' },
+          { value: '$5M+', label: 'Annual Savings' },
+        ],
+      },
+      finance: {
+        headline: 'AI & Machine Learning for Financial Services',
+        subheadline: 'Fraud detection, credit risk, and customer analytics models that protect and grow revenue.',
+        painPoints: [
+          {
+            title: 'Fraud Losses',
+            description: 'Rules-based fraud detection missing sophisticated attacks.',
+            icon: 'shield-off',
+          },
+          {
+            title: 'Credit Risk Accuracy',
+            description: 'Traditional scorecards missing good customers or approving bad ones.',
+            icon: 'alert-circle',
+          },
+          {
+            title: 'Customer Churn',
+            description: 'Losing valuable customers without predictive warning signs.',
+            icon: 'trending-down',
+          },
+          {
+            title: 'AML False Positives',
+            description: 'Compliance teams overwhelmed with false positive alerts.',
+            icon: 'search',
+          },
+        ],
+        stats: [
+          { value: '60%', label: 'Reduction in Fraud Losses' },
+          { value: '25%', label: 'Better Credit Decisions' },
+          { value: '35%', label: 'Reduction in Churn' },
+          { value: '70%', label: 'Fewer AML False Positives' },
+        ],
+      },
+      manufacturing: {
+        headline: 'AI & Machine Learning for Manufacturing',
+        subheadline: 'Predictive maintenance, quality optimization, and demand forecasting for smart manufacturing.',
+        painPoints: [
+          {
+            title: 'Unplanned Downtime',
+            description: 'Equipment failures disrupting production and costing millions.',
+            icon: 'alert-triangle',
+          },
+          {
+            title: 'Quality Escapes',
+            description: 'Defects discovered too late in the production process.',
+            icon: 'x-circle',
+          },
+          {
+            title: 'Demand Forecasting',
+            description: 'Inaccurate forecasts leading to over/under production.',
+            icon: 'trending-up',
+          },
+          {
+            title: 'Energy Optimization',
+            description: 'No visibility into opportunities to reduce energy consumption.',
+            icon: 'zap',
+          },
+        ],
+        stats: [
+          { value: '45%', label: 'Reduction in Downtime' },
+          { value: '30%', label: 'Fewer Quality Defects' },
+          { value: '25%', label: 'Improved Forecast Accuracy' },
+          { value: '20%', label: 'Energy Cost Savings' },
+        ],
+      },
+      oil_gas: {
+        headline: 'AI & Machine Learning for Oil & Gas',
+        subheadline: 'Predictive models for production optimization, asset reliability, and reservoir analysis.',
+        painPoints: [
+          {
+            title: 'Production Optimization',
+            description: 'Not extracting maximum value from existing wells.',
+            icon: 'trending-up',
+          },
+          {
+            title: 'Asset Failures',
+            description: 'Unplanned equipment failures in remote, expensive locations.',
+            icon: 'alert-triangle',
+          },
+          {
+            title: 'Reservoir Modeling',
+            description: 'Traditional reservoir simulation slow and limited.',
+            icon: 'database',
+          },
+          {
+            title: 'Safety Incidents',
+            description: 'Leading indicators not being captured to prevent incidents.',
+            icon: 'shield',
+          },
+        ],
+        stats: [
+          { value: '15%', label: 'Production Increase' },
+          { value: '40%', label: 'Reduction in Failures' },
+          { value: '10x', label: 'Faster Reservoir Analysis' },
+          { value: '50%', label: 'Reduction in Safety Incidents' },
+        ],
+      },
+      retail: {
+        headline: 'AI & Machine Learning for Retail',
+        subheadline: 'Demand forecasting, personalization, and pricing optimization that drive revenue growth.',
+        painPoints: [
+          {
+            title: 'Stockouts & Overstock',
+            description: 'Inventory imbalances costing margin and sales.',
+            icon: 'package',
+          },
+          {
+            title: 'Generic Recommendations',
+            description: 'Product recommendations that don\'t resonate with customers.',
+            icon: 'users',
+          },
+          {
+            title: 'Pricing Inefficiency',
+            description: 'Leaving money on the table with suboptimal pricing.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'Customer Churn',
+            description: 'Losing customers without early warning or intervention.',
+            icon: 'trending-down',
+          },
+        ],
+        stats: [
+          { value: '30%', label: 'Reduction in Stockouts' },
+          { value: '25%', label: 'Increase in Conversions' },
+          { value: '5-15%', label: 'Revenue Lift from Pricing' },
+          { value: '40%', label: 'Improvement in Retention' },
+        ],
+      },
+    },
   },
 
   // ==========================================
@@ -960,6 +1935,137 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     certifications: ['OpenAI Partner', 'Anthropic Partner', 'LangChain Certified'],
+
+    industryVariants: {
+      finance: {
+        headline: 'Agentic AI for Financial Services Automation',
+        subheadline: 'Autonomous AI agents that process loans, manage claims, and handle customer inquiries with enterprise controls.',
+        painPoints: [
+          {
+            title: 'Loan Processing Backlog',
+            description: 'Applications sitting in queue while manual review bottlenecks continue.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Claims Handling Delays',
+            description: 'Simple claims taking days when they could be resolved in minutes.',
+            icon: 'clock',
+          },
+          {
+            title: 'Customer Service Scaling',
+            description: 'Can\'t scale support without proportional headcount increases.',
+            icon: 'trending-up',
+          },
+          {
+            title: 'Compliance Documentation',
+            description: 'Manual compliance reporting consuming analyst time.',
+            icon: 'shield',
+          },
+        ],
+        stats: [
+          { value: '70%', label: 'Straight-Through Processing' },
+          { value: '4 Hours', label: 'Avg Claim Resolution' },
+          { value: '100%', label: 'Audit Trail Coverage' },
+          { value: '50%', label: 'Cost Per Transaction Reduction' },
+        ],
+      },
+      healthcare: {
+        headline: 'Agentic AI for Healthcare Operations',
+        subheadline: 'AI agents that handle prior authorizations, patient scheduling, and revenue cycle tasks autonomously.',
+        painPoints: [
+          {
+            title: 'Prior Authorization Delays',
+            description: 'Days spent on prior auth when patients need care now.',
+            icon: 'clock',
+          },
+          {
+            title: 'Patient Scheduling Complexity',
+            description: 'Manual scheduling causing no-shows and inefficiency.',
+            icon: 'calendar',
+          },
+          {
+            title: 'Denial Management',
+            description: 'Revenue leakage from unworked denials.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'Care Coordination',
+            description: 'Patients falling through cracks between appointments.',
+            icon: 'users',
+          },
+        ],
+        stats: [
+          { value: '60%', label: 'Faster Prior Auth' },
+          { value: '30%', label: 'Reduction in No-Shows' },
+          { value: '40%', label: 'More Denials Worked' },
+          { value: '100%', label: 'HIPAA Compliant' },
+        ],
+      },
+      insurance: {
+        headline: 'Agentic AI for Insurance Operations',
+        subheadline: 'Autonomous agents for underwriting, claims processing, and policy servicing.',
+        painPoints: [
+          {
+            title: 'Underwriting Bottleneck',
+            description: 'Submissions stuck in queue while competitors respond faster.',
+            icon: 'clock',
+          },
+          {
+            title: 'Claims Leakage',
+            description: 'Overpayments and fraud slipping through manual review.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'Policy Servicing Load',
+            description: 'Simple endorsements requiring human intervention.',
+            icon: 'edit-3',
+          },
+          {
+            title: 'FNOL Processing',
+            description: 'First notice of loss handled manually regardless of complexity.',
+            icon: 'file-text',
+          },
+        ],
+        stats: [
+          { value: '3x', label: 'Faster Quote Turnaround' },
+          { value: '25%', label: 'Reduction in Claims Leakage' },
+          { value: '80%', label: 'Auto-Process Simple Endorsements' },
+          { value: '60%', label: 'Faster FNOL Resolution' },
+        ],
+      },
+      customer_service: {
+        headline: 'Agentic AI for Customer Service Excellence',
+        subheadline: 'AI agents that resolve customer issues autonomously while maintaining brand experience.',
+        painPoints: [
+          {
+            title: 'Ticket Backlog',
+            description: 'Support queues growing faster than team can handle.',
+            icon: 'inbox',
+          },
+          {
+            title: 'Repetitive Inquiries',
+            description: 'Agents spending time on issues that should be self-service.',
+            icon: 'refresh-cw',
+          },
+          {
+            title: 'Cross-System Resolution',
+            description: 'Simple issues requiring multiple system lookups.',
+            icon: 'link',
+          },
+          {
+            title: 'After-Hours Coverage',
+            description: 'Customer issues waiting until next business day.',
+            icon: 'clock',
+          },
+        ],
+        stats: [
+          { value: '60%', label: 'Autonomous Resolution' },
+          { value: '24/7', label: 'Coverage Without Staffing' },
+          { value: '5 min', label: 'Average Resolution Time' },
+          { value: '95%', label: 'Customer Satisfaction' },
+        ],
+      },
+    },
   },
 
   // ==========================================
@@ -1075,6 +2181,169 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     certifications: ['MuleSoft Partner', 'Informatica Partner', 'Fivetran Partner', 'AWS Data Partner'],
+
+    industryVariants: {
+      healthcare: {
+        headline: 'Healthcare Data Integration & Interoperability',
+        subheadline: 'HIPAA-compliant integration connecting EHR, claims, and clinical systems for unified patient data.',
+        painPoints: [
+          {
+            title: 'EHR Data Silos',
+            description: 'Patient data scattered across Epic, Cerner, and legacy systems.',
+            icon: 'database',
+          },
+          {
+            title: 'Interoperability Mandates',
+            description: 'CMS and ONC rules requiring HL7 FHIR compliance.',
+            icon: 'link',
+          },
+          {
+            title: 'Claims Integration',
+            description: 'Payer and provider systems don\'t share data effectively.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Population Health Data',
+            description: 'Can\'t aggregate data for value-based care programs.',
+            icon: 'users',
+          },
+        ],
+        stats: [
+          { value: '100%', label: 'HIPAA Compliant' },
+          { value: 'FHIR', label: 'Native Support' },
+          { value: '360°', label: 'Patient Data View' },
+          { value: '50%', label: 'Faster Data Access' },
+        ],
+      },
+      finance: {
+        headline: 'Financial Services Data Integration',
+        subheadline: 'Real-time integration across core banking, trading, and customer systems with complete audit trails.',
+        painPoints: [
+          {
+            title: 'Core Banking Integration',
+            description: 'Legacy core systems difficult to connect with modern applications.',
+            icon: 'server',
+          },
+          {
+            title: 'Real-Time Requirements',
+            description: 'Market data and transactions need sub-second synchronization.',
+            icon: 'zap',
+          },
+          {
+            title: 'Regulatory Data Needs',
+            description: 'Compliance reporting requiring data from multiple systems.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Customer 360 Gaps',
+            description: 'No unified view across accounts, transactions, and interactions.',
+            icon: 'users',
+          },
+        ],
+        stats: [
+          { value: '<100ms', label: 'Integration Latency' },
+          { value: '100%', label: 'Audit Coverage' },
+          { value: '99.99%', label: 'Data Accuracy' },
+          { value: 'Real-Time', label: 'Customer 360' },
+        ],
+      },
+      manufacturing: {
+        headline: 'Manufacturing Data Integration',
+        subheadline: 'Connect ERP, MES, and IoT systems for unified operational visibility.',
+        painPoints: [
+          {
+            title: 'ERP-MES Disconnect',
+            description: 'Production and business systems speaking different languages.',
+            icon: 'unlink',
+          },
+          {
+            title: 'IoT Data Ingestion',
+            description: 'Sensor data trapped on the shop floor, not reaching analytics.',
+            icon: 'radio',
+          },
+          {
+            title: 'Supply Chain Visibility',
+            description: 'Supplier and logistics data not integrated with operations.',
+            icon: 'truck',
+          },
+          {
+            title: 'Quality Data Silos',
+            description: 'QMS data isolated from production and customer systems.',
+            icon: 'check-circle',
+          },
+        ],
+        stats: [
+          { value: 'Real-Time', label: 'Shop Floor to ERP' },
+          { value: '100%', label: 'IoT Data Captured' },
+          { value: '50%', label: 'Faster Supply Chain Response' },
+          { value: '99.9%', label: 'Data Reliability' },
+        ],
+      },
+      oil_gas: {
+        headline: 'Oil & Gas Data Integration',
+        subheadline: 'Integrate SCADA, historian, and enterprise systems for unified operational intelligence.',
+        painPoints: [
+          {
+            title: 'OT/IT Gap',
+            description: 'Operational data not flowing to business systems.',
+            icon: 'unlink',
+          },
+          {
+            title: 'Historian Integration',
+            description: 'Time-series data trapped in PI or other historians.',
+            icon: 'database',
+          },
+          {
+            title: 'Partner Data Exchange',
+            description: 'JV partners, contractors, and vendors on different systems.',
+            icon: 'users',
+          },
+          {
+            title: 'Asset Data Consolidation',
+            description: 'Equipment data scattered across maintenance and operations.',
+            icon: 'settings',
+          },
+        ],
+        stats: [
+          { value: 'Real-Time', label: 'OT to IT Data Flow' },
+          { value: '100%', label: 'Asset Data Unified' },
+          { value: '40%', label: 'Faster Decision Making' },
+          { value: '99.9%', label: 'Data Pipeline Uptime' },
+        ],
+      },
+      retail: {
+        headline: 'Retail & E-commerce Data Integration',
+        subheadline: 'Unify POS, e-commerce, inventory, and customer data for omnichannel excellence.',
+        painPoints: [
+          {
+            title: 'Channel Data Silos',
+            description: 'Online, store, and marketplace data not unified.',
+            icon: 'git-branch',
+          },
+          {
+            title: 'Inventory Accuracy',
+            description: 'Inventory levels not synchronized across fulfillment points.',
+            icon: 'package',
+          },
+          {
+            title: 'Customer Data Fragmentation',
+            description: 'Same customer appears differently across systems.',
+            icon: 'users',
+          },
+          {
+            title: 'Vendor/Dropship Integration',
+            description: 'Supplier data feeds unreliable and inconsistent.',
+            icon: 'truck',
+          },
+        ],
+        stats: [
+          { value: 'Real-Time', label: 'Inventory Sync' },
+          { value: '360°', label: 'Customer View' },
+          { value: '99.9%', label: 'Order Data Accuracy' },
+          { value: '50%', label: 'Faster Vendor Onboarding' },
+        ],
+      },
+    },
   },
 
   // ==========================================
@@ -1190,6 +2459,137 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     certifications: ['Monte Carlo Partner', 'Atlan Partner', 'dbt Partner', 'Snowflake Partner'],
+
+    industryVariants: {
+      finance: {
+        headline: 'Data Observability for Financial Services',
+        subheadline: 'Complete visibility into financial data pipelines with SOX-compliant audit trails and lineage.',
+        painPoints: [
+          {
+            title: 'Regulatory Reporting Failures',
+            description: 'Data quality issues discovered during regulatory submissions.',
+            icon: 'alert-triangle',
+          },
+          {
+            title: 'SOX Audit Findings',
+            description: 'Data lineage gaps creating audit risk and findings.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Risk Model Data Quality',
+            description: 'Bad data feeding into credit and market risk models.',
+            icon: 'alert-circle',
+          },
+          {
+            title: 'Reconciliation Failures',
+            description: 'Data discrepancies discovered manually, too late.',
+            icon: 'search',
+          },
+        ],
+        stats: [
+          { value: '100%', label: 'SOX Compliance' },
+          { value: '95%', label: 'Issues Caught Before Reports' },
+          { value: '100%', label: 'Data Lineage Coverage' },
+          { value: '70%', label: 'Reduction in Audit Findings' },
+        ],
+      },
+      healthcare: {
+        headline: 'Data Observability for Healthcare',
+        subheadline: 'Monitor clinical and operational data quality with HIPAA-compliant observability.',
+        painPoints: [
+          {
+            title: 'Quality Measure Accuracy',
+            description: 'Data issues affecting HEDIS, STAR, and quality scores.',
+            icon: 'alert-circle',
+          },
+          {
+            title: 'Patient Safety',
+            description: 'Bad data potentially affecting clinical decisions.',
+            icon: 'shield',
+          },
+          {
+            title: 'Compliance Reporting',
+            description: 'CMS and payer reports failing due to data gaps.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Data Governance',
+            description: 'No visibility into PHI data flows and access.',
+            icon: 'eye',
+          },
+        ],
+        stats: [
+          { value: '100%', label: 'HIPAA Compliant' },
+          { value: '90%', label: 'Proactive Issue Detection' },
+          { value: '100%', label: 'PHI Data Lineage' },
+          { value: '50%', label: 'Faster Quality Submissions' },
+        ],
+      },
+      ecommerce: {
+        headline: 'Data Observability for E-commerce',
+        subheadline: 'Real-time monitoring of product, inventory, and customer data that powers your business.',
+        painPoints: [
+          {
+            title: 'Product Data Errors',
+            description: 'Wrong prices, descriptions, or images going live.',
+            icon: 'alert-triangle',
+          },
+          {
+            title: 'Inventory Sync Failures',
+            description: 'Overselling due to inventory data lag.',
+            icon: 'package',
+          },
+          {
+            title: 'Analytics Discrepancies',
+            description: 'Marketing and finance reporting different numbers.',
+            icon: 'bar-chart',
+          },
+          {
+            title: 'Feed Failures',
+            description: 'Google, Amazon, and marketplace feeds breaking silently.',
+            icon: 'alert-circle',
+          },
+        ],
+        stats: [
+          { value: '<5 min', label: 'Issue Detection' },
+          { value: '99.9%', label: 'Data Accuracy' },
+          { value: 'Zero', label: 'Overselling Incidents' },
+          { value: '100%', label: 'Feed Monitoring' },
+        ],
+      },
+      saas: {
+        headline: 'Data Observability for SaaS Companies',
+        subheadline: 'Monitor product analytics, customer data, and revenue metrics with confidence.',
+        painPoints: [
+          {
+            title: 'Product Analytics Gaps',
+            description: 'Missing or incorrect user behavior data affecting decisions.',
+            icon: 'bar-chart',
+          },
+          {
+            title: 'Revenue Recognition',
+            description: 'Billing data issues affecting MRR/ARR calculations.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'Customer Health Scores',
+            description: 'Bad data leading to inaccurate churn predictions.',
+            icon: 'heart',
+          },
+          {
+            title: 'Board Reporting',
+            description: 'Scrambling to explain metric discrepancies to investors.',
+            icon: 'trending-up',
+          },
+        ],
+        stats: [
+          { value: '100%', label: 'Metric Accuracy' },
+          { value: '95%', label: 'Proactive Detection' },
+          { value: 'Real-Time', label: 'Data Health Monitoring' },
+          { value: '60%', label: 'Less Time Debugging Data' },
+        ],
+      },
+    },
   },
 
   // ==========================================
@@ -1305,6 +2705,137 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     certifications: ['SAP Partner', 'Oracle Partner', 'Microsoft Partner', 'NetSuite Partner'],
+
+    industryVariants: {
+      manufacturing: {
+        headline: 'ERP Modernization for Manufacturing',
+        subheadline: 'Transform legacy ERP into an agile platform for Industry 4.0 and smart manufacturing.',
+        painPoints: [
+          {
+            title: 'Legacy MRP Limitations',
+            description: 'Old systems can\'t handle modern demand variability and complexity.',
+            icon: 'server',
+          },
+          {
+            title: 'Shop Floor Disconnect',
+            description: 'ERP doesn\'t integrate with MES, IoT, or automation.',
+            icon: 'unlink',
+          },
+          {
+            title: 'Supply Chain Rigidity',
+            description: 'Can\'t respond quickly to supply disruptions or demand changes.',
+            icon: 'truck',
+          },
+          {
+            title: 'Costing Accuracy',
+            description: 'Standard costing doesn\'t reflect actual production costs.',
+            icon: 'dollar-sign',
+          },
+        ],
+        stats: [
+          { value: '40%', label: 'Reduction in Planning Cycle' },
+          { value: 'Real-Time', label: 'Shop Floor Integration' },
+          { value: '25%', label: 'Inventory Reduction' },
+          { value: '99%', label: 'Costing Accuracy' },
+        ],
+      },
+      distribution: {
+        headline: 'ERP Modernization for Distribution',
+        subheadline: 'Streamline warehouse operations, order management, and customer fulfillment.',
+        painPoints: [
+          {
+            title: 'Order Management Inefficiency',
+            description: 'Manual order processing slowing fulfillment and accuracy.',
+            icon: 'file-text',
+          },
+          {
+            title: 'Warehouse Limitations',
+            description: 'WMS features inadequate for modern fulfillment demands.',
+            icon: 'package',
+          },
+          {
+            title: 'Pricing Complexity',
+            description: 'Customer-specific pricing and rebates managed in spreadsheets.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'Supplier Integration',
+            description: 'Manual processes for vendor orders and ASN processing.',
+            icon: 'truck',
+          },
+        ],
+        stats: [
+          { value: '50%', label: 'Faster Order Processing' },
+          { value: '30%', label: 'Warehouse Productivity' },
+          { value: '99.5%', label: 'Order Accuracy' },
+          { value: '40%', label: 'Reduction in DSO' },
+        ],
+      },
+      retail: {
+        headline: 'ERP Modernization for Retail',
+        subheadline: 'Unified retail platform connecting stores, e-commerce, and supply chain.',
+        painPoints: [
+          {
+            title: 'Omnichannel Gaps',
+            description: 'Separate systems for online and in-store operations.',
+            icon: 'git-branch',
+          },
+          {
+            title: 'Inventory Visibility',
+            description: 'Can\'t see or promise inventory across all locations.',
+            icon: 'eye-off',
+          },
+          {
+            title: 'Peak Season Scaling',
+            description: 'Systems struggle during Black Friday and holidays.',
+            icon: 'trending-up',
+          },
+          {
+            title: 'Customer Data Fragmentation',
+            description: 'No unified customer view across channels.',
+            icon: 'users',
+          },
+        ],
+        stats: [
+          { value: 'Unified', label: 'Commerce Platform' },
+          { value: 'Real-Time', label: 'Inventory Visibility' },
+          { value: 'Unlimited', label: 'Peak Scaling' },
+          { value: '360°', label: 'Customer View' },
+        ],
+      },
+      professional_services: {
+        headline: 'ERP Modernization for Professional Services',
+        subheadline: 'Transform project accounting, resource management, and billing for services firms.',
+        painPoints: [
+          {
+            title: 'Project Accounting Limitations',
+            description: 'ERP not designed for complex project billing and recognition.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'Resource Management',
+            description: 'No real-time visibility into utilization and capacity.',
+            icon: 'users',
+          },
+          {
+            title: 'Time & Expense Friction',
+            description: 'Cumbersome T&E processes frustrating consultants.',
+            icon: 'clock',
+          },
+          {
+            title: 'Client Profitability',
+            description: 'Can\'t analyze profitability by client, project, or practice.',
+            icon: 'bar-chart',
+          },
+        ],
+        stats: [
+          { value: '85%', label: 'Target Utilization' },
+          { value: '60%', label: 'Faster Billing Cycle' },
+          { value: 'Real-Time', label: 'Profitability Visibility' },
+          { value: '20%', label: 'Margin Improvement' },
+        ],
+      },
+    },
   },
 };
 
