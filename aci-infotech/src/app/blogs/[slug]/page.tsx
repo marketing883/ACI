@@ -454,12 +454,18 @@ export default function BlogPostPage() {
             Our team of experts can help you implement these strategies at your organization.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
+            <a
+              href="/contact?reason=architecture-call"
+              className="inline-flex items-center justify-center px-8 py-4 bg-white text-[var(--aci-primary)] font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
+            >
               Schedule Architecture Call
-            </Button>
-            <Button href="/blogs" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
+            </a>
+            <a
+              href="/blogs"
+              className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-white font-semibold rounded-lg border-2 border-white/50 hover:bg-white/10 transition-colors"
+            >
               Read More Articles
-            </Button>
+            </a>
           </div>
         </div>
       </section>
