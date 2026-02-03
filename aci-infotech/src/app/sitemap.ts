@@ -1,120 +1,227 @@
 import { MetadataRoute } from 'next';
+import { createClient } from '@supabase/supabase-js';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://aciinfotech.com';
+const baseUrl = 'https://aciinfotech.com';
 
-  // Static pages
-  const staticPages = [
-    '',
-    '/about',
-    '/contact',
-    '/case-studies',
-    '/blog',
-    '/services',
-    '/platforms',
-    '/industries',
+// Create Supabase client for fetching dynamic content
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const supabase = getSupabase();
+
+  // =====================
+  // STATIC PAGES
+  // =====================
+
+  const staticPages: MetadataRoute.Sitemap = [
+    // Main pages
+    { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
+    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/careers`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/news`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+
+    // Resource listings
+    { url: `${baseUrl}/case-studies`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/whitepapers`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${baseUrl}/playbooks`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+
+    // Section landing pages
+    { url: `${baseUrl}/services`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/platforms`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/industries`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+
+    // Legal pages
+    { url: `${baseUrl}/privacy-policy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/terms-of-service`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
   ];
 
-  // Service pages
-  const servicePages = [
+  // =====================
+  // SERVICE PAGES
+  // =====================
+
+  const servicePages: MetadataRoute.Sitemap = [
     '/services/data-engineering',
     '/services/applied-ai-ml',
     '/services/cloud-modernization',
     '/services/martech-cdp',
     '/services/digital-transformation',
     '/services/cyber-security',
-  ];
+  ].map(path => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.9,
+  }));
 
-  // Platform pages
-  const platformPages = [
+  // =====================
+  // PLATFORM PAGES
+  // =====================
+
+  const platformPages: MetadataRoute.Sitemap = [
     '/platforms/databricks',
     '/platforms/snowflake',
     '/platforms/salesforce',
     '/platforms/aws',
     '/platforms/azure',
     '/platforms/sap',
-  ];
+    '/platforms/braze',
+    '/platforms/servicenow',
+    '/platforms/microsoft-dynamics',
+  ].map(path => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }));
 
-  // Industry pages
-  const industryPages = [
+  // =====================
+  // INDUSTRY PAGES
+  // =====================
+
+  const industryPages: MetadataRoute.Sitemap = [
     '/industries/financial-services',
     '/industries/retail',
     '/industries/healthcare',
     '/industries/manufacturing',
     '/industries/energy',
-  ];
-
-  // Case study slugs - in production, fetch from database
-  const caseStudySlugs = [
-    'msci-data-automation',
-    'racetrac-martech',
-    'sodexo-unified-data',
-    'fortune-100-retailer-ai',
-    'healthcare-cloud-migration',
-    'finserv-fraud-detection',
-    'manufacturing-iot',
-    'insurance-digital-platform',
-    'energy-security-overhaul',
-    'pharma-data-lake',
-    'retail-personalization',
-    'logistics-optimization',
-  ];
-
-  // Blog post slugs - in production, fetch from database
-  const blogSlugs = [
-    'building-enterprise-data-mesh-architecture',
-    'ai-governance-enterprise-guide',
-    'databricks-vs-snowflake-2025',
-    'zero-trust-security-implementation',
-    'mlops-best-practices-production',
-    'customer-data-platform-selection',
-    'cloud-cost-optimization-strategies',
-    'real-time-analytics-architecture',
-    'llm-enterprise-integration',
-    'data-quality-automation',
-  ];
-
-  const staticEntries: MetadataRoute.Sitemap = staticPages.map((path) => ({
+    '/industries/hospitality',
+    '/industries/transportation',
+  ].map(path => ({
     url: `${baseUrl}${path}`,
     lastModified: new Date(),
-    changeFrequency: path === '' ? 'weekly' : 'monthly',
-    priority: path === '' ? 1 : 0.8,
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
   }));
 
-  const serviceEntries: MetadataRoute.Sitemap = servicePages.map((path) => ({
+  // =====================
+  // LANDING PAGES
+  // =====================
+
+  const landingPages: MetadataRoute.Sitemap = [
+    '/lp/microsoft-dynamics-roadmap',
+  ].map(path => ({
     url: `${baseUrl}${path}`,
     lastModified: new Date(),
-    changeFrequency: 'monthly',
-    priority: 0.9,
-  }));
-
-  const caseStudyEntries: MetadataRoute.Sitemap = caseStudySlugs.map((slug) => ({
-    url: `${baseUrl}/case-studies/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly',
+    changeFrequency: 'monthly' as const,
     priority: 0.7,
   }));
 
-  const blogEntries: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({
-    url: `${baseUrl}/blog/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.6,
-  }));
+  // =====================
+  // DYNAMIC CONTENT FROM DATABASE
+  // =====================
 
-  const platformEntries: MetadataRoute.Sitemap = platformPages.map((path) => ({
-    url: `${baseUrl}${path}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly',
-    priority: 0.8,
-  }));
+  let blogEntries: MetadataRoute.Sitemap = [];
+  let caseStudyEntries: MetadataRoute.Sitemap = [];
+  let whitepaperEntries: MetadataRoute.Sitemap = [];
+  let jobEntries: MetadataRoute.Sitemap = [];
+  let newsEntries: MetadataRoute.Sitemap = [];
 
-  const industryEntries: MetadataRoute.Sitemap = industryPages.map((path) => ({
-    url: `${baseUrl}${path}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly',
-    priority: 0.8,
-  }));
+  if (supabase) {
+    // Fetch published blog posts
+    const { data: blogPosts } = await supabase
+      .from('blog_posts')
+      .select('slug, updated_at, created_at')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false });
 
-  return [...staticEntries, ...serviceEntries, ...platformEntries, ...industryEntries, ...caseStudyEntries, ...blogEntries];
+    if (blogPosts) {
+      blogEntries = blogPosts.map(post => ({
+        url: `${baseUrl}/blog/${post.slug}`,
+        lastModified: new Date(post.updated_at || post.created_at),
+        changeFrequency: 'weekly' as const,
+        priority: 0.6,
+      }));
+    }
+
+    // Fetch published case studies
+    const { data: caseStudies } = await supabase
+      .from('case_studies')
+      .select('slug, updated_at, created_at')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false });
+
+    if (caseStudies) {
+      caseStudyEntries = caseStudies.map(cs => ({
+        url: `${baseUrl}/case-studies/${cs.slug}`,
+        lastModified: new Date(cs.updated_at || cs.created_at),
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      }));
+    }
+
+    // Fetch published whitepapers
+    const { data: whitepapers } = await supabase
+      .from('whitepapers')
+      .select('slug, updated_at, created_at')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false });
+
+    if (whitepapers) {
+      whitepaperEntries = whitepapers.map(wp => ({
+        url: `${baseUrl}/whitepapers/${wp.slug}`,
+        lastModified: new Date(wp.updated_at || wp.created_at),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      }));
+    }
+
+    // Fetch published jobs
+    const { data: jobs } = await supabase
+      .from('jobs')
+      .select('slug, updated_at, created_at')
+      .eq('status', 'published')
+      .order('created_at', { ascending: false });
+
+    if (jobs) {
+      jobEntries = jobs.map(job => ({
+        url: `${baseUrl}/careers/${job.slug}`,
+        lastModified: new Date(job.updated_at || job.created_at),
+        changeFrequency: 'weekly' as const,
+        priority: 0.6,
+      }));
+    }
+
+    // Fetch published news
+    const { data: news } = await supabase
+      .from('news')
+      .select('id, updated_at, published_at, created_at')
+      .eq('status', 'published')
+      .order('published_at', { ascending: false });
+
+    // Note: News items link externally, so we don't add individual pages
+    // But if you have individual news pages, uncomment below:
+    // if (news) {
+    //   newsEntries = news.map(item => ({
+    //     url: `${baseUrl}/news/${item.id}`,
+    //     lastModified: new Date(item.updated_at || item.published_at || item.created_at),
+    //     changeFrequency: 'monthly' as const,
+    //     priority: 0.5,
+    //   }));
+    // }
+  }
+
+  // =====================
+  // COMBINE ALL ENTRIES
+  // =====================
+
+  return [
+    ...staticPages,
+    ...servicePages,
+    ...platformPages,
+    ...industryPages,
+    ...landingPages,
+    ...blogEntries,
+    ...caseStudyEntries,
+    ...whitepaperEntries,
+    ...jobEntries,
+    ...newsEntries,
+  ];
 }
