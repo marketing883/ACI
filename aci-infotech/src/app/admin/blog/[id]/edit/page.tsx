@@ -105,6 +105,7 @@ export default function EditBlogPage() {
   const [metaDescription, setMetaDescription] = useState('');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
   const [articleType, setArticleType] = useState('how-to');
+  const [publishedAt, setPublishedAt] = useState('');
 
   // Author info
   const [authorInfo, setAuthorInfo] = useState<AuthorInfo>(DEFAULT_AUTHORS[0]);
@@ -160,6 +161,11 @@ export default function EditBlogPage() {
           setArticleType(data.article_type || 'how-to');
           setFaqs(data.faqs || []);
           setContentFormat(data.content_format || 'markdown');
+          // Load published_at date (convert to local datetime format for input)
+          if (data.published_at) {
+            const date = new Date(data.published_at);
+            setPublishedAt(date.toISOString().slice(0, 16)); // Format: YYYY-MM-DDTHH:mm
+          }
 
           // Load author info
           if (data.author_name || data.author_title || data.author_bio) {
@@ -608,7 +614,10 @@ export default function EditBlogPage() {
         faqs: faqs.filter(f => f.question && f.answer),
         is_published: isPublishing,
         is_featured: false,
-        published_at: isPublishing ? new Date().toISOString() : null,
+        // Use custom date if set, otherwise current time when publishing
+        published_at: isPublishing
+          ? (publishedAt ? new Date(publishedAt).toISOString() : new Date().toISOString())
+          : null,
         read_time_minutes: Math.ceil(content.split(/\s+/).length / 200),
       };
 
@@ -1076,6 +1085,24 @@ export default function EditBlogPage() {
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
                   {ARTICLE_TYPES.find(t => t.id === articleType)?.description}
+                </p>
+              </div>
+
+              {/* Publish Date */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Publish Date & Time
+                </label>
+                <input
+                  type="datetime-local"
+                  value={publishedAt}
+                  onChange={(e) => setPublishedAt(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  {publishedAt
+                    ? `Will be published as: ${new Date(publishedAt).toLocaleString()}`
+                    : 'Leave empty to use current time when publishing'}
                 </p>
               </div>
             </div>

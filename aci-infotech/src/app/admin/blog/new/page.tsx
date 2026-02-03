@@ -208,6 +208,7 @@ export default function NewBlogPostPage() {
   const [isFeatured, setIsFeatured] = useState(false);
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
+  const [publishedAt, setPublishedAt] = useState('');
 
   // Author info
   const [authorInfo, setAuthorInfo] = useState<AuthorInfo>(DEFAULT_AUTHORS[0]);
@@ -727,7 +728,10 @@ export default function NewBlogPostPage() {
         featured_image_url: featuredImage || null,
         is_published: publish,
         is_featured: isFeatured,
-        published_at: publish ? new Date().toISOString() : null,
+        // Use custom date if set, otherwise current time when publishing
+        published_at: publish
+          ? (publishedAt ? new Date(publishedAt).toISOString() : new Date().toISOString())
+          : null,
         read_time_minutes: Math.ceil(content.split(/\s+/).length / 200),
         seo_title: metaTitle || title,
         seo_description: metaDescription || excerpt,
@@ -1627,7 +1631,7 @@ export default function NewBlogPostPage() {
               </div>
 
               {/* Featured */}
-              <label className="flex items-center gap-3 cursor-pointer">
+              <label className="flex items-center gap-3 cursor-pointer mb-4">
                 <input
                   type="checkbox"
                   checked={isFeatured}
@@ -1636,6 +1640,24 @@ export default function NewBlogPostPage() {
                 />
                 <span className="text-sm text-gray-700">Featured post</span>
               </label>
+
+              {/* Publish Date */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Publish Date & Time
+                </label>
+                <input
+                  type="datetime-local"
+                  value={publishedAt}
+                  onChange={(e) => setPublishedAt(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[var(--aci-primary)]"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  {publishedAt
+                    ? `Will be published as: ${new Date(publishedAt).toLocaleString()}`
+                    : 'Leave empty to use current time when publishing'}
+                </p>
+              </div>
             </div>
 
             {/* Author Info */}
