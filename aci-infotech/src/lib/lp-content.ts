@@ -2837,6 +2837,2612 @@ export const LP_CONTENT: Record<string, LPContent> = {
       },
     },
   },
+
+  // ==========================================
+  // KEYWORD-FOCUSED LPs: DATA ENGINEERING CLUSTER
+  // ==========================================
+  'snowflake-consulting': {
+    slug: 'snowflake-consulting',
+    serviceCluster: 'data-engineering',
+    keyword: 'snowflake consulting services',
+
+    metaTitle: 'Snowflake Consulting Services | Certified Partners | ACI Infotech',
+    metaDescription: 'Expert Snowflake consulting services from certified partners. Data warehouse implementation, migration, and optimization.',
+
+    headline: 'Maximize Your Snowflake Investment',
+    subheadline: 'Certified Snowflake partners delivering architecture, implementation, and optimization services.',
+    ctoText: 'Get Your Snowflake Assessment',
+    ctoSecondaryText: 'See Your Optimization Potential',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Snowflake Performance Issues',
+        description: 'Queries running slower than expected, warehouses consuming too many credits.',
+        icon: 'clock',
+      },
+      {
+        title: 'Cost Overruns',
+        description: 'Snowflake costs higher than budgeted with no visibility into what\'s driving spend.',
+        icon: 'dollar-sign',
+      },
+      {
+        title: 'Migration Complexity',
+        description: 'Legacy data warehouse migration to Snowflake stalled or delivering poor results.',
+        icon: 'database',
+      },
+      {
+        title: 'Underutilized Features',
+        description: 'Not leveraging Snowflake capabilities like data sharing, streams, or tasks.',
+        icon: 'layers',
+      },
+    ],
+
+    solutionHeadline: 'Snowflake Expertise, End-to-End',
+    solutionDescription: 'We help enterprises get maximum value from Snowflake with certified expertise across the entire platform.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Deep-dive analysis of your current Snowflake setup or migration requirements.' },
+      { step: '02', title: 'Architect', description: 'Design optimal data architecture leveraging Snowflake best practices.' },
+      { step: '03', title: 'Implement', description: 'Build and migrate with proven methodologies and automation.' },
+      { step: '04', title: 'Optimize', description: 'Continuous cost and performance optimization using FinOps principles.' },
+    ],
+
+    stats: [
+      { value: '100+', label: 'Snowflake Projects' },
+      { value: '45%', label: 'Average Cost Reduction' },
+      { value: '10x', label: 'Query Performance Gains' },
+      { value: 'Elite', label: 'Snowflake Partner Tier' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Cost Optimization',
+        description: 'Right-sized warehouses and queries that minimize credit consumption.',
+        icon: 'dollar-sign',
+      },
+      {
+        title: 'Performance Tuning',
+        description: 'Sub-second queries through proper clustering, caching, and design.',
+        icon: 'zap',
+      },
+      {
+        title: 'Modern Architecture',
+        description: 'Data mesh, data sharing, and lakehouse patterns on Snowflake.',
+        icon: 'layers',
+      },
+      {
+        title: 'Certified Experts',
+        description: 'SnowPro certified architects and engineers on your team.',
+        icon: 'award',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '60% Cost Reduction',
+        description: 'Optimized a Fortune 500 company\'s Snowflake deployment, reducing annual spend by $1.2M while improving performance.',
+        industry: 'retail',
+      },
+      {
+        headline: 'Teradata to Snowflake in 4 Months',
+        description: 'Migrated 15 years of data warehouse history from Teradata to Snowflake with zero business disruption.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Are you a certified Snowflake partner?',
+        answer: 'Yes, we\'re an Elite Snowflake partner with SnowPro certified architects and engineers across data engineering, administration, and advanced certifications.',
+      },
+      {
+        question: 'Can you help optimize our existing Snowflake?',
+        answer: 'Absolutely. We conduct thorough assessments of query patterns, warehouse configuration, and data architecture to identify optimization opportunities.',
+      },
+      {
+        question: 'Do you support migrations from other platforms?',
+        answer: 'Yes, we have proven migration methodologies for Teradata, Oracle, SQL Server, Redshift, BigQuery, and other data warehouses.',
+      },
+      {
+        question: 'How do you approach Snowflake cost management?',
+        answer: 'We implement FinOps practices including resource monitoring, auto-suspend policies, query optimization, and governance controls.',
+      },
+    ],
+
+    certifications: ['Snowflake Elite Partner', 'SnowPro Certified', 'AWS Partner', 'Azure Partner'],
+  },
+
+  'databricks-services': {
+    slug: 'databricks-services',
+    serviceCluster: 'data-engineering',
+    keyword: 'databricks consulting services',
+
+    metaTitle: 'Databricks Consulting Services | Lakehouse Implementation | ACI Infotech',
+    metaDescription: 'Expert Databricks consulting and lakehouse implementation services. Delta Lake, MLflow, and Spark optimization from certified partners.',
+
+    headline: 'Build Your Data Lakehouse with Databricks',
+    subheadline: 'Certified Databricks partners delivering lakehouse architecture, implementation, and ML at scale.',
+    ctoText: 'Get Your Lakehouse Readiness Assessment',
+    ctoSecondaryText: 'See the Databricks Difference',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Data Lake Chaos',
+        description: 'Data swamp instead of data lake—no governance, quality, or discoverability.',
+        icon: 'alert-triangle',
+      },
+      {
+        title: 'Spark Performance',
+        description: 'Spark jobs running too slow or consuming too many resources.',
+        icon: 'clock',
+      },
+      {
+        title: 'ML in Production',
+        description: 'Data science models stuck in notebooks, never making it to production.',
+        icon: 'cpu',
+      },
+      {
+        title: 'Separate Analytics & ML',
+        description: 'BI and data science teams working on different platforms with duplicated data.',
+        icon: 'git-branch',
+      },
+    ],
+
+    solutionHeadline: 'Unified Analytics with Databricks',
+    solutionDescription: 'We implement the Databricks Lakehouse Platform to unify data engineering, analytics, and ML.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Evaluate your data landscape and lakehouse readiness.' },
+      { step: '02', title: 'Design', description: 'Architect a medallion architecture with Delta Lake best practices.' },
+      { step: '03', title: 'Build', description: 'Implement data pipelines, Unity Catalog, and ML workflows.' },
+      { step: '04', title: 'Scale', description: 'Optimize clusters, implement MLOps, and enable self-service.' },
+    ],
+
+    stats: [
+      { value: '75+', label: 'Databricks Implementations' },
+      { value: '5x', label: 'Faster Data Processing' },
+      { value: '50%', label: 'Infrastructure Cost Savings' },
+      { value: 'Premier', label: 'Databricks Partner' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Unified Platform',
+        description: 'One platform for data engineering, BI, and ML workloads.',
+        icon: 'layers',
+      },
+      {
+        title: 'Delta Lake Excellence',
+        description: 'ACID transactions, time travel, and quality enforcement.',
+        icon: 'database',
+      },
+      {
+        title: 'MLOps Foundation',
+        description: 'MLflow pipelines for reproducible, production ML.',
+        icon: 'cpu',
+      },
+      {
+        title: 'Cost Efficiency',
+        description: 'Optimized clusters and autoscaling for minimal spend.',
+        icon: 'dollar-sign',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'Data Lake to Lakehouse',
+        description: 'Transformed a chaotic data lake into a governed lakehouse, reducing data preparation time by 70%.',
+        industry: 'healthcare',
+      },
+      {
+        headline: 'ML at Scale',
+        description: 'Deployed 50+ ML models to production using Databricks and MLflow for a retail personalization platform.',
+        industry: 'retail',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What\'s the difference between a data lake and lakehouse?',
+        answer: 'A lakehouse combines data lake flexibility with warehouse reliability using Delta Lake for ACID transactions, schema enforcement, and governance.',
+      },
+      {
+        question: 'Can you migrate our existing Spark workloads?',
+        answer: 'Yes, we migrate Spark workloads from EMR, Dataproc, HDInsight, and on-premise Hadoop clusters to Databricks.',
+      },
+      {
+        question: 'Do you implement Unity Catalog?',
+        answer: 'Absolutely. Unity Catalog is essential for governance—we implement it for unified access control, lineage, and data discovery.',
+      },
+      {
+        question: 'How do you handle MLOps on Databricks?',
+        answer: 'We implement MLflow for experiment tracking, model registry, and deployment, integrated with your CI/CD pipelines.',
+      },
+    ],
+
+    certifications: ['Databricks Premier Partner', 'Spark Certified', 'AWS Partner', 'Azure Partner'],
+  },
+
+  'data-pipeline-development': {
+    slug: 'data-pipeline-development',
+    serviceCluster: 'data-engineering',
+    keyword: 'data pipeline development services',
+
+    metaTitle: 'Data Pipeline Development Services | ETL & Streaming | ACI Infotech',
+    metaDescription: 'Expert data pipeline development services. Batch and streaming ETL pipelines that scale with enterprise reliability.',
+
+    headline: 'Build Data Pipelines That Never Fail',
+    subheadline: 'Reliable, scalable data pipelines that deliver the right data to the right place at the right time.',
+    ctoText: 'Get Your Pipeline Architecture Review',
+    ctoSecondaryText: 'See Our Pipeline Patterns',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Pipeline Failures',
+        description: 'ETL jobs failing regularly, requiring constant manual intervention.',
+        icon: 'alert-triangle',
+      },
+      {
+        title: 'Data Freshness',
+        description: 'Data arriving too late for business decisions—hours or days stale.',
+        icon: 'clock',
+      },
+      {
+        title: 'Scaling Issues',
+        description: 'Pipelines that worked at small scale breaking as data volumes grow.',
+        icon: 'trending-up',
+      },
+      {
+        title: 'No Observability',
+        description: 'Pipeline failures discovered by stakeholders, not monitoring.',
+        icon: 'eye-off',
+      },
+    ],
+
+    solutionHeadline: 'Production-Grade Data Pipelines',
+    solutionDescription: 'We build battle-tested data pipelines using modern orchestration, transformation, and monitoring tools.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Review existing pipelines and define requirements for reliability and latency.' },
+      { step: '02', title: 'Design', description: 'Architect pipelines with appropriate patterns—batch, micro-batch, or streaming.' },
+      { step: '03', title: 'Build', description: 'Implement with dbt, Airflow, Spark, or Kafka depending on requirements.' },
+      { step: '04', title: 'Monitor', description: 'Deploy observability, alerting, and self-healing capabilities.' },
+    ],
+
+    stats: [
+      { value: '300+', label: 'Pipelines Built' },
+      { value: '99.9%', label: 'Pipeline Reliability' },
+      { value: '10x', label: 'Throughput Improvement' },
+      { value: '<5 min', label: 'Typical Latency' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Bulletproof Reliability',
+        description: 'Self-healing pipelines with automatic retries and failure handling.',
+        icon: 'shield',
+      },
+      {
+        title: 'Low Latency',
+        description: 'Near real-time data delivery for time-sensitive use cases.',
+        icon: 'zap',
+      },
+      {
+        title: 'Complete Observability',
+        description: 'Know exactly what\'s happening with lineage, metrics, and alerts.',
+        icon: 'eye',
+      },
+      {
+        title: 'Cost Efficient',
+        description: 'Right-sized infrastructure that scales with your actual needs.',
+        icon: 'dollar-sign',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '99.99% Uptime',
+        description: 'Rebuilt a critical financial data pipeline achieving 99.99% uptime, up from 95% with the legacy system.',
+        industry: 'finance',
+      },
+      {
+        headline: 'Real-Time Inventory',
+        description: 'Implemented streaming pipelines processing 1M+ events/minute for real-time inventory visibility.',
+        industry: 'retail',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What tools do you use for data pipelines?',
+        answer: 'We use the right tool for each job—Airflow, Prefect, or Dagster for orchestration; dbt for transformation; Spark, Flink, or Kafka for processing.',
+      },
+      {
+        question: 'Can you fix our existing failing pipelines?',
+        answer: 'Yes, we regularly rescue failing pipelines—identifying root causes and implementing fixes for reliability and performance.',
+      },
+      {
+        question: 'What\'s the difference between batch and streaming?',
+        answer: 'Batch processes data in scheduled intervals (hourly, daily). Streaming processes events continuously. We help you choose the right approach.',
+      },
+      {
+        question: 'How do you ensure data quality in pipelines?',
+        answer: 'We implement validation at ingestion, transformation testing, and anomaly detection to catch quality issues before they propagate.',
+      },
+    ],
+
+    certifications: ['dbt Partner', 'Airflow Certified', 'Kafka Certified', 'Spark Certified'],
+  },
+
+  'etl-services': {
+    slug: 'etl-services',
+    serviceCluster: 'data-engineering',
+    keyword: 'etl services',
+
+    metaTitle: 'ETL Services | Data Extraction, Transformation & Loading | ACI Infotech',
+    metaDescription: 'Enterprise ETL services for data integration and transformation. Modern ELT approaches with cloud-native tools.',
+
+    headline: 'ETL Services That Scale With Your Business',
+    subheadline: 'Modern extraction, transformation, and loading solutions that turn raw data into business insights.',
+    ctoText: 'Get Your ETL Modernization Roadmap',
+    ctoSecondaryText: 'See Your Integration Options',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Legacy ETL Tools',
+        description: 'Expensive, slow ETL tools that can\'t keep up with modern requirements.',
+        icon: 'server',
+      },
+      {
+        title: 'Manual Data Wrangling',
+        description: 'Teams spending hours manually extracting and preparing data.',
+        icon: 'edit-3',
+      },
+      {
+        title: 'Data Silos',
+        description: 'Critical business data trapped in source systems, not integrated.',
+        icon: 'database',
+      },
+      {
+        title: 'Transformation Logic',
+        description: 'Business logic scattered across scripts with no documentation or testing.',
+        icon: 'code',
+      },
+    ],
+
+    solutionHeadline: 'Modern ETL/ELT Implementation',
+    solutionDescription: 'We implement modern ELT approaches using cloud-native tools and best practices.',
+    processSteps: [
+      { step: '01', title: 'Discover', description: 'Map your data sources, volumes, and transformation requirements.' },
+      { step: '02', title: 'Design', description: 'Choose the right ETL/ELT approach and tool stack.' },
+      { step: '03', title: 'Build', description: 'Implement extraction, transformation, and orchestration.' },
+      { step: '04', title: 'Operationalize', description: 'Deploy with monitoring, documentation, and runbooks.' },
+    ],
+
+    stats: [
+      { value: '500+', label: 'ETL Projects Delivered' },
+      { value: '80%', label: 'Reduction in Manual Work' },
+      { value: '10x', label: 'Faster Data Availability' },
+      { value: '99.9%', label: 'Job Success Rate' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Automated Extraction',
+        description: 'Connectors to 100+ data sources with automated ingestion.',
+        icon: 'download',
+      },
+      {
+        title: 'Tested Transformations',
+        description: 'Version-controlled, tested transformation logic using dbt.',
+        icon: 'code',
+      },
+      {
+        title: 'Incremental Processing',
+        description: 'Process only changed data for efficiency and speed.',
+        icon: 'zap',
+      },
+      {
+        title: 'Data Quality',
+        description: 'Built-in validation ensuring data quality at every step.',
+        icon: 'check-circle',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'Informatica to dbt Migration',
+        description: 'Migrated 200+ legacy Informatica mappings to dbt, reducing licensing costs by $500K annually.',
+        industry: 'finance',
+      },
+      {
+        headline: '50 Sources Unified',
+        description: 'Built an ELT platform integrating 50 data sources for a unified analytics foundation.',
+        industry: 'healthcare',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What\'s the difference between ETL and ELT?',
+        answer: 'ETL transforms data before loading; ELT loads raw data then transforms in the warehouse. ELT is often preferred with modern cloud warehouses.',
+      },
+      {
+        question: 'Can you replace our legacy ETL tool?',
+        answer: 'Yes, we frequently migrate from Informatica, SSIS, DataStage, and Talend to modern tools like dbt, Fivetran, and Airbyte.',
+      },
+      {
+        question: 'How do you handle complex transformations?',
+        answer: 'We use dbt for SQL-based transformations with testing, documentation, and lineage. For complex logic, we use Spark or custom Python.',
+      },
+      {
+        question: 'What about real-time ETL?',
+        answer: 'For real-time requirements, we implement streaming ETL using Kafka, Flink, or Spark Streaming depending on latency needs.',
+      },
+    ],
+
+    certifications: ['dbt Partner', 'Fivetran Partner', 'Airbyte Partner', 'Informatica Certified'],
+  },
+
+  // ==========================================
+  // KEYWORD-FOCUSED LPs: POWER BI CLUSTER
+  // ==========================================
+  'power-bi-dashboard-development': {
+    slug: 'power-bi-dashboard-development',
+    serviceCluster: 'data-analytics',
+    keyword: 'power bi dashboard development',
+
+    metaTitle: 'Power BI Dashboard Development Services | Custom Dashboards | ACI Infotech',
+    metaDescription: 'Custom Power BI dashboard development services. Transform your data into actionable visual insights with expert-designed dashboards.',
+
+    headline: 'Custom Power BI Dashboards That Drive Decisions',
+    subheadline: 'Expert-designed dashboards that turn complex data into clear, actionable insights for every stakeholder.',
+    ctoText: 'Get Your Dashboard Blueprint',
+    ctoSecondaryText: 'See Dashboard Examples',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Dashboard Clutter',
+        description: 'Too many visuals that confuse rather than clarify decisions.',
+        icon: 'layout',
+      },
+      {
+        title: 'Slow Reports',
+        description: 'Dashboards taking forever to load, frustrating users.',
+        icon: 'clock',
+      },
+      {
+        title: 'Poor User Adoption',
+        description: 'Dashboards built but nobody uses them.',
+        icon: 'users',
+      },
+      {
+        title: 'Data Model Issues',
+        description: 'Complex DAX not working, relationships broken, wrong numbers.',
+        icon: 'database',
+      },
+    ],
+
+    solutionHeadline: 'Dashboards Users Actually Use',
+    solutionDescription: 'We design and develop Power BI dashboards following UX best practices and performance optimization.',
+    processSteps: [
+      { step: '01', title: 'Discover', description: 'Understand your business questions and user needs.' },
+      { step: '02', title: 'Design', description: 'Create wireframes and visual designs for approval.' },
+      { step: '03', title: 'Develop', description: 'Build optimized data models and compelling visualizations.' },
+      { step: '04', title: 'Deploy', description: 'Publish, train users, and iterate based on feedback.' },
+    ],
+
+    stats: [
+      { value: '500+', label: 'Dashboards Delivered' },
+      { value: '<3 sec', label: 'Average Load Time' },
+      { value: '90%', label: 'User Adoption Rate' },
+      { value: '50%', label: 'Faster Decision Making' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Clear Insights',
+        description: 'Dashboards that answer questions at a glance.',
+        icon: 'eye',
+      },
+      {
+        title: 'Fast Performance',
+        description: 'Optimized data models for sub-second responses.',
+        icon: 'zap',
+      },
+      {
+        title: 'Mobile Ready',
+        description: 'Responsive designs that work on any device.',
+        icon: 'smartphone',
+      },
+      {
+        title: 'Easy Maintenance',
+        description: 'Well-documented, sustainable dashboard solutions.',
+        icon: 'settings',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'Executive Dashboard Suite',
+        description: 'Built a C-suite dashboard suite that reduced monthly reporting effort from 3 days to 3 hours.',
+        industry: 'manufacturing',
+      },
+      {
+        headline: '95% Adoption',
+        description: 'Redesigned failing dashboards achieving 95% user adoption within 60 days.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Can you redesign our existing dashboards?',
+        answer: 'Yes, we frequently rescue underperforming dashboards—improving design, performance, and adoption.',
+      },
+      {
+        question: 'How do you ensure dashboard performance?',
+        answer: 'We follow Power BI best practices: star schema modeling, proper relationships, optimized DAX, and incremental refresh.',
+      },
+      {
+        question: 'Do you provide dashboard templates?',
+        answer: 'We can create reusable templates for consistent reporting across your organization.',
+      },
+      {
+        question: 'Can dashboards work on mobile?',
+        answer: 'Absolutely. We design responsive layouts and can create dedicated mobile views for key dashboards.',
+      },
+    ],
+
+    certifications: ['Microsoft Gold Partner', 'Power BI Certified', 'DAX Experts'],
+  },
+
+  'power-bi-implementation': {
+    slug: 'power-bi-implementation',
+    serviceCluster: 'data-analytics',
+    keyword: 'power bi implementation partner',
+
+    metaTitle: 'Power BI Implementation Services | Enterprise Deployment | ACI Infotech',
+    metaDescription: 'Enterprise Power BI implementation services. From strategy to deployment with governance, security, and user adoption.',
+
+    headline: 'Enterprise Power BI Implementation Done Right',
+    subheadline: 'Strategic Power BI deployment with governance, security, and adoption that delivers organization-wide insights.',
+    ctoText: 'Get Your Implementation Roadmap',
+    ctoSecondaryText: 'See Our Methodology',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Scattered BI Chaos',
+        description: 'Different teams using different tools with no standards.',
+        icon: 'git-branch',
+      },
+      {
+        title: 'Governance Gaps',
+        description: 'No control over data access, sharing, or report quality.',
+        icon: 'shield-off',
+      },
+      {
+        title: 'Failed Adoption',
+        description: 'Previous BI initiatives that didn\'t stick.',
+        icon: 'trending-down',
+      },
+      {
+        title: 'Integration Challenges',
+        description: 'Power BI not connecting well with your data sources.',
+        icon: 'unlink',
+      },
+    ],
+
+    solutionHeadline: 'Strategic Power BI Deployment',
+    solutionDescription: 'We implement Power BI as an enterprise platform with proper governance, security, and change management.',
+    processSteps: [
+      { step: '01', title: 'Strategy', description: 'Define vision, use cases, and success metrics.' },
+      { step: '02', title: 'Foundation', description: 'Set up tenant, workspaces, gateways, and security.' },
+      { step: '03', title: 'Build', description: 'Develop data models, reports, and governance framework.' },
+      { step: '04', title: 'Enable', description: 'Train users, establish COE, and drive adoption.' },
+    ],
+
+    stats: [
+      { value: '50+', label: 'Enterprise Implementations' },
+      { value: '85%', label: 'Average Adoption Rate' },
+      { value: '3 Months', label: 'Typical Time to Value' },
+      { value: '40%', label: 'Reduction in Reporting Effort' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Enterprise Governance',
+        description: 'Proper controls for security, quality, and compliance.',
+        icon: 'shield',
+      },
+      {
+        title: 'Scalable Architecture',
+        description: 'Foundation that grows with your organization.',
+        icon: 'layers',
+      },
+      {
+        title: 'User Adoption',
+        description: 'Training and change management for lasting success.',
+        icon: 'users',
+      },
+      {
+        title: 'Center of Excellence',
+        description: 'Internal capability to sustain and expand BI.',
+        icon: 'star',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'Global BI Standardization',
+        description: 'Implemented Power BI as the standard BI platform for a 10,000-employee company across 20 countries.',
+        industry: 'manufacturing',
+      },
+      {
+        headline: 'Self-Service Success',
+        description: 'Established a BI COE that trained 500+ business users to create their own reports.',
+        industry: 'healthcare',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What\'s included in enterprise implementation?',
+        answer: 'Strategy, architecture, security setup, governance framework, initial reports, training, and COE establishment.',
+      },
+      {
+        question: 'Do we need Power BI Premium?',
+        answer: 'We assess your needs and recommend the right licensing—Pro, Premium Per User, or Premium capacity.',
+      },
+      {
+        question: 'How do you handle change management?',
+        answer: 'We include comprehensive training, champions programs, and communication plans to drive adoption.',
+      },
+      {
+        question: 'Can you migrate from other BI tools?',
+        answer: 'Yes, we migrate from Tableau, Qlik, Cognos, and other platforms with report conversion and user transition.',
+      },
+    ],
+
+    certifications: ['Microsoft Gold Partner', 'Power BI Certified', 'Azure Partner'],
+  },
+
+  // ==========================================
+  // KEYWORD-FOCUSED LPs: CLOUD CLUSTER
+  // ==========================================
+  'azure-migration-services': {
+    slug: 'azure-migration-services',
+    serviceCluster: 'cloud-modernization',
+    keyword: 'azure migration services',
+
+    metaTitle: 'Azure Migration Services | Microsoft Cloud Migration | ACI Infotech',
+    metaDescription: 'Expert Azure migration services from a Microsoft Gold Partner. Seamless cloud migration with minimal disruption.',
+
+    headline: 'Migrate to Azure with Microsoft Experts',
+    subheadline: 'Microsoft Gold Partner delivering seamless Azure migrations with proven methodologies and deep platform expertise.',
+    ctoText: 'Get Your Azure Migration Assessment',
+    ctoSecondaryText: 'See Your Azure TCO Savings',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Azure Complexity',
+        description: 'Overwhelmed by Azure services and not sure which to use.',
+        icon: 'help-circle',
+      },
+      {
+        title: 'Migration Risk',
+        description: 'Worried about downtime and business disruption during migration.',
+        icon: 'alert-triangle',
+      },
+      {
+        title: 'Cost Uncertainty',
+        description: 'Unsure what Azure will actually cost once migrated.',
+        icon: 'dollar-sign',
+      },
+      {
+        title: 'Microsoft 365 Integration',
+        description: 'Want to leverage existing Microsoft investments.',
+        icon: 'link',
+      },
+    ],
+
+    solutionHeadline: 'Proven Azure Migration Methodology',
+    solutionDescription: 'We use Microsoft\'s Cloud Adoption Framework and our proven accelerators for successful Azure migrations.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Discover workloads and create Azure landing zone design.' },
+      { step: '02', title: 'Plan', description: 'Build migration waves and detailed runbooks.' },
+      { step: '03', title: 'Migrate', description: 'Execute migrations using Azure Migrate and proven tools.' },
+      { step: '04', title: 'Optimize', description: 'Implement Azure governance and cost optimization.' },
+    ],
+
+    stats: [
+      { value: '200+', label: 'Azure Migrations' },
+      { value: '99.9%', label: 'Migration Success Rate' },
+      { value: '40%', label: 'Average Cost Savings' },
+      { value: 'Gold', label: 'Microsoft Partner Status' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Microsoft Expertise',
+        description: 'Gold Partner with deep Azure certifications and experience.',
+        icon: 'award',
+      },
+      {
+        title: 'Seamless Integration',
+        description: 'Leverage existing Microsoft 365 and Dynamics investments.',
+        icon: 'link',
+      },
+      {
+        title: 'Azure Well-Architected',
+        description: 'Designs following Microsoft\'s best practice framework.',
+        icon: 'check-circle',
+      },
+      {
+        title: 'Cost Control',
+        description: 'Azure Cost Management setup from day one.',
+        icon: 'dollar-sign',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'VMware to Azure',
+        description: 'Migrated 500 VMs from on-premise VMware to Azure with zero unplanned downtime.',
+        industry: 'healthcare',
+      },
+      {
+        headline: '45% TCO Reduction',
+        description: 'Achieved 45% total cost reduction for a financial services firm through Azure optimization.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Are you a certified Microsoft partner?',
+        answer: 'Yes, we\'re a Microsoft Gold Partner with specializations in Azure and multiple Azure Expert MSP certifications.',
+      },
+      {
+        question: 'Can you migrate our SQL Server databases?',
+        answer: 'Absolutely. We migrate to Azure SQL, Azure SQL Managed Instance, or SQL Server on Azure VMs depending on requirements.',
+      },
+      {
+        question: 'How do you handle hybrid scenarios?',
+        answer: 'We design hybrid architectures using Azure Arc, ExpressRoute, and VPN for seamless on-premise integration.',
+      },
+      {
+        question: 'What about Azure security?',
+        answer: 'We implement Azure Security Center, Defender, Sentinel, and proper RBAC as part of every migration.',
+      },
+    ],
+
+    certifications: ['Microsoft Gold Partner', 'Azure Expert MSP', 'Azure Solutions Architect', 'Azure Administrator'],
+  },
+
+  'aws-migration-partner': {
+    slug: 'aws-migration-partner',
+    serviceCluster: 'cloud-modernization',
+    keyword: 'aws migration partner',
+
+    metaTitle: 'AWS Migration Partner | Cloud Migration Services | ACI Infotech',
+    metaDescription: 'AWS Advanced Partner for cloud migration services. Proven methodologies for seamless AWS migrations.',
+
+    headline: 'Migrate to AWS with Certified Experts',
+    subheadline: 'AWS Advanced Partner delivering secure, efficient migrations using proven AWS methodologies and tools.',
+    ctoText: 'Get Your AWS Migration Assessment',
+    ctoSecondaryText: 'See Your AWS Cost Projection',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'AWS Service Selection',
+        description: 'Overwhelmed by 200+ AWS services, unsure which to use.',
+        icon: 'help-circle',
+      },
+      {
+        title: 'Migration Complexity',
+        description: 'Hundreds of servers and applications to migrate.',
+        icon: 'server',
+      },
+      {
+        title: 'Security Requirements',
+        description: 'Need to maintain compliance during and after migration.',
+        icon: 'shield',
+      },
+      {
+        title: 'Database Migration',
+        description: 'Critical databases that need zero-downtime migration.',
+        icon: 'database',
+      },
+    ],
+
+    solutionHeadline: 'AWS Migration Competency Partner',
+    solutionDescription: 'We use AWS\'s Migration Acceleration Program and our proven methodologies for successful migrations.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Discovery using AWS Migration Evaluator and application profiling.' },
+      { step: '02', title: 'Mobilize', description: 'Build landing zone, migration factory, and wave plans.' },
+      { step: '03', title: 'Migrate', description: 'Execute using AWS MGN, DMS, and automation.' },
+      { step: '04', title: 'Modernize', description: 'Optimize and modernize for cloud-native benefits.' },
+    ],
+
+    stats: [
+      { value: '300+', label: 'AWS Migrations' },
+      { value: '99.9%', label: 'Migration Success Rate' },
+      { value: '35%', label: 'Average Cost Savings' },
+      { value: 'Advanced', label: 'AWS Partner Tier' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'AWS Expertise',
+        description: 'Certified architects with deep AWS experience.',
+        icon: 'award',
+      },
+      {
+        title: 'Migration Factory',
+        description: 'Repeatable processes for efficient at-scale migration.',
+        icon: 'settings',
+      },
+      {
+        title: 'MAP Credits',
+        description: 'Access to AWS Migration Acceleration Program benefits.',
+        icon: 'dollar-sign',
+      },
+      {
+        title: 'Security First',
+        description: 'AWS Well-Architected security from day one.',
+        icon: 'shield',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '1000+ Server Migration',
+        description: 'Migrated 1000+ servers to AWS in 8 months for a global logistics company.',
+        industry: 'logistics',
+      },
+      {
+        headline: 'Oracle to Aurora',
+        description: 'Migrated mission-critical Oracle databases to Aurora with 99.99% uptime.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Are you an AWS Partner?',
+        answer: 'Yes, we\'re an AWS Advanced Consulting Partner with Migration Competency.',
+      },
+      {
+        question: 'Can you help with AWS MAP credits?',
+        answer: 'Absolutely. We help qualifying customers access AWS Migration Acceleration Program credits and funding.',
+      },
+      {
+        question: 'How do you migrate databases?',
+        answer: 'We use AWS DMS for homogeneous and heterogeneous database migrations with minimal downtime.',
+      },
+      {
+        question: 'What about mainframe migration?',
+        answer: 'We have experience migrating mainframe workloads to AWS using replatforming and refactoring approaches.',
+      },
+    ],
+
+    certifications: ['AWS Advanced Partner', 'AWS Migration Competency', 'AWS Solutions Architect', 'AWS DevOps'],
+  },
+
+  'cloud-cost-optimization': {
+    slug: 'cloud-cost-optimization',
+    serviceCluster: 'cloud-modernization',
+    keyword: 'cloud cost optimization services',
+
+    metaTitle: 'Cloud Cost Optimization Services | FinOps | ACI Infotech',
+    metaDescription: 'Expert cloud cost optimization services. Reduce AWS, Azure, and GCP spend by 30-50% with FinOps practices.',
+
+    headline: 'Cut Your Cloud Costs by 30-50%',
+    subheadline: 'FinOps-driven cloud cost optimization that reduces spend without sacrificing performance.',
+    ctoText: 'Get Your Free Cloud Cost Assessment',
+    ctoSecondaryText: 'See Your Savings Potential',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Cloud Bill Shock',
+        description: 'Monthly cloud bills higher than expected with no visibility into why.',
+        icon: 'dollar-sign',
+      },
+      {
+        title: 'Zombie Resources',
+        description: 'Paying for unused or underutilized cloud resources.',
+        icon: 'ghost',
+      },
+      {
+        title: 'No Cost Accountability',
+        description: 'Teams spinning up resources with no ownership or chargebacks.',
+        icon: 'users',
+      },
+      {
+        title: 'Reserved Instance Waste',
+        description: 'Committed discounts not being fully utilized.',
+        icon: 'calendar',
+      },
+    ],
+
+    solutionHeadline: 'FinOps-Driven Cost Optimization',
+    solutionDescription: 'We implement FinOps practices and technical optimizations to permanently reduce cloud spend.',
+    processSteps: [
+      { step: '01', title: 'Analyze', description: 'Deep cost analysis identifying all optimization opportunities.' },
+      { step: '02', title: 'Optimize', description: 'Implement quick wins—rightsizing, scheduling, cleanup.' },
+      { step: '03', title: 'Govern', description: 'Establish FinOps practices, tagging, and accountability.' },
+      { step: '04', title: 'Automate', description: 'Deploy automated cost controls and continuous optimization.' },
+    ],
+
+    stats: [
+      { value: '40%', label: 'Average Cost Reduction' },
+      { value: '$50M+', label: 'Client Savings to Date' },
+      { value: '30 Days', label: 'Typical Time to Savings' },
+      { value: '100%', label: 'ROI Guarantee' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Immediate Savings',
+        description: 'Quick wins implemented within the first 30 days.',
+        icon: 'zap',
+      },
+      {
+        title: 'Full Visibility',
+        description: 'Dashboards showing spend by team, project, and service.',
+        icon: 'eye',
+      },
+      {
+        title: 'Sustainable Practices',
+        description: 'FinOps culture that maintains optimization over time.',
+        icon: 'refresh-cw',
+      },
+      {
+        title: 'Multi-Cloud Support',
+        description: 'Optimization across AWS, Azure, and GCP.',
+        icon: 'cloud',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '$2M Annual Savings',
+        description: 'Identified and implemented $2M in annual AWS savings for an e-commerce company in 60 days.',
+        industry: 'retail',
+      },
+      {
+        headline: '45% Azure Reduction',
+        description: 'Reduced Azure spend by 45% for a healthcare organization through rightsizing and reserved instances.',
+        industry: 'healthcare',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'How quickly can we see savings?',
+        answer: 'Most clients see 15-25% savings in the first 30 days from quick wins like rightsizing and unused resource cleanup.',
+      },
+      {
+        question: 'Do you offer a guarantee?',
+        answer: 'Yes, we guarantee our fees will be covered by savings identified. If we don\'t find savings, you don\'t pay.',
+      },
+      {
+        question: 'Will optimization affect performance?',
+        answer: 'No. We right-size resources, not undersize them. Performance is maintained or improved through better architecture.',
+      },
+      {
+        question: 'What tools do you use?',
+        answer: 'We use native cloud tools plus platforms like CloudHealth, Spot.io, and custom automation.',
+      },
+    ],
+
+    certifications: ['FinOps Certified', 'AWS Partner', 'Azure Partner', 'GCP Partner'],
+  },
+
+  // ==========================================
+  // KEYWORD-FOCUSED LPs: DYNAMICS 365 CLUSTER
+  // ==========================================
+  'dynamics-365-finance-implementation': {
+    slug: 'dynamics-365-finance-implementation',
+    serviceCluster: 'dynamics-365',
+    keyword: 'dynamics 365 finance implementation',
+
+    metaTitle: 'Dynamics 365 Finance Implementation | Microsoft Partner | ACI Infotech',
+    metaDescription: 'Expert Dynamics 365 Finance implementation services. Transform your financial operations with certified Microsoft partners.',
+
+    headline: 'Transform Financial Operations with D365 Finance',
+    subheadline: 'Streamline accounting, close faster, and gain real-time financial visibility with Dynamics 365 Finance.',
+    ctoText: 'Get Your D365 Finance Readiness Assessment',
+    ctoSecondaryText: 'See Implementation Timeline',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Slow Month-End Close',
+        description: 'Financial close taking too long with too much manual effort.',
+        icon: 'clock',
+      },
+      {
+        title: 'Disconnected Systems',
+        description: 'Finance systems not integrated with operations and sales.',
+        icon: 'unlink',
+      },
+      {
+        title: 'Limited Visibility',
+        description: 'No real-time view into cash flow, profitability, or budgets.',
+        icon: 'eye-off',
+      },
+      {
+        title: 'Compliance Burden',
+        description: 'Regulatory requirements creating manual work and audit risk.',
+        icon: 'file-text',
+      },
+    ],
+
+    solutionHeadline: 'End-to-End D365 Finance Expertise',
+    solutionDescription: 'We implement Dynamics 365 Finance to automate processes and provide real-time financial intelligence.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Analyze current processes and define future state requirements.' },
+      { step: '02', title: 'Design', description: 'Configure D365 Finance to match your chart of accounts and processes.' },
+      { step: '03', title: 'Build', description: 'Implement, integrate with source systems, and migrate data.' },
+      { step: '04', title: 'Enable', description: 'Train users, go live, and optimize post-implementation.' },
+    ],
+
+    stats: [
+      { value: '75+', label: 'D365 Finance Implementations' },
+      { value: '50%', label: 'Faster Month-End Close' },
+      { value: '99.9%', label: 'On-Time Go-Lives' },
+      { value: 'Real-Time', label: 'Financial Visibility' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Automated Close',
+        description: 'Streamlined close processes with automated journal entries.',
+        icon: 'zap',
+      },
+      {
+        title: 'Real-Time Reporting',
+        description: 'Financial insights available instantly, not days later.',
+        icon: 'bar-chart',
+      },
+      {
+        title: 'Global Capabilities',
+        description: 'Multi-currency, multi-entity, and localization support.',
+        icon: 'globe',
+      },
+      {
+        title: 'Compliance Built-In',
+        description: 'Audit trails, controls, and regulatory reporting.',
+        icon: 'shield',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '10-Day to 3-Day Close',
+        description: 'Reduced month-end close from 10 days to 3 days for a manufacturing company.',
+        industry: 'manufacturing',
+      },
+      {
+        headline: 'Global Consolidation',
+        description: 'Implemented D365 Finance across 15 countries with automated consolidation.',
+        industry: 'professional_services',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Can D365 Finance replace our current ERP?',
+        answer: 'Yes, D365 Finance can serve as your core financial system, integrating with other Dynamics modules or third-party systems.',
+      },
+      {
+        question: 'How long does implementation take?',
+        answer: 'A focused D365 Finance implementation typically takes 4-6 months depending on complexity and integrations.',
+      },
+      {
+        question: 'Do you support global deployments?',
+        answer: 'Absolutely. We implement D365 Finance for multinational organizations with complex entity structures.',
+      },
+      {
+        question: 'Can you migrate from our current system?',
+        answer: 'Yes, we migrate from SAP, Oracle, NetSuite, Sage, and legacy Microsoft Dynamics products.',
+      },
+    ],
+
+    certifications: ['Microsoft Gold Partner', 'D365 Finance Certified', 'Power Platform Partner'],
+  },
+
+  'dynamics-365-sales-consulting': {
+    slug: 'dynamics-365-sales-consulting',
+    serviceCluster: 'dynamics-365',
+    keyword: 'dynamics 365 sales consulting',
+
+    metaTitle: 'Dynamics 365 Sales Consulting | CRM Implementation | ACI Infotech',
+    metaDescription: 'Expert Dynamics 365 Sales consulting and implementation. Transform your sales process with Microsoft\'s leading CRM.',
+
+    headline: 'Accelerate Sales with Dynamics 365 Sales',
+    subheadline: 'Empower your sales team with AI-powered insights, automation, and seamless Microsoft integration.',
+    ctoText: 'Get Your D365 Sales Demo',
+    ctoSecondaryText: 'See CRM Comparison',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'No Pipeline Visibility',
+        description: 'Can\'t see real-time pipeline or forecast accurately.',
+        icon: 'eye-off',
+      },
+      {
+        title: 'Poor CRM Adoption',
+        description: 'Sales team not using CRM because it slows them down.',
+        icon: 'users',
+      },
+      {
+        title: 'Manual Processes',
+        description: 'Reps spending time on data entry instead of selling.',
+        icon: 'edit-3',
+      },
+      {
+        title: 'Disconnected Tools',
+        description: 'CRM not integrated with email, Teams, or other Microsoft tools.',
+        icon: 'unlink',
+      },
+    ],
+
+    solutionHeadline: 'CRM That Sales Teams Love',
+    solutionDescription: 'We implement D365 Sales with Copilot AI, embedded in the Microsoft tools your team already uses.',
+    processSteps: [
+      { step: '01', title: 'Discover', description: 'Map your sales process and define CRM requirements.' },
+      { step: '02', title: 'Design', description: 'Configure D365 Sales to match your methodology.' },
+      { step: '03', title: 'Implement', description: 'Build, integrate, migrate data, and customize.' },
+      { step: '04', title: 'Adopt', description: 'Train users and drive adoption with change management.' },
+    ],
+
+    stats: [
+      { value: '100+', label: 'D365 Sales Implementations' },
+      { value: '30%', label: 'Increase in Win Rates' },
+      { value: '90%', label: 'User Adoption Achieved' },
+      { value: '25%', label: 'Faster Sales Cycles' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'AI-Powered Selling',
+        description: 'Copilot suggests next actions and drafts communications.',
+        icon: 'cpu',
+      },
+      {
+        title: 'Microsoft Integration',
+        description: 'Seamless with Outlook, Teams, and Microsoft 365.',
+        icon: 'link',
+      },
+      {
+        title: 'Mobile Sales',
+        description: 'Full CRM functionality from any device.',
+        icon: 'smartphone',
+      },
+      {
+        title: 'Sales Insights',
+        description: 'AI-driven forecasting and relationship analytics.',
+        icon: 'trending-up',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '35% More Pipeline',
+        description: 'Increased qualified pipeline by 35% through better lead management and follow-up automation.',
+        industry: 'technology',
+      },
+      {
+        headline: 'Salesforce Migration',
+        description: 'Migrated 200 users from Salesforce to D365 Sales with improved adoption and lower costs.',
+        industry: 'manufacturing',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'How does D365 Sales compare to Salesforce?',
+        answer: 'D365 Sales offers comparable functionality with superior Microsoft 365 integration and often lower total cost of ownership.',
+      },
+      {
+        question: 'Can you migrate from Salesforce?',
+        answer: 'Yes, we have proven migration methodology including data, customizations, and user transition.',
+      },
+      {
+        question: 'What about Sales Copilot?',
+        answer: 'We implement Sales Copilot for AI-assisted email drafting, meeting summaries, and opportunity insights.',
+      },
+      {
+        question: 'How do you drive adoption?',
+        answer: 'We include change management, training, and adoption tracking as part of every implementation.',
+      },
+    ],
+
+    certifications: ['Microsoft Gold Partner', 'D365 Sales Certified', 'Power Platform Partner'],
+  },
+
+  // ==========================================
+  // KEYWORD-FOCUSED LPs: GEN AI CLUSTER
+  // ==========================================
+  'enterprise-chatbot-development': {
+    slug: 'enterprise-chatbot-development',
+    serviceCluster: 'gen-ai',
+    keyword: 'enterprise chatbot development',
+
+    metaTitle: 'Enterprise Chatbot Development | AI Chatbots | ACI Infotech',
+    metaDescription: 'Enterprise AI chatbot development services. Build intelligent chatbots that handle customer service, internal support, and more.',
+
+    headline: 'Build AI Chatbots That Actually Work',
+    subheadline: 'Enterprise-grade chatbots powered by the latest LLMs, integrated with your systems and data.',
+    ctoText: 'Get Your Chatbot Strategy Assessment',
+    ctoSecondaryText: 'See Chatbot Use Cases',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Failed Chatbot Projects',
+        description: 'Previous chatbots that frustrated users more than they helped.',
+        icon: 'x-circle',
+      },
+      {
+        title: 'Support Volume',
+        description: 'Customer service teams overwhelmed with repetitive inquiries.',
+        icon: 'message-circle',
+      },
+      {
+        title: 'Limited Knowledge',
+        description: 'Chatbots that can\'t answer questions about your products or services.',
+        icon: 'help-circle',
+      },
+      {
+        title: 'No Integration',
+        description: 'Chatbots that can\'t take action or access your systems.',
+        icon: 'unlink',
+      },
+    ],
+
+    solutionHeadline: 'Intelligent Chatbots, Enterprise Ready',
+    solutionDescription: 'We build LLM-powered chatbots with RAG, tool use, and enterprise integrations.',
+    processSteps: [
+      { step: '01', title: 'Scope', description: 'Define use cases, knowledge sources, and integration needs.' },
+      { step: '02', title: 'Build', description: 'Develop chatbot with LLM, RAG, and conversation design.' },
+      { step: '03', title: 'Integrate', description: 'Connect to your systems, knowledge bases, and channels.' },
+      { step: '04', title: 'Deploy', description: 'Launch with monitoring, feedback loops, and continuous improvement.' },
+    ],
+
+    stats: [
+      { value: '60%', label: 'Query Deflection Rate' },
+      { value: '90%', label: 'User Satisfaction' },
+      { value: '24/7', label: 'Availability' },
+      { value: '70%', label: 'Cost Reduction' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'LLM Intelligence',
+        description: 'Natural conversations powered by GPT-4, Claude, or custom models.',
+        icon: 'cpu',
+      },
+      {
+        title: 'Your Knowledge',
+        description: 'RAG integration with your documents, products, and FAQs.',
+        icon: 'database',
+      },
+      {
+        title: 'System Integration',
+        description: 'Chatbot can check status, make changes, and take actions.',
+        icon: 'link',
+      },
+      {
+        title: 'Multi-Channel',
+        description: 'Deploy on web, mobile, Teams, Slack, and more.',
+        icon: 'smartphone',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '65% Ticket Deflection',
+        description: 'Deployed an AI chatbot that handles 65% of support tickets without human intervention.',
+        industry: 'technology',
+      },
+      {
+        headline: 'Internal Knowledge Bot',
+        description: 'Built an employee knowledge assistant that reduced IT help desk calls by 40%.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'How is this different from basic chatbots?',
+        answer: 'We use LLMs with RAG for natural conversation and real answers, not just keyword matching and canned responses.',
+      },
+      {
+        question: 'Can the chatbot access our systems?',
+        answer: 'Yes, we integrate with CRM, ticketing, knowledge bases, and other systems for actions and data retrieval.',
+      },
+      {
+        question: 'Is our data secure?',
+        answer: 'Absolutely. We implement private deployments, data encryption, and access controls. Your data never trains public models.',
+      },
+      {
+        question: 'How do you handle hallucinations?',
+        answer: 'We implement RAG grounding, confidence thresholds, and guardrails to ensure accurate, sourced responses.',
+      },
+    ],
+
+    certifications: ['OpenAI Partner', 'Azure AI Partner', 'AWS ML Partner'],
+  },
+
+  'ai-copilot-development': {
+    slug: 'ai-copilot-development',
+    serviceCluster: 'gen-ai',
+    keyword: 'ai copilot development',
+
+    metaTitle: 'AI Copilot Development Services | Enterprise Copilots | ACI Infotech',
+    metaDescription: 'Custom AI copilot development services. Build intelligent assistants that augment your team\'s productivity.',
+
+    headline: 'Build AI Copilots for Your Workflows',
+    subheadline: 'Custom AI assistants that help your team work faster by automating research, drafting, and decision support.',
+    ctoText: 'Explore AI Copilot Opportunities',
+    ctoSecondaryText: 'See Copilot Examples',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Knowledge Worker Bottlenecks',
+        description: 'Skilled employees spending time on routine tasks instead of high-value work.',
+        icon: 'users',
+      },
+      {
+        title: 'Information Overload',
+        description: 'Too much data and documentation for humans to process effectively.',
+        icon: 'database',
+      },
+      {
+        title: 'Inconsistent Quality',
+        description: 'Output quality varying based on individual skill and experience.',
+        icon: 'alert-circle',
+      },
+      {
+        title: 'Slow Onboarding',
+        description: 'New employees taking months to become productive.',
+        icon: 'clock',
+      },
+    ],
+
+    solutionHeadline: 'AI That Augments Your Team',
+    solutionDescription: 'We build custom copilots that assist with specific workflows—not replace workers, but amplify them.',
+    processSteps: [
+      { step: '01', title: 'Discover', description: 'Identify high-impact workflows suitable for AI augmentation.' },
+      { step: '02', title: 'Design', description: 'Define copilot capabilities, knowledge sources, and interfaces.' },
+      { step: '03', title: 'Build', description: 'Develop with LLMs, RAG, and workflow integration.' },
+      { step: '04', title: 'Refine', description: 'Iterate based on user feedback and usage patterns.' },
+    ],
+
+    stats: [
+      { value: '3x', label: 'Productivity Multiplier' },
+      { value: '50%', label: 'Reduction in Research Time' },
+      { value: '80%', label: 'Faster Document Drafting' },
+      { value: '95%', label: 'User Satisfaction' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Workflow-Specific',
+        description: 'Copilots designed for your exact processes and terminology.',
+        icon: 'settings',
+      },
+      {
+        title: 'Knowledge Access',
+        description: 'Instant access to organizational knowledge and documents.',
+        icon: 'search',
+      },
+      {
+        title: 'Draft Generation',
+        description: 'AI-generated first drafts for documents, emails, and reports.',
+        icon: 'file-text',
+      },
+      {
+        title: 'Decision Support',
+        description: 'Analysis and recommendations based on your data.',
+        icon: 'cpu',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'Legal Research Copilot',
+        description: 'Built a research copilot that reduced legal research time from 4 hours to 30 minutes.',
+        industry: 'legal',
+      },
+      {
+        headline: 'Sales Proposal Copilot',
+        description: 'Developed a copilot that generates customized proposals, increasing win rates by 25%.',
+        industry: 'professional_services',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What\'s the difference between a chatbot and copilot?',
+        answer: 'Chatbots answer questions. Copilots actively assist with work—drafting, analyzing, and taking actions alongside users.',
+      },
+      {
+        question: 'Can copilots work with our existing tools?',
+        answer: 'Yes, we integrate copilots into your existing workflows—email, documents, CRM, or custom applications.',
+      },
+      {
+        question: 'How do you train the copilot on our knowledge?',
+        answer: 'We use RAG to connect copilots to your documents, databases, and knowledge bases without retraining the base model.',
+      },
+      {
+        question: 'How do users interact with copilots?',
+        answer: 'Through natural language in context—sidebar panels, inline suggestions, or embedded in your applications.',
+      },
+    ],
+
+    certifications: ['OpenAI Partner', 'Anthropic Partner', 'Azure AI Partner'],
+  },
+
+  // ==========================================
+  // KEYWORD-FOCUSED LPs: AI/ML CLUSTER
+  // ==========================================
+  'predictive-analytics-services': {
+    slug: 'predictive-analytics-services',
+    serviceCluster: 'ai-ml',
+    keyword: 'predictive analytics services',
+
+    metaTitle: 'Predictive Analytics Services | ML Forecasting | ACI Infotech',
+    metaDescription: 'Enterprise predictive analytics services. Machine learning models that forecast demand, predict churn, and optimize decisions.',
+
+    headline: 'Predict the Future with Your Data',
+    subheadline: 'Machine learning models that turn historical data into accurate predictions for better business decisions.',
+    ctoText: 'Get Your Predictive Analytics Assessment',
+    ctoSecondaryText: 'See Prediction Use Cases',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Reactive Decision Making',
+        description: 'Always responding to problems instead of preventing them.',
+        icon: 'clock',
+      },
+      {
+        title: 'Inaccurate Forecasts',
+        description: 'Spreadsheet-based forecasts that miss the mark.',
+        icon: 'trending-down',
+      },
+      {
+        title: 'Customer Churn',
+        description: 'Losing customers without early warning signs.',
+        icon: 'users',
+      },
+      {
+        title: 'Inventory Imbalances',
+        description: 'Stockouts and overstock due to poor demand prediction.',
+        icon: 'package',
+      },
+    ],
+
+    solutionHeadline: 'Production-Ready Predictive Models',
+    solutionDescription: 'We build ML models that predict outcomes, deployed in production with monitoring and continuous improvement.',
+    processSteps: [
+      { step: '01', title: 'Define', description: 'Identify prediction use cases with clear business value.' },
+      { step: '02', title: 'Build', description: 'Develop and validate models using your historical data.' },
+      { step: '03', title: 'Deploy', description: 'Put models in production with APIs and integrations.' },
+      { step: '04', title: 'Operate', description: 'Monitor, retrain, and improve models over time.' },
+    ],
+
+    stats: [
+      { value: '85%+', label: 'Typical Model Accuracy' },
+      { value: '30%', label: 'Improvement Over Baselines' },
+      { value: '3x', label: 'ROI on Analytics Investment' },
+      { value: '6 Weeks', label: 'Average Time to POC' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Accurate Predictions',
+        description: 'ML models that outperform traditional forecasting.',
+        icon: 'target',
+      },
+      {
+        title: 'Proactive Action',
+        description: 'Early warning signals to prevent problems.',
+        icon: 'bell',
+      },
+      {
+        title: 'Automated Decisions',
+        description: 'Models integrated into workflows for real-time decisions.',
+        icon: 'cpu',
+      },
+      {
+        title: 'Continuous Learning',
+        description: 'Models that improve with new data over time.',
+        icon: 'refresh-cw',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '35% Better Demand Forecast',
+        description: 'Improved demand forecasting accuracy by 35%, reducing inventory costs by $3M annually.',
+        industry: 'retail',
+      },
+      {
+        headline: 'Churn Prediction at Scale',
+        description: 'Deployed churn prediction identifying at-risk customers 90 days in advance with 85% accuracy.',
+        industry: 'telecom',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What can predictive analytics predict?',
+        answer: 'Common use cases: customer churn, demand forecasting, equipment failure, fraud, credit risk, and price optimization.',
+      },
+      {
+        question: 'How much data do we need?',
+        answer: 'It depends on the use case. Generally, more data improves accuracy. We assess your data readiness upfront.',
+      },
+      {
+        question: 'How accurate are the predictions?',
+        answer: 'Accuracy varies by use case. We set clear accuracy targets and validate before deployment.',
+      },
+      {
+        question: 'Can predictions be explained?',
+        answer: 'Yes, we implement explainable AI techniques so you understand why predictions are made.',
+      },
+    ],
+
+    certifications: ['AWS ML Competency', 'Azure AI Partner', 'Databricks Partner'],
+  },
+
+  'mlops-services': {
+    slug: 'mlops-services',
+    serviceCluster: 'ai-ml',
+    keyword: 'mlops services',
+
+    metaTitle: 'MLOps Services | ML Platform Engineering | ACI Infotech',
+    metaDescription: 'Enterprise MLOps services. Build ML platforms that automate model deployment, monitoring, and lifecycle management.',
+
+    headline: 'Get ML Models to Production and Keep Them There',
+    subheadline: 'MLOps platforms that automate the entire ML lifecycle from experimentation to production monitoring.',
+    ctoText: 'Get Your MLOps Maturity Assessment',
+    ctoSecondaryText: 'See Our MLOps Platform',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Notebook to Production Gap',
+        description: 'Models that work in Jupyter but never make it to production.',
+        icon: 'alert-triangle',
+      },
+      {
+        title: 'Model Drift',
+        description: 'Deployed models degrading over time with no detection.',
+        icon: 'trending-down',
+      },
+      {
+        title: 'Manual Deployments',
+        description: 'Data scientists manually deploying models without CI/CD.',
+        icon: 'edit-3',
+      },
+      {
+        title: 'No Reproducibility',
+        description: 'Can\'t reproduce training runs or understand what\'s in production.',
+        icon: 'help-circle',
+      },
+    ],
+
+    solutionHeadline: 'Enterprise MLOps Platform',
+    solutionDescription: 'We build MLOps platforms using best-in-class tools for reproducible, reliable ML at scale.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Evaluate current ML practices and define target state.' },
+      { step: '02', title: 'Design', description: 'Architect MLOps platform with appropriate components.' },
+      { step: '03', title: 'Build', description: 'Implement experiment tracking, model registry, and CI/CD.' },
+      { step: '04', title: 'Enable', description: 'Train team and migrate existing models to platform.' },
+    ],
+
+    stats: [
+      { value: '10x', label: 'Faster Model Deployment' },
+      { value: '100%', label: 'Model Reproducibility' },
+      { value: '50%', label: 'Reduction in ML Technical Debt' },
+      { value: '99.9%', label: 'Model Availability' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Automated Pipelines',
+        description: 'CI/CD for ML with automated testing and deployment.',
+        icon: 'settings',
+      },
+      {
+        title: 'Model Registry',
+        description: 'Version control and governance for all models.',
+        icon: 'database',
+      },
+      {
+        title: 'Drift Detection',
+        description: 'Automated monitoring for data and model drift.',
+        icon: 'eye',
+      },
+      {
+        title: 'Feature Store',
+        description: 'Centralized features for consistency and reuse.',
+        icon: 'layers',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'MLOps at Scale',
+        description: 'Built an MLOps platform supporting 100+ models in production for a financial services firm.',
+        industry: 'finance',
+      },
+      {
+        headline: 'Deployment Time: Days to Hours',
+        description: 'Reduced model deployment time from 2 weeks to 4 hours with automated MLOps pipelines.',
+        industry: 'retail',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What tools do you use for MLOps?',
+        answer: 'We implement MLflow, Kubeflow, SageMaker, Vertex AI, and Databricks depending on your stack and requirements.',
+      },
+      {
+        question: 'Can you help with our existing models?',
+        answer: 'Yes, we migrate existing models to proper MLOps practices with versioning, monitoring, and automation.',
+      },
+      {
+        question: 'Do we need Kubernetes?',
+        answer: 'Not necessarily. We design MLOps platforms appropriate to your scale—from managed services to Kubernetes.',
+      },
+      {
+        question: 'How do you handle model monitoring?',
+        answer: 'We implement data drift detection, prediction monitoring, and automated alerting with retraining triggers.',
+      },
+    ],
+
+    certifications: ['MLflow Certified', 'Kubeflow Certified', 'AWS ML Competency', 'Azure AI Partner'],
+  },
+
+  // ==========================================
+  // KEYWORD-FOCUSED LPs: DATA INTEGRATION CLUSTER
+  // ==========================================
+  'mulesoft-consulting': {
+    slug: 'mulesoft-consulting',
+    serviceCluster: 'data-integration',
+    keyword: 'mulesoft consulting services',
+
+    metaTitle: 'MuleSoft Consulting Services | API Integration | ACI Infotech',
+    metaDescription: 'Expert MuleSoft consulting and implementation services. Build APIs and integrations with certified MuleSoft partners.',
+
+    headline: 'Unlock Connectivity with MuleSoft',
+    subheadline: 'Certified MuleSoft partners delivering API-led connectivity for enterprise integration.',
+    ctoText: 'Get Your MuleSoft Assessment',
+    ctoSecondaryText: 'See Integration Architecture',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Point-to-Point Chaos',
+        description: 'Spaghetti integrations that are fragile and hard to maintain.',
+        icon: 'git-branch',
+      },
+      {
+        title: 'API Sprawl',
+        description: 'APIs everywhere with no governance or discoverability.',
+        icon: 'alert-triangle',
+      },
+      {
+        title: 'Integration Backlog',
+        description: 'New integration requests piling up faster than delivery.',
+        icon: 'clock',
+      },
+      {
+        title: 'Reuse Challenges',
+        description: 'Building the same integration patterns over and over.',
+        icon: 'refresh-cw',
+      },
+    ],
+
+    solutionHeadline: 'API-Led Connectivity with MuleSoft',
+    solutionDescription: 'We implement MuleSoft\'s Anypoint Platform for scalable, reusable API-led integration architecture.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Analyze integration landscape and define API strategy.' },
+      { step: '02', title: 'Design', description: 'Architect API-led connectivity with system, process, and experience layers.' },
+      { step: '03', title: 'Build', description: 'Develop APIs and integrations using MuleSoft best practices.' },
+      { step: '04', title: 'Govern', description: 'Implement API management, security, and lifecycle governance.' },
+    ],
+
+    stats: [
+      { value: '100+', label: 'MuleSoft Projects' },
+      { value: '3x', label: 'Faster Integration Delivery' },
+      { value: '60%', label: 'Reuse Rate Achieved' },
+      { value: 'Premier', label: 'MuleSoft Partner' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'API-Led Architecture',
+        description: 'Scalable integration patterns that enable reuse.',
+        icon: 'layers',
+      },
+      {
+        title: 'Anypoint Platform',
+        description: 'Full lifecycle API management and governance.',
+        icon: 'settings',
+      },
+      {
+        title: 'Pre-Built Connectors',
+        description: 'Leverage 300+ connectors for faster delivery.',
+        icon: 'link',
+      },
+      {
+        title: 'Certified Experts',
+        description: 'MuleSoft certified architects and developers.',
+        icon: 'award',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'Integration Center of Excellence',
+        description: 'Established a MuleSoft-based integration COE delivering 50+ APIs with 65% reuse.',
+        industry: 'healthcare',
+      },
+      {
+        headline: 'Legacy Modernization',
+        description: 'Exposed legacy mainframe systems via modern APIs using MuleSoft.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Are you a certified MuleSoft partner?',
+        answer: 'Yes, we\'re a MuleSoft Premier Partner with certified architects and developers.',
+      },
+      {
+        question: 'What\'s API-led connectivity?',
+        answer: 'It\'s MuleSoft\'s methodology for building reusable APIs in layers—system, process, and experience—for maximum reuse.',
+      },
+      {
+        question: 'Can you migrate from other integration tools?',
+        answer: 'Yes, we migrate from Dell Boomi, Informatica, TIBCO, and custom integration code to MuleSoft.',
+      },
+      {
+        question: 'How do you ensure API security?',
+        answer: 'We implement OAuth, API gateways, rate limiting, and threat protection as part of every implementation.',
+      },
+    ],
+
+    certifications: ['MuleSoft Premier Partner', 'MuleSoft Certified Architect', 'MuleSoft Certified Developer'],
+  },
+
+  'api-integration-services': {
+    slug: 'api-integration-services',
+    serviceCluster: 'data-integration',
+    keyword: 'api integration services',
+
+    metaTitle: 'API Integration Services | Custom API Development | ACI Infotech',
+    metaDescription: 'Enterprise API integration services. Connect your systems with secure, scalable APIs and integrations.',
+
+    headline: 'Connect Your Systems with Modern APIs',
+    subheadline: 'Custom API development and integration services that enable seamless data flow across your enterprise.',
+    ctoText: 'Get Your Integration Architecture Review',
+    ctoSecondaryText: 'See API Patterns',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'System Silos',
+        description: 'Critical systems that don\'t share data or functionality.',
+        icon: 'database',
+      },
+      {
+        title: 'Partner Integration',
+        description: 'Difficulty connecting with customer and supplier systems.',
+        icon: 'users',
+      },
+      {
+        title: 'Legacy Systems',
+        description: 'Old systems with no modern APIs or integration options.',
+        icon: 'server',
+      },
+      {
+        title: 'Real-Time Needs',
+        description: 'Batch integrations too slow for business requirements.',
+        icon: 'clock',
+      },
+    ],
+
+    solutionHeadline: 'Enterprise API & Integration Excellence',
+    solutionDescription: 'We design, build, and manage APIs and integrations that connect your entire digital ecosystem.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Map systems, data flows, and integration requirements.' },
+      { step: '02', title: 'Design', description: 'Architect APIs and integration patterns for your needs.' },
+      { step: '03', title: 'Build', description: 'Develop secure, documented, testable APIs.' },
+      { step: '04', title: 'Operate', description: 'Deploy with monitoring, versioning, and lifecycle management.' },
+    ],
+
+    stats: [
+      { value: '500+', label: 'APIs Delivered' },
+      { value: '99.9%', label: 'API Uptime' },
+      { value: '50ms', label: 'Average Response Time' },
+      { value: '100%', label: 'Documentation Coverage' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'RESTful APIs',
+        description: 'Well-designed, documented APIs following best practices.',
+        icon: 'code',
+      },
+      {
+        title: 'Real-Time Integration',
+        description: 'Event-driven and streaming patterns for immediate data.',
+        icon: 'zap',
+      },
+      {
+        title: 'Security First',
+        description: 'OAuth, API keys, encryption, and rate limiting built in.',
+        icon: 'shield',
+      },
+      {
+        title: 'Developer Portal',
+        description: 'Documentation and sandbox for API consumers.',
+        icon: 'book',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'B2B API Platform',
+        description: 'Built a partner API platform enabling 200+ integrations with customers and suppliers.',
+        industry: 'manufacturing',
+      },
+      {
+        headline: 'Real-Time Order Integration',
+        description: 'Implemented real-time order APIs processing 10,000+ orders/hour across channels.',
+        industry: 'retail',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What technologies do you use for APIs?',
+        answer: 'We build APIs using REST, GraphQL, and event-driven patterns with Node.js, Python, Java, or .NET depending on your stack.',
+      },
+      {
+        question: 'Can you integrate legacy systems?',
+        answer: 'Yes, we create API wrappers and adapters for legacy systems including mainframes and old databases.',
+      },
+      {
+        question: 'How do you handle API security?',
+        answer: 'We implement industry-standard security: OAuth 2.0, API gateways, rate limiting, encryption, and threat protection.',
+      },
+      {
+        question: 'Do you provide API documentation?',
+        answer: 'Absolutely. Every API includes OpenAPI specs, developer documentation, and often interactive sandbox environments.',
+      },
+    ],
+
+    certifications: ['AWS Partner', 'Azure Partner', 'MuleSoft Partner', 'Kong Partner'],
+  },
+
+  // ==========================================
+  // KEYWORD-FOCUSED LPs: ERP CLUSTER
+  // ==========================================
+  'sap-s4hana-migration': {
+    slug: 'sap-s4hana-migration',
+    serviceCluster: 'erp-transformation',
+    keyword: 'sap s4hana migration',
+
+    metaTitle: 'SAP S/4HANA Migration Services | SAP Partner | ACI Infotech',
+    metaDescription: 'Expert SAP S/4HANA migration services. Seamless transition from ECC with proven methodology and deep SAP expertise.',
+
+    headline: 'Migrate to SAP S/4HANA with Confidence',
+    subheadline: 'Proven SAP S/4HANA migration methodology that minimizes risk and accelerates time to value.',
+    ctoText: 'Get Your S/4HANA Readiness Assessment',
+    ctoSecondaryText: 'See Migration Approaches',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'ECC End of Support',
+        description: '2027 deadline approaching with no clear migration plan.',
+        icon: 'clock',
+      },
+      {
+        title: 'Migration Complexity',
+        description: 'Years of customizations making migration seem impossible.',
+        icon: 'alert-triangle',
+      },
+      {
+        title: 'Business Disruption Fear',
+        description: 'Worried about impact to operations during migration.',
+        icon: 'alert-octagon',
+      },
+      {
+        title: 'Cloud vs. On-Premise',
+        description: 'Unsure which S/4HANA deployment model is right.',
+        icon: 'help-circle',
+      },
+    ],
+
+    solutionHeadline: 'Structured S/4HANA Migration',
+    solutionDescription: 'We use proven methodologies to migrate your SAP landscape with minimal disruption and maximum value.',
+    processSteps: [
+      { step: '01', title: 'Discover', description: 'Assess current landscape, customizations, and readiness.' },
+      { step: '02', title: 'Design', description: 'Define target architecture and migration approach.' },
+      { step: '03', title: 'Transform', description: 'Execute migration with testing and validation.' },
+      { step: '04', title: 'Run', description: 'Hypercare support and continuous optimization.' },
+    ],
+
+    stats: [
+      { value: '50+', label: 'S/4HANA Migrations' },
+      { value: '99%', label: 'On-Time, On-Budget' },
+      { value: '40%', label: 'Average TCO Reduction' },
+      { value: 'Zero', label: 'Unplanned Downtime' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Risk Mitigation',
+        description: 'Proven methodology that identifies and addresses risks early.',
+        icon: 'shield',
+      },
+      {
+        title: 'Business Continuity',
+        description: 'Migration approaches that minimize operational disruption.',
+        icon: 'check-circle',
+      },
+      {
+        title: 'Process Optimization',
+        description: 'Opportunity to simplify and standardize during migration.',
+        icon: 'settings',
+      },
+      {
+        title: 'Future Ready',
+        description: 'Modern platform enabling AI, automation, and innovation.',
+        icon: 'rocket',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'Global S/4HANA Rollout',
+        description: 'Migrated SAP ECC to S/4HANA Cloud across 12 countries in 18 months.',
+        industry: 'manufacturing',
+      },
+      {
+        headline: 'Selective Data Transition',
+        description: 'Used selective data migration to reduce data footprint by 60% while maintaining compliance.',
+        industry: 'retail',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What migration approaches do you support?',
+        answer: 'We support all paths: greenfield, brownfield (system conversion), selective data transition, and hybrid approaches.',
+      },
+      {
+        question: 'Should we go to S/4HANA Cloud or on-premise?',
+        answer: 'We assess your requirements, compliance needs, and customization level to recommend the right deployment model.',
+      },
+      {
+        question: 'How do you handle custom code?',
+        answer: 'We analyze custom code with SAP tools, identifying what needs adaptation, replacement, or retirement.',
+      },
+      {
+        question: 'What about our integrations?',
+        answer: 'We map all integrations and either migrate, modernize, or replace them as part of the program.',
+      },
+    ],
+
+    certifications: ['SAP Gold Partner', 'SAP S/4HANA Certified', 'SAP RISE Partner'],
+  },
+
+  'netsuite-implementation': {
+    slug: 'netsuite-implementation',
+    serviceCluster: 'erp-transformation',
+    keyword: 'netsuite implementation partner',
+
+    metaTitle: 'NetSuite Implementation Services | SuiteSuccess Partner | ACI Infotech',
+    metaDescription: 'Expert NetSuite implementation services. Accelerated deployment with proven SuiteSuccess methodology.',
+
+    headline: 'Fast-Track Your NetSuite Implementation',
+    subheadline: 'Accelerated NetSuite deployment with industry-specific configurations and proven best practices.',
+    ctoText: 'Get Your NetSuite Readiness Assessment',
+    ctoSecondaryText: 'See Implementation Timeline',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Outgrown QuickBooks',
+        description: 'Current accounting software can\'t handle your growth.',
+        icon: 'trending-up',
+      },
+      {
+        title: 'Disconnected Systems',
+        description: 'Separate systems for finance, inventory, and CRM.',
+        icon: 'unlink',
+      },
+      {
+        title: 'Manual Processes',
+        description: 'Too much time spent on spreadsheets and manual data entry.',
+        icon: 'edit-3',
+      },
+      {
+        title: 'Poor Visibility',
+        description: 'No real-time view into financial and operational performance.',
+        icon: 'eye-off',
+      },
+    ],
+
+    solutionHeadline: 'NetSuite, Implemented Right',
+    solutionDescription: 'We implement NetSuite using SuiteSuccess methodology with industry configurations and accelerators.',
+    processSteps: [
+      { step: '01', title: 'Scope', description: 'Define requirements and implementation approach.' },
+      { step: '02', title: 'Configure', description: 'Set up NetSuite with industry best practices.' },
+      { step: '03', title: 'Integrate', description: 'Connect to other systems and migrate data.' },
+      { step: '04', title: 'Launch', description: 'Train users, go live, and optimize.' },
+    ],
+
+    stats: [
+      { value: '75+', label: 'NetSuite Implementations' },
+      { value: '90 Days', label: 'Typical Go-Live' },
+      { value: '95%', label: 'On-Time Delivery' },
+      { value: '50%', label: 'Faster Close Process' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Unified Platform',
+        description: 'Finance, CRM, inventory, and e-commerce in one system.',
+        icon: 'box',
+      },
+      {
+        title: 'Real-Time Visibility',
+        description: 'Dashboards and reports available instantly.',
+        icon: 'bar-chart',
+      },
+      {
+        title: 'Scalability',
+        description: 'Cloud ERP that grows with your business.',
+        icon: 'trending-up',
+      },
+      {
+        title: 'Automation',
+        description: 'Workflows that eliminate manual processes.',
+        icon: 'zap',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '90-Day Implementation',
+        description: 'Implemented NetSuite for a growing e-commerce company in 90 days, replacing 4 separate systems.',
+        industry: 'retail',
+      },
+      {
+        headline: 'Multi-Subsidiary Rollout',
+        description: 'Deployed NetSuite across 8 subsidiaries with consolidated reporting.',
+        industry: 'professional_services',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'Are you a certified NetSuite partner?',
+        answer: 'Yes, we\'re a NetSuite Solution Provider with SuiteSuccess certified consultants.',
+      },
+      {
+        question: 'How long does NetSuite implementation take?',
+        answer: 'Typical implementations take 60-120 days depending on complexity. We use SuiteSuccess for faster deployment.',
+      },
+      {
+        question: 'Can you migrate from QuickBooks?',
+        answer: 'Yes, we frequently migrate from QuickBooks, Sage, and other accounting systems with data conversion.',
+      },
+      {
+        question: 'What about customizations?',
+        answer: 'We balance standard configuration with necessary customizations using SuiteScript and workflows.',
+      },
+    ],
+
+    certifications: ['NetSuite Solution Provider', 'SuiteSuccess Certified', 'Oracle Partner'],
+  },
+
+  // ==========================================
+  // KEYWORD-FOCUSED LPs: AGENTIC AI CLUSTER
+  // ==========================================
+  'ai-automation-services': {
+    slug: 'ai-automation-services',
+    serviceCluster: 'agentic-ai',
+    keyword: 'ai automation services',
+
+    metaTitle: 'AI Automation Services | Intelligent Process Automation | ACI Infotech',
+    metaDescription: 'Enterprise AI automation services. Automate complex workflows with intelligent AI agents that reason and act.',
+
+    headline: 'Automate Complex Work with AI',
+    subheadline: 'Intelligent automation that handles multi-step workflows, not just simple tasks.',
+    ctoText: 'Discover Your Automation Opportunities',
+    ctoSecondaryText: 'See AI Automation Examples',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'RPA Limitations',
+        description: 'Traditional automation breaks when screens or processes change.',
+        icon: 'alert-triangle',
+      },
+      {
+        title: 'Exception Handling',
+        description: 'Most workflow variations require human intervention.',
+        icon: 'user',
+      },
+      {
+        title: 'Scaling Knowledge Work',
+        description: 'Can\'t automate work that requires judgment and reasoning.',
+        icon: 'cpu',
+      },
+      {
+        title: 'Integration Complexity',
+        description: 'Automation requires connecting many systems with different interfaces.',
+        icon: 'link',
+      },
+    ],
+
+    solutionHeadline: 'AI-Powered Intelligent Automation',
+    solutionDescription: 'We build AI agents that understand context, make decisions, and handle exceptions—true intelligent automation.',
+    processSteps: [
+      { step: '01', title: 'Identify', description: 'Find high-value automation opportunities in your workflows.' },
+      { step: '02', title: 'Design', description: 'Architect AI automation with appropriate guardrails.' },
+      { step: '03', title: 'Build', description: 'Develop AI agents with reasoning, tool use, and error handling.' },
+      { step: '04', title: 'Deploy', description: 'Launch with monitoring, human oversight, and continuous learning.' },
+    ],
+
+    stats: [
+      { value: '85%', label: 'Automation Rate Achieved' },
+      { value: '10x', label: 'Faster Than Manual' },
+      { value: '95%', label: 'Accuracy with Oversight' },
+      { value: '60%', label: 'Cost Reduction' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'True Automation',
+        description: 'AI that handles variations and exceptions, not just happy path.',
+        icon: 'cpu',
+      },
+      {
+        title: 'Self-Healing',
+        description: 'Agents that adapt when systems or processes change.',
+        icon: 'refresh-cw',
+      },
+      {
+        title: 'Enterprise Controls',
+        description: 'Audit trails, approvals, and human oversight where needed.',
+        icon: 'shield',
+      },
+      {
+        title: 'Continuous Learning',
+        description: 'Automation that improves based on feedback and outcomes.',
+        icon: 'trending-up',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'Invoice Processing at Scale',
+        description: 'Automated invoice processing handling 95% of variations that RPA couldn\'t handle.',
+        industry: 'finance',
+      },
+      {
+        headline: 'Customer Onboarding',
+        description: 'AI automation reduced customer onboarding from 5 days to 4 hours.',
+        industry: 'insurance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'How is this different from RPA?',
+        answer: 'RPA follows rigid scripts. AI automation reasons about situations, handles exceptions, and adapts to changes.',
+      },
+      {
+        question: 'What workflows are good candidates?',
+        answer: 'Multi-step processes with document handling, decision points, and variations that currently require human judgment.',
+      },
+      {
+        question: 'How do you ensure accuracy?',
+        answer: 'We implement confidence scoring, human-in-the-loop for edge cases, and continuous monitoring.',
+      },
+      {
+        question: 'Can AI automation work with our existing systems?',
+        answer: 'Yes, AI agents interact via APIs, and can even interact with UI when needed for legacy systems.',
+      },
+    ],
+
+    certifications: ['UiPath Partner', 'OpenAI Partner', 'Microsoft AI Partner'],
+  },
+
+  'intelligent-process-automation': {
+    slug: 'intelligent-process-automation',
+    serviceCluster: 'agentic-ai',
+    keyword: 'intelligent process automation',
+
+    metaTitle: 'Intelligent Process Automation | IPA Services | ACI Infotech',
+    metaDescription: 'Intelligent process automation services combining AI, RPA, and workflow automation for end-to-end process transformation.',
+
+    headline: 'Transform Processes with Intelligent Automation',
+    subheadline: 'Combine AI, RPA, and orchestration for truly intelligent end-to-end process automation.',
+    ctoText: 'Get Your IPA Readiness Assessment',
+    ctoSecondaryText: 'See IPA Success Stories',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Partial Automation',
+        description: 'RPA automates pieces but processes still need manual handoffs.',
+        icon: 'git-branch',
+      },
+      {
+        title: 'Unstructured Data',
+        description: 'Documents, emails, and images that can\'t be processed automatically.',
+        icon: 'file-text',
+      },
+      {
+        title: 'Process Fragmentation',
+        description: 'Automation tools don\'t work together as a unified platform.',
+        icon: 'puzzle',
+      },
+      {
+        title: 'Change Management',
+        description: 'Automations break when business rules or systems change.',
+        icon: 'alert-circle',
+      },
+    ],
+
+    solutionHeadline: 'End-to-End Intelligent Automation',
+    solutionDescription: 'We implement IPA platforms that combine AI, RPA, document processing, and orchestration.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Map processes and identify automation opportunities.' },
+      { step: '02', title: 'Design', description: 'Architect IPA solution with the right technology mix.' },
+      { step: '03', title: 'Implement', description: 'Build automation with AI, RPA, and orchestration.' },
+      { step: '04', title: 'Scale', description: 'Expand automation across the enterprise with COE.' },
+    ],
+
+    stats: [
+      { value: '70%', label: 'End-to-End Automation' },
+      { value: '80%', label: 'Faster Process Completion' },
+      { value: '50%', label: 'Cost Reduction' },
+      { value: '99%', label: 'Accuracy Rate' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Unified Platform',
+        description: 'AI, RPA, and orchestration working together seamlessly.',
+        icon: 'layers',
+      },
+      {
+        title: 'Document AI',
+        description: 'Intelligent processing of invoices, contracts, and forms.',
+        icon: 'file-text',
+      },
+      {
+        title: 'Decision Automation',
+        description: 'AI-powered decisions within automated workflows.',
+        icon: 'cpu',
+      },
+      {
+        title: 'Process Mining',
+        description: 'Discover automation opportunities from your data.',
+        icon: 'search',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'Claims Processing Revolution',
+        description: 'Implemented IPA for claims, reducing processing time from 5 days to 2 hours.',
+        industry: 'insurance',
+      },
+      {
+        headline: 'Order-to-Cash Automation',
+        description: 'Automated 80% of order-to-cash process with intelligent document processing.',
+        industry: 'manufacturing',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What technologies are included in IPA?',
+        answer: 'IPA typically combines RPA, AI/ML, document processing, process mining, and workflow orchestration.',
+      },
+      {
+        question: 'How do you handle documents?',
+        answer: 'We use AI-powered document processing to extract data from invoices, contracts, forms, and unstructured documents.',
+      },
+      {
+        question: 'What platforms do you work with?',
+        answer: 'We implement UiPath, Automation Anywhere, Power Automate, and custom solutions depending on requirements.',
+      },
+      {
+        question: 'How do we measure IPA success?',
+        answer: 'We track automation rate, processing time, accuracy, cost savings, and employee time freed for higher-value work.',
+      },
+    ],
+
+    certifications: ['UiPath Partner', 'Automation Anywhere Partner', 'Microsoft Power Platform Partner'],
+  },
+
+  // ==========================================
+  // KEYWORD-FOCUSED LPs: DATA OBSERVABILITY CLUSTER
+  // ==========================================
+  'data-quality-services': {
+    slug: 'data-quality-services',
+    serviceCluster: 'data-observability',
+    keyword: 'data quality services',
+
+    metaTitle: 'Data Quality Services | Data Quality Management | ACI Infotech',
+    metaDescription: 'Enterprise data quality services. Implement data quality management that ensures accurate, complete, and trustworthy data.',
+
+    headline: 'Trust Your Data with Enterprise Data Quality',
+    subheadline: 'Comprehensive data quality management that ensures your data is accurate, complete, and reliable.',
+    ctoText: 'Get Your Data Quality Assessment',
+    ctoSecondaryText: 'See Data Quality Metrics',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Bad Data Decisions',
+        description: 'Business decisions made on inaccurate or incomplete data.',
+        icon: 'alert-triangle',
+      },
+      {
+        title: 'Manual Data Fixes',
+        description: 'Teams spending hours cleaning data before analysis.',
+        icon: 'edit-3',
+      },
+      {
+        title: 'Customer Data Issues',
+        description: 'Duplicate records, wrong addresses, and outdated information.',
+        icon: 'users',
+      },
+      {
+        title: 'Compliance Risk',
+        description: 'Data quality issues creating regulatory and audit risk.',
+        icon: 'shield-off',
+      },
+    ],
+
+    solutionHeadline: 'Enterprise Data Quality Management',
+    solutionDescription: 'We implement comprehensive data quality programs covering profiling, cleansing, monitoring, and governance.',
+    processSteps: [
+      { step: '01', title: 'Profile', description: 'Assess current data quality across critical data assets.' },
+      { step: '02', title: 'Define', description: 'Establish data quality rules and metrics.' },
+      { step: '03', title: 'Implement', description: 'Deploy cleansing, validation, and monitoring tools.' },
+      { step: '04', title: 'Sustain', description: 'Establish ongoing DQ operations and governance.' },
+    ],
+
+    stats: [
+      { value: '99%', label: 'Data Accuracy Achieved' },
+      { value: '80%', label: 'Reduction in DQ Issues' },
+      { value: '60%', label: 'Less Manual Data Work' },
+      { value: '100%', label: 'Critical Data Monitored' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Accurate Data',
+        description: 'Data you can trust for decisions and reporting.',
+        icon: 'check-circle',
+      },
+      {
+        title: 'Automated Quality',
+        description: 'Rules and monitoring that catch issues automatically.',
+        icon: 'settings',
+      },
+      {
+        title: 'Clean Customer Data',
+        description: 'Deduplicated, standardized master data.',
+        icon: 'users',
+      },
+      {
+        title: 'Compliance Ready',
+        description: 'Data quality controls for regulatory requirements.',
+        icon: 'shield',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '99.5% Customer Data Accuracy',
+        description: 'Implemented data quality program achieving 99.5% accuracy for customer master data.',
+        industry: 'finance',
+      },
+      {
+        headline: 'Regulatory Compliance',
+        description: 'Data quality controls helped pass regulatory audit with zero findings.',
+        industry: 'healthcare',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'What data quality dimensions do you measure?',
+        answer: 'We assess accuracy, completeness, consistency, timeliness, validity, and uniqueness.',
+      },
+      {
+        question: 'What tools do you use for data quality?',
+        answer: 'We implement Informatica DQ, Talend, Great Expectations, dbt tests, and custom solutions.',
+      },
+      {
+        question: 'How do you handle master data quality?',
+        answer: 'We implement MDM solutions with matching, merging, and survivorship rules for golden records.',
+      },
+      {
+        question: 'Can you fix our existing data?',
+        answer: 'Yes, we conduct data cleansing projects to fix historical issues while implementing prevention.',
+      },
+    ],
+
+    certifications: ['Informatica Partner', 'Talend Partner', 'dbt Partner'],
+  },
+
+  'data-governance-consulting': {
+    slug: 'data-governance-consulting',
+    serviceCluster: 'data-observability',
+    keyword: 'data governance consulting',
+
+    metaTitle: 'Data Governance Consulting | Data Management Framework | ACI Infotech',
+    metaDescription: 'Enterprise data governance consulting services. Build a data governance framework that enables trust, compliance, and value.',
+
+    headline: 'Build a Data Governance Program That Works',
+    subheadline: 'Practical data governance that enables data democratization while ensuring compliance and quality.',
+    ctoText: 'Get Your Governance Maturity Assessment',
+    ctoSecondaryText: 'See Our Governance Framework',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'Data Chaos',
+        description: 'No one knows what data exists, where it is, or who owns it.',
+        icon: 'help-circle',
+      },
+      {
+        title: 'Compliance Pressure',
+        description: 'GDPR, CCPA, and industry regulations requiring data controls.',
+        icon: 'shield',
+      },
+      {
+        title: 'Access Confusion',
+        description: 'Unclear policies about who can access what data.',
+        icon: 'lock',
+      },
+      {
+        title: 'Failed Initiatives',
+        description: 'Previous governance attempts that created bureaucracy without value.',
+        icon: 'x-circle',
+      },
+    ],
+
+    solutionHeadline: 'Practical, Value-Driven Governance',
+    solutionDescription: 'We implement data governance that balances control with enablement—not bureaucracy for its own sake.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Evaluate current state and define governance vision.' },
+      { step: '02', title: 'Design', description: 'Create governance framework, policies, and operating model.' },
+      { step: '03', title: 'Implement', description: 'Deploy tools, catalogs, and processes.' },
+      { step: '04', title: 'Operationalize', description: 'Establish councils, stewardship, and continuous improvement.' },
+    ],
+
+    stats: [
+      { value: '100%', label: 'Critical Data Cataloged' },
+      { value: '60%', label: 'Faster Data Access Requests' },
+      { value: '90%', label: 'Policy Compliance' },
+      { value: '50%', label: 'Less Time Finding Data' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Data Catalog',
+        description: 'Searchable inventory of all data assets.',
+        icon: 'search',
+      },
+      {
+        title: 'Clear Ownership',
+        description: 'Defined data owners and stewards with accountability.',
+        icon: 'users',
+      },
+      {
+        title: 'Access Management',
+        description: 'Policies and processes for appropriate data access.',
+        icon: 'key',
+      },
+      {
+        title: 'Compliance Controls',
+        description: 'Privacy and regulatory compliance built in.',
+        icon: 'shield',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: 'GDPR Compliance',
+        description: 'Implemented data governance enabling GDPR compliance with full data lineage and consent management.',
+        industry: 'retail',
+      },
+      {
+        headline: 'Self-Service Analytics',
+        description: 'Data governance program that enabled self-service analytics while maintaining security.',
+        industry: 'finance',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'How do you avoid governance bureaucracy?',
+        answer: 'We focus governance on high-value, high-risk data first, and design for enablement, not just control.',
+      },
+      {
+        question: 'What tools do you use for data governance?',
+        answer: 'We implement Collibra, Alation, Atlan, Purview, and other catalogs depending on your environment.',
+      },
+      {
+        question: 'How do you handle data privacy?',
+        answer: 'We implement privacy-by-design with classification, consent management, and automated compliance controls.',
+      },
+      {
+        question: 'What\'s the role of a data steward?',
+        answer: 'Data stewards are business-side owners responsible for data quality, definitions, and access decisions.',
+      },
+    ],
+
+    certifications: ['Collibra Partner', 'Alation Partner', 'Atlan Partner', 'Purview Certified'],
+  },
 };
 
 // Get content for a specific landing page with personalization applied
