@@ -26,13 +26,13 @@ async function getLatestPosts(limit: number = 3) {
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-  // Use * to fetch all columns - works with any table structure
-  // Order by published_at to show most recently published articles first
+  // Fetch all published posts, order by published_at (nulls last), then created_at
   const { data, error } = await supabase
     .from('blog_posts')
     .select('*')
     .eq('is_published', true)
-    .order('published_at', { ascending: false })
+    .order('published_at', { ascending: false, nullsFirst: false })
+    .order('created_at', { ascending: false })
     .limit(limit);
 
   if (error) {
@@ -40,7 +40,14 @@ async function getLatestPosts(limit: number = 3) {
     return [];
   }
 
-  return data || [];
+  // Sort in JS to handle nulls properly - use published_at or created_at
+  const sortedData = (data || []).sort((a, b) => {
+    const dateA = new Date(a.published_at || a.created_at || 0).getTime();
+    const dateB = new Date(b.published_at || b.created_at || 0).getTime();
+    return dateB - dateA; // Descending order (newest first)
+  });
+
+  return sortedData.slice(0, limit);
 }
 
 function formatDate(dateString: string | null): string {
@@ -71,7 +78,7 @@ export default async function DynamicBlogSection({
     title: post.title,
     excerpt: post.excerpt || '',
     author: post.author_name || 'ACI Infotech',
-    date: formatDate(post.published_at ?? null),
+    date: formatDate(post.published_at || post.created_at || null),
     category: post.category || 'Insights',
     featured_image: post.featured_image_url || undefined,
     read_time: post.read_time_minutes ? `${post.read_time_minutes} min read` : undefined,
