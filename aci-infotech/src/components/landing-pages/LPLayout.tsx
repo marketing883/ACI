@@ -17,7 +17,7 @@ export default function LPLayout({ children, showMinimalFooter = true }: LPLayou
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link href="/" className="inline-block">
             <Image
-              src="/images/aci-logo-white.png"
+              src="/aci-infotech-logo-white.png"
               alt="ACI Infotech"
               width={140}
               height={40}
@@ -37,7 +37,7 @@ export default function LPLayout({ children, showMinimalFooter = true }: LPLayou
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-6">
                 <Image
-                  src="/images/aci-logo-white.png"
+                  src="/aci-infotech-logo-white.png"
                   alt="ACI Infotech"
                   width={120}
                   height={35}

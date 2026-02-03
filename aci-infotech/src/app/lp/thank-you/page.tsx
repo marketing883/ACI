@@ -71,7 +71,7 @@ function ThankYouContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link href="/">
             <Image
-              src="/images/aci-logo-white.png"
+              src="/aci-infotech-logo-white.png"
               alt="ACI Infotech"
               width={140}
               height={40}
