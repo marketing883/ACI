@@ -4,6 +4,24 @@ const nextConfig: NextConfig = {
   // Configure sharp for server-side image processing
   serverExternalPackages: ['sharp'],
 
+  // Redirects for legacy URLs
+  async redirects() {
+    return [
+      // Redirect old /blogs/* URLs to /blog/*
+      {
+        source: '/blogs/:slug',
+        destination: '/blog/:slug',
+        permanent: true, // 301 redirect for SEO
+      },
+      // Also redirect /blogs to /blog
+      {
+        source: '/blogs',
+        destination: '/blog',
+        permanent: true,
+      },
+    ];
+  },
+
   // Cache control headers - prevent long caching of HTML pages
   async headers() {
     return [
