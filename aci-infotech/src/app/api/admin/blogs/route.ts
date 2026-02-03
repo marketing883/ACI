@@ -119,7 +119,8 @@ export async function GET(request: NextRequest) {
 // CREATE - New blog post
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
+    const { content_format, ...data } = await request.json();
+    // Note: content_format is extracted but not saved (column doesn't exist in DB)
 
     // Demo mode: return mock response when Supabase isn't configured
     if (!isSupabaseConfigured()) {
@@ -167,7 +168,7 @@ export async function POST(request: NextRequest) {
 // UPDATE - Edit blog post
 export async function PUT(request: NextRequest) {
   try {
-    const { id, ...data } = await request.json();
+    const { id, content_format, ...data } = await request.json();
 
     if (!id) {
       return NextResponse.json(
@@ -178,6 +179,7 @@ export async function PUT(request: NextRequest) {
 
     console.log('Updating blog post:', id);
     console.log('Update data keys:', Object.keys(data));
+    // Note: content_format is extracted but not saved (column doesn't exist in DB)
 
     // Demo mode: return mock response when Supabase isn't configured
     if (!isSupabaseConfigured()) {
