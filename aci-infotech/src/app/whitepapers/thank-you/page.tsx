@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Download, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import { trackDownload, trackEvent } from '@/components/analytics/GoogleAnalytics';
+import { trackDownload, trackEvent } from '@/components/analytics/GoogleTagManager';
 
 interface WhitepaperInfo {
   title: string;

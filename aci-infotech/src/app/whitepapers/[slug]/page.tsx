@@ -24,7 +24,7 @@ import {
   X,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import { trackFormSubmission, trackContentView } from '@/components/analytics/GoogleAnalytics';
+import { trackFormSubmission, trackContentView } from '@/components/analytics/GoogleTagManager';
 
 interface Whitepaper {
   id: string;

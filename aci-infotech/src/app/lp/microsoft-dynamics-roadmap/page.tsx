@@ -24,7 +24,7 @@ import {
   Award,
   Play,
 } from 'lucide-react';
-import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleAnalytics';
+import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleTagManager';
 
 // Animated counter hook
 function useCountUp(end: number, duration: number = 2000, start: boolean = false) {

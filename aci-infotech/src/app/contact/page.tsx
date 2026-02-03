@@ -4,7 +4,7 @@ import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Mail, Clock, Send, CheckCircle, Globe2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleAnalytics';
+import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleTagManager';
 import InteractiveGlobe from '@/components/contact/InteractiveGlobe';
 
 const contactReasons = [

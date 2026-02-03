@@ -4,30 +4,33 @@ import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
 
-// GA4 Measurement ID
-const GA_MEASUREMENT_ID = 'G-145NLC9TW3';
+// Google Tag Manager Container ID
+const GTM_ID = 'GTM-NGTG3ZZ';
 
-// Declare gtag on window
+// Declare dataLayer on window
 declare global {
   interface Window {
-    gtag: (...args: unknown[]) => void;
-    dataLayer: unknown[];
+    dataLayer: Record<string, unknown>[];
   }
 }
 
-// Helper function to send GA4 events
-export function gtag(...args: unknown[]) {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag(...args);
+// Helper function to push events to dataLayer (GTM reads this)
+export function pushToDataLayer(event: string, data?: Record<string, unknown>) {
+  if (typeof window !== 'undefined') {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event,
+      ...data,
+    });
   }
 }
 
 // Track page views
 export function trackPageView(url: string, title?: string) {
-  gtag('event', 'page_view', {
+  pushToDataLayer('page_view', {
     page_path: url,
-    page_title: title || document.title,
-    page_location: window.location.href,
+    page_title: title || (typeof document !== 'undefined' ? document.title : ''),
+    page_location: typeof window !== 'undefined' ? window.location.href : '',
   });
 }
 
@@ -36,7 +39,7 @@ export function trackEvent(
   eventName: string,
   parameters?: Record<string, string | number | boolean>
 ) {
-  gtag('event', eventName, parameters);
+  pushToDataLayer(eventName, parameters);
 }
 
 // Track content views (blog, whitepaper, case study, etc.)
@@ -46,7 +49,7 @@ export function trackContentView(
   contentTitle: string,
   category?: string
 ) {
-  gtag('event', 'view_item', {
+  pushToDataLayer('view_item', {
     content_type: contentType,
     content_id: contentId,
     content_title: contentTitle,
@@ -60,7 +63,7 @@ export function trackDownload(
   contentType: string,
   contentTitle: string
 ) {
-  gtag('event', 'file_download', {
+  pushToDataLayer('file_download', {
     file_name: fileName,
     content_type: contentType,
     content_title: contentTitle,
@@ -74,7 +77,7 @@ export function trackFormSubmission(
   formLocation: string,
   additionalData?: Record<string, string>
 ) {
-  gtag('event', 'generate_lead', {
+  pushToDataLayer('generate_lead', {
     form_name: formName,
     form_location: formLocation,
     ...additionalData,
@@ -87,7 +90,7 @@ export function trackCTAClick(
   ctaLocation: string,
   destination?: string
 ) {
-  gtag('event', 'cta_click', {
+  pushToDataLayer('cta_click', {
     cta_text: ctaText,
     cta_location: ctaLocation,
     cta_destination: destination || 'unknown',
@@ -100,7 +103,7 @@ export function trackEngagement(
   value: number,
   pageType?: string
 ) {
-  gtag('event', `${engagementType}_milestone`, {
+  pushToDataLayer(`${engagementType}_milestone`, {
     engagement_type: engagementType,
     engagement_value: value,
     page_type: pageType || 'general',
@@ -109,7 +112,7 @@ export function trackEngagement(
 
 // Track search
 export function trackSearch(searchTerm: string, searchLocation: string) {
-  gtag('event', 'search', {
+  pushToDataLayer('search', {
     search_term: searchTerm,
     search_location: searchLocation,
   });
@@ -117,13 +120,13 @@ export function trackSearch(searchTerm: string, searchLocation: string) {
 
 // Track service page interest - key for B2B targeting
 export function trackServiceInterest(serviceName: string, serviceCategory: string) {
-  gtag('event', 'service_interest', {
+  pushToDataLayer('service_interest', {
     service_name: serviceName,
     service_category: serviceCategory,
   });
 
   // Set user property for audience building
-  gtag('set', 'user_properties', {
+  pushToDataLayer('set_user_properties', {
     interested_service: serviceName,
     last_service_viewed: serviceName,
   });
@@ -131,7 +134,7 @@ export function trackServiceInterest(serviceName: string, serviceCategory: strin
 
 // Track high-value page views (contact, pricing intent)
 export function trackHighIntentPage(pageName: string) {
-  gtag('event', 'high_intent_page_view', {
+  pushToDataLayer('high_intent_page_view', {
     page_name: pageName,
     timestamp: new Date().toISOString(),
   });
@@ -192,6 +195,25 @@ function PageViewTracker() {
   }, [pathname, searchParams]);
 
   return null;
+}
+
+// Helper to determine page type from URL
+function getPageType(): string {
+  if (typeof window === 'undefined') return 'unknown';
+
+  const pathname = window.location.pathname;
+
+  if (pathname === '/') return 'homepage';
+  if (pathname.startsWith('/blog')) return 'blog';
+  if (pathname.startsWith('/whitepapers')) return 'whitepaper';
+  if (pathname.startsWith('/case-studies')) return 'case-study';
+  if (pathname.startsWith('/webinars')) return 'webinar';
+  if (pathname.startsWith('/playbooks')) return 'playbook';
+  if (pathname.startsWith('/services')) return 'services';
+  if (pathname.startsWith('/contact')) return 'contact';
+  if (pathname.startsWith('/admin')) return 'admin';
+
+  return 'other';
 }
 
 // Scroll depth tracker
@@ -270,25 +292,6 @@ function TimeOnPageTracker() {
   }, []);
 
   return null;
-}
-
-// Helper to determine page type from URL
-function getPageType(): string {
-  if (typeof window === 'undefined') return 'unknown';
-
-  const pathname = window.location.pathname;
-
-  if (pathname === '/') return 'homepage';
-  if (pathname.startsWith('/blog')) return 'blog';
-  if (pathname.startsWith('/whitepapers')) return 'whitepaper';
-  if (pathname.startsWith('/case-studies')) return 'case-study';
-  if (pathname.startsWith('/webinars')) return 'webinar';
-  if (pathname.startsWith('/playbooks')) return 'playbook';
-  if (pathname.startsWith('/services')) return 'services';
-  if (pathname.startsWith('/contact')) return 'contact';
-  if (pathname.startsWith('/admin')) return 'admin';
-
-  return 'other';
 }
 
 // CTA click tracker - attaches to document
@@ -374,7 +377,7 @@ function EngagementScoreTracker() {
     if (score >= 50) engagementLevel = 'high';
     else if (score >= 25) engagementLevel = 'medium';
 
-    gtag('set', 'user_properties', {
+    pushToDataLayer('set_user_properties', {
       engagement_score: score,
       engagement_level: engagementLevel,
       pages_viewed_count: pagesViewed.length,
@@ -389,7 +392,7 @@ function EngagementScoreTracker() {
         reachedMilestones.push(milestone);
         sessionStorage.setItem('aci_score_milestones', JSON.stringify(reachedMilestones));
 
-        gtag('event', 'engagement_milestone', {
+        pushToDataLayer('engagement_milestone', {
           milestone_value: milestone,
           engagement_level: engagementLevel,
           pages_viewed: pagesViewed.length,
@@ -402,7 +405,7 @@ function EngagementScoreTracker() {
       const qualified = sessionStorage.getItem('aci_qualified_tracked');
       if (!qualified) {
         sessionStorage.setItem('aci_qualified_tracked', 'true');
-        gtag('event', 'qualified_visitor', {
+        pushToDataLayer('qualified_visitor', {
           engagement_score: score,
           pages_viewed: pagesViewed.length,
           services_viewed: pagesViewed.filter((p: string) => p.startsWith('/services/')).length,
@@ -414,36 +417,44 @@ function EngagementScoreTracker() {
   return null;
 }
 
-// Main GoogleAnalytics component
-export default function GoogleAnalytics() {
+// GTM Head Script Component
+export function GTMHead() {
+  return (
+    <Script id="gtm-head" strategy="afterInteractive">
+      {`
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','${GTM_ID}');
+      `}
+    </Script>
+  );
+}
+
+// GTM NoScript Component (for body)
+export function GTMBody() {
+  return (
+    <noscript>
+      <iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+        height="0"
+        width="0"
+        style={{ display: 'none', visibility: 'hidden' }}
+      />
+    </noscript>
+  );
+}
+
+// Main GoogleTagManager component
+export default function GoogleTagManager() {
   return (
     <>
-      {/* GA4 base script */}
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+      {/* GTM Script */}
+      <GTMHead />
 
-          gtag('config', '${GA_MEASUREMENT_ID}', {
-            page_path: window.location.pathname,
-            send_page_view: true,
-            cookie_flags: 'SameSite=None;Secure',
-            // Enhanced measurement settings
-            enhanced_measurement: {
-              scrolls: true,
-              outbound_clicks: true,
-              site_search: true,
-              video_engagement: true,
-              file_downloads: true
-            }
-          });
-        `}
-      </Script>
+      {/* GTM NoScript fallback */}
+      <GTMBody />
 
       {/* Enhanced tracking components */}
       <Suspense fallback={null}>

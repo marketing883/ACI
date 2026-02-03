@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Download, FileText, X, Mail, Building2, User, Loader2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import { trackFormSubmission, trackEvent, trackCTAClick } from '@/components/analytics/GoogleAnalytics';
+import { trackFormSubmission, trackEvent, trackCTAClick } from '@/components/analytics/GoogleTagManager';
 
 // Types for whitepapers
 interface Whitepaper {

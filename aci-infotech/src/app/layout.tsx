@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
-import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import GoogleTagManager from "@/components/analytics/GoogleTagManager";
 import CookieConsent from "@/components/CookieConsent";
 import GlobalStructuredData from "@/components/seo/StructuredData";
 
@@ -82,7 +82,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased font-sans" suppressHydrationWarning>
         <GlobalStructuredData />
-        <GoogleAnalytics />
+        <GoogleTagManager />
         <ConditionalLayout>{children}</ConditionalLayout>
         <CookieConsent />
       </body>
