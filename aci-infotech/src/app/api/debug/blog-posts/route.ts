@@ -6,9 +6,19 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  // Check configuration status
+  const configStatus = {
+    hasUrl: !!supabaseUrl,
+    hasAnonKey: !!supabaseAnonKey,
+    hasServiceKey: !!supabaseServiceKey,
+    cmsWillWork: !!(supabaseUrl && supabaseServiceKey),
+    warning: !supabaseServiceKey ? 'SUPABASE_SERVICE_ROLE_KEY is missing - CMS is in DEMO MODE and posts are NOT being saved!' : null
+  };
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    return NextResponse.json({ error: 'Missing Supabase credentials' }, { status: 500 });
+    return NextResponse.json({ error: 'Missing Supabase credentials', configStatus }, { status: 500 });
   }
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -37,6 +47,7 @@ export async function GET() {
 
   return NextResponse.json({
     timestamp: new Date().toISOString(),
+    configStatus,
     totalPosts: allPosts?.length || 0,
     newestByPublishedAt: allPosts?.slice(0, 10).map(p => ({
       title: p.title?.substring(0, 50),
