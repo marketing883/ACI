@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import LPForm from './LPForm';
 import { VisitorContext, getUrgencyMessage } from '@/lib/lp-personalization';
 
@@ -48,7 +50,7 @@ export default function LPHero({
   }, [context]);
 
   return (
-    <section className="relative bg-gradient-to-br from-[#0A1628] via-[#0F2847] to-[#0A1628] pt-24 pb-16 lg:pb-24 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-[#0A1628] via-[#0F2847] to-[#0A1628] pt-8 pb-16 lg:pb-24 overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div
@@ -65,6 +67,18 @@ export default function LPHero({
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Logo */}
+        <div className="mb-12">
+          <Link href="/">
+            <Image
+              src="/aci-infotech-logo-white.png"
+              alt="ACI Infotech"
+              width={160}
+              height={45}
+              className="h-12 w-auto"
+            />
+          </Link>
+        </div>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Content */}
           <div className="text-center lg:text-left">

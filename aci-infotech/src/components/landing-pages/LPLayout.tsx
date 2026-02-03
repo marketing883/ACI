@@ -12,22 +12,7 @@ interface LPLayoutProps {
 export default function LPLayout({ children, showMinimalFooter = true }: LPLayoutProps) {
   return (
     <div className="min-h-screen bg-white">
-      {/* Minimal Header - Logo only, no navigation */}
-      <header className="absolute top-0 left-0 right-0 z-50 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="inline-block">
-            <Image
-              src="/aci-infotech-logo-white.png"
-              alt="ACI Infotech"
-              width={140}
-              height={40}
-              className="h-10 w-auto"
-            />
-          </Link>
-        </div>
-      </header>
-
-      {/* Main Content */}
+      {/* Main Content - No header, logo is in hero */}
       <main>{children}</main>
 
       {/* Minimal Footer */}
