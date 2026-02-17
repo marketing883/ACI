@@ -45,7 +45,8 @@ function AnimatedCounter({ end, prefix = '', suffix = '', duration = 2000 }: Cou
 
       // Easing function for smooth deceleration
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      setCount(Math.floor(easeOutQuart * end));
+      // Use Math.round for small end values so they don't stay at 0 for the entire animation
+      setCount(Math.round(easeOutQuart * end));
 
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
