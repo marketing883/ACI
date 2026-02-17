@@ -34,11 +34,12 @@ async function getFeaturedCaseStudies(limit: number = 6) {
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-  // First try with 'featured' column, fall back to fetching all published
+  // Only fetch featured, published case studies for the homepage
   const { data, error } = await supabase
     .from('case_studies')
     .select('*')
     .eq('status', 'published')
+    .eq('is_featured', true)
     .order('created_at', { ascending: false })
     .limit(limit);
 
