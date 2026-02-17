@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    const { name, email, company, whitepaper_slug, whitepaper_title } = data;
+    const { name, email, company, title, whitepaper_slug, whitepaper_title } = data;
 
     // Validate required fields
     if (!name || !email || !company || !whitepaper_slug) {
@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
         name,
         email,
         company,
+        job_title: title || null,
         whitepaper_slug,
         whitepaper_title,
         download_token: downloadToken,
