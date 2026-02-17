@@ -234,19 +234,11 @@ function DownloadModal({
           <Button
             type="submit"
             disabled={isSubmitting}
+            loading={isSubmitting}
             className="w-full"
+            leftIcon={!isSubmitting ? <Download className="w-5 h-5" /> : undefined}
           >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                Processing...
-              </>
-            ) : (
-              <>
-                <Download className="w-5 h-5 mr-2" />
-                Get Free Whitepaper
-              </>
-            )}
+            {isSubmitting ? 'Processing...' : 'Get Free Whitepaper'}
           </Button>
 
           <p className="text-xs text-center text-gray-500">
@@ -388,8 +380,8 @@ export default function WhitepaperDetailPage() {
                 onClick={() => setShowDownloadModal(true)}
                 size="lg"
                 className="group"
+                leftIcon={<Download className="w-5 h-5 group-hover:animate-bounce" />}
               >
-                <Download className="w-5 h-5 mr-2 group-hover:animate-bounce" />
                 Download Free Whitepaper
               </Button>
             </div>
@@ -559,8 +551,8 @@ export default function WhitepaperDetailPage() {
             onClick={() => setShowDownloadModal(true)}
             variant="lime"
             size="lg"
+            leftIcon={<Download className="w-5 h-5" />}
           >
-            <Download className="w-5 h-5 mr-2" />
             Get Your Free Copy
           </Button>
         </div>
