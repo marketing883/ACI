@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getServiceSupabase } from '@/lib/supabase';
 import crypto from 'crypto';
 import { sendWhitepaperLeadNotification, sendWhitepaperThankYouEmail } from '@/lib/email';
 
@@ -20,6 +20,9 @@ export async function POST(request: NextRequest) {
     // Generate download token
     const downloadToken = crypto.randomUUID();
     const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    // Use service role client to bypass RLS for server-side insert
+    const supabase = getServiceSupabase();
 
     // Insert into Supabase
     const { error } = await supabase.from('whitepaper_leads').insert([
@@ -86,6 +89,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   // Admin endpoint to list whitepaper leads
   try {
+    const supabase = getServiceSupabase();
     const { data, error } = await supabase
       .from('whitepaper_leads')
       .select('*')

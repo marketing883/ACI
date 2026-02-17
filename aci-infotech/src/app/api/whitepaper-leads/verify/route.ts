@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getServiceSupabase } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,6 +9,8 @@ export async function GET(request: NextRequest) {
     if (!token) {
       return NextResponse.json({ valid: false });
     }
+
+    const supabase = getServiceSupabase();
 
     // Check if token exists and is valid
     const { data, error } = await supabase
