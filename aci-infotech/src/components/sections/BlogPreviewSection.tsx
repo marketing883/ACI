@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Clock, Download, FileText, X, Mail, Building2, User, Loader2, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Clock, Download, FileText, Loader2, CheckCircle2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
 interface BlogPost {
@@ -36,184 +36,11 @@ interface BlogPreviewSectionProps {
   showWhitepaper?: boolean;
 }
 
-// Download Modal Component
-function WhitepaperDownloadModal({
-  isOpen,
-  onClose,
-  whitepaper,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  whitepaper: Whitepaper | null;
-}) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError('');
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError('Please enter a valid email address');
-      setIsSubmitting(false);
-      return;
-    }
-
-    const personalDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com'];
-    const emailDomain = formData.email.split('@')[1]?.toLowerCase();
-    if (personalDomains.includes(emailDomain)) {
-      setError('Please use your work email address');
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/whitepaper-leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          whitepaper_slug: whitepaper?.slug,
-          whitepaper_title: whitepaper?.title,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit');
-      }
-
-      const data = await response.json();
-      window.location.href = `/whitepapers/thank-you?token=${data.downloadToken}&whitepaper=${whitepaper?.slug}`;
-    } catch {
-      setError('Something went wrong. Please try again.');
-      setIsSubmitting(false);
-    }
-  };
-
-  if (!isOpen || !whitepaper) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
-          <X className="w-5 h-5 text-gray-500" />
-        </button>
-
-        <div className="p-6">
-          <div className="text-center mb-6">
-            <div className="w-12 h-12 bg-[var(--aci-primary)]/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Download className="w-6 h-6 text-[var(--aci-primary)]" />
-            </div>
-            <h3 className="text-xl font-bold text-[var(--aci-secondary)]">
-              Download Whitepaper
-            </h3>
-            <p className="text-gray-600 text-sm mt-2">
-              {whitepaper.title}
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
-                  placeholder="John Smith"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Work Email
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
-                  placeholder="john@company.com"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Company
-              </label>
-              <div className="relative">
-                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  required
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
-                  placeholder="Acme Corp"
-                />
-              </div>
-            </div>
-
-            {error && (
-              <p className="text-red-500 text-sm">{error}</p>
-            )}
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3 bg-[var(--aci-primary)] text-white font-semibold rounded-lg hover:bg-[var(--aci-primary-dark)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <Download className="w-5 h-5" />
-                  Get Whitepaper
-                </>
-              )}
-            </button>
-
-            <p className="text-xs text-gray-500 text-center">
-              By downloading, you agree to receive occasional updates from ACI Infotech.
-              Unsubscribe anytime.
-            </p>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // Featured Whitepaper Card Component
 function FeaturedWhitepaperCard({
   whitepaper,
-  onDownloadClick,
 }: {
   whitepaper: Whitepaper;
-  onDownloadClick: () => void;
 }) {
   const [imageError, setImageError] = useState(false);
 
@@ -265,13 +92,13 @@ function FeaturedWhitepaperCard({
         </div>
 
         <div className="mt-6">
-          <button
-            onClick={onDownloadClick}
-            className="w-full py-3 bg-[#0052CC] text-white font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+          <Link
+            href={`/whitepapers/${whitepaper.slug}`}
+            className="w-full py-3 bg-[#0052CC] text-white font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 flex items-center justify-center gap-2"
           >
             <Download className="w-5 h-5" />
             Download Free
-          </button>
+          </Link>
           <Link
             href="/whitepapers"
             className="block text-center text-gray-300 text-sm mt-3 hover:text-white transition-colors"
@@ -292,7 +119,6 @@ export default function BlogPreviewSection({
   showWhitepaper = true,
 }: BlogPreviewSectionProps) {
   const [featuredWhitepaper, setFeaturedWhitepaper] = useState<Whitepaper | null>(null);
-  const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -412,7 +238,6 @@ export default function BlogPreviewSection({
               ) : (
                 <FeaturedWhitepaperCard
                   whitepaper={displayWhitepaper}
-                  onDownloadClick={() => setShowDownloadModal(true)}
                 />
               )}
             </div>
@@ -427,12 +252,6 @@ export default function BlogPreviewSection({
         </div>
       </div>
 
-      {/* Download Modal */}
-      <WhitepaperDownloadModal
-        isOpen={showDownloadModal}
-        onClose={() => setShowDownloadModal(false)}
-        whitepaper={displayWhitepaper}
-      />
     </section>
   );
 }
