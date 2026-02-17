@@ -406,7 +406,6 @@ export default function CaseStudiesPage() {
             metrics?: { label: string; value: string; description?: string }[] | string;
             technologies?: string[] | string;
             is_featured?: boolean;
-            featured?: boolean; // Database uses 'featured' column
             status?: string;
           }
 
