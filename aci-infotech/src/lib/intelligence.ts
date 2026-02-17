@@ -328,3 +328,178 @@ CRITICAL FORMATTING: Never use em dashes (—) or en dashes (–) in any text co
   console.error('All AI models failed for intelligence:', errors);
   return createFallbackReport(lead);
 }
+
+// Whitepaper nurturing content generation
+export interface WhitepaperNurturingContent {
+  relatedTopics: string[];
+  valueProps: string[];
+  caseStudies: string[];
+  nextSteps: string[];
+  ctaText: string;
+  ctaUrl: string;
+}
+
+function createFallbackNurturingContent(whitepaperSlug: string): WhitepaperNurturingContent {
+  // Category-based fallback content
+  const slug = whitepaperSlug.toLowerCase();
+
+  if (slug.includes('data') || slug.includes('analytics') || slug.includes('engineering')) {
+    return {
+      relatedTopics: ['Modern Data Platform Architecture', 'Real-Time Analytics', 'Data Governance Best Practices'],
+      valueProps: ['Production-grade data pipelines with SLAs', '80+ enterprise deployments', 'Databricks and Snowflake expertise'],
+      caseStudies: ['MSCI: $12M savings through SAP data consolidation', 'Fortune 500 Retailer: Real-time inventory analytics'],
+      nextSteps: ['Schedule a data architecture assessment', 'Review our data engineering case studies', 'Connect with a senior data architect'],
+      ctaText: 'Schedule Data Strategy Assessment',
+      ctaUrl: 'https://aci-infotech.com/contact?reason=data-strategy',
+    };
+  }
+
+  if (slug.includes('ai') || slug.includes('ml') || slug.includes('governance')) {
+    return {
+      relatedTopics: ['MLOps and Model Lifecycle Management', 'Responsible AI Implementation', 'GenAI for Enterprise'],
+      valueProps: ['End-to-end MLOps pipelines', 'AI governance frameworks', 'Production ML systems with monitoring'],
+      caseStudies: ['AI Forecasting: $18M savings, 92% accuracy', 'Enterprise GenAI deployment with ArqAI'],
+      nextSteps: ['Discuss your AI initiatives', 'Review AI governance frameworks', 'Explore MLOps maturity assessment'],
+      ctaText: 'Discuss Your AI Initiatives',
+      ctaUrl: 'https://aci-infotech.com/contact?reason=ai-consultation',
+    };
+  }
+
+  if (slug.includes('cloud') || slug.includes('migration')) {
+    return {
+      relatedTopics: ['Cloud Migration Strategies', 'Cost Optimization on AWS/Azure/GCP', 'Kubernetes and Container Orchestration'],
+      valueProps: ['Zero-downtime migrations', 'Multi-cloud expertise', 'Cost optimization frameworks'],
+      caseStudies: ['Legacy Hadoop to Databricks migration', 'Multi-cloud deployment for Fortune 500'],
+      nextSteps: ['Get a cloud readiness assessment', 'Review migration case studies', 'Connect with cloud architects'],
+      ctaText: 'Get Cloud Assessment',
+      ctaUrl: 'https://aci-infotech.com/contact?reason=cloud-assessment',
+    };
+  }
+
+  if (slug.includes('martech') || slug.includes('cdp') || slug.includes('customer')) {
+    return {
+      relatedTopics: ['Customer 360 Implementation', 'Marketing Automation', 'Personalization at Scale'],
+      valueProps: ['CDP implementation expertise', 'Salesforce and Braze specialists', 'Unified customer experience'],
+      caseStudies: ['RaceTrac: 25% promotion lift with MarTech', 'Retail CDP unifying 10M+ customer profiles'],
+      nextSteps: ['Assess your MarTech stack', 'Review CDP implementation guides', 'Connect with MarTech specialists'],
+      ctaText: 'Assess Your MarTech Stack',
+      ctaUrl: 'https://aci-infotech.com/contact?reason=martech-assessment',
+    };
+  }
+
+  // Default fallback
+  return {
+    relatedTopics: ['Enterprise Architecture', 'Digital Transformation', 'Technology Strategy'],
+    valueProps: ['80+ Fortune 500 clients', '$500M+ value delivered', '98% client retention'],
+    caseStudies: ['MSCI: Enterprise-wide data transformation', 'Sodexo: 400K employee platform'],
+    nextSteps: ['Schedule an architecture call', 'Explore our case studies', 'Connect with our architects'],
+    ctaText: 'Schedule Architecture Call',
+    ctaUrl: 'https://aci-infotech.com/contact?reason=architecture-call',
+  };
+}
+
+export async function generateWhitepaperNurturing(
+  whitepaperTitle: string,
+  whitepaperSlug: string,
+  leadName: string,
+  leadCompany?: string
+): Promise<WhitepaperNurturingContent> {
+  const anthropic = getAnthropicClient();
+  const openai = getOpenAIClient();
+
+  if (!anthropic && !openai) {
+    console.log('[Nurturing] No AI API configured, using fallback content');
+    return createFallbackNurturingContent(whitepaperSlug);
+  }
+
+  const firstName = leadName.split(' ')[0];
+  const companyContext = leadCompany ? `The lead works at ${leadCompany}.` : '';
+
+  const prompt = `You are a B2B content strategist for ACI Infotech, an enterprise tech consulting firm.
+
+ACI CONTEXT:
+- 80+ Fortune 500 clients, $500M+ value delivered, 98% retention
+- Services: Data Engineering (Databricks, Snowflake, dbt), AI/ML (MLOps, GenAI, ArqAI), Cloud (AWS, Azure, K8s), MarTech/CDP (Salesforce, Braze), Digital Transformation (SAP S/4HANA, ServiceNow)
+- Case Studies: MSCI ($12M savings, SAP consolidation), RaceTrac (25% promotion lift, MarTech), Sodexo (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
+
+CONTEXT:
+A lead named ${firstName} just downloaded the whitepaper: "${whitepaperTitle}" (slug: ${whitepaperSlug})
+${companyContext}
+
+Generate nurturing content for a thank you email that will provide additional value and encourage engagement.
+
+Return a JSON object with this EXACT structure (no markdown, just JSON):
+{
+  "relatedTopics": ["<3 related topics they should explore based on the whitepaper they downloaded>"],
+  "valueProps": ["<3 ACI value propositions that would resonate given their interest>"],
+  "caseStudies": ["<2 relevant case studies with brief descriptions, e.g., 'MSCI: $12M savings through data consolidation'>"],
+  "nextSteps": ["<3 actionable next steps for the lead>"],
+  "ctaText": "<compelling CTA button text, 4-6 words>",
+  "ctaUrl": "<appropriate ACI contact URL with reason parameter>"
+}
+
+Make content specific to the whitepaper topic. Be concise and actionable.
+
+CRITICAL FORMATTING: Never use em dashes or en dashes. Use commas, semicolons, colons, or periods instead.`;
+
+  const errors: string[] = [];
+
+  // Try Anthropic models first
+  if (anthropic) {
+    for (const model of [MODELS.anthropic.primary, MODELS.anthropic.fallback]) {
+      try {
+        console.log(`[Nurturing] Trying Anthropic model ${model}`);
+        const response = await anthropic.messages.create({
+          model,
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }],
+        });
+
+        const textContent = response.content.find(block => block.type === 'text');
+        const text = textContent && 'text' in textContent ? textContent.text : '';
+
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const content = JSON.parse(jsonMatch[0]) as WhitepaperNurturingContent;
+          console.log(`[Nurturing] Generated successfully with ${model}`);
+          return content;
+        }
+        console.warn(`[Nurturing] ${model} returned unparseable response`);
+      } catch (error) {
+        console.error(`[Nurturing] Anthropic model ${model} failed:`, error);
+        errors.push(`${model}: ${error}`);
+      }
+    }
+  }
+
+  // Try OpenAI models as fallback
+  if (openai) {
+    for (const model of [MODELS.openai.primary, MODELS.openai.fallback]) {
+      try {
+        console.log(`[Nurturing] Trying OpenAI model ${model}`);
+        const response = await openai.chat.completions.create({
+          model,
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }],
+        });
+
+        const content = response.choices[0]?.message?.content;
+        if (content) {
+          const jsonMatch = content.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const nurturing = JSON.parse(jsonMatch[0]) as WhitepaperNurturingContent;
+            console.log(`[Nurturing] Generated successfully with OpenAI ${model}`);
+            return nurturing;
+          }
+        }
+        console.warn(`[Nurturing] OpenAI ${model} returned unparseable response`);
+      } catch (error) {
+        console.error(`[Nurturing] OpenAI model ${model} failed:`, error);
+        errors.push(`OpenAI ${model}: ${error}`);
+      }
+    }
+  }
+
+  console.error('[Nurturing] All AI models failed:', errors);
+  return createFallbackNurturingContent(whitepaperSlug);
+}

@@ -19,7 +19,6 @@ import {
   Tag,
   Trash2,
 } from 'lucide-react';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 interface WhitepaperLead {
   id: string;
@@ -126,29 +125,27 @@ export default function WhitepaperLeadsPage() {
   const [configured, setConfigured] = useState(false);
 
   useEffect(() => {
-    const isConfigured = isSupabaseConfigured();
-    setConfigured(isConfigured);
-
-    if (isConfigured) {
-      fetchLeads();
-    } else {
-      setLeads(mockLeads);
-      setLoading(false);
-    }
+    fetchLeads();
   }, []);
 
   async function fetchLeads() {
     try {
-      const { data, error } = await supabase
-        .from('whitepaper_leads')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const response = await fetch('/api/admin/whitepaper-leads');
+      const result = await response.json();
 
-      if (error) throw error;
-      setLeads(data || []);
+      if (result.demo) {
+        setConfigured(false);
+        setLeads(mockLeads);
+      } else if (result.leads) {
+        setConfigured(true);
+        setLeads(result.leads);
+      } else {
+        setLeads([]);
+      }
     } catch (error) {
       console.error('Error fetching leads:', error);
       setLeads(mockLeads);
+      setConfigured(false);
     } finally {
       setLoading(false);
     }
@@ -166,12 +163,13 @@ export default function WhitepaperLeadsPage() {
     }
 
     try {
-      const { error } = await supabase
-        .from('whitepaper_leads')
-        .delete()
-        .eq('id', id);
+      const response = await fetch(`/api/admin/whitepaper-leads?id=${id}`, {
+        method: 'DELETE',
+      });
 
-      if (error) throw error;
+      const result = await response.json();
+      if (result.error) throw new Error(result.error);
+
       setLeads(leads.filter(l => l.id !== id));
     } catch (error) {
       console.error('Error deleting lead:', error);

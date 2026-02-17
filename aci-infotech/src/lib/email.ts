@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { generateWhitepaperNurturing, WhitepaperNurturingContent } from './intelligence';
 
 // Initialize Resend client
 const resend = process.env.RESEND_API_KEY
@@ -200,6 +201,217 @@ export async function sendThankYouEmail(data: ThankYouEmailData): Promise<boolea
     return true;
   } catch (error) {
     console.error('[Email] Error sending thank you email:', error);
+    return false;
+  }
+}
+
+// Whitepaper lead notification interfaces
+interface WhitepaperLeadNotificationData {
+  name: string;
+  email: string;
+  company?: string;
+  whitepaperSlug: string;
+  whitepaperTitle: string;
+}
+
+interface WhitepaperThankYouData {
+  name: string;
+  email: string;
+  company?: string;
+  whitepaperSlug: string;
+  whitepaperTitle: string;
+}
+
+// Send notification email to admin when whitepaper is downloaded
+export async function sendWhitepaperLeadNotification(data: WhitepaperLeadNotificationData): Promise<boolean> {
+  if (!resend) {
+    console.log('[Email] Resend not configured - skipping whitepaper lead notification');
+    console.log('[Email] Whitepaper lead data:', data);
+    return false;
+  }
+
+  const subject = `New Whitepaper Download: ${data.whitepaperTitle}`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #0066FF; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0; font-size: 24px;">New Whitepaper Download</h1>
+      </div>
+
+      <div style="padding: 30px; background: #f9f9f9;">
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <h2 style="color: #0066FF; margin-top: 0;">Contact Information</h2>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 8px 0; color: #666; width: 140px;">Name:</td>
+              <td style="padding: 8px 0; font-weight: bold;">${data.name}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #666;">Email:</td>
+              <td style="padding: 8px 0;"><a href="mailto:${data.email}" style="color: #0066FF;">${data.email}</a></td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #666;">Company:</td>
+              <td style="padding: 8px 0;">${data.company || 'Not provided'}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px;">
+          <h2 style="color: #0066FF; margin-top: 0;">Whitepaper Downloaded</h2>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 8px 0; color: #666; width: 140px;">Title:</td>
+              <td style="padding: 8px 0; font-weight: bold;">${data.whitepaperTitle}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #666;">Slug:</td>
+              <td style="padding: 8px 0;">${data.whitepaperSlug}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div style="padding: 20px; text-align: center; color: #666; font-size: 12px;">
+        <p>This lead was captured from the ACI Infotech whitepaper download system.</p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: ADMIN_EMAIL,
+      subject,
+      html,
+    });
+
+    if (error) {
+      console.error('[Email] Failed to send whitepaper lead notification:', error);
+      return false;
+    }
+
+    console.log('[Email] Whitepaper lead notification sent successfully');
+    return true;
+  } catch (error) {
+    console.error('[Email] Error sending whitepaper lead notification:', error);
+    return false;
+  }
+}
+
+// Send thank you email with AI-generated nurturing content
+export async function sendWhitepaperThankYouEmail(data: WhitepaperThankYouData): Promise<boolean> {
+  if (!resend) {
+    console.log('[Email] Resend not configured - skipping whitepaper thank you email');
+    return false;
+  }
+
+  const firstName = data.name.split(' ')[0];
+
+  // Generate AI-powered nurturing content
+  let nurturing: WhitepaperNurturingContent;
+  try {
+    nurturing = await generateWhitepaperNurturing(
+      data.whitepaperTitle,
+      data.whitepaperSlug,
+      data.name,
+      data.company
+    );
+  } catch (error) {
+    console.error('[Email] Failed to generate nurturing content, using defaults:', error);
+    nurturing = {
+      relatedTopics: ['Enterprise Architecture', 'Digital Transformation', 'Technology Strategy'],
+      valueProps: ['80+ Fortune 500 clients', '$500M+ value delivered', '98% client retention'],
+      caseStudies: ['MSCI: Enterprise-wide data transformation', 'Sodexo: 400K employee platform'],
+      nextSteps: ['Schedule an architecture call', 'Explore our case studies', 'Connect with our architects'],
+      ctaText: 'Schedule Architecture Call',
+      ctaUrl: 'https://aci-infotech.com/contact?reason=architecture-call',
+    };
+  }
+
+  const subject = `Your whitepaper is ready: ${data.whitepaperTitle}`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: linear-gradient(135deg, #0066FF 0%, #0044AA 100%); color: white; padding: 40px; text-align: center;">
+        <h1 style="margin: 0; font-size: 28px;">Thank You, ${firstName}!</h1>
+        <p style="margin: 15px 0 0 0; opacity: 0.9;">Your whitepaper download is confirmed.</p>
+      </div>
+
+      <div style="padding: 40px 30px; background: #ffffff;">
+        <p style="font-size: 16px; color: #333; line-height: 1.6;">
+          Thank you for downloading <strong>"${data.whitepaperTitle}"</strong>. We hope you find the insights valuable for your organization's journey.
+        </p>
+
+        <div style="background: #f5f7fa; padding: 25px; border-radius: 8px; margin: 30px 0;">
+          <h3 style="margin: 0 0 15px 0; color: #0066FF;">Explore Related Topics</h3>
+          <ul style="margin: 0; padding-left: 20px; color: #555; line-height: 1.8;">
+            ${nurturing.relatedTopics.map(topic => `<li>${topic}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div style="background: #E8F4FF; border-left: 4px solid #0066FF; padding: 20px; margin: 30px 0;">
+          <h3 style="margin: 0 0 15px 0; color: #0A1628;">Why ACI Infotech?</h3>
+          <ul style="margin: 0; padding-left: 20px; color: #555; line-height: 1.8;">
+            ${nurturing.valueProps.map(prop => `<li>${prop}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div style="background: #f5f7fa; padding: 25px; border-radius: 8px; margin: 30px 0;">
+          <h3 style="margin: 0 0 15px 0; color: #0066FF;">Relevant Case Studies</h3>
+          <ul style="margin: 0; padding-left: 20px; color: #555; line-height: 1.8;">
+            ${nurturing.caseStudies.map(cs => `<li>${cs}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div style="background: #E8F4FF; border-left: 4px solid #0066FF; padding: 20px; margin: 30px 0;">
+          <h3 style="margin: 0 0 10px 0; color: #0A1628;">Ready to Take the Next Step?</h3>
+          <p style="margin: 0 0 15px 0; color: #555;">
+            Our architects can provide personalized guidance based on your specific challenges and goals.
+          </p>
+          <a href="${nurturing.ctaUrl}" style="display: inline-block; background: #0066FF; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+            ${nurturing.ctaText}
+          </a>
+        </div>
+
+        <p style="font-size: 16px; color: #333; line-height: 1.6;">
+          More resources you might find helpful:
+        </p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="https://aci-infotech.com/whitepapers" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">More Whitepapers</a>
+          <a href="https://aci-infotech.com/case-studies" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">Case Studies</a>
+          <a href="https://aci-infotech.com/blog" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">Blog</a>
+        </div>
+      </div>
+
+      <div style="padding: 30px; background: #0A1628; color: #ffffff; text-align: center;">
+        <p style="margin: 0 0 10px 0; font-size: 14px;">ACI Infotech</p>
+        <p style="margin: 0; font-size: 12px; opacity: 0.7;">Enterprise Data Engineering | AI/ML | Cloud Modernization</p>
+        <div style="margin-top: 20px;">
+          <a href="https://aci-infotech.com" style="color: #7CB3FF; text-decoration: none; font-size: 12px;">aci-infotech.com</a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject,
+      html,
+    });
+
+    if (error) {
+      console.error('[Email] Failed to send whitepaper thank you email:', error);
+      return false;
+    }
+
+    console.log('[Email] Whitepaper thank you email sent to:', data.email);
+    return true;
+  } catch (error) {
+    console.error('[Email] Error sending whitepaper thank you email:', error);
     return false;
   }
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import crypto from 'crypto';
+import { sendWhitepaperLeadNotification, sendWhitepaperThankYouEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,6 +51,23 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Send emails (async, non-blocking)
+    sendWhitepaperLeadNotification({
+      name,
+      email,
+      company,
+      whitepaperSlug: whitepaper_slug,
+      whitepaperTitle: whitepaper_title,
+    }).catch(err => console.error('[Whitepaper Lead] Admin notification failed:', err));
+
+    sendWhitepaperThankYouEmail({
+      name,
+      email,
+      company,
+      whitepaperSlug: whitepaper_slug,
+      whitepaperTitle: whitepaper_title,
+    }).catch(err => console.error('[Whitepaper Lead] Thank you email failed:', err));
 
     return NextResponse.json({
       success: true,
