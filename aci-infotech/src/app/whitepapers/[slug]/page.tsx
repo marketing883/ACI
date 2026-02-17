@@ -129,8 +129,8 @@ function DownloadModal({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          whitepaperSlug: whitepaper.slug,
-          whitepaperTitle: whitepaper.title,
+          whitepaper_slug: whitepaper.slug,
+          whitepaper_title: whitepaper.title,
         }),
       });
 
