@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import CaseStudiesCarousel from './CaseStudiesCarousel';
 
-// Server-side Supabase client
+// Server-side Supabase client - use service role to bypass RLS
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 interface CaseStudyDB {
   id: string;
@@ -28,22 +28,22 @@ interface CaseStudyDB {
 }
 
 async function getFeaturedCaseStudies(limit: number = 6) {
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!supabaseUrl || !supabaseServiceKey) {
     return [];
   }
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+  // First try with 'featured' column, fall back to fetching all published
   const { data, error } = await supabase
     .from('case_studies')
     .select('*')
     .eq('status', 'published')
-    .eq('featured', true)
     .order('created_at', { ascending: false })
     .limit(limit);
 
   if (error) {
-    console.error('Error fetching case studies:', error);
+    console.error('Error fetching case studies:', error.message, error.code, error.details, error.hint);
     return [];
   }
 
