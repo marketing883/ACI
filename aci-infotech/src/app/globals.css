@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "../styles/design-system.css";
+@import "../styles/design-system.css" layer(base);
 
 @theme inline {
   /* ACI Brand Colors - Updated Design System */
@@ -20,45 +20,58 @@
   --font-title: 'Funnel Display', system-ui, -apple-system, sans-serif;
 }
 
-/* Thin line icons globally - Lucide icons */
-.lucide, [class*="lucide-"] {
-  stroke-width: 1.5 !important;
+/* Cross-browser fix: Tailwind v4 Preflight resets padding/margin using physical
+   shorthand (padding: 0) but utilities use logical properties (padding-inline).
+   Some browsers (Edge) don't correctly resolve physical vs logical across @layer
+   boundaries. This ensures the reset also uses logical properties so utilities
+   can properly override them. */
+@layer base {
+  *, ::before, ::after, ::backdrop {
+    padding-inline: 0;
+    padding-block: 0;
+    margin-inline: 0;
+    margin-block: 0;
+  }
+
+  .lucide, [class*="lucide-"] {
+    stroke-width: 1.5 !important;
+  }
+
+  /* Animated counter for hero stats */
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-count-up {
+    animation: countUp 0.6s ease-out forwards;
+  }
+
+  /* Ensure smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Remove default margins */
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* Improve font rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Fix for sticky header */
+  main {
+    min-height: 100vh;
+  }
 }
 
-/* Animated counter for hero stats */
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-count-up {
-  animation: countUp 0.6s ease-out forwards;
-}
-
-/* Ensure smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Remove default margins */
-body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-/* Improve font rendering */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Fix for sticky header */
-main {
-  min-height: 100vh;
-}
-
-/* Custom scrollbar */
+/* Custom scrollbar - keep unlayered for pseudo-element compatibility */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

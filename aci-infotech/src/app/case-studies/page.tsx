@@ -438,7 +438,7 @@ export default function CaseStudiesPage() {
                 { metric: 'Significant', description: 'Business impact achieved' }
               ],
               technologies: techArray,
-              is_featured: study.is_featured || study.featured, // Handle both field names
+              is_featured: study.is_featured,
               is_published: study.status === 'published',
             };
           });
