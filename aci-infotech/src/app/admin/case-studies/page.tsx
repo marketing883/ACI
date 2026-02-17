@@ -196,7 +196,7 @@ export default function CaseStudiesAdmin() {
     try {
       const { error } = await supabase
         .from('case_studies')
-        .update({ is_featured: newStatus })
+        .update({ featured: newStatus })
         .eq('id', id);
 
       if (error) throw error;

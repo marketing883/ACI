@@ -125,11 +125,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let newsEntries: MetadataRoute.Sitemap = [];
 
   if (supabase) {
-    // Fetch published blog posts
+    // Fetch published blog posts (published_at not null = published)
     const { data: blogPosts } = await supabase
       .from('blog_posts')
       .select('slug, updated_at, created_at')
-      .eq('is_published', true)
+      .not('published_at', 'is', null)
       .order('created_at', { ascending: false });
 
     if (blogPosts) {
@@ -141,11 +141,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
     }
 
-    // Fetch published case studies
+    // Fetch published case studies (status = 'published')
     const { data: caseStudies } = await supabase
       .from('case_studies')
       .select('slug, updated_at, created_at')
-      .eq('is_published', true)
+      .eq('status', 'published')
       .order('created_at', { ascending: false });
 
     if (caseStudies) {
@@ -157,11 +157,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
     }
 
-    // Fetch published whitepapers
+    // Fetch published whitepapers (status = 'published')
     const { data: whitepapers } = await supabase
       .from('whitepapers')
       .select('slug, updated_at, created_at')
-      .eq('is_published', true)
+      .eq('status', 'published')
       .order('created_at', { ascending: false });
 
     if (whitepapers) {

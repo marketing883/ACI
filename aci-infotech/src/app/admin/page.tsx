@@ -164,13 +164,23 @@ export default function AdminDashboard() {
       const totalWhitepaperLeads = await safeCount('whitepaper_leads');
       const newWhitepaperLeads = await safeCount('whitepaper_leads', { column: 'status', value: 'new' });
 
-      // Fetch case studies stats
+      // Fetch case studies stats (uses status column)
       const totalCaseStudies = await safeCount('case_studies');
-      const publishedCaseStudies = await safeCount('case_studies', { column: 'is_published', value: true });
+      const publishedCaseStudies = await safeCount('case_studies', { column: 'status', value: 'published' });
 
-      // Fetch blog stats
+      // Fetch blog stats (uses published_at not null for published)
       const totalBlog = await safeCount('blog_posts');
-      const publishedBlog = await safeCount('blog_posts', { column: 'is_published', value: true });
+      // For published blogs, count those with published_at not null
+      let publishedBlog = 0;
+      try {
+        const { count, error } = await supabase
+          .from('blog_posts')
+          .select('*', { count: 'exact', head: true })
+          .not('published_at', 'is', null);
+        if (!error && count !== null) publishedBlog = count;
+      } catch {
+        // Ignore errors
+      }
 
       setStats({
         contacts: { total: totalContacts, new: newContacts },

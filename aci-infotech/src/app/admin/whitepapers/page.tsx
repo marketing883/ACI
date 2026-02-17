@@ -110,13 +110,13 @@ export default function WhitepapersAdmin() {
       if (!currentFeatured) {
         await supabase
           .from('whitepapers')
-          .update({ is_featured: false })
+          .update({ featured: false })
           .neq('id', id);
       }
 
       const { error } = await supabase
         .from('whitepapers')
-        .update({ is_featured: !currentFeatured })
+        .update({ featured: !currentFeatured })
         .eq('id', id);
 
       if (error) throw error;

@@ -38,7 +38,7 @@ async function getFeaturedCaseStudies(limit: number = 6) {
     .from('case_studies')
     .select('*')
     .eq('status', 'published')
-    .eq('is_featured', true)
+    .eq('featured', true)
     .order('created_at', { ascending: false })
     .limit(limit);
 

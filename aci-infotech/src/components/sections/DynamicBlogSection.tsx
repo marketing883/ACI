@@ -42,7 +42,7 @@ async function getLatestPosts(limit: number = 3) {
   const { data, error } = await supabase
     .from('blog_posts')
     .select('*')
-    .eq('is_published', true)
+    .not('published_at', 'is', null)
     .order('published_at', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false })
     .limit(fetchLimit);

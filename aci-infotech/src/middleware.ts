@@ -10,9 +10,10 @@ function getPublicUrl(request: NextRequest, pathname: string, searchParams?: URL
   // Fall back to host header
   const host = forwardedHost || request.headers.get('host') || 'aciinfotech.com';
 
-  // Build the URL - always use the public host, never localhost
-  const publicHost = host.includes('localhost') ? 'aciinfotech.com' : host;
-  const protocol = forwardedProto === 'http' ? 'http' : 'https';
+  // Build the URL - use localhost in development, public host in production
+  const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
+  const publicHost = isLocalhost ? host : host;
+  const protocol = isLocalhost ? 'http' : (forwardedProto === 'http' ? 'http' : 'https');
 
   let url = `${protocol}://${publicHost}${pathname}`;
   if (searchParams && searchParams.toString()) {

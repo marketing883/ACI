@@ -406,6 +406,7 @@ export default function CaseStudiesPage() {
             metrics?: { label: string; value: string; description?: string }[] | string;
             technologies?: string[] | string;
             is_featured?: boolean;
+            featured?: boolean; // Database uses 'featured' column
             status?: string;
           }
 
@@ -438,7 +439,7 @@ export default function CaseStudiesPage() {
                 { metric: 'Significant', description: 'Business impact achieved' }
               ],
               technologies: techArray,
-              is_featured: study.is_featured,
+              is_featured: study.is_featured || study.featured, // Handle both field names
               is_published: study.status === 'published',
             };
           });

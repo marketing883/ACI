@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false });
 
     if (featured) {
-      query = query.eq('is_featured', true);
+      query = query.eq('featured', true);
     }
 
     // Apply pagination
@@ -110,10 +110,22 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// Helper to transform frontend field names to database column names
+function transformFieldNames(data: Record<string, unknown>): Record<string, unknown> {
+  const transformed = { ...data };
+  // Map is_featured -> featured (database uses 'featured' column)
+  if ('is_featured' in transformed) {
+    transformed.featured = transformed.is_featured;
+    delete transformed.is_featured;
+  }
+  return transformed;
+}
+
 // CREATE - New case study
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
+    const rawData = await request.json();
+    const data = transformFieldNames(rawData);
 
     // Demo mode: return mock response when Supabase isn't configured
     if (!isSupabaseConfigured()) {
@@ -161,7 +173,8 @@ export async function POST(request: NextRequest) {
 // UPDATE - Edit case study
 export async function PUT(request: NextRequest) {
   try {
-    const { id, ...data } = await request.json();
+    const { id, ...rawData } = await request.json();
+    const data = transformFieldNames(rawData);
 
     if (!id) {
       return NextResponse.json(

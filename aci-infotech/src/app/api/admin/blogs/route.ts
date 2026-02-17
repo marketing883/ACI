@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
         .from('blog_posts')
         .select('*')
         .eq('slug', slug)
-        .eq('is_published', true)
+        .not('published_at', 'is', null)
         .single();
 
       if (error) {
@@ -80,11 +80,11 @@ export async function GET(request: NextRequest) {
       .order('published_at', { ascending: false });
 
     if (publishedOnly) {
-      query = query.eq('is_published', true);
+      query = query.not('published_at', 'is', null);
     }
 
     if (featured) {
-      query = query.eq('is_featured', true);
+      query = query.eq('featured', true);
     }
 
     // Apply pagination
@@ -116,10 +116,32 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// Helper to transform frontend field names to database column names
+function transformFieldNames(data: Record<string, unknown>): Record<string, unknown> {
+  const transformed = { ...data };
+  // Map is_featured -> featured (database uses 'featured' column)
+  if ('is_featured' in transformed) {
+    transformed.featured = transformed.is_featured;
+    delete transformed.is_featured;
+  }
+  // Handle is_published: if true and no published_at, set published_at to now
+  // if false, ensure published_at is null
+  if ('is_published' in transformed) {
+    if (transformed.is_published && !transformed.published_at) {
+      transformed.published_at = new Date().toISOString();
+    } else if (!transformed.is_published) {
+      transformed.published_at = null;
+    }
+    delete transformed.is_published;
+  }
+  return transformed;
+}
+
 // CREATE - New blog post
 export async function POST(request: NextRequest) {
   try {
-    const { content_format, ...data } = await request.json();
+    const { content_format, ...rawData } = await request.json();
+    const data = transformFieldNames(rawData);
     // Note: content_format is extracted but not saved (column doesn't exist in DB)
 
     // Demo mode: return mock response when Supabase isn't configured
@@ -168,7 +190,8 @@ export async function POST(request: NextRequest) {
 // UPDATE - Edit blog post
 export async function PUT(request: NextRequest) {
   try {
-    const { id, content_format, ...data } = await request.json();
+    const { id, content_format, ...rawData } = await request.json();
+    const data = transformFieldNames(rawData);
 
     if (!id) {
       return NextResponse.json(
