@@ -57,8 +57,8 @@ const fallbackWhitepapers: Record<string, Whitepaper> = {
     file_url: '/whitepapers/pdfs/retail-technology-benchmark-report-2026.pdf',
     category: 'Retail & Technology',
     tags: ['Retail', 'Digital Transformation', 'Technology Benchmark'],
-    read_time: '25 min',
-    page_count: 42,
+    read_time: '15 min',
+    page_count: 25,
     published_at: '2026-02-16',
     executive_summary: 'Retail executives face unprecedented pressure to modernize technology stacks while maintaining operational efficiency and customer satisfaction. This benchmark report provides actionable insights from 120+ retail enterprises across multiple verticals.',
     key_takeaways: [
@@ -368,7 +368,7 @@ export default function WhitepaperDetailPage() {
               <div className="flex flex-wrap gap-4 mb-8">
                 <div className="flex items-center gap-2 text-blue-200">
                   <BookOpen className="w-5 h-5" />
-                  <span>{whitepaper.page_count || 42} pages</span>
+                  <span>{whitepaper.page_count || 25} pages</span>
                 </div>
                 <div className="flex items-center gap-2 text-blue-200">
                   <Calendar className="w-5 h-5" />
