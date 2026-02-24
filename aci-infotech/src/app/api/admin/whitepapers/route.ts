@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false });
 
     if (featured) {
-      query = query.eq('featured', true);
+      query = query.eq('is_featured', true);
     }
 
     // Apply pagination
@@ -95,13 +95,8 @@ export async function GET(request: NextRequest) {
 
 // Helper to transform frontend field names to database column names
 function transformFieldNames(data: Record<string, unknown>): Record<string, unknown> {
-  const transformed = { ...data };
-  // Map is_featured -> featured (database uses 'featured' column)
-  if ('is_featured' in transformed) {
-    transformed.featured = transformed.is_featured;
-    delete transformed.is_featured;
-  }
-  return transformed;
+  // Database uses 'is_featured' column directly, no transformation needed
+  return { ...data };
 }
 
 // CREATE - New whitepaper
