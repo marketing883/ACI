@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (featured) {
-      query = query.eq('featured', true);
+      query = query.eq('is_featured', true);
     }
 
     // Apply pagination
@@ -119,11 +119,7 @@ export async function GET(request: NextRequest) {
 // Helper to transform frontend field names to database column names
 function transformFieldNames(data: Record<string, unknown>): Record<string, unknown> {
   const transformed = { ...data };
-  // Map is_featured -> featured (database uses 'featured' column)
-  if ('is_featured' in transformed) {
-    transformed.featured = transformed.is_featured;
-    delete transformed.is_featured;
-  }
+  // Database uses 'is_featured' column directly, no transformation needed
   // Handle is_published: if true and no published_at, set published_at to now
   // if false, ensure published_at is null
   if ('is_published' in transformed) {
