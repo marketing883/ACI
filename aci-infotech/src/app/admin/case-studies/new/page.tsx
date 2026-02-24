@@ -246,8 +246,13 @@ export default function NewCaseStudyPage() {
 
     setUploadingImage(true);
     try {
+      // Read file into memory first to prevent ERR_UPLOAD_FILE_CHANGED
+      const arrayBuffer = await file.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: file.type });
+      const newFile = new File([blob], file.name, { type: file.type });
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', newFile);
       formData.append('bucket', 'ACI-web');
       formData.append('folder', 'case-studies');
 
@@ -264,7 +269,7 @@ export default function NewCaseStudyPage() {
       setFeaturedImage(result.url);
     } catch (error) {
       console.error('Error uploading image:', error);
-      alert('Failed to upload image');
+      alert('Failed to upload image. Please try again.');
     } finally {
       setUploadingImage(false);
     }
@@ -290,8 +295,13 @@ export default function NewCaseStudyPage() {
 
     setUploadingLogo(true);
     try {
+      // Read file into memory first to prevent ERR_UPLOAD_FILE_CHANGED
+      const arrayBuffer = await file.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: file.type });
+      const newFile = new File([blob], file.name, { type: file.type });
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', newFile);
       formData.append('bucket', 'ACI-web');
       formData.append('folder', 'logos');
 

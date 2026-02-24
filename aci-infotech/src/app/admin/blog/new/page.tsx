@@ -642,8 +642,13 @@ export default function NewBlogPostPage() {
 
     setUploadingImage(true);
     try {
+      // Read file into memory first to prevent ERR_UPLOAD_FILE_CHANGED
+      const arrayBuffer = await file.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: file.type });
+      const newFile = new File([blob], file.name, { type: file.type });
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', newFile);
       formData.append('folder', 'blog-images');
       formData.append('bucket', 'ACI-web');
 
@@ -661,7 +666,7 @@ export default function NewBlogPostPage() {
       setFeaturedImage(result.url);
     } catch (error) {
       console.error('Error uploading image:', error);
-      alert('Failed to upload image');
+      alert('Failed to upload image. Please try again.');
     } finally {
       setUploadingImage(false);
     }

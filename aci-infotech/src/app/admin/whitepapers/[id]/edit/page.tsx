@@ -207,8 +207,13 @@ export default function EditWhitepaperPage() {
 
     setUploadingFile(true);
     try {
+      // Read file into memory first to prevent ERR_UPLOAD_FILE_CHANGED
+      const arrayBuffer = await file.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: file.type });
+      const newFile = new File([blob], file.name, { type: file.type });
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', newFile);
       formData.append('folder', 'whitepapers');
       formData.append('bucket', 'ACI-web');
 
@@ -226,9 +231,11 @@ export default function EditWhitepaperPage() {
       setFileUrl(result.url);
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert('Failed to upload file');
+      alert('Failed to upload file. Please try again.');
     } finally {
       setUploadingFile(false);
+      // Reset file input
+      e.target.value = '';
     }
   };
 
@@ -243,8 +250,13 @@ export default function EditWhitepaperPage() {
 
     setUploadingCover(true);
     try {
+      // Read file into memory first to prevent ERR_UPLOAD_FILE_CHANGED
+      const arrayBuffer = await file.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: file.type });
+      const newFile = new File([blob], file.name, { type: file.type });
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', newFile);
       formData.append('folder', 'whitepaper-covers');
       formData.append('bucket', 'ACI-web');
 
@@ -262,9 +274,11 @@ export default function EditWhitepaperPage() {
       setCoverImage(result.url);
     } catch (error) {
       console.error('Error uploading cover:', error);
-      alert('Failed to upload cover image');
+      alert('Failed to upload cover image. Please try again.');
     } finally {
       setUploadingCover(false);
+      // Reset file input
+      e.target.value = '';
     }
   };
 
