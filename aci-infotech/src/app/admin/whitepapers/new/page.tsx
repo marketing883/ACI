@@ -325,7 +325,7 @@ export default function NewWhitepaperPage() {
                 URL Slug *
               </label>
               <div className="flex items-center gap-2">
-                <span className="text-gray-500">/resources/whitepapers/</span>
+                <span className="text-gray-500">/whitepapers/</span>
                 <input
                   type="text"
                   value={slug}

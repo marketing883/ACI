@@ -363,7 +363,7 @@ export default function WhitepapersAdmin() {
                           <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-10">
                             {wp.status === 'published' && (
                               <Link
-                                href={`/resources/whitepapers/${wp.slug}`}
+                                href={`/whitepapers/${wp.slug}`}
                                 target="_blank"
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                               >

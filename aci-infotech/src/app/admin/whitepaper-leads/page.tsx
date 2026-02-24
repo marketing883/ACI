@@ -101,7 +101,7 @@ const mockLeads: WhitepaperLead[] = [
 ];
 
 const whitepaperNames: Record<string, string> = {
-  'enterprise-data-strategy-2025': 'Enterprise Data Strategy 2025',
+  'retail-technology-benchmark-report-2026': 'Retail Technology Benchmark Report 2026',
   'ai-governance-playbook': 'AI Governance Playbook',
   'cloud-migration-blueprint': 'Cloud Migration Blueprint',
   'martech-cdp-guide': 'MarTech & CDP Implementation Guide',

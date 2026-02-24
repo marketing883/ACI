@@ -148,16 +148,16 @@ export default function BlogPreviewSection({
   // Fallback whitepaper for development
   const displayWhitepaper = featuredWhitepaper || {
     id: 'default',
-    slug: 'enterprise-data-strategy-2025',
-    title: 'Enterprise Data Strategy 2025',
-    excerpt: 'Build resilient, AI-ready data platforms that scale with your business needs.',
-    description: 'A comprehensive guide to building resilient, AI-ready data platforms that scale with your business needs. Learn from 80+ enterprise deployments.',
+    slug: 'retail-technology-benchmark-report-2026',
+    title: 'Retail Technology Benchmark Report 2026',
+    excerpt: 'Retail executives face unprecedented pressure to modernize technology stacks while maintaining operational efficiency and customer satisfaction.',
+    description: 'A comprehensive benchmark report analyzing technology adoption across 120+ retail enterprises, with actionable frameworks for digital transformation.',
     highlights: [
-      'Framework for AI-powered data architecture',
-      'Cost optimization strategies that drive 40% savings',
-      'Real-world case studies from Fortune 500 implementations',
+      'Identify technology gaps costing your organization revenue and efficiency',
+      'Access proven frameworks that reduce deployment risks by 40%',
+      'Benchmark data from 120+ retail enterprises across multiple verticals',
     ],
-    cover_image: '/images/whitepapers/data-strategy-cover.jpg',
+    cover_image: '/images/whitepapers/retail-benchmark-cover.jpg',
   };
 
   return (
