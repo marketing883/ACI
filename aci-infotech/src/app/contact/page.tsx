@@ -75,8 +75,8 @@ function ContactForm() {
       });
 
       setIsSubmitted(true);
-    } catch {
-      setError('Something went wrong. Please try again or email us directly.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again or email us directly.');
     } finally {
       setIsSubmitting(false);
     }
