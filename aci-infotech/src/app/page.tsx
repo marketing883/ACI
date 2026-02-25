@@ -154,44 +154,49 @@ export default function HomePage() {
       />
 
       {/* Final CTA Section */}
-      <section className="relative py-24 overflow-hidden">
-        {/* Background Image */}
+      <section className="relative py-28 overflow-hidden">
+        {/* Background Video */}
         <div className="absolute inset-0">
-          <img
-            src="/images/aci-cta-home-bg.jpg"
-            alt=""
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
             className="w-full h-full object-cover"
-          />
-          {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-[#0A1628]/75" />
+            poster="/images/aci-cta-home-bg.jpg"
+          >
+            <source src="/videos/cta-bg.mp4" type="video/mp4" />
+          </video>
+          {/* Dark Overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 via-[#0A1628]/80 to-[#0A1628]/70" />
         </div>
 
         {/* Content */}
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 font-[var(--font-title)]">
-            Talk to Someone Who&apos;s Built This Before
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 font-[var(--font-title)] drop-shadow-lg">
+            Let&apos;s Build Something Exceptional Together
           </h2>
-          <p className="text-lg md:text-xl text-blue-100/90 mb-10 max-w-2xl mx-auto">
-            Tell us what you&apos;re trying to build. We&apos;ll tell you if we&apos;ve done it before and exactly how it went.
+          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+            From strategy to deployment, we partner with enterprises to turn data challenges into competitive advantages.
           </p>
 
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-6 sm:gap-10 mb-12 text-left sm:text-center">
-            <div className="flex items-center gap-3 text-white/90">
-              <span className="w-2 h-2 bg-[#C4FF61] rounded-full flex-shrink-0" />
-              <span className="text-sm md:text-base">See similar builds and their outcomes</span>
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-6 sm:gap-10 mb-14">
+            <div className="flex items-center gap-3 text-white">
+              <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
+              <span className="text-base md:text-lg drop-shadow-md">Enterprise-grade solutions</span>
             </div>
-            <div className="flex items-center gap-3 text-white/90">
-              <span className="w-2 h-2 bg-[#C4FF61] rounded-full flex-shrink-0" />
-              <span className="text-sm md:text-base">Browse architectures we&apos;ve actually deployed</span>
+            <div className="flex items-center gap-3 text-white">
+              <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
+              <span className="text-base md:text-lg drop-shadow-md">Proven delivery track record</span>
             </div>
-            <div className="flex items-center gap-3 text-white/90">
-              <span className="w-2 h-2 bg-[#C4FF61] rounded-full flex-shrink-0" />
-              <span className="text-sm md:text-base">Save months of trial and error</span>
+            <div className="flex items-center gap-3 text-white">
+              <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
+              <span className="text-base md:text-lg drop-shadow-md">Dedicated partnership approach</span>
             </div>
           </div>
 
           <Button href="/contact" variant="lime" size="lg">
-            Book 30 Minutes
+            Start the Conversation
           </Button>
         </div>
       </section>
