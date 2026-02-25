@@ -609,7 +609,7 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
           </div>
 
           {/* Title */}
-          <h5 className="text-white font-semibold text-sm leading-snug mb-4 group-hover:text-[#C4FF61] transition-colors duration-300">
+          <h5 className="text-white font-semibold text-base leading-snug mb-4 group-hover:text-[#C4FF61] transition-colors duration-300">
             {playbook.displayTitle}
           </h5>
 
