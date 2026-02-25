@@ -45,6 +45,10 @@ export const RATE_LIMITS = {
   auth: { requests: 5, window: '300 s' as const },
   // Read-only endpoints (more permissive)
   read: { requests: 30, window: '10 s' as const },
+  // Contact form submissions (prevent spam)
+  contact: { requests: 5, window: '3600 s' as const }, // 5 per hour
+  // Newsletter subscriptions
+  newsletter: { requests: 3, window: '3600 s' as const }, // 3 per hour
 };
 
 export type RateLimitType = keyof typeof RATE_LIMITS;

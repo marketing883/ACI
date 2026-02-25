@@ -1,17 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Button from '@/components/ui/Button';
 import FormField from './FormField';
 import { CheckCircle, AlertCircle } from 'lucide-react';
+import { isWorkEmail } from '@/lib/email-validation';
 
-// Validation schema
+// Validation schema with work email check
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string()
+    .email('Please enter a valid email address')
+    .refine(isWorkEmail, {
+      message: 'Please use your work email. Personal emails (Gmail, Yahoo, etc.) are not accepted.',
+    }),
   company: z.string().min(2, 'Company name must be at least 2 characters'),
   role: z.string().optional(),
   inquiry_type: z.string().min(1, 'Please select an inquiry type'),
@@ -46,6 +51,8 @@ export default function ContactForm({
 }: ContactFormProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [formLoadTime] = useState(() => Date.now()); // Track when form was loaded
+  const [honeypot, setHoneypot] = useState(''); // Honeypot field for bot detection
 
   const {
     register,
@@ -69,15 +76,28 @@ export default function ContactForm({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          // Anti-bot fields
+          _honeypot: honeypot,
+          _formLoadTime: formLoadTime,
+          _submitTime: Date.now(),
+        }),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
+        // Show specific error messages from API
+        if (result.error) {
+          throw new Error(result.error);
+        }
         throw new Error('Failed to submit form');
       }
 
       setStatus('success');
       reset();
+      setHoneypot(''); // Reset honeypot
 
       if (onSuccess) {
         onSuccess();
@@ -88,7 +108,7 @@ export default function ContactForm({
       }
     } catch (error) {
       setStatus('error');
-      setErrorMessage('Something went wrong. Please try again or email us directly.');
+      setErrorMessage(error instanceof Error ? error.message : 'Something went wrong. Please try again or email us directly.');
     }
   };
 
@@ -114,6 +134,20 @@ export default function ContactForm({
           <p className="text-sm">{errorMessage}</p>
         </div>
       )}
+
+      {/* Honeypot field - hidden from humans, bots will fill it */}
+      <div style={{ position: 'absolute', left: '-9999px', opacity: 0 }} aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input
+          type="text"
+          id="website"
+          name="website"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
