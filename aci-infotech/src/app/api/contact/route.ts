@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
       email,
       company,
       phone,
-      reason,
+      inquiry_type,
+      reason, // Legacy field name support
       message,
       source,
       // Anti-bot fields
@@ -31,6 +32,9 @@ export async function POST(request: NextRequest) {
       _formLoadTime,
       _submitTime,
     } = data;
+
+    // Support both 'inquiry_type' (new) and 'reason' (legacy)
+    const inquiryType = inquiry_type || reason;
 
     // Check 1: Honeypot field (if filled, it's definitely a bot)
     if (checkHoneypot(_honeypot)) {
@@ -40,7 +44,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate required fields
-    if (!name || !email || !reason || !message) {
+    if (!name || !email || !inquiryType || !message) {
       return NextResponse.json(
         { error: 'Please fill in all required fields.' },
         { status: 400 }
@@ -101,7 +105,7 @@ export async function POST(request: NextRequest) {
           email,
           company: company || null,
           phone: phone || null,
-          inquiry_type: reason,
+          inquiry_type: inquiryType,
           message,
           source: source || 'website_contact_form',
           status: submissionStatus,
@@ -124,7 +128,7 @@ export async function POST(request: NextRequest) {
               email,
               company: company || null,
               phone: phone || null,
-              inquiry_type: reason,
+              inquiry_type: inquiryType,
               message,
               source: source || 'website_contact_form',
               status: submissionStatus,
@@ -156,9 +160,9 @@ export async function POST(request: NextRequest) {
         email,
         company,
         phone,
-        inquiry_type: reason,
+        inquiry_type: inquiryType,
         message,
-        service_interest: reason,
+        service_interest: inquiryType,
       }).then(async (intelligence) => {
         try {
           await supabase

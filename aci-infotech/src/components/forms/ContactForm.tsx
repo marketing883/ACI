@@ -70,6 +70,13 @@ export default function ContactForm({
     setStatus('loading');
     setErrorMessage('');
 
+    // Double-check work email validation (safety net)
+    if (!isWorkEmail(data.email)) {
+      setStatus('error');
+      setErrorMessage('Please use your work email. Personal emails (Gmail, Yahoo, etc.) are not accepted.');
+      return;
+    }
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
