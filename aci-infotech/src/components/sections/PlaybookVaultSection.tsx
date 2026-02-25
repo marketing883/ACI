@@ -609,35 +609,35 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
           </div>
 
           {/* Title */}
-          <h5 className="text-white font-medium text-xs leading-tight mb-3 group-hover:text-[#C4FF61] transition-colors duration-300">
+          <h5 className="text-white font-semibold text-sm leading-snug mb-4 group-hover:text-[#C4FF61] transition-colors duration-300">
             {playbook.displayTitle}
           </h5>
 
           {/* Quick stats */}
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-3 mb-4">
             {playbook.outcomes.slice(0, 2).map((outcome, i) => (
               <div
                 key={i}
-                className="px-2 py-1 rounded-md bg-white/5 border border-white/10"
+                className="px-3 py-1.5 rounded-md bg-white/5 border border-white/10"
               >
-                <span className="text-[#C4FF61] font-mono text-xs font-bold">{outcome.metric}</span>
-                <span className="text-white/70 text-[10px] ml-1">{outcome.description}</span>
+                <span className="text-[#C4FF61] font-mono text-sm font-bold">{outcome.metric}</span>
+                <span className="text-white/70 text-xs ml-1.5">{outcome.description}</span>
               </div>
             ))}
           </div>
 
           {/* Tech tags */}
-          <div className="flex flex-wrap gap-1 mt-auto mb-4">
+          <div className="flex flex-wrap gap-1.5 mt-auto mb-4">
             {playbook.architecture.slice(0, 3).map((tech, i) => (
               <span
                 key={i}
-                className="px-2 py-0.5 rounded text-[10px] font-medium bg-[#0052CC]/20 text-[#60A5FA] border border-[#0052CC]/30"
+                className="px-2.5 py-1 rounded text-xs font-medium bg-[#0052CC]/20 text-[#60A5FA] border border-[#0052CC]/30"
               >
                 {tech}
               </span>
             ))}
             {playbook.architecture.length > 3 && (
-              <span className="px-2 py-0.5 rounded text-[10px] text-white/60">
+              <span className="px-2.5 py-1 rounded text-xs text-white/60">
                 +{playbook.architecture.length - 3}
               </span>
             )}
@@ -645,10 +645,10 @@ function PlaybookCard({ playbook, index, isActive, isAnyActive, onSelect, mouseP
 
           {/* CTA indicator */}
           <div className="flex items-center justify-between pt-4 border-t border-white/10">
-            <span className="text-white/70 text-xs group-hover:text-white transition-colors">
+            <span className="text-white/70 text-sm group-hover:text-white transition-colors">
               Explore playbook
             </span>
-            <ArrowRight className="w-4 h-4 text-white/50 group-hover:text-[#C4FF61] group-hover:translate-x-1 transition-all duration-300" />
+            <ArrowRight className="w-5 h-5 text-white/50 group-hover:text-[#C4FF61] group-hover:translate-x-1 transition-all duration-300" />
           </div>
         </div>
 
@@ -1130,7 +1130,7 @@ export default function PlaybookVaultSection() {
           <SectionHeader />
 
           {/* Playbook Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {PLAYBOOKS.map((playbook, index) => (
               <PlaybookCard
                 key={playbook.id}
