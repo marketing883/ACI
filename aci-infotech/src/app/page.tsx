@@ -155,18 +155,13 @@ export default function HomePage() {
 
       {/* Final CTA Section */}
       <section className="relative py-28 overflow-hidden">
-        {/* Background Video */}
+        {/* Background Image */}
         <div className="absolute inset-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
+          <img
+            src="/images/aci-cta-home-bg.jpg"
+            alt=""
             className="w-full h-full object-cover"
-            poster="/images/aci-cta-home-bg.jpg"
-          >
-            <source src="/videos/cta-bg.mp4" type="video/mp4" />
-          </video>
+          />
           {/* Dark Overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 via-[#0A1628]/80 to-[#0A1628]/70" />
         </div>
