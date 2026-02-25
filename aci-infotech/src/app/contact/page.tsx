@@ -6,6 +6,7 @@ import { Mail, Clock, Send, CheckCircle, Globe2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleTagManager';
 import InteractiveGlobe from '@/components/contact/InteractiveGlobe';
+import { isWorkEmail } from '@/lib/email-validation';
 
 const contactReasons = [
   { value: 'architecture-call', label: 'Schedule Architecture Discussion' },
@@ -40,6 +41,13 @@ function ContactForm() {
     setIsSubmitting(true);
     setError(null);
 
+    // Validate work email before submitting
+    if (!isWorkEmail(formData.email)) {
+      setError('Please use your work email. Personal emails (Gmail, Yahoo, etc.) are not accepted.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -47,8 +55,10 @@ function ContactForm() {
         body: JSON.stringify(formData),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to submit form');
+        throw new Error(result.error || 'Failed to submit form');
       }
 
       // Track successful contact form submission
