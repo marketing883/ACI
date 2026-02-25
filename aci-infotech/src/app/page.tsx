@@ -174,29 +174,29 @@ export default function HomePage() {
         {/* Content */}
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 font-[var(--font-title)] drop-shadow-lg">
-            Let&apos;s Build Something Exceptional Together
+            Talk to People Who&apos;ve Actually Deployed These Systems.
           </h2>
           <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            From strategy to deployment, we partner with enterprises to turn data challenges into competitive advantages.
+            No sales teams. No junior consultants. Just senior practitioners who&apos;ve architected and deployed the infrastructure you&apos;re considering.
           </p>
 
           <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-6 sm:gap-10 mb-14">
             <div className="flex items-center gap-3 text-white">
               <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
-              <span className="text-base md:text-lg drop-shadow-md">Enterprise-grade solutions</span>
+              <span className="text-base md:text-lg drop-shadow-md">30-minute technical conversations with architects</span>
             </div>
             <div className="flex items-center gap-3 text-white">
               <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
-              <span className="text-base md:text-lg drop-shadow-md">Proven delivery track record</span>
+              <span className="text-base md:text-lg drop-shadow-md">Architecture diagrams from live deployments</span>
             </div>
             <div className="flex items-center gap-3 text-white">
               <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
-              <span className="text-base md:text-lg drop-shadow-md">Dedicated partnership approach</span>
+              <span className="text-base md:text-lg drop-shadow-md">Honest answers about feasibility, timeline, and risk</span>
             </div>
           </div>
 
           <Button href="/contact" variant="lime" size="lg">
-            Start the Conversation
+            Schedule a Discussion
           </Button>
         </div>
       </section>
