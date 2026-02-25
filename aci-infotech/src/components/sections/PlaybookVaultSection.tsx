@@ -1129,9 +1129,9 @@ export default function PlaybookVaultSection() {
           {/* Section Header */}
           <SectionHeader />
 
-          {/* Playbook Grid */}
+          {/* Playbook Grid - Show first 6 on homepage */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {PLAYBOOKS.map((playbook, index) => (
+            {PLAYBOOKS.slice(0, 6).map((playbook, index) => (
               <PlaybookCard
                 key={playbook.id}
                 playbook={playbook}
@@ -1152,7 +1152,7 @@ export default function PlaybookVaultSection() {
             }}
           >
             <p className="text-white/40 text-sm mb-6">
-              Can't find your exact scenario? We've documented 100+ patterns beyond these 8.
+              Can't find your exact scenario? We've documented 100+ patterns beyond these.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
