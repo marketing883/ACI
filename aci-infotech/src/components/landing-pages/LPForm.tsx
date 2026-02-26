@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { JOB_TITLE_OPTIONS, getLookingForOptions, isWorkEmail } from '@/lib/lp-dropdown-options';
+import { trackDemoRequestConversion } from '@/components/analytics/LinkedInInsightTag';
 
 interface LPFormProps {
   landingPage: string;
@@ -111,6 +112,9 @@ export default function LPForm({
       }
 
       setStatus('success');
+
+      // Track LinkedIn conversion for lead gen campaigns
+      trackDemoRequestConversion();
 
       if (onSuccess) {
         onSuccess({

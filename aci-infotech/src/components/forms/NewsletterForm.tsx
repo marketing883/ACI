@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Button from '@/components/ui/Button';
 import { CheckCircle, Mail } from 'lucide-react';
+import { trackNewsletterSignupConversion } from '@/components/analytics/LinkedInInsightTag';
 
 // Validation schema
 const newsletterSchema = z.object({
@@ -58,6 +59,9 @@ export default function NewsletterForm({
 
       setStatus('success');
       reset();
+
+      // Track LinkedIn conversion for lead gen campaigns
+      trackNewsletterSignupConversion();
     } catch (error) {
       setStatus('error');
     }

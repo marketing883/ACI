@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Download, CheckCircle2, Loader2, X, Mail, Building2, User } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { trackPlaybookAccessConversion } from '@/components/analytics/LinkedInInsightTag';
 
 // Playbook detailed data
 const playbooksData: Record<string, PlaybookDetail> = {
@@ -550,6 +551,9 @@ function DownloadModal({
       }
 
       const data = await response.json();
+
+      // Track LinkedIn conversion for lead gen campaigns
+      trackPlaybookAccessConversion();
 
       // Redirect to thank you page with download token
       window.location.href = `/playbooks/thank-you?token=${data.downloadToken}&playbook=${playbookSlug}`;

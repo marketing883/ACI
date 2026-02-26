@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import GoogleTagManager from "@/components/analytics/GoogleTagManager";
+import LinkedInInsightTag from "@/components/analytics/LinkedInInsightTag";
 import CookieConsent from "@/components/CookieConsent";
 import GlobalStructuredData from "@/components/seo/StructuredData";
 
@@ -83,6 +84,7 @@ export default function RootLayout({
       <body className="antialiased font-sans" suppressHydrationWarning>
         <GlobalStructuredData />
         <GoogleTagManager />
+        <LinkedInInsightTag />
         <ConditionalLayout>{children}</ConditionalLayout>
         <CookieConsent />
       </body>

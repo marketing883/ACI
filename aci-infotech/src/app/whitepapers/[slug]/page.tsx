@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { trackFormSubmission, trackContentView } from '@/components/analytics/GoogleTagManager';
+import { trackWhitepaperDownloadConversion } from '@/components/analytics/LinkedInInsightTag';
 
 interface Whitepaper {
   id: string;
@@ -143,6 +144,9 @@ function DownloadModal({
         whitepaper_title: whitepaper.title,
         company: formData.company,
       });
+
+      // Track LinkedIn conversion for lead gen campaigns
+      trackWhitepaperDownloadConversion();
 
       window.location.href = `/whitepapers/thank-you?token=${data.downloadToken}&whitepaper=${whitepaper.slug}`;
     } catch {

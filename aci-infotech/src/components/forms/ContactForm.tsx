@@ -8,6 +8,7 @@ import Button from '@/components/ui/Button';
 import FormField from './FormField';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 import { isWorkEmail } from '@/lib/email-validation';
+import { trackContactFormConversion } from '@/components/analytics/LinkedInInsightTag';
 
 // Validation schema with work email check
 const contactSchema = z.object({
@@ -105,6 +106,9 @@ export default function ContactForm({
       setStatus('success');
       reset();
       setHoneypot(''); // Reset honeypot
+
+      // Track LinkedIn conversion for lead gen campaigns
+      trackContactFormConversion();
 
       if (onSuccess) {
         onSuccess();

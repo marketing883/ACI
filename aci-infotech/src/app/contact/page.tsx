@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Mail, Clock, Send, CheckCircle, Globe2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleTagManager';
+import { trackContactFormConversion } from '@/components/analytics/LinkedInInsightTag';
 import InteractiveGlobe from '@/components/contact/InteractiveGlobe';
 import { isWorkEmail } from '@/lib/email-validation';
 
@@ -73,6 +74,9 @@ function ContactForm() {
         has_company: formData.company ? 'yes' : 'no',
         has_phone: formData.phone ? 'yes' : 'no',
       });
+
+      // Track LinkedIn conversion for lead gen campaigns
+      trackContactFormConversion();
 
       setIsSubmitted(true);
     } catch (err) {
