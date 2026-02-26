@@ -6482,6 +6482,245 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     certifications: ['Braze Alloys Certified Partner', 'Braze Certified Professional', 'Customer Engagement Specialist'],
   },
+
+  // ==========================================
+  // UTILITIES DATA MODERNIZATION
+  // ==========================================
+  'utilities-data-modernization': {
+    slug: 'utilities-data-modernization',
+    serviceCluster: 'data-engineering',
+    keyword: 'utilities data modernization services',
+
+    metaTitle: 'Utilities Data Modernization Services | IT/OT Integration | ACI Infotech',
+    metaDescription: 'Modernize your utility data infrastructure. Integrate SCADA, OT, and enterprise systems for real-time grid visibility and NERC CIP compliance. Free assessment.',
+
+    headline: 'Modernize Your Utility Data Infrastructure',
+    subheadline: 'Bridge the IT/OT divide with unified data platforms that deliver real-time visibility, NERC CIP compliance, and operational intelligence.',
+    ctoText: 'Get Your Free Infrastructure Assessment',
+    ctoSecondaryText: 'Download Grid Modernization Checklist',
+
+    painPointsHeadline: 'Are You Struggling With...',
+    painPoints: [
+      {
+        title: 'IT/OT Data Silos',
+        description: 'SCADA, ADMS, and enterprise systems speak different languages—preventing real-time grid visibility and unified operations.',
+        icon: 'unlink',
+      },
+      {
+        title: 'Aging Infrastructure',
+        description: 'Legacy systems 20+ years old with proprietary protocols, high maintenance costs, and no path to modern analytics.',
+        icon: 'server',
+      },
+      {
+        title: 'Compliance Burden',
+        description: 'NERC CIP audits consuming weeks of effort. Evidence collection manual. Gaps discovered during audits, not before.',
+        icon: 'shield',
+      },
+      {
+        title: 'Pilot Purgatory',
+        description: 'Digital initiatives stuck in proof-of-concept. No clear path to scale analytics and AI from pilots to operations.',
+        icon: 'alert-triangle',
+      },
+    ],
+
+    solutionHeadline: 'Unified Data Platform for Utilities',
+    solutionDescription: 'We build modern data infrastructure that connects OT and IT systems, enabling real-time analytics while maintaining compliance.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Comprehensive audit of OT/IT systems, data flows, compliance gaps, and modernization readiness.' },
+      { step: '02', title: 'Architect', description: 'Design Unified Namespace (UNS) architecture with edge computing, MQTT translation, and cloud integration.' },
+      { step: '03', title: 'Integrate', description: 'Connect SCADA, historians, GIS, and enterprise systems with secure, real-time data pipelines.' },
+      { step: '04', title: 'Operationalize', description: 'Deploy analytics, compliance automation, and continuous monitoring with 24/7 support.' },
+    ],
+
+    stats: [
+      { value: '50+', label: 'Utility Projects Delivered' },
+      { value: '99.9%', label: 'NERC CIP Audit Pass Rate' },
+      { value: '40%', label: 'Reduction in Compliance Effort' },
+      { value: '10x', label: 'Faster Operational Insights' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      {
+        title: 'Real-Time Grid Visibility',
+        description: 'Unified view across SCADA, ADMS, OMS, and enterprise systems with sub-second data refresh.',
+        icon: 'zap',
+      },
+      {
+        title: 'Compliance Automation',
+        description: 'Continuous NERC CIP monitoring with automated evidence collection and audit-ready reports.',
+        icon: 'shield',
+      },
+      {
+        title: 'Edge-to-Cloud Architecture',
+        description: 'Secure data flow from substations and field assets to cloud analytics without network exposure.',
+        icon: 'layers',
+      },
+      {
+        title: 'Utility-Proven Expertise',
+        description: 'Team with deep experience in SCADA, PI historians, and utility-specific data challenges.',
+        icon: 'award',
+      },
+    ],
+
+    proofItems: [
+      {
+        headline: '100% NERC CIP Compliance',
+        description: 'Helped a regional electric utility achieve full NERC CIP compliance with automated evidence collection, reducing audit prep from 6 weeks to 3 days.',
+        industry: 'energy',
+      },
+      {
+        headline: 'Real-Time Grid Analytics',
+        description: 'Built a unified data platform for a multi-state utility, integrating 50+ SCADA systems and enabling real-time outage prediction with 40% fewer unplanned outages.',
+        industry: 'energy',
+      },
+    ],
+
+    faqs: [
+      {
+        question: 'How do you integrate legacy SCADA and OT systems with modern cloud platforms?',
+        answer: 'We deploy edge software that translates legacy protocols (Modbus, DNP3, PROFINET) to MQTT/OPC-UA, enabling secure data flow to cloud without replacing existing systems. This approach preserves your OT investments while enabling modern analytics.',
+      },
+      {
+        question: 'Can you help with NERC CIP compliance for critical infrastructure?',
+        answer: 'Yes, we have extensive NERC CIP expertise. Our solutions include continuous compliance monitoring, automated evidence collection, and audit-ready reporting that reduces compliance burden by 40% or more.',
+      },
+      {
+        question: 'How long does a typical utility data modernization project take?',
+        answer: 'Initial assessment takes 2-4 weeks. A focused integration project typically takes 3-6 months. Full enterprise data platform modernization spans 12-18 months with phased delivery and early wins.',
+      },
+      {
+        question: 'Do you work with electric, water, and gas utilities?',
+        answer: 'Yes, we serve all utility types. While regulations differ (NERC CIP for electric, AWWA for water, PHMSA for gas), the data integration challenges are similar, and we adapt our approach to each sector.',
+      },
+    ],
+
+    certifications: ['NERC CIP Expertise', 'SOC 2 Type II Compliant', 'Azure IoT Partner', 'AWS Industrial Partner', 'OSIsoft PI Certified'],
+
+    // Industry Variants
+    industryVariants: {
+      electric: {
+        headline: 'Modernize Your Electric Utility Data Infrastructure',
+        subheadline: 'Bridge the IT/OT divide with unified platforms for grid visibility, NERC CIP compliance, and DER integration.',
+        painPoints: [
+          {
+            title: 'Grid Capacity Constraints',
+            description: 'AI data centers and EV adoption driving 100+ GW additional demand by 2030—current infrastructure can\'t scale.',
+            icon: 'trending-up',
+          },
+          {
+            title: 'DER Integration Chaos',
+            description: 'Solar, storage, and distributed resources creating bidirectional flows your systems weren\'t designed for.',
+            icon: 'git-branch',
+          },
+          {
+            title: 'NERC CIP Compliance',
+            description: 'Audits consuming weeks. Evidence collection manual. IT/OT convergence expanding your attack surface.',
+            icon: 'shield',
+          },
+          {
+            title: 'Aging SCADA Systems',
+            description: 'Control systems 20+ years old using Modbus and DNP3—incompatible with modern analytics.',
+            icon: 'server',
+          },
+        ],
+        stats: [
+          { value: '40+', label: 'Electric Utility Projects' },
+          { value: '100%', label: 'NERC CIP Compliance' },
+          { value: '50%', label: 'Faster Outage Response' },
+          { value: 'Real-Time', label: 'Grid Visibility' },
+        ],
+      },
+      water: {
+        headline: 'Modernize Your Water Utility Data Infrastructure',
+        subheadline: 'Unify SCADA, GIS, and enterprise systems for real-time leak detection, quality monitoring, and asset optimization.',
+        painPoints: [
+          {
+            title: 'Infrastructure Invisibility',
+            description: 'Miles of underground pipes with no real-time visibility into pressure, flow, or leak locations.',
+            icon: 'eye-off',
+          },
+          {
+            title: 'Water Quality Monitoring',
+            description: 'Manual sampling and delayed lab results—can\'t detect contamination events in real time.',
+            icon: 'alert-circle',
+          },
+          {
+            title: 'Non-Revenue Water Loss',
+            description: '20-30% of treated water lost to leaks, theft, or metering errors with no data to locate issues.',
+            icon: 'dollar-sign',
+          },
+          {
+            title: 'AWWA Compliance',
+            description: 'Regulatory reporting requiring data from disparate systems with no unified platform.',
+            icon: 'file-text',
+          },
+        ],
+        stats: [
+          { value: '25%', label: 'Reduction in Water Loss' },
+          { value: 'Real-Time', label: 'Quality Monitoring' },
+          { value: '40%', label: 'Faster Leak Detection' },
+          { value: '99.9%', label: 'Data Pipeline Reliability' },
+        ],
+      },
+      gas: {
+        headline: 'Modernize Your Gas Utility Data Infrastructure',
+        subheadline: 'Integrate SCADA, pipeline monitoring, and enterprise systems for safety, compliance, and operational efficiency.',
+        painPoints: [
+          {
+            title: 'Pipeline Safety Visibility',
+            description: 'Aging pipelines with limited monitoring—can\'t detect leaks or integrity issues in real time.',
+            icon: 'alert-triangle',
+          },
+          {
+            title: 'PHMSA Compliance',
+            description: 'TSA pipeline security and PHMSA regulations requiring data from systems that don\'t integrate.',
+            icon: 'shield',
+          },
+          {
+            title: 'Methane Emissions Tracking',
+            description: 'New EPA rules requiring emissions monitoring and reporting your systems can\'t support.',
+            icon: 'database',
+          },
+          {
+            title: 'Legacy Control Systems',
+            description: 'Decades-old SCADA and RTUs that can\'t connect to modern analytics or cloud platforms.',
+            icon: 'server',
+          },
+        ],
+        stats: [
+          { value: '30%', label: 'Reduction in Leak Response Time' },
+          { value: '100%', label: 'PHMSA Compliance' },
+          { value: 'Real-Time', label: 'Pipeline Monitoring' },
+          { value: '50%', label: 'Faster Regulatory Reporting' },
+        ],
+      },
+    },
+
+    // Role Variants
+    roleVariants: {
+      cio: {
+        headline: 'Bridge the IT/OT Divide in Your Utility',
+        subheadline: 'Unified data architecture that connects operational technology to enterprise systems—securely and at scale.',
+        ctoText: 'Get Your IT/OT Integration Assessment',
+      },
+      cto: {
+        headline: 'Architect a Modern Utility Data Platform',
+        subheadline: 'Edge-to-cloud architecture with Unified Namespace, MQTT translation, and real-time streaming—built for utility scale.',
+        ctoText: 'Get Your Architecture Assessment',
+      },
+      cfo: {
+        headline: 'Reduce Compliance Costs While Modernizing',
+        subheadline: 'Cut NERC CIP audit prep by 40% while building the data foundation for operational efficiency gains.',
+        ctoText: 'See Your ROI Projection',
+      },
+      vp: {
+        headline: 'Operationalize Your Digital Transformation',
+        subheadline: 'Move from pilot purgatory to production. Scale analytics and AI initiatives across your utility operations.',
+        ctoText: 'Get Your Modernization Roadmap',
+      },
+    },
+  },
 };
 
 // Get content for a specific landing page with personalization applied
