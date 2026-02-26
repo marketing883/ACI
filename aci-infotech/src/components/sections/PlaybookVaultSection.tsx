@@ -32,9 +32,9 @@ interface PlaybookData {
   outcomes: { metric: string; description: string }[];
   industries: string[];
   architecture: string[];
-  category: 'data' | 'cloud' | 'analytics' | 'integration';
+  category: 'data' | 'cloud' | 'analytics' | 'integration' | 'ai';
   gradient: string;
-  iconType: 'zap' | 'radio' | 'globe' | 'barchart' | 'shield' | 'truck' | 'cloud' | 'gitmerge';
+  iconType: 'zap' | 'radio' | 'globe' | 'barchart' | 'shield' | 'truck' | 'cloud' | 'gitmerge' | 'sparkles';
 }
 
 const PLAYBOOKS: PlaybookData[] = [
@@ -153,6 +153,64 @@ const PLAYBOOKS: PlaybookData[] = [
     category: 'analytics',
     gradient: 'from-amber-500 to-orange-600',
     iconType: 'barchart',
+  },
+  {
+    id: 'agentic-ai',
+    name: 'Enterprise Agentic AI Deployment',
+    shortName: 'Agentic AI',
+    displayTitle: 'AI Agent → Workflow',
+    slug: 'agentic-ai-deployment',
+    deployments: 18,
+    challengePattern: [
+      'Agent hallucination causing errors at scale',
+      'Multi-agent orchestration complexity',
+      'Human-in-the-loop checkpoint design',
+      'Cost management as usage scales',
+    ],
+    keyLearnings: [
+      'Start single-agent before multi-agent',
+      'Guardrails matter more than model selection',
+      'Track cost per transaction from day one',
+    ],
+    outcomes: [
+      { metric: '60%', description: 'Manual effort reduced' },
+      { metric: '94%', description: 'Task accuracy' },
+      { metric: '3.2x', description: 'First-year ROI' },
+    ],
+    industries: ['Financial Services', 'Retail', 'Technology', 'Healthcare'],
+    architecture: ['LangChain', 'Azure OpenAI', 'AWS Bedrock', 'Vector DBs', 'Kubernetes', 'Guardrails'],
+    category: 'ai',
+    gradient: 'from-emerald-500 to-teal-600',
+    iconType: 'sparkles',
+  },
+  {
+    id: 'ai-governance',
+    name: 'Enterprise AI Governance & Compliance',
+    shortName: 'AI Governance',
+    displayTitle: 'Governed AI',
+    slug: 'enterprise-ai-governance',
+    deployments: 14,
+    challengePattern: [
+      'No unified AI governance framework',
+      'Model bias across diverse datasets',
+      'Regulatory requirements across jurisdictions',
+      'No audit trail for model decisions',
+    ],
+    keyLearnings: [
+      'Governance must be automated, not manual',
+      'Bias testing on production data, not training',
+      'Shadow AI is the biggest ignored risk',
+    ],
+    outcomes: [
+      { metric: '100%', description: 'Audit coverage' },
+      { metric: '85%', description: 'Bias incidents reduced' },
+      { metric: '40%', description: 'Faster approvals' },
+    ],
+    industries: ['Financial Services', 'Healthcare', 'Insurance', 'Government'],
+    architecture: ['MLflow', 'SHAP', 'Fairlearn', 'Evidently AI', 'Audit Logging', 'Compliance Automation'],
+    category: 'ai',
+    gradient: 'from-amber-500 to-orange-600',
+    iconType: 'shield',
   },
   {
     id: 'healthcare-data',
@@ -278,6 +336,7 @@ const IconMap = {
   radio: Radio,
   globe: Globe,
   barchart: BarChart3,
+  sparkles: Sparkles,
   shield: Shield,
   truck: Truck,
   cloud: Cloud,

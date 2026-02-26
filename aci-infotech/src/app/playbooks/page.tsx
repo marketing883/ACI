@@ -183,9 +183,53 @@ const allPlaybooks = [
     technologies: ['Fivetran/Airbyte', 'Informatica/Mulesoft', 'Databricks/Snowflake', 'Great Expectations'],
     category: 'Data Engineering',
   },
+  {
+    id: 'agentic-ai',
+    slug: 'agentic-ai-deployment',
+    displayTitle: 'AI Agent → Workflow',
+    fullTitle: 'Enterprise Agentic AI Deployment',
+    deployments: 18,
+    description: 'Production-ready playbook for deploying AI agents into enterprise workflows with guardrails, orchestration, and human-in-the-loop design.',
+    challengePattern: [
+      'Agent hallucination causing errors at scale',
+      'Multi-agent orchestration without cascading failures',
+      'Human-in-the-loop checkpoint design',
+      'Latency requirements for real-time workflows',
+    ],
+    outcomes: [
+      { metric: '60%', description: 'Manual effort reduced' },
+      { metric: '94%', description: 'Task accuracy' },
+      { metric: '3.2x', description: 'First-year ROI' },
+    ],
+    industries: ['Financial Services', 'Retail', 'Technology', 'Healthcare'],
+    technologies: ['LangChain', 'Azure OpenAI', 'AWS Bedrock', 'Vector DBs'],
+    category: 'AI & ML',
+  },
+  {
+    id: 'ai-governance',
+    slug: 'enterprise-ai-governance',
+    displayTitle: 'Governed AI',
+    fullTitle: 'Enterprise AI Governance & Compliance',
+    deployments: 14,
+    description: 'Comprehensive framework for AI governance including bias detection, explainability, audit trails, and multi-regulation compliance.',
+    challengePattern: [
+      'No unified AI governance framework',
+      'Model bias across diverse datasets',
+      'Regulatory requirements across jurisdictions',
+      'No audit trail for model decisions',
+    ],
+    outcomes: [
+      { metric: '100%', description: 'Audit coverage' },
+      { metric: '85%', description: 'Bias incidents reduced' },
+      { metric: '40%', description: 'Faster approvals' },
+    ],
+    industries: ['Financial Services', 'Healthcare', 'Insurance', 'Government'],
+    technologies: ['MLflow', 'SHAP', 'Fairlearn', 'Evidently AI'],
+    category: 'AI & ML',
+  },
 ];
 
-const categories = ['All', 'Data Engineering', 'Cloud', 'Analytics', 'Healthcare', 'Supply Chain'];
+const categories = ['All', 'Data Engineering', 'Cloud', 'Analytics', 'AI & ML', 'Healthcare', 'Supply Chain'];
 const industries = ['All', 'Financial Services', 'Retail', 'Healthcare', 'Hospitality', 'Manufacturing', 'Technology'];
 
 export default function PlaybooksPage() {
