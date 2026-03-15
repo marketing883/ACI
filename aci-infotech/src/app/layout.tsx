@@ -3,6 +3,7 @@ import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import GoogleTagManager from "@/components/analytics/GoogleTagManager";
 import LinkedInInsightTag from "@/components/analytics/LinkedInInsightTag";
+import VisitorTracker from "@/components/analytics/VisitorTracker";
 import CookieConsent from "@/components/CookieConsent";
 import GlobalStructuredData from "@/components/seo/StructuredData";
 
@@ -85,6 +86,7 @@ export default function RootLayout({
         <GlobalStructuredData />
         <GoogleTagManager />
         <LinkedInInsightTag />
+        <VisitorTracker />
         <ConditionalLayout>{children}</ConditionalLayout>
         <CookieConsent />
       </body>

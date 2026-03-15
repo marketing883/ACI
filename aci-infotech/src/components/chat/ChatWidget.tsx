@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
-import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2, CheckCircle2 } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2, CheckCircle2, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MessageRenderer from './MessageRenderer';
 import QuickReplies, {
@@ -12,6 +12,8 @@ import QuickReplies, {
   getPageInitialMessage,
   detectPageContext,
 } from './QuickReplies';
+import { getTriggerEngine, type TriggerEvent } from '@/lib/analytics/engagement-triggers';
+import { useTracker } from '@/components/analytics/VisitorTracker';
 
 interface Message {
   id: string;
@@ -19,6 +21,7 @@ interface Message {
   content: string;
   timestamp: Date;
   showQuickReplies?: boolean;
+  isProactive?: boolean; // Flag for proactive messages
 }
 
 interface LeadInfo {
@@ -82,9 +85,13 @@ export default function ChatWidget() {
   const [pageContext, setPageContext] = useState<PageContext>({ path: '/', type: 'home' });
   const [entryPage, setEntryPage] = useState<string>('/');
   const [pagesVisited, setPagesVisited] = useState<string[]>([]);
+  const [proactiveTriggerId, setProactiveTriggerId] = useState<string | null>(null);
+  const [showProactiveIndicator, setShowProactiveIndicator] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const isInitialized = useRef(false);
+  const hasInteractedThisSession = useRef(false);
+  const tracker = useTracker();
 
   // Initialize session and restore state from localStorage
   useEffect(() => {
@@ -220,6 +227,71 @@ export default function ChatWidget() {
       inputRef.current.focus();
     }
   }, [isOpen, isMinimized]);
+
+  // Listen for proactive engagement triggers
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleEngagementTrigger = (event: CustomEvent<TriggerEvent>) => {
+      // Don't show proactive messages if user has already interacted
+      if (hasInteractedThisSession.current) return;
+
+      // Don't show if chat is already open
+      if (isOpen) return;
+
+      const { trigger, message } = event.detail;
+
+      // Store the trigger ID for tracking
+      setProactiveTriggerId(trigger.id);
+
+      // Show the proactive indicator on the chat button
+      setShowProactiveIndicator(true);
+
+      // If trigger action is to open chat with message
+      if (trigger.action_type === 'chat_proactive') {
+        // Add proactive message to messages
+        const proactiveMessage: Message = {
+          id: `proactive_${Date.now()}`,
+          role: 'assistant',
+          content: message,
+          timestamp: new Date(),
+          showQuickReplies: true,
+          isProactive: true,
+        };
+
+        setMessages(prev => {
+          // Don't add if there's already a proactive message
+          if (prev.some(m => m.isProactive)) return prev;
+          return [...prev, proactiveMessage];
+        });
+
+        // Auto-open chat after a brief delay
+        setTimeout(() => {
+          setIsOpen(true);
+          tracker.trackChatOpen();
+        }, 500);
+      }
+    };
+
+    window.addEventListener('aci:engagement_trigger', handleEngagementTrigger as EventListener);
+
+    return () => {
+      window.removeEventListener('aci:engagement_trigger', handleEngagementTrigger as EventListener);
+    };
+  }, [isOpen, tracker]);
+
+  // Track when user interacts with chat
+  const markInteraction = useCallback(() => {
+    hasInteractedThisSession.current = true;
+    setShowProactiveIndicator(false);
+
+    // Record engagement if this was triggered by a proactive message
+    if (proactiveTriggerId) {
+      const triggerEngine = getTriggerEngine();
+      triggerEngine.recordEngagement(proactiveTriggerId);
+      setProactiveTriggerId(null);
+    }
+  }, [proactiveTriggerId]);
 
   // Save lead to database
   const saveLead = useCallback(async (info: LeadInfo, conversationHistory: Message[]) => {
@@ -447,6 +519,10 @@ export default function ChatWidget() {
     const messageContent = content || input.trim();
     if (!messageContent || isLoading) return;
 
+    // Mark user interaction
+    markInteraction();
+    tracker.trackChatMessage(true);
+
     setShowTimeSlots(false);
 
     const userMessage: Message = {
@@ -552,20 +628,86 @@ export default function ChatWidget() {
   // Closed state - floating button
   if (!isOpen) {
     return (
-      <motion.button
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        whileHover={{ scale: 1.1 }}
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-[#0052CC] text-white p-4 rounded-full shadow-lg hover:bg-[#003D99] transition-colors group"
-        aria-label="Open chat"
-      >
-        <MessageCircle className="w-6 h-6" />
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#C4FF61] rounded-full border-2 border-white animate-pulse" />
-        <span className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
-          Chat with us
-        </span>
-      </motion.button>
+      <motion.div className="fixed bottom-6 right-6 z-50">
+        {/* Proactive message bubble */}
+        <AnimatePresence>
+          {showProactiveIndicator && messages.some(m => m.isProactive) && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              className="absolute bottom-full right-0 mb-3 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+            >
+              <div className="p-3 bg-gradient-to-r from-[#0052CC]/5 to-[#C4FF61]/10 border-b border-gray-100">
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <Sparkles className="w-3 h-3 text-[#0052CC]" />
+                  <span>ACI Assistant</span>
+                </div>
+              </div>
+              <div className="p-4">
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {messages.find(m => m.isProactive)?.content}
+                </p>
+              </div>
+              <div className="px-4 pb-4 flex gap-2">
+                <button
+                  onClick={() => {
+                    setIsOpen(true);
+                    markInteraction();
+                    tracker.trackChatOpen();
+                  }}
+                  className="flex-1 px-4 py-2 bg-[#0052CC] text-white text-sm font-medium rounded-lg hover:bg-[#003D99] transition-colors"
+                >
+                  Chat now
+                </button>
+                <button
+                  onClick={() => {
+                    setShowProactiveIndicator(false);
+                    if (proactiveTriggerId) {
+                      const triggerEngine = getTriggerEngine();
+                      triggerEngine.recordDismissal(proactiveTriggerId);
+                    }
+                  }}
+                  className="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Chat button */}
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          whileHover={{ scale: 1.1 }}
+          onClick={() => {
+            setIsOpen(true);
+            tracker.trackChatOpen();
+          }}
+          className="relative bg-[#0052CC] text-white p-4 rounded-full shadow-lg hover:bg-[#003D99] transition-colors group"
+          aria-label="Open chat"
+        >
+          <MessageCircle className="w-6 h-6" />
+          {showProactiveIndicator ? (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-1 -right-1 w-5 h-5 bg-[#C4FF61] rounded-full border-2 border-white flex items-center justify-center"
+            >
+              <span className="text-[10px] font-bold text-gray-800">1</span>
+            </motion.span>
+          ) : (
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#C4FF61] rounded-full border-2 border-white animate-pulse" />
+          )}
+          {!showProactiveIndicator && (
+            <span className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
+              Chat with us
+            </span>
+          )}
+        </motion.button>
+      </motion.div>
     );
   }
 
