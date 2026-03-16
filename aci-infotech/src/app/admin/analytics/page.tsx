@@ -166,14 +166,14 @@ export default function AnalyticsDashboard() {
       const avgScore =
         sessions && sessions.length > 0
           ? Math.round(
-              sessions.reduce((sum: number, s) => sum + (s.engagement_score || 0), 0) /
+              sessions.reduce((sum: number, s: ActiveVisitor) => sum + (s.engagement_score || 0), 0) /
                 sessions.length
             )
           : 0;
 
       // Top pages
       const pageCounts: Record<string, number> = {};
-      pageViews?.forEach((pv) => {
+      pageViews?.forEach((pv: PageView) => {
         pageCounts[pv.page_path] = (pageCounts[pv.page_path] || 0) + 1;
       });
       const topPages = Object.entries(pageCounts)
@@ -183,7 +183,7 @@ export default function AnalyticsDashboard() {
 
       // Device breakdown
       const deviceCounts: Record<string, number> = {};
-      sessions?.forEach((s) => {
+      sessions?.forEach((s: ActiveVisitor) => {
         const device = s.device_type || 'unknown';
         deviceCounts[device] = (deviceCounts[device] || 0) + 1;
       });
@@ -194,7 +194,7 @@ export default function AnalyticsDashboard() {
 
       // Countries
       const countryCounts: Record<string, number> = {};
-      sessions?.forEach((s) => {
+      sessions?.forEach((s: ActiveVisitor) => {
         if (s.country) {
           countryCounts[s.country] = (countryCounts[s.country] || 0) + 1;
         }

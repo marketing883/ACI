@@ -218,27 +218,27 @@ export default function AdminDashboard() {
 
       // Combine and sort all leads
       const allLeads: RecentLead[] = [
-        ...(contacts || []).map(c => ({
+        ...(contacts || []).map((c: Record<string, unknown>) => ({
           ...c,
           type: 'contact' as const,
-          source: c.inquiry_type,
-          lead_score: c.intelligence?.leadScore,
+          source: c.inquiry_type as string,
+          lead_score: (c.intelligence as Record<string, unknown>)?.leadScore as number | undefined,
         })),
-        ...(chatLeads || []).map(c => ({
+        ...(chatLeads || []).map((c: Record<string, unknown>) => ({
           ...c,
           type: 'chat' as const,
-          source: c.service_interest,
-          lead_score: c.intelligence?.leadScore || c.lead_score,
+          source: c.service_interest as string,
+          lead_score: ((c.intelligence as Record<string, unknown>)?.leadScore || c.lead_score) as number | undefined,
         })),
-        ...(playbookLeads || []).map(p => ({
+        ...(playbookLeads || []).map((p: Record<string, unknown>) => ({
           ...p,
           type: 'playbook' as const,
-          source: p.playbook_title,
+          source: p.playbook_title as string,
         })),
-        ...(whitepaperLeads || []).map(w => ({
+        ...(whitepaperLeads || []).map((w: Record<string, unknown>) => ({
           ...w,
           type: 'whitepaper' as const,
-          source: w.whitepaper_title,
+          source: w.whitepaper_title as string,
         })),
       ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         .slice(0, 6);
