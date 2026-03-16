@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 import {
   Users,
   Eye,
@@ -52,7 +52,7 @@ interface RealtimeStats {
 }
 
 export default function AnalyticsDashboard() {
-  const supabase = createClientComponentClient();
+  const supabase = createSupabaseBrowserClient();
   const [activeVisitors, setActiveVisitors] = useState<ActiveVisitor[]>([]);
   const [recentPageViews, setRecentPageViews] = useState<PageView[]>([]);
   const [stats, setStats] = useState<RealtimeStats>({
