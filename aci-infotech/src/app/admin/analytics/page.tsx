@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
+import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import {
   Users,
   Eye,
@@ -82,7 +83,7 @@ export default function AnalyticsDashboard() {
           table: 'visitor_sessions',
           filter: 'is_active=eq.true',
         },
-        (payload) => {
+        (payload: RealtimePostgresChangesPayload<ActiveVisitor>) => {
           console.log('Session change:', payload);
           if (payload.eventType === 'INSERT') {
             setActiveVisitors((prev) => [payload.new as ActiveVisitor, ...prev]);
@@ -113,7 +114,7 @@ export default function AnalyticsDashboard() {
           schema: 'public',
           table: 'page_views',
         },
-        (payload) => {
+        (payload: RealtimePostgresChangesPayload<PageView>) => {
           setRecentPageViews((prev) => [payload.new as PageView, ...prev.slice(0, 19)]);
           setLastUpdated(new Date());
         }
