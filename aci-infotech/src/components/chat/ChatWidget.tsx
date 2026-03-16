@@ -405,7 +405,7 @@ export default function ChatWidget() {
 
           // Common name introduction patterns (case-insensitive)
           const namePatterns = [
-            /^(?:i'?m|i am|my name is|this is|it'?s|call me|hey,? i'?m|hi,? i'?m|hello,? i'?m)\s+(.+)$/i,
+            /^(?:i'?m|i am|(?:my )?name is|this is|it'?s|call me|hey,? i'?m|hi,? i'?m|hello,? i'?m)\s+(.+)$/i,
             /^(.+?)(?:\s+here|\s+speaking)$/i,
           ];
 
