@@ -367,7 +367,7 @@ export default function AnalyticsDashboard() {
         {/* Active Visitors List */}
         <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-4 border-b border-gray-100">
-            <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+            <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
               <Activity className="w-5 h-5 text-green-500" />
               Active Visitors
               <span className="ml-auto text-xs font-normal text-gray-500">
@@ -490,7 +490,7 @@ export default function AnalyticsDashboard() {
           {/* Top Pages */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-4 border-b border-gray-100">
-              <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+              <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
                 <Eye className="w-5 h-5 text-blue-500" />
                 Top Pages (1h)
               </h2>
@@ -522,7 +522,7 @@ export default function AnalyticsDashboard() {
           {/* Device Breakdown */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-4 border-b border-gray-100">
-              <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+              <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
                 <Monitor className="w-5 h-5 text-purple-500" />
                 Devices
               </h2>
@@ -543,7 +543,7 @@ export default function AnalyticsDashboard() {
           {/* Live Feed */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-4 border-b border-gray-100">
-              <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+              <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
                 <Activity className="w-5 h-5 text-green-500 animate-pulse" />
                 Live Feed
               </h2>
