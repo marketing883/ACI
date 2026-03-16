@@ -1,13 +1,13 @@
 'use client';
 
-import { useRef, useEffect, ReactNode } from 'react';
+import { useRef, useEffect, ReactNode, ElementType } from 'react';
 
 interface SectionTrackerProps {
   id: string;
   name?: string;
   children: ReactNode;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: ElementType;
 }
 
 /**

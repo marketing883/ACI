@@ -40,12 +40,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Update trigger conversions count
-    await supabase
+    const { data: trigger } = await supabase
       .from('engagement_triggers')
-      .update({
-        conversions: supabase.sql`conversions + 1`,
-      })
-      .eq('id', trigger_id);
+      .select('conversions')
+      .eq('id', trigger_id)
+      .single();
+
+    if (trigger) {
+      await supabase
+        .from('engagement_triggers')
+        .update({
+          conversions: (trigger.conversions || 0) + 1,
+        })
+        .eq('id', trigger_id);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

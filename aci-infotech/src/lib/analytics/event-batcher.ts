@@ -230,7 +230,7 @@ export function debounce<T extends (...args: Parameters<T>) => void>(
 /**
  * Create a throttled function
  */
-export function throttle<T extends (...args: Parameters<T>) => void>(
+export function throttle<T extends (...args: unknown[]) => void>(
   fn: T,
   limit: number
 ): (...args: Parameters<T>) => void {
@@ -244,7 +244,7 @@ export function throttle<T extends (...args: Parameters<T>) => void>(
       setTimeout(() => {
         inThrottle = false;
         if (lastArgs) {
-          fn(...lastArgs);
+          fn(...(lastArgs as Parameters<T>));
           lastArgs = null;
         }
       }, limit);

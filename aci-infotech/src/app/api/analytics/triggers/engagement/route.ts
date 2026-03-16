@@ -40,12 +40,20 @@ export async function POST(request: NextRequest) {
 
     // Update trigger engagements count if engaged
     if (response === 'engaged') {
-      await supabase
+      const { data: trigger } = await supabase
         .from('engagement_triggers')
-        .update({
-          engagements: supabase.sql`engagements + 1`,
-        })
-        .eq('id', trigger_id);
+        .select('engagements')
+        .eq('id', trigger_id)
+        .single();
+
+      if (trigger) {
+        await supabase
+          .from('engagement_triggers')
+          .update({
+            engagements: (trigger.engagements || 0) + 1,
+          })
+          .eq('id', trigger_id);
+      }
     }
 
     return NextResponse.json({ success: true });
