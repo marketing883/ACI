@@ -166,7 +166,7 @@ export default function AnalyticsDashboard() {
       const avgScore =
         sessions && sessions.length > 0
           ? Math.round(
-              sessions.reduce((sum, s) => sum + (s.engagement_score || 0), 0) /
+              sessions.reduce((sum: number, s) => sum + (s.engagement_score || 0), 0) /
                 sessions.length
             )
           : 0;
