@@ -26,6 +26,7 @@ import {
   Briefcase,
   UserCheck,
   Newspaper,
+  BarChart3,
 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 
@@ -65,6 +66,14 @@ const navItems: NavItem[] = [
       { href: '/admin/job-applications', label: 'Applications', icon: UserCheck },
     ]
   },
+  {
+    label: 'Analytics',
+    icon: BarChart3,
+    children: [
+      { href: '/admin/analytics', label: 'Real-Time Analytics', icon: BarChart3 },
+      { href: '/admin/analytics/triggers', label: 'Engagement Triggers', icon: Sparkles },
+    ]
+  },
 ];
 
 export default function AdminLayout({
@@ -73,7 +82,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<string[]>(['Leads', 'Content', 'Hiring']);
+  const [expandedSections, setExpandedSections] = useState<string[]>(['Leads', 'Content', 'Hiring', 'Analytics']);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
