@@ -1,20 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Building2, Globe2 } from 'lucide-react';
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  Marker,
-  Line,
-} from 'react-simple-maps';
 
-// World map TopoJSON - using Natural Earth 110m simplified data
-const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
-
-// Office locations with real geographic coordinates (longitude, latitude)
+// Office locations with coordinates mapped to SVG viewBox (0-100 scale)
 const offices = [
   // Americas
   {
@@ -27,7 +17,8 @@ const offices = [
     address: '220 Davidson Avenue, Suite 129',
     cityFull: 'Somerset, New Jersey 08873',
     country: 'United States',
-    coordinates: [-74.49, 40.50] as [number, number],
+    x: 23,
+    y: 35,
   },
   {
     id: 'atlanta',
@@ -38,7 +29,8 @@ const offices = [
     address: 'The Pinnacle Building, 3455 Peachtree Road NE',
     cityFull: '5th Floor, Atlanta, Georgia 30326',
     country: 'United States',
-    coordinates: [-84.39, 33.75] as [number, number],
+    x: 20,
+    y: 38,
   },
   {
     id: 'dallas',
@@ -49,7 +41,8 @@ const offices = [
     address: 'Dallas, Texas',
     cityFull: 'Dallas, Texas',
     country: 'United States',
-    coordinates: [-96.80, 32.78] as [number, number],
+    x: 17,
+    y: 39,
   },
   {
     id: 'miami',
@@ -60,7 +53,8 @@ const offices = [
     address: 'Miami, Florida',
     cityFull: 'Miami, Florida',
     country: 'United States',
-    coordinates: [-80.19, 25.76] as [number, number],
+    x: 21,
+    y: 43,
   },
   // Europe
   {
@@ -72,7 +66,8 @@ const offices = [
     address: 'London',
     cityFull: 'London',
     country: 'United Kingdom',
-    coordinates: [-0.13, 51.51] as [number, number],
+    x: 48,
+    y: 30,
   },
   {
     id: 'luxembourg',
@@ -84,7 +79,8 @@ const offices = [
     address: 'Coming Soon',
     cityFull: 'Luxembourg',
     country: 'Luxembourg',
-    coordinates: [6.13, 49.61] as [number, number],
+    x: 50,
+    y: 31,
   },
   // Middle East
   {
@@ -96,7 +92,8 @@ const offices = [
     address: 'Dubai, UAE',
     cityFull: 'Dubai',
     country: 'United Arab Emirates',
-    coordinates: [55.27, 25.20] as [number, number],
+    x: 60,
+    y: 43,
   },
   // India
   {
@@ -108,7 +105,8 @@ const offices = [
     address: 'Mindspace Raheja IT Park, 5th Floor, Bldg. No.9',
     cityFull: 'Hitech City, Hyderabad 500081, Telangana',
     country: 'India',
-    coordinates: [78.49, 17.39] as [number, number],
+    x: 68,
+    y: 46,
   },
   {
     id: 'noida',
@@ -119,7 +117,8 @@ const offices = [
     address: 'Sector 63, Noida, D-108, D Block',
     cityFull: 'Hazratpur Wajidpur, Uttar Pradesh 201301',
     country: 'India',
-    coordinates: [77.39, 28.54] as [number, number],
+    x: 67,
+    y: 40,
   },
   {
     id: 'bangalore',
@@ -130,7 +129,8 @@ const offices = [
     address: 'ITI Layout, HSR Layout',
     cityFull: 'Bengaluru, Karnataka 560102',
     country: 'India',
-    coordinates: [77.59, 12.97] as [number, number],
+    x: 67,
+    y: 50,
   },
   // Asia Pacific
   {
@@ -143,7 +143,8 @@ const offices = [
     address: 'Coming Soon',
     cityFull: 'Singapore',
     country: 'Singapore',
-    coordinates: [103.82, 1.35] as [number, number],
+    x: 75,
+    y: 55,
   },
   {
     id: 'kualalumpur',
@@ -155,7 +156,8 @@ const offices = [
     address: 'Coming Soon',
     cityFull: 'Kuala Lumpur',
     country: 'Malaysia',
-    coordinates: [101.69, 3.14] as [number, number],
+    x: 74,
+    y: 53,
   },
 ];
 
@@ -179,13 +181,13 @@ interface Office {
   address: string;
   cityFull: string;
   country: string;
-  coordinates: [number, number];
+  x: number;
+  y: number;
 }
 
 export default function InteractiveGlobe() {
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
   const [hoveredOffice, setHoveredOffice] = useState<string | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
 
   const activeOffice = offices.find(o => o.id === (selectedOffice || hoveredOffice)) as Office | undefined;
 
@@ -203,99 +205,105 @@ export default function InteractiveGlobe() {
       {/* Desktop: Interactive Globe */}
       <div className="hidden md:block">
         <div className="relative max-w-5xl mx-auto bg-gradient-to-b from-slate-50 to-slate-100 rounded-2xl overflow-hidden shadow-inner">
-          <ComposableMap
-            projection="geoMercator"
-            projectionConfig={{
-              scale: 130,
-              center: [30, 30],
-            }}
-            style={{ width: '100%', height: 'auto' }}
+          <svg
+            viewBox="0 0 100 60"
+            className="w-full h-auto"
+            style={{ minHeight: '400px' }}
           >
-            {/* World map geographies */}
-            <Geographies geography={geoUrl}>
-              {({ geographies }) =>
-                geographies.map((geo) => (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    fill="#CBD5E1"
-                    stroke="#94A3B8"
-                    strokeWidth={0.5}
-                    style={{
-                      default: { outline: 'none' },
-                      hover: { outline: 'none', fill: '#B0BFCF' },
-                      pressed: { outline: 'none' },
-                    }}
-                  />
-                ))
-              }
-            </Geographies>
+            {/* Simple world map paths - simplified continents */}
+            <g fill="#CBD5E1" stroke="#94A3B8" strokeWidth="0.2">
+              {/* North America */}
+              <path d="M5,20 L25,15 L30,20 L28,30 L25,35 L22,40 L18,42 L15,40 L10,35 L8,28 Z" />
+              {/* South America */}
+              <path d="M20,45 L28,42 L30,48 L28,55 L22,58 L18,55 L17,48 Z" />
+              {/* Europe */}
+              <path d="M45,18 L55,16 L58,22 L55,30 L50,32 L45,30 L43,25 Z" />
+              {/* Africa */}
+              <path d="M45,35 L55,33 L60,40 L58,52 L50,55 L45,50 L43,42 Z" />
+              {/* Asia */}
+              <path d="M58,15 L85,12 L90,25 L88,40 L78,45 L70,42 L62,35 L58,25 Z" />
+              {/* Australia */}
+              <path d="M78,50 L88,48 L92,52 L88,58 L80,58 L76,54 Z" />
+              {/* India subcontinent */}
+              <path d="M62,38 L72,36 L74,45 L70,52 L64,50 L62,44 Z" />
+              {/* UK */}
+              <ellipse cx="47" cy="26" rx="2" ry="3" />
+              {/* Japan */}
+              <ellipse cx="88" cy="32" rx="1.5" ry="4" />
+              {/* Indonesia */}
+              <path d="M75,52 L82,50 L85,52 L82,54 L76,54 Z" />
+            </g>
 
             {/* Connection lines from HQ to all other offices */}
             {hqOffice && offices.map((office) => {
               if (office.isHQ) return null;
               return (
-                <Line
+                <line
                   key={`line-${office.id}`}
-                  from={hqOffice.coordinates}
-                  to={office.coordinates}
+                  x1={hqOffice.x}
+                  y1={hqOffice.y}
+                  x2={office.x}
+                  y2={office.y}
                   stroke={regionColors[office.region]}
-                  strokeWidth={1}
-                  strokeLinecap="round"
-                  strokeDasharray="4 4"
-                  strokeOpacity={0.4}
+                  strokeWidth="0.3"
+                  strokeDasharray="1 1"
+                  opacity="0.4"
                 />
               );
             })}
 
             {/* Office markers */}
             {offices.map((office) => (
-              <Marker
+              <g
                 key={office.id}
-                coordinates={office.coordinates}
-                onMouseEnter={(e) => {
-                  setHoveredOffice(office.id);
-                  const rect = (e.target as SVGElement).getBoundingClientRect();
-                  setTooltipPosition({ x: rect.x + rect.width / 2, y: rect.y });
-                }}
-                onMouseLeave={() => {
-                  setHoveredOffice(null);
-                  setTooltipPosition(null);
-                }}
+                transform={`translate(${office.x}, ${office.y})`}
+                onMouseEnter={() => setHoveredOffice(office.id)}
+                onMouseLeave={() => setHoveredOffice(null)}
                 onClick={() => setSelectedOffice(selectedOffice === office.id ? null : office.id)}
+                className="cursor-pointer"
               >
                 {/* Pulse animation for HQ */}
                 {office.isHQ && (
-                  <motion.circle
-                    r={12}
+                  <circle
+                    r="3"
                     fill={regionColors[office.region]}
-                    animate={{ scale: [1, 2], opacity: [0.6, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
+                    opacity="0.3"
+                  >
+                    <animate
+                      attributeName="r"
+                      values="2;4;2"
+                      dur="2s"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0.6;0;0.6"
+                      dur="2s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
                 )}
 
                 {/* Main marker */}
-                <motion.circle
-                  r={office.isHQ ? 8 : office.comingSoon ? 5 : 6}
+                <circle
+                  r={office.isHQ ? 2 : office.comingSoon ? 1.2 : 1.5}
                   fill={office.comingSoon ? 'white' : regionColors[office.region]}
                   stroke={regionColors[office.region]}
-                  strokeWidth={office.comingSoon ? 2 : 0}
-                  strokeDasharray={office.comingSoon ? '3 2' : 'none'}
-                  initial={{ scale: 0 }}
-                  animate={{
-                    scale: selectedOffice === office.id || hoveredOffice === office.id ? 1.4 : 1
+                  strokeWidth={office.comingSoon ? 0.4 : 0}
+                  strokeDasharray={office.comingSoon ? '0.5 0.3' : 'none'}
+                  className="transition-transform duration-200"
+                  style={{
+                    transform: (selectedOffice === office.id || hoveredOffice === office.id) ? 'scale(1.5)' : 'scale(1)',
                   }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                  className="cursor-pointer"
                 />
 
                 {/* Inner circle for HQ */}
                 {office.isHQ && (
-                  <circle r={3} fill="white" />
+                  <circle r="0.8" fill="white" />
                 )}
-              </Marker>
+              </g>
             ))}
-          </ComposableMap>
+          </svg>
 
           {/* Location card */}
           <AnimatePresence>
