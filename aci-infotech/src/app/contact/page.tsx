@@ -6,7 +6,7 @@ import { Mail, Clock, Send, CheckCircle, Globe2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleTagManager';
 import { trackContactFormConversion } from '@/components/analytics/LinkedInInsightTag';
-import InteractiveGlobe from '@/components/contact/InteractiveGlobe';
+import Image from 'next/image';
 import { isWorkEmail } from '@/lib/email-validation';
 
 const contactReasons = [
@@ -336,15 +336,9 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Global Offices Section - Interactive Globe */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-10 left-10 w-64 h-64 bg-[var(--aci-primary)]/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-[var(--aci-primary)]/5 rounded-full blur-3xl" />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      {/* Global Offices Section - Map Image */}
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--aci-primary)]/10 rounded-full text-[var(--aci-primary)] font-medium text-sm mb-4">
@@ -359,15 +353,16 @@ export default function ContactPage() {
             </p>
           </div>
 
-          {/* Interactive Globe */}
-          <InteractiveGlobe />
-
-          {/* Connection Lines Visual */}
-          <div className="mt-12 text-center">
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--aci-secondary)] text-white rounded-full">
-              <Globe2 className="w-5 h-5" />
-              <span className="font-medium">Connected Globally, Delivering Locally</span>
-            </div>
+          {/* Office Location Map */}
+          <div className="relative w-full rounded-xl overflow-hidden shadow-lg">
+            <Image
+              src="/aci-office-location-on-map.webp"
+              alt="ACI Infotech global office locations"
+              width={1920}
+              height={971}
+              className="w-full h-auto"
+              priority
+            />
           </div>
         </div>
       </section>
