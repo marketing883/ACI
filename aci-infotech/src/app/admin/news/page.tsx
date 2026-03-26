@@ -170,7 +170,7 @@ export default function AdminNewsPage() {
       </div>
 
       {/* News Table */}
-      <div className="bg-white rounded-lg border overflow-hidden">
+      <div className="bg-white rounded-lg border overflow-x-auto">
         {loading ? (
           <div className="p-8 text-center text-gray-500">Loading news...</div>
         ) : news.length === 0 ? (
@@ -186,24 +186,24 @@ export default function AdminNewsPage() {
             </Link>
           </div>
         ) : (
-          <table className="w-full">
+          <table className="w-full min-w-[900px]">
             <thead className="bg-gray-50 border-b">
               <tr>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">News</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Source</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Status</th>
-                <th className="text-center px-4 py-3 text-sm font-medium text-gray-500">Featured</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Date</th>
-                <th className="text-right px-4 py-3 text-sm font-medium text-gray-500">Actions</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500 w-[350px]">News</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500 w-[120px]">Source</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500 w-[100px]">Status</th>
+                <th className="text-center px-4 py-3 text-sm font-medium text-gray-500 w-[80px]">Featured</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500 w-[100px]">Date</th>
+                <th className="text-right px-4 py-3 text-sm font-medium text-gray-500 w-[120px]">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y">
               {news.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-4">
+                  <td className="px-4 py-4 max-w-[350px]">
                     <div className="flex items-center gap-3">
                       {item.image_url ? (
-                        <div className="relative w-16 h-12 rounded overflow-hidden flex-shrink-0">
+                        <div className="relative w-12 h-10 rounded overflow-hidden flex-shrink-0">
                           <Image
                             src={item.image_url}
                             alt={item.title}
@@ -212,17 +212,17 @@ export default function AdminNewsPage() {
                           />
                         </div>
                       ) : (
-                        <div className="w-16 h-12 rounded bg-gray-100 flex items-center justify-center flex-shrink-0">
-                          <Newspaper className="w-5 h-5 text-gray-400" />
+                        <div className="w-12 h-10 rounded bg-gray-100 flex items-center justify-center flex-shrink-0">
+                          <Newspaper className="w-4 h-4 text-gray-400" />
                         </div>
                       )}
-                      <div className="min-w-0">
-                        <p className="font-medium text-gray-900 truncate">{item.title}</p>
-                        <p className="text-sm text-gray-500 truncate">{item.excerpt}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-gray-900 truncate text-sm">{item.title}</p>
+                        <p className="text-xs text-gray-500 truncate">{item.excerpt}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-600">{item.source}</td>
+                  <td className="px-4 py-4 text-sm text-gray-600 truncate max-w-[120px]">{item.source}</td>
                   <td className="px-4 py-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${statusColors[item.status]}`}>
                       {item.status}
