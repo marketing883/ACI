@@ -83,8 +83,8 @@ export default function HeroSection() {
               videoLoaded && !videoError ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <source src="/GettyImages-1394448388.webm" type="video/webm" />
-            <source src="/GettyImages-1394448388.mp4" type="video/mp4" />
+            <source src="/hero-bg-compressed.webm" type="video/webm" />
+            <source src="/hero-bg-compressed.mp4" type="video/mp4" />
           </video>
         )}
         {/* Poster image for mobile / video fallback */}
