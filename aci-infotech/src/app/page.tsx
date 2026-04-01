@@ -2,19 +2,22 @@
 // Blog/case study sections use unstable_noStore() internally for fresh data
 export const revalidate = 60;
 
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import Button from '@/components/ui/Button';
 import {
   HeroSection,
   DynamicCaseStudiesSection,
-  PartnersSection,
-  TestimonialsSection,
-  NewsSection,
-  AwardsSection,
   DynamicBlogSection,
-  ArqAISection,
-  WhatWeBuildSection,
 } from '@/components/sections';
-import PlaybookVaultSection from '@/components/sections/PlaybookVaultSection';
+
+// Lazy-load below-fold client sections to reduce initial JS bundle
+const TestimonialsSection = dynamic(() => import('@/components/sections/TestimonialsSection'));
+const PlaybookVaultSection = dynamic(() => import('@/components/sections/PlaybookVaultSection'));
+const WhatWeBuildSection = dynamic(() => import('@/components/sections/WhatWeBuildSection'));
+const PartnersSection = dynamic(() => import('@/components/sections/PartnersSection'));
+const NewsSection = dynamic(() => import('@/components/sections/NewsSection'));
+const ArqAISection = dynamic(() => import('@/components/sections/ArqAISection'));
 
 const partners = [
   { name: 'Databricks', logo_url: '/images/Solution-Partners/databricks.png' },
@@ -157,10 +160,13 @@ export default function HomePage() {
       <section className="relative py-28 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img
+          <Image
             src="/images/aci-cta-home-bg.jpg"
             alt=""
-            className="w-full h-full object-cover"
+            fill
+            quality={75}
+            loading="lazy"
+            className="object-cover"
           />
           {/* Dark Overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 via-[#0A1628]/80 to-[#0A1628]/70" />

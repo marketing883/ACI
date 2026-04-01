@@ -67,7 +67,7 @@ export default function HeroSection() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="none"
             poster="/images/hero-poster.webp"
             onCanPlayThrough={handleCanPlayThrough}
             onLoadedData={() => setVideoLoaded(true)}
