@@ -22,7 +22,7 @@ function getPublicUrl(request: NextRequest, pathname: string, searchParams?: URL
   return url;
 }
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -64,7 +64,7 @@ export async function proxy(request: NextRequest) {
   const isAdminPage = request.nextUrl.pathname.startsWith('/admin');
   const isApiRoute = request.nextUrl.pathname.startsWith('/api');
 
-  // Skip proxy for API routes and public pages
+  // Skip middleware for API routes and public pages
   if (isApiRoute || !isAdminPage) {
     return supabaseResponse;
   }
