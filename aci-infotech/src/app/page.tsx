@@ -9,6 +9,7 @@ import {
   HeroSection,
   DynamicCaseStudiesSection,
   DynamicBlogSection,
+  DynamicNewsSection,
 } from '@/components/sections';
 
 // Lazy-load below-fold client sections to reduce initial JS bundle
@@ -16,7 +17,6 @@ const TestimonialsSection = dynamic(() => import('@/components/sections/Testimon
 const PlaybookVaultSection = dynamic(() => import('@/components/sections/PlaybookVaultSection'));
 const WhatWeBuildSection = dynamic(() => import('@/components/sections/WhatWeBuildSection'));
 const PartnersSection = dynamic(() => import('@/components/sections/PartnersSection'));
-const NewsSection = dynamic(() => import('@/components/sections/NewsSection'));
 const ArqAISection = dynamic(() => import('@/components/sections/ArqAISection'));
 
 const partners = [
@@ -50,49 +50,6 @@ const testimonials = [
     quote: "ACI Infotech's dedicated resources consistently deliver excellent work quality, exceeding our expectations. Their dedicated onshore and onsite resources have been commendable, consistently demonstrating excellence.",
     author: 'Director',
     company: 'Gen II',
-  },
-];
-
-const newsItems = [
-  {
-    id: 'salesforce-agentforce',
-    title: 'ACI Infotech Accelerates Growth with Exclusive Salesforce-Agentforce Partnership',
-    excerpt: "Partnership with Salesforce's Agentforce platform positions ACI as a trusted innovation partner for Fortune 500 companies, enabling intelligent agents that act across systems and deliver measurable business value at scale.",
-    image_url: '/images/news/PR-newswire-new.jpg',
-    source: 'PR Newswire',
-    date: 'June 2025',
-    url: 'https://www.prnewswire.com/news-releases/aci-infotech-accelerates-growth-with-exclusive-salesforceagentforce-partnership-and-bold-vision-for-the-future-302486563.html',
-    cta_text: 'Read Full Story',
-  },
-  {
-    id: 'agentforce-einpresswire',
-    title: 'Bold Vision for the Future: ACI Infotech and Salesforce Agentforce',
-    excerpt: 'As autonomous AI moves from concept to enterprise reality, ACI Infotech delivers Agentforce implementations that are secure, explainable, and aligned with industry-specific goals.',
-    image_url: '/images/news/EIN-presswire.jpg',
-    source: 'EIN Presswire',
-    date: 'June 2025',
-    url: 'https://www.einpresswire.com/article/823866377/aci-infotech-accelerates-growth-with-exclusive-salesforce-agentforce-partnership-and-bold-vision-for-the-future',
-    cta_text: 'Read Article',
-  },
-  {
-    id: 'jag-kanumuri-ai',
-    title: 'Jag Kanumuri: Helping Enterprises Turn AI from Ambition into Advantage',
-    excerpt: 'Outlook India profiles ACI Infotech CEO Jag Kanumuri on pioneering AI-native enterprises and shaping a technopreneurial era where change is built into the DNA of business.',
-    image_url: '/images/news/outlook-new.jpg',
-    source: 'Outlook India',
-    date: 'May 2025',
-    url: 'https://www.outlookindia.com/hub4business/jag-kanumuri-helping-enterprises-turn-ai-from-ambition-into-advantage',
-    cta_text: 'Read Interview',
-  },
-  {
-    id: 'arqai-egypt-summit',
-    title: 'ACI Infotech Unveils ArqAI at World CIO 200 Summit Egypt',
-    excerpt: 'Twenty-year enterprise transformation veteran ACI Infotech unveiled ArqAI at the World CIO 200 Summit in Egypt, positioning MENA enterprises to capitalize on the most dramatic AI investment surge in modern business history.',
-    image_url: '/images/news/GEC-Newswire.jpg',
-    source: 'GEC Newswire',
-    date: 'May 2025',
-    url: 'https://gecnewswire.com/aci-infotech-unveils-arqai-at-world-cio-200-summit-egypt/',
-    cta_text: 'Read Coverage',
   },
 ];
 
@@ -131,11 +88,10 @@ export default function HomePage() {
       {/* Partners Section */}
       <PartnersSection partners={partners} />
 
-      {/* News Section */}
-      <NewsSection
+      {/* News Section - Dynamic from CMS */}
+      <DynamicNewsSection
         headline="In The News"
         subheadline="Recent recognition and partnerships"
-        news={newsItems}
       />
 
       {/* ArqAI Platform Section */}
