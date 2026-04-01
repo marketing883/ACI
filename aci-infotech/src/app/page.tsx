@@ -1,6 +1,6 @@
-// Force dynamic rendering to always fetch fresh blog data
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// ISR: Revalidate every 60 seconds for fast cached responses
+// Blog/case study sections use unstable_noStore() internally for fresh data
+export const revalidate = 60;
 
 import Button from '@/components/ui/Button';
 import {

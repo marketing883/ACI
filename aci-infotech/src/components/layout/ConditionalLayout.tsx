@@ -1,9 +1,15 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
-import ChatWidgetWrapper from '@/components/chat/ChatWidgetWrapper';
+
+// Lazy load ChatWidget - it's 887 lines and not critical for initial page render
+const ChatWidgetWrapper = dynamic(
+  () => import('@/components/chat/ChatWidgetWrapper'),
+  { ssr: false }
+);
 
 export default function ConditionalLayout({
   children,

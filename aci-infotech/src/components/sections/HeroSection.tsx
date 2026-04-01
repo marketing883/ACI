@@ -11,7 +11,9 @@ interface CounterProps {
 }
 
 function AnimatedCounter({ end, prefix = '', suffix = '', duration = 2000 }: CounterProps) {
-  const [count, setCount] = useState(0);
+  // Initialize with end value for SSR - users see final number immediately
+  const [count, setCount] = useState(end);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -34,7 +36,11 @@ function AnimatedCounter({ end, prefix = '', suffix = '', duration = 2000 }: Cou
   }, []);
 
   useEffect(() => {
-    if (!isVisible) return;
+    // Only animate once, after becoming visible on client
+    if (!isVisible || hasAnimated) return;
+
+    setHasAnimated(true);
+    setCount(0); // Reset to 0 to start animation
 
     let startTime: number;
     let animationFrame: number;
@@ -58,7 +64,7 @@ function AnimatedCounter({ end, prefix = '', suffix = '', duration = 2000 }: Cou
     animationFrame = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animationFrame);
-  }, [isVisible, end, duration]);
+  }, [isVisible, hasAnimated, end, duration]);
 
   return (
     <div
@@ -119,7 +125,8 @@ export default function HeroSection() {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
+            poster="/images/hero-poster.webp"
             onCanPlayThrough={handleCanPlayThrough}
             onLoadedData={() => setVideoLoaded(true)}
             onError={() => setVideoError(true)}
