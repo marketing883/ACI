@@ -3,80 +3,29 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 
-interface CounterProps {
-  end: number;
-  prefix?: string;
-  suffix?: string;
-  duration?: number;
-}
-
-function AnimatedCounter({ end, prefix = '', suffix = '', duration = 2000 }: CounterProps) {
-  // Initialize with end value for SSR - users see final number immediately
-  const [count, setCount] = useState(end);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    // Only animate once, after becoming visible on client
-    if (!isVisible || hasAnimated) return;
-
-    setHasAnimated(true);
-    setCount(0); // Reset to 0 to start animation
-
-    let startTime: number;
-    let animationFrame: number;
-
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-
-      // Easing function for smooth deceleration
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      // Use Math.round for small end values so they don't stay at 0 for the entire animation
-      setCount(Math.round(easeOutQuart * end));
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      } else {
-        setCount(end);
-      }
-    };
-
-    animationFrame = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(animationFrame);
-  }, [isVisible, hasAnimated, end, duration]);
-
+function HeroStat({ value, label }: { value: string; label: string }) {
   return (
-    <div
-      ref={ref}
-      className="font-bold text-white font-[var(--font-title)]"
-      style={{
-        fontSize: 'clamp(36px, 8vw, 120px)',
-        letterSpacing: '-0.03em',
-        lineHeight: 1,
-      }}
-    >
-      {prefix}{count.toLocaleString()}{suffix}
+    <div className="flex-shrink-0">
+      <div
+        className="font-bold text-white font-[var(--font-title)]"
+        style={{
+          fontSize: 'clamp(36px, 8vw, 120px)',
+          letterSpacing: '-0.03em',
+          lineHeight: 1,
+        }}
+      >
+        {value}
+      </div>
+      <div
+        className="mt-2 uppercase font-medium whitespace-nowrap"
+        style={{
+          fontSize: 'clamp(10px, 1.2vw, 14px)',
+          letterSpacing: '0.05em',
+          color: 'rgba(255, 255, 255, 0.7)',
+        }}
+      >
+        {label}
+      </div>
     </div>
   );
 }
@@ -84,14 +33,7 @@ function AnimatedCounter({ end, prefix = '', suffix = '', duration = 2000 }: Cou
 export default function HeroSection() {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const [animationStarted, setAnimationStarted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Trigger animations on mount
-  useEffect(() => {
-    const timer = setTimeout(() => setAnimationStarted(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Manually trigger video play to handle browser autoplay policies
   const attemptVideoPlay = useCallback(async () => {
@@ -172,19 +114,16 @@ export default function HeroSection() {
               }}
             />
 
-            {/* Two-line headline with staggered animation */}
+            {/* Two-line headline with CSS-only staggered animation */}
             <div className="flex flex-col">
               {/* Line 1: Modernizing the */}
               <h1
-                className="font-bold text-white font-[var(--font-title)]"
+                className="font-bold text-white font-[var(--font-title)] animate-[heroFadeUp_0.3s_ease-out_both]"
                 style={{
                   fontSize: 'clamp(42px, 7vw, 84px)',
                   lineHeight: 1.1,
                   letterSpacing: '-0.02em',
                   WebkitFontSmoothing: 'antialiased',
-                  opacity: animationStarted ? 1 : 0,
-                  transform: animationStarted ? 'translateY(0)' : 'translateY(20px)',
-                  transition: 'opacity 200ms ease-out, transform 200ms ease-out',
                 }}
               >
                 Modernizing the
@@ -192,16 +131,13 @@ export default function HeroSection() {
 
               {/* Line 2: Global Enterprise. - lime green */}
               <h1
-                className="font-bold font-[var(--font-title)]"
+                className="font-bold font-[var(--font-title)] animate-[heroFadeUp_0.3s_ease-out_0.1s_both]"
                 style={{
                   fontSize: 'clamp(48px, 8vw, 96px)',
                   lineHeight: 1.1,
                   letterSpacing: '-0.02em',
                   WebkitFontSmoothing: 'antialiased',
                   color: '#C4FF61',
-                  opacity: animationStarted ? 1 : 0,
-                  transform: animationStarted ? 'translateY(0)' : 'translateY(20px)',
-                  transition: 'opacity 200ms ease-out 100ms, transform 200ms ease-out 100ms',
                 }}
               >
                 Global Enterprise.
@@ -209,16 +145,14 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Subheadline - 24px, 85% white with fade animation */}
+          {/* Subheadline - 24px, 85% white with CSS fade animation */}
           <p
-            className="mb-[50px] max-w-[680px]"
+            className="mb-[50px] max-w-[680px] animate-[heroFadeIn_0.3s_ease-out_0.2s_both]"
             style={{
               fontSize: 'clamp(18px, 2vw, 24px)',
               fontWeight: 400,
               lineHeight: 1.5,
               color: 'rgba(255, 255, 255, 0.85)',
-              opacity: animationStarted ? 1 : 0,
-              transition: 'opacity 200ms ease-out 300ms',
             }}
           >
             Data platforms. AI systems. Cloud architectures.
@@ -226,47 +160,11 @@ export default function HeroSection() {
             We stand behind what we build.
           </p>
 
-          {/* Stats Row */}
+          {/* Stats Row - Static values, no animation to avoid hydration flicker */}
           <div className="flex flex-nowrap gap-6 sm:gap-8 md:gap-16 lg:gap-24 mb-[50px]">
-            <div className="flex-shrink-0">
-              <AnimatedCounter end={1} prefix="$" suffix="B+" duration={1500} />
-              <div
-                className="mt-2 uppercase font-medium whitespace-nowrap"
-                style={{
-                  fontSize: 'clamp(10px, 1.2vw, 14px)',
-                  letterSpacing: '0.05em',
-                  color: 'rgba(255, 255, 255, 0.7)',
-                }}
-              >
-                Value Delivered to Clients
-              </div>
-            </div>
-            <div className="flex-shrink-0">
-              <AnimatedCounter end={6250} suffix="+" duration={2000} />
-              <div
-                className="mt-2 uppercase font-medium whitespace-nowrap"
-                style={{
-                  fontSize: 'clamp(10px, 1.2vw, 14px)',
-                  letterSpacing: '0.05em',
-                  color: 'rgba(255, 255, 255, 0.7)',
-                }}
-              >
-                Engineers Worldwide
-              </div>
-            </div>
-            <div className="flex-shrink-0">
-              <AnimatedCounter end={80} suffix="+" duration={1800} />
-              <div
-                className="mt-2 uppercase font-medium whitespace-nowrap"
-                style={{
-                  fontSize: 'clamp(10px, 1.2vw, 14px)',
-                  letterSpacing: '0.05em',
-                  color: 'rgba(255, 255, 255, 0.7)',
-                }}
-              >
-                Fortune 500 Clients Served
-              </div>
-            </div>
+            <HeroStat value="$1B+" label="Value Delivered to Clients" />
+            <HeroStat value="6,250+" label="Engineers Worldwide" />
+            <HeroStat value="80+" label="Fortune 500 Clients Served" />
           </div>
 
           {/* Buttons - 50px gap from stats */}
