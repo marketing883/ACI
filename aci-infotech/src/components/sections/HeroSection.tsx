@@ -33,7 +33,13 @@ function HeroStat({ value, label }: { value: string; label: string }) {
 export default function HeroSection() {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [isMobile, setIsMobile] = useState(true); // Default true to skip video on SSR
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Detect mobile to skip video entirely (saves 5MB+ on mobile connections)
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   // Manually trigger video play to handle browser autoplay policies
   const attemptVideoPlay = useCallback(async () => {
@@ -47,9 +53,10 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
+    if (isMobile) return;
     const timer = setTimeout(attemptVideoPlay, 100);
     return () => clearTimeout(timer);
-  }, [attemptVideoPlay]);
+  }, [attemptVideoPlay, isMobile]);
 
   const handleCanPlayThrough = () => {
     setVideoLoaded(true);
@@ -58,9 +65,9 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0A1628]">
-      {/* Video Background */}
+      {/* Video Background - desktop only; mobile uses poster image */}
       <div className="absolute inset-0 z-0">
-        {!videoError && (
+        {!isMobile && !videoError && (
           <video
             ref={videoRef}
             autoPlay
@@ -80,14 +87,18 @@ export default function HeroSection() {
             <source src="/GettyImages-1394448388.mp4" type="video/mp4" />
           </video>
         )}
+        {/* Poster image for mobile / video fallback */}
+        {(isMobile || !videoLoaded || videoError) && (
+          <img
+            src="/images/hero-poster.webp"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A1628]/95 via-[#0A1628]/80 to-[#0A1628]/60" />
-        {/* Fallback */}
-        <div
-          className={`absolute inset-0 bg-[#0A1628] transition-opacity duration-1000 ${
-            videoLoaded && !videoError ? 'opacity-0' : 'opacity-100'
-          }`}
-        />
+        {/* Fallback solid color beneath poster/video */}
+        <div className="absolute inset-0 bg-[#0A1628] -z-10" />
       </div>
 
       {/* Geometric Accent - Right side */}
