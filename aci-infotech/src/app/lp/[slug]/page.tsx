@@ -37,14 +37,15 @@ function LandingPageContent() {
 
   const industryParam = searchParams.get('ind') || searchParams.get('industry') || undefined;
   const roleParam = searchParams.get('role') || undefined;
+  const painParam = searchParams.get('pain') || undefined;
 
   // Get content synchronously - this is the key fix
   // First check if base content exists, then get personalized version
   const baseContent = useMemo(() => getLPContent(slug), [slug]);
   const content = useMemo(() => {
     if (!baseContent) return null;
-    return getPersonalizedContent(slug, industryParam, roleParam);
-  }, [slug, industryParam, roleParam, baseContent]);
+    return getPersonalizedContent(slug, industryParam, roleParam, painParam);
+  }, [slug, industryParam, roleParam, painParam, baseContent]);
 
   const [context, setContext] = useState<VisitorContext | null>(null);
 

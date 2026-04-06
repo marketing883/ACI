@@ -3062,7 +3062,738 @@ export const LP_CONTENT: Record<string, LPContent> = {
       },
     ],
 
-    certifications: ['Databricks Premier Partner', 'Spark Certified', 'AWS Partner', 'Azure Partner'],
+    certifications: ['Databricks Elite Partner', 'Spark Certified', 'AWS Partner', 'Azure Partner'],
+
+    industryVariants: {
+      finance: {
+        headline: 'Databricks for Financial Services — SOX & PCI Compliant',
+        subheadline: 'Unified lakehouse for fraud detection, risk analytics, and regulatory reporting with enterprise-grade compliance.',
+        painPoints: [
+          { title: 'Fraud Detection Latency', description: 'Batch fraud models catching fraud hours or days after it happens—not in real time.', icon: 'alert-triangle' },
+          { title: 'Regulatory Reporting Gaps', description: 'Weeks of manual effort to compile SOX, PCI, and Basel III reports from siloed systems.', icon: 'file-text' },
+          { title: 'Siloed Risk Data', description: 'Credit, market, and operational risk data in separate systems with no unified view.', icon: 'database' },
+          { title: 'AML Compliance Burden', description: 'Anti-money laundering checks running on legacy systems that can\'t keep pace with transaction volumes.', icon: 'shield' },
+        ],
+        stats: [
+          { value: '10x', label: 'Faster Fraud Detection' },
+          { value: '80%', label: 'Faster Regulatory Reporting' },
+          { value: '50%', label: 'Infrastructure Cost Savings' },
+          { value: 'SOX/PCI', label: 'Compliance Ready' },
+        ],
+      },
+      healthcare: {
+        headline: 'HIPAA-Compliant Databricks Lakehouse for Healthcare',
+        subheadline: 'Unify clinical, claims, and genomics data on a governed lakehouse with HIPAA-grade security.',
+        painPoints: [
+          { title: 'PHI Governance Gaps', description: 'Protected health information scattered across systems without unified access controls or lineage.', icon: 'shield' },
+          { title: 'Clinical Data Silos', description: 'EHR, lab, imaging, and claims data in separate systems—no unified patient view.', icon: 'database' },
+          { title: 'Claims Processing Bottlenecks', description: 'Batch-based claims analytics taking days instead of minutes, delaying reimbursements.', icon: 'clock' },
+          { title: 'Real-World Evidence Gaps', description: 'Can\'t leverage real-world patient data for outcomes research and population health.', icon: 'activity' },
+        ],
+        stats: [
+          { value: 'HIPAA', label: 'Compliant Architecture' },
+          { value: '60%', label: 'Faster Claims Processing' },
+          { value: '360°', label: 'Patient Data View' },
+          { value: '45%', label: 'Cost Reduction' },
+        ],
+      },
+      retail: {
+        headline: 'Databricks for Retail — Customer 360 & Demand Forecasting',
+        subheadline: 'Unified customer intelligence and real-time demand forecasting on a single lakehouse platform.',
+        painPoints: [
+          { title: 'Fragmented Customer Data', description: 'Online, in-store, and loyalty data in separate systems—no single customer view.', icon: 'users' },
+          { title: 'Demand Forecasting Errors', description: 'Spreadsheet-based forecasting leading to stockouts and overstock across thousands of SKUs.', icon: 'trending-up' },
+          { title: 'Pricing Optimization Gaps', description: 'Static pricing that can\'t respond to real-time market conditions and competitor moves.', icon: 'dollar-sign' },
+          { title: 'Inventory Blind Spots', description: 'No real-time visibility into inventory across all locations, warehouses, and channels.', icon: 'package' },
+        ],
+        stats: [
+          { value: '360°', label: 'Customer View' },
+          { value: '35%', label: 'Forecast Accuracy Gain' },
+          { value: '25%', label: 'Inventory Cost Reduction' },
+          { value: '3x', label: 'Faster Personalization' },
+        ],
+      },
+      manufacturing: {
+        headline: 'Databricks for Manufacturing — Predictive Maintenance & IoT',
+        subheadline: 'Stream IoT sensor data into a lakehouse for predictive maintenance, quality analytics, and production optimization.',
+        painPoints: [
+          { title: 'Unplanned Equipment Downtime', description: 'Reactive maintenance causing costly production line shutdowns and missed delivery targets.', icon: 'alert-triangle' },
+          { title: 'IoT Data Overload', description: 'Millions of sensor readings per day with no platform to process, store, and analyze them at scale.', icon: 'cpu' },
+          { title: 'Quality Traceability Gaps', description: 'Can\'t trace defects back to specific production runs, components, or process parameters.', icon: 'search' },
+          { title: 'Production Planning Blind Spots', description: 'Manual production scheduling without ML-driven demand and capacity optimization.', icon: 'calendar' },
+        ],
+        stats: [
+          { value: '40%', label: 'Less Unplanned Downtime' },
+          { value: '5x', label: 'Faster IoT Processing' },
+          { value: '30%', label: 'Quality Improvement' },
+          { value: '25%', label: 'Production Efficiency Gain' },
+        ],
+      },
+      media: {
+        headline: 'Databricks for Media — Audience Intelligence at Scale',
+        subheadline: 'Real-time audience analytics, content personalization, and ad optimization on a unified data platform.',
+        painPoints: [
+          { title: 'Audience Fragmentation', description: 'Viewer and subscriber data scattered across streaming, web, mobile, and linear platforms.', icon: 'users' },
+          { title: 'Content Personalization Gaps', description: 'Recommendation engines running on stale batch data instead of real-time viewing behavior.', icon: 'film' },
+          { title: 'Ad Spend Attribution Chaos', description: 'Can\'t attribute revenue to specific campaigns, creatives, or audience segments accurately.', icon: 'dollar-sign' },
+          { title: 'Streaming Data at Scale', description: 'Petabytes of unstructured video, audio, and interaction data with no unified analytics.', icon: 'database' },
+        ],
+        stats: [
+          { value: '3x', label: 'Audience Engagement' },
+          { value: '50%', label: 'Better Ad Attribution' },
+          { value: 'Real-Time', label: 'Content Recommendations' },
+          { value: '40%', label: 'Data Processing Cost Cut' },
+        ],
+      },
+      energy: {
+        headline: 'Databricks for Energy & Utilities — Grid Analytics & ESG',
+        subheadline: 'Smart meter analytics, grid optimization, and ESG compliance on a scalable lakehouse platform.',
+        painPoints: [
+          { title: 'Smart Meter Data Deluge', description: 'Millions of meter readings per day overwhelming legacy data infrastructure.', icon: 'zap' },
+          { title: 'Grid Edge Blind Spots', description: 'No real-time visibility into distributed energy resources and grid edge performance.', icon: 'eye-off' },
+          { title: 'ESG Reporting Burden', description: 'Manual ESG and sustainability reporting from fragmented data sources.', icon: 'file-text' },
+          { title: 'Energy Demand Forecasting', description: 'Inaccurate load forecasting leading to over-generation and grid instability.', icon: 'trending-up' },
+        ],
+        stats: [
+          { value: '10M+', label: 'Meter Reads/Day Processed' },
+          { value: '30%', label: 'Better Load Forecasting' },
+          { value: '60%', label: 'Faster ESG Reporting' },
+          { value: '40%', label: 'Infrastructure Cost Savings' },
+        ],
+      },
+    },
+
+    roleVariants: {
+      cdo: {
+        headline: 'Govern Your Data Lakehouse with Unity Catalog',
+        subheadline: 'Unified governance, cataloging, and lineage for your entire data estate—from ingestion to ML.',
+        ctoText: 'Get Your Data Governance Assessment',
+      },
+      cto: {
+        headline: 'Architect a Scalable Lakehouse — Databricks Elite Partner',
+        subheadline: 'Multi-cloud lakehouse architecture with Delta Lake, Unity Catalog, and production-grade MLOps.',
+        ctoText: 'Get Your Architecture Assessment',
+      },
+      cfo: {
+        headline: 'Cut Data Platform Costs by 50% with Lakehouse',
+        subheadline: 'Consolidate data warehouses, lakes, and ML platforms into one cost-efficient lakehouse.',
+        ctoText: 'See Your Cost Savings Potential',
+      },
+      vp: {
+        headline: 'Ship Data Products 5x Faster on Databricks',
+        subheadline: 'Accelerate pipeline development with medallion architecture, Delta Live Tables, and collaborative notebooks.',
+        ctoText: 'See Your Pipeline Acceleration Plan',
+      },
+      architect: {
+        headline: 'Medallion Architecture & Delta Lake Best Practices',
+        subheadline: 'Deep-dive into lakehouse patterns: medallion layers, Unity Catalog, Photon engine, and Spark tuning.',
+        ctoText: 'Get Your Lakehouse Blueprint',
+      },
+    },
+  },
+
+  // ==========================================
+  // DATABRICKS MIGRATION
+  // ==========================================
+  'databricks-migration': {
+    slug: 'databricks-migration',
+    serviceCluster: 'data-engineering',
+    keyword: 'databricks migration services',
+
+    metaTitle: 'Databricks Migration Services | Lakehouse Migration Partner | ACI Infotech',
+    metaDescription: 'Migrate from Hadoop, Snowflake, Teradata, or Redshift to Databricks Lakehouse. Elite Partner with 75+ migrations delivered.',
+
+    headline: 'Migrate to Databricks Lakehouse — Zero Downtime, Full Confidence',
+    subheadline: 'Move from legacy data warehouses and Hadoop to a modern lakehouse with our proven migration framework.',
+    ctoText: 'Get Your Migration Assessment',
+    ctoSecondaryText: 'See Migration Timeline',
+
+    painPointsHeadline: 'Is Your Migration Stuck?',
+    painPoints: [
+      { title: 'Legacy Lock-In', description: 'Expensive legacy warehouse contracts with no clear path to a modern platform.', icon: 'lock' },
+      { title: 'Migration Risk', description: 'Fear of data loss, downtime, or broken pipelines during cutover.', icon: 'alert-triangle' },
+      { title: 'Skill Gaps', description: 'Team lacks Databricks and Spark expertise to execute the migration confidently.', icon: 'users' },
+      { title: 'Cost Uncertainty', description: 'No clear picture of TCO comparison between current platform and Databricks.', icon: 'dollar-sign' },
+    ],
+
+    solutionHeadline: 'Proven Migration Framework',
+    solutionDescription: 'Our 4-phase migration methodology minimizes risk and accelerates time-to-value on Databricks.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Inventory workloads, map dependencies, and build a TCO comparison.' },
+      { step: '02', title: 'Design', description: 'Architect target lakehouse with medallion layers, Unity Catalog, and optimized compute.' },
+      { step: '03', title: 'Migrate', description: 'Automated workload conversion, data migration, and parallel validation.' },
+      { step: '04', title: 'Optimize', description: 'Performance tuning, cost optimization, and team enablement on the new platform.' },
+    ],
+
+    stats: [
+      { value: '75+', label: 'Migrations Completed' },
+      { value: '99.9%', label: 'Data Accuracy' },
+      { value: '50%', label: 'Average Cost Savings' },
+      { value: '0', label: 'Hours of Downtime' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      { title: 'Risk-Free Migration', description: 'Parallel-run validation ensures zero data loss and zero downtime during cutover.', icon: 'shield' },
+      { title: 'Automated Conversion', description: 'SQL, ETL, and pipeline code automatically converted and validated for Databricks.', icon: 'zap' },
+      { title: 'Cost Transparency', description: 'Detailed TCO analysis showing exact savings vs. your current platform.', icon: 'dollar-sign' },
+      { title: 'Team Enablement', description: 'Hands-on training so your team is self-sufficient on Databricks from day one.', icon: 'users' },
+    ],
+
+    proofItems: [
+      { headline: 'Teradata to Lakehouse in 12 Weeks', description: 'Migrated 500+ tables and 200 ETL jobs from Teradata to Databricks with zero data discrepancies.', industry: 'finance' },
+      { headline: 'Hadoop Sunset, Lakehouse Sunrise', description: 'Decommissioned a 2,000-node Hadoop cluster and migrated to Databricks, cutting infrastructure costs by 60%.', industry: 'technology' },
+    ],
+
+    faqs: [
+      { question: 'How long does a typical migration take?', answer: 'Most migrations complete in 8-16 weeks depending on complexity. We run parallel environments so there\'s no downtime.' },
+      { question: 'Can you migrate our Snowflake workloads?', answer: 'Yes, we use Databricks Lakebridge and custom tooling to migrate Snowflake SQL, stored procedures, and data to the lakehouse.' },
+      { question: 'What about our existing ETL pipelines?', answer: 'We convert ETL code from Informatica, SSIS, Talend, and custom scripts to Databricks notebooks and Delta Live Tables.' },
+      { question: 'Will we lose any data during migration?', answer: 'No. Our parallel-run methodology validates every table row-by-row before cutover. We guarantee 99.9% data accuracy.' },
+    ],
+
+    certifications: ['Databricks Elite Partner', 'Migration Specialist', 'AWS Partner', 'Azure Partner'],
+
+    industryVariants: {
+      finance: {
+        headline: 'Migrate from Legacy DW to Databricks — Financial Services',
+        subheadline: 'SOX-compliant migration from Teradata, Oracle, or Snowflake to a governed Databricks Lakehouse.',
+        painPoints: [
+          { title: 'Teradata/Oracle Lock-In', description: 'Seven-figure annual licenses for legacy warehouses that can\'t support real-time analytics.', icon: 'lock' },
+          { title: 'Regulatory Migration Risk', description: 'SOX and PCI audit requirements make any platform migration feel impossibly risky.', icon: 'shield' },
+          { title: 'Data Lineage Gaps', description: 'Auditors need full lineage—current tools can\'t trace data across legacy and modern systems.', icon: 'git-branch' },
+          { title: 'Parallel Run Costs', description: 'Running legacy and new platforms simultaneously is burning through budget.', icon: 'dollar-sign' },
+        ],
+        stats: [
+          { value: '60%', label: 'License Cost Savings' },
+          { value: 'SOX/PCI', label: 'Compliant Migration' },
+          { value: '12wk', label: 'Average Timeline' },
+          { value: '100%', label: 'Audit-Ready Lineage' },
+        ],
+      },
+      healthcare: {
+        headline: 'HIPAA-Compliant Migration to Databricks Lakehouse',
+        subheadline: 'Migrate clinical and claims data from legacy systems to a HIPAA-compliant lakehouse with full PHI governance.',
+        painPoints: [
+          { title: 'Legacy EDW Limitations', description: 'On-premise data warehouses can\'t handle genomics, imaging, and real-world evidence workloads.', icon: 'database' },
+          { title: 'PHI Migration Risk', description: 'Moving protected health information requires HIPAA-grade encryption and access controls throughout.', icon: 'shield' },
+          { title: 'Interoperability Gaps', description: 'HL7 FHIR and legacy EHR data formats need transformation during migration.', icon: 'git-branch' },
+          { title: 'Compliance Validation', description: 'Every migration step must be auditable for HIPAA, HITRUST, and state regulations.', icon: 'file-text' },
+        ],
+        stats: [
+          { value: 'HIPAA', label: 'Compliant Throughout' },
+          { value: '50%', label: 'Faster Data Access' },
+          { value: '100%', label: 'PHI Lineage Tracked' },
+          { value: '40%', label: 'Infrastructure Savings' },
+        ],
+      },
+      retail: {
+        headline: 'Modernize Your Retail Data Stack on Databricks',
+        subheadline: 'Migrate from Snowflake or Redshift to a unified lakehouse for analytics, ML, and real-time personalization.',
+        painPoints: [
+          { title: 'Snowflake Cost Creep', description: 'Warehouse credits spiraling as data volumes and concurrent queries grow.', icon: 'trending-up' },
+          { title: 'Separate ML Platform', description: 'Analytics on one platform, ML on another—duplicating data and doubling costs.', icon: 'git-branch' },
+          { title: 'Real-Time Gaps', description: 'Batch-based platform can\'t support real-time personalization and dynamic pricing.', icon: 'clock' },
+          { title: 'Vendor Lock-In', description: 'Proprietary formats making it expensive to move or integrate with other tools.', icon: 'lock' },
+        ],
+        stats: [
+          { value: '45%', label: 'Platform Cost Savings' },
+          { value: '1', label: 'Unified Platform' },
+          { value: 'Real-Time', label: 'Analytics & ML' },
+          { value: '8wk', label: 'Migration Timeline' },
+        ],
+      },
+      manufacturing: {
+        headline: 'Migrate Manufacturing Data to Databricks Lakehouse',
+        subheadline: 'Move IoT, MES, and ERP data from on-premise systems to a streaming-ready lakehouse.',
+        painPoints: [
+          { title: 'On-Premise Limitations', description: 'Legacy on-prem systems can\'t scale for IoT streaming and predictive analytics.', icon: 'server' },
+          { title: 'IoT Data Silos', description: 'Sensor data trapped in historian databases disconnected from business analytics.', icon: 'database' },
+          { title: 'MES/ERP Integration', description: 'Manufacturing execution and ERP data needs unified access for production optimization.', icon: 'link' },
+          { title: 'Edge-to-Cloud Gap', description: 'No pipeline from factory floor sensors to cloud-based analytics and ML.', icon: 'cloud' },
+        ],
+        stats: [
+          { value: '5x', label: 'Faster IoT Analytics' },
+          { value: '50%', label: 'Infrastructure Savings' },
+          { value: 'Streaming', label: 'Real-Time Pipelines' },
+          { value: '10wk', label: 'Average Timeline' },
+        ],
+      },
+    },
+
+    painPointVariants: {
+      snowflake: {
+        headline: 'Migrate from Snowflake to Databricks Lakehouse',
+        subheadline: 'Consolidate analytics and ML on one platform. Cut costs, eliminate data duplication, and unlock real-time capabilities.',
+        painPoints: [
+          { title: 'Snowflake Credit Costs', description: 'Warehouse credit consumption growing faster than your data budget—no cost ceiling in sight.', icon: 'trending-up' },
+          { title: 'No Native ML', description: 'Data science teams forced onto a separate platform, duplicating data and adding latency.', icon: 'cpu' },
+          { title: 'Proprietary Lock-In', description: 'Data stored in Snowflake\'s proprietary format—expensive to extract or integrate.', icon: 'lock' },
+          { title: 'Real-Time Limitations', description: 'Snowflake built for batch analytics, not streaming or real-time ML serving.', icon: 'clock' },
+        ],
+        stats: [
+          { value: '40-60%', label: 'Cost Savings vs Snowflake' },
+          { value: '1', label: 'Unified Analytics + ML' },
+          { value: 'Open', label: 'Delta Lake Format' },
+          { value: '8-12wk', label: 'Migration Timeline' },
+        ],
+      },
+      hadoop: {
+        headline: 'Modernize from Hadoop to Databricks Lakehouse',
+        subheadline: 'Decommission your Hadoop cluster. Get 10x performance at half the cost on a managed lakehouse.',
+        painPoints: [
+          { title: 'Hadoop Admin Overhead', description: 'Full-time engineers babysitting HDFS, YARN, and ZooKeeper instead of building data products.', icon: 'settings' },
+          { title: 'Talent Shortage', description: 'Hadoop/MapReduce skills increasingly rare and expensive—hard to hire, hard to retain.', icon: 'users' },
+          { title: 'Performance Plateau', description: 'MapReduce and Hive queries taking hours for workloads that should take minutes.', icon: 'clock' },
+          { title: 'End of Support', description: 'Cloudera/Hortonworks versions approaching end-of-life with no clear upgrade path.', icon: 'alert-triangle' },
+        ],
+        stats: [
+          { value: '10x', label: 'Performance Improvement' },
+          { value: '60%', label: 'Infrastructure Cost Cut' },
+          { value: '0', label: 'Cluster Admin Needed' },
+          { value: '12-16wk', label: 'Migration Timeline' },
+        ],
+      },
+      teradata: {
+        headline: 'Replace Teradata with Databricks Lakehouse',
+        subheadline: 'Escape seven-figure Teradata licenses. Migrate to an open, scalable lakehouse with full SQL compatibility.',
+        painPoints: [
+          { title: 'Crushing License Costs', description: 'Annual Teradata licenses consuming budget that should go toward innovation.', icon: 'dollar-sign' },
+          { title: 'Capacity Constraints', description: 'Fixed appliance capacity can\'t scale for new workloads without another hardware purchase.', icon: 'server' },
+          { title: 'SQL Migration Fear', description: 'Thousands of complex Teradata SQL scripts and stored procedures to convert.', icon: 'code' },
+          { title: 'Vendor Dependency', description: 'Single-vendor ecosystem with no portability to cloud or open formats.', icon: 'lock' },
+        ],
+        stats: [
+          { value: '70%', label: 'License Cost Elimination' },
+          { value: '500+', label: 'Tables Auto-Migrated' },
+          { value: '99.9%', label: 'SQL Compatibility' },
+          { value: '16wk', label: 'Typical Timeline' },
+        ],
+      },
+      redshift: {
+        headline: 'Migrate from Redshift to Databricks Lakehouse',
+        subheadline: 'Unify analytics and ML on Databricks. Get better performance, open formats, and predictable costs.',
+        painPoints: [
+          { title: 'Redshift Scaling Pain', description: 'Cluster resizing causes downtime, and concurrency limits throttle users at peak times.', icon: 'trending-up' },
+          { title: 'No ML Integration', description: 'Data scientists can\'t run ML workloads natively—forced to extract data to SageMaker.', icon: 'cpu' },
+          { title: 'AWS Lock-In', description: 'Tied to AWS ecosystem with no multi-cloud flexibility or open data formats.', icon: 'lock' },
+          { title: 'Cost Unpredictability', description: 'Serverless pricing spikes and reserved instance commitments make budgeting difficult.', icon: 'dollar-sign' },
+        ],
+        stats: [
+          { value: '3x', label: 'Query Performance' },
+          { value: '40%', label: 'Cost Savings' },
+          { value: 'Multi-Cloud', label: 'Flexibility' },
+          { value: '8-12wk', label: 'Migration Timeline' },
+        ],
+      },
+    },
+  },
+
+  // ==========================================
+  // DATABRICKS UNITY CATALOG
+  // ==========================================
+  'databricks-unity-catalog': {
+    slug: 'databricks-unity-catalog',
+    serviceCluster: 'data-engineering',
+    keyword: 'unity catalog implementation',
+
+    metaTitle: 'Unity Catalog Implementation Services | Databricks Governance | ACI Infotech',
+    metaDescription: 'Implement Databricks Unity Catalog for unified governance, access control, and data lineage. Elite Partner — migrate before the legacy metastore sunset.',
+
+    headline: 'Implement Unity Catalog Before the Deadline Hits',
+    subheadline: 'Legacy Hive metastore is being sunset. Get unified governance, lineage, and access control across your entire lakehouse.',
+    ctoText: 'Get Your Unity Catalog Migration Plan',
+    ctoSecondaryText: 'See the Governance Gap Assessment',
+
+    painPointsHeadline: 'Is Your Governance Ready?',
+    painPoints: [
+      { title: 'Legacy Metastore Sunset', description: 'Databricks is deprecating the legacy Hive metastore—migration to Unity Catalog is now mandatory.', icon: 'alert-triangle' },
+      { title: 'No Unified Access Control', description: 'Different permissions for tables, files, and ML models—no single governance layer.', icon: 'shield' },
+      { title: 'Missing Data Lineage', description: 'Can\'t trace data from source to dashboard—audit and compliance teams are frustrated.', icon: 'git-branch' },
+      { title: 'Cross-Workspace Chaos', description: 'Multiple Databricks workspaces with no shared catalog, duplicated data, and inconsistent schemas.', icon: 'database' },
+    ],
+
+    solutionHeadline: 'Unified Governance with Unity Catalog',
+    solutionDescription: 'We implement Unity Catalog to give you one place to govern all data, ML models, and AI assets.',
+    processSteps: [
+      { step: '01', title: 'Audit', description: 'Inventory all metastores, permissions, tables, and external locations across workspaces.' },
+      { step: '02', title: 'Design', description: 'Architect catalog/schema hierarchy, define access policies, and plan the migration path.' },
+      { step: '03', title: 'Migrate', description: 'Migrate tables, views, and permissions from legacy metastore to Unity Catalog with zero downtime.' },
+      { step: '04', title: 'Govern', description: 'Enable lineage tracking, column-level security, and automated compliance reporting.' },
+    ],
+
+    stats: [
+      { value: '100%', label: 'Lineage Visibility' },
+      { value: '1', label: 'Unified Catalog' },
+      { value: '0', label: 'Migration Downtime' },
+      { value: '50+', label: 'UC Migrations Done' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      { title: 'Unified Access Control', description: 'One permission model for tables, volumes, ML models, and AI endpoints.', icon: 'shield' },
+      { title: 'Full Data Lineage', description: 'Automatic column-level lineage from source to dashboard—audit-ready.', icon: 'git-branch' },
+      { title: 'Cross-Workspace Sharing', description: 'Share data securely across workspaces, clouds, and teams without copying.', icon: 'share-2' },
+      { title: 'Compliance Ready', description: 'Row and column-level security, data masking, and attribute-based access controls.', icon: 'lock' },
+    ],
+
+    proofItems: [
+      { headline: 'Enterprise-Wide Governance', description: 'Migrated 12 workspaces and 10,000+ tables to Unity Catalog, enabling unified governance for the first time.', industry: 'finance' },
+      { headline: 'Audit-Ready in 6 Weeks', description: 'Implemented column-level lineage and access controls, passing SOX audit requirements on the first attempt.', industry: 'finance' },
+    ],
+
+    faqs: [
+      { question: 'How urgent is the Unity Catalog migration?', answer: 'Databricks is actively sunsetting legacy metastore features. New features are Unity Catalog-only. We recommend migrating now to avoid disruption.' },
+      { question: 'Will migration cause downtime?', answer: 'No. We use Databricks upgrade wizards and custom tooling to migrate in-place with zero downtime and zero data movement.' },
+      { question: 'What about external tables and storage?', answer: 'Unity Catalog supports external locations, storage credentials, and external tables—we migrate all of them with proper governance.' },
+      { question: 'Can you handle multi-cloud Unity Catalog?', answer: 'Yes. Unity Catalog works across AWS, Azure, and GCP. We implement cross-cloud governance and data sharing.' },
+    ],
+
+    certifications: ['Databricks Elite Partner', 'Unity Catalog Specialist', 'AWS Partner', 'Azure Partner'],
+
+    industryVariants: {
+      finance: {
+        headline: 'SOX-Compliant Data Governance with Unity Catalog',
+        subheadline: 'Unified access control, full lineage, and audit-ready compliance for financial services data.',
+        painPoints: [
+          { title: 'SOX Audit Gaps', description: 'Auditors require full data lineage and access logs—legacy metastore can\'t provide them.', icon: 'file-text' },
+          { title: 'PII Exposure Risk', description: 'No column-level security means sensitive financial data accessible to too many users.', icon: 'shield' },
+          { title: 'Multi-Workspace Sprawl', description: 'Trading, risk, and compliance teams on separate workspaces with no shared governance.', icon: 'database' },
+          { title: 'Regulatory Reporting Lineage', description: 'Regulators want proof of data provenance—current tools can\'t trace end-to-end.', icon: 'git-branch' },
+        ],
+        stats: [
+          { value: 'SOX/PCI', label: 'Audit Compliant' },
+          { value: '100%', label: 'Data Lineage' },
+          { value: 'Column-Level', label: 'Access Control' },
+          { value: '6wk', label: 'Implementation' },
+        ],
+      },
+      healthcare: {
+        headline: 'HIPAA-Grade Governance with Unity Catalog',
+        subheadline: 'Protect PHI with column-level security, data masking, and full lineage across your healthcare lakehouse.',
+        painPoints: [
+          { title: 'PHI Access Control Gaps', description: 'Protected health information accessible to users who shouldn\'t see it—HIPAA risk.', icon: 'shield' },
+          { title: 'No Data Masking', description: 'Can\'t mask SSN, DOB, or diagnosis codes for analysts who need aggregated data.', icon: 'eye-off' },
+          { title: 'Cross-Department Silos', description: 'Clinical, research, and operations teams can\'t share data with proper governance.', icon: 'users' },
+          { title: 'Audit Trail Gaps', description: 'HIPAA auditors need complete access logs and lineage—current system can\'t provide them.', icon: 'file-text' },
+        ],
+        stats: [
+          { value: 'HIPAA', label: 'Compliant' },
+          { value: 'PHI', label: 'Fully Governed' },
+          { value: 'Column-Level', label: 'Data Masking' },
+          { value: '100%', label: 'Audit Trail' },
+        ],
+      },
+    },
+  },
+
+  // ==========================================
+  // DATABRICKS GENERATIVE AI
+  // ==========================================
+  'databricks-genai': {
+    slug: 'databricks-genai',
+    serviceCluster: 'gen-ai',
+    keyword: 'databricks generative ai consulting',
+
+    metaTitle: 'Databricks Generative AI Consulting | Mosaic AI & RAG | ACI Infotech',
+    metaDescription: 'Build enterprise GenAI applications on Databricks with Mosaic AI, RAG pipelines, and AI agents. Elite Partner with production GenAI deployments.',
+
+    headline: 'Build Enterprise GenAI on Databricks — From POC to Production',
+    subheadline: 'Deploy RAG applications, AI agents, and LLM pipelines on your lakehouse with full governance and security.',
+    ctoText: 'Get Your GenAI Readiness Assessment',
+    ctoSecondaryText: 'See a RAG Demo',
+
+    painPointsHeadline: 'Is Your GenAI Stuck in POC?',
+    painPoints: [
+      { title: 'POC Purgatory', description: 'ChatGPT prototypes that never make it to production because of security, cost, and governance concerns.', icon: 'alert-triangle' },
+      { title: 'Data Governance for AI', description: 'No way to control which data LLMs can access or trace how answers are generated.', icon: 'shield' },
+      { title: 'Hallucination Risk', description: 'LLMs generating inaccurate answers with no retrieval grounding or evaluation framework.', icon: 'alert-circle' },
+      { title: 'Vendor Lock-In', description: 'Tied to a single LLM provider with no flexibility to switch models or use open-source.', icon: 'lock' },
+    ],
+
+    solutionHeadline: 'Production GenAI on Your Lakehouse',
+    solutionDescription: 'We build enterprise GenAI applications using Databricks Mosaic AI with your data, your governance, your security.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Identify high-value GenAI use cases and evaluate data readiness for RAG pipelines.' },
+      { step: '02', title: 'Build', description: 'Develop RAG applications, fine-tune models, and build AI agent workflows on Mosaic AI.' },
+      { step: '03', title: 'Evaluate', description: 'Implement evaluation frameworks for quality, safety, and hallucination detection.' },
+      { step: '04', title: 'Deploy', description: 'Production deployment with model serving, monitoring, and feedback loops.' },
+    ],
+
+    stats: [
+      { value: '30+', label: 'GenAI Deployments' },
+      { value: '90%', label: 'Reduction in Hallucinations' },
+      { value: '10x', label: 'Faster Document Processing' },
+      { value: 'Enterprise', label: 'Grade Security' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      { title: 'RAG on Your Data', description: 'Retrieval-augmented generation using your lakehouse data with Unity Catalog governance.', icon: 'database' },
+      { title: 'Model Flexibility', description: 'Use any LLM—GPT-4, Claude, Llama, DBRX—swap freely without code changes.', icon: 'refresh-cw' },
+      { title: 'AI Agents', description: 'Build compound AI systems with tool use, multi-step reasoning, and human-in-the-loop.', icon: 'cpu' },
+      { title: 'Full Observability', description: 'MLflow tracing, evaluation dashboards, and production monitoring for every AI application.', icon: 'activity' },
+    ],
+
+    proofItems: [
+      { headline: 'AI-Powered Contract Analysis', description: 'Built a RAG application that processes 10,000+ legal contracts per month, reducing review time by 80%.', industry: 'finance' },
+      { headline: 'Clinical Decision Support', description: 'Deployed a GenAI assistant that retrieves relevant clinical guidelines, reducing physician research time by 60%.', industry: 'healthcare' },
+    ],
+
+    faqs: [
+      { question: 'What is Mosaic AI?', answer: 'Mosaic AI is Databricks\' integrated GenAI platform for building RAG applications, fine-tuning models, and deploying AI agents—all governed by Unity Catalog.' },
+      { question: 'Can we use our own data securely?', answer: 'Yes. RAG pipelines run entirely within your lakehouse. Your data never leaves your environment or gets used for model training.' },
+      { question: 'Which LLMs do you support?', answer: 'Any model—OpenAI GPT-4, Anthropic Claude, Meta Llama, Databricks DBRX, or custom fine-tuned models. Mosaic AI is model-agnostic.' },
+      { question: 'How do you handle hallucinations?', answer: 'We implement retrieval grounding, evaluation frameworks with judges, and feedback loops to continuously measure and reduce hallucination rates.' },
+    ],
+
+    certifications: ['Databricks Elite Partner', 'Mosaic AI Specialist', 'AWS Partner', 'Azure Partner'],
+
+    industryVariants: {
+      finance: {
+        headline: 'Generative AI for Financial Services on Databricks',
+        subheadline: 'Build compliant GenAI applications for contract analysis, risk assessment, and regulatory intelligence.',
+        painPoints: [
+          { title: 'Compliance-Safe AI', description: 'Regulators demand explainability and audit trails—generic ChatGPT wrappers won\'t pass.', icon: 'shield' },
+          { title: 'Contract Analysis Backlog', description: 'Thousands of contracts, amendments, and regulatory filings reviewed manually.', icon: 'file-text' },
+          { title: 'Risk Intelligence Gaps', description: 'Analysts spending hours searching for relevant risk data across systems and documents.', icon: 'search' },
+          { title: 'AML/KYC Bottlenecks', description: 'Manual due diligence processes that can\'t scale with transaction volumes.', icon: 'users' },
+        ],
+        stats: [
+          { value: '80%', label: 'Faster Contract Review' },
+          { value: 'SOX/PCI', label: 'Compliant AI' },
+          { value: '10x', label: 'Faster Due Diligence' },
+          { value: '100%', label: 'Audit-Ready Traces' },
+        ],
+      },
+      healthcare: {
+        headline: 'HIPAA-Compliant Generative AI for Healthcare',
+        subheadline: 'Build clinical AI assistants, medical coding automation, and research tools on your governed lakehouse.',
+        painPoints: [
+          { title: 'PHI in AI Prompts', description: 'Can\'t use public LLM APIs because patient data would leave your secure environment.', icon: 'shield' },
+          { title: 'Medical Coding Backlog', description: 'Manual ICD-10 coding causing billing delays and revenue leakage.', icon: 'file-text' },
+          { title: 'Clinical Literature Overload', description: 'Physicians can\'t keep up with 3,000+ new studies published weekly.', icon: 'book' },
+          { title: 'Prior Auth Delays', description: 'Manual prior authorization reviews slowing care delivery and frustrating patients.', icon: 'clock' },
+        ],
+        stats: [
+          { value: 'HIPAA', label: 'Compliant AI' },
+          { value: '60%', label: 'Faster Medical Coding' },
+          { value: '3x', label: 'Research Productivity' },
+          { value: '50%', label: 'Faster Prior Auth' },
+        ],
+      },
+      retail: {
+        headline: 'Generative AI for Retail — Personalization & Product Intelligence',
+        subheadline: 'Build AI-powered product recommendations, search, and customer service on your lakehouse.',
+        painPoints: [
+          { title: 'Generic Recommendations', description: 'Rule-based product recommendations that don\'t understand customer intent.', icon: 'shopping-cart' },
+          { title: 'Product Catalog Chaos', description: 'Millions of SKUs with inconsistent descriptions, attributes, and categorization.', icon: 'database' },
+          { title: 'Search Relevance', description: 'Site search returns irrelevant results because it can\'t understand natural language queries.', icon: 'search' },
+          { title: 'Customer Service Scale', description: 'Support tickets growing faster than headcount—need AI-assisted resolution.', icon: 'message-circle' },
+        ],
+        stats: [
+          { value: '40%', label: 'Higher Conversion' },
+          { value: '3x', label: 'Search Relevance' },
+          { value: '60%', label: 'Tickets Auto-Resolved' },
+          { value: '25%', label: 'Higher AOV' },
+        ],
+      },
+    },
+  },
+
+  // ==========================================
+  // DATABRICKS COST OPTIMIZATION
+  // ==========================================
+  'databricks-cost-optimization': {
+    slug: 'databricks-cost-optimization',
+    serviceCluster: 'data-engineering',
+    keyword: 'databricks cost optimization',
+
+    metaTitle: 'Databricks Cost Optimization & FinOps | Reduce DBU Spend | ACI Infotech',
+    metaDescription: 'Cut Databricks costs by 40-60% with cluster optimization, serverless tuning, and FinOps best practices. Elite Partner.',
+
+    headline: 'Cut Your Databricks Costs by 40-60% — Without Sacrificing Performance',
+    subheadline: 'FinOps-driven optimization of clusters, DBU consumption, and storage to maximize your lakehouse ROI.',
+    ctoText: 'Get Your Cost Optimization Report',
+    ctoSecondaryText: 'See Your Savings Estimate',
+
+    painPointsHeadline: 'Is Your Databricks Bill Out of Control?',
+    painPoints: [
+      { title: 'Runaway DBU Costs', description: 'Monthly Databricks bill growing faster than data volumes—no visibility into what\'s driving spend.', icon: 'trending-up' },
+      { title: 'Over-Provisioned Clusters', description: 'Interactive clusters running 24/7 with 10% utilization—paying for idle compute.', icon: 'server' },
+      { title: 'No Cost Attribution', description: 'Can\'t tell which teams, pipelines, or workloads are consuming the most DBUs.', icon: 'pie-chart' },
+      { title: 'Serverless Uncertainty', description: 'Serverless pricing looks attractive but unpredictable—afraid of bill shock.', icon: 'dollar-sign' },
+    ],
+
+    solutionHeadline: 'FinOps for Databricks',
+    solutionDescription: 'We analyze your entire Databricks environment and implement optimizations that cut costs while improving performance.',
+    processSteps: [
+      { step: '01', title: 'Audit', description: 'Deep analysis of cluster utilization, job efficiency, storage patterns, and DBU consumption.' },
+      { step: '02', title: 'Optimize', description: 'Right-size clusters, enable autoscaling, tune Spark jobs, and implement Photon where beneficial.' },
+      { step: '03', title: 'Govern', description: 'Set up cost tagging, team budgets, alerts, and automated policies to prevent overspend.' },
+      { step: '04', title: 'Monitor', description: 'Continuous dashboards and monthly reviews to maintain savings as workloads evolve.' },
+    ],
+
+    stats: [
+      { value: '40-60%', label: 'Average Cost Reduction' },
+      { value: '2x', label: 'Performance Improvement' },
+      { value: '100%', label: 'Cost Attribution' },
+      { value: '< 4wk', label: 'Time to Savings' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      { title: 'Cluster Optimization', description: 'Right-sized clusters with autoscaling, spot instances, and Photon acceleration.', icon: 'sliders' },
+      { title: 'Job Efficiency', description: 'Spark job tuning—partition optimization, caching, broadcast joins, and shuffle reduction.', icon: 'zap' },
+      { title: 'Cost Governance', description: 'Tagging, budgets, alerts, and policies so teams are accountable for their spend.', icon: 'shield' },
+      { title: 'Ongoing Monitoring', description: 'Real-time cost dashboards and monthly optimization reviews to sustain savings.', icon: 'bar-chart-2' },
+    ],
+
+    proofItems: [
+      { headline: '$2M Annual Savings', description: 'Optimized 200+ clusters and 500 Spark jobs, reducing annual Databricks spend from $5M to $3M.', industry: 'finance' },
+      { headline: '60% Faster at Half the Cost', description: 'Migrated to Photon and optimized partition strategies—2x performance at 50% lower DBU consumption.', industry: 'retail' },
+    ],
+
+    faqs: [
+      { question: 'How quickly will we see savings?', answer: 'Most clients see 20-30% savings within the first 2 weeks from quick wins like cluster right-sizing and idle termination.' },
+      { question: 'Will optimization impact performance?', answer: 'No—in most cases performance improves. We tune Spark jobs and enable Photon, which is 3-8x faster for SQL workloads.' },
+      { question: 'Do you support serverless optimization?', answer: 'Yes. We analyze serverless vs. classic compute tradeoffs and help you pick the right option for each workload type.' },
+      { question: 'What about reserved capacity?', answer: 'We analyze your usage patterns and recommend the optimal mix of on-demand, reserved, and spot instances.' },
+    ],
+
+    certifications: ['Databricks Elite Partner', 'FinOps Certified', 'AWS Partner', 'Azure Partner'],
+
+    roleVariants: {
+      cfo: {
+        headline: 'Reduce Databricks Spend by 40-60% — CFO-Ready ROI',
+        subheadline: 'Clear cost attribution, predictable budgets, and measurable savings within 4 weeks.',
+        ctoText: 'See Your Savings Estimate',
+      },
+      cto: {
+        headline: 'Optimize Databricks Performance and Cost — CTO Guide',
+        subheadline: 'Right-size compute, tune Spark workloads, and implement FinOps governance without sacrificing engineering velocity.',
+        ctoText: 'Get Your Architecture Optimization Report',
+      },
+      vp: {
+        headline: 'Give Your Data Team More Compute for Less Budget',
+        subheadline: 'Stop choosing between cost and speed. Optimize clusters and pipelines so your team ships faster at lower cost.',
+        ctoText: 'See Your Team\'s Optimization Plan',
+      },
+    },
+  },
+
+  // ==========================================
+  // DATABRICKS MLOPS
+  // ==========================================
+  'databricks-mlops': {
+    slug: 'databricks-mlops',
+    serviceCluster: 'data-engineering',
+    keyword: 'databricks mlops consulting',
+
+    metaTitle: 'Databricks MLOps Consulting | MLflow & Model Registry | ACI Infotech',
+    metaDescription: 'Production MLOps on Databricks with MLflow, Feature Store, and Model Serving. Get ML models from notebook to production.',
+
+    headline: 'Get ML Models from Notebook to Production on Databricks',
+    subheadline: 'End-to-end MLOps with MLflow, Feature Store, and Model Serving — so data science delivers business value.',
+    ctoText: 'Get Your MLOps Maturity Assessment',
+    ctoSecondaryText: 'See Our MLOps Framework',
+
+    painPointsHeadline: 'Is Your ML Stuck in Notebooks?',
+    painPoints: [
+      { title: 'Notebook Graveyard', description: 'Data scientists building models that never make it to production—months of work sitting idle.', icon: 'file-text' },
+      { title: 'No Reproducibility', description: 'Can\'t reproduce model results because experiments, data versions, and code aren\'t tracked.', icon: 'refresh-cw' },
+      { title: 'Manual Deployments', description: 'Deploying models via email and Slack messages instead of automated CI/CD pipelines.', icon: 'upload' },
+      { title: 'Model Drift', description: 'Production models degrading silently because there\'s no monitoring or retraining pipeline.', icon: 'trending-down' },
+    ],
+
+    solutionHeadline: 'Production-Grade MLOps',
+    solutionDescription: 'We implement the full MLOps lifecycle on Databricks — from experiment tracking to model monitoring.',
+    processSteps: [
+      { step: '01', title: 'Assess', description: 'Evaluate your MLOps maturity and identify the biggest gaps between development and production.' },
+      { step: '02', title: 'Build', description: 'Implement MLflow tracking, Feature Store, and Model Registry with proper governance.' },
+      { step: '03', title: 'Automate', description: 'CI/CD pipelines for model training, validation, and deployment using Databricks Workflows.' },
+      { step: '04', title: 'Monitor', description: 'Production monitoring for data drift, model performance, and automated retraining triggers.' },
+    ],
+
+    stats: [
+      { value: '10x', label: 'Faster Model Deployment' },
+      { value: '50+', label: 'Models in Production' },
+      { value: '100%', label: 'Experiment Reproducibility' },
+      { value: '90%', label: 'Less Manual ML Work' },
+    ],
+
+    benefitsHeadline: 'What You Get',
+    benefits: [
+      { title: 'MLflow Foundation', description: 'Experiment tracking, model registry, and deployment pipelines — all integrated with your lakehouse.', icon: 'layers' },
+      { title: 'Feature Store', description: 'Centralized, governed features shared across teams with point-in-time correctness.', icon: 'database' },
+      { title: 'Automated Pipelines', description: 'End-to-end ML pipelines from data prep to model serving, triggered by schedules or events.', icon: 'git-branch' },
+      { title: 'Production Monitoring', description: 'Real-time dashboards for model performance, data drift, and prediction quality.', icon: 'activity' },
+    ],
+
+    proofItems: [
+      { headline: '50 Models to Production', description: 'Implemented MLOps platform that took a retail company from 3 production models to 50 in 6 months.', industry: 'retail' },
+      { headline: 'Real-Time Fraud Scoring', description: 'Built an MLOps pipeline that deploys and monitors fraud models serving 10,000 predictions per second.', industry: 'finance' },
+    ],
+
+    faqs: [
+      { question: 'What is MLflow and why do we need it?', answer: 'MLflow is the open-source ML lifecycle platform built into Databricks. It tracks experiments, manages model versions, and automates deployment.' },
+      { question: 'Can you integrate with our existing CI/CD?', answer: 'Yes. We integrate MLflow with GitHub Actions, Azure DevOps, Jenkins, or any CI/CD system your engineering team uses.' },
+      { question: 'What about real-time model serving?', answer: 'Databricks Model Serving provides serverless endpoints for real-time predictions with autoscaling and A/B testing built in.' },
+      { question: 'How do you handle model governance?', answer: 'Unity Catalog governs ML models alongside data—access controls, lineage, and approval workflows for model promotion.' },
+    ],
+
+    certifications: ['Databricks Elite Partner', 'MLflow Specialist', 'AWS Partner', 'Azure Partner'],
+
+    industryVariants: {
+      finance: {
+        headline: 'MLOps for Financial Services — Compliant Model Governance',
+        subheadline: 'Deploy and monitor credit risk, fraud, and trading models with full audit trails and regulatory compliance.',
+        painPoints: [
+          { title: 'Model Risk Management', description: 'Regulators require model validation, documentation, and ongoing monitoring—your current process is manual.', icon: 'shield' },
+          { title: 'Slow Model Approval', description: 'Weeks of back-and-forth between data science and model risk teams to get models approved.', icon: 'clock' },
+          { title: 'No Audit Trail', description: 'Can\'t demonstrate to regulators how models were built, validated, and promoted to production.', icon: 'file-text' },
+          { title: 'Stale Risk Models', description: 'Credit and fraud models trained on outdated data because retraining is manual and infrequent.', icon: 'trending-down' },
+        ],
+        stats: [
+          { value: 'SR 11-7', label: 'Model Risk Compliant' },
+          { value: '80%', label: 'Faster Model Approval' },
+          { value: '100%', label: 'Audit Trail Coverage' },
+          { value: 'Daily', label: 'Model Retraining' },
+        ],
+      },
+      healthcare: {
+        headline: 'MLOps for Healthcare — HIPAA-Compliant ML Pipelines',
+        subheadline: 'Deploy clinical prediction models, patient risk scores, and medical imaging ML with HIPAA governance.',
+        painPoints: [
+          { title: 'PHI in ML Pipelines', description: 'Training data contains PHI but there\'s no governance on how it flows through ML experiments.', icon: 'shield' },
+          { title: 'Clinical Validation Gaps', description: 'Models need clinical validation before deployment—no standardized process exists.', icon: 'check-circle' },
+          { title: 'Slow Research-to-Production', description: 'Months between research model validation and clinical deployment due to manual processes.', icon: 'clock' },
+          { title: 'No Model Monitoring', description: 'Clinical prediction models in production with no drift detection or performance alerts.', icon: 'activity' },
+        ],
+        stats: [
+          { value: 'HIPAA', label: 'Compliant MLOps' },
+          { value: '5x', label: 'Faster Clinical ML' },
+          { value: '100%', label: 'PHI Governance' },
+          { value: 'Real-Time', label: 'Model Monitoring' },
+        ],
+      },
+      retail: {
+        headline: 'MLOps for Retail — Personalization & Demand Models at Scale',
+        subheadline: 'Deploy and monitor recommendation engines, demand forecasting, and pricing models across thousands of SKUs.',
+        painPoints: [
+          { title: 'Model Proliferation', description: 'Hundreds of SKU-level models with no central registry or version management.', icon: 'database' },
+          { title: 'Seasonal Drift', description: 'Demand models degrade during seasonal shifts because retraining isn\'t automated.', icon: 'trending-down' },
+          { title: 'A/B Testing Gaps', description: 'No framework to A/B test model versions against each other in production.', icon: 'git-branch' },
+          { title: 'Feature Inconsistency', description: 'Training features computed differently than serving features, causing prediction errors.', icon: 'alert-triangle' },
+        ],
+        stats: [
+          { value: '500+', label: 'Models Managed' },
+          { value: '35%', label: 'Forecast Accuracy Gain' },
+          { value: 'Automated', label: 'A/B Testing' },
+          { value: '1', label: 'Shared Feature Store' },
+        ],
+      },
+    },
   },
 
   'data-pipeline-development': {
@@ -6734,18 +7465,23 @@ export function getAllLPSlugs(): string[] {
 }
 
 // Get content with industry variant applied
-export function getPersonalizedContent(slug: string, industry?: string, role?: string): LPContent | null {
+export function getPersonalizedContent(slug: string, industry?: string, role?: string, pain?: string): LPContent | null {
   const baseContent = LP_CONTENT[slug];
   if (!baseContent) return null;
 
   let content = { ...baseContent };
+
+  // Apply pain point variant (e.g. ?pain=snowflake for migration pages)
+  if (pain && baseContent.painPointVariants?.[pain]) {
+    content = { ...content, ...baseContent.painPointVariants[pain] };
+  }
 
   // Apply industry variant
   if (industry && baseContent.industryVariants?.[industry]) {
     content = { ...content, ...baseContent.industryVariants[industry] };
   }
 
-  // Apply role variant
+  // Apply role variant (highest priority — overrides industry)
   if (role && baseContent.roleVariants?.[role]) {
     content = { ...content, ...baseContent.roleVariants[role] };
   }
