@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Shield, Eye, Lock, AlertTriangle, FileCheck, Server } from 'lucide-react';
+import { ArrowRight, CheckCircle, ChevronDown, Shield, Eye, Lock, AlertTriangle, FileCheck, Server, Activity } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
@@ -151,7 +151,19 @@ const faqs = [
     question: 'Do you provide ongoing security support?',
     answer: 'Yes. We offer managed security services, 24/7 monitoring, and incident response. Security is not a one-time project.',
   },
+  {
+    question: 'Do you run NOC and SOC operations, or just set them up?',
+    answer: "Both. We design, implement, and operate. For clients who want ACI to stay on post-deployment, we provide 24/7 NOC and SOC coverage backed by SLAs, using the same observability stack we built for you. No handoff to a separate managed services team that doesn't know your environment.",
+  },
 ];
+
+const managedSecurityOutcomes = [
+  '24/7 infrastructure and security monitoring with documented escalation paths',
+  'Rapid incident detection, triage, and response: proactive, not reactive',
+  'SLA-backed operations aligned to your compliance and audit requirements',
+];
+
+const managedSecurityTech = ['Dynatrace', 'Splunk', 'CrowdStrike', 'Microsoft Sentinel', 'PagerDuty'];
 
 export default function CyberSecurityPage() {
   return (
@@ -281,6 +293,95 @@ export default function CyberSecurityPage() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Managed Security Operations */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
+                Managed Security Operations
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mt-3 mb-4">
+                We don&apos;t just build your security infrastructure. We run it.
+              </h2>
+              <p className="text-lg text-gray-600 mb-8">
+                For enterprises that need eyes on their environment around the clock,
+                ACI provides 24/7 NOC and SOC operations backed by SLAs, using the same
+                observability stack we designed and deployed. No handoff to a separate
+                team that doesn&apos;t know your environment. No ramp-up time. Just continuous
+                coverage from the people who built it.
+              </p>
+
+              <ul className="space-y-3 mb-8">
+                {managedSecurityOutcomes.map((outcome) => (
+                  <li key={outcome} className="flex items-start gap-3 text-gray-700">
+                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span>{outcome}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="flex flex-wrap gap-2 mb-8">
+                {managedSecurityTech.map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700 font-medium"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <Button href="/contact?service=cyber-security" variant="primary" size="lg">
+                Talk to a Security Architect <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+
+            {/* Visual - NOC/SOC Operations Diagram */}
+            <div className="relative hidden lg:block">
+              <div className="bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 rounded-2xl p-8 shadow-2xl">
+                <div className="flex items-center gap-3 mb-6">
+                  <Activity className="w-6 h-6 text-[var(--aci-primary-light)]" />
+                  <div className="text-sm text-gray-400">24/7 Operations Center</div>
+                </div>
+                <div className="space-y-4">
+                  {/* Monitor layer */}
+                  <div className="flex gap-2">
+                    {['Infra', 'Apps', 'Network', 'Identity'].map((src) => (
+                      <div key={src} className="flex-1 bg-gray-800 rounded-lg p-3 text-center text-xs text-gray-300">
+                        {src}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-center text-gray-500">↓</div>
+                  {/* Observability */}
+                  <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4 text-center">
+                    <div className="text-[var(--aci-primary-light)] font-medium">Observability & Detection</div>
+                    <div className="text-xs text-gray-400 mt-1">Dynatrace • Splunk • Sentinel</div>
+                  </div>
+                  <div className="text-center text-gray-500">↓</div>
+                  {/* Response */}
+                  <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
+                    <div className="text-white font-bold">Triage & Response</div>
+                    <div className="text-xs text-gray-300 mt-1">24/7 on-call • SLA-backed escalation</div>
+                  </div>
+                  <div className="text-center text-gray-500">↓</div>
+                  {/* Outcome */}
+                  <div className="flex gap-2">
+                    {['Contained', 'Resolved', 'Reported'].map((dest) => (
+                      <div key={dest} className="flex-1 bg-green-900/30 rounded-lg p-3 text-center text-xs text-green-300">
+                        {dest}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
+            </div>
           </div>
         </div>
       </section>
