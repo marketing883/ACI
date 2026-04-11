@@ -1,232 +1,207 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowRight, CheckCircle, ChevronDown, Database, Zap, Eye, Shield, Settings, Cloud, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
+import { ArrowRight, CheckCircle, ChevronDown, Code2, Cpu, Plug, RefreshCw, Layers, Sparkles, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
-  title: 'Data Engineering Services | ACI Infotech',
-  description: 'Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. 40+ deployments, 30%+ latency reduction.',
-  keywords: 'data engineering services, databricks consulting, snowflake implementation, data lakehouse, real-time data pipelines, enterprise data platform',
+  title: 'Application Development Services | ACI Infotech',
+  description: 'Enterprise application engineering that sits on top of your data and AI infrastructure. Custom, web, and AI-powered applications built with production-grade rigor — not agency output.',
+  keywords: 'enterprise application development, custom application development, AI-powered applications, web application development, legacy modernization, API development, enterprise software engineering',
   alternates: {
-    canonical: `${siteUrl}/services/data-engineering`,
+    canonical: `${siteUrl}/services/app-development`,
   },
 };
 
 // Service data
 const keyOutcomes = [
-  'Cut data latency 30%+ with real-time pipelines',
-  'Unify scattered data into single source of truth',
-  'Enable AI-ready data products from day one',
-  'Instrument observability so you see issues before users',
+  'Enterprise applications that survive production scale',
+  'AI-powered features that ship, not PoC demos',
+  'Applications integrated with your data and AI stack from day one',
+  'SLA-backed delivery, not fire-and-forget project closures',
 ];
 
 const offerings = [
   {
-    id: 'unified-lakehouse',
-    title: 'Unified Data Lakehouse',
-    description: 'Consolidate scattered data warehouses into one governed lakehouse built on Databricks or Snowflake.',
-    icon: Database,
-    technologies: ['Azure Databricks', 'Delta Lake', 'Snowflake', 'Apache Iceberg', 'dbt'],
-    outcomes: ['30-40% storage cost reduction', 'Single source of truth', 'AI-ready data products'],
+    id: 'enterprise-applications',
+    title: 'Enterprise Applications',
+    description: 'Custom web and enterprise applications built for Fortune 500 operations. Production-grade from day one, not polished prototypes.',
+    icon: Layers,
+    technologies: ['Next.js', 'React', 'Node.js', 'TypeScript', 'PostgreSQL'],
+    outcomes: ['Production-ready on launch', '99.9% uptime SLAs', 'Scales to millions of users'],
   },
   {
-    id: 'real-time-pipelines',
-    title: 'Real-Time Data Pipelines',
-    description: 'Streaming data pipelines that feed dashboards, ML models, and operational systems with millisecond latency.',
-    icon: Zap,
-    technologies: ['Kafka', 'Spark Streaming', 'AWS Kinesis', 'Azure Event Hubs'],
-    outcomes: ['<1 second data latency', 'Real-time insights', 'Self-healing pipelines'],
+    id: 'ai-powered-applications',
+    title: 'AI-Powered Applications',
+    description: 'Applications with real AI embedded, not just an LLM chat widget bolted onto a marketing site. Copilots, agents, recommendation engines, intelligent workflows.',
+    icon: Sparkles,
+    technologies: ['OpenAI', 'Anthropic', 'LangChain', 'Pinecone', 'Azure OpenAI'],
+    outcomes: ['Measurable business impact', 'Integrated with your data', 'Governed AI responses'],
   },
   {
-    id: 'data-observability',
-    title: 'Data Observability & Quality',
-    description: 'Monitor data lineage, freshness, and SLAs end-to-end with Dynatrace or similar platforms.',
-    icon: Eye,
-    technologies: ['Dynatrace', 'Great Expectations', 'Monte Carlo', 'DataHub'],
-    outcomes: ['90% reduction in quality incidents', 'Full lineage tracking', 'SLA compliance visibility'],
+    id: 'custom-business-apps',
+    title: 'Custom Business Applications',
+    description: 'Internal tools, workflow automation, and line-of-business applications that replace spreadsheets, legacy systems, and manual processes.',
+    icon: Code2,
+    technologies: ['React', 'Python', 'FastAPI', '.NET', 'GraphQL'],
+    outcomes: ['Replaces 5+ manual tools', 'Reduces process time 50%+', 'Full audit trail'],
   },
   {
-    id: 'dataops-automation',
-    title: 'DataOps & Automation',
-    description: 'CI/CD pipelines for data with automated testing, deployment, and monitoring.',
-    icon: Settings,
-    technologies: ['GitLab CI/CD', 'Terraform', 'Airflow', 'Dagster'],
-    outcomes: ['40% faster pipeline development', 'Automated testing', 'Version-controlled infrastructure'],
+    id: 'api-development',
+    title: 'API & Integration Platforms',
+    description: 'Enterprise-grade APIs, GraphQL gateways, and integration layers that connect your applications, data, and partner systems.',
+    icon: Plug,
+    technologies: ['GraphQL', 'REST', 'gRPC', 'Kafka', 'MuleSoft'],
+    outcomes: ['<100ms API latency', 'Full OpenAPI documentation', 'Automated contract testing'],
   },
   {
-    id: 'data-governance',
-    title: 'Data Governance & Cataloging',
-    description: 'Enterprise data governance with Unity Catalog, Collibra, or Alation.',
-    icon: Shield,
-    technologies: ['Unity Catalog', 'Collibra', 'Alation', 'Apache Atlas'],
-    outcomes: ['100% data cataloged', 'Automated PII classification', 'Audit-ready logs'],
+    id: 'legacy-modernization',
+    title: 'Legacy Application Modernization',
+    description: 'Modernize aging Java, .NET, and mainframe applications into cloud-native, microservices-based systems — without big-bang rewrites.',
+    icon: RefreshCw,
+    technologies: ['Kubernetes', 'Docker', 'Spring Boot', 'Strangler Pattern'],
+    outcomes: ['Zero-downtime migration', 'Phased modernization', '40-60% cost reduction'],
   },
   {
-    id: 'cloud-data-migration',
-    title: 'Cloud Data Migration',
-    description: 'Migrate on-premises data warehouses to cloud with zero downtime.',
-    icon: Cloud,
-    technologies: ['AWS DMS', 'Azure Data Migration', 'Snowflake Migration'],
-    outcomes: ['Zero-downtime migration', '30-50% cost reduction', 'Legacy decommissioning'],
+    id: 'platform-engineering',
+    title: 'Platform Engineering',
+    description: 'Internal developer platforms, DX tooling, and engineering productivity systems that help your teams ship faster with fewer bugs.',
+    icon: Cpu,
+    technologies: ['Backstage', 'GitHub Actions', 'Terraform', 'ArgoCD'],
+    outcomes: ['2x faster deployment', 'Self-service tooling', 'Standardized delivery'],
   },
 ];
 
 const caseStudies = [
   {
-    slug: 'msci-data-automation',
-    client: 'MSCI',
-    industry: 'Financial Services',
-    challenge: '40+ finance systems post-acquisitions needed consolidation into unified platform',
-    results: [
-      { metric: '$12M', description: 'Operational savings in year one' },
-      { metric: '18 months', description: 'Delivery timeline' },
-      { metric: 'Zero', description: 'Financial reporting disruptions' },
-    ],
-    technologies: ['SAP S/4HANA', 'Python', 'Azure DevOps'],
-  },
-  {
-    slug: 'racetrac-real-time-data',
+    slug: 'racetrac-martech',
     client: 'RaceTrac',
-    industry: 'Retail',
-    challenge: 'Payment systems across 600+ locations needed real-time data with zero downtime',
+    industry: 'Retail — Convenience',
+    challenge: 'Needed a unified digital guest experience and loyalty platform across 600+ locations with real-time personalization at the point of sale.',
     results: [
-      { metric: '30%', description: 'Reduction in data latency' },
       { metric: '600+', description: 'Locations with zero downtime' },
-      { metric: 'Real-time', description: 'Inventory visibility' },
+      { metric: '25%', description: 'Improvement in promotion effectiveness' },
+      { metric: '2.5x', description: 'Email engagement lift' },
     ],
-    technologies: ['Databricks', 'Kafka', 'AWS', 'Braze'],
-  },
-  {
-    slug: 'sodexo-unified-data',
-    client: 'Sodexo',
-    industry: 'Hospitality',
-    challenge: 'Global operations with data scattered across regional silos',
-    results: [
-      { metric: 'Single', description: 'Source of truth' },
-      { metric: 'Global', description: 'Supply chain visibility' },
-      { metric: '50%', description: 'Faster decision-making' },
-    ],
-    technologies: ['Informatica IICS', 'MDM', 'Cloud Integration'],
+    technologies: ['Salesforce', 'Braze', 'Databricks', 'AWS', 'Kafka'],
   },
 ];
 
 const processPhases = [
   {
     number: 1,
-    title: 'Discovery & Architecture',
-    duration: 'Weeks 1-4',
-    description: 'Assess your current data landscape, understand business requirements, and design the target architecture.',
+    title: 'Discovery & Design',
+    duration: 'Weeks 1-3',
+    description: 'Understand the business problem, user journeys, and existing data/AI infrastructure. Design for production from day one.',
   },
   {
     number: 2,
-    title: 'Foundation & Setup',
-    duration: 'Weeks 5-12',
-    description: 'Platform provisioning, security framework, governance setup. The foundation everything builds on.',
+    title: 'Architecture & Foundation',
+    duration: 'Weeks 4-6',
+    description: 'Technical architecture, CI/CD, observability, security, and data integration foundations before any feature code.',
   },
   {
     number: 3,
-    title: 'Build & Iterate',
-    duration: 'Months 4-8',
-    description: 'Iterative development in 2-week sprints. Build pipelines, transform data, create data products.',
+    title: 'Iterative Build',
+    duration: 'Months 2-6',
+    description: 'Two-week sprints with working software at the end of each. Real users testing, not mockups in Figma.',
   },
   {
     number: 4,
     title: 'Launch & Stabilize',
-    duration: 'Weeks 9-12',
-    description: 'Production deployment with monitoring, alerting, and runbooks. We stabilize until SLAs are met.',
+    duration: 'Weeks before go-live',
+    description: 'Production hardening, load testing, runbooks, and SLA baseline. We stay on the release, not offshore while you cut over.',
   },
   {
     number: 5,
-    title: 'Optimize & Scale',
+    title: 'Operate & Evolve',
     duration: 'Ongoing',
-    description: 'Continuous optimization, cost management, and feature enhancements.',
+    description: 'Post-launch operations, feature evolution, and continuous optimization. We run what we build.',
+  },
+];
+
+const differentiators = [
+  {
+    title: 'Sits On Top of Your Data & AI',
+    description: 'We build applications that are integrated with your data platform and AI systems from day one — not isolated frontends that need ETL jobs to find the data.',
+    proof: 'Native integration with your lakehouse, CDP, and AI stack',
+  },
+  {
+    title: 'Senior Architects, Not Agency Generalists',
+    description: 'Our engineers have built applications that run Fortune 500 operations. Not freelancers stitching together Webflow and Zapier.',
+    proof: '70% senior engineers on every engagement',
+  },
+  {
+    title: 'Production SLAs, Not Project Handoffs',
+    description: "We don't build it and disappear. SLA-backed operations, monitoring, and continuous evolution are part of how we engage.",
+    proof: '24/7 incident response included',
+  },
+  {
+    title: 'Systems That Survive Scale',
+    description: 'We architect for the day you 10x your users, not just launch day. Load-tested, observable, and built to last.',
+    proof: 'Zero production outages in last 3 years',
   },
 ];
 
 const beyondDelivery = [
   {
     title: 'Production Operations',
-    description: '24/7 monitoring, incident response, and platform health management. When a pipeline breaks at 2am, we are on the call.',
+    description: '24/7 monitoring, incident response, and platform health management — with defined SLAs and named engineering ownership.',
     icon: Activity,
   },
   {
     title: 'SLA-Backed Support',
-    description: 'Contractual response times, defined escalation paths, and accountable ownership. Not helpdesk tickets — engineering ownership.',
+    description: 'Contractual response times, defined escalation paths, and accountable ownership. Not helpdesk tickets that disappear into a queue.',
     icon: FileCheck,
   },
   {
     title: 'Continuous Optimization',
-    description: 'Cost tuning, performance improvements, and capacity planning. Your platform gets better over time, not worse.',
+    description: 'Cost tuning, performance improvements, and capacity planning as part of ongoing engagement — not a separate line item.',
     icon: TrendingUp,
   },
   {
     title: 'Evolution as Partners',
-    description: "Roadmap co-ownership, new data product delivery, and architectural evolution. We're with you for the long arc.",
+    description: "Roadmap co-ownership, feature delivery, and architectural evolution. We're in it with you for the long arc, not just the launch sprint.",
     icon: Users,
-  },
-];
-
-const differentiators = [
-  {
-    title: 'Deep Platform Expertise',
-    description: "We're Databricks Exclusive Partner and Snowflake certified with 40+ lakehouse implementations.",
-    proof: '40+ enterprise data platforms deployed',
-  },
-  {
-    title: 'Observability Built In',
-    description: 'Dynatrace partnership means we instrument observability from day one.',
-    proof: 'Every platform ships with monitoring',
-  },
-  {
-    title: 'Production-Grade from Start',
-    description: "We don't build pilots that die. We architect for production scale from the first sprint.",
-    proof: 'Zero production failures in last 3 years',
-  },
-  {
-    title: 'Cost-Effective Delivery',
-    description: '40-60% less than Big 4 consultancies. Senior architects leading, not junior analysts.',
-    proof: '70% senior engineers on every project',
   },
 ];
 
 const faqs = [
   {
-    question: 'How long does a typical data platform project take?',
-    answer: '6-12 months for enterprise-scale lakehouse consolidation. Smaller projects (single pipeline, specific integration) can be 3-6 months.',
+    question: "What makes ACI different from a development agency?",
+    answer: "We're not an agency. We're an engineering firm that builds applications for enterprises that already have complex data and AI infrastructure. Our applications sit on top of that infrastructure and integrate with it natively — we don't do greenfield startup products or marketing sites.",
   },
   {
-    question: "What's the ROI of a modern data platform?",
-    answer: 'Typical clients see 30-40% reduction in storage costs, 50%+ faster time to insights, and 3-5x improvement in data analyst productivity.',
+    question: 'Do you build mobile applications or e-commerce platforms?',
+    answer: 'Mobile-first consumer apps and e-commerce platforms are not our focus. We build enterprise applications, AI-powered systems, and internal platforms for Fortune 500 operations. If you need a mobile-first consumer app, we can refer you to a better-fit partner.',
   },
   {
-    question: 'Do we need to migrate everything at once?',
-    answer: "No. We use a phased approach, critical systems first, then expand. You'll see value within 3-4 months.",
+    question: 'What technology stack do you prefer?',
+    answer: 'We work primarily in Next.js/React/TypeScript for frontend, Node.js/Python/.NET for backend, and whatever cloud and data platform you already use. We meet you where you are — we don\'t impose a stack just because we like it.',
   },
   {
-    question: 'Can you work with our existing cloud provider?',
-    answer: "Yes. We're certified on AWS, Azure, and GCP. We design for your environment and can handle multi-cloud.",
+    question: 'What happens after the application launches?',
+    answer: 'This is where most firms disappear. We don\'t. Post-launch operations, SLA-backed support, and continuous optimization are part of how we engage. See "Beyond Delivery" above — we run what we build.',
   },
 ];
 
-export default function DataEngineeringPage() {
+export default function AppDevelopmentPage() {
   return (
     <>
       {/* Structured Data for SEO/AEO */}
       <ServiceSchema
-        name="Data Engineering Services"
-        description="Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability."
-        url="/services/data-engineering"
-        serviceType="Data Engineering Consulting"
+        name="Application Development Services"
+        description="Enterprise application engineering that sits on top of your data and AI infrastructure. Custom, web, and AI-powered applications built with production-grade rigor."
+        url="/services/app-development"
+        serviceType="Application Development Consulting"
       />
       <FAQSchema faqs={faqs} />
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
           { name: 'Services', url: '/services' },
-          { name: 'Data Engineering', url: '/services/data-engineering' },
+          { name: 'App Development', url: '/services/app-development' },
         ]}
       />
 
@@ -236,15 +211,15 @@ export default function DataEngineeringPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Data Engineering
+                Application Development
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Platforms That Feed AI and Analytics
+                Applications Built to Survive Production
               </h1>
               <p className="text-lg text-gray-300 mb-8">
-                Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability.
-                We build data platforms that feed AI, power analytics, and run 24/7 with SLAs.
-                Not architecture diagrams, production code that handles millions of records per second.
+                Custom, web, and AI-powered applications engineered for Fortune 500 operations.
+                We build on top of your existing data and AI infrastructure — not separate from it —
+                with the same production rigor we bring to everything else we ship.
               </p>
 
               {/* Key Outcomes */}
@@ -258,53 +233,53 @@ export default function DataEngineeringPage() {
               </ul>
 
               <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                40+ enterprise data platforms deployed | 30%+ average latency reduction
+                Enterprise-scale engineering | Production SLAs | Integrated with your data & AI
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button href="/contact?service=data-engineering" variant="primary" size="lg">
-                  Talk to a Data Architect
+                <Button href="/contact?service=app-development" variant="primary" size="lg">
+                  Talk to an Engineer
                 </Button>
                 <Button
-                  href="/case-studies?service=data-engineering"
+                  href="/case-studies?service=app-development"
                   variant="ghost"
                   size="lg"
                   className="text-white border-white hover:bg-white/10"
                 >
-                  See Data Projects
+                  See Application Projects
                 </Button>
               </div>
             </div>
 
-            {/* Visual - Data Flow Diagram Mockup */}
+            {/* Visual - Application Stack Diagram */}
             <div className="relative hidden lg:block">
               <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <div className="text-sm text-gray-400 mb-4">Data Platform Architecture</div>
+                <div className="text-sm text-gray-400 mb-4">Enterprise Application Stack</div>
                 <div className="space-y-4">
-                  {/* Source Layer */}
+                  {/* User Layer */}
                   <div className="flex gap-2">
-                    {['CRM', 'ERP', 'APIs', 'IoT'].map((src) => (
+                    {['Web', 'Mobile', 'API'].map((src) => (
                       <div key={src} className="flex-1 bg-gray-700 rounded-lg p-3 text-center text-xs text-gray-300">
                         {src}
                       </div>
                     ))}
                   </div>
                   <div className="text-center text-gray-500">↓</div>
-                  {/* Ingestion */}
+                  {/* App Layer */}
                   <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4 text-center">
-                    <div className="text-[var(--aci-primary-light)] font-medium">Data Ingestion Layer</div>
-                    <div className="text-xs text-gray-400 mt-1">Kafka • Spark Streaming • AWS Glue</div>
+                    <div className="text-[var(--aci-primary-light)] font-medium">Application Layer</div>
+                    <div className="text-xs text-gray-400 mt-1">Next.js • React • TypeScript • Node.js</div>
                   </div>
                   <div className="text-center text-gray-500">↓</div>
-                  {/* Lakehouse */}
+                  {/* Integration Layer */}
                   <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
-                    <div className="text-white font-bold">Unified Lakehouse</div>
-                    <div className="text-xs text-gray-300 mt-1">Databricks • Delta Lake • Unity Catalog</div>
+                    <div className="text-white font-bold">Integration & AI Layer</div>
+                    <div className="text-xs text-gray-300 mt-1">GraphQL • LangChain • Kafka • Event Bus</div>
                   </div>
                   <div className="text-center text-gray-500">↓</div>
-                  {/* Consumption */}
+                  {/* Foundation */}
                   <div className="flex gap-2">
-                    {['AI/ML', 'BI', 'Apps'].map((dest) => (
+                    {['Data Platform', 'AI Stack', 'Cloud'].map((dest) => (
                       <div key={dest} className="flex-1 bg-green-900/30 rounded-lg p-3 text-center text-xs text-green-300">
                         {dest}
                       </div>
@@ -327,18 +302,19 @@ export default function DataEngineeringPage() {
             </h2>
             <div className="space-y-4 text-gray-600">
               <p>
-                We build data platforms on Databricks, Snowflake, and AWS/Azure cloud data services.
-                This isn't abstract architecture, it's production code that handles your data volumes,
-                meets your SLAs, and feeds your AI models.
+                Enterprise applications. AI-powered systems. Custom business tools.
+                Not marketing sites, not mobile-first consumer products, not MVPs destined for rewrites.
+                We build applications that sit on top of complex enterprise infrastructure and
+                integrate with your data and AI stack from day one.
               </p>
               <p>
-                Most enterprises have data scattered across 10-50 systems accumulated over decades of
-                acquisitions, point solutions, and organic growth. We consolidate that chaos into a
-                governed lakehouse where every dataset has lineage, quality scores, and access controls.
+                The distinction matters. Most development firms build greenfield products.
+                We build the enterprise applications that run on top of the data platforms and AI systems
+                we've already deployed for Fortune 500 clients — or that integrate cleanly with yours.
               </p>
               <p className="font-semibold text-[var(--aci-secondary)]">
-                We've done this 40+ times for Fortune 500 companies. When something breaks at 2am,
-                we're on the call with you.
+                When your application needs to authenticate against your SSO, query your lakehouse,
+                invoke your ML models, and handle 10,000 concurrent users — that's the job we do.
               </p>
             </div>
           </div>
@@ -350,7 +326,7 @@ export default function DataEngineeringPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Data Engineering Services
+              Application Development Services
             </h2>
             <p className="text-lg text-gray-600">
               Six core offerings, each delivered with production-grade quality
@@ -400,45 +376,48 @@ export default function DataEngineeringPage() {
         </div>
       </section>
 
-      {/* Case Studies */}
+      {/* Case Study - RaceTrac */}
       <section className="py-20 bg-[var(--aci-secondary)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Data Engineering Projects We've Built
+              Enterprise Applications We've Built
             </h2>
             <p className="text-lg text-gray-400">
               Real projects. Real Fortune 500 clients. Real outcomes.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="max-w-4xl mx-auto">
             {caseStudies.map((study) => (
               <div
                 key={study.slug}
                 className="bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-700 transition-colors"
               >
-                <div className="p-6 border-b border-gray-700">
+                <div className="p-8 border-b border-gray-700">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xl font-bold text-white">{study.client}</span>
+                    <span className="text-2xl font-bold text-white">{study.client}</span>
                     <span className="text-sm text-gray-400">{study.industry}</span>
                   </div>
-                  <p className="text-gray-300 text-sm">{study.challenge}</p>
+                  <h3 className="text-xl font-semibold text-[var(--aci-primary-light)] mb-3">
+                    Digital Guest Experience & Loyalty Platform
+                  </h3>
+                  <p className="text-gray-300">{study.challenge}</p>
                 </div>
-                <div className="p-6">
-                  <div className="space-y-3 mb-6">
+                <div className="p-8">
+                  <div className="grid sm:grid-cols-3 gap-6 mb-6">
                     {study.results.map((result, idx) => (
-                      <div key={idx} className="flex items-baseline gap-3">
-                        <span className="text-2xl font-bold text-[var(--aci-primary-light)]">
+                      <div key={idx}>
+                        <div className="text-3xl font-bold text-[var(--aci-primary-light)] mb-1">
                           {result.metric}
-                        </span>
-                        <span className="text-sm text-gray-400">{result.description}</span>
+                        </div>
+                        <div className="text-sm text-gray-400">{result.description}</div>
                       </div>
                     ))}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {study.technologies.map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-gray-700 rounded text-xs text-gray-300">
+                      <span key={tech} className="px-3 py-1 bg-gray-700 rounded text-xs text-gray-300">
                         {tech}
                       </span>
                     ))}
@@ -449,8 +428,8 @@ export default function DataEngineeringPage() {
           </div>
 
           <div className="text-center mt-12">
-            <Button href="/case-studies?service=data-engineering" variant="secondary" size="lg">
-              See All Data Engineering Case Studies <ArrowRight className="w-4 h-4 ml-2" />
+            <Button href="/case-studies?service=app-development" variant="secondary" size="lg">
+              See More Application Projects <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         </div>
@@ -461,7 +440,7 @@ export default function DataEngineeringPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Our Data Engineering Process
+              Our Application Development Process
             </h2>
             <p className="text-lg text-gray-600">
               From engagement to production: how we work
@@ -528,10 +507,10 @@ export default function DataEngineeringPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Why Choose ACI for Data Engineering
+              Why Choose ACI for Application Development
             </h2>
             <p className="text-lg text-gray-600">
-              What makes us different from other consulting firms
+              What makes us different from dev agencies
             </p>
           </div>
 
@@ -557,7 +536,7 @@ export default function DataEngineeringPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Common Questions About Data Engineering
+              Common Questions About Application Development
             </h2>
           </div>
 
@@ -581,23 +560,23 @@ export default function DataEngineeringPage() {
       <section className="py-20 bg-[var(--aci-primary)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Build Your Data Platform?
+            Ready to Build an Application That Survives Production?
           </h2>
           <p className="text-lg text-blue-100 mb-8">
-            Schedule a 30-minute technical call with one of our data architects.
-            No sales pitch, just an engineering conversation about your specific data challenges.
+            Schedule a 30-minute technical call with one of our engineers.
+            No sales pitch, just an engineering conversation about what you're trying to build.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <span className="text-blue-200 text-sm">Talk to senior data architects, not sales reps</span>
+            <span className="text-blue-200 text-sm">Talk to senior engineers, not sales reps</span>
             <span className="text-blue-300">|</span>
             <span className="text-blue-200 text-sm">30-minute technical discussion</span>
             <span className="text-blue-300">|</span>
             <span className="text-blue-200 text-sm">We'll tell you if we're not the right fit</span>
           </div>
 
-          <Button href="/contact?service=data-engineering" variant="lime" size="lg">
-            Talk to a Data Architect
+          <Button href="/contact?service=app-development" variant="lime" size="lg">
+            Talk to an Engineer
           </Button>
         </div>
       </section>

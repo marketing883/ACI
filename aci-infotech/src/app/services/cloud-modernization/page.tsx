@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Cloud, Server, RefreshCw, Lock, Gauge, Container } from 'lucide-react';
+import { ArrowRight, CheckCircle, ChevronDown, Cloud, Server, RefreshCw, Lock, Gauge, Container, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
@@ -108,6 +108,29 @@ const caseStudies = [
       { metric: '40%', description: 'Cost reduction' },
     ],
     technologies: ['AWS', 'Azure', 'Terraform', 'Consul'],
+  },
+];
+
+const beyondDelivery = [
+  {
+    title: 'Production Operations',
+    description: '24/7 cloud operations, incident response, and platform health across AWS, Azure, and GCP. We stay on the console when something breaks.',
+    icon: Activity,
+  },
+  {
+    title: 'SLA-Backed Support',
+    description: 'Contractual response times, defined escalation paths, and accountable ownership — not just a ticket into a shared support queue.',
+    icon: FileCheck,
+  },
+  {
+    title: 'FinOps & Cost Governance',
+    description: 'Continuous cloud cost tuning, reserved capacity planning, and right-sizing so your bill trends down, not up.',
+    icon: TrendingUp,
+  },
+  {
+    title: 'Evolution as Partners',
+    description: "Roadmap co-ownership, multi-cloud strategy, and architectural evolution. We're with you beyond the migration.",
+    icon: Users,
   },
 ];
 
@@ -324,6 +347,37 @@ export default function CloudModernizationPage() {
             <Button href="/case-studies?service=cloud-modernization" variant="secondary" size="lg">
               See All Cloud Case Studies <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Beyond Delivery — Managed Services */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
+              Beyond Delivery
+            </h2>
+            <p className="text-lg text-gray-600">
+              Cloud migrations are the start, not the finish. Post-migration operations,
+              SLA-backed support, and FinOps-led cost governance are part of how we engage.
+              <span className="block mt-2 font-semibold text-[var(--aci-secondary)]">We run what we build.</span>
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {beyondDelivery.map((pillar) => {
+              const Icon = pillar.icon;
+              return (
+                <div key={pillar.title} className="bg-white p-6 rounded-xl shadow-sm">
+                  <Icon className="w-8 h-8 text-[var(--aci-primary)] mb-4" />
+                  <h3 className="text-lg font-semibold text-[var(--aci-secondary)] mb-2">
+                    {pillar.title}
+                  </h3>
+                  <p className="text-sm text-gray-600">{pillar.description}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { ArrowRight, Database, Brain, Cloud, Users, Shield, Zap, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Database, Brain, Cloud, Users, Shield, Zap, CheckCircle2, Code2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
 
@@ -64,6 +64,26 @@ const services = [
     capabilities: ['Process Automation', 'System Integration', 'ERP Modernization', 'Digital Strategy'],
     technologies: ['SAP', 'ServiceNow', 'MuleSoft', 'Power Platform', 'Workato'],
     href: '/services/digital-transformation',
+  },
+  {
+    id: 'app-development',
+    icon: Code2,
+    title: 'App Development',
+    tagline: 'Applications Built to Survive Production',
+    description: 'Enterprise application engineering that sits on top of your data and AI delivery. Custom, web, and AI-powered applications built with the rigor of production infrastructure — not agency output.',
+    capabilities: ['Enterprise Application Development', 'AI-Powered Applications', 'API & Integration', 'Legacy Modernization'],
+    technologies: ['Next.js', 'React', 'Node.js', 'Python', 'TypeScript', 'GraphQL'],
+    href: '/services/app-development',
+  },
+  {
+    id: 'qa-testing',
+    icon: CheckCircle2,
+    title: 'QA & Testing',
+    tagline: 'Ship Fast. Break Nothing.',
+    description: 'Production engineering discipline, not a standalone testing service. Automated frameworks, CI/CD-integrated QA, AI-driven test coverage, and performance and security testing as part of engineering delivery.',
+    capabilities: ['Automated Test Frameworks', 'CI/CD Integrated QA', 'AI-Driven Test Coverage', 'Performance & Security Testing'],
+    technologies: ['Playwright', 'Cypress', 'Selenium', 'JMeter', 'SonarQube', 'GitHub Actions'],
+    href: '/services/qa-testing',
   },
   {
     id: 'cyber-security',

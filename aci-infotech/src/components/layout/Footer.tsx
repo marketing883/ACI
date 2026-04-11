@@ -11,6 +11,10 @@ const FOOTER_LINKS = {
     { label: 'Applied AI & ML', href: '/services/applied-ai-ml' },
     { label: 'Cloud Modernization', href: '/services/cloud-modernization' },
     { label: 'MarTech & CDP', href: '/services/martech-cdp' },
+    { label: 'Digital Transformation', href: '/services/digital-transformation' },
+    { label: 'App Development', href: '/services/app-development' },
+    { label: 'QA & Testing', href: '/services/qa-testing' },
+    { label: 'Cyber Security', href: '/services/cyber-security' },
   ],
   resources: [
     { label: 'Case Studies', href: '/case-studies' },

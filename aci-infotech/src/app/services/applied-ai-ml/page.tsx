@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Brain, Cpu, BarChart3, Bot, Shield, Sparkles } from 'lucide-react';
+import { ArrowRight, CheckCircle, ChevronDown, Brain, Cpu, BarChart3, Bot, Shield, Sparkles, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
@@ -108,6 +108,29 @@ const caseStudies = [
       { metric: '80%', description: 'Reduction in manual work' },
     ],
     technologies: ['Document AI', 'Azure OpenAI', 'Python'],
+  },
+];
+
+const beyondDelivery = [
+  {
+    title: 'Model Operations',
+    description: '24/7 monitoring of production models, drift detection, and incident response. When a model starts misbehaving at 2am, we\'re on the call.',
+    icon: Activity,
+  },
+  {
+    title: 'SLA-Backed Support',
+    description: 'Contractual response times for model failures, defined escalation paths, and accountable ownership — not a ticket into a vendor queue.',
+    icon: FileCheck,
+  },
+  {
+    title: 'Continuous Retraining',
+    description: 'MLOps pipelines that retrain, validate, and redeploy models as data shifts. Models improve over time instead of decaying silently.',
+    icon: TrendingUp,
+  },
+  {
+    title: 'Evolution as Partners',
+    description: "Roadmap co-ownership, new model delivery, and AI strategy evolution. We're with you as the AI landscape shifts around you.",
+    icon: Users,
   },
 ];
 
@@ -334,6 +357,37 @@ export default function AppliedAIMLPage() {
             <Button href="/case-studies?service=applied-ai-ml" variant="secondary" size="lg">
               See All AI Case Studies <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Beyond Delivery — Managed Services */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
+              Beyond Delivery
+            </h2>
+            <p className="text-lg text-gray-600">
+              AI models need continuous care. Post-deployment MLOps, drift detection, retraining,
+              and SLA-backed operations are part of how we engage.
+              <span className="block mt-2 font-semibold text-[var(--aci-secondary)]">We run what we build.</span>
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {beyondDelivery.map((pillar) => {
+              const Icon = pillar.icon;
+              return (
+                <div key={pillar.title} className="bg-white p-6 rounded-xl shadow-sm">
+                  <Icon className="w-8 h-8 text-[var(--aci-primary)] mb-4" />
+                  <h3 className="text-lg font-semibold text-[var(--aci-secondary)] mb-2">
+                    {pillar.title}
+                  </h3>
+                  <p className="text-sm text-gray-600">{pillar.description}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
