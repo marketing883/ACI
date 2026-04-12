@@ -66,6 +66,62 @@ async function lastErrorAt(): Promise<string | null> {
   }
 }
 
+interface ContentIndexStatus {
+  pgvector: 'ok' | 'missing' | 'unknown';
+  contentChunks: number | null;
+  lastIndexedAt: string | null;
+}
+
+async function contentIndexStatus(): Promise<ContentIndexStatus> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    return { pgvector: 'unknown', contentChunks: null, lastIndexedAt: null };
+  }
+  try {
+    // HEAD + count=exact gives the row count without transferring rows.
+    const countRes = await fetch(
+      `${url}/rest/v1/content_chunks?select=id&limit=1`,
+      {
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`,
+          Prefer: 'count=exact',
+        },
+        cache: 'no-store',
+      },
+    );
+    if (!countRes.ok) {
+      return { pgvector: 'missing', contentChunks: null, lastIndexedAt: null };
+    }
+    const contentRange = countRes.headers.get('content-range');
+    const count = contentRange
+      ? Number.parseInt(contentRange.split('/')[1] ?? '0', 10)
+      : null;
+
+    const tsRes = await fetch(
+      `${url}/rest/v1/content_chunks?select=indexed_at&order=indexed_at.desc&limit=1`,
+      {
+        headers: { apikey: key, Authorization: `Bearer ${key}` },
+        cache: 'no-store',
+      },
+    );
+    let lastIndexedAt: string | null = null;
+    if (tsRes.ok) {
+      const rows = (await tsRes.json()) as Array<{ indexed_at?: string }>;
+      lastIndexedAt = rows[0]?.indexed_at ?? null;
+    }
+    return {
+      pgvector: 'ok',
+      contentChunks: count,
+      lastIndexedAt,
+    };
+  } catch (err) {
+    log.warn('health', err, { route: '/api/copilot/health', extra: { phase: 'contentIndex' } });
+    return { pgvector: 'unknown', contentChunks: null, lastIndexedAt: null };
+  }
+}
+
 export async function GET() {
   const isProd = process.env.NODE_ENV === 'production';
   if (isProd) {
@@ -79,9 +135,10 @@ export async function GET() {
   }
 
   const flags = getFlagSnapshot();
-  const [supabase, lastErr] = await Promise.all([
+  const [supabase, lastErr, indexStatus] = await Promise.all([
     supabaseStatus(),
     lastErrorAt(),
+    contentIndexStatus(),
   ]);
 
   const anthropic = providerStatus('ANTHROPIC_API_KEY');
@@ -96,9 +153,9 @@ export async function GET() {
       anthropic,
       openai,
     },
-    pgvector: 'pending-part-2',
-    contentChunks: null as number | null,
-    lastIndexedAt: null as string | null,
+    pgvector: indexStatus.pgvector,
+    contentChunks: indexStatus.contentChunks,
+    lastIndexedAt: indexStatus.lastIndexedAt,
     lastErrorAt: lastErr,
     nowUtc: new Date().toISOString(),
   };
