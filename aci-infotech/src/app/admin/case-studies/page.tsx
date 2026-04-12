@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
+import { displayClient } from '@/lib/content/anonymize';
 // Helper to extract meaningful error messages from Supabase errors
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
@@ -371,7 +372,7 @@ export default function CaseStudiesAdmin() {
                   <tr key={cs.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div>
-                        <p className="font-medium text-gray-900">{cs.client_name}</p>
+                        <p className="font-medium text-gray-900">{displayClient(cs)}</p>
                         <p className="text-sm text-gray-500 line-clamp-1">{getDisplayTitle(cs)}</p>
                       </div>
                     </td>
@@ -487,7 +488,7 @@ export default function CaseStudiesAdmin() {
               Are you sure you want to delete this case study?
             </p>
             <p className="font-medium text-gray-900 mb-4 p-3 bg-gray-50 rounded-lg">
-              {deleteModal.client_name}: {getDisplayTitle(deleteModal)}
+              {displayClient(deleteModal)}: {getDisplayTitle(deleteModal)}
             </p>
             <p className="text-sm text-red-600 mb-6">
               This action cannot be undone.

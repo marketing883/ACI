@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle, ChevronDown, Code2, Cpu, Plug, RefreshCw, Laye
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
+import { displayClient } from '@/lib/content/anonymize';
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
@@ -396,7 +397,7 @@ export default function AppDevelopmentPage() {
               >
                 <div className="p-8 border-b border-gray-700">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold text-white">{study.client}</span>
+                    <span className="text-2xl font-bold text-white">{displayClient(study)}</span>
                     <span className="text-sm text-gray-400">{study.industry}</span>
                   </div>
                   <h3 className="text-xl font-semibold text-[var(--aci-primary-light)] mb-3">

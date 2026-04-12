@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Globe, Users, TrendingUp, Clock, Utensils } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   title: 'Hospitality & Food Services Technology Solutions',
   description: 'Enterprise data, AI, and cloud solutions for hotels, restaurants, and food service companies. Global operations, customer engagement, and supply chain optimization.',
@@ -229,7 +230,7 @@ export default function HospitalityPage() {
                       <span className="px-3 py-1 bg-[var(--aci-primary)] text-white text-sm font-medium rounded-full">
                         {cs.type}
                       </span>
-                      <span className="text-gray-500">{cs.client}</span>
+                      <span className="text-gray-500">{displayClient(cs)}</span>
                     </div>
 
                     <div className="mb-4">

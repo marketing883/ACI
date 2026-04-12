@@ -32,7 +32,10 @@ export interface CaseStudy {
   slug: string;
   title: string;
   excerpt: string | null;
+  /** Legacy: real client name. App NEVER renders this; use `client_descriptor`. */
   client_name: string;
+  /** Anonymized descriptor rendered everywhere via `displayClient`. */
+  client_descriptor: string | null;
   client_logo_url: string | null;
   industry: string;
   challenge: string;

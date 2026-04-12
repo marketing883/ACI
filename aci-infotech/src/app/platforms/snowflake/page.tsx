@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Database, Shield, TrendingUp, Snowflake } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   title: 'Snowflake Implementation Services',
   description: 'ACI Infotech is a Snowflake Select Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
@@ -187,7 +188,7 @@ export default function SnowflakePage() {
                   <span className="px-3 py-1 bg-[#29B5E8]/10 text-[#29B5E8] text-sm font-medium rounded-full">
                     {cs.industry}
                   </span>
-                  <span className="text-gray-500 text-sm">{cs.client}</span>
+                  <span className="text-gray-500 text-sm">{displayClient(cs)}</span>
                 </div>
 
                 <div className="mb-6">

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Cloud, Shield, TrendingUp, Cpu } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   title: 'Microsoft Azure Cloud Services',
   description: 'ACI Infotech is a Microsoft Gold Partner. Azure migration, Synapse Analytics, Power Platform, and enterprise cloud solutions.',
@@ -210,7 +211,7 @@ export default function AzurePage() {
                   <span className="px-3 py-1 bg-[#0078D4]/10 text-[#0078D4] text-sm font-medium rounded-full">
                     {cs.industry}
                   </span>
-                  <span className="text-gray-500 text-sm">{cs.client}</span>
+                  <span className="text-gray-500 text-sm">{displayClient(cs)}</span>
                 </div>
 
                 <div className="mb-6">

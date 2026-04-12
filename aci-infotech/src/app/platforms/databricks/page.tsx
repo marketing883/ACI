@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Zap, Shield, TrendingUp } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   title: 'Databricks Implementation Services',
   description: 'ACI Infotech is an exclusive Databricks partner. Lakehouse architecture, Delta Lake, MLflow, and Spark optimization for enterprise.',
@@ -187,7 +188,7 @@ export default function DatabricksPage() {
                   <span className="px-3 py-1 bg-[#FF3621]/10 text-[#FF3621] text-sm font-medium rounded-full">
                     {cs.industry}
                   </span>
-                  <span className="text-gray-500 text-sm">{cs.client}</span>
+                  <span className="text-gray-500 text-sm">{displayClient(cs)}</span>
                 </div>
 
                 <div className="mb-6">

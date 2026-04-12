@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 interface CaseStudy {
   slug: string;
   client: string;
@@ -59,13 +60,13 @@ export default function CaseStudiesSection({
                   {study.logo_url ? (
                     <Image
                       src={study.logo_url}
-                      alt={`${study.client} logo - ${study.challenge.substring(0, 50)} case study`}
+                      alt={`${displayClient(study)} logo - ${study.challenge.substring(0, 50)} case study`}
                       width={100}
                       height={40}
                       className="object-contain brightness-0 invert opacity-70"
                     />
                   ) : (
-                    <span className="text-xl font-bold text-white">{study.client}</span>
+                    <span className="text-xl font-bold text-white">{displayClient(study)}</span>
                   )}
                   <span className="text-sm text-gray-400">{study.industry}</span>
                 </div>

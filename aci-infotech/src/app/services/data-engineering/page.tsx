@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle, ChevronDown, Database, Zap, Eye, Shield, Setti
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
+import { displayClient } from '@/lib/content/anonymize';
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
@@ -420,7 +421,7 @@ export default function DataEngineeringPage() {
               >
                 <div className="p-6 border-b border-gray-700">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xl font-bold text-white">{study.client}</span>
+                    <span className="text-xl font-bold text-white">{displayClient(study)}</span>
                     <span className="text-sm text-gray-400">{study.industry}</span>
                   </div>
                   <p className="text-gray-300 text-sm">{study.challenge}</p>

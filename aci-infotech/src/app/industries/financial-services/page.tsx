@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Shield, TrendingUp, Clock, Building2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   title: 'Financial Services Technology Solutions',
   description: 'Enterprise data, AI, and cloud solutions for banks, insurance companies, and asset managers. Regulatory compliance, fraud detection, and digital transformation.',
@@ -230,7 +231,7 @@ export default function FinancialServicesPage() {
                       <span className="px-3 py-1 bg-[var(--aci-primary)] text-white text-sm font-medium rounded-full">
                         {cs.type}
                       </span>
-                      <span className="text-gray-500">{cs.client}</span>
+                      <span className="text-gray-500">{displayClient(cs)}</span>
                     </div>
 
                     <div className="mb-4">

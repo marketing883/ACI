@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Factory, Cpu, BarChart3, Wrench } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   title: 'Manufacturing Technology Solutions',
   description: 'Industry 4.0 solutions for manufacturers. IoT analytics, predictive maintenance, quality analytics, and smart factory implementations.',
@@ -229,7 +230,7 @@ export default function ManufacturingPage() {
                       <span className="px-3 py-1 bg-orange-600 text-white text-sm font-medium rounded-full">
                         {cs.type}
                       </span>
-                      <span className="text-gray-500">{cs.client}</span>
+                      <span className="text-gray-500">{displayClient(cs)}</span>
                     </div>
 
                     <div className="mb-4">

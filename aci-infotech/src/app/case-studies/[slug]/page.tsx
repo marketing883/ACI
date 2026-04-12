@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button';
 import { createClient } from '@supabase/supabase-js';
 import ReactMarkdown from 'react-markdown';
 
+import { displayClient } from '@/lib/content/anonymize';
 // Supabase client for server-side fetching
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -233,7 +234,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const dbStudy = await getCaseStudyBySlug(slug);
   if (dbStudy) {
     return {
-      title: dbStudy.meta_title || `${dbStudy.client_name} Case Study | ${dbStudy.title} | ACI Infotech`,
+      title: dbStudy.meta_title || `${displayClient(dbStudy)} Case Study | ${dbStudy.title} | ACI Infotech`,
       description: dbStudy.meta_description || dbStudy.excerpt || dbStudy.challenge?.substring(0, 160),
     };
   }
@@ -248,7 +249,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${study.client} Case Study | ${study.headline} | ACI Infotech`,
+    title: `${displayClient(study)} Case Study | ${study.headline} | ACI Infotech`,
     description: study.subheadline,
   };
 }
@@ -293,7 +294,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
             </Link>
 
             <div className="flex items-center gap-4 mb-6">
-              <span className="text-2xl font-bold text-white">{dbStudy.client_name}</span>
+              <span className="text-2xl font-bold text-white">{displayClient(dbStudy)}</span>
               <div className="flex gap-2">
                 {dbStudy.industry && (
                   <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm rounded">{dbStudy.industry}</span>
@@ -514,13 +515,13 @@ export default async function CaseStudyPage({ params }: PageProps) {
             {study.logo_url ? (
               <Image
                 src={study.logo_url}
-                alt={`${study.client} logo - ${study.headline} case study`}
+                alt={`${displayClient(study)} logo - ${study.headline} case study`}
                 width={120}
                 height={48}
                 className="object-contain brightness-0 invert"
               />
             ) : (
-              <span className="text-2xl font-bold text-white">{study.client}</span>
+              <span className="text-2xl font-bold text-white">{displayClient(study)}</span>
             )}
             <div className="flex gap-2">
               <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm rounded">{study.industry}</span>
@@ -699,13 +700,13 @@ export default async function CaseStudyPage({ params }: PageProps) {
                     {related.logo_url ? (
                       <Image
                         src={related.logo_url}
-                        alt={`${related.client} logo - ${related.headline} case study`}
+                        alt={`${displayClient(related)} logo - ${related.headline} case study`}
                         width={80}
                         height={32}
                         className="object-contain"
                       />
                     ) : (
-                      <span className="text-lg font-bold text-[var(--aci-secondary)]">{related.client}</span>
+                      <span className="text-lg font-bold text-[var(--aci-secondary)]">{displayClient(related)}</span>
                     )}
                     <span className="px-2 py-1 bg-blue-100 text-[var(--aci-primary)] text-xs rounded">
                       {related.service}

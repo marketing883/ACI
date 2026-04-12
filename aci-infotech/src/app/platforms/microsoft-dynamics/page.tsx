@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 const capabilities = [
   {
     icon: Bot,
@@ -55,6 +56,7 @@ const capabilities = [
 
 const caseStudies = [
   {
+    slug: 'd365-manufacturing-ordertocash',
     client: 'Global Manufacturing',
     industry: 'Manufacturing',
     challenge: 'Disconnected systems causing delays in order-to-cash cycle',
@@ -62,6 +64,7 @@ const caseStudies = [
     results: ['60% faster order processing', '$4M annual savings', '99.5% order accuracy'],
   },
   {
+    slug: 'd365-services-project-ops',
     client: 'Professional Services Firm',
     industry: 'Services',
     challenge: 'Manual resource allocation and project tracking',
@@ -191,13 +194,13 @@ export default function MicrosoftDynamicsPage() {
 
           <div className="grid md:grid-cols-2 gap-8">
             {caseStudies.map((study) => (
-              <div key={study.client} className="bg-gray-50 rounded-xl p-8">
+              <div key={study.slug ?? displayClient(study)} className="bg-gray-50 rounded-xl p-8">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="px-3 py-1 bg-[#0078D4]/10 text-[#0078D4] text-sm font-medium rounded-full">
                     {study.industry}
                   </span>
                 </div>
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">{study.client}</h3>
+                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">{displayClient(study)}</h3>
                 <p className="text-gray-600 mb-4">
                   <span className="font-medium">Challenge:</span> {study.challenge}
                 </p>

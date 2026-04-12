@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Zap, Shield, BarChart3, Leaf } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   title: 'Energy & Utilities Technology Solutions',
   description: 'Secure, compliant technology solutions for energy companies and utilities. NERC CIP compliance, grid optimization, and renewable integration.',
@@ -230,7 +231,7 @@ export default function EnergyPage() {
                       <span className="px-3 py-1 bg-yellow-500 text-white text-sm font-medium rounded-full">
                         {cs.type}
                       </span>
-                      <span className="text-gray-500">{cs.client}</span>
+                      <span className="text-gray-500">{displayClient(cs)}</span>
                     </div>
 
                     <div className="mb-4">

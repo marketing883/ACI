@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { ArrowRight, Filter, Search, Loader2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 // Types for case studies
 interface CaseStudyResult {
   metric: string;
@@ -673,7 +674,7 @@ function CaseStudyCard({ study, featured }: CaseStudyCardProps) {
         {/* Client Name */}
         <div className="mb-3">
           <span className="text-white/80 text-sm font-semibold uppercase tracking-wider">
-            {study.client}
+            {displayClient(study)}
           </span>
         </div>
 

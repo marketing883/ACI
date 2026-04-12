@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Cloud, Shield, TrendingUp, Zap } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   title: 'AWS Cloud Services',
   description: 'ACI Infotech is an AWS Advanced Consulting Partner. Cloud migration, data lakes, serverless architecture, and managed AWS services.',
@@ -210,7 +211,7 @@ export default function AWSPage() {
                   <span className="px-3 py-1 bg-[#FF9900]/10 text-[#FF9900] text-sm font-medium rounded-full">
                     {cs.industry}
                   </span>
-                  <span className="text-gray-500 text-sm">{cs.client}</span>
+                  <span className="text-gray-500 text-sm">{displayClient(cs)}</span>
                 </div>
 
                 <div className="mb-6">

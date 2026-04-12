@@ -31,7 +31,18 @@ export interface ServiceItem {
 
 export interface CaseStudyItem {
   slug: string;
-  client: string;
+  /**
+   * Anonymized descriptor used for all site-wide rendering via
+   * `displayClient` from `@/lib/content/anonymize`. Example:
+   * "Fortune 500 Financial Services Client". Populated by the content team.
+   */
+  client_descriptor?: string;
+  /**
+   * @deprecated Legacy raw client name. Never read by the app; present only
+   * for backwards compatibility with legacy hardcoded data arrays that the
+   * content team is rewriting on its own branch.
+   */
+  client?: string;
   logo_url?: string;
   industry: string;
   challenge: string;

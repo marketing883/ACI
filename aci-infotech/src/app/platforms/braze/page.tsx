@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, MessageSquare, Zap, TrendingUp, Users } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
+import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   title: 'Braze Implementation Services',
   description: 'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
@@ -210,7 +211,7 @@ export default function BrazePage() {
                   <span className="px-3 py-1 bg-[#ED4B4B]/10 text-[#ED4B4B] text-sm font-medium rounded-full">
                     {cs.industry}
                   </span>
-                  <span className="text-gray-500 text-sm">{cs.client}</span>
+                  <span className="text-gray-500 text-sm">{displayClient(cs)}</span>
                 </div>
 
                 <div className="mb-6">
