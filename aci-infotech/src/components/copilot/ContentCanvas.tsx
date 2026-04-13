@@ -140,7 +140,6 @@ export default function ContentCanvas({ onReady, placeholder }: ContentCanvasPro
               >
                 <Panel
                   entityRef={active.entityRef}
-                  rationale={active.rationale}
                   highlight={active.highlight}
                 />
               </Suspense>

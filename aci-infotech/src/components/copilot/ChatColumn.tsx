@@ -92,6 +92,7 @@ export default function ChatColumn({
       let actionButtons: OfferActionButtonsArgs['buttons'] | undefined;
       let requestField: RequestFieldArgs | undefined;
       let thought: string | undefined;
+      let panelOpened = false;
 
       const nextMessages = [...messages, userMsg].map((m) => ({
         role: m.role as 'user' | 'assistant',
@@ -144,6 +145,7 @@ export default function ChatColumn({
                 const panel = args as ShowContentPanelArgs | undefined;
                 if (panel?.panelType && panel.entityRef) {
                   onPanelRequest(panel);
+                  panelOpened = true;
                 }
                 break;
               }
@@ -179,20 +181,30 @@ export default function ChatColumn({
           },
           onDone: ({ streamIncomplete }) => {
             setMessages((m) =>
-              m.map((msg) =>
-                msg.id === pendingAssistantId
-                  ? {
-                      ...msg,
-                      isStreaming: false,
-                      actionButtons,
-                      requestField,
-                      citations: activeCitations.length ? activeCitations : undefined,
-                      content: msg.content || (streamIncomplete
-                        ? "I hit a snag. [Reach out](/contact) and we'll keep going."
-                        : msg.content),
-                    }
-                  : msg,
-              ),
+              m.map((msg) => {
+                if (msg.id !== pendingAssistantId) return msg;
+                let content = msg.content;
+                if (!content || content.trim().length === 0) {
+                  // Model fired tools but produced no prose. Surface a
+                  // soft fallback so the chat bubble is not empty.
+                  if (streamIncomplete) {
+                    content =
+                      "I hit a snag. [Reach out](/contact) and we will keep going.";
+                  } else if (panelOpened) {
+                    content = 'Pulled it up on the right. Tell me where to dig in.';
+                  } else {
+                    content = 'One moment. Want to give me a bit more on what you are after?';
+                  }
+                }
+                return {
+                  ...msg,
+                  isStreaming: false,
+                  actionButtons,
+                  requestField,
+                  citations: activeCitations.length ? activeCitations : undefined,
+                  content,
+                };
+              }),
             );
           },
         },
