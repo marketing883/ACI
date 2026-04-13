@@ -88,6 +88,17 @@ function isWorkEmail(email: string): boolean {
   return domain ? !CONSUMER_EMAIL_DOMAINS.includes(domain) : false;
 }
 
+/**
+ * Route-level suppression: landing pages under /lp/* are ad-connected
+ * form-fill surfaces. No chat widget — legacy or Atheros — renders on
+ * those routes so the form is the single focal point. Any other
+ * route-specific suppression belongs here too.
+ */
+function isChatSuppressedRoute(pathname: string | null): boolean {
+  if (!pathname) return false;
+  return pathname === '/lp' || pathname.startsWith('/lp/');
+}
+
 export default function ChatWidget() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -686,6 +697,14 @@ export default function ChatWidget() {
   // "closed = floating button" path is skipped and the flag branches
   // below decide the render.
   const atherosActive = copilotV2Active(sessionId);
+
+  // Ad-connected landing pages (/lp/*) are form-fill surfaces; suppress
+  // every chat widget so the form is the single focal point. This must
+  // fire before the desktop / mobile / legacy render branches below so
+  // Atheros never mounts its trigger or shell.
+  if (isChatSuppressedRoute(pathname)) {
+    return null;
+  }
 
   // Closed state - floating button. Only rendered when the v2 flag is
   // off for this visitor; otherwise MobilePill or ConsultationShell

@@ -233,13 +233,8 @@ const PREFIXES: Array<[string, PillCopy]> = [
       peek: 'Copilot needs clean data to be useful. Ask me how we get there.',
     },
   ],
-  [
-    '/lp/',
-    {
-      idle: 'Questions on this?',
-      peek: 'Ask me anything about this; I can pressure-test your plan as we go.',
-    },
-  ],
+  // /lp/* routes are intentionally chat-suppressed (see ChatWidget.tsx
+  // isChatSuppressedRoute). No pill copy needed.
   [
     '/case-studies/',
     {

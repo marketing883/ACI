@@ -230,12 +230,8 @@ const PREFIX_OVERRIDES: Array<[string, Welcome]> = [
       text: 'Reading a piece. Want me to summarize the part that matters for your situation?',
     },
   ],
-  [
-    '/lp/',
-    {
-      text: 'Pressure-test this against your environment. What is your current setup?',
-    },
-  ],
+  // /lp/* routes are intentionally chat-suppressed (see ChatWidget.tsx
+  // isChatSuppressedRoute). No welcome copy needed.
   [
     '/whitepapers/',
     {
