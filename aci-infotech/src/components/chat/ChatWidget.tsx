@@ -25,6 +25,14 @@ const ConsultationShell = dynamic(
   { ssr: false },
 );
 
+// Mobile pill is lazy-loaded and only mounted when the flag is on and
+// the viewport is < 1024 px. The idle pill is ~4 KB gzipped on its own;
+// the converse sheet is pulled in on first interaction.
+const MobilePill = dynamic(
+  () => import('@/components/copilot/mobile/MobilePill'),
+  { ssr: false },
+);
+
 interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
@@ -673,8 +681,16 @@ export default function ChatWidget() {
     }
   };
 
-  // Closed state - floating button
-  if (!isOpen) {
+  // When Atheros v2 is active for this visitor, the Part-4 desktop shell
+  // and the Part-5 mobile pill take over the surface entirely; the legacy
+  // "closed = floating button" path is skipped and the flag branches
+  // below decide the render.
+  const atherosActive = copilotV2Active(sessionId);
+
+  // Closed state - floating button. Only rendered when the v2 flag is
+  // off for this visitor; otherwise MobilePill or ConsultationShell
+  // manages its own idle surface (the pill itself IS the trigger).
+  if (!isOpen && !atherosActive) {
     return (
       <motion.div className="fixed bottom-6 right-6 z-50">
         {/* Proactive message bubble */}
@@ -763,7 +779,7 @@ export default function ChatWidget() {
   // the flag is active for this visitor and the viewport is >= 1024 px.
   // Flag off or smaller viewport falls through to the legacy floating
   // widget below. Zero bytes in the initial bundle (dynamic import).
-  if (isDesktop && copilotV2Active(sessionId)) {
+  if (isDesktop && atherosActive) {
     const atherosInitial: ChatColumnMessage[] = messages.map((m) => ({
       id: m.id,
       role: m.role,
@@ -780,6 +796,25 @@ export default function ChatWidget() {
           entryPage,
           cluster: undefined,
         }}
+        leadState={leadInfo as Record<string, unknown>}
+      />
+    );
+  }
+
+  // Atheros Part-5 mobile pill. Mounted only when the flag is active
+  // for this visitor and the viewport is < 1024 px. Three-state machine
+  // (pill / converse / peek) lives inside MobilePill; the legacy
+  // widget is skipped entirely on mobile when the flag is active.
+  if (!isDesktop && atherosActive) {
+    const atherosInitial: ChatColumnMessage[] = messages.map((m) => ({
+      id: m.id,
+      role: m.role,
+      content: m.content,
+    }));
+    return (
+      <MobilePill
+        sessionId={sessionId}
+        initialMessages={atherosInitial}
         leadState={leadInfo as Record<string, unknown>}
       />
     );

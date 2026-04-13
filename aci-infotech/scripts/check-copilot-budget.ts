@@ -27,6 +27,8 @@ const BUDGETS_KB = {
   shell: 40,
   panel: 12,
   diagram: 10,
+  mobileIdle: 4,
+  mobileConverse: 26,
 };
 
 interface Entry {
@@ -55,6 +57,14 @@ const ENTRIES: Entry[] = [
     source: `src/components/copilot/panels/${p}.tsx`,
     budgetKb: BUDGETS_KB.panel,
   })),
+  // Mobile idle pill: should ship ~4 KB gz on its own. The pill is CSS-only;
+  // Framer Motion and React Dom are already shared with the rest of the app.
+  { label: 'mobile idle: PillIdle', source: 'src/components/copilot/mobile/PillIdle.tsx', budgetKb: BUDGETS_KB.mobileIdle },
+  // Mobile converse bundle: MobileSheet + PillPeek + MobilePill orchestrator.
+  // Each file is small; the sum should stay well under 26 KB gz.
+  { label: 'mobile converse: PillPeek', source: 'src/components/copilot/mobile/PillPeek.tsx', budgetKb: BUDGETS_KB.mobileConverse },
+  { label: 'mobile converse: MobileSheet', source: 'src/components/copilot/mobile/MobileSheet.tsx', budgetKb: BUDGETS_KB.mobileConverse },
+  { label: 'mobile converse: MobilePill', source: 'src/components/copilot/mobile/MobilePill.tsx', budgetKb: BUDGETS_KB.mobileConverse },
   ...[
     'Lakehouse',
     'DataMesh',
