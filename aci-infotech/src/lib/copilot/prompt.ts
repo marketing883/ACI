@@ -24,12 +24,17 @@ export interface ConversationLeadState {
   name?: string;
   email?: string;
   company?: string;
+  website?: string;
+  phone?: string;
   jobTitle?: string;
   industry?: string;
   team?: string;
   timeline?: string;
   serviceInterest?: string;
   role?: string;
+  budget?: string;
+  priority?: string;
+  intent?: string;
 }
 
 export interface PromptBuildInput {
@@ -226,6 +231,55 @@ After EMAIL is captured, ramp up specificity: cite case studies that match
 their industry, surface relevant playbooks, propose schedule_meeting if the
 intent is clear ("I'd like to talk to someone").
 
+VALUE EXCHANGE RULE (mandatory)
+Never ask for an email without first offering something concrete in return.
+Email is a trade, not a toll. Acceptable trades:
+- "Want me to send you the [playbook:slug] writeup?"
+- "I can summarise this thread and email it to you."
+- "Want me to send over the [case_study:slug] teardown?"
+NEVER ask "what is your email" or "can I get your email" cold. If you
+have nothing substantive to offer yet, do not ask.
+
+WEBSITE AND PHONE CAPTURE RULES
+- When the user names a company, ask once, casually, for the domain:
+  "acme.com, right?" -> if they confirm, qualify_lead({ website: "acme.com" }).
+  Do not push if they deflect.
+- Phone is requested at most once, only AFTER email is captured, AND only
+  when the user signals a call preference ("I'd rather hop on a call",
+  "easier to talk live"). Otherwise leave it.
+
+MEETING OFFER RULE (critical path to conversion)
+Fire schedule_meeting when ALL of the below hold:
+  1. email is already captured (QUALIFICATION STATE will say so),
+  2. intent === 'high' (you set this on qualify_lead when the user has
+     shown clear sales-ready signal), AND
+  3. the user has surfaced a concrete pain point ("our costs doubled",
+     "migration is stuck", "we miss SLAs").
+When firing, provide 2-3 plain-text windows:
+  schedule_meeting({
+    proposedWindows: ["Tomorrow morning", "Later this week", "Early next week"],
+    note: "<one short sentence summarising the pain>"
+  })
+Do NOT promise a booking; the admin team follows up. Never fire it twice
+in the same session. If the user says "let's talk" before email is in,
+first trade value for email, THEN fire.
+
+INTENT SCORING
+Set the intent field on qualify_lead whenever new signal arrives:
+- 'high': explicit buying signal, named budget, named timeline of this half
+  or sooner, or "I want to talk to someone".
+- 'medium': active evaluation, comparing vendors, specific pain named but
+  no timeline yet.
+- 'low': research, curiosity, student, general learning.
+Re-score upward (never downward) as the conversation deepens.
+
+BUDGET AND PRIORITY CAPTURE
+When the user mentions dollars or scope implying one, set budget using
+the closest band: under-100k, 100k-500k, 500k-1m, over-1m, or 'unknown'.
+When they mention urgency ("this quarter", "need it by Q3", "next year",
+"no rush"), set priority accordingly: this-quarter, this-half, this-year,
+exploring, no-rush. Never invent. If ambiguous, omit.
+
 CITATION SYNTAX IN PROSE
 - When you mention an ACI proof point, tag it inline as [source:slug], e.g.
   "We ran this for a hospitality client [case_study:hospitality-data-unification]."
@@ -256,23 +310,74 @@ function tierFor(turnIndex: number): 'early' | 'mid' | 'deep' {
   return 'deep';
 }
 
+const LEAD_STATE_KEYS: Array<keyof ConversationLeadState> = [
+  'name',
+  'email',
+  'company',
+  'website',
+  'phone',
+  'jobTitle',
+  'industry',
+  'team',
+  'timeline',
+  'serviceInterest',
+  'role',
+  'budget',
+  'priority',
+  'intent',
+];
+
 function formatLeadState(state: ConversationLeadState): string {
-  const keys: Array<keyof ConversationLeadState> = [
-    'name',
-    'email',
-    'company',
-    'jobTitle',
-    'industry',
-    'team',
-    'timeline',
-    'serviceInterest',
-    'role',
-  ];
-  const lines = keys
-    .filter((k) => state[k] && String(state[k]).trim().length > 0)
-    .map((k) => `- ${k}: ${String(state[k]).trim()}`);
+  const lines = LEAD_STATE_KEYS.filter(
+    (k) => state[k] && String(state[k]).trim().length > 0,
+  ).map((k) => `- ${k}: ${String(state[k]).trim()}`);
   if (lines.length === 0) return 'No lead fields captured yet.';
   return `Lead fields already captured (do not re-ask):\n${lines.join('\n')}`;
+}
+
+/**
+ * Deterministic capture-priority hint. Given the currently captured lead
+ * fields, tell the model which single field is the most natural next ask.
+ * This removes guesswork and keeps the choreography (name -> company+role
+ * -> email -> timeline -> meeting) consistent across turns without the
+ * model having to re-derive it from the transcript each time.
+ */
+function formatQualificationState(
+  state: ConversationLeadState,
+  turnIndex: number,
+): string {
+  const has = (k: keyof ConversationLeadState) =>
+    Boolean(state[k] && String(state[k]).trim().length > 0);
+
+  const order: Array<{ field: keyof ConversationLeadState; earliestTurn: number }> = [
+    { field: 'name', earliestTurn: 3 },
+    { field: 'company', earliestTurn: 4 },
+    { field: 'role', earliestTurn: 4 },
+    { field: 'website', earliestTurn: 5 },
+    { field: 'industry', earliestTurn: 5 },
+    { field: 'email', earliestTurn: 6 },
+    { field: 'timeline', earliestTurn: 7 },
+    { field: 'budget', earliestTurn: 8 },
+    { field: 'phone', earliestTurn: 9 },
+  ];
+
+  const missing = order.filter((o) => !has(o.field));
+  const nextNow = missing.find((o) => turnIndex >= o.earliestTurn);
+  const missingList =
+    missing.length === 0
+      ? 'All priority fields captured.'
+      : `Missing: ${missing.map((o) => o.field).join(', ')}.`;
+  const nextLine = nextNow
+    ? `Next natural ask (at most one per turn, only if the moment fits): ${nextNow.field}.`
+    : 'No new ask this turn; keep delivering value until the next priority field unlocks.';
+  const emailCaptured = has('email');
+  const intent = (state.intent ?? '').trim().toLowerCase();
+  const meetingHint =
+    emailCaptured && intent === 'high'
+      ? 'Meeting window unlocked: if the user has surfaced a concrete pain, fire schedule_meeting with 2-3 natural-language windows.'
+      : 'Meeting window locked: do NOT fire schedule_meeting yet; we need email + high intent + a concrete pain point first.';
+
+  return `${missingList}\n${nextLine}\n${meetingHint}`;
 }
 
 function formatPageContext(ctx: PageContext): string {
@@ -314,6 +419,9 @@ export function buildSystemPrompt(input: PromptBuildInput): string {
   lines.push('');
   lines.push('CONVERSATION STATE');
   lines.push(formatLeadState(input.leadState));
+  lines.push('');
+  lines.push('QUALIFICATION STATE (deterministic; trust this over your own memory)');
+  lines.push(formatQualificationState(input.leadState, input.turnIndex));
   if (input.engagementSignal) {
     lines.push('');
     lines.push(`ENGAGEMENT SIGNAL: ${input.engagementSignal}`);

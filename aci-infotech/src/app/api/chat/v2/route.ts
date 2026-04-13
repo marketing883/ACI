@@ -47,6 +47,7 @@ import {
 import { createStreamEmitter, SSE_RESPONSE_HEADERS } from '@/lib/copilot/stream';
 import type { AtherosStreamEvent } from '@/lib/copilot/stream';
 import { costUsd } from '@/lib/copilot/cost';
+import { sendThankYouEmail } from '@/lib/email';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -87,12 +88,17 @@ const leadStateSchema = z.object({
   name: z.string().optional(),
   email: z.string().optional(),
   company: z.string().optional(),
+  website: z.string().optional(),
+  phone: z.string().optional(),
   jobTitle: z.string().optional(),
   industry: z.string().optional(),
   team: z.string().optional(),
   timeline: z.string().optional(),
   serviceInterest: z.string().optional(),
   role: z.string().optional(),
+  budget: z.string().optional(),
+  priority: z.string().optional(),
+  intent: z.string().optional(),
 });
 
 const requestSchema = z.object({
@@ -768,7 +774,40 @@ async function executeToolCall(input: ExecuteToolInput): Promise<void> {
     if (spec.name === 'qualify_lead') {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const fields = validated.data as any;
-      await upsertChatLead(input.sessionId, fields, input.conversation);
+      const leadResult = await upsertChatLead(
+        input.sessionId,
+        fields,
+        input.conversation,
+      );
+      // Fire a one-shot thank-you email the first time we capture an email
+      // on this session. Fire-and-forget: Resend failure must never block
+      // the streaming turn.
+      if (leadResult.freshEmail && typeof fields.email === 'string') {
+        const firstName =
+          typeof fields.name === 'string' && fields.name.trim().length > 0
+            ? fields.name.trim().split(/\s+/)[0]
+            : 'there';
+        const serviceCluster =
+          typeof fields.serviceInterest === 'string' && fields.serviceInterest.trim().length > 0
+            ? fields.serviceInterest.trim()
+            : 'enterprise transformation';
+        const lookingFor =
+          typeof fields.serviceInterest === 'string' && fields.serviceInterest.trim().length > 0
+            ? fields.serviceInterest.trim()
+            : 'your current initiative';
+        void sendThankYouEmail({
+          firstName,
+          email: fields.email,
+          serviceCluster,
+          lookingFor,
+          ctoText: 'Schedule a discovery call',
+        }).catch((err) => {
+          log.warn('tool', err, {
+            sessionId: input.sessionId,
+            extra: { phase: 'qualify_lead.thankYouEmail' },
+          });
+        });
+      }
     } else if (spec.name === 'handoff_to_human') {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payload = validated.data as any;

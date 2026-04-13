@@ -31,17 +31,45 @@ export const audienceRoleSchema = z.enum([
   'other',
 ]);
 
+export const budgetBandSchema = z.enum([
+  'unknown',
+  'under-100k',
+  '100k-500k',
+  '500k-1m',
+  'over-1m',
+]);
+
+export const prioritySchema = z.enum([
+  'this-quarter',
+  'this-half',
+  'this-year',
+  'exploring',
+  'no-rush',
+]);
+
+export const intentSchema = z.enum(['low', 'medium', 'high']);
+
 export const qualifyLeadSchema = z
   .object({
     name: z.string().trim().max(120).optional(),
     email: z.string().trim().max(200).email().optional(),
     company: z.string().trim().max(200).optional(),
+    website: z
+      .string()
+      .trim()
+      .max(200)
+      .regex(/^(https?:\/\/)?[^\s]+\.[^\s]+$/, 'website must look like a domain or URL')
+      .optional(),
+    phone: z.string().trim().max(40).optional(),
     jobTitle: z.string().trim().max(200).optional(),
     industry: z.string().trim().max(80).optional(),
     team: z.string().trim().max(200).optional(),
     timeline: z.string().trim().max(120).optional(),
     serviceInterest: z.string().trim().max(200).optional(),
     role: audienceRoleSchema.optional(),
+    budget: budgetBandSchema.optional(),
+    priority: prioritySchema.optional(),
+    intent: intentSchema.optional(),
   })
   .refine(
     (v) => Object.values(v).some((x) => x !== undefined && x !== ''),
@@ -173,7 +201,7 @@ export const TOOL_SPECS: ReadonlyArray<AtherosToolSpec> = [
   {
     name: 'qualify_lead',
     description:
-      'Record lead details captured naturally in conversation. Only call when at least one new field is confidently known. Never invent values. Never request more than one field in the same turn.',
+      'Record lead details captured naturally in conversation. Fire whenever a new field surfaces in what the user has said. Never invent values. Never ask for more than one field in the same turn.',
     schema: qualifyLeadSchema,
     mutates: true,
     inputSchema: {
@@ -181,12 +209,25 @@ export const TOOL_SPECS: ReadonlyArray<AtherosToolSpec> = [
       additionalProperties: false,
       properties: {
         name: { type: 'string', description: "Lead's first or full name" },
-        email: { type: 'string', description: 'Work email address if offered' },
-        company: { type: 'string', description: 'Company name' },
-        jobTitle: { type: 'string', description: 'Job title or role' },
+        email: {
+          type: 'string',
+          description:
+            'Work email address if the user has offered it. Only call when the user has actually shared it.',
+        },
+        company: { type: 'string', description: 'Company or organization name' },
+        website: {
+          type: 'string',
+          description:
+            'Company website URL or bare domain (e.g. "acme.com" or "https://acme.com").',
+        },
+        phone: { type: 'string', description: 'Phone number in any format the user shared' },
+        jobTitle: { type: 'string', description: 'Job title exactly as stated' },
         industry: { type: 'string', description: 'Industry vertical' },
         team: { type: 'string', description: 'Functional team or department' },
-        timeline: { type: 'string', description: 'Project timeline signal' },
+        timeline: {
+          type: 'string',
+          description: 'Project timeline signal in the lead\'s own words',
+        },
         serviceInterest: {
           type: 'string',
           description: 'Service cluster or platform of interest',
@@ -195,6 +236,24 @@ export const TOOL_SPECS: ReadonlyArray<AtherosToolSpec> = [
           type: 'string',
           enum: ['cio', 'cdo', 'cto', 'ciso', 'ceo', 'cmo', 'other'],
           description: 'Detected C-suite role',
+        },
+        budget: {
+          type: 'string',
+          enum: ['unknown', 'under-100k', '100k-500k', '500k-1m', 'over-1m'],
+          description:
+            'Rough budget band inferred from how the user talks about scope (never from what you invent).',
+        },
+        priority: {
+          type: 'string',
+          enum: ['this-quarter', 'this-half', 'this-year', 'exploring', 'no-rush'],
+          description:
+            'How soon the user wants to act. Infer only from explicit signals; otherwise omit.',
+        },
+        intent: {
+          type: 'string',
+          enum: ['low', 'medium', 'high'],
+          description:
+            'Your confidence that this lead is qualified and ready for sales engagement based on the whole conversation.',
         },
       },
     },

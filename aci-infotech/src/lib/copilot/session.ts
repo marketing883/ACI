@@ -139,27 +139,42 @@ export async function markSessionHandoff(
  * shows a fully-enriched lead the moment an admin clicks through, with
  * no manual "Generate" click required.
  */
+export interface UpsertChatLeadResult {
+  /**
+   * True when the email landed in chat_leads for the first time on this
+   * session (no pre-existing row, or the pre-existing row had no
+   * intelligence yet). Used by the caller to fire a one-shot
+   * sendThankYouEmail alongside the intelligence generation.
+   */
+  freshEmail: boolean;
+}
+
 export async function upsertChatLead(
   sessionId: string,
   fields: {
     name?: string;
     email?: string;
     company?: string;
+    website?: string;
+    phone?: string;
     jobTitle?: string;
     industry?: string;
     timeline?: string;
     serviceInterest?: string;
     role?: string;
     team?: string;
+    budget?: string;
+    priority?: string;
+    intent?: string;
   },
   conversation?: Array<{ role: string; content: string }>,
-): Promise<void> {
+): Promise<UpsertChatLeadResult> {
   const supabase = serviceRoleClient();
-  if (!supabase) return;
+  if (!supabase) return { freshEmail: false };
   // Email is required by the existing chat_leads schema. Upsert only when
   // we have one; otherwise the row is created on the next qualify_lead turn
   // that includes email.
-  if (!fields.email) return;
+  if (!fields.email) return { freshEmail: false };
 
   // Detect "fresh email": is this session's row already in the table with
   // intelligence already attached? If not, we'll fire intelligence after
@@ -188,11 +203,16 @@ export async function upsertChatLead(
         name: fields.name ?? null,
         email: fields.email,
         company: fields.company ?? null,
+        website: fields.website ?? null,
+        phone: fields.phone ?? null,
         job_title: fields.jobTitle ?? null,
         location: null,
         service_interest: fields.serviceInterest ?? null,
         requirements: fields.team ?? null,
         preferred_time: fields.timeline ?? null,
+        budget: fields.budget ?? null,
+        priority: fields.priority ?? null,
+        intent: fields.intent ?? null,
         conversation: conversation ?? [],
         source: 'atheros_v2',
       },
@@ -205,10 +225,10 @@ export async function upsertChatLead(
       sessionId,
       extra: { phase: 'upsertChatLead' },
     });
-    return;
+    return { freshEmail: false };
   }
 
-  if (!needsIntelligence || !upserted?.id) return;
+  if (!needsIntelligence || !upserted?.id) return { freshEmail: false };
 
   // Fire-and-forget intelligence generation. Mirrors the legacy
   // /api/chat/lead/route.ts pattern. Failures land in chat_errors via
@@ -251,4 +271,6 @@ export async function upsertChatLead(
         extra: { phase: 'generateIntelligence', leadId },
       });
     });
+
+  return { freshEmail: true };
 }

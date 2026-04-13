@@ -307,8 +307,13 @@ function LeadCard({ lead }: { lead: Record<string, unknown> }) {
     ['Name', (lead.name as string) ?? ''],
     ['Email', (lead.email as string) ?? ''],
     ['Company', (lead.company as string) ?? ''],
+    ['Website', (lead.website as string) ?? ''],
+    ['Phone', (lead.phone as string) ?? ''],
     ['Title', (lead.job_title as string) ?? ''],
     ['Service', (lead.service_interest as string) ?? ''],
+    ['Budget', (lead.budget as string) ?? ''],
+    ['Urgency', (lead.priority as string) ?? ''],
+    ['Intent', (lead.intent as string) ?? ''],
     ['Score', String(lead.lead_score ?? '')],
     ['Status', (lead.status as string) ?? ''],
   ];
