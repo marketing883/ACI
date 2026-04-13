@@ -205,6 +205,98 @@ function ConvergingLinesArt({ accent, animateIn }: { accent: string; animateIn: 
   );
 }
 
+/**
+ * AlignmentNetworkArt - scattered nodes on the left wire themselves into a
+ * single aligned column on the right. Reads as: many locations, suppliers,
+ * or regions coming into one operational view. Good for hospitality,
+ * multi-location retail, global rollouts, and supplier-alignment stories.
+ */
+function AlignmentNetworkArt({ accent, animateIn }: { accent: string; animateIn: boolean }) {
+  // Left cluster: scattered nodes. Right cluster: aligned column.
+  const leftNodes = [
+    { x: 30, y: 40 },
+    { x: 65, y: 95 },
+    { x: 25, y: 150 },
+    { x: 85, y: 65 },
+    { x: 70, y: 170 },
+    { x: 45, y: 115 },
+  ];
+  const rightX = 320;
+  const rightNodes = leftNodes.map((_, i) => ({
+    x: rightX,
+    y: 30 + i * 28, // evenly spaced aligned column
+  }));
+
+  return (
+    <svg viewBox="0 0 400 200" className="w-full h-auto" aria-hidden>
+      {/* Faint baseline rail on the right to signal "alignment". */}
+      <motion.line
+        x1={rightX}
+        y1={22}
+        x2={rightX}
+        y2={178}
+        stroke={accent}
+        strokeOpacity={0.22}
+        strokeWidth={1}
+        initial={{ pathLength: 0 }}
+        animate={animateIn ? { pathLength: 1 } : { pathLength: 0 }}
+        transition={{ duration: 0.6, ease: EASE_OUT }}
+      />
+      {/* Connective lines: each scattered node draws a line to its
+          aligned destination, staggered so the formation feels like it
+          is snapping into place. */}
+      {leftNodes.map((n, i) => {
+        const r = rightNodes[i];
+        // Bezier with control midway, slightly sagged so lines feel organic.
+        const cx = (n.x + r.x) / 2;
+        const cy = (n.y + r.y) / 2;
+        return (
+          <motion.path
+            key={`line-${i}`}
+            d={`M${n.x} ${n.y} Q${cx} ${cy} ${r.x} ${r.y}`}
+            fill="none"
+            stroke={accent}
+            strokeOpacity={0.55}
+            strokeWidth={1.4}
+            initial={{ pathLength: 0 }}
+            animate={animateIn ? { pathLength: 1 } : { pathLength: 0 }}
+            transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.1 + i * 0.12 }}
+          />
+        );
+      })}
+      {/* Scattered left nodes: appear first. */}
+      {leftNodes.map((n, i) => (
+        <motion.circle
+          key={`ln-${i}`}
+          cx={n.x}
+          cy={n.y}
+          r={3.5}
+          fill={accent}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={animateIn ? { scale: 1, opacity: 0.85 } : { scale: 0, opacity: 0 }}
+          transition={{ duration: 0.3, delay: 0.05 * i, ease: EASE_OUT }}
+          style={{ transformOrigin: `${n.x}px ${n.y}px` }}
+        />
+      ))}
+      {/* Aligned right nodes: appear with the line arriving at them,
+          slightly bigger to emphasize the "formation complete" beat. */}
+      {rightNodes.map((n, i) => (
+        <motion.circle
+          key={`rn-${i}`}
+          cx={n.x}
+          cy={n.y}
+          r={4.5}
+          fill={accent}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={animateIn ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+          transition={{ duration: 0.35, delay: 0.1 + i * 0.12 + 0.75, ease: EASE_OUT }}
+          style={{ transformOrigin: `${n.x}px ${n.y}px` }}
+        />
+      ))}
+    </svg>
+  );
+}
+
 // ---------- Counter that animates the metric value ----------
 
 /**
@@ -266,6 +358,35 @@ function AnimatedMetric({
   );
 }
 
+// ---------- Industry-driven art selector ----------
+
+type ArtKey = 'heartbeat' | 'barColumns' | 'convergingLines' | 'alignment';
+
+/**
+ * Pick the art metaphor whose shape actually fits the case study.
+ * Returns a string key so the caller can render via a stable
+ * module-scope component reference (satisfies the
+ * react-hooks/static-components rule). Falls back to the
+ * network/alignment art for anything we have not explicitly mapped,
+ * because it reads as "things coming together" which is the right
+ * neutral default for enterprise outcomes.
+ */
+function pickArtForIndustry(industry: string): ArtKey {
+  const i = industry.toLowerCase();
+  if (/manufactur|industrial|automotive|energy|utilities|logistics|transport/.test(i)) {
+    return 'heartbeat';
+  }
+  if (/financ|insuranc|bank|invest|capital/.test(i)) {
+    return 'barColumns';
+  }
+  if (/health|pharma|clinical|bio|life sciences/.test(i)) {
+    return 'convergingLines';
+  }
+  // Hospitality, retail, food, consumer, multi-location, global
+  // operations, supplier-alignment stories.
+  return 'alignment';
+}
+
 // ---------- Main component ----------
 
 export default function CaseStudyKinetic({
@@ -286,12 +407,11 @@ export default function CaseStudyKinetic({
   const inView = useInView(ref, { once: true, margin: '-15% 0px -15% 0px' });
   const animateIn = inView || reduced;
 
-  const Art =
-    theme === 'industrial'
-      ? HeartbeatArt
-      : theme === 'analytical'
-        ? BarColumnsArt
-        : ConvergingLinesArt;
+  // Art is chosen from the case study's own industry, not the theme slot
+  // it happened to land in, so a hospitality story never gets a factory
+  // heartbeat metaphor and a financial services story never gets
+  // converging customer paths.
+  const artKey = pickArtForIndustry(study.industry);
 
   // Stagger pattern: descriptor -> outcome -> metric -> label -> approach -> footer
   const containerVariants = {
@@ -517,7 +637,18 @@ export default function CaseStudyKinetic({
                 : undefined,
             }}
           >
-            <Art accent={t.accent} animateIn={animateIn} />
+            {artKey === 'heartbeat' && (
+              <HeartbeatArt accent={t.accent} animateIn={animateIn} />
+            )}
+            {artKey === 'barColumns' && (
+              <BarColumnsArt accent={t.accent} animateIn={animateIn} />
+            )}
+            {artKey === 'convergingLines' && (
+              <ConvergingLinesArt accent={t.accent} animateIn={animateIn} />
+            )}
+            {artKey === 'alignment' && (
+              <AlignmentNetworkArt accent={t.accent} animateIn={animateIn} />
+            )}
           </div>
         </motion.div>
       </motion.div>
