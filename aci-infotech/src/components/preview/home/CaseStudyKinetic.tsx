@@ -260,38 +260,48 @@ function CandlestickArt({ accent, animateIn }: { accent: string; animateIn: bool
           <line key={y} x1="0" y1={y} x2="400" y2={y} />
         ))}
       </g>
-      {candles.map((c, i) => (
-        <motion.g
-          key={i}
-          initial={{ opacity: 0, y: 6 }}
-          animate={animateIn ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
-          transition={{ duration: 0.28, delay: 0.06 * i, ease: EASE_OUT }}
-        >
-          {/* Wick - thin line from high to low. */}
-          <line
-            x1={c.x}
-            y1={c.wHi}
-            x2={c.x}
-            y2={c.wLo}
-            stroke={accent}
-            strokeWidth="1.2"
-            strokeOpacity="0.8"
-          />
-          {/* Body - filled for up candles, outlined for down candles.
-              This creates the signature "green/red" reading even in a
-              single-accent palette. */}
-          <rect
-            x={c.x - bodyWidth / 2}
-            y={c.bHi}
-            width={bodyWidth}
-            height={c.bLo - c.bHi}
-            fill={c.up ? accent : 'none'}
-            fillOpacity={c.up ? 0.9 : 0}
-            stroke={accent}
-            strokeWidth="1.5"
-          />
-        </motion.g>
-      ))}
+      {candles.map((c, i) => {
+        // Animate each candle growing upward from its wick-low baseline.
+        // We apply the scale transform per-primitive rather than on a
+        // wrapper group so framer-motion's SVG animation stays on
+        // elements that reliably accept it.
+        const origin = `${c.x}px ${c.wLo}px`;
+        return (
+          <g key={i}>
+            {/* Wick - thin line from high to low. */}
+            <motion.line
+              x1={c.x}
+              y1={c.wHi}
+              x2={c.x}
+              y2={c.wLo}
+              stroke={accent}
+              strokeWidth={1.2}
+              strokeOpacity={0.8}
+              initial={{ scaleY: 0, opacity: 0 }}
+              animate={animateIn ? { scaleY: 1, opacity: 1 } : { scaleY: 0, opacity: 0 }}
+              transition={{ duration: 0.3, delay: 0.06 * i, ease: EASE_OUT }}
+              style={{ transformOrigin: origin }}
+            />
+            {/* Body - filled for up candles, outlined for down candles.
+                This creates the signature "green/red" reading even in a
+                single-accent palette. */}
+            <motion.rect
+              x={c.x - bodyWidth / 2}
+              y={c.bHi}
+              width={bodyWidth}
+              height={c.bLo - c.bHi}
+              fill={c.up ? accent : 'transparent'}
+              fillOpacity={c.up ? 0.9 : 0}
+              stroke={accent}
+              strokeWidth={1.5}
+              initial={{ scaleY: 0, opacity: 0 }}
+              animate={animateIn ? { scaleY: 1, opacity: 1 } : { scaleY: 0, opacity: 0 }}
+              transition={{ duration: 0.35, delay: 0.06 * i + 0.05, ease: EASE_OUT }}
+              style={{ transformOrigin: origin }}
+            />
+          </g>
+        );
+      })}
     </svg>
   );
 }
