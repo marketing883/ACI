@@ -20,7 +20,7 @@ import {
 // PLAYBOOK DATA
 // ============================================================================
 
-interface PlaybookData {
+export interface PlaybookData {
   id: string;
   name: string;
   shortName: string;
@@ -37,7 +37,7 @@ interface PlaybookData {
   iconType: 'zap' | 'radio' | 'globe' | 'barchart' | 'shield' | 'truck' | 'cloud' | 'gitmerge' | 'sparkles';
 }
 
-const PLAYBOOKS: PlaybookData[] = [
+export const PLAYBOOKS: PlaybookData[] = [
   {
     id: 'post-acquisition',
     name: 'Post-Acquisition System Consolidation',
