@@ -519,7 +519,13 @@ async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
         model: input.model.id,
         max_tokens: maxOutputTokens(),
         system: input.systemPrompt,
-        // No tools on the follow-up so the model must produce text.
+        // Anthropic requires the tools array when the message history
+        // contains tool_use blocks, otherwise it 400s with
+        // "tool_use ids were found without tool_use definitions".
+        // We still force text via tool_choice:'none' so the model
+        // cannot re-enter the tool loop and must write prose.
+        tools: anthropicTools() as unknown as Anthropic.Tool[],
+        tool_choice: { type: 'none' as const },
         messages: [
           ...modelMessages,
           { role: 'assistant', content: toolUseContent },

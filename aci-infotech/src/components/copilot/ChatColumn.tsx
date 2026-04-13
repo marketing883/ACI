@@ -81,10 +81,7 @@ function humanizeSlug(slug: string): string {
  * looks like a stock response. Used by the onDone handler when content
  * is empty after streaming completes.
  */
-function buildPanelFallback(panel: ShowContentPanelArgs | null): string {
-  if (!panel) {
-    return 'I pulled up the most relevant view on the right. Where do you want to start?';
-  }
+function singlePanelFallback(panel: ShowContentPanelArgs): string {
   const name = humanizeSlug(panel.entityRef);
   switch (panel.panelType) {
     case 'diagram':
@@ -110,6 +107,40 @@ function buildPanelFallback(panel: ShowContentPanelArgs | null): string {
     default:
       return `${name} is on the right. Want me to walk through it?`;
   }
+}
+
+/**
+ * Fallback when multiple panels fired in a single turn (typical for
+ * compound queries like "Dynamics 365 for manufacturing" or "Databricks
+ * in healthcare"). We pair the primary (platform / service) with the
+ * secondary (industry) in one sentence + a focused follow-up question,
+ * so the bubble is never the generic "industry patterns are up" line
+ * when the user asked a compound question.
+ */
+function compoundPanelFallback(panels: readonly ShowContentPanelArgs[]): string {
+  const platform = panels.find((p) => p.panelType === 'platform');
+  const service = panels.find((p) => p.panelType === 'service');
+  const industry = panels.find((p) => p.panelType === 'industry');
+  const primary = platform ?? service;
+
+  if (primary && industry) {
+    const primaryName = humanizeSlug(primary.entityRef);
+    const industryName = humanizeSlug(industry.entityRef);
+    return `${primaryName} on the right, with the ${industryName} context alongside. Is the pain more on the platform side, or on the ${industryName.toLowerCase()} workflows?`;
+  }
+  if (platform && service) {
+    return `${humanizeSlug(platform.entityRef)} and the ${humanizeSlug(service.entityRef)} service page are both up. Which one is closer to the immediate need?`;
+  }
+  // Two of the same type; fall back to the single-panel line on the first.
+  return singlePanelFallback(panels[0]);
+}
+
+function buildPanelFallback(panels: readonly ShowContentPanelArgs[]): string {
+  if (panels.length === 0) {
+    return 'I pulled up the most relevant view on the right. Where do you want to start?';
+  }
+  if (panels.length === 1) return singlePanelFallback(panels[0]);
+  return compoundPanelFallback(panels);
 }
 
 export default function ChatColumn({
@@ -235,7 +266,10 @@ export default function ChatColumn({
       let requestField: RequestFieldArgs | undefined;
       let thought: string | undefined;
       let panelOpened = false;
-      let lastPanel: ShowContentPanelArgs | null = null;
+      // All panels fired in this turn, in the order the model emitted them.
+      // Used to build compound fallbacks when the model skips prose on a
+      // platform+industry (or service+industry) combo query.
+      const firedPanels: ShowContentPanelArgs[] = [];
 
       const nextMessages = [...messages, userMsg].map((m) => ({
         role: m.role as 'user' | 'assistant',
@@ -289,7 +323,7 @@ export default function ChatColumn({
                 if (panel?.panelType && panel.entityRef) {
                   onPanelRequest(panel);
                   panelOpened = true;
-                  lastPanel = panel;
+                  firedPanels.push(panel);
                 }
                 break;
               }
@@ -336,7 +370,7 @@ export default function ChatColumn({
                     content =
                       "I hit a snag. [Reach out](/contact) and we will keep going.";
                   } else if (panelOpened) {
-                    content = buildPanelFallback(lastPanel);
+                    content = buildPanelFallback(firedPanels);
                   } else {
                     content =
                       'One moment. Want to give me a bit more on what you are after?';
