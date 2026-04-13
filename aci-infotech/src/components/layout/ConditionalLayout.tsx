@@ -11,6 +11,11 @@ const ChatWidgetWrapper = dynamic(
   { ssr: false }
 );
 
+// Dark-hero routes. On these, the nav renders transparent and the hero
+// should extend beneath it, so we drop the usual pt-20 that pads every
+// other page below the fixed nav bar.
+const OVERLAY_HERO_ROUTES = new Set<string>(['/', '/preview/home']);
+
 export default function ConditionalLayout({
   children,
 }: {
@@ -25,11 +30,13 @@ export default function ConditionalLayout({
     return <>{children}</>;
   }
 
+  const isOverlayHero = OVERLAY_HERO_ROUTES.has(pathname ?? '');
+
   // Regular site pages with Navigation, Footer, and Chat
   return (
     <>
       <Navigation />
-      <main className="pt-20">{children}</main>
+      <main className={isOverlayHero ? '' : 'pt-20'}>{children}</main>
       <Footer />
       <ChatWidgetWrapper />
     </>

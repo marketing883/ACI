@@ -224,9 +224,10 @@ export default function HeroRotator() {
 
       {/* Content - asymmetric, left-anchored, right third intentionally empty */}
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-8 md:px-16 lg:px-[120px] py-32 lg:py-40">
-        {/* The 2/3 width clamp lives on the H1 wrapper so the headline wraps
-            into two lines while the rest of the column can still breathe. */}
-        <div className="lg:max-w-[66%]">
+        {/* Content column. The wider 78% clamp lets the display headline
+            break to two lines reliably across desktop widths; text-balance
+            hints the browser toward a natural 2-line wrap. */}
+        <div className="lg:max-w-[78%]">
           {/* Stage holds the active scene; AnimatePresence handles enter/exit. */}
           <div className="relative min-h-[420px] md:min-h-[480px] lg:min-h-[520px]">
             <AnimatePresence mode="wait" initial={false}>
@@ -247,14 +248,18 @@ export default function HeroRotator() {
                   {active.eyebrow}
                 </motion.div>
 
-                {/* H1 - clip-path mask wipes the line from bottom to top */}
+                {/* H1 - clip-path mask wipes the line from bottom to top.
+                    text-wrap: balance lets the browser distribute words
+                    across lines so the headline reads as a clean couplet
+                    instead of an orphaned third line. */}
                 <motion.h1
                   variants={headlineVariants}
                   className="font-bold text-white font-[var(--font-title)] mb-6"
                   style={{
-                    fontSize: 'clamp(42px, 7vw, 96px)',
+                    fontSize: 'clamp(40px, 6vw, 84px)',
                     lineHeight: 1.05,
                     letterSpacing: '-0.025em',
+                    textWrap: 'balance',
                     WebkitFontSmoothing: 'antialiased',
                   }}
                 >
