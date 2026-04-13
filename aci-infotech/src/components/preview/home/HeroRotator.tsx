@@ -28,7 +28,13 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 interface Scene {
   eyebrow: string;
-  headline: string;
+  /**
+   * Headline is authored as a two-line tuple [topLine, bottomLine] so each
+   * scene renders as exactly two lines, regardless of viewport width. This
+   * lets us keep dramatic display sizing without relying on the browser to
+   * guess good break points.
+   */
+  headline: [string, string];
   sub: string;
   proof: string;
   tint: string;
@@ -37,28 +43,28 @@ interface Scene {
 const SCENES: Scene[] = [
   {
     eyebrow: '// scope',
-    headline: 'We modernize the Global Enterprise.',
+    headline: ['We modernize', 'the Global Enterprise.'],
     sub: "Data, AI, and cloud transformation for the world's largest operators.",
     proof: '$1B+ delivered across 80+ Fortune 500 clients',
     tint: 'rgba(0, 82, 204, 0.22)',
   },
   {
     eyebrow: '// who shows up',
-    headline: 'Senior architects only. No juniors on your dime.',
+    headline: ['Senior architects only.', 'No juniors on your dime.'],
     sub: 'Every engagement is led by a 10+ year practitioner. Nothing is delegated down.',
     proof: 'Avg. 14 years per engagement lead',
     tint: 'rgba(217, 119, 6, 0.24)',
   },
   {
     eyebrow: '// how we deliver',
-    headline: 'Ten playbooks. Hundreds of deployments.',
+    headline: ['Ten playbooks.', 'Hundreds of deployments.'],
     sub: 'Post-acquisition integration, multi-location rollouts, global data platforms, and seven more.',
     proof: '10 playbooks . in production',
     tint: 'rgba(13, 148, 136, 0.22)',
   },
   {
     eyebrow: '// after go-live',
-    headline: 'We answer the 2am call.',
+    headline: ['We answer', 'the 2am call.'],
     sub: '24/7 operations with documented SLAs. The call lands here, not with a junior on a shared inbox.',
     proof: 'Operations across 14 time zones',
     tint: 'rgba(185, 28, 28, 0.22)',
@@ -222,14 +228,19 @@ export default function HeroRotator() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/30" />
       </div>
 
-      {/* Content - asymmetric, left-anchored, right third intentionally empty */}
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-8 md:px-16 lg:px-[120px] py-32 lg:py-40">
-        {/* Content column. The wider 78% clamp lets the display headline
-            break to two lines reliably across desktop widths; text-balance
-            hints the browser toward a natural 2-line wrap. */}
-        <div className="lg:max-w-[78%]">
-          {/* Stage holds the active scene; AnimatePresence handles enter/exit. */}
-          <div className="relative min-h-[420px] md:min-h-[480px] lg:min-h-[520px]">
+      {/* Content. Tighter vertical padding keeps the CTA row inside the
+          first viewport at typical desktop heights (900-1100px). */}
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-8 md:px-16 lg:px-[120px] py-24 md:py-28 lg:py-32">
+        {/* The content column spans the full padded width so the longest
+            headline ("Senior architects only. No juniors on your dime.")
+            still resolves to two lines. The sub + proof are constrained
+            separately below so they don't stretch to full width. */}
+        <div className="w-full">
+          {/* Stage holds the active scene; AnimatePresence handles enter/exit.
+              Reserved height is sized to hold a two-line headline plus the
+              sub + proof, with no extra padding that would push the CTA
+              below the fold. */}
+          <div className="relative min-h-[300px] md:min-h-[340px] lg:min-h-[360px]">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={sceneIndex}
@@ -242,36 +253,36 @@ export default function HeroRotator() {
                 {/* Eyebrow */}
                 <motion.div
                   variants={lineVariants}
-                  className="font-mono uppercase tracking-[0.18em] text-[#C4FF61]/90 mb-6"
+                  className="font-mono uppercase tracking-[0.18em] text-[#C4FF61]/90 mb-5"
                   style={{ fontSize: 'clamp(11px, 1vw, 13px)' }}
                 >
                   {active.eyebrow}
                 </motion.div>
 
-                {/* H1 - clip-path mask wipes the line from bottom to top.
-                    text-wrap: balance lets the browser distribute words
-                    across lines so the headline reads as a clean couplet
-                    instead of an orphaned third line. */}
+                {/* H1 - clip-path mask wipes the couplet from bottom to top.
+                    The two lines are authored in the scene data and rendered
+                    as explicit block spans, so every scene reads as a clean
+                    two-line couplet across every viewport. */}
                 <motion.h1
                   variants={headlineVariants}
-                  className="font-bold text-white font-[var(--font-title)] mb-6"
+                  className="font-bold text-white font-[var(--font-title)] mb-5"
                   style={{
-                    fontSize: 'clamp(40px, 6vw, 84px)',
+                    fontSize: 'clamp(36px, 5.2vw, 72px)',
                     lineHeight: 1.05,
                     letterSpacing: '-0.025em',
-                    textWrap: 'balance',
                     WebkitFontSmoothing: 'antialiased',
                   }}
                 >
-                  {active.headline}
+                  <span className="block">{active.headline[0]}</span>
+                  <span className="block">{active.headline[1]}</span>
                 </motion.h1>
 
                 {/* Supporting sentence */}
                 <motion.p
                   variants={lineVariants}
-                  className="max-w-[640px] mb-8 text-white/85"
+                  className="max-w-[600px] mb-6 text-white/85"
                   style={{
-                    fontSize: 'clamp(17px, 1.6vw, 22px)',
+                    fontSize: 'clamp(16px, 1.4vw, 20px)',
                     lineHeight: 1.5,
                     fontWeight: 400,
                   }}
@@ -297,8 +308,9 @@ export default function HeroRotator() {
           </div>
 
           {/* CTA + scene indicators (sit outside the rotating stage so they
-              hold steady while content above swaps). */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-2">
+              hold steady while content above swaps). Tight top margin so
+              the button is always visible inside the first viewport. */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-6 md:mt-8">
             <Link
               href={`/contact?reason=home-hero-v2&scene=${sceneIndex + 1}`}
               onFocus={() => setPaused(true)}
