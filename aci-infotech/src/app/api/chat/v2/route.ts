@@ -33,10 +33,16 @@ import { COPILOT_KILL_SWITCH, isCopilotV2Active, bucketForVisitor } from '@/lib/
 import { log } from '@/lib/copilot/logger';
 import { FALLBACK_USER_MESSAGES } from '@/lib/copilot/brand';
 import { MODEL_CHAIN, maxOutputTokens } from '@/lib/copilot/models';
-import { TOOL_SPECS, getToolSpec, anthropicTools, openaiTools } from '@/lib/copilot/tools';
+import {
+  TOOL_SPECS,
+  getToolSpec,
+  anthropicToolsForProse,
+  openaiToolsForProse,
+} from '@/lib/copilot/tools';
 import type { AtherosToolName } from '@/lib/copilot/tools';
 import { buildSystemPrompt, splitThoughtFromReply } from '@/lib/copilot/prompt';
 import { hybridRetrieve, augmentContextFromQuery, type PageContext } from '@/lib/copilot/retrieval';
+import { pickPanelFromContext, type ResolvedPanel } from '@/lib/copilot/panelRouter';
 import { checkRateLimit } from '@/lib/copilot/ratelimit';
 import {
   insertMessage,
@@ -332,11 +338,52 @@ async function runTurn(input: RunTurnInput): Promise<void> {
     sourceTypes: Array.from(new Set(retrieved.map((r) => r.source_type).filter(Boolean))),
   };
 
+  // Deterministic panel selection. The server picks the entity to render
+  // on the right canvas and emits the tool event so the client renders
+  // the panel identically to the legacy model-fired path. The model is
+  // then called with a prose-only tool set (no show_content_panel) and
+  // a short "panel already shown" line in the system prompt. Eliminates
+  // slug hallucinations and turns where the model fires a tool but emits
+  // no prose.
+  const resolvedPanel = pickPanelFromContext(enrichedContext, retrieved);
+  if (resolvedPanel) {
+    const callId = `srv_panel_${Date.now()}_${resolvedPanel.entityRef}`;
+    emit({
+      type: 'tool_call_start',
+      id: callId,
+      name: 'show_content_panel',
+    });
+    emit({
+      type: 'tool_call_end',
+      id: callId,
+      name: 'show_content_panel',
+      result: 'ok',
+      args: {
+        panelType: resolvedPanel.panelType,
+        entityRef: resolvedPanel.entityRef,
+        rationale: resolvedPanel.rationale,
+      },
+    });
+    // Persist the synthetic tool call so admin replay matches the UX.
+    await insertMessage({
+      session_id: body.sessionId,
+      role: 'tool',
+      tool_name: 'show_content_panel',
+      tool_args: {
+        panelType: resolvedPanel.panelType,
+        entityRef: resolvedPanel.entityRef,
+        rationale: resolvedPanel.rationale,
+      },
+      tool_result: { ok: true, source: 'server-router' },
+    });
+  }
+
   const systemPrompt = buildSystemPrompt({
     pageContext: enrichedContext,
     retrieved,
     leadState: body.leadState ?? {},
     turnIndex: body.turnIndex ?? body.messages.length,
+    serverPanel: resolvedPanel,
   });
 
   // Attempt each model in the chain until one streams successfully.
@@ -431,7 +478,7 @@ async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
     // Tool schemas are authored as strict JSON Schema with `type: "object"` at
     // the root; the Anthropic SDK's InputSchema type is stricter than the
     // runtime wire format, so we cast to the SDK's accepted shape here.
-    tools: anthropicTools() as unknown as Anthropic.Tool[],
+    tools: anthropicToolsForProse() as unknown as Anthropic.Tool[],
     messages: modelMessages,
   });
 
@@ -524,7 +571,7 @@ async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
         // "tool_use ids were found without tool_use definitions".
         // We still force text via tool_choice:'none' so the model
         // cannot re-enter the tool loop and must write prose.
-        tools: anthropicTools() as unknown as Anthropic.Tool[],
+        tools: anthropicToolsForProse() as unknown as Anthropic.Tool[],
         tool_choice: { type: 'none' as const },
         messages: [
           ...modelMessages,
@@ -626,7 +673,7 @@ async function streamFromOpenAI(input: ModelStreamInput): Promise<void> {
       { role: 'system', content: input.systemPrompt },
       ...modelMessages,
     ],
-    tools: openaiTools(),
+    tools: openaiToolsForProse(),
   });
 
   for await (const chunk of stream) {

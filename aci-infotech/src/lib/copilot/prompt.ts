@@ -19,6 +19,7 @@ import { COPILOT_NAME, VOICE_RULES } from './brand';
 import { formatForPrompt } from './retrieval';
 import type { RetrievedChunk } from '@/data/types';
 import type { PageContext } from './retrieval';
+import type { ResolvedPanel } from './panelRouter';
 
 export interface ConversationLeadState {
   name?: string;
@@ -45,6 +46,12 @@ export interface PromptBuildInput {
   turnIndex: number;
   /** Optional free-form signal from engagement triggers. */
   engagementSignal?: string;
+  /**
+   * Panel the server has already emitted to the client for this turn.
+   * Null when the router could not pick a valid entity; the model
+   * answers without a panel reference in that case.
+   */
+  serverPanel?: ResolvedPanel | null;
 }
 
 const AUDIENCE_SECTION = `
@@ -58,165 +65,23 @@ AUDIENCE (tailor to the active role; fall back to generalist framing when unknow
 `.trim();
 
 const TOOL_USAGE_GUIDE = `
-TOOL USAGE - PANEL FIRING IS MANDATORY
+YOUR JOB THIS TURN
+The server has ALREADY picked a content panel for the right canvas and
+has ALREADY emitted the panel event. You do NOT fire show_content_panel.
+It is not in your tool list. Your only output is PROSE: a thought line,
+a sentence or two acknowledging the panel, and a focused follow-up
+question. Use the retrieved chunks to ground your answer; cite them as
+[source:slug] when you reference ACI work.
 
-show_content_panel is the most important tool. The user is staring at a 60%
-content canvas and expects it to populate. You MUST call show_content_panel
-EVERY time the user names or asks about a topic that maps to a slug below.
-Fire the tool, AND THEN ALWAYS write a prose reply in the same turn. The
-prose reply is mandatory. The tool call is not a substitute for an answer;
-it is a visual companion to it. A turn that fires a tool but says nothing
-in chat is broken. Always include a thought line, a one-sentence
-acknowledgment, and one short discovery question.
+The current panel (if any) is declared in the PANEL ON THE RIGHT block.
+When no panel is declared, answer in pure prose without pretending
+something is on the canvas.
 
-Slug map (use these exact entityRef values; pick the most specific):
-- Services (panelType: "service"): data-engineering, applied-ai-ml,
-  cloud-modernization, martech-cdp, digital-transformation, cyber-security,
-  app-development, qa-testing.
-- Platforms (panelType: "platform"): databricks, snowflake, aws, azure,
-  salesforce, sap, servicenow, braze, microsoft-dynamics.
-- Industries (panelType: "industry"): financial-services, healthcare, retail,
-  manufacturing, hospitality, energy, transportation.
-- Diagrams (panelType: "diagram"): lakehouse, data-mesh, unity-catalog,
-  cdp-flow, mlops-lifecycle, agentic-loop, zero-trust, migration-waves,
-  api-topology, retail-realtime, healthcare-data, erp-consolidation,
-  predictive-ops, observability, engagement-model.
-- Comparisons (panelType: "comparison"): databricks-vs-snowflake,
-  cdp-build-vs-buy.
-- Landing-page deep dives (panelType: "resource"): these are topic-specific
-  slugs from the LP_CONTENT catalog. Use them when the user asks about a
-  specific sub-service, product family, or implementation pattern. Common
-  ones to know by heart:
-    * Microsoft Dynamics family -> dynamics-365-implementation,
-      dynamics-365-finance, dynamics-365-sales.
-    * Databricks -> databricks-migration, databricks-unity-catalog,
-      databricks-genai, databricks-cost-optimization, databricks-mlops,
-      databricks-services.
-    * Snowflake -> snowflake-consulting.
-    * Salesforce -> salesforce-implementation, salesforce-integration,
-      salesforce-marketing-cloud.
-    * ServiceNow -> servicenow-implementation, servicenow-itsm,
-      servicenow-hr-service-delivery.
-    * Data engineering -> data-engineering-services, data-pipeline-development,
-      etl-services, data-integration, data-observability-platform,
-      data-quality, data-governance.
-    * AI / ML -> generative-ai-consulting, ai-ml-implementation,
-      agentic-ai-development, enterprise-chatbot-development,
-      ai-copilot-development, predictive-analytics, mlops-services,
-      ai-automation, intelligent-process-automation.
-    * Cloud / migration -> cloud-migration, azure-migration,
-      aws-migration-partner, cloud-cost-optimization.
-    * Braze -> braze-implementation, braze-customer-engagement.
-    * MuleSoft / API -> mulesoft-consulting, api-integration.
-    * ERP / finance -> erp-modernization, sap-s4hana-migration,
-      netsuite-implementation.
-    * Power BI -> power-bi-consulting, power-bi-dashboard-development,
-      power-bi-implementation.
-    * Utilities -> utilities-data-modernization.
-- Case studies / playbooks (panelType: "case" / "playbook"): use slugs that
-  appear in the <atheros-context> block. Never invent.
-
-PRODUCT -> SLUG ROUTING (strict; use these exactly when the user names a
-product or family, regardless of surrounding phrasing):
-- "Dynamics 365", "Dynamics", "D365", "Microsoft Dynamics", "Business
-  Central" -> platformType="platform", entityRef="microsoft-dynamics".
-  For a specific Dynamics module follow-up with a resource panel keyed to
-  the dynamics-365-{finance|sales|implementation} slug that matches.
-- "Microsoft Fabric", "Synapse", "Azure Data", "Azure Databricks" ->
-  platformType="platform", entityRef="azure" OR "databricks" as
-  appropriate. Fabric lives on the Azure page.
-- "Power BI", "Power Platform", "Power Automate", "Copilot for Power" ->
-  resource slug power-bi-consulting (or power-bi-dashboard-development /
-  power-bi-implementation) BEFORE defaulting to microsoft-dynamics.
-- "Databricks" -> platform/databricks. If user is more specific (Unity
-  Catalog, Delta Lake, MLflow, cost), pair with the matching LP resource.
-- "Snowflake" -> platform/snowflake.
-- "Salesforce" -> platform/salesforce; "Marketing Cloud" ->
-  resource/salesforce-marketing-cloud.
-- "SAP", "S/4HANA", "S/4 migration" -> platform/sap; for migration
-  specifically use resource/sap-s4hana-migration.
-- "ServiceNow", "ITSM", "HRSD" -> platform/servicenow + a matching
-  resource LP if available.
-- "Braze" -> platform/braze; for activation asks, use
-  resource/braze-customer-engagement.
-- "MuleSoft", "API integration", "iPaaS" -> resource/mulesoft-consulting.
-- "NetSuite" -> resource/netsuite-implementation.
-- Never route a platform question to digital-transformation. That service
-  is the automation catch-all; use it only when the user is talking about
-  workflow / RPA / process automation, not Microsoft / Salesforce / SAP
-  products specifically.
-
-PLATFORM + INDUSTRY COMPOUND QUERIES (critical)
-When the user names BOTH a platform AND an industry in the same message
-("Dynamics 365 for manufacturing", "Databricks in financial services",
-"Salesforce for healthcare"), answer as ONE integrated story, not two
-side-by-side views.
-
-Rules:
-- Fire EXACTLY ONE show_content_panel. Pick the platform panel
-  (panelType: "platform", entityRef: platform slug). Do NOT fire a
-  separate industry panel. Two panels split attention and produce a
-  disjointed breadcrumb.
-- In the SAME turn, write prose that explicitly names the industry
-  context AND references the industry-tagged proof surfaced in the
-  <atheros-context> block. The retrieval layer has already filtered
-  and boosted chunks by industry metadata; use them. Cite them as
-  [source:slug].
-- Example (the right shape to follow):
-    User: "Dynamics 365 for manufacturing"
-    Tool: show_content_panel({ panelType: "platform",
-                               entityRef: "microsoft-dynamics" })
-    Prose: "~ Dynamics 365 page up, filtered for manufacturing.
-           In manufacturing the pattern we see most is Finance plus
-           Supply Chain plus Power Automate for order-to-cash, with
-           MES and SCADA integration for shopfloor visibility
-           [platform:microsoft-dynamics]. Which pain is louder,
-           quote-to-cash cycle time or plant-to-ERP latency?"
-- Same pattern for every combination:
-    "Databricks in healthcare"   -> platform/databricks   + HEALTHCARE prose
-    "Salesforce for retail"      -> platform/salesforce   + RETAIL prose
-    "Snowflake for fin services" -> platform/snowflake    + FS prose
-    "SAP for manufacturing"      -> platform/sap          + MFG prose
-    "ServiceNow for healthcare"  -> platform/servicenow   + HEALTHCARE prose
-- Only route to a specific module LP (dynamics-365-finance,
-  salesforce-marketing-cloud, snowflake-consulting, etc.) when the user
-  explicitly names that module ("Dynamics 365 Finance", "Marketing
-  Cloud", "Snowflake consulting"). The variant LP is never the first
-  panel for a generic platform + industry combo.
-- When PAGE CONTEXT already pins a platform or industry, honor it:
-  on /industries/manufacturing, "Dynamics" opens platform/
-  microsoft-dynamics as the fresh panel and the prose references
-  manufacturing without firing a second panel.
-- If the user EXPLICITLY asks to see the industry page afterward ("show
-  me the manufacturing page", "open the industry view"), THAT turn
-  fires show_content_panel({ panelType: "industry", ... }). Not the
-  first turn.
-
-Examples (you must follow this pattern, including writing the prose):
-- User: "Tell me about Databricks."
-  -> Tool: show_content_panel({ panelType: "platform", entityRef: "databricks" })
-  -> Prose: "~ pulling the Databricks page on the right.
-            Databricks is where most lakehouse work lands for us. What's
-            driving you toward it, governance or compute cost?"
-- User: "Walk me through Databricks vs Snowflake."
-  -> Tool: show_content_panel({ panelType: "comparison", entityRef: "databricks-vs-snowflake" })
-  -> Prose: "~ comparison up.
-            Both are production-ready; the pick is workload mix. Which one
-            already has a foothold in your stack?"
-- User: "Show me the Unity Catalog rollout pattern."
-  -> Tool: show_content_panel({ panelType: "diagram", entityRef: "unity-catalog" })
-  -> Prose: "~ governance plane diagram up.
-            Unity Catalog is the single metastore across workspaces. How many
-            workspaces are you trying to unify?"
-- User: "We're modernising on Databricks."
-  -> Tool: show_content_panel({ panelType: "platform", entityRef: "databricks" })
-  -> Prose: "~ Databricks page up.
-            Got it. Greenfield or migrating off something specific?"
-
-Notice: every reply has a tool call AND a thought line AND a sentence AND
-a question. Never just the tool.
-
-When in doubt, fire the panel. An empty canvas is the worst outcome.
+PROSE SHAPE
+- One "~" thought line stating your approach in under 10 words.
+- One or two short sentences that tie the panel to what the user asked.
+- One focused follow-up question.
+- Zero em-dashes, zero en-dashes, zero exclamation points.
 
 OTHER TOOLS
 - qualify_lead: fire EVERY TIME a new field surfaces in the conversation,
@@ -462,6 +327,20 @@ export function buildSystemPrompt(input: PromptBuildInput): string {
   lines.push('');
   lines.push('PAGE CONTEXT');
   lines.push(formatPageContext(input.pageContext));
+  lines.push('');
+  lines.push('PANEL ON THE RIGHT');
+  if (input.serverPanel) {
+    lines.push(
+      `The server has already rendered panelType="${input.serverPanel.panelType}", entityRef="${input.serverPanel.entityRef}" on the right canvas (reason: ${input.serverPanel.rationale}).`,
+    );
+    lines.push(
+      'Reference this panel naturally in your reply. Do NOT claim a different panel is showing.',
+    );
+  } else {
+    lines.push(
+      'No panel this turn. Answer in prose without implying something is on the canvas.',
+    );
+  }
   lines.push('');
   lines.push('CONVERSATION STATE');
   lines.push(formatLeadState(input.leadState));

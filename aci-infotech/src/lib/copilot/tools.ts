@@ -451,6 +451,25 @@ export function anthropicTools(): Array<{
 }
 
 /**
+ * Tools for turns where the server has already chosen and emitted the
+ * content panel. Drops `show_content_panel` so the model cannot
+ * hallucinate a slug or skip prose by firing a tool. Everything else
+ * (qualify_lead, request_field, cite_source, offer_action_buttons,
+ * schedule_meeting, handoff_to_human) is still available and useful.
+ */
+export function anthropicToolsForProse(): Array<{
+  name: string;
+  description: string;
+  input_schema: Record<string, unknown>;
+}> {
+  return TOOL_SPECS.filter((t) => t.name !== 'show_content_panel').map((t) => ({
+    name: t.name,
+    description: t.description,
+    input_schema: t.inputSchema,
+  }));
+}
+
+/**
  * OpenAI tool definitions (Chat Completions API).
  */
 export function openaiTools(): Array<{
@@ -462,6 +481,25 @@ export function openaiTools(): Array<{
   };
 }> {
   return TOOL_SPECS.map((t) => ({
+    type: 'function' as const,
+    function: {
+      name: t.name,
+      description: t.description,
+      parameters: t.inputSchema,
+    },
+  }));
+}
+
+/** OpenAI prose-only tool set. See anthropicToolsForProse for rationale. */
+export function openaiToolsForProse(): Array<{
+  type: 'function';
+  function: {
+    name: string;
+    description: string;
+    parameters: Record<string, unknown>;
+  };
+}> {
+  return TOOL_SPECS.filter((t) => t.name !== 'show_content_panel').map((t) => ({
     type: 'function' as const,
     function: {
       name: t.name,
