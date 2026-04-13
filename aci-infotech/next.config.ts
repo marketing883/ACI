@@ -63,6 +63,11 @@ const nextConfig: NextConfig = {
               "media-src 'self' blob:",
               "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://px.ads.linkedin.com https://*.supabase.co",
               "frame-src 'self'",
+              // Allow the PWA manifest to load through the GitHub Codespaces
+              // auth tunnel (private port forwarding redirects /manifest.webmanifest
+              // through https://github.dev/pf-signin?...). On a real production
+              // domain the manifest is served from 'self' so this is a no-op.
+              "manifest-src 'self' https://*.github.dev https://github.dev",
             ].join('; '),
           },
         ],

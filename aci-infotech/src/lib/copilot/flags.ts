@@ -5,54 +5,70 @@
  * later parts, they all check `isCopilotV2Active(visitorId)` before running.
  * With the flag off, the existing chat widget and /api/chat route behave
  * exactly like today.
+ *
+ * IMPORTANT (Next.js / Turbopack inlining):
+ *   `process.env.NEXT_PUBLIC_*` is substituted at compile time ONLY when
+ *   accessed via static dot notation in source. Bracket access through a
+ *   helper (`process.env[key]`) is NOT inlined and returns `undefined`
+ *   on the client. The exported NEXT_PUBLIC_* flags below therefore go
+ *   through static reads + a pure `parseFlag` / `parseInt100` helper.
+ *   Server-only `COPILOT_KILL` keeps the dynamic helper because it is
+ *   never bundled to the client.
  */
 
 import { COPILOT_NAMESPACE } from './brand';
 
-/** Read once at module load; safe to re-read since process.env is stable. */
-function envFlag(key: string, defaultValue = false): boolean {
-  const raw = process.env[key];
-  if (raw === undefined) return defaultValue;
-  const normalized = raw.trim().toLowerCase();
-  return normalized === '1' || normalized === 'true' || normalized === 'yes';
+/** Pure parser. Takes the raw value (which Next.js inlined for us). */
+function parseFlag(raw: string | undefined, defaultValue = false): boolean {
+  if (raw === undefined || raw === null) return defaultValue;
+  const n = String(raw).trim().toLowerCase();
+  return n === '1' || n === 'true' || n === 'yes';
 }
 
-function envInt(key: string, defaultValue: number, min = 0, max = 100): number {
-  const raw = process.env[key];
+function parseInt100(raw: string | undefined, defaultValue: number): number {
   if (!raw) return defaultValue;
   const n = Number.parseInt(raw, 10);
   if (!Number.isFinite(n)) return defaultValue;
-  return Math.max(min, Math.min(max, n));
+  return Math.max(0, Math.min(100, n));
+}
+
+/** Server-only dynamic-key helper. Only safe for non-NEXT_PUBLIC vars. */
+function envFlag(key: string, defaultValue = false): boolean {
+  return parseFlag(process.env[key], defaultValue);
 }
 
 /**
- * Master switch. When false, every v2 code path short-circuits. Public env
- * so the client bundle can read it too for conditional rendering.
+ * Master switch. When false, every v2 code path short-circuits.
+ * STATIC dot-notation read so Turbopack inlines this into the client bundle.
  */
-export const COPILOT_V2_ENABLED: boolean = envFlag('NEXT_PUBLIC_COPILOT_V2');
+export const COPILOT_V2_ENABLED: boolean = parseFlag(
+  process.env.NEXT_PUBLIC_COPILOT_V2,
+);
 
 /**
  * Gradual-rollout bucket, 0 to 100. Visitors are hashed to a stable bucket;
  * only visitors whose bucket is strictly less than this value see v2.
  * 100 = everyone; 0 = nobody (equivalent to COPILOT_V2_ENABLED=false).
+ * STATIC dot-notation read so Turbopack inlines this.
  */
-export const COPILOT_V2_PERCENT: number = envInt(
-  'NEXT_PUBLIC_COPILOT_V2_PERCENT',
-  100,
-  0,
+export const COPILOT_V2_PERCENT: number = parseInt100(
+  process.env.NEXT_PUBLIC_COPILOT_V2_PERCENT,
   100,
 );
 
 /**
  * Server-only emergency stop. Setting `COPILOT_KILL=true` makes every v2
  * route return a safe fallback and emit a `kill_switch_active` event.
- * Never exposed to the client bundle.
+ * Never exposed to the client bundle, so dynamic-key access is fine here.
  */
 export const COPILOT_KILL_SWITCH: boolean = envFlag('COPILOT_KILL');
 
-/** Gate the dev-only error toast (separate from the v2 rollout). */
-export const COPILOT_DEV_ERRORS: boolean = envFlag(
-  'NEXT_PUBLIC_COPILOT_DEV_ERRORS',
+/**
+ * Gate the dev-only error toast (separate from the v2 rollout).
+ * STATIC dot-notation read for the client bundle.
+ */
+export const COPILOT_DEV_ERRORS: boolean = parseFlag(
+  process.env.NEXT_PUBLIC_COPILOT_DEV_ERRORS,
 );
 
 /**
