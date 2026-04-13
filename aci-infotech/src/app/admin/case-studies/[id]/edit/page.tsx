@@ -78,6 +78,11 @@ export default function EditCaseStudyPage() {
   const [slug, setSlug] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [clientName, setClientName] = useState('');
+  // Anonymized, public-safe label (e.g. "Fortune 500 Financial Services
+  // Client"). This is the ONLY client label that renders on the public
+  // site. Real client_name is never displayed; see
+  // src/lib/content/anonymize.ts.
+  const [clientDescriptor, setClientDescriptor] = useState('');
   const [clientLogo, setClientLogo] = useState('');
   const [clientIndustry, setClientIndustry] = useState('');
   const [clientSize, setClientSize] = useState('');
@@ -116,6 +121,7 @@ export default function EditCaseStudyPage() {
           setSlug(data.slug || '');
           setExcerpt(data.excerpt || '');
           setClientName(data.client_name || '');
+          setClientDescriptor(data.client_descriptor || '');
           setClientLogo(data.client_logo_url || '');
           setClientIndustry(data.industry || '');
           setClientSize(data.client_size || '');
@@ -433,6 +439,7 @@ export default function EditCaseStudyPage() {
         slug,
         excerpt: excerpt || null,
         client_name: clientName,
+        client_descriptor: clientDescriptor || null,
         client_logo_url: clientLogo || null,
         industry: clientIndustry,
         client_size: clientSize || null,
@@ -617,17 +624,38 @@ export default function EditCaseStudyPage() {
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Client Name *
+                  Client Name <span className="text-gray-400 font-normal">(internal only)</span>
                 </label>
                 <input
                   type="text"
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
-                  placeholder="e.g., MSCI or Fortune 500 Retailer"
+                  placeholder="Real company name. Never shown publicly."
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Stored for internal reference. The public site only shows the descriptor below.
+                </p>
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Public Descriptor *
+                </label>
+                <input
+                  type="text"
+                  value={clientDescriptor}
+                  onChange={(e) => setClientDescriptor(e.target.value)}
+                  placeholder="e.g. Fortune 500 Financial Services Client"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  The anonymized label that shows on the homepage and case study page.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Industry
@@ -645,6 +673,7 @@ export default function EditCaseStudyPage() {
                   ))}
                 </select>
               </div>
+              <div />
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">

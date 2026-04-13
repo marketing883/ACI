@@ -138,11 +138,13 @@ function dbRowToKinetic(row: CaseStudyDB, fallbackIndex: number): KineticStudy {
 }
 
 export default async function CaseStudiesKineticSection() {
+  // Pull as many featured rows as we can (up to 3) and render exactly
+  // what the CMS has. If the CMS has zero featured case studies at all,
+  // we fall back to the placeholder trio so the section is never empty
+  // on first load; any real rows take precedence over placeholders.
   const dbRows = await fetchTopFeatured(3);
-  const studies: KineticStudy[] =
-    dbRows.length >= 3
-      ? dbRows.slice(0, 3).map((row, i) => dbRowToKinetic(row, i))
-      : PLACEHOLDERS;
+  const dbStudies = dbRows.map((row, i) => dbRowToKinetic(row, i));
+  const studies: KineticStudy[] = dbStudies.length > 0 ? dbStudies : PLACEHOLDERS;
 
   return (
     <section className="bg-white">
@@ -150,7 +152,7 @@ export default async function CaseStudiesKineticSection() {
           asserts its own palette below. */}
       <div className="max-w-[1320px] mx-auto px-5 md:px-10 pt-24 md:pt-32 pb-16 md:pb-20">
         <div className="font-mono text-xs md:text-sm text-neutral-500 tracking-wider mb-5">
-          {'// 03 case studies . live in production'}
+          {`// ${studies.length.toString().padStart(2, '0')} case studies . live in production`}
         </div>
         <h2
           className="text-[#0A1628] font-[var(--font-title)] font-bold max-w-3xl"
@@ -163,13 +165,15 @@ export default async function CaseStudiesKineticSection() {
           See what we shipped, and what it changed.
         </h2>
         <p className="mt-5 text-neutral-600 max-w-2xl text-base md:text-lg leading-relaxed">
-          Three recent builds for Fortune-scale operators. Each one is running
-          today. Read on for what the team walked into, what we delivered, and
+          The most recent builds our content team has marked as featured.
+          Each one shipped to a Fortune-scale operator and is running today.
+          Read on for what the team walked into, what we delivered, and
           what it actually moved.
         </p>
       </div>
 
-      {/* Three studies stacked, each with its own theme */}
+      {/* Studies stacked, each with its own theme. Theme cycles so 1 or 2
+          real rows still get their own identities. */}
       {studies.map((s, i) => (
         <CaseStudyKinetic
           key={s.id}
