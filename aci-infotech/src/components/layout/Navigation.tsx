@@ -132,11 +132,22 @@ const NAV_DATA = {
   ],
 };
 
+// Pages that begin with a full-bleed dark hero. On these pages the nav
+// renders transparent over the hero with light text, then snaps to its
+// normal white sticky state once the visitor scrolls past the hero band.
+const HERO_OVERLAY_ROUTES = new Set<string>(['/', '/preview/home']);
+
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+
+  // True only on dark-hero pages while still in the hero band. The dropdown
+  // panels are always white (so legibility there never depends on this),
+  // but the top bar itself, its text, and its logo invert.
+  const overlayMode =
+    HERO_OVERLAY_ROUTES.has(pathname) && !isScrolled && !isMobileMenuOpen;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -147,6 +158,10 @@ export default function Navigation() {
   }, []);
 
   useEffect(() => {
+    // Close any open menu when navigating between routes. The setState
+    // calls here are intentional: pathname is the external "system" we're
+    // synchronizing to, and we have to clear stale UI on navigation.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobileMenuOpen(false);
     setActiveDropdown(null);
   }, [pathname]);
@@ -168,21 +183,27 @@ export default function Navigation() {
         className={`
           fixed top-0 left-0 right-0 z-50
           transition-all duration-300
-          ${isScrolled
-            ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50'
-            : 'bg-white/90 backdrop-blur-xl border-b border-gray-100/50'}
+          ${overlayMode
+            ? 'bg-transparent border-b border-transparent'
+            : isScrolled
+              ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50'
+              : 'bg-white/90 backdrop-blur-xl border-b border-gray-100/50'}
         `}
-        style={{
-          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          backdropFilter: 'blur(20px) saturate(180%)',
-        }}
+        style={
+          overlayMode
+            ? undefined
+            : {
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+              }
+        }
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            {/* Logo - Increased size by ~17% */}
+            {/* Logo - swaps to white variant in overlay mode */}
             <Link href="/" className="flex-shrink-0">
               <Image
-                src="/aci-infotech-logo.png"
+                src={overlayMode ? '/aci-infotech-logo-white.png' : '/aci-infotech-logo.png'}
                 alt="ACI Infotech"
                 width={210}
                 height={52}
@@ -199,6 +220,7 @@ export default function Navigation() {
                 isActive={activeDropdown === 'services'}
                 onMouseEnter={() => setActiveDropdown('services')}
                 onMouseLeave={() => setActiveDropdown(null)}
+                overlayMode={overlayMode}
                 wide
               >
                 <ServicesMegaMenu items={NAV_DATA.services} />
@@ -210,6 +232,7 @@ export default function Navigation() {
                 isActive={activeDropdown === 'platforms'}
                 onMouseEnter={() => setActiveDropdown('platforms')}
                 onMouseLeave={() => setActiveDropdown(null)}
+                overlayMode={overlayMode}
               >
                 <PlatformsMegaMenu items={NAV_DATA.platforms} />
               </NavDropdown>
@@ -220,6 +243,7 @@ export default function Navigation() {
                 isActive={activeDropdown === 'industries'}
                 onMouseEnter={() => setActiveDropdown('industries')}
                 onMouseLeave={() => setActiveDropdown(null)}
+                overlayMode={overlayMode}
               >
                 <IndustriesMegaMenu items={NAV_DATA.industries} />
               </NavDropdown>
@@ -230,6 +254,7 @@ export default function Navigation() {
                 isActive={activeDropdown === 'resources'}
                 onMouseEnter={() => setActiveDropdown('resources')}
                 onMouseLeave={() => setActiveDropdown(null)}
+                overlayMode={overlayMode}
               >
                 <ResourcesMegaMenu items={NAV_DATA.resources} />
               </NavDropdown>
@@ -240,6 +265,7 @@ export default function Navigation() {
                 isActive={activeDropdown === 'about'}
                 onMouseEnter={() => setActiveDropdown('about')}
                 onMouseLeave={() => setActiveDropdown(null)}
+                overlayMode={overlayMode}
               >
                 <AboutMegaMenu items={NAV_DATA.about} />
               </NavDropdown>
@@ -247,7 +273,11 @@ export default function Navigation() {
               {/* Contact Link */}
               <Link
                 href="/contact"
-                className="px-4 py-2 text-[15px] font-medium text-[var(--aci-secondary)] hover:text-[var(--aci-primary)] transition-colors"
+                className={`px-4 py-2 text-[15px] font-medium transition-colors ${
+                  overlayMode
+                    ? 'text-white/90 hover:text-white'
+                    : 'text-[var(--aci-secondary)] hover:text-[var(--aci-primary)]'
+                }`}
               >
                 Contact
               </Link>
@@ -262,7 +292,9 @@ export default function Navigation() {
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 text-[var(--aci-secondary)]"
+              className={`lg:hidden p-2 transition-colors ${
+                overlayMode ? 'text-white' : 'text-[var(--aci-secondary)]'
+              }`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
@@ -292,16 +324,24 @@ interface NavDropdownProps {
   onMouseLeave: () => void;
   children: React.ReactNode;
   wide?: boolean;
+  overlayMode?: boolean;
 }
 
-function NavDropdown({ label, isActive, onMouseEnter, onMouseLeave, children, wide }: NavDropdownProps) {
+function NavDropdown({ label, isActive, onMouseEnter, onMouseLeave, children, wide, overlayMode }: NavDropdownProps) {
+  // Trigger color: in overlay mode the trigger label sits on the dark hero,
+  // so we use white-with-hover-to-lime; otherwise the live nav palette.
+  const triggerClass = overlayMode
+    ? isActive
+      ? 'text-[#C4FF61]'
+      : 'text-white/90 hover:text-white'
+    : isActive
+      ? 'text-[var(--aci-primary)]'
+      : 'text-[var(--aci-secondary)] hover:text-[var(--aci-primary)]';
+
   return (
     <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <button
-        className={`
-          flex items-center gap-1.5 px-4 py-3 text-[15px] font-medium transition-colors
-          ${isActive ? 'text-[var(--aci-primary)]' : 'text-[var(--aci-secondary)] hover:text-[var(--aci-primary)]'}
-        `}
+        className={`flex items-center gap-1.5 px-4 py-3 text-[15px] font-medium transition-colors ${triggerClass}`}
       >
         {label}
         <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'rotate-180' : ''}`} />

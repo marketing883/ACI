@@ -150,7 +150,7 @@ export default async function CaseStudiesKineticSection() {
           asserts its own palette below. */}
       <div className="max-w-[1320px] mx-auto px-5 md:px-10 pt-24 md:pt-32 pb-16 md:pb-20">
         <div className="font-mono text-xs md:text-sm text-neutral-500 tracking-wider mb-5">
-          {'// 03 case studies . featured'}
+          {'// 03 case studies . live in production'}
         </div>
         <h2
           className="text-[#0A1628] font-[var(--font-title)] font-bold max-w-3xl"
@@ -160,11 +160,12 @@ export default async function CaseStudiesKineticSection() {
             letterSpacing: '-0.025em',
           }}
         >
-          What we built. What it delivered.
+          See what we shipped, and what it changed.
         </h2>
-        <p className="mt-5 text-neutral-600 max-w-2xl text-base md:text-lg">
-          Three recent engagements. Each shipped to a Fortune-scale operator
-          and is running today.
+        <p className="mt-5 text-neutral-600 max-w-2xl text-base md:text-lg leading-relaxed">
+          Three recent builds for Fortune-scale operators. Each one is running
+          today. Read on for what the team walked into, what we delivered, and
+          what it actually moved.
         </p>
       </div>
 
