@@ -45,54 +45,72 @@ type PlaybookCopy = {
 
 const PLAYBOOK_COPY: Record<string, PlaybookCopy> = {
   'post-acquisition': {
-    displayName: 'Turn your acquisition into one company.',
-    promise: 'We stitch 30 to 50 inherited systems into one audited platform. Finance close stops looking like a hostage situation.',
+    displayName:
+      'Integrate a New Platform Without Disrupting What Already\u00A0Works.',
+    promise:
+      "When a new platform comes in, whether it's SAP, Salesforce, or a cloud-native stack, the real work is making it operate cleanly alongside the 20 to 50 systems already running your business. We handle the integration, data mapping, and cutover so the new platform delivers value from day one instead of creating a new layer of\u00A0complexity.",
     headlineOutcome: '$9.2M saved in year one. Zero disrupted closes.',
   },
   'multi-location': {
-    displayName: 'Every location on the same page.',
-    promise: 'We turn 300 to 1000 branches into one live data plane. Payments never flinch, not during the cutover, not at 11pm on a Friday.',
-    headlineOutcome: 'Customer data lag down 64%. Payment uptime 99.97%.',
+    displayName: 'Give Every Location Real-Time Operational\u00A0Visibility.',
+    promise:
+      'Multi-location businesses lose money when each site runs on its own data. We build a single live data layer across 300 to 1,000 locations so inventory, payments, and performance are visible in real time, not 24 hours\u00A0later.',
+    headlineOutcome: '64% latency reduced. Zero cutover disruptions.',
   },
   'global-unification': {
-    displayName: 'Forty countries. One view. No more spreadsheets of spreadsheets.',
-    promise: 'We unify regional silos across 40+ countries so your execs stop waiting three weeks for a single number.',
-    headlineOutcome: 'Decisions land 50% faster. Executive reporting in days, not weeks.',
+    displayName: 'One Global Data Platform. No More Regional\u00A0Silos.',
+    promise:
+      'Global operations teams waste weeks reconciling regional data that was never designed to align. We unify it into one governed platform so leadership has a single, reliable view across every market they operate\u00A0in.',
+    headlineOutcome: '50% faster decisions. Manual reconciliation eliminated entirely.',
   },
   'self-service-analytics': {
-    displayName: 'Get IT out of the chart-request business.',
-    promise: 'We give 5,000+ people governed dashboards they can actually use, with row-level security baked in so nobody sees what they should not.',
-    headlineOutcome: 'IT requests cut 88%. Time-to-insight down to 2 hours.',
+    displayName:
+      'Self-Service Analytics for Business Teams, Without IT in the\u00A0Middle.',
+    promise:
+      'When every dashboard request goes through IT, the business slows down and the data team burns out. We deploy governed self-service analytics for 5,000 plus users with row-level security ensuring each person sees exactly what they should, nothing\u00A0more.',
+    headlineOutcome: '88% reduction in IT analytics requests. 92% user satisfaction.',
   },
   'agentic-ai': {
-    displayName: 'Put AI agents to work. Keep them on a leash.',
-    promise: 'We wire bounded agents into real workflows with full context, real APIs, and an audit trail. No free-range LLMs.',
+    displayName:
+      'Deploy AI Agents Into Live Workflows With Full\u00A0Governance.',
+    promise:
+      'AI agents only deliver value when they are connected to real workflows and accountable for every action. We deploy bounded agents with full API access, complete audit trails, and governance built in from day one, not added after something goes\u00A0wrong.',
     headlineOutcome: 'Operations run 40 to 60% faster. Full audit coverage.',
   },
   'ai-governance': {
-    displayName: 'Find your shadow AI before legal does.',
-    promise: 'We inventory every model in use, including the ones hiding inside vendor products, tier the risk, and automate the audit evidence.',
-    headlineOutcome: 'Full AI visibility. Audit cycles down 70%.',
+    displayName:
+      'Find Every AI Model in Your Environment Before Compliance\u00A0Does.',
+    promise:
+      'Most enterprises have more AI running across their systems and vendor products than their security team has documented. We conduct a full AI inventory, tier every risk, and produce audit-ready evidence before regulators or legal ask for\u00A0it.',
+    headlineOutcome: '100% AI inventory visibility. 70% faster audit cycles.',
   },
   'healthcare-data': {
-    displayName: 'Move patient data across borders without losing sleep.',
-    promise: 'We build one patient identity that respects HIPAA, GDPR, and every local rule in between. Encryption is baseline, not a feature.',
+    displayName:
+      'Unify Patient Data Across Jurisdictions Without Compliance\u00A0Risk.',
+    promise:
+      'Healthcare data crosses jurisdictions where compliance rules frequently conflict. We build a unified patient identity architecture that satisfies every applicable regulation with encryption and access controls as the foundation, not an\u00A0afterthought.',
     headlineOutcome: 'One patient identity. Duplicates down 58%. Zero violations.',
   },
   'supply-chain': {
-    displayName: 'See your supply chain before it breaks.',
-    promise: 'We stitch procurement, logistics, and IoT into one live view. Disruptions become hours to act on, not days to discover.',
-    headlineOutcome: 'End-to-end visibility. Costs down 25%. Response under 4 hours.',
+    displayName:
+      'See Supply Chain Problems Before They Become\u00A0Disruptions.',
+    promise:
+      'Supply chain disruptions are only expensive when you find out about them late. We integrate procurement, logistics, and IoT data into one live view so operations teams can see problems forming and respond before they become outages or\u00A0stockouts.',
+    headlineOutcome: 'Disruption response time cut from days to hours. Stockouts down 73%.',
   },
   'cloud-migration': {
-    displayName: 'Get off legacy. Keep your users blissfully unaware.',
-    promise: 'We re-architect aging on-prem stacks for the cloud with parallel runs. Nobody notices the migration. The bill just drops.',
+    displayName:
+      'Modernize Legacy Systems Without Disrupting Daily\u00A0Operations.',
+    promise:
+      'Legacy infrastructure does not get replaced, it gets worked around, until it cannot be. We re-architect aging systems using parallel migration runs so users experience no disruption and the business sees lower operational costs from day\u00A0one.',
     headlineOutcome: 'Infrastructure cost cut 68%. 10x faster scale-up.',
   },
   'data-integration': {
-    displayName: 'Make your data trustworthy. Finally.',
-    promise: 'We connect 20 to 40 source systems with self-healing pipelines and quality gates that catch bad data before your users do.',
-    headlineOutcome: 'Data quality up 85%. Pipeline reliability 99.8%.',
+    displayName:
+      'Fix Data Quality Problems Before They Reach Your\u00A0Decisions.',
+    promise:
+      'Bad data does not announce itself. It shows up in board decks, forecasts, and decisions made on numbers nobody verified. We connect 20 to 40 source systems with self-healing pipelines and automated quality gates that catch problems at the source before they reach anyone\u00A0downstream.',
+    headlineOutcome: 'Data quality incidents down 91%. Pipeline failures self-resolved before escalation.',
   },
 };
 
