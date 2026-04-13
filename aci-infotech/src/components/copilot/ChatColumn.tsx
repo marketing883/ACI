@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Send, X } from 'lucide-react';
 import MessageRenderer from '@/components/chat/MessageRenderer';
@@ -8,6 +9,7 @@ import ActionChips from './ActionChips';
 import InlineField from './InlineField';
 import CitationPill from './CitationPill';
 import { streamAtherosReply } from '@/lib/copilot/clientStream';
+import { resolveWelcome } from '@/lib/copilot/welcome';
 import type {
   OfferActionButtonsArgs,
   RequestFieldArgs,
@@ -40,6 +42,23 @@ export interface ChatColumnProps {
   subtitle?: string;
 }
 
+/** localStorage key for thread persistence. Versioned so a future schema bump can be hard-rolled. */
+const THREAD_KEY_PREFIX = 'atheros_thread_v1_';
+/** Hard cap on persisted thread length to bound localStorage growth. */
+const MAX_PERSISTED = 50;
+/** Match the legacy widget's 24h session timeout. */
+const THREAD_TTL_MS = 24 * 60 * 60 * 1000;
+
+interface PersistedThread {
+  savedAt: number;
+  messages: ChatColumnMessage[];
+}
+
+function buildWelcomeMessage(pathname: string | null): ChatColumnMessage {
+  const w = resolveWelcome(pathname);
+  return { id: 'welcome', role: 'assistant', content: w.text };
+}
+
 export default function ChatColumn({
   sessionId,
   initialMessages,
@@ -50,11 +69,56 @@ export default function ChatColumn({
   onClose,
   subtitle,
 }: ChatColumnProps) {
+  const pathname = usePathname();
+  // Server-safe initial state. The mount effect below either restores a
+  // persisted thread or seeds with a page-aware welcome bubble.
   const [messages, setMessages] = useState<ChatColumnMessage[]>(initialMessages);
   const [status, setStatus] = useState<string | null>(null);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
+
+  // Hydrate from localStorage on first mount; fall back to the welcome.
+  // Keyed by sessionId so different visitors do not collide; pathname is
+  // captured at mount so the welcome reflects the page the user actually
+  // opened the chat on.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const key = `${THREAD_KEY_PREFIX}${sessionId}`;
+    try {
+      const raw = window.localStorage.getItem(key);
+      if (raw) {
+        const parsed = JSON.parse(raw) as PersistedThread;
+        const ageMs = Date.now() - (parsed.savedAt ?? 0);
+        if (ageMs < THREAD_TTL_MS && Array.isArray(parsed.messages) && parsed.messages.length > 0) {
+          setMessages(parsed.messages);
+          return;
+        }
+      }
+    } catch {
+      // copilot-allow-silent-catch: corrupted localStorage; fall through to seed welcome
+    }
+    if (initialMessages.length === 0) {
+      setMessages([buildWelcomeMessage(pathname ?? null)]);
+    }
+    // Intentionally only run on sessionId change. We do NOT want a route
+    // change to overwrite the user's running thread with a fresh welcome.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId]);
+
+  // Persist on every messages change. Slice to bound storage size.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (messages.length === 0) return;
+    const key = `${THREAD_KEY_PREFIX}${sessionId}`;
+    try {
+      const sliced = messages.slice(-MAX_PERSISTED);
+      const payload: PersistedThread = { savedAt: Date.now(), messages: sliced };
+      window.localStorage.setItem(key, JSON.stringify(payload));
+    } catch {
+      // copilot-allow-silent-catch: storage full or private mode
+    }
+  }, [messages, sessionId]);
   const statusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {

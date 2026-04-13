@@ -16,7 +16,6 @@ export default function MessageRenderer({ content, isUser = false }: MessageRend
   }
 
   const elements: React.ReactNode[] = [];
-  let currentIndex = 0;
 
   // Process the content
   const lines = content.split('\n');

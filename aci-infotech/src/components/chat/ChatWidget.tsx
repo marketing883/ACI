@@ -780,11 +780,11 @@ export default function ChatWidget() {
   // Flag off or smaller viewport falls through to the legacy floating
   // widget below. Zero bytes in the initial bundle (dynamic import).
   if (isDesktop && atherosActive) {
-    const atherosInitial: ChatColumnMessage[] = messages.map((m) => ({
-      id: m.id,
-      role: m.role,
-      content: m.content,
-    }));
+    // ChatColumn manages its own persistence and seeds a page-aware
+    // welcome on first mount, so we deliberately pass an empty
+    // initialMessages array. The legacy `messages` state stays
+    // populated for the v1-flag-off fallback further below.
+    const atherosInitial: ChatColumnMessage[] = [];
     // The shell stays mounted across open/close so chat state persists.
     // AnimatePresence inside the shell handles entrance/exit; body scroll
     // lock + focus trap only fire while `open` is true. The trigger button
@@ -824,11 +824,10 @@ export default function ChatWidget() {
   // (pill / converse / peek) lives inside MobilePill; the legacy
   // widget is skipped entirely on mobile when the flag is active.
   if (!isDesktop && atherosActive) {
-    const atherosInitial: ChatColumnMessage[] = messages.map((m) => ({
-      id: m.id,
-      role: m.role,
-      content: m.content,
-    }));
+    // ChatColumn (used by MobileSheet) manages its own persistence and
+    // welcome seeding, so we pass an empty initialMessages array. See
+    // the desktop branch above for the rationale.
+    const atherosInitial: ChatColumnMessage[] = [];
     return (
       <MobilePill
         sessionId={sessionId}
