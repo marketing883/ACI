@@ -136,6 +136,9 @@ export default function AtherosSessionReplay({
             </button>
           </div>
         </header>
+        {data?.session && (data.session as Record<string, unknown>).admin_claimed_by ? (
+          <RelayComposer sessionId={id} onSent={fetchDetail} />
+        ) : null}
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {loading && !data ? (
             <div className="text-center text-gray-400">Loading…</div>
@@ -202,6 +205,55 @@ export default function AtherosSessionReplay({
         </div>
       </aside>
     </div>
+  );
+}
+
+function RelayComposer({ sessionId, onSent }: { sessionId: string; onSent: () => void }) {
+  const [text, setText] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  return (
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+        if (!text.trim() || busy) return;
+        setBusy(true);
+        setErr(null);
+        try {
+          const res = await fetch('/api/admin/copilot/takeover', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId, content: text.trim() }),
+          });
+          const json = await res.json();
+          if (!res.ok || !json.ok) {
+            setErr(json.reason ?? `HTTP ${res.status}`);
+            return;
+          }
+          setText('');
+          onSent();
+        } finally {
+          setBusy(false);
+        }
+      }}
+      className="flex items-end gap-2 border-b border-amber-200 bg-amber-50 px-6 py-3"
+    >
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        rows={1}
+        placeholder="You are in relay mode. Type a message to the visitor."
+        className="flex-1 resize-none rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm focus:border-amber-500 focus:outline-none"
+      />
+      <button
+        type="submit"
+        disabled={!text.trim() || busy}
+        className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 disabled:opacity-50"
+      >
+        {busy ? 'Sending…' : 'Send'}
+      </button>
+      {err && <span className="ml-2 text-xs text-red-700">{err}</span>}
+    </form>
   );
 }
 

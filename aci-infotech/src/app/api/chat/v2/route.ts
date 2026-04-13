@@ -27,6 +27,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import { createClient } from '@supabase/supabase-js';
 
 import { COPILOT_KILL_SWITCH, isCopilotV2Active, bucketForVisitor } from '@/lib/copilot/flags';
 import { log } from '@/lib/copilot/logger';
@@ -177,6 +178,35 @@ export async function POST(request: Request) {
     });
   }
 
+  // Live-takeover gate: if an admin has claimed this session in relay
+  // mode, suppress AI generation entirely. The user's turn is persisted
+  // above so the admin sees it; the admin's reply will arrive via
+  // /api/admin/copilot/takeover. We close the SSE stream immediately
+  // with a status event so the client renders the "admin is here" banner.
+  const adminMode = await readAdminClaimedMode(body.sessionId);
+  if (adminMode === 'relay') {
+    const emitter = createStreamEmitter();
+    (async () => {
+      try {
+        emitter.emit({
+          type: 'status',
+          text: 'A real person from ACI is replying in this conversation.',
+        });
+        emitter.emit({
+          type: 'done',
+          model: 'admin-relay',
+          inputTokens: 0,
+          outputTokens: 0,
+          costUsd: 0,
+          latencyMs: Date.now() - startedAt,
+        });
+      } finally {
+        await emitter.close();
+      }
+    })();
+    return new Response(emitter.readable, { headers: SSE_RESPONSE_HEADERS });
+  }
+
   // --- Build the stream ---------------------------------------------------
   const emitter = createStreamEmitter();
   const statusEvents: Array<{ at: number; text: string }> = [];
@@ -229,6 +259,29 @@ export async function POST(request: Request) {
   })();
 
   return new Response(emitter.readable, { headers: SSE_RESPONSE_HEADERS });
+}
+
+async function readAdminClaimedMode(sessionId: string): Promise<'relay' | 'copilot' | null> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  try {
+    const supabase = createClient(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { data } = await supabase
+      .from('chat_sessions')
+      .select('admin_claimed_by, admin_mode')
+      .eq('session_id', sessionId)
+      .maybeSingle();
+    if (data?.admin_claimed_by && (data.admin_mode === 'relay' || data.admin_mode === 'copilot')) {
+      return data.admin_mode;
+    }
+    return null;
+  } catch (err) {
+    log.warn('init', err, { sessionId, extra: { phase: 'readAdminClaimedMode' } });
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------------------

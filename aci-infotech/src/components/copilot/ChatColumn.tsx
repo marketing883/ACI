@@ -10,6 +10,7 @@ import InlineField from './InlineField';
 import CitationPill from './CitationPill';
 import { streamAtherosReply } from '@/lib/copilot/clientStream';
 import { resolveWelcome } from '@/lib/copilot/welcome';
+import { subscribeAdminLive } from '@/lib/copilot/realtime';
 import type {
   OfferActionButtonsArgs,
   RequestFieldArgs,
@@ -171,6 +172,31 @@ export default function ChatColumn({
       // copilot-allow-silent-catch: storage full or private mode
     }
   }, [messages, sessionId]);
+
+  // Live takeover: subscribe to admin messages for this session. When an
+  // admin claims the conversation and types a relay message, it lands in
+  // chat_messages with role='admin'; we surface it as an amber bubble.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const off = subscribeAdminLive({
+      onMessageInsert: (row) => {
+        if ((row as { session_id?: string }).session_id !== sessionId) return;
+        const role = (row as { role?: string }).role;
+        if (role !== 'admin') return;
+        const content = (row as { content?: string }).content ?? '';
+        const messageId =
+          (row as { message_id?: string }).message_id ?? `admin_${Date.now()}`;
+        setMessages((m) => {
+          if (m.some((x) => x.id === messageId)) return m;
+          return [
+            ...m,
+            { id: messageId, role: 'assistant', content },
+          ];
+        });
+      },
+    });
+    return off;
+  }, [sessionId]);
   const statusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {

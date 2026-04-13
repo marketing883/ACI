@@ -20,6 +20,7 @@ import { services } from '@/data/services';
 import { industries } from '@/data/industries';
 import { platforms } from '@/data/platforms';
 import type { ServiceClusterId, IndustryId, PlatformId } from '@/data/types';
+import { resolveOutcomeOverride } from './outcomeCopyResolver';
 
 export interface Welcome {
   text: string;
@@ -275,6 +276,11 @@ function trimEnd(s: string): string {
   return s.replace(/[\s.,;:]+$/g, '');
 }
 
+/**
+ * Synchronous resolver used at first render. Falls back through the
+ * static maps and dynamic composition. Admin overrides apply only to
+ * the async resolver below (because they require a DB read).
+ */
 export function resolveWelcome(pathname: string | null | undefined): Welcome {
   if (!pathname) return DEFAULT_WELCOME;
   if (EXACT[pathname]) return EXACT[pathname];
@@ -293,6 +299,22 @@ export function resolveWelcome(pathname: string | null | undefined): Welcome {
   if (dyn) return dyn;
 
   return DEFAULT_WELCOME;
+}
+
+/**
+ * Async resolver that consults outcome_copy_overrides first. Used by
+ * the server route when it needs the most up-to-date copy. Falls back
+ * to resolveWelcome() when no admin override matches.
+ */
+export async function resolveWelcomeWithOverrides(
+  pathname: string | null | undefined,
+  variant?: string | null,
+): Promise<Welcome> {
+  if (pathname) {
+    const overridden = await resolveOutcomeOverride(pathname, 'welcome', variant ?? null);
+    if (overridden) return { text: overridden };
+  }
+  return resolveWelcome(pathname);
 }
 
 /**

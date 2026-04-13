@@ -13,6 +13,8 @@
  * the resolver here is the fallback when no override is active.
  */
 
+import { resolveOutcomeOverride } from './outcomeCopyResolver';
+
 export interface PillCopy {
   /** Shown on the idle pill. Short, curious, concrete. */
   idle: string;
@@ -253,7 +255,8 @@ const DEFAULT_COPY: PillCopy = {
 };
 
 /**
- * Resolve the pill copy for a given pathname.
+ * Resolve the pill copy for a given pathname (synchronous fallback).
+ * Admin overrides apply only via resolvePillCopyWithOverrides.
  */
 export function resolvePillCopy(pathname: string | null | undefined): PillCopy {
   if (!pathname) return DEFAULT_COPY;
@@ -268,6 +271,27 @@ export function resolvePillCopy(pathname: string | null | undefined): PillCopy {
     }
   }
   return bestMatch ?? DEFAULT_COPY;
+}
+
+/**
+ * Async resolver: consults outcome_copy_overrides for idle/peek per
+ * surface, falling back to the static resolver when no override matches.
+ * Server-side use only (requires the service-role key).
+ */
+export async function resolvePillCopyWithOverrides(
+  pathname: string | null | undefined,
+  variant?: string | null,
+): Promise<PillCopy> {
+  const base = resolvePillCopy(pathname);
+  if (!pathname) return base;
+  const [idleOverride, peekOverride] = await Promise.all([
+    resolveOutcomeOverride(pathname, 'idle', variant ?? null),
+    resolveOutcomeOverride(pathname, 'peek.proactive', variant ?? null),
+  ]);
+  return {
+    idle: idleOverride ?? base.idle,
+    peek: peekOverride ?? base.peek,
+  };
 }
 
 /**
