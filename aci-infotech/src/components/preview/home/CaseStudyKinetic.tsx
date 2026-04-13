@@ -47,6 +47,14 @@ export type KineticStudy = {
    * fits the work, rather than just the industry bucket.
    */
   services?: string[];
+  /**
+   * Optional per-study override for the generated art metaphor. Set
+   * from the admin form. When present and valid, it bypasses the
+   * auto-picker. Valid values: 'barColumns' | 'heartbeat' |
+   * 'convergingLines' | 'alignment'. Anything else (including null
+   * or 'auto') means "use the auto-picker".
+   */
+  artVariant?: string;
   playbookUsed?: string;
   /**
    * Full URL of the case study's featured image (usually Supabase storage).
@@ -367,65 +375,113 @@ function AnimatedMetric({
 
 // ---------- Industry-driven art selector ----------
 
-type ArtKey = 'heartbeat' | 'barColumns' | 'convergingLines' | 'alignment';
+export type ArtKey = 'heartbeat' | 'barColumns' | 'convergingLines' | 'alignment';
+
+const ALL_ART_KEYS: ArtKey[] = ['barColumns', 'heartbeat', 'convergingLines', 'alignment'];
 
 /**
- * Pick the art metaphor whose shape actually fits the case study.
- *
- * The selector reads, in order:
- *   1. The admin-tagged `services` array (strongest signal - editors
- *      already classify each study).
- *   2. The outcome + approach + metricLabel text (weaker signal, good
- *      for studies where services are sparse or generic).
- *   3. The industry, as a final neutral fallback.
- *
- * This matters because industry alone tells us nothing about what the
- * engagement actually did - a retail case study can be analytics,
- * supplier alignment, AI governance, or cloud migration, each of which
- * deserves a different metaphor. Services and outcome text carry that
- * signal; industry does not.
- *
- * Returns a string key so the caller can render via stable module-scope
- * components (satisfies react-hooks/static-components).
+ * Return the study's art preferences in priority order. The section
+ * uses this to assign a unique art key per card: each card gets its
+ * first-choice art only if no sibling already took it, otherwise it
+ * drops to its next-best fit. This prevents visual repetition on the
+ * homepage even when two studies share a dominant signal.
  */
-function pickArtForStudy(study: KineticStudy): ArtKey {
+export function artPreferencesForStudy(study: {
+  services?: string[];
+  outcome: string;
+  approach: string;
+  metricLabel: string;
+  industry: string;
+  artVariant?: string;
+}): ArtKey[] {
+  // Explicit admin override pins the first choice. We still return the
+  // remaining three as fallbacks so the diversity algorithm can resolve
+  // conflicts if an admin accidentally set two siblings to the same
+  // variant.
+  if (
+    study.artVariant === 'barColumns' ||
+    study.artVariant === 'heartbeat' ||
+    study.artVariant === 'convergingLines' ||
+    study.artVariant === 'alignment'
+  ) {
+    const rest = ALL_ART_KEYS.filter((k) => k !== study.artVariant);
+    return [study.artVariant as ArtKey, ...rest];
+  }
+
   const services = (study.services ?? []).join(' ').toLowerCase();
   const content = `${study.outcome} ${study.approach} ${study.metricLabel}`.toLowerCase();
   const signal = `${services} ${content}`;
-
-  // Analytics / BI / reporting / self-service dashboards.
-  if (/analytics|\bbi\b|report|dashboard|self[- ]service|power ?bi|tableau/.test(signal)) {
-    return 'barColumns';
-  }
-  // AI / ML / agents / governance: converging lines reads as "many
-  // signals feeding one intelligent output."
-  if (/\bai\b|\bml\b|agent|\bllm\b|gen[- ]?ai|govern|shadow ai|compliance/.test(signal)) {
-    return 'convergingLines';
-  }
-  // Cloud migration / modernization / legacy exit: heartbeat reads as
-  // before/after, the calming of noise into steady state.
-  if (/migrat|moderniz|legacy|\bcloud\b|re[- ]?architect|lift[- ]and[- ]shift/.test(signal)) {
-    return 'heartbeat';
-  }
-  // Multi-location, supplier alignment, global unification, data
-  // integration: alignment-network reads as "many things becoming one."
-  if (/align|unif|consolid|integrat|supplier|multi[- ]location|global roll|post[- ]acquisition|m&a|merger/.test(signal)) {
-    return 'alignment';
-  }
-
-  // Industry fallback if content gave no signal.
   const industry = study.industry.toLowerCase();
-  if (/manufactur|industrial|automotive|energy|utilities|logistics|transport/.test(industry)) {
-    return 'heartbeat';
+
+  // Score each art key against all available signals. Higher score =
+  // stronger fit. Ties are broken by the natural ALL_ART_KEYS order so
+  // the result is deterministic.
+  const scores: Record<ArtKey, number> = {
+    barColumns: 0,
+    heartbeat: 0,
+    convergingLines: 0,
+    alignment: 0,
+  };
+
+  // Strong, specific content signals.
+  if (/analytics|\bbi\b|report|dashboard|self[- ]service|power ?bi|tableau/.test(signal)) {
+    scores.barColumns += 6;
   }
-  if (/financ|insuranc|bank|invest|capital/.test(industry)) {
-    return 'barColumns';
+  if (/\bai\b|\bml\b|agent|\bllm\b|gen[- ]?ai|govern|shadow ai|\bcompliance\b/.test(signal)) {
+    scores.convergingLines += 6;
   }
-  if (/health|pharma|clinical|bio|life sciences/.test(industry)) {
-    return 'convergingLines';
+  if (/align|unif|consolid|\bintegrat|supplier|multi[- ]location|global roll|post[- ]acquisition|\bm&a\b|merger/.test(signal)) {
+    scores.alignment += 6;
   }
-  return 'alignment';
+
+  // Industry-strong conventions (weaker than explicit content, stronger
+  // than generic keywords).
+  if (/financ|insuranc|bank|invest|capital/.test(industry)) scores.barColumns += 4;
+  if (/manufactur|industrial|automotive|energy|utilities|logistics|transport/.test(industry)) scores.heartbeat += 4;
+  if (/health|pharma|clinical|bio|life sciences/.test(industry)) scores.convergingLines += 4;
+
+  // Weaker content signals.
+  if (/migrat|moderniz|legacy|\bcloud\b|re[- ]?architect|lift[- ]and[- ]shift/.test(signal)) {
+    scores.heartbeat += 2;
+  }
+  if (/real[- ]?time|stream|kafka|cdc/.test(signal)) scores.heartbeat += 1;
+  if (/cost|saving|reduction|faster/.test(signal)) scores.barColumns += 1;
+
+  // Neutral baseline so alignment is the sensible default tiebreaker.
+  scores.alignment += 1;
+
+  return [...ALL_ART_KEYS].sort((a, b) => scores[b] - scores[a]);
 }
+
+/**
+ * Greedy diversity assignment: walk the studies in order, give each
+ * its highest-preference art key that has not yet been taken. Returns
+ * one key per study. If there are more studies than distinct art
+ * variants (four), the remainder cycle through freely (duplicates
+ * become unavoidable but rare on a three-card homepage).
+ */
+export function assignDiverseArt(
+  studies: Array<{
+    services?: string[];
+    outcome: string;
+    approach: string;
+    metricLabel: string;
+    industry: string;
+    artVariant?: string;
+  }>,
+): ArtKey[] {
+  const taken = new Set<ArtKey>();
+  const result: ArtKey[] = [];
+  for (const s of studies) {
+    const prefs = artPreferencesForStudy(s);
+    const chosen = prefs.find((k) => !taken.has(k)) ?? prefs[0];
+    taken.add(chosen);
+    result.push(chosen);
+    if (taken.size >= ALL_ART_KEYS.length) taken.clear();
+  }
+  return result;
+}
+
 
 // ---------- Main component ----------
 
@@ -433,10 +489,18 @@ export default function CaseStudyKinetic({
   study,
   theme,
   index,
+  artKey,
 }: {
   study: KineticStudy;
   theme: Theme;
   index: number;
+  /**
+   * Pre-computed art key. The parent section computes this across all
+   * siblings to guarantee visual diversity (no two stacked cards share
+   * the same art). If omitted, the component falls back to this
+   * study's own first preference.
+   */
+  artKey?: ArtKey;
 }) {
   const t = THEMES[theme];
   const reduced = useReducedMotion() ?? false;
@@ -447,12 +511,11 @@ export default function CaseStudyKinetic({
   const inView = useInView(ref, { once: true, margin: '-15% 0px -15% 0px' });
   const animateIn = inView || reduced;
 
-  // Art is chosen from the case study's own content (services, outcome,
-  // approach text, then industry as a fallback). This means two studies
-  // in the same industry but tackling different problems get different
-  // metaphors: a retail analytics story gets bar columns, a retail
-  // supplier-alignment story gets the network.
-  const artKey = pickArtForStudy(study);
+  // Art assignment lives in the parent section so diversity can be
+  // enforced across siblings. Standalone use of this component (e.g.
+  // on a future /case-studies/[slug] detail page) falls back to this
+  // study's own highest-preference key.
+  const resolvedArtKey: ArtKey = artKey ?? artPreferencesForStudy(study)[0];
 
   // Stagger pattern: descriptor -> outcome -> metric -> label -> approach -> footer
   const containerVariants = {
@@ -678,16 +741,16 @@ export default function CaseStudyKinetic({
                 : undefined,
             }}
           >
-            {artKey === 'heartbeat' && (
+            {resolvedArtKey === 'heartbeat' && (
               <HeartbeatArt accent={t.accent} animateIn={animateIn} />
             )}
-            {artKey === 'barColumns' && (
+            {resolvedArtKey === 'barColumns' && (
               <BarColumnsArt accent={t.accent} animateIn={animateIn} />
             )}
-            {artKey === 'convergingLines' && (
+            {resolvedArtKey === 'convergingLines' && (
               <ConvergingLinesArt accent={t.accent} animateIn={animateIn} />
             )}
-            {artKey === 'alignment' && (
+            {resolvedArtKey === 'alignment' && (
               <AlignmentNetworkArt accent={t.accent} animateIn={animateIn} />
             )}
           </div>

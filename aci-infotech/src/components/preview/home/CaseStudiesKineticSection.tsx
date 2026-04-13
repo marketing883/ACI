@@ -14,6 +14,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { displayClient } from '@/lib/content/anonymize';
 import CaseStudyKinetic, {
+  assignDiverseArt,
   type KineticStudy,
   type Theme,
 } from './CaseStudyKinetic';
@@ -35,6 +36,7 @@ interface CaseStudyDB {
   technologies?: string[] | null;
   services?: string[] | null;
   featured_image_url?: string | null;
+  art_variant?: string | null;
   is_featured?: boolean;
   status?: string;
 }
@@ -138,6 +140,7 @@ function dbRowToKinetic(row: CaseStudyDB, fallbackIndex: number): KineticStudy {
     playbookUsed: undefined,
     featuredImageUrl: row.featured_image_url ?? undefined,
     services: row.services ?? undefined,
+    artVariant: row.art_variant ?? undefined,
   };
 }
 
@@ -174,15 +177,21 @@ export default async function CaseStudiesKineticSection() {
       </div>
 
       {/* Studies stacked, each with its own theme. Theme cycles so 1 or 2
-          real rows still get their own identities. */}
-      {studies.map((s, i) => (
-        <CaseStudyKinetic
-          key={s.id}
-          study={s}
-          theme={THEMES[i % THEMES.length]}
-          index={i}
-        />
-      ))}
+          real rows still get their own identities. Art assignment is
+          computed in one pass across all siblings so no two stacked
+          cards share the same generated metaphor. */}
+      {(() => {
+        const artKeys = assignDiverseArt(studies);
+        return studies.map((s, i) => (
+          <CaseStudyKinetic
+            key={s.id}
+            study={s}
+            theme={THEMES[i % THEMES.length]}
+            index={i}
+            artKey={artKeys[i]}
+          />
+        ));
+      })()}
     </section>
   );
 }
