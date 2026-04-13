@@ -8,6 +8,40 @@ interface MessageRendererProps {
   isUser?: boolean;
 }
 
+/**
+ * Strip Atheros inline citation tags like `[platform:databricks]` or
+ * `[case_study:foo]` from assistant prose. The system prompt asks the
+ * model to cite inline as anchors for retrieval, but the panel on the
+ * right is the visual anchor; rendering the raw tags in the chat bubble
+ * shows model "thinking" the user should not see. We only strip the
+ * canonical `[source_type:slug]` shape — markdown links
+ * `[text](url)` are left intact for the existing link renderer.
+ */
+const CITATION_TAG_SOURCE_TYPES = [
+  'lp',
+  'service',
+  'industry',
+  'platform',
+  'case_study',
+  'case',
+  'blog',
+  'whitepaper',
+  'playbook',
+  'diagram',
+  'comparison',
+  'timeline',
+  'stats',
+  'resource',
+] as const;
+const CITATION_TAG_PATTERN = new RegExp(
+  `\\[(?:${CITATION_TAG_SOURCE_TYPES.join('|')}):[a-z0-9][a-z0-9-]*\\]`,
+  'gi',
+);
+
+function stripCitationTags(raw: string): string {
+  return raw.replace(CITATION_TAG_PATTERN, '').replace(/[ \t]{2,}/g, ' ').replace(/ ([.,;:!?])/g, '$1');
+}
+
 // Parse markdown-style content and render as React elements
 export default function MessageRenderer({ content, isUser = false }: MessageRendererProps) {
   // If user message, just render plain text
@@ -15,10 +49,11 @@ export default function MessageRenderer({ content, isUser = false }: MessageRend
     return <span className="whitespace-pre-wrap">{content}</span>;
   }
 
+  const cleaned = stripCitationTags(content);
   const elements: React.ReactNode[] = [];
 
   // Process the content
-  const lines = content.split('\n');
+  const lines = cleaned.split('\n');
 
   lines.forEach((line, lineIndex) => {
     if (lineIndex > 0) {
