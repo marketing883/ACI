@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Metadata } from 'next';
 import {
   ArrowRight,
@@ -84,10 +85,11 @@ const services = [
     icon: Code2,
     title: 'App Development',
     tagline: 'Applications Built to Survive Production',
-    description: 'Enterprise application engineering that sits on top of your data and AI delivery. Custom, web, and AI-powered applications built with the rigor of production infrastructure — not agency output.',
+    description: 'Enterprise application engineering that sits on top of your data and AI delivery. Custom, web, and AI-powered applications built with the rigor of production infrastructure, not agency output.',
     capabilities: ['Enterprise Application Development', 'AI-Powered Applications', 'API & Integration', 'Legacy Modernization'],
     technologies: ['Next.js', 'React', 'Node.js', 'Python', 'TypeScript', 'GraphQL'],
     href: '/services/app-development',
+    image: '/images/app-development.jpg',
   },
   {
     id: 'qa-testing',
@@ -230,9 +232,21 @@ export default function ServicesPage() {
 
                   {/* Visual */}
                   <div className="flex-1 w-full">
-                    <div className="bg-gradient-to-br from-[var(--aci-primary)] to-[var(--aci-secondary)] rounded-2xl aspect-[4/3] flex items-center justify-center">
-                      <Icon className="w-24 h-24 text-white/30" />
-                    </div>
+                    {service.image ? (
+                      <div className="relative w-full aspect-[4/3] overflow-hidden rounded-2xl">
+                        <Image
+                          src={service.image}
+                          alt={service.title}
+                          fill
+                          sizes="(min-width: 1024px) 560px, 100vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="bg-gradient-to-br from-[var(--aci-primary)] to-[var(--aci-secondary)] rounded-2xl aspect-[4/3] flex items-center justify-center">
+                        <Icon className="w-24 h-24 text-white/30" />
+                      </div>
+                    )}
                   </div>
                 </div>
               );
