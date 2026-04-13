@@ -19,9 +19,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { createRequire } from 'node:module';
-const require = createRequire(import.meta.url);
-
 // Register tsx to resolve TS paths (@/ alias) and transpile on the fly.
 // Requires: `npx tsx scripts/test-retrieval.mjs`.
 const retrieval = await import('../src/lib/copilot/retrieval.ts');

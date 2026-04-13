@@ -15,6 +15,15 @@ import QuickReplies, {
 import { getTriggerEngine, type TriggerEvent } from '@/lib/analytics/engagement-triggers';
 import { useTracker } from '@/components/analytics/VisitorTracker';
 import { streamAtherosReply, copilotV2Active } from '@/lib/copilot/clientStream';
+import dynamic from 'next/dynamic';
+import type { ChatColumnMessage } from '@/components/copilot/ChatColumn';
+
+// Desktop shell is lazy-loaded and only mounted when the flag is on and
+// the viewport is >= 1024 px. Zero bytes on the initial bundle.
+const ConsultationShell = dynamic(
+  () => import('@/components/copilot/ConsultationShell'),
+  { ssr: false },
+);
 
 interface Message {
   id: string;
@@ -87,6 +96,17 @@ export default function ChatWidget() {
   const [entryPage, setEntryPage] = useState<string>('/');
   const [pagesVisited, setPagesVisited] = useState<string[]>([]);
   const [proactiveTriggerId, setProactiveTriggerId] = useState<string | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // Desktop viewport detection for the Atheros Part-4 consultation shell.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const apply = () => setIsDesktop(mq.matches);
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
   const [showProactiveIndicator, setShowProactiveIndicator] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -736,6 +756,32 @@ export default function ChatWidget() {
           )}
         </motion.button>
       </motion.div>
+    );
+  }
+
+  // Atheros Part-4 desktop split-consultation shell. Mounted only when
+  // the flag is active for this visitor and the viewport is >= 1024 px.
+  // Flag off or smaller viewport falls through to the legacy floating
+  // widget below. Zero bytes in the initial bundle (dynamic import).
+  if (isDesktop && copilotV2Active(sessionId)) {
+    const atherosInitial: ChatColumnMessage[] = messages.map((m) => ({
+      id: m.id,
+      role: m.role,
+      content: m.content,
+    }));
+    return (
+      <ConsultationShell
+        sessionId={sessionId}
+        open={!isMinimized}
+        onClose={() => setIsOpen(false)}
+        initialMessages={atherosInitial}
+        pageContext={{
+          path: typeof window !== 'undefined' ? window.location.pathname : pageContext.path,
+          entryPage,
+          cluster: undefined,
+        }}
+        leadState={leadInfo as Record<string, unknown>}
+      />
     );
   }
 
