@@ -74,6 +74,17 @@ const navItems: NavItem[] = [
       { href: '/admin/analytics/triggers', label: 'Engagement Triggers', icon: Sparkles },
     ]
   },
+  {
+    label: 'Atheros',
+    icon: Sparkles,
+    children: [
+      { href: '/admin/copilot/live', label: 'Live Conversations', icon: MessageSquare },
+      { href: '/admin/copilot/handoffs', label: 'Handoffs', icon: Bell },
+      { href: '/admin/copilot/outcome-copy', label: 'Outcome Copy', icon: FileText },
+      { href: '/admin/copilot/errors', label: 'Errors', icon: HelpCircle },
+      { href: '/admin/copilot/analytics', label: 'Analytics', icon: BarChart3 },
+    ],
+  },
 ];
 
 export default function AdminLayout({
@@ -82,7 +93,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<string[]>(['Leads', 'Content', 'Hiring', 'Analytics']);
+  const [expandedSections, setExpandedSections] = useState<string[]>(['Leads', 'Content', 'Hiring', 'Analytics', 'Atheros']);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();

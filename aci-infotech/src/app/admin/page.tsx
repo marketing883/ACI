@@ -453,6 +453,61 @@ export default function AdminDashboard() {
         })}
       </div>
 
+      {/* Atheros Section */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Atheros</h2>
+          <Link
+            href="/admin/copilot/live"
+            className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+          >
+            Live conversations <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Link
+            href="/admin/copilot/live"
+            className="block bg-white border border-gray-200 rounded-xl p-4 hover:border-[var(--aci-primary,#0052CC)] hover:shadow-sm transition"
+          >
+            <div className="text-xs uppercase tracking-wide text-gray-500">Live</div>
+            <div className="mt-1 text-2xl font-bold text-gray-900">Conversations</div>
+            <div className="mt-1 text-xs text-gray-500">
+              Real-time feed, search, filters, replay drill-down.
+            </div>
+          </Link>
+          <Link
+            href="/admin/copilot/handoffs"
+            className="block bg-white border border-gray-200 rounded-xl p-4 hover:border-[var(--aci-primary,#0052CC)] hover:shadow-sm transition"
+          >
+            <div className="text-xs uppercase tracking-wide text-gray-500">Handoffs</div>
+            <div className="mt-1 text-2xl font-bold text-gray-900">Inbox</div>
+            <div className="mt-1 text-xs text-gray-500">
+              Take over when Atheros escalates. (Phase B)
+            </div>
+          </Link>
+          <Link
+            href="/admin/copilot/outcome-copy"
+            className="block bg-white border border-gray-200 rounded-xl p-4 hover:border-[var(--aci-primary,#0052CC)] hover:shadow-sm transition"
+          >
+            <div className="text-xs uppercase tracking-wide text-gray-500">Outcome copy</div>
+            <div className="mt-1 text-2xl font-bold text-gray-900">Overrides</div>
+            <div className="mt-1 text-xs text-gray-500">
+              Edit pill, peek, and CTA copy without a deploy. (Phase B)
+            </div>
+          </Link>
+          <Link
+            href="/admin/copilot/analytics"
+            className="block bg-white border border-gray-200 rounded-xl p-4 hover:border-[var(--aci-primary,#0052CC)] hover:shadow-sm transition"
+          >
+            <div className="text-xs uppercase tracking-wide text-gray-500">Analytics</div>
+            <div className="mt-1 text-2xl font-bold text-gray-900">Coming</div>
+            <div className="mt-1 text-xs text-gray-500">
+              Cost, latency, content gaps. (Phase C)
+            </div>
+          </Link>
+        </div>
+      </div>
+
       {/* Lead Categories Section */}
       <div>
         <div className="flex items-center justify-between mb-4">
