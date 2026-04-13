@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, CheckCircle2, Award } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
@@ -135,8 +136,26 @@ export default function PlatformsPage() {
       />
 
       {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-32 pb-20 overflow-hidden bg-[var(--aci-secondary)]">
+        <Image
+          src="/images/services-hero-bg.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          priority
+          className="object-cover object-center"
+        />
+        <div aria-hidden className="absolute inset-0 bg-[color:var(--aci-secondary)]/85" />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-br from-[color:var(--aci-primary)]/35 via-transparent to-[color:var(--aci-secondary)]/70"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-[color:var(--aci-secondary)]/30 via-transparent to-[color:var(--aci-secondary)]/85"
+        />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
             <p className="text-[var(--aci-primary-light)] font-medium mb-4 tracking-wide uppercase">
               Technology Platforms
@@ -145,7 +164,7 @@ export default function PlatformsPage() {
               Certified Experts in the Platforms
               <span className="text-[var(--aci-primary-light)]"> Enterprises Trust</span>
             </h1>
-            <p className="text-xl text-gray-400 mb-8">
+            <p className="text-xl text-gray-300 mb-8">
               We're not just consultants, we're certified partners with deep expertise in the platforms
               that power Fortune 500 operations. Our teams hold advanced certifications and have
               delivered hundreds of enterprise implementations.
@@ -155,7 +174,7 @@ export default function PlatformsPage() {
           {/* Partner Badges */}
           <div className="flex flex-wrap justify-center gap-4 mt-12">
             {platforms.filter(p => p.partnershipLevel === 'gold').map((platform) => (
-              <div key={platform.id} className="flex items-center gap-2 bg-yellow-500/20 px-4 py-2 rounded-full">
+              <div key={platform.id} className="flex items-center gap-2 bg-yellow-500/20 backdrop-blur-sm border border-yellow-400/30 px-4 py-2 rounded-full">
                 <Award className="w-5 h-5 text-yellow-400" />
                 <span className="text-yellow-300 font-medium">{platform.name} {platform.partnership}</span>
               </div>

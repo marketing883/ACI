@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Building2, ShoppingCart, Heart, Factory, Zap, Truck, Utensils } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
@@ -106,8 +107,26 @@ export default function IndustriesPage() {
       />
 
       {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-32 pb-20 overflow-hidden bg-[var(--aci-secondary)]">
+        <Image
+          src="/images/services-hero-bg.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          priority
+          className="object-cover object-center"
+        />
+        <div aria-hidden className="absolute inset-0 bg-[color:var(--aci-secondary)]/85" />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-br from-[color:var(--aci-primary)]/35 via-transparent to-[color:var(--aci-secondary)]/70"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-[color:var(--aci-secondary)]/30 via-transparent to-[color:var(--aci-secondary)]/85"
+        />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
             <p className="text-[var(--aci-primary-light)] font-medium mb-4 tracking-wide uppercase">
               Industries We Serve
@@ -116,7 +135,7 @@ export default function IndustriesPage() {
               Deep Expertise Across
               <span className="text-[var(--aci-primary-light)]"> Industries That Matter</span>
             </h1>
-            <p className="text-xl text-gray-400 mb-8">
+            <p className="text-xl text-gray-300 mb-8">
               We don't just understand technology, we understand your business. Our consultants bring
               industry-specific expertise to every engagement, speaking your language and solving
               your unique challenges.
@@ -125,21 +144,21 @@ export default function IndustriesPage() {
 
           {/* Stats */}
           <div className="grid md:grid-cols-4 gap-6 mt-12">
-            <div className="bg-gray-800 rounded-xl p-6 text-center">
+            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
               <div className="text-4xl font-bold text-white mb-2">15+</div>
-              <div className="text-gray-400">Industries Served</div>
+              <div className="text-gray-300">Industries Served</div>
             </div>
-            <div className="bg-gray-800 rounded-xl p-6 text-center">
+            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
               <div className="text-4xl font-bold text-white mb-2">80+</div>
-              <div className="text-gray-400">Enterprise Clients</div>
+              <div className="text-gray-300">Enterprise Clients</div>
             </div>
-            <div className="bg-gray-800 rounded-xl p-6 text-center">
+            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
               <div className="text-4xl font-bold text-white mb-2">98%</div>
-              <div className="text-gray-400">Client Retention</div>
+              <div className="text-gray-300">Client Retention</div>
             </div>
-            <div className="bg-gray-800 rounded-xl p-6 text-center">
+            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
               <div className="text-4xl font-bold text-white mb-2">$500M+</div>
-              <div className="text-gray-400">Value Delivered</div>
+              <div className="text-gray-300">Value Delivered</div>
             </div>
           </div>
         </div>
