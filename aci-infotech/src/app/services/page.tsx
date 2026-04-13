@@ -39,6 +39,7 @@ const services = [
     capabilities: ['Lakehouse Architecture', 'Real-Time Pipelines', 'Data Quality & Governance', 'Migration & Modernization'],
     technologies: ['Databricks', 'Snowflake', 'dbt', 'Kafka', 'Spark'],
     href: '/services/data-engineering',
+    image: '/images/data-engineering.jpg',
   },
   {
     id: 'applied-ai-ml',
@@ -49,6 +50,7 @@ const services = [
     capabilities: ['MLOps & Model Deployment', 'Predictive Analytics', 'GenAI & LLM Integration', 'AI Governance (ArqAI)'],
     technologies: ['Python', 'MLflow', 'TensorFlow', 'LangChain', 'Azure ML'],
     href: '/services/applied-ai-ml',
+    image: '/images/ai-ml-services.jpg',
   },
   {
     id: 'cloud-modernization',
@@ -59,6 +61,7 @@ const services = [
     capabilities: ['Cloud Migration', 'Kubernetes & Containers', 'Infrastructure as Code', 'Cost Optimization'],
     technologies: ['AWS', 'Azure', 'GCP', 'Terraform', 'Kubernetes'],
     href: '/services/cloud-modernization',
+    image: '/images/cloud-modernization-services.jpg',
   },
   {
     id: 'martech-cdp',
@@ -69,6 +72,7 @@ const services = [
     capabilities: ['Customer Data Platforms', 'Marketing Automation', 'Real-Time Personalization', 'Attribution & Analytics'],
     technologies: ['Salesforce', 'Braze', 'Adobe', 'Segment', 'mParticle'],
     href: '/services/martech-cdp',
+    image: '/images/martech-cdp.jpg',
   },
   {
     id: 'digital-transformation',
@@ -79,6 +83,7 @@ const services = [
     capabilities: ['Process Automation', 'System Integration', 'ERP Modernization', 'Digital Strategy'],
     technologies: ['SAP', 'ServiceNow', 'MuleSoft', 'Power Platform', 'Workato'],
     href: '/services/digital-transformation',
+    image: '/images/digital-transformation.jpg',
   },
   {
     id: 'app-development',
@@ -100,6 +105,7 @@ const services = [
     capabilities: ['Automated Test Frameworks', 'CI/CD Integrated QA', 'AI-Driven Test Coverage', 'Performance & Security Testing'],
     technologies: ['Playwright', 'Cypress', 'Selenium', 'JMeter', 'SonarQube', 'GitHub Actions'],
     href: '/services/qa-testing',
+    image: '/images/QA-testing.jpg',
   },
   {
     id: 'cyber-security',
@@ -110,6 +116,7 @@ const services = [
     capabilities: ['Zero Trust Architecture', 'DevSecOps', 'Compliance & Audit', 'Threat Detection'],
     technologies: ['Splunk', 'CrowdStrike', 'Azure Sentinel', 'Palo Alto', 'Okta'],
     href: '/services/cyber-security',
+    image: '/images/cyber-security.jpg',
   },
 ];
 
