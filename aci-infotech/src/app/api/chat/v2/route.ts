@@ -36,7 +36,7 @@ import { MODEL_CHAIN, maxOutputTokens } from '@/lib/copilot/models';
 import { TOOL_SPECS, getToolSpec, anthropicTools, openaiTools } from '@/lib/copilot/tools';
 import type { AtherosToolName } from '@/lib/copilot/tools';
 import { buildSystemPrompt, splitThoughtFromReply } from '@/lib/copilot/prompt';
-import { hybridRetrieve, type PageContext } from '@/lib/copilot/retrieval';
+import { hybridRetrieve, augmentContextFromQuery, type PageContext } from '@/lib/copilot/retrieval';
 import { checkRateLimit } from '@/lib/copilot/ratelimit';
 import {
   insertMessage,
@@ -305,8 +305,14 @@ interface RunTurnInput {
 async function runTurn(input: RunTurnInput): Promise<void> {
   const { body, userQuery, emit, startedAt } = input;
 
+  // Augment page context with platform / industry / cluster signals detected
+  // in the user's message so retrieval and the prompt both see the full
+  // intent. "Dynamics 365 for manufacturing" on a generic page must still
+  // pin platform=microsoft-dynamics AND industry=manufacturing.
+  const enrichedContext = augmentContextFromQuery(body.pageContext ?? {}, userQuery);
+
   emit({ type: 'status', text: 'Looking up ACI context.' });
-  const retrieved = await hybridRetrieve(userQuery, body.pageContext ?? {}, { topK: 8 });
+  const retrieved = await hybridRetrieve(userQuery, enrichedContext, { topK: 8 });
   emit({
     type: 'status',
     text:
@@ -327,7 +333,7 @@ async function runTurn(input: RunTurnInput): Promise<void> {
   };
 
   const systemPrompt = buildSystemPrompt({
-    pageContext: body.pageContext ?? {},
+    pageContext: enrichedContext,
     retrieved,
     leadState: body.leadState ?? {},
     turnIndex: body.turnIndex ?? body.messages.length,

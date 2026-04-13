@@ -54,6 +54,131 @@ const DEFAULT_TOP_K = 8;
 const DEFAULT_MIN_SIMILARITY = 0.2;
 
 // ---------------------------------------------------------------------------
+// Query-side signal extraction
+// ---------------------------------------------------------------------------
+
+/**
+ * Keyword tables for detecting platform / industry / service-cluster signals
+ * in a free-text user message. Keyed by the canonical id so we can merge
+ * detections back into PageContext. Multiple aliases per id catch common
+ * spellings and product families ("d365" -> microsoft-dynamics, "s/4hana" -> sap).
+ */
+const PLATFORM_KEYWORDS: Record<PlatformId, readonly string[]> = {
+  databricks: ['databricks', 'delta lake', 'unity catalog', 'mlflow', 'lakehouse'],
+  snowflake: ['snowflake', 'snowpark', 'snowpipe', 'snowsight'],
+  aws: ['aws', 'amazon web services', 'redshift', 'sagemaker', 'glue', 'lambda'],
+  azure: ['azure', 'synapse', 'fabric', 'azure databricks', 'azure data'],
+  salesforce: ['salesforce', 'sfdc', 'marketing cloud', 'sales cloud', 'service cloud'],
+  sap: ['sap', 's/4hana', 's4hana', 's/4 hana', 'hana'],
+  servicenow: ['servicenow', 'itsm', 'hrsd', 'now platform'],
+  braze: ['braze'],
+  'microsoft-dynamics': [
+    'microsoft dynamics',
+    'dynamics 365',
+    'dynamics365',
+    'd365',
+    'business central',
+    'dynamics crm',
+    'dynamics erp',
+    'dynamics finance',
+    'dynamics supply chain',
+  ],
+};
+
+const INDUSTRY_KEYWORDS: Record<IndustryId, readonly string[]> = {
+  'financial-services': [
+    'financial services',
+    'fintech',
+    'banking',
+    'capital markets',
+    'insurance',
+    'wealth management',
+  ],
+  healthcare: ['healthcare', 'hospital', 'payer', 'provider', 'life sciences', 'clinical'],
+  retail: ['retail', 'ecommerce', 'e-commerce', 'omnichannel', 'cpg'],
+  manufacturing: [
+    'manufacturing',
+    'factory',
+    'plant',
+    'supply chain',
+    'shopfloor',
+    'shop floor',
+    'discrete manufacturing',
+    'process manufacturing',
+    'mes',
+    'scada',
+  ],
+  hospitality: ['hospitality', 'hotel', 'resort', 'restaurant', 'travel'],
+  energy: ['energy', 'utilities', 'oil and gas', 'oil & gas', 'grid', 'upstream', 'downstream'],
+  transportation: ['transportation', 'logistics', 'freight', 'fleet', 'shipping'],
+};
+
+const CLUSTER_KEYWORDS: Record<ServiceClusterId, readonly string[]> = {
+  'data-engineering': ['data engineering', 'data pipeline', 'etl', 'data platform', 'data mesh'],
+  'applied-ai-ml': [
+    'machine learning',
+    'ml ',
+    'applied ai',
+    'generative ai',
+    'genai',
+    'mlops',
+    'agentic',
+    'copilot',
+  ],
+  'cloud-modernization': ['cloud migration', 'cloud modernization', 'lift and shift', 'replatform'],
+  'martech-cdp': ['martech', 'cdp', 'customer data platform', 'identity resolution'],
+  'digital-transformation': [
+    'digital transformation',
+    'process automation',
+    'rpa',
+    'workflow automation',
+  ],
+  'cyber-security': ['cyber security', 'cybersecurity', 'zero trust', 'identity', 'iam'],
+  'app-development': ['app development', 'mobile app', 'web application'],
+  'qa-testing': ['qa testing', 'test automation', 'quality assurance'],
+};
+
+function matchFirst<T extends string>(
+  text: string,
+  table: Record<T, readonly string[]>,
+): T | undefined {
+  for (const key of Object.keys(table) as T[]) {
+    for (const alias of table[key]) {
+      if (text.includes(alias)) return key;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Augment PageContext with platform / industry / cluster signals detected
+ * in the user's free-text message. Existing context values always win:
+ * if a visitor is on `/platforms/databricks` the path wins even when the
+ * message mentions Snowflake. Detection is additive only.
+ *
+ * This is the smallest change that fixes "Dynamics 365 for manufacturing"
+ * routing to a Finance-specific LP: the query itself carries the signal,
+ * so retrieval + prompt get platform=microsoft-dynamics AND
+ * industry=manufacturing without relying on the URL.
+ */
+export function augmentContextFromQuery(ctx: PageContext, query: string): PageContext {
+  if (!query) return ctx;
+  const text = query.toLowerCase();
+  const nextPlatform = ctx.platform ?? matchFirst(text, PLATFORM_KEYWORDS);
+  const nextIndustry = ctx.industry ?? matchFirst(text, INDUSTRY_KEYWORDS);
+  const nextCluster = ctx.cluster ?? matchFirst(text, CLUSTER_KEYWORDS);
+  if (nextPlatform === ctx.platform && nextIndustry === ctx.industry && nextCluster === ctx.cluster) {
+    return ctx;
+  }
+  return {
+    ...ctx,
+    platform: nextPlatform,
+    industry: nextIndustry,
+    cluster: nextCluster,
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Structured lookup
 // ---------------------------------------------------------------------------
 
@@ -221,15 +346,45 @@ export async function hybridRetrieve(
   const pinnedChunks = await fetchChunksBySlug(pinned);
 
   // Score + dedupe.
+  // Boost structure:
+  //   +0.15 pinned entity (structuredLookup hit)
+  //   +0.10 metadata industry matches ctx.industry (applies to any source_type)
+  //   +0.10 metadata platform matches ctx.platform
+  //   +0.08 source_type in {platform, service, industry} when we have a
+  //         platform or industry signal (reduces LP dominance on composite
+  //         queries like "Dynamics 365 for manufacturing")
+  //   +0.05 LP cluster match (kept so LP routing still works on pure cluster
+  //         queries that don't mention an industry)
+  // All boosts additive, clamped to 1.
   const byKey = new Map<string, RetrievedChunk>();
+  const hasIndustrySignal = Boolean(ctx.industry);
+  const hasPlatformSignal = Boolean(ctx.platform);
   for (const s of semantic) {
-    const boost =
-      pinnedKeys.has(`${s.source_type}:${s.source_slug}`) ? 0.15 : 0;
-    const clusterBoost =
+    const pinnedBoost = pinnedKeys.has(`${s.source_type}:${s.source_slug}`) ? 0.15 : 0;
+    const industryMetaBoost =
+      hasIndustrySignal && s.metadata?.industry === ctx.industry ? 0.1 : 0;
+    const platformMetaBoost =
+      hasPlatformSignal && s.metadata?.platform === ctx.platform ? 0.1 : 0;
+    const structuredTypeBoost =
+      (hasIndustrySignal || hasPlatformSignal) &&
+      (s.source_type === 'platform' ||
+        s.source_type === 'service' ||
+        s.source_type === 'industry')
+        ? 0.08
+        : 0;
+    const lpClusterBoost =
       s.source_type === 'lp' && ctx.cluster && s.metadata?.cluster === ctx.cluster
         ? 0.05
         : 0;
-    const score = Math.min(1, s.similarity + boost + clusterBoost);
+    const score = Math.min(
+      1,
+      s.similarity +
+        pinnedBoost +
+        industryMetaBoost +
+        platformMetaBoost +
+        structuredTypeBoost +
+        lpClusterBoost,
+    );
     const k = `${s.source_type}:${s.source_slug}:${s.section_path ?? ''}`;
     byKey.set(k, { ...s, similarity: score });
   }

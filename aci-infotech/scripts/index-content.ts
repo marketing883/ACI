@@ -270,6 +270,10 @@ function caseStubChunk(
 ): ProtoChunk {
   const anon = displayClient(cs);
   const results = cs.results.map((r) => `${r.metric}: ${r.description}`).join('\n');
+  // Propagate the case study's own industry into chunk metadata so a
+  // manufacturing case nested under the microsoft-dynamics platform page
+  // still answers queries like "Dynamics 365 for manufacturing".
+  const caseIndustry = normalizeIndustryLabel(cs.industry);
   return {
     source_type: parentType,
     source_slug: parentSlug,
@@ -285,8 +289,33 @@ function caseStubChunk(
     ]
       .filter(Boolean)
       .join('\n'),
-    metadata: { ...baseMetadata, tech: cs.technologies ?? [] },
+    metadata: {
+      ...baseMetadata,
+      ...(caseIndustry
+        ? { industry: caseIndustry as ContentChunk['metadata']['industry'] }
+        : {}),
+      tech: cs.technologies ?? [],
+    },
   };
+}
+
+/**
+ * Normalize a free-text industry label from LP_CONTENT proofItems into one
+ * of the canonical IndustryId values used across services/industries data.
+ * Returns undefined when no known industry matches.
+ */
+function normalizeIndustryLabel(raw: string | undefined): string | undefined {
+  if (!raw) return undefined;
+  const s = raw.toLowerCase();
+  if (/(financial|fintech|bank|insur|capital)/.test(s)) return 'financial-services';
+  if (/(health|hospital|payer|provider|clinical|life scienc)/.test(s)) return 'healthcare';
+  if (/(retail|ecommerce|omnichannel|cpg)/.test(s)) return 'retail';
+  if (/(manufactur|factory|shopfloor|supply chain|mes|scada)/.test(s))
+    return 'manufacturing';
+  if (/(hospitality|hotel|restaurant|travel)/.test(s)) return 'hospitality';
+  if (/(energy|utilit|oil|gas|grid)/.test(s)) return 'energy';
+  if (/(transport|logistic|freight|fleet|shipping)/.test(s)) return 'transportation';
+  return undefined;
 }
 
 function chunkLP(lp: unknown): ProtoChunk[] {
@@ -309,6 +338,22 @@ function chunkLP(lp: unknown): ProtoChunk[] {
   };
   const where = `lp:${c.slug}`;
   const title = c.metaTitle ?? c.headline ?? c.slug;
+  // Derive an industry tag for this LP: first proof item with a known
+  // industry wins. Falls back to slug-based heuristics so LPs like
+  // `retail-data-modernization` are still industry-tagged. Without this
+  // tag, LP chunks never match ctx.industry and lose ranking on composite
+  // queries ("Dynamics 365 for manufacturing").
+  const industryFromProof = (c.proofItems ?? [])
+    .map((p) => normalizeIndustryLabel(p.industry))
+    .find((x): x is string => Boolean(x));
+  const industryFromSlug = normalizeIndustryLabel(c.slug.replace(/-/g, ' '));
+  const lpIndustry = industryFromProof ?? industryFromSlug;
+  const baseMeta = {
+    cluster: c.serviceCluster as ContentChunk['metadata']['cluster'],
+    ...(lpIndustry
+      ? { industry: lpIndustry as ContentChunk['metadata']['industry'] }
+      : {}),
+  } satisfies ContentChunk['metadata'];
   pushChunk(
     out,
     {
@@ -317,7 +362,7 @@ function chunkLP(lp: unknown): ProtoChunk[] {
       title,
       section_path: 'hero',
       text: [c.headline, c.subheadline, c.metaDescription, c.keyword].filter(Boolean).join('\n'),
-      metadata: { cluster: c.serviceCluster as ContentChunk['metadata']['cluster'] },
+      metadata: baseMeta,
     },
     `${where}:hero`,
   );
@@ -330,7 +375,7 @@ function chunkLP(lp: unknown): ProtoChunk[] {
         title: `${title}: pain points`,
         section_path: 'pain-points',
         text: c.painPoints.map((p) => `- ${p.title}: ${p.description}`).join('\n'),
-        metadata: { cluster: c.serviceCluster as ContentChunk['metadata']['cluster'] },
+        metadata: baseMeta,
       },
       `${where}:pain`,
     );
@@ -344,7 +389,7 @@ function chunkLP(lp: unknown): ProtoChunk[] {
         title: `${title}: process`,
         section_path: 'process',
         text: c.processSteps.map((p) => `${p.step ?? ''}. ${p.title}: ${p.description}`).join('\n'),
-        metadata: { cluster: c.serviceCluster as ContentChunk['metadata']['cluster'] },
+        metadata: baseMeta,
       },
       `${where}:process`,
     );
@@ -358,9 +403,41 @@ function chunkLP(lp: unknown): ProtoChunk[] {
         title: `${title}: benefits`,
         section_path: 'benefits',
         text: c.benefits.map((b) => `- ${b.title}: ${b.description}`).join('\n'),
-        metadata: { cluster: c.serviceCluster as ContentChunk['metadata']['cluster'] },
+        metadata: baseMeta,
       },
       `${where}:benefits`,
+    );
+  }
+  // One chunk per proof item, tagged with the specific industry on the
+  // proof so "Dynamics 365 for manufacturing" can match the manufacturing
+  // proof point inside the broader dynamics-365-implementation LP without
+  // pulling the whole LP's hero.
+  for (let i = 0; i < (c.proofItems ?? []).length; i++) {
+    const p = c.proofItems![i];
+    const proofIndustry = normalizeIndustryLabel(p.industry);
+    const proofMeta = {
+      ...baseMeta,
+      ...(proofIndustry
+        ? { industry: proofIndustry as ContentChunk['metadata']['industry'] }
+        : {}),
+    } satisfies ContentChunk['metadata'];
+    pushChunk(
+      out,
+      {
+        source_type: 'lp',
+        source_slug: c.slug,
+        title: `${title} proof: ${p.headline}`,
+        section_path: `proof.${i}`,
+        text: [
+          p.industry ? `Industry: ${p.industry}` : '',
+          `Headline: ${p.headline}`,
+          p.description,
+        ]
+          .filter(Boolean)
+          .join('\n'),
+        metadata: proofMeta,
+      },
+      `${where}:proof.${i}`,
     );
   }
   if (c.faqs?.length) {
@@ -374,7 +451,7 @@ function chunkLP(lp: unknown): ProtoChunk[] {
           title: `${title} FAQ: ${f.question}`,
           section_path: `faq.${i}`,
           text: `Q: ${f.question}\nA: ${f.answer}`,
-          metadata: { cluster: c.serviceCluster as ContentChunk['metadata']['cluster'] },
+          metadata: baseMeta,
         },
         `${where}:faq.${i}`,
       );
