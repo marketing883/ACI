@@ -12,6 +12,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { log } from './logger';
+import { generateIntelligence } from '@/lib/intelligence';
 
 // Loose client type; see scripts/index-content.ts for rationale.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -122,6 +123,13 @@ export async function markSessionHandoff(
  * Upsert captured lead fields into public.chat_leads. Keeps the existing
  * chat_leads shape so Part-1 ops (generateIntelligence, admin/chat-leads)
  * keep working. Called by the qualify_lead tool handler.
+ *
+ * Side effect: when an email arrives for the first time on a session,
+ * fires generateIntelligence in the background and stores the resulting
+ * IntelligenceReport on the chat_leads row. This mirrors the legacy
+ * /api/chat/lead/route.ts behavior so the admin /admin/chat-leads page
+ * shows a fully-enriched lead the moment an admin clicks through, with
+ * no manual "Generate" click required.
  */
 export async function upsertChatLead(
   sessionId: string,
@@ -144,26 +152,95 @@ export async function upsertChatLead(
   // we have one; otherwise the row is created on the next qualify_lead turn
   // that includes email.
   if (!fields.email) return;
-  const { error } = await supabase.from('chat_leads').upsert(
-    {
-      session_id: sessionId,
-      name: fields.name ?? null,
-      email: fields.email,
-      company: fields.company ?? null,
-      job_title: fields.jobTitle ?? null,
-      location: null,
-      service_interest: fields.serviceInterest ?? null,
-      requirements: fields.team ?? null,
-      preferred_time: fields.timeline ?? null,
-      conversation: conversation ?? [],
-      source: 'atheros_v2',
-    },
-    { onConflict: 'session_id' },
-  );
+
+  // Detect "fresh email": is this session's row already in the table with
+  // intelligence already attached? If not, we'll fire intelligence after
+  // the upsert. We only fire once per session to avoid burning budget on
+  // every qualify_lead call.
+  let needsIntelligence = false;
+  try {
+    const { data: existing } = await supabase
+      .from('chat_leads')
+      .select('id, intelligence')
+      .eq('session_id', sessionId)
+      .maybeSingle();
+    needsIntelligence = !existing || existing.intelligence == null;
+  } catch (err) {
+    // copilot-allow-silent-catch: read failure is non-fatal; we err on the
+    // side of generating (worst case: minor double-generation).
+    log.warn('tool', err, { sessionId, extra: { phase: 'upsertChatLead.preCheck' } });
+    needsIntelligence = true;
+  }
+
+  const { data: upserted, error } = await supabase
+    .from('chat_leads')
+    .upsert(
+      {
+        session_id: sessionId,
+        name: fields.name ?? null,
+        email: fields.email,
+        company: fields.company ?? null,
+        job_title: fields.jobTitle ?? null,
+        location: null,
+        service_interest: fields.serviceInterest ?? null,
+        requirements: fields.team ?? null,
+        preferred_time: fields.timeline ?? null,
+        conversation: conversation ?? [],
+        source: 'atheros_v2',
+      },
+      { onConflict: 'session_id' },
+    )
+    .select('id')
+    .single();
   if (error) {
     log.error('tool', error, {
       sessionId,
       extra: { phase: 'upsertChatLead' },
     });
+    return;
   }
+
+  if (!needsIntelligence || !upserted?.id) return;
+
+  // Fire-and-forget intelligence generation. Mirrors the legacy
+  // /api/chat/lead/route.ts pattern. Failures land in chat_errors via
+  // log.error; the user-facing turn is never blocked.
+  const leadId = upserted.id as string;
+  void generateIntelligence({
+    name: fields.name,
+    email: fields.email,
+    company: fields.company ?? null,
+    job_title: fields.jobTitle ?? null,
+    location: null,
+    service_interest: fields.serviceInterest ?? undefined,
+    requirements: fields.team ?? undefined,
+    conversation: conversation ?? [],
+  })
+    .then(async (intelligence) => {
+      try {
+        const { error: updateErr } = await supabase
+          .from('chat_leads')
+          .update({ intelligence, lead_score: intelligence.leadScore })
+          .eq('id', leadId);
+        if (updateErr) {
+          log.warn('tool', updateErr, {
+            sessionId,
+            extra: { phase: 'upsertChatLead.intelligencePersist', leadId },
+          });
+        } else {
+          log.info('tool', `intelligence stored for chat_lead ${leadId}`, {
+            sessionId,
+          });
+        }
+      } catch (err) {
+        // copilot-allow-silent-catch: persist failure already logged above
+        log.warn('tool', err, { sessionId, extra: { phase: 'upsertChatLead.persistCatch' } });
+      }
+    })
+    .catch((err) => {
+      log.error('generate', err, {
+        sessionId,
+        extra: { phase: 'generateIntelligence', leadId },
+      });
+    });
 }
