@@ -82,6 +82,7 @@ async function maybeWriteToDb(event: CopilotErrorEvent): Promise<void> {
         message: event.message,
         stack: event.stack ?? null,
         context: event.context ?? {},
+        fingerprint: computeFingerprint(event.stage, event.message),
       }),
       // Never block a user-facing request on telemetry.
       cache: 'no-store',
@@ -154,6 +155,31 @@ async function maybeEmitAnalytics(event: CopilotErrorEvent): Promise<void> {
       console.warn('[copilot/logger] analytics emit failed', err);
     }
   }
+}
+
+/**
+ * Compute a fingerprint that groups errors by root cause. We normalize
+ * volatile parts of the message (UUIDs, timestamps, file paths, large
+ * numbers) so identical-shape errors collapse into one fingerprint.
+ * Plain djb2-style hash; not cryptographic, just stable.
+ */
+function computeFingerprint(stage: string, message: string): string {
+  const normalized = message
+    .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, '<uuid>')
+    .replace(/\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z?\b/gi, '<ts>')
+    .replace(/\b\d+(?:\.\d+)?(?:ms|s|kb|mb|usd)\b/gi, '<n>')
+    .replace(/\bport \d+\b/gi, 'port <n>')
+    .replace(/\b\d{3,}\b/g, '<n>')
+    .replace(/\/[^\s]+\.(?:tsx?|mjs|cjs|json)\b/g, '<file>')
+    .toLowerCase()
+    .trim()
+    .slice(0, 240);
+  const seed = `${stage}:${normalized}`;
+  let h = 5381;
+  for (let i = 0; i < seed.length; i++) {
+    h = ((h << 5) + h + seed.charCodeAt(i)) | 0;
+  }
+  return ((h >>> 0).toString(16) + Math.abs(h).toString(16)).slice(0, 16);
 }
 
 declare global {
