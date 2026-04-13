@@ -40,6 +40,13 @@ export type KineticStudy = {
   metricLabel: string; // sentence under metric (e.g. "saved in year one")
   outcome: string; // one-line outcome sentence
   approach: string; // one-line approach sentence
+  /**
+   * Services tagged on this case study in the admin (e.g.
+   * ["Analytics & BI", "Data Engineering"]). Used alongside the outcome
+   * and approach text to pick a generated art metaphor that actually
+   * fits the work, rather than just the industry bucket.
+   */
+  services?: string[];
   playbookUsed?: string;
   /**
    * Full URL of the case study's featured image (usually Supabase storage).
@@ -364,26 +371,59 @@ type ArtKey = 'heartbeat' | 'barColumns' | 'convergingLines' | 'alignment';
 
 /**
  * Pick the art metaphor whose shape actually fits the case study.
- * Returns a string key so the caller can render via a stable
- * module-scope component reference (satisfies the
- * react-hooks/static-components rule). Falls back to the
- * network/alignment art for anything we have not explicitly mapped,
- * because it reads as "things coming together" which is the right
- * neutral default for enterprise outcomes.
+ *
+ * The selector reads, in order:
+ *   1. The admin-tagged `services` array (strongest signal - editors
+ *      already classify each study).
+ *   2. The outcome + approach + metricLabel text (weaker signal, good
+ *      for studies where services are sparse or generic).
+ *   3. The industry, as a final neutral fallback.
+ *
+ * This matters because industry alone tells us nothing about what the
+ * engagement actually did - a retail case study can be analytics,
+ * supplier alignment, AI governance, or cloud migration, each of which
+ * deserves a different metaphor. Services and outcome text carry that
+ * signal; industry does not.
+ *
+ * Returns a string key so the caller can render via stable module-scope
+ * components (satisfies react-hooks/static-components).
  */
-function pickArtForIndustry(industry: string): ArtKey {
-  const i = industry.toLowerCase();
-  if (/manufactur|industrial|automotive|energy|utilities|logistics|transport/.test(i)) {
-    return 'heartbeat';
-  }
-  if (/financ|insuranc|bank|invest|capital/.test(i)) {
+function pickArtForStudy(study: KineticStudy): ArtKey {
+  const services = (study.services ?? []).join(' ').toLowerCase();
+  const content = `${study.outcome} ${study.approach} ${study.metricLabel}`.toLowerCase();
+  const signal = `${services} ${content}`;
+
+  // Analytics / BI / reporting / self-service dashboards.
+  if (/analytics|\bbi\b|report|dashboard|self[- ]service|power ?bi|tableau/.test(signal)) {
     return 'barColumns';
   }
-  if (/health|pharma|clinical|bio|life sciences/.test(i)) {
+  // AI / ML / agents / governance: converging lines reads as "many
+  // signals feeding one intelligent output."
+  if (/\bai\b|\bml\b|agent|\bllm\b|gen[- ]?ai|govern|shadow ai|compliance/.test(signal)) {
     return 'convergingLines';
   }
-  // Hospitality, retail, food, consumer, multi-location, global
-  // operations, supplier-alignment stories.
+  // Cloud migration / modernization / legacy exit: heartbeat reads as
+  // before/after, the calming of noise into steady state.
+  if (/migrat|moderniz|legacy|\bcloud\b|re[- ]?architect|lift[- ]and[- ]shift/.test(signal)) {
+    return 'heartbeat';
+  }
+  // Multi-location, supplier alignment, global unification, data
+  // integration: alignment-network reads as "many things becoming one."
+  if (/align|unif|consolid|integrat|supplier|multi[- ]location|global roll|post[- ]acquisition|m&a|merger/.test(signal)) {
+    return 'alignment';
+  }
+
+  // Industry fallback if content gave no signal.
+  const industry = study.industry.toLowerCase();
+  if (/manufactur|industrial|automotive|energy|utilities|logistics|transport/.test(industry)) {
+    return 'heartbeat';
+  }
+  if (/financ|insuranc|bank|invest|capital/.test(industry)) {
+    return 'barColumns';
+  }
+  if (/health|pharma|clinical|bio|life sciences/.test(industry)) {
+    return 'convergingLines';
+  }
   return 'alignment';
 }
 
@@ -407,11 +447,12 @@ export default function CaseStudyKinetic({
   const inView = useInView(ref, { once: true, margin: '-15% 0px -15% 0px' });
   const animateIn = inView || reduced;
 
-  // Art is chosen from the case study's own industry, not the theme slot
-  // it happened to land in, so a hospitality story never gets a factory
-  // heartbeat metaphor and a financial services story never gets
-  // converging customer paths.
-  const artKey = pickArtForIndustry(study.industry);
+  // Art is chosen from the case study's own content (services, outcome,
+  // approach text, then industry as a fallback). This means two studies
+  // in the same industry but tackling different problems get different
+  // metaphors: a retail analytics story gets bar columns, a retail
+  // supplier-alignment story gets the network.
+  const artKey = pickArtForStudy(study);
 
   // Stagger pattern: descriptor -> outcome -> metric -> label -> approach -> footer
   const containerVariants = {

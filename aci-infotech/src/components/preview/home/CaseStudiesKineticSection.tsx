@@ -33,6 +33,7 @@ interface CaseStudyDB {
   results?: string | null;
   metrics?: { label: string; value: string; description?: string }[] | null;
   technologies?: string[] | null;
+  services?: string[] | null;
   featured_image_url?: string | null;
   is_featured?: boolean;
   status?: string;
@@ -136,6 +137,7 @@ function dbRowToKinetic(row: CaseStudyDB, fallbackIndex: number): KineticStudy {
     approach: shorten(row.solution) || shorten(row.challenge) || placeholder.approach,
     playbookUsed: undefined,
     featuredImageUrl: row.featured_image_url ?? undefined,
+    services: row.services ?? undefined,
   };
 }
 
