@@ -130,34 +130,51 @@ function PlaybookRow({ pb, index }: { pb: PlaybookData; index: number }) {
         aria-expanded={open}
         className="w-full text-left py-7 md:py-8 px-5 md:px-8 cursor-pointer focus:outline-none focus:bg-white/[0.02]"
       >
-        {/* Top line: ID + name + deployment count phrase. Status chip
-            dropped - it was abstract labeling without clear meaning. The
-            count phrase on the right tells the visitor exactly what they
-            need to know: this play has been shipped this many times. */}
-        <div className="flex items-baseline gap-4 md:gap-6 flex-wrap">
-          <span className="font-mono text-[#C4FF61]/90 text-sm md:text-base tracking-wider">
-            PB-{pad2(index + 1)}
-          </span>
-          <span
-            className="text-white font-[var(--font-title)] font-medium flex-1 min-w-[280px]"
-            style={{ fontSize: 'clamp(20px, 2.4vw, 28px)', lineHeight: 1.2 }}
-          >
-            {displayName}
-          </span>
-          {/* Right-side count. Two-line so the big number carries the
-              weight and the qualifier sits small and dry beneath it.
-              Reads like a tally mark, not a product spec. */}
-          <span className="text-right whitespace-nowrap leading-none">
+        {/* Top band: eyebrow + tally on the left, big display name sits
+            underneath. The eyebrow ("Playbook 01") and the live tally
+            read like a dashboard strip; the display name is the
+            headline beneath it. */}
+        <div className="flex items-start justify-between gap-6">
+          <div className="flex-1 min-w-0">
+            <div className="font-mono text-[10px] md:text-xs uppercase tracking-[0.22em] text-[#C4FF61]/80 mb-3">
+              Playbook {pad2(index + 1)}
+            </div>
             <span
-              className="block font-[var(--font-title)] font-bold text-white"
-              style={{ fontSize: 'clamp(22px, 2.4vw, 30px)', letterSpacing: '-0.02em' }}
+              className="block text-white font-[var(--font-title)] font-medium"
+              style={{ fontSize: 'clamp(20px, 2.4vw, 28px)', lineHeight: 1.2 }}
             >
-              {pb.deployments}x
+              {displayName}
             </span>
-            <span className="mt-1 block font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/55">
-              and counting
-            </span>
-          </span>
+          </div>
+          {/* Live tally. Pulsing lime dot signals "active, still running".
+              The big number anchors the unit, and the caption beneath
+              puts it in context by pulling real industry breadth from
+              the playbook data. */}
+          <div className="text-right whitespace-nowrap leading-none pt-1">
+            <div className="flex items-baseline justify-end gap-2">
+              <span
+                className="relative inline-flex h-2 w-2 rounded-full bg-[#C4FF61]"
+                aria-hidden
+              >
+                <span className="absolute inset-0 rounded-full bg-[#C4FF61] opacity-60 animate-ping" />
+              </span>
+              <span
+                className="font-[var(--font-title)] font-bold text-white"
+                style={{ fontSize: 'clamp(28px, 3.2vw, 40px)', letterSpacing: '-0.03em' }}
+              >
+                {pb.deployments}
+              </span>
+              <span
+                className="font-mono text-white/55"
+                style={{ fontSize: 'clamp(11px, 1vw, 13px)' }}
+              >
+                live
+              </span>
+            </div>
+            <div className="mt-2 font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/55">
+              across {pb.industries.length} industries
+            </div>
+          </div>
         </div>
 
         {/* Promise line: action-oriented sentence describing what we will
