@@ -510,7 +510,14 @@ async function loadDbCaseStudies(supabase: SupabaseClient): Promise<ProtoChunk[]
         title: (row.headline as string) || anon,
         section_path: 'summary',
         text,
-        metadata: { industry: (row.industry as string) ?? undefined },
+        // Normalize the raw DB industry label ("Manufacturing", "Banking",
+        // etc.) to the canonical IndustryId so retrieval boosts on
+        // ctx.industry (always lower-case canonical) match.
+        metadata: {
+          industry: normalizeIndustryLabel(row.industry as string | undefined) as
+            | ContentChunk['metadata']['industry']
+            | undefined,
+        },
       },
       `case_study:${row.slug}`,
     );
