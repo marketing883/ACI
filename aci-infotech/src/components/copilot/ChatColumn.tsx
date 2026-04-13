@@ -131,14 +131,50 @@ export default function ChatColumn({
             setStatus(`Preparing ${name.replace(/_/g, ' ')}…`);
             clearStatusSoon();
           },
-          onToolCallEnd: (id, name, resultKind) => {
-            // We do not receive the parsed tool args from the SSE end frame;
-            // the server has already validated, executed, and persisted them.
-            // For UI-only tools, we rely on the route emitting a follow-up
-            // status; for now, we surface the call itself so the UX reflects
-            // the server event stream.
+          onToolCallEnd: (id, name, resultKind, args) => {
             if (resultKind !== 'ok') {
               log.warn('panel', `tool ${name} returned error`, { extra: { id } });
+              return;
+            }
+            // Route validated args from UI-only tools into the right surface.
+            // The server has already Zod-validated; treat each shape as
+            // trusted-but-unknown and narrow per tool.
+            switch (name) {
+              case 'show_content_panel': {
+                const panel = args as ShowContentPanelArgs | undefined;
+                if (panel?.panelType && panel.entityRef) {
+                  onPanelRequest(panel);
+                }
+                break;
+              }
+              case 'offer_action_buttons': {
+                const payload = args as OfferActionButtonsArgs | undefined;
+                if (payload?.buttons?.length) {
+                  actionButtons = payload.buttons;
+                }
+                break;
+              }
+              case 'request_field': {
+                const payload = args as RequestFieldArgs | undefined;
+                if (payload?.fieldName) {
+                  requestField = payload;
+                }
+                break;
+              }
+              case 'cite_source': {
+                const cite = args as CiteSourceArgs | undefined;
+                if (cite?.sourceType && cite.slug) {
+                  activeCitations.push(cite);
+                }
+                break;
+              }
+              case 'qualify_lead': {
+                const fields = args as QualifyLeadArgs | undefined;
+                if (fields) onLeadCaptured?.(fields);
+                break;
+              }
+              default:
+                break;
             }
           },
           onDone: ({ streamIncomplete }) => {
@@ -189,17 +225,6 @@ export default function ChatColumn({
           ),
         );
       }
-
-      // Route panel / chip / field payloads from the SSE tool echo. The
-      // server-side route delivers tool_args in chat_messages; for Part-4
-      // we derive UI-only tool calls from a companion parallel channel.
-      // (The edge route echoes tool args inside `argsPreview` on tool_call_start
-      // in a future extension; for now, this signal lives purely in the
-      // persisted chat_messages row for admin replay in Part 6.)
-      void onPanelRequest;
-      void onLeadCaptured;
-      void actionButtons;
-      void requestField;
 
       setBusy(false);
       setStatus(null);

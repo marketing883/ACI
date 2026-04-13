@@ -575,6 +575,12 @@ async function executeToolCall(input: ExecuteToolInput): Promise<void> {
     return;
   }
 
+  // Args echoed in the SSE end frame so the client can render UI-only
+  // tools (panel, chips, field, citation) and admin replay (Part 6) sees
+  // the exact values the model produced. validated.data is unknown here;
+  // cast for the wire shape — the schema already proved each field's type.
+  const echoArgs = validated.data as Record<string, unknown>;
+
   if (!spec.mutates) {
     // UI-only tool; echo it back and persist the call in chat_messages.
     input.emit({
@@ -582,6 +588,7 @@ async function executeToolCall(input: ExecuteToolInput): Promise<void> {
       id: input.callId,
       name: input.toolName,
       result: 'ok',
+      args: echoArgs,
     });
     await insertMessage({
       session_id: input.sessionId,
@@ -618,6 +625,7 @@ async function executeToolCall(input: ExecuteToolInput): Promise<void> {
       id: input.callId,
       name: input.toolName,
       result: 'ok',
+      args: echoArgs,
     });
   } catch (err) {
     log.error('tool', err, {

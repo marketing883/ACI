@@ -35,6 +35,14 @@ export type AtherosStreamEvent =
       name: string;
       result: 'ok' | 'error';
       message?: string;
+      /**
+       * Validated tool arguments echoed back so the client can render
+       * UI-only tool calls (show_content_panel, offer_action_buttons,
+       * request_field, cite_source). Server-side mutating tools also
+       * include their args so admin replay (Part 6) reproduces the UX
+       * the user saw.
+       */
+      args?: Record<string, unknown>;
     }
   | {
       type: 'done';

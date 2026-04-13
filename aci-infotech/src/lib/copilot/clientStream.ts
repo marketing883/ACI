@@ -18,7 +18,12 @@ export interface AtherosStreamHandlers {
   onThought?: (text: string) => void;
   onToken?: (text: string) => void;
   onToolCallStart?: (id: string, name: string) => void;
-  onToolCallEnd?: (id: string, name: string, result: 'ok' | 'error') => void;
+  onToolCallEnd?: (
+    id: string,
+    name: string,
+    result: 'ok' | 'error',
+    args?: Record<string, unknown>,
+  ) => void;
   onDone?: (usage: {
     model: string;
     inputTokens: number;
@@ -123,7 +128,7 @@ export async function streamAtherosReply(
             input.handlers?.onToolCallStart?.(evt.id, evt.name);
             break;
           case 'tool_call_end':
-            input.handlers?.onToolCallEnd?.(evt.id, evt.name, evt.result);
+            input.handlers?.onToolCallEnd?.(evt.id, evt.name, evt.result, evt.args);
             break;
           case 'done':
             if (evt.streamIncomplete) incomplete = true;

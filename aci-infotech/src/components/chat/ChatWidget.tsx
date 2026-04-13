@@ -785,19 +785,37 @@ export default function ChatWidget() {
       role: m.role,
       content: m.content,
     }));
+    // The shell stays mounted across open/close so chat state persists.
+    // AnimatePresence inside the shell handles entrance/exit; body scroll
+    // lock + focus trap only fire while `open` is true. The trigger button
+    // is only rendered when closed.
     return (
-      <ConsultationShell
-        sessionId={sessionId}
-        open={!isMinimized}
-        onClose={() => setIsOpen(false)}
-        initialMessages={atherosInitial}
-        pageContext={{
-          path: typeof window !== 'undefined' ? window.location.pathname : pageContext.path,
-          entryPage,
-          cluster: undefined,
-        }}
-        leadState={leadInfo as Record<string, unknown>}
-      />
+      <>
+        {!isOpen && (
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            aria-label="Open Atheros"
+            className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[var(--aci-secondary,#0A1628)] px-4 py-2.5 text-sm font-semibold text-white shadow-2xl transition hover:bg-[var(--aci-primary,#0052CC)]"
+          >
+            <Sparkles className="h-4 w-4" aria-hidden />
+            <span>Ask Atheros</span>
+            <span className="ml-1 inline-flex h-2 w-2 rounded-full bg-[var(--aci-lime,#C4FF61)]" aria-hidden />
+          </button>
+        )}
+        <ConsultationShell
+          sessionId={sessionId}
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+          initialMessages={atherosInitial}
+          pageContext={{
+            path: typeof window !== 'undefined' ? window.location.pathname : pageContext.path,
+            entryPage,
+            cluster: undefined,
+          }}
+          leadState={leadInfo as Record<string, unknown>}
+        />
+      </>
     );
   }
 
