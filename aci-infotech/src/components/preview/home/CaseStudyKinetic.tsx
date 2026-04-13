@@ -20,6 +20,7 @@
  */
 
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   motion,
   useInView,
@@ -40,6 +41,14 @@ export type KineticStudy = {
   outcome: string; // one-line outcome sentence
   approach: string; // one-line approach sentence
   playbookUsed?: string;
+  /**
+   * Full URL of the case study's featured image (usually Supabase storage).
+   * When present, the image fills the entire card as an atmospheric
+   * background under a strong, consistent treatment. When absent, the
+   * card falls back to the solid theme color and the generated art
+   * stands on its own.
+   */
+  featuredImageUrl?: string;
 };
 
 export type Theme = 'industrial' | 'analytical' | 'warm';
@@ -300,17 +309,74 @@ export default function CaseStudyKinetic({
     },
   };
 
+  // True on dark themes. Used to pick the right blend mode for the image
+  // treatment (multiply on dark bg, overlay on light bg so the warm
+  // theme does not wash the photo out to white).
+  const isDark = theme !== 'warm';
+  const hasImage = Boolean(study.featuredImageUrl);
+
   return (
     <article
       ref={ref}
-      className="relative py-20 md:py-28 lg:min-h-[85vh] flex items-center"
+      className="relative py-20 md:py-28 lg:min-h-[85vh] flex items-center overflow-hidden"
       style={{ backgroundColor: t.bg, color: t.text }}
     >
+      {/* Background: featured image fills the card when present. A
+          consistent three-layer treatment sits on top so image quality
+          differences between uploads always resolve to a single
+          cohesive look: (1) the image itself, (2) a theme-color
+          duotone via mix-blend, (3) a left-heavy gradient scrim that
+          keeps text crisp on the left column while letting the image
+          breathe on the right where the art panel sits. When no image
+          is set, the solid theme bg already applied to the article
+          carries the card. */}
+      {hasImage && study.featuredImageUrl && (
+        <>
+          <Image
+            src={study.featuredImageUrl}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="100vw"
+            aria-hidden
+          />
+          {/* Duotone tint toward the theme accent/base. Multiply on dark
+              themes, overlay on the warm theme. */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundColor: t.bg,
+              mixBlendMode: isDark ? 'multiply' : 'overlay',
+              opacity: isDark ? 0.88 : 0.72,
+            }}
+            aria-hidden
+          />
+          {/* Legibility scrim: heavy left, thin right. Text column sits
+              on the dark side, art panel on the lighter side. */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `linear-gradient(to right, ${t.bg} 0%, ${t.bg}F2 38%, ${t.bg}B3 72%, ${t.bg}80 100%)`,
+            }}
+            aria-hidden
+          />
+          {/* Soft vignette so edges don't feel square-cropped. */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%)',
+            }}
+            aria-hidden
+          />
+        </>
+      )}
+
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate={animateIn ? 'show' : 'hidden'}
-        className="relative w-full max-w-[1320px] mx-auto px-5 md:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center"
+        className="relative z-10 w-full max-w-[1320px] mx-auto px-5 md:px-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center"
       >
         {/* LEFT: text column */}
         <div className="lg:col-span-7">
@@ -431,13 +497,24 @@ export default function CaseStudyKinetic({
           </motion.div>
         </div>
 
-        {/* RIGHT: animated artwork */}
+        {/* RIGHT: animated artwork. With a featured image behind, the
+            panel reads as a frosted dashboard window floating over the
+            scene: slightly translucent, blurred backdrop, hairline
+            border in the theme accent. Without a featured image it
+            falls back to the flat panel look. */}
         <motion.div variants={lineUp} className="lg:col-span-5">
           <div
-            className="relative aspect-[2/1] rounded-sm p-6 md:p-8"
+            className="relative aspect-[2/1] rounded-sm p-6 md:p-8 backdrop-blur-md"
             style={{
-              backgroundColor: t.panelBg,
+              backgroundColor: hasImage
+                ? isDark
+                  ? 'rgba(10, 16, 28, 0.55)'
+                  : 'rgba(255, 245, 239, 0.72)'
+                : t.panelBg,
               border: `1px solid ${t.hairline}`,
+              boxShadow: hasImage
+                ? '0 10px 40px rgba(0,0,0,0.35)'
+                : undefined,
             }}
           >
             <Art accent={t.accent} animateIn={animateIn} />
