@@ -4,6 +4,35 @@ Memory for Claude Code when working on the ACI Infotech site.
 
 ## Copywriting rules
 
+### Write like a human, not like an AI
+
+Every piece of marketing copy on this site is direct, plain-spoken
+English, the way a senior engineer would actually talk. Not the way a
+consulting deck would phrase it.
+
+Tells that the copy has drifted into AI-speak:
+
+- "already know how to", "so that you can", "we enable you to",
+  "leverage", "drive value", "unlock"
+- Hollow amplifiers: "proven pattern", "many times over",
+  "battle-tested", "best in class"
+- Serial parallelism that reads like a slide bullet list ("the
+  problems we solve, the outcomes we deliver, the stack that carries
+  each build")
+- Polished sentences with no edge
+
+Fix by:
+
+- Using concrete verbs ("ship", "stitch", "wire", "unify",
+  "inventory") and concrete objects ("the bill", "the audit", "the
+  close").
+- Cutting filler. Short sentences beat long ones.
+- Letting one line carry a small wink. A single dry aside per
+  paragraph (a "google giggle") is what separates human copy from AI
+  copy. Do not force a joke. Let one land, where it fits.
+- Reading the draft out loud. If it does not sound like a person the
+  reader would actually want to hire, rewrite.
+
 ### Never leave a widow word
 
 A widow is a single word (or very short fragment) stranded on the last line

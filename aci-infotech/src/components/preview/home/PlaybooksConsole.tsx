@@ -45,54 +45,54 @@ type PlaybookCopy = {
 
 const PLAYBOOK_COPY: Record<string, PlaybookCopy> = {
   'post-acquisition': {
-    displayName: 'Land your acquisition cleanly.',
-    promise: 'We collapse 30 to 50 inherited systems into one audited platform without breaking finance close.',
-    headlineOutcome: '$9.2M saved in year one with zero close disruptions.',
+    displayName: 'Turn your acquisition into one company.',
+    promise: 'We stitch 30 to 50 inherited systems into one audited platform. Finance close stops looking like a hostage situation.',
+    headlineOutcome: '$9.2M saved in year one. Zero disrupted closes.',
   },
   'multi-location': {
-    displayName: 'Run every location on live data.',
-    promise: 'We turn 300 to 1000 stores, branches, or sites into a single real-time data plane that never takes payments offline.',
-    headlineOutcome: 'Customer data lag down 64% with 99.97% payment uptime.',
+    displayName: 'Every location on the same page.',
+    promise: 'We turn 300 to 1000 branches into one live data plane. Payments never flinch, not during the cutover, not at 11pm on a Friday.',
+    headlineOutcome: 'Customer data lag down 64%. Payment uptime 99.97%.',
   },
   'global-unification': {
-    displayName: 'See your global business in one view.',
-    promise: 'We unify regional silos across 40 plus countries so your executives stop waiting weeks for one number.',
-    headlineOutcome: 'Decisions land 50% faster on a single global view.',
+    displayName: 'Forty countries. One view. No more spreadsheets of spreadsheets.',
+    promise: 'We unify regional silos across 40+ countries so your execs stop waiting three weeks for a single number.',
+    headlineOutcome: 'Decisions land 50% faster. Executive reporting in days, not weeks.',
   },
   'self-service-analytics': {
-    displayName: 'Give every team self-service answers.',
-    promise: 'We hand 5,000 plus people governed dashboards with row-level security so IT stops being the queue.',
-    headlineOutcome: 'IT requests cut 88%. Time-to-insight drops to 2 hours.',
+    displayName: 'Get IT out of the chart-request business.',
+    promise: 'We give 5,000+ people governed dashboards they can actually use, with row-level security baked in so nobody sees what they should not.',
+    headlineOutcome: 'IT requests cut 88%. Time-to-insight down to 2 hours.',
   },
   'agentic-ai': {
-    displayName: 'Put production agents to work.',
-    promise: 'We wire bounded AI agents into your real workflows with full context, real APIs, and an audit trail.',
-    headlineOutcome: 'Operations run 40 to 60% faster with 100% audit coverage.',
+    displayName: 'Put AI agents to work. Keep them on a leash.',
+    promise: 'We wire bounded agents into real workflows with full context, real APIs, and an audit trail. No free-range LLMs.',
+    headlineOutcome: 'Operations run 40 to 60% faster. Full audit coverage.',
   },
   'ai-governance': {
-    displayName: 'Get every AI model under control.',
-    promise: 'We discover your shadow AI, tier the risk, and automate evidence so audits stop costing weeks.',
-    headlineOutcome: 'Full AI visibility. Audits move 70% faster.',
+    displayName: 'Find your shadow AI before legal does.',
+    promise: 'We inventory every model in use, including the ones hiding inside vendor products, tier the risk, and automate the audit evidence.',
+    headlineOutcome: 'Full AI visibility. Audit cycles down 70%.',
   },
   'healthcare-data': {
-    displayName: 'Move patient data across borders, safely.',
-    promise: 'We build a unified patient identity that respects HIPAA, GDPR, and every regional rule in between.',
+    displayName: 'Move patient data across borders without losing sleep.',
+    promise: 'We build one patient identity that respects HIPAA, GDPR, and every local rule in between. Encryption is baseline, not a feature.',
     headlineOutcome: 'One patient identity. Duplicates down 58%. Zero violations.',
   },
   'supply-chain': {
-    displayName: 'See your supply chain end to end.',
-    promise: 'We connect procurement, logistics, and IoT into one live view so disruptions become hours, not days.',
-    headlineOutcome: 'Full E2E visibility. Costs cut 25%. Response time under 4 hours.',
+    displayName: 'See your supply chain before it breaks.',
+    promise: 'We stitch procurement, logistics, and IoT into one live view. Disruptions become hours to act on, not days to discover.',
+    headlineOutcome: 'End-to-end visibility. Costs down 25%. Response under 4 hours.',
   },
   'cloud-migration': {
-    displayName: 'Get off legacy without breaking ops.',
-    promise: 'We re-architect aging on-prem stacks for the cloud with parallel runs, so the migration is invisible to users.',
+    displayName: 'Get off legacy. Keep your users blissfully unaware.',
+    promise: 'We re-architect aging on-prem stacks for the cloud with parallel runs. Nobody notices the migration. The bill just drops.',
     headlineOutcome: 'Infrastructure cost cut 68%. 10x faster scale-up.',
   },
   'data-integration': {
-    displayName: 'Make your data trustworthy at last.',
-    promise: 'We connect 20 to 40 source systems with self-healing pipelines and quality gates that catch issues before users do.',
-    headlineOutcome: '85% lift in data quality. 99.8% pipeline reliability.',
+    displayName: 'Make your data trustworthy. Finally.',
+    promise: 'We connect 20 to 40 source systems with self-healing pipelines and quality gates that catch bad data before your users do.',
+    headlineOutcome: 'Data quality up 85%. Pipeline reliability 99.8%.',
   },
 };
 
@@ -144,8 +144,19 @@ function PlaybookRow({ pb, index }: { pb: PlaybookData; index: number }) {
           >
             {displayName}
           </span>
-          <span className="font-mono text-white/70 text-xs md:text-sm tracking-wider uppercase whitespace-nowrap">
-            Shipped {pb.deployments}{'\u00A0'}times
+          {/* Right-side count. Two-line so the big number carries the
+              weight and the qualifier sits small and dry beneath it.
+              Reads like a tally mark, not a product spec. */}
+          <span className="text-right whitespace-nowrap leading-none">
+            <span
+              className="block font-[var(--font-title)] font-bold text-white"
+              style={{ fontSize: 'clamp(22px, 2.4vw, 30px)', letterSpacing: '-0.02em' }}
+            >
+              {pb.deployments}x
+            </span>
+            <span className="mt-1 block font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/55">
+              and counting
+            </span>
           </span>
         </div>
 
@@ -306,10 +317,10 @@ export default function PlaybooksConsole() {
               letterSpacing: '-0.025em',
             }}
           >
-            {'Ten plays we already know how to run for\u00A0you.'}
+            {'Ten things we have shipped so many times we stopped\u00A0counting.'}
           </h2>
           <p className="mt-5 text-white/75 max-w-2xl text-base md:text-lg leading-relaxed">
-            {'Each one is a real pattern, shipped to production many times over. Open any row for the problems we solve, the outcomes we deliver, and the stack that carries each\u00A0build.'}
+            {'Not slides. Not case studies. Real work, done over and over for enterprises like yours. Click a row to see what is broken when we arrive, what is working when we\u00A0leave.'}
           </p>
         </div>
 
