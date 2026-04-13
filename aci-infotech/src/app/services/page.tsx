@@ -1,6 +1,20 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { ArrowRight, Database, Brain, Cloud, Users, Shield, Zap, CheckCircle2, Code2 } from 'lucide-react';
+import {
+  ArrowRight,
+  Database,
+  Brain,
+  Cloud,
+  Users,
+  Shield,
+  Zap,
+  CheckCircle2,
+  Code2,
+  UserCheck,
+  ShieldCheck,
+  Headphones,
+  Target,
+} from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
 
@@ -321,8 +335,8 @@ export default function ServicesPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">👷</span>
+              <div className="w-16 h-16 bg-[var(--aci-primary)]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <UserCheck className="w-7 h-7 text-[var(--aci-primary)]" strokeWidth={1.5} />
               </div>
               <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Senior Architects Only</h3>
               <p className="text-gray-600 text-sm">
@@ -330,8 +344,8 @@ export default function ServicesPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📋</span>
+              <div className="w-16 h-16 bg-[var(--aci-primary)]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <ShieldCheck className="w-7 h-7 text-[var(--aci-primary)]" strokeWidth={1.5} />
               </div>
               <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Production Code with SLAs</h3>
               <p className="text-gray-600 text-sm">
@@ -339,8 +353,8 @@ export default function ServicesPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📞</span>
+              <div className="w-16 h-16 bg-[var(--aci-primary)]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Headphones className="w-7 h-7 text-[var(--aci-primary)]" strokeWidth={1.5} />
               </div>
               <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">We Answer the 2am Call</h3>
               <p className="text-gray-600 text-sm">
@@ -348,8 +362,8 @@ export default function ServicesPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🎯</span>
+              <div className="w-16 h-16 bg-[var(--aci-primary)]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Target className="w-7 h-7 text-[var(--aci-primary)]" strokeWidth={1.5} />
               </div>
               <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Business Outcomes First</h3>
               <p className="text-gray-600 text-sm">
