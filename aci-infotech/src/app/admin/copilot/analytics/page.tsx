@@ -146,9 +146,7 @@ export default function AnalyticsPage() {
             <RankedList title="Top service interests" rows={data.topServices.map((r) => ({ label: r.service, value: r.count }))} />
           </div>
 
-          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-4 text-xs text-gray-500">
-            Content Gap feed (queries with low retrieval similarity that need a content brief) ships in a follow-up commit; it requires logging per-query similarity scores in chat_messages, which the indexer does not surface yet. The schema and dashboard slot are reserved for it.
-          </div>
+          <ContentGapFeed />
         </>
       ) : null}
     </div>
@@ -160,6 +158,98 @@ function Stat({ label, value, accent }: { label: string; value: string | number;
     <div className={`rounded-xl border bg-white p-4 ${accent ? 'border-amber-300 bg-amber-50' : 'border-gray-200'}`}>
       <div className="text-xs uppercase tracking-wide text-gray-500">{label}</div>
       <div className="mt-1 text-xl font-bold text-gray-900">{value}</div>
+    </div>
+  );
+}
+
+interface Gap {
+  message_id: string;
+  session_id: string;
+  created_at: string;
+  top_k: number;
+  top_similarity: number;
+  source_types: string[];
+  user_question: string;
+}
+
+function ContentGapFeed() {
+  const [gaps, setGaps] = useState<Gap[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState<string | null>(null);
+
+  const refresh = useCallback(async () => {
+    setErr(null);
+    try {
+      const res = await fetch('/api/admin/copilot/content-gaps?since=7d&threshold=0.35&limit=40', {
+        cache: 'no-store',
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) {
+        setErr(json.reason ?? `HTTP ${res.status}`);
+        return;
+      }
+      setGaps(json.gaps as Gap[]);
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-4">
+      <div className="mb-3 flex items-baseline justify-between">
+        <div>
+          <h2 className="text-sm font-semibold text-gray-900">Content Gap feed</h2>
+          <p className="text-xs text-gray-500">
+            User questions where retrieval returned nothing or scored below 0.35. Last 7 days. Each one is a prompt for a new page, FAQ, or case study.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={refresh}
+          className="rounded-lg border border-gray-300 px-2 py-1 text-xs hover:border-[var(--aci-primary,#0052CC)]"
+        >
+          Refresh
+        </button>
+      </div>
+      {err ? (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700">{err}</div>
+      ) : loading && gaps.length === 0 ? (
+        <div className="text-center text-xs text-gray-400">Loading…</div>
+      ) : gaps.length === 0 ? (
+        <div className="text-center text-xs text-gray-400">
+          No gaps in the last 7 days. Retrieval is covering every question.
+        </div>
+      ) : (
+        <ul className="divide-y divide-gray-100 text-sm">
+          {gaps.map((g) => (
+            <li key={g.message_id} className="flex items-start justify-between gap-4 py-2">
+              <div className="min-w-0 flex-1">
+                <div className="truncate font-medium text-gray-900" title={g.user_question}>
+                  {g.user_question.length > 120
+                    ? `${g.user_question.slice(0, 120)}…`
+                    : g.user_question}
+                </div>
+                <div className="mt-0.5 text-[11px] uppercase tracking-wide text-gray-500">
+                  top-1 similarity {g.top_similarity.toFixed(2)} · {g.top_k} chunks ·{' '}
+                  {new Date(g.created_at).toLocaleString()}
+                </div>
+              </div>
+              <a
+                href={`/admin/copilot/sessions/${encodeURIComponent(g.session_id)}`}
+                className="shrink-0 text-xs font-semibold text-[var(--aci-primary,#0052CC)] hover:underline"
+              >
+                Replay →
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

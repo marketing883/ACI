@@ -309,6 +309,17 @@ async function runTurn(input: RunTurnInput): Promise<void> {
         : 'No direct matches; answering from posture.',
   });
 
+  // Summarize retrieval for the content-gap feed. Persisted on the
+  // assistant turn's chat_messages row; queried by /api/admin/copilot/content-gaps.
+  const retrievalSummary = {
+    topK: retrieved.length,
+    topSimilarity:
+      retrieved.length === 0
+        ? 0
+        : Math.max(...retrieved.map((r) => r.similarity ?? 0)),
+    sourceTypes: Array.from(new Set(retrieved.map((r) => r.source_type).filter(Boolean))),
+  };
+
   const systemPrompt = buildSystemPrompt({
     pageContext: body.pageContext ?? {},
     retrieved,
@@ -320,9 +331,9 @@ async function runTurn(input: RunTurnInput): Promise<void> {
   for (const model of MODEL_CHAIN) {
     try {
       if (model.provider === 'anthropic') {
-        await streamFromAnthropic({ model, systemPrompt, body, emit, startedAt });
+        await streamFromAnthropic({ model, systemPrompt, body, emit, startedAt, retrievalSummary });
       } else {
-        await streamFromOpenAI({ model, systemPrompt, body, emit, startedAt });
+        await streamFromOpenAI({ model, systemPrompt, body, emit, startedAt, retrievalSummary });
       }
       return;
     } catch (err) {
@@ -348,6 +359,7 @@ interface ModelStreamInput {
   body: RequestShape;
   emit: (ev: AtherosStreamEvent) => void;
   startedAt: number;
+  retrievalSummary: { topK: number; topSimilarity: number; sourceTypes: string[] };
 }
 
 async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
@@ -463,6 +475,7 @@ async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
     outputTokens,
     startedAt: input.startedAt,
     emit: input.emit,
+    retrievalSummary: input.retrievalSummary,
   });
 }
 
@@ -714,6 +727,7 @@ interface FinalizeInput {
   outputTokens: number;
   startedAt: number;
   emit: (ev: AtherosStreamEvent) => void;
+  retrievalSummary?: { topK: number; topSimilarity: number; sourceTypes: string[] };
 }
 
 async function finalizeTurn(input: FinalizeInput): Promise<void> {
@@ -739,6 +753,7 @@ async function finalizeTurn(input: FinalizeInput): Promise<void> {
     output_tokens: input.outputTokens,
     latency_ms: latencyMs,
     cost_usd: cost,
+    retrieval_summary: input.retrievalSummary ?? null,
   });
 }
 

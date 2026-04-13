@@ -57,6 +57,12 @@ export async function upsertSession(input: SessionUpsertInput): Promise<void> {
   }
 }
 
+export interface RetrievalSummary {
+  topK: number;
+  topSimilarity: number;
+  sourceTypes: string[];
+}
+
 export interface MessageInsertInput {
   session_id: string;
   role: 'user' | 'assistant' | 'tool' | 'admin' | 'system';
@@ -72,6 +78,7 @@ export interface MessageInsertInput {
   thoughts?: string[] | null;
   status_events?: Array<{ at: number; text: string }> | null;
   stream_incomplete?: boolean;
+  retrieval_summary?: RetrievalSummary | null;
 }
 
 export async function insertMessage(input: MessageInsertInput): Promise<void> {
@@ -92,6 +99,7 @@ export async function insertMessage(input: MessageInsertInput): Promise<void> {
     thoughts: input.thoughts ?? null,
     status_events: input.status_events ?? null,
     stream_incomplete: input.stream_incomplete ?? false,
+    retrieval_summary: input.retrieval_summary ?? null,
   });
   if (error) {
     log.warn('init', error, {
