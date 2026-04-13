@@ -30,6 +30,10 @@ import {
   animate,
 } from 'framer-motion';
 import { useEffect, useRef } from 'react';
+// Art scoring + diversity lives in a neutral (server-and-client)
+// module so the server component that queries Supabase can call it
+// directly without crossing the 'use client' boundary.
+import { artPreferencesForStudy, type ArtKey } from './caseStudyArt';
 
 export type KineticStudy = {
   id: string;
@@ -371,115 +375,6 @@ function AnimatedMetric({
       {suffix ?? ''}
     </span>
   );
-}
-
-// ---------- Industry-driven art selector ----------
-
-export type ArtKey = 'heartbeat' | 'barColumns' | 'convergingLines' | 'alignment';
-
-const ALL_ART_KEYS: ArtKey[] = ['barColumns', 'heartbeat', 'convergingLines', 'alignment'];
-
-/**
- * Return the study's art preferences in priority order. The section
- * uses this to assign a unique art key per card: each card gets its
- * first-choice art only if no sibling already took it, otherwise it
- * drops to its next-best fit. This prevents visual repetition on the
- * homepage even when two studies share a dominant signal.
- */
-export function artPreferencesForStudy(study: {
-  services?: string[];
-  outcome: string;
-  approach: string;
-  metricLabel: string;
-  industry: string;
-  artVariant?: string;
-}): ArtKey[] {
-  // Explicit admin override pins the first choice. We still return the
-  // remaining three as fallbacks so the diversity algorithm can resolve
-  // conflicts if an admin accidentally set two siblings to the same
-  // variant.
-  if (
-    study.artVariant === 'barColumns' ||
-    study.artVariant === 'heartbeat' ||
-    study.artVariant === 'convergingLines' ||
-    study.artVariant === 'alignment'
-  ) {
-    const rest = ALL_ART_KEYS.filter((k) => k !== study.artVariant);
-    return [study.artVariant as ArtKey, ...rest];
-  }
-
-  const services = (study.services ?? []).join(' ').toLowerCase();
-  const content = `${study.outcome} ${study.approach} ${study.metricLabel}`.toLowerCase();
-  const signal = `${services} ${content}`;
-  const industry = study.industry.toLowerCase();
-
-  // Score each art key against all available signals. Higher score =
-  // stronger fit. Ties are broken by the natural ALL_ART_KEYS order so
-  // the result is deterministic.
-  const scores: Record<ArtKey, number> = {
-    barColumns: 0,
-    heartbeat: 0,
-    convergingLines: 0,
-    alignment: 0,
-  };
-
-  // Strong, specific content signals.
-  if (/analytics|\bbi\b|report|dashboard|self[- ]service|power ?bi|tableau/.test(signal)) {
-    scores.barColumns += 6;
-  }
-  if (/\bai\b|\bml\b|agent|\bllm\b|gen[- ]?ai|govern|shadow ai|\bcompliance\b/.test(signal)) {
-    scores.convergingLines += 6;
-  }
-  if (/align|unif|consolid|\bintegrat|supplier|multi[- ]location|global roll|post[- ]acquisition|\bm&a\b|merger/.test(signal)) {
-    scores.alignment += 6;
-  }
-
-  // Industry-strong conventions (weaker than explicit content, stronger
-  // than generic keywords).
-  if (/financ|insuranc|bank|invest|capital/.test(industry)) scores.barColumns += 4;
-  if (/manufactur|industrial|automotive|energy|utilities|logistics|transport/.test(industry)) scores.heartbeat += 4;
-  if (/health|pharma|clinical|bio|life sciences/.test(industry)) scores.convergingLines += 4;
-
-  // Weaker content signals.
-  if (/migrat|moderniz|legacy|\bcloud\b|re[- ]?architect|lift[- ]and[- ]shift/.test(signal)) {
-    scores.heartbeat += 2;
-  }
-  if (/real[- ]?time|stream|kafka|cdc/.test(signal)) scores.heartbeat += 1;
-  if (/cost|saving|reduction|faster/.test(signal)) scores.barColumns += 1;
-
-  // Neutral baseline so alignment is the sensible default tiebreaker.
-  scores.alignment += 1;
-
-  return [...ALL_ART_KEYS].sort((a, b) => scores[b] - scores[a]);
-}
-
-/**
- * Greedy diversity assignment: walk the studies in order, give each
- * its highest-preference art key that has not yet been taken. Returns
- * one key per study. If there are more studies than distinct art
- * variants (four), the remainder cycle through freely (duplicates
- * become unavoidable but rare on a three-card homepage).
- */
-export function assignDiverseArt(
-  studies: Array<{
-    services?: string[];
-    outcome: string;
-    approach: string;
-    metricLabel: string;
-    industry: string;
-    artVariant?: string;
-  }>,
-): ArtKey[] {
-  const taken = new Set<ArtKey>();
-  const result: ArtKey[] = [];
-  for (const s of studies) {
-    const prefs = artPreferencesForStudy(s);
-    const chosen = prefs.find((k) => !taken.has(k)) ?? prefs[0];
-    taken.add(chosen);
-    result.push(chosen);
-    if (taken.size >= ALL_ART_KEYS.length) taken.clear();
-  }
-  return result;
 }
 
 

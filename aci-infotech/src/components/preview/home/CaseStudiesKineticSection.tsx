@@ -14,10 +14,10 @@
 import { createClient } from '@supabase/supabase-js';
 import { displayClient } from '@/lib/content/anonymize';
 import CaseStudyKinetic, {
-  assignDiverseArt,
   type KineticStudy,
   type Theme,
 } from './CaseStudyKinetic';
+import { assignDiverseArt } from './caseStudyArt';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
