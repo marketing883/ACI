@@ -59,6 +59,58 @@ function buildWelcomeMessage(pathname: string | null): ChatColumnMessage {
   return { id: 'welcome', role: 'assistant', content: w.text };
 }
 
+function humanizeSlug(slug: string): string {
+  return slug
+    .split('-')
+    .map((w) => (w[0] ? w[0].toUpperCase() + w.slice(1) : w))
+    .join(' ')
+    .replace(/\bAi\b/g, 'AI')
+    .replace(/\bMl\b/g, 'ML')
+    .replace(/\bAws\b/g, 'AWS')
+    .replace(/\bSap\b/g, 'SAP')
+    .replace(/\bApi\b/g, 'API')
+    .replace(/\bErp\b/g, 'ERP')
+    .replace(/\bCdp\b/g, 'CDP')
+    .replace(/\bMartech\b/g, 'MarTech');
+}
+
+/**
+ * Contextual fallback for turns where the model fired a panel but emitted
+ * no prose. Varies per panel type and entity name so the bubble never
+ * looks like a stock response. Used by the onDone handler when content
+ * is empty after streaming completes.
+ */
+function buildPanelFallback(panel: ShowContentPanelArgs | null): string {
+  if (!panel) {
+    return 'I pulled up the most relevant view on the right. Where do you want to start?';
+  }
+  const name = humanizeSlug(panel.entityRef);
+  switch (panel.panelType) {
+    case 'diagram':
+      return `${name} diagram is on the right. Which node do you want me to walk through first?`;
+    case 'service':
+      return `${name} page is up. What is the immediate need, cost, latency, or governance?`;
+    case 'platform':
+      return `${name} is on the right. Are you greenfield, or migrating from something specific?`;
+    case 'industry':
+      return `${name} patterns are up. Which one mirrors your situation most closely?`;
+    case 'case':
+      return `Pulled the case study. Want me to translate any part of it to your stack?`;
+    case 'comparison':
+      return `${name.replace(/-vs-/g, ' vs ')} comparison is up. Which row deserves the closer look?`;
+    case 'playbook':
+      return `Playbook is on the right. Which step is the sticky one for your team?`;
+    case 'timeline':
+      return `Timeline is up. Which phase are you closest to right now?`;
+    case 'stats':
+      return `The numbers are up. Anything stand out you want me to dig into?`;
+    case 'resource':
+      return `${name} is on the right. Want a quick map of what it covers before you commit to the read?`;
+    default:
+      return `${name} is on the right. Want me to walk through it?`;
+  }
+}
+
 export default function ChatColumn({
   sessionId,
   initialMessages,
@@ -157,6 +209,7 @@ export default function ChatColumn({
       let requestField: RequestFieldArgs | undefined;
       let thought: string | undefined;
       let panelOpened = false;
+      let lastPanel: ShowContentPanelArgs | null = null;
 
       const nextMessages = [...messages, userMsg].map((m) => ({
         role: m.role as 'user' | 'assistant',
@@ -210,6 +263,7 @@ export default function ChatColumn({
                 if (panel?.panelType && panel.entityRef) {
                   onPanelRequest(panel);
                   panelOpened = true;
+                  lastPanel = panel;
                 }
                 break;
               }
@@ -250,14 +304,16 @@ export default function ChatColumn({
                 let content = msg.content;
                 if (!content || content.trim().length === 0) {
                   // Model fired tools but produced no prose. Surface a
-                  // soft fallback so the chat bubble is not empty.
+                  // panel-aware fallback so the bubble is never the same
+                  // generic line twice in a row.
                   if (streamIncomplete) {
                     content =
                       "I hit a snag. [Reach out](/contact) and we will keep going.";
                   } else if (panelOpened) {
-                    content = 'Pulled it up on the right. Tell me where to dig in.';
+                    content = buildPanelFallback(lastPanel);
                   } else {
-                    content = 'One moment. Want to give me a bit more on what you are after?';
+                    content =
+                      'One moment. Want to give me a bit more on what you are after?';
                   }
                 }
                 return {
