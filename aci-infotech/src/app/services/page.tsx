@@ -132,8 +132,33 @@ export default function ServicesPage() {
       />
 
       {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-32 pb-20 overflow-hidden bg-[var(--aci-secondary)]">
+        <Image
+          src="/images/services-hero-bg.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          priority
+          className="object-cover object-center"
+        />
+        {/* Stylized brand overlay:
+            1) Dark navy scrim for headline contrast.
+            2) Diagonal aci-primary wash for brand accent.
+            3) Bottom-to-top fade so the stat tiles anchor on solid dark. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[color:var(--aci-secondary)]/85"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-br from-[color:var(--aci-primary)]/35 via-transparent to-[color:var(--aci-secondary)]/70"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-[color:var(--aci-secondary)]/30 via-transparent to-[color:var(--aci-secondary)]/85"
+        />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
             <p className="text-[var(--aci-primary-light)] font-medium mb-4 tracking-wide uppercase">
               Our Services
@@ -142,7 +167,7 @@ export default function ServicesPage() {
               Enterprise Technology Services That
               <span className="text-[var(--aci-primary-light)]"> Actually Deliver</span>
             </h1>
-            <p className="text-xl text-gray-400 mb-8">
+            <p className="text-xl text-gray-300 mb-8">
               Six practice areas. One engineering standard. Every engagement staffed with senior architects
               who've shipped production systems at Fortune 500 scale.
             </p>
@@ -150,17 +175,17 @@ export default function ServicesPage() {
 
           {/* Value Props */}
           <div className="grid md:grid-cols-3 gap-6 mt-12">
-            <div className="bg-gray-800 rounded-xl p-6 text-center">
+            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
               <div className="text-4xl font-bold text-white mb-2">80+</div>
-              <div className="text-gray-400">Enterprise Clients</div>
+              <div className="text-gray-300">Enterprise Clients</div>
             </div>
-            <div className="bg-gray-800 rounded-xl p-6 text-center">
+            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
               <div className="text-4xl font-bold text-white mb-2">$500M+</div>
-              <div className="text-gray-400">Client Value Delivered</div>
+              <div className="text-gray-300">Client Value Delivered</div>
             </div>
-            <div className="bg-gray-800 rounded-xl p-6 text-center">
+            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
               <div className="text-4xl font-bold text-white mb-2">98%</div>
-              <div className="text-gray-400">Client Retention Rate</div>
+              <div className="text-gray-300">Client Retention Rate</div>
             </div>
           </div>
         </div>
