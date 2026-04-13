@@ -96,8 +96,8 @@ export default function ServicePanel({ entityRef, rationale }: PanelProps) {
                 </div>
                 <p className="mt-1 text-sm text-gray-700">{cs.challenge}</p>
                 <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-600">
-                  {cs.results.slice(0, 3).map((r) => (
-                    <span key={r.metric}>
+                  {cs.results.slice(0, 3).map((r, idx) => (
+                    <span key={`${cs.slug}-${idx}`}>
                       <span className="font-semibold text-[color:var(--aci-secondary,#0A1628)]">
                         {r.metric}
                       </span>{' '}

@@ -78,8 +78,9 @@ function humanizeSlug(slug: string): string {
 /**
  * Contextual fallback for turns where the model fired a panel but emitted
  * no prose. Varies per panel type and entity name so the bubble never
- * looks like a stock response. Used by the onDone handler when content
- * is empty after streaming completes.
+ * looks like a stock response. Reads the FIRST (primary) panel fired
+ * in the turn: for compound queries the platform / service lands first
+ * and is what the user actually asked about.
  */
 function singlePanelFallback(panel: ShowContentPanelArgs): string {
   const name = humanizeSlug(panel.entityRef);
@@ -109,38 +110,11 @@ function singlePanelFallback(panel: ShowContentPanelArgs): string {
   }
 }
 
-/**
- * Fallback when multiple panels fired in a single turn (typical for
- * compound queries like "Dynamics 365 for manufacturing" or "Databricks
- * in healthcare"). We pair the primary (platform / service) with the
- * secondary (industry) in one sentence + a focused follow-up question,
- * so the bubble is never the generic "industry patterns are up" line
- * when the user asked a compound question.
- */
-function compoundPanelFallback(panels: readonly ShowContentPanelArgs[]): string {
-  const platform = panels.find((p) => p.panelType === 'platform');
-  const service = panels.find((p) => p.panelType === 'service');
-  const industry = panels.find((p) => p.panelType === 'industry');
-  const primary = platform ?? service;
-
-  if (primary && industry) {
-    const primaryName = humanizeSlug(primary.entityRef);
-    const industryName = humanizeSlug(industry.entityRef);
-    return `${primaryName} on the right, with the ${industryName} context alongside. Is the pain more on the platform side, or on the ${industryName.toLowerCase()} workflows?`;
-  }
-  if (platform && service) {
-    return `${humanizeSlug(platform.entityRef)} and the ${humanizeSlug(service.entityRef)} service page are both up. Which one is closer to the immediate need?`;
-  }
-  // Two of the same type; fall back to the single-panel line on the first.
-  return singlePanelFallback(panels[0]);
-}
-
 function buildPanelFallback(panels: readonly ShowContentPanelArgs[]): string {
   if (panels.length === 0) {
     return 'I pulled up the most relevant view on the right. Where do you want to start?';
   }
-  if (panels.length === 1) return singlePanelFallback(panels[0]);
-  return compoundPanelFallback(panels);
+  return singlePanelFallback(panels[0]);
 }
 
 export default function ChatColumn({
