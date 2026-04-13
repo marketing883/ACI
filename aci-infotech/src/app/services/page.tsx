@@ -227,6 +227,86 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      {/* Managed & Operational Services */}
+      <section className="py-20 bg-white border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-12">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--aci-primary)] font-semibold">
+              Operational delivery
+            </p>
+            <h2 className="mt-2 text-2xl md:text-3xl font-bold text-[var(--aci-secondary)]">
+              Managed &amp; Operational Services
+            </h2>
+            <p className="mt-3 text-gray-600 max-w-3xl">
+              Behind every transformation is the team that keeps it running. These are the managed engagements that protect what we build and what you already operate.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div>
+              <h3 className="font-semibold text-[var(--aci-secondary)] text-lg">
+                Managed IT &amp; Infrastructure
+              </h3>
+              <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                End-to-end infrastructure management for enterprises running hybrid and cloud environments. Monitoring, operations, and SLA-backed support, built around what you are actually running.
+              </p>
+              <Link
+                href="/contact?service=managed-infrastructure&source=services-managed"
+                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aci-primary)] hover:text-[var(--aci-secondary)] transition-colors"
+              >
+                Talk to us
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div>
+              <h3 className="font-semibold text-[var(--aci-secondary)] text-lg">
+                NOC &amp; SOC Operations
+              </h3>
+              <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                24/7 network and security operations backed by the same observability stack we deploy. Proactive monitoring, incident response, and documented escalation paths.
+              </p>
+              <Link
+                href="/services/cyber-security?source=services-managed-noc-soc"
+                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aci-primary)] hover:text-[var(--aci-secondary)] transition-colors"
+              >
+                See our Security practice
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div>
+              <h3 className="font-semibold text-[var(--aci-secondary)] text-lg">
+                IT Support Services
+              </h3>
+              <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                Structured support across L1, L2, and L3, aligned to your operations, not a generic helpdesk model. Delivered as part of a managed engagement, not standalone staffing.
+              </p>
+              <Link
+                href="/contact?service=it-support&source=services-managed"
+                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aci-primary)] hover:text-[var(--aci-secondary)] transition-colors"
+              >
+                Talk to us
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div>
+              <h3 className="font-semibold text-[var(--aci-secondary)] text-lg">
+                Application Managed Services
+              </h3>
+              <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                Post-deployment operations for the applications and integrations we build. SLA-backed support, release management, and continuous improvement to keep production healthy.
+              </p>
+              <Link
+                href="/contact?service=application-managed-services&source=services-managed"
+                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aci-primary)] hover:text-[var(--aci-secondary)] transition-colors"
+              >
+                Talk to us
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Our Approach */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
