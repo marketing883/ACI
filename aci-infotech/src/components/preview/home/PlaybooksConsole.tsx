@@ -96,31 +96,13 @@ const PLAYBOOK_COPY: Record<string, PlaybookCopy> = {
   },
 };
 
-type Status = 'scaled' | 'live' | 'iterating';
-
-function statusFor(deployments: number): Status {
-  if (deployments >= 30) return 'scaled';
-  if (deployments >= 15) return 'live';
-  return 'iterating';
-}
-
 function pad2(n: number) {
   return n.toString().padStart(2, '0');
 }
-function pad3(n: number) {
-  return n.toString().padStart(3, '0');
-}
-
-const STATUS_STYLES: Record<Status, string> = {
-  scaled: 'text-[#C4FF61] border-[#C4FF61]/40 bg-[#C4FF61]/[0.06]',
-  live: 'text-cyan-300 border-cyan-300/40 bg-cyan-300/[0.05]',
-  iterating: 'text-amber-300 border-amber-300/40 bg-amber-300/[0.05]',
-};
 
 function PlaybookRow({ pb, index }: { pb: PlaybookData; index: number }) {
   const [open, setOpen] = useState(false);
   const [hover, setHover] = useState(false);
-  const status = statusFor(pb.deployments);
   // Copy override is the source for the row's display name, promise line,
   // and hover-revealed outcome. Fall back to the structured data only if the
   // override is missing for an unknown id.
@@ -148,7 +130,10 @@ function PlaybookRow({ pb, index }: { pb: PlaybookData; index: number }) {
         aria-expanded={open}
         className="w-full text-left py-7 md:py-8 px-5 md:px-8 cursor-pointer focus:outline-none focus:bg-white/[0.02]"
       >
-        {/* Top line: ID + name + count + status */}
+        {/* Top line: ID + name + deployment count phrase. Status chip
+            dropped - it was abstract labeling without clear meaning. The
+            count phrase on the right tells the visitor exactly what they
+            need to know: this play has been shipped this many times. */}
         <div className="flex items-baseline gap-4 md:gap-6 flex-wrap">
           <span className="font-mono text-[#C4FF61]/90 text-sm md:text-base tracking-wider">
             PB-{pad2(index + 1)}
@@ -159,13 +144,8 @@ function PlaybookRow({ pb, index }: { pb: PlaybookData; index: number }) {
           >
             {displayName}
           </span>
-          <span className="font-mono text-white/50 text-sm md:text-base">
-            dep:{pad3(pb.deployments)}
-          </span>
-          <span
-            className={`font-mono text-[11px] md:text-xs uppercase tracking-[0.18em] px-2.5 py-1 border ${STATUS_STYLES[status]}`}
-          >
-            {status}
+          <span className="font-mono text-white/70 text-xs md:text-sm tracking-wider uppercase whitespace-nowrap">
+            Shipped {pb.deployments}{'\u00A0'}times
           </span>
         </div>
 
@@ -283,9 +263,6 @@ function PlaybookRow({ pb, index }: { pb: PlaybookData; index: number }) {
 }
 
 export default function PlaybooksConsole() {
-  // Format date as YYYY-MM-DD using the build/render time. This matches the
-  // austere "last updated" feel without depending on real DB metadata.
-  const today = new Date().toISOString().slice(0, 10);
   const total = pad2(PLAYBOOKS.length);
 
   return (
@@ -312,11 +289,15 @@ export default function PlaybooksConsole() {
       />
 
       <div className="relative max-w-[1320px] mx-auto px-5 md:px-10">
-        {/* Section header */}
+        {/* Section header. Copy authored so the wrapped last line never
+            leaves a widow word (see CLAUDE.md). */}
         <div className="mb-12 md:mb-16 px-1 md:px-8">
           <div className="font-mono text-xs md:text-sm text-white/55 tracking-wider mb-6">
-            {`// ${total} playbooks . in production . last updated ${today}`}
+            {`// ${total} playbooks . in production`}
           </div>
+          {/* Non-breaking space between the final two words so the last
+              line of the wrapped headline is never a single orphan word
+              (widow rule, see CLAUDE.md). */}
           <h2
             className="text-white font-[var(--font-title)] font-bold max-w-3xl"
             style={{
@@ -325,12 +306,10 @@ export default function PlaybooksConsole() {
               letterSpacing: '-0.025em',
             }}
           >
-            Pick the move you need next.
+            {'Ten plays we already know how to run for\u00A0you.'}
           </h2>
           <p className="mt-5 text-white/75 max-w-2xl text-base md:text-lg leading-relaxed">
-            Ten things we already know how to ship for you. Each one is a
-            proven pattern, not a slide. Open a row to see what we will fix,
-            what you will get, and the stack we will run on.
+            {'Each one is a real pattern, shipped to production many times over. Open any row for the problems we solve, the outcomes we deliver, and the stack that carries each\u00A0build.'}
           </p>
         </div>
 
