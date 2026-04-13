@@ -374,12 +374,43 @@ async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
 
   let emittedThought = false;
   let textBuffer = '';
+  let streamedTextLength = 0;
   let inputTokens = 0;
   let outputTokens = 0;
   const pendingToolCalls = new Map<
     string,
     { name: string; jsonBuffer: string }
   >();
+  // Captured tool_use blocks from the first stream, used to build the
+  // follow-up agentic-loop call when the model skipped prose.
+  const completedToolUses: Array<{
+    id: string;
+    name: string;
+    input: unknown;
+    resultSummary: string;
+  }> = [];
+
+  // Shared helper: accept a streamed text delta and emit it through the
+  // thought-parsing pipeline (dim "~ ..." line vs. normal tokens).
+  const handleTextDelta = (delta: string) => {
+    textBuffer += delta;
+    streamedTextLength += delta.length;
+    if (!emittedThought) {
+      const { thought, reply } = splitThoughtFromReply(textBuffer);
+      if (thought && reply) {
+        input.emit({ type: 'thought', text: thought });
+        emittedThought = true;
+        if (reply.length > 0) input.emit({ type: 'token', text: reply });
+        return;
+      }
+      if (textBuffer.length > 160 && !textBuffer.trimStart().startsWith('~')) {
+        emittedThought = true;
+        input.emit({ type: 'token', text: textBuffer });
+      }
+      return;
+    }
+    input.emit({ type: 'token', text: delta });
+  };
 
   const stream = await client.messages.stream({
     model: input.model.id,
@@ -407,28 +438,7 @@ async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
       }
     } else if (event.type === 'content_block_delta') {
       if (event.delta.type === 'text_delta') {
-        const delta = event.delta.text;
-        textBuffer += delta;
-        if (!emittedThought) {
-          const { thought, reply } = splitThoughtFromReply(textBuffer);
-          if (thought && reply) {
-            input.emit({ type: 'thought', text: thought });
-            emittedThought = true;
-            // Flush the reply that arrived together with the thought line.
-            if (reply.length > 0) {
-              input.emit({ type: 'token', text: reply });
-            }
-            continue;
-          }
-          // If we have received a lot of text with no "~" marker, accept
-          // that there is no thought; stream remaining text as tokens.
-          if (textBuffer.length > 160 && !textBuffer.trimStart().startsWith('~')) {
-            emittedThought = true;
-            input.emit({ type: 'token', text: textBuffer });
-          }
-          continue;
-        }
-        input.emit({ type: 'token', text: delta });
+        handleTextDelta(event.delta.text);
       } else if (event.delta.type === 'input_json_delta') {
         const contentBlockIndex = (event as { index: number }).index;
         const ids = Array.from(pendingToolCalls.keys());
@@ -439,11 +449,16 @@ async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
         }
       }
     } else if (event.type === 'content_block_stop') {
-      // Finalize pending tool call if any.
       const finishedId = [...pendingToolCalls.keys()].pop();
       if (finishedId) {
         const slot = pendingToolCalls.get(finishedId);
         if (slot) {
+          let parsedInput: unknown = {};
+          try {
+            parsedInput = slot.jsonBuffer ? JSON.parse(slot.jsonBuffer) : {};
+          } catch {
+            // copilot-allow-silent-catch: bad JSON handled in executeToolCall
+          }
           await executeToolCall({
             callId: finishedId,
             toolName: slot.name,
@@ -451,6 +466,12 @@ async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
             sessionId: input.body.sessionId,
             conversation: input.body.messages,
             emit: input.emit,
+          });
+          completedToolUses.push({
+            id: finishedId,
+            name: slot.name,
+            input: parsedInput,
+            resultSummary: describeToolResult(slot.name, parsedInput),
           });
           pendingToolCalls.delete(finishedId);
         }
@@ -460,6 +481,55 @@ async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
         inputTokens = event.usage.input_tokens ?? inputTokens;
         outputTokens = event.usage.output_tokens ?? outputTokens;
       }
+    }
+  }
+
+  // Agentic tool-use loop: if Haiku skipped prose and only fired tools,
+  // send the tool results back and ask for the actual reply. One extra
+  // round-trip; roughly doubles cost on tool-firing turns (~$0.002 to
+  // ~$0.004) but eliminates the canned-fallback UX.
+  if (streamedTextLength === 0 && completedToolUses.length > 0) {
+    input.emit({ type: 'status', text: 'Composing reply from the panels above.' });
+    try {
+      const toolUseContent = completedToolUses.map((t) => ({
+        type: 'tool_use' as const,
+        id: t.id,
+        name: t.name,
+        input: (t.input ?? {}) as Record<string, unknown>,
+      }));
+      const toolResultContent = completedToolUses.map((t) => ({
+        type: 'tool_result' as const,
+        tool_use_id: t.id,
+        content: t.resultSummary,
+      }));
+
+      const followUp = await client.messages.stream({
+        model: input.model.id,
+        max_tokens: maxOutputTokens(),
+        system: input.systemPrompt,
+        // No tools on the follow-up so the model must produce text.
+        messages: [
+          ...modelMessages,
+          { role: 'assistant', content: toolUseContent },
+          { role: 'user', content: toolResultContent },
+        ],
+      });
+
+      for await (const ev of followUp) {
+        if (ev.type === 'content_block_delta' && ev.delta.type === 'text_delta') {
+          handleTextDelta(ev.delta.text);
+        } else if (ev.type === 'message_delta' && ev.usage) {
+          inputTokens += ev.usage.input_tokens ?? 0;
+          outputTokens += ev.usage.output_tokens ?? 0;
+        }
+      }
+    } catch (err) {
+      log.warn('generate', err, {
+        sessionId: input.body.sessionId,
+        extra: { phase: 'agentic-follow-up' },
+      });
+      // Fall through to finalizeTurn; the contextual fallback in
+      // ChatColumn will cover the empty reply as a last resort.
     }
   }
 
@@ -477,6 +547,33 @@ async function streamFromAnthropic(input: ModelStreamInput): Promise<void> {
     emit: input.emit,
     retrievalSummary: input.retrievalSummary,
   });
+}
+
+function describeToolResult(name: string, args: unknown): string {
+  switch (name) {
+    case 'show_content_panel': {
+      const a = args as { panelType?: string; entityRef?: string };
+      return `panel ${a.panelType ?? 'unknown'}/${a.entityRef ?? 'unknown'} rendered on the right`;
+    }
+    case 'offer_action_buttons':
+      return 'action chips rendered under the reply';
+    case 'request_field': {
+      const a = args as { fieldName?: string };
+      return `inline input for ${a.fieldName ?? 'field'} rendered under the reply`;
+    }
+    case 'cite_source': {
+      const a = args as { slug?: string };
+      return `citation pill for ${a.slug ?? 'source'} rendered`;
+    }
+    case 'qualify_lead':
+      return 'lead fields captured to the chat_leads row';
+    case 'schedule_meeting':
+      return 'meeting request recorded; admin will follow up';
+    case 'handoff_to_human':
+      return 'handoff to human recorded; admin notified';
+    default:
+      return 'tool executed';
+  }
 }
 
 // ---------------------------------------------------------------------------
