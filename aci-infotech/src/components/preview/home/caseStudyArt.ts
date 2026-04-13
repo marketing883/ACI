@@ -8,9 +8,20 @@
  * crossing the server/client boundary.
  */
 
-export type ArtKey = 'heartbeat' | 'barColumns' | 'convergingLines' | 'alignment';
+export type ArtKey =
+  | 'heartbeat'
+  | 'barColumns'
+  | 'convergingLines'
+  | 'alignment'
+  | 'candles';
 
-const ALL_ART_KEYS: ArtKey[] = ['barColumns', 'heartbeat', 'convergingLines', 'alignment'];
+const ALL_ART_KEYS: ArtKey[] = [
+  'candles',
+  'barColumns',
+  'heartbeat',
+  'convergingLines',
+  'alignment',
+];
 
 /**
  * Minimum shape needed to score a study. Intentionally a structural
@@ -46,7 +57,8 @@ export function artPreferencesForStudy(study: StudyForArt): ArtKey[] {
     study.artVariant === 'barColumns' ||
     study.artVariant === 'heartbeat' ||
     study.artVariant === 'convergingLines' ||
-    study.artVariant === 'alignment'
+    study.artVariant === 'alignment' ||
+    study.artVariant === 'candles'
   ) {
     const rest = ALL_ART_KEYS.filter((k) => k !== study.artVariant);
     return [study.artVariant as ArtKey, ...rest];
@@ -62,8 +74,10 @@ export function artPreferencesForStudy(study: StudyForArt): ArtKey[] {
     heartbeat: 0,
     convergingLines: 0,
     alignment: 0,
+    candles: 0,
   };
 
+  // Strong content signals.
   if (/analytics|\bbi\b|report|dashboard|self[- ]service|power ?bi|tableau/.test(signal)) {
     scores.barColumns += 6;
   }
@@ -73,11 +87,21 @@ export function artPreferencesForStudy(study: StudyForArt): ArtKey[] {
   if (/align|unif|consolid|\bintegrat|supplier|multi[- ]location|global roll|post[- ]acquisition|\bm&a\b|merger/.test(signal)) {
     scores.alignment += 6;
   }
+  // Finance-specific content: trading floors, risk, portfolios,
+  // allocations, P&L work, regulatory reporting. These reliably suit
+  // the candlestick metaphor over any other.
+  if (/trading|\bstock\b|equity|equities|portfolio|allocation|\brisk\b|\bp&l\b|profitab|capital markets|sec\b|regulator/.test(signal)) {
+    scores.candles += 6;
+  }
 
-  if (/financ|insuranc|bank|invest|capital/.test(industry)) scores.barColumns += 4;
+  // Industry conventions. Finance now defaults to candles (the
+  // unambiguous financial-services visual), not bars. Bars stay
+  // reserved for explicit analytics/BI stories regardless of sector.
+  if (/financ|insuranc|bank|invest|capital/.test(industry)) scores.candles += 5;
   if (/manufactur|industrial|automotive|energy|utilities|logistics|transport/.test(industry)) scores.heartbeat += 4;
   if (/health|pharma|clinical|bio|life sciences/.test(industry)) scores.convergingLines += 4;
 
+  // Weaker content signals.
   if (/migrat|moderniz|legacy|\bcloud\b|re[- ]?architect|lift[- ]and[- ]shift/.test(signal)) {
     scores.heartbeat += 2;
   }

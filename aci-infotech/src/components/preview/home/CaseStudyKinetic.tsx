@@ -225,6 +225,78 @@ function ConvergingLinesArt({ accent, animateIn }: { accent: string; animateIn: 
 }
 
 /**
+ * CandlestickArt - stylized OHLC / candlestick series. The canonical
+ * financial-services visual: a trading floor in one glance. Mixed
+ * up/down candles with a subtle trend so it reads as markets moving,
+ * not just decoration.
+ */
+function CandlestickArt({ accent, animateIn }: { accent: string; animateIn: boolean }) {
+  // Faux OHLC series. Tuned to trend gently up across the viewBox so
+  // the composition lands as "markets improving," which fits every
+  // finance outcome we care to show (faster allocations, lower risk,
+  // cost cut, etc.).
+  const candles = [
+    { x: 28, wHi: 70, wLo: 160, bHi: 95, bLo: 135, up: false },
+    { x: 56, wHi: 60, wLo: 150, bHi: 85, bLo: 120, up: true },
+    { x: 84, wHi: 50, wLo: 145, bHi: 80, bLo: 120, up: true },
+    { x: 112, wHi: 65, wLo: 155, bHi: 100, bLo: 130, up: false },
+    { x: 140, wHi: 45, wLo: 140, bHi: 70, bLo: 110, up: true },
+    { x: 168, wHi: 40, wLo: 130, bHi: 60, bLo: 100, up: true },
+    { x: 196, wHi: 55, wLo: 135, bHi: 85, bLo: 115, up: false },
+    { x: 224, wHi: 35, wLo: 120, bHi: 55, bLo: 90, up: true },
+    { x: 252, wHi: 30, wLo: 110, bHi: 45, bLo: 80, up: true },
+    { x: 280, wHi: 45, wLo: 115, bHi: 65, bLo: 90, up: false },
+    { x: 308, wHi: 25, wLo: 100, bHi: 40, bLo: 70, up: true },
+    { x: 336, wHi: 20, wLo: 90, bHi: 30, bLo: 60, up: true },
+    { x: 364, wHi: 15, wLo: 80, bHi: 22, bLo: 50, up: true },
+  ];
+  const bodyWidth = 14;
+
+  return (
+    <svg viewBox="0 0 400 200" className="w-full h-auto" aria-hidden>
+      {/* Ghost grid lines to imply an axis without stealing attention. */}
+      <g stroke={accent} strokeOpacity="0.12" strokeWidth="0.5">
+        {[40, 80, 120, 160].map((y) => (
+          <line key={y} x1="0" y1={y} x2="400" y2={y} />
+        ))}
+      </g>
+      {candles.map((c, i) => (
+        <motion.g
+          key={i}
+          initial={{ opacity: 0, y: 6 }}
+          animate={animateIn ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
+          transition={{ duration: 0.28, delay: 0.06 * i, ease: EASE_OUT }}
+        >
+          {/* Wick - thin line from high to low. */}
+          <line
+            x1={c.x}
+            y1={c.wHi}
+            x2={c.x}
+            y2={c.wLo}
+            stroke={accent}
+            strokeWidth="1.2"
+            strokeOpacity="0.8"
+          />
+          {/* Body - filled for up candles, outlined for down candles.
+              This creates the signature "green/red" reading even in a
+              single-accent palette. */}
+          <rect
+            x={c.x - bodyWidth / 2}
+            y={c.bHi}
+            width={bodyWidth}
+            height={c.bLo - c.bHi}
+            fill={c.up ? accent : 'none'}
+            fillOpacity={c.up ? 0.9 : 0}
+            stroke={accent}
+            strokeWidth="1.5"
+          />
+        </motion.g>
+      ))}
+    </svg>
+  );
+}
+
+/**
  * AlignmentNetworkArt - scattered nodes on the left wire themselves into a
  * single aligned column on the right. Reads as: many locations, suppliers,
  * or regions coming into one operational view. Good for hospitality,
@@ -647,6 +719,9 @@ export default function CaseStudyKinetic({
             )}
             {resolvedArtKey === 'alignment' && (
               <AlignmentNetworkArt accent={t.accent} animateIn={animateIn} />
+            )}
+            {resolvedArtKey === 'candles' && (
+              <CandlestickArt accent={t.accent} animateIn={animateIn} />
             )}
           </div>
         </motion.div>
