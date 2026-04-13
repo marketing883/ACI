@@ -162,13 +162,10 @@ export default async function CaseStudiesKineticSection() {
             letterSpacing: '-0.025em',
           }}
         >
-          See what we shipped, and what it changed.
+          {'See the Work in\u00A0Production.'}
         </h2>
         <p className="mt-5 text-neutral-600 max-w-2xl text-base md:text-lg leading-relaxed">
-          The most recent builds our content team has marked as featured.
-          Each one shipped to a Fortune-scale operator and is running today.
-          Read on for what the team walked into, what we delivered, and
-          what it actually moved.
+          {'Featured builds, live today at Fortune-scale\u00A0operators. Scroll for the problem each one walked into, what we built, and what changed once it\u00A0shipped.'}
         </p>
       </div>
 
