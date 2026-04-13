@@ -356,27 +356,17 @@ export default function ChatColumn({
         },
       });
 
-      // When flag is off or the endpoint returns 404, fall back to the
-      // legacy /api/chat so the dark launch never regresses.
-      if (result.status === 'not-enabled') {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: nextMessages,
-            pageContext,
-            leadInfo: leadState,
-          }),
-        });
-        const data = (await res.json().catch(() => ({}))) as { message?: string };
+      // v1 /api/chat fallback was removed when the legacy widget was
+      // retired. If the flag is off or the endpoint is unavailable, we
+      // surface an honest inline note so the bubble is never empty.
+      if (result.status === 'not-enabled' || result.status === 'error') {
         setMessages((m) =>
           m.map((msg) =>
             msg.id === pendingAssistantId
               ? {
                   ...msg,
                   content:
-                    data.message ??
-                    "I'm not on this route right now. [Reach out](/contact) and we'll continue.",
+                    "Something is off on my end. [Reach out directly](/contact) and we will keep going.",
                   isStreaming: false,
                 }
               : msg,

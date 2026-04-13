@@ -1,11 +1,10 @@
 /**
  * Browser-side SSE consumer for /api/chat/v2.
  *
- * Dark-launch friendly: returns the final accumulated reply text so the
- * existing ChatWidget can drop in this call in place of its current
- * fetch('/api/chat') without changing the on-screen rendering. Tool
- * calls and status/thought events are delivered via callbacks; the
- * Part-4 UI wires them up, Part-3 just logs and ignores them.
+ * Returns the final accumulated reply text plus status / thought / tool
+ * events via callbacks. Callers decide what to render. The legacy v1
+ * /api/chat route was retired along with the legacy ChatWidget; there
+ * is no fallback path.
  */
 
 'use client';

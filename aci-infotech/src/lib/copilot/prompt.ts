@@ -78,8 +78,68 @@ Slug map (use these exact entityRef values; pick the most specific):
   predictive-ops, observability, engagement-model.
 - Comparisons (panelType: "comparison"): databricks-vs-snowflake,
   cdp-build-vs-buy.
-- Case studies / playbooks / LPs (panelType: "case" / "playbook" / "resource"):
-  use slugs that appear in the <atheros-context> block. Never invent.
+- Landing-page deep dives (panelType: "resource"): these are topic-specific
+  slugs from the LP_CONTENT catalog. Use them when the user asks about a
+  specific sub-service, product family, or implementation pattern. Common
+  ones to know by heart:
+    * Microsoft Dynamics family -> dynamics-365-implementation,
+      dynamics-365-finance, dynamics-365-sales.
+    * Databricks -> databricks-migration, databricks-unity-catalog,
+      databricks-genai, databricks-cost-optimization, databricks-mlops,
+      databricks-services.
+    * Snowflake -> snowflake-consulting.
+    * Salesforce -> salesforce-implementation, salesforce-integration,
+      salesforce-marketing-cloud.
+    * ServiceNow -> servicenow-implementation, servicenow-itsm,
+      servicenow-hr-service-delivery.
+    * Data engineering -> data-engineering-services, data-pipeline-development,
+      etl-services, data-integration, data-observability-platform,
+      data-quality, data-governance.
+    * AI / ML -> generative-ai-consulting, ai-ml-implementation,
+      agentic-ai-development, enterprise-chatbot-development,
+      ai-copilot-development, predictive-analytics, mlops-services,
+      ai-automation, intelligent-process-automation.
+    * Cloud / migration -> cloud-migration, azure-migration,
+      aws-migration-partner, cloud-cost-optimization.
+    * Braze -> braze-implementation, braze-customer-engagement.
+    * MuleSoft / API -> mulesoft-consulting, api-integration.
+    * ERP / finance -> erp-modernization, sap-s4hana-migration,
+      netsuite-implementation.
+    * Power BI -> power-bi-consulting, power-bi-dashboard-development,
+      power-bi-implementation.
+    * Utilities -> utilities-data-modernization.
+- Case studies / playbooks (panelType: "case" / "playbook"): use slugs that
+  appear in the <atheros-context> block. Never invent.
+
+PRODUCT -> SLUG ROUTING (strict; use these exactly when the user names a
+product or family, regardless of surrounding phrasing):
+- "Dynamics 365", "Dynamics", "D365", "Microsoft Dynamics", "Business
+  Central" -> platformType="platform", entityRef="microsoft-dynamics".
+  For a specific Dynamics module follow-up with a resource panel keyed to
+  the dynamics-365-{finance|sales|implementation} slug that matches.
+- "Microsoft Fabric", "Synapse", "Azure Data", "Azure Databricks" ->
+  platformType="platform", entityRef="azure" OR "databricks" as
+  appropriate. Fabric lives on the Azure page.
+- "Power BI", "Power Platform", "Power Automate", "Copilot for Power" ->
+  resource slug power-bi-consulting (or power-bi-dashboard-development /
+  power-bi-implementation) BEFORE defaulting to microsoft-dynamics.
+- "Databricks" -> platform/databricks. If user is more specific (Unity
+  Catalog, Delta Lake, MLflow, cost), pair with the matching LP resource.
+- "Snowflake" -> platform/snowflake.
+- "Salesforce" -> platform/salesforce; "Marketing Cloud" ->
+  resource/salesforce-marketing-cloud.
+- "SAP", "S/4HANA", "S/4 migration" -> platform/sap; for migration
+  specifically use resource/sap-s4hana-migration.
+- "ServiceNow", "ITSM", "HRSD" -> platform/servicenow + a matching
+  resource LP if available.
+- "Braze" -> platform/braze; for activation asks, use
+  resource/braze-customer-engagement.
+- "MuleSoft", "API integration", "iPaaS" -> resource/mulesoft-consulting.
+- "NetSuite" -> resource/netsuite-implementation.
+- Never route a platform question to digital-transformation. That service
+  is the automation catch-all; use it only when the user is talking about
+  workflow / RPA / process automation, not Microsoft / Salesforce / SAP
+  products specifically.
 
 Examples (you must follow this pattern, including writing the prose):
 - User: "Tell me about Databricks."

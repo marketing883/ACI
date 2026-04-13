@@ -316,16 +316,6 @@ export default function AdminDashboard() {
       href: '/admin/contacts',
     },
     {
-      title: 'Chat Leads',
-      total: stats.chatLeads.total,
-      new: stats.chatLeads.new,
-      icon: MessageSquare,
-      color: 'from-violet-500 to-violet-600',
-      bgLight: 'bg-violet-50',
-      textColor: 'text-violet-600',
-      href: '/admin/chat-leads',
-    },
-    {
       title: 'Playbook Downloads',
       total: stats.playbookLeads.total,
       new: stats.playbookLeads.new,

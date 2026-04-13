@@ -24,10 +24,10 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
   ]),
   // Atheros / co-pilot fail-loud rule.
-  // Applied to NEW copilot code and the forthcoming /api/chat/v2 edge route
-  // only. The legacy /api/chat/route.ts is intentionally excluded until it
-  // is deleted in Part 7 of the rollout. Every failure in the new code must
-  // call log.info/warn/error/fatal or carry a `copilot-allow-silent-catch`
+  // Applied to every copilot code path + the /api/chat/v2 edge route.
+  // The legacy /api/chat + /api/chat/lead routes were deleted along with
+  // the legacy ChatWidget. Every failure in this scope must call
+  // log.info/warn/error/fatal or carry a `copilot-allow-silent-catch`
   // explanation; the rule is implemented in eslint-rules/no-silent-catch.mjs.
   {
     files: [
