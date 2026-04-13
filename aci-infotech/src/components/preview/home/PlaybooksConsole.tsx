@@ -317,10 +317,10 @@ export default function PlaybooksConsole() {
               letterSpacing: '-0.025em',
             }}
           >
-            {'Ten things we have shipped so many times we stopped\u00A0counting.'}
+            {"See What's Possible for Your\u00A0Organization"}
           </h2>
           <p className="mt-5 text-white/75 max-w-2xl text-base md:text-lg leading-relaxed">
-            {'Not slides. Not case studies. Real work, done over and over for enterprises like yours. Click a row to see what is broken when we arrive, what is working when we\u00A0leave.'}
+            {'Every pattern below has been deployed at enterprise scale. Real problems, real environments, real\u00A0outcomes.'}
           </p>
         </div>
 
