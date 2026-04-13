@@ -14,6 +14,7 @@ import QuickReplies, {
 } from './QuickReplies';
 import { getTriggerEngine, type TriggerEvent } from '@/lib/analytics/engagement-triggers';
 import { useTracker } from '@/components/analytics/VisitorTracker';
+import { streamAtherosReply, copilotV2Active } from '@/lib/copilot/clientStream';
 
 interface Message {
   id: string;
@@ -548,26 +549,53 @@ export default function ChatWidget() {
       if (followUp && !shouldCallAI) {
         assistantContent = followUp;
       } else {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
+        // Atheros v2 dark launch: when the flag is on for this visitor, we
+        // stream from /api/chat/v2 and ignore UI-only tool calls. When the
+        // flag is off we fall through to the v1 endpoint unchanged.
+        let v2Content: string | null = null;
+        if (copilotV2Active(sessionId)) {
+          const v2Res = await streamAtherosReply({
+            sessionId,
+            visitorId: sessionId,
+            pageContext: {
+              path: typeof window !== 'undefined' ? window.location.pathname : pageContext,
+            },
+            leadState: updatedLead as Record<string, unknown>,
             messages: currentMessages.map(m => ({
-              role: m.role,
+              role: m.role as 'user' | 'assistant',
               content: m.content,
             })),
-            leadInfo: updatedLead,
-            stage: nextStage,
-            pageContext: {
-              currentPage: pageContext,
-              entryPage,
-              pagesVisited,
-            },
-          }),
-        });
+            turnIndex: currentMessages.length,
+          });
+          if (v2Res.status === 'ok' && v2Res.text.trim().length > 0) {
+            v2Content = v2Res.text;
+          }
+        }
 
-        const data = await response.json();
-        assistantContent = data.message || "Something's off on my end. [Reach out directly](/contact) - faster anyway.";
+        if (v2Content !== null) {
+          assistantContent = v2Content;
+        } else {
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              messages: currentMessages.map(m => ({
+                role: m.role,
+                content: m.content,
+              })),
+              leadInfo: updatedLead,
+              stage: nextStage,
+              pageContext: {
+                currentPage: pageContext,
+                entryPage,
+                pagesVisited,
+              },
+            }),
+          });
+
+          const data = await response.json();
+          assistantContent = data.message || "Something's off on my end. [Reach out directly](/contact) - faster anyway.";
+        }
 
         // If in discovery, prompt for info naturally
         if (nextStage === 'collecting_name' && !followUp) {
