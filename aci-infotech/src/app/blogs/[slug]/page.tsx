@@ -60,7 +60,7 @@ export default function BlogPostPage() {
   const shareOnTwitter = () => {
     const url = encodeURIComponent(getShareUrl());
     const text = encodeURIComponent(post?.title || '');
-    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
+    window.open(`https://x.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
   };
 
   const shareOnFacebook = () => {

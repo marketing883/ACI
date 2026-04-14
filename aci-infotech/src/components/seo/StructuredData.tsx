@@ -101,7 +101,7 @@ export function OrganizationSchema({
   },
   sameAs = [
     'https://www.linkedin.com/company/aci-infotech',
-    'https://twitter.com/aciinfotech',
+    'https://x.com/ACIInfotech',
   ],
   foundingDate = '2015',
   numberOfEmployees = '200+',
@@ -308,7 +308,7 @@ export function LocalBusinessSchema({
   priceRange = '$$$',
   sameAs = [
     'https://www.linkedin.com/company/aci-infotech',
-    'https://twitter.com/aciinfotech',
+    'https://x.com/ACIInfotech',
   ],
 }: LocalBusinessSchemaProps = {}) {
   const schema = {

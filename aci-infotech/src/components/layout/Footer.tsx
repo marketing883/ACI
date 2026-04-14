@@ -32,7 +32,7 @@ const FOOTER_LINKS = {
 
 const SOCIAL_LINKS = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/aciinfotech', icon: Linkedin },
-  { label: 'Twitter', href: 'https://twitter.com/aciinfotech', icon: Twitter },
+  { label: 'X', href: 'https://x.com/ACIInfotech', icon: Twitter },
   { label: 'YouTube', href: 'https://www.youtube.com/@aciinfotech', icon: Youtube },
 ];
 
