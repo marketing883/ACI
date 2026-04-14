@@ -27,7 +27,6 @@ import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 interface Scene {
-  eyebrow: string;
   /**
    * Headline is authored as a two-line tuple [topLine, bottomLine] so each
    * scene renders as exactly two lines, regardless of viewport width. This
@@ -36,38 +35,47 @@ interface Scene {
    */
   headline: [string, string];
   sub: string;
-  proof: string;
+  /**
+   * Per-scene CTA. Each slide points to the most relevant destination for
+   * that message, so the hero functions as the site's primary wayfinding
+   * layer instead of a single universal button.
+   */
+  cta: { label: string; href: string };
+  /**
+   * Subtle color wash layered over the dark scrim. Kept in a cool
+   * brand-aligned family across all four scenes so the hero never drifts
+   * into red/brown territory.
+   */
   tint: string;
 }
 
 const SCENES: Scene[] = [
   {
-    eyebrow: '// scope',
-    headline: ['We modernize', 'the Global Enterprise.'],
-    sub: "Data, AI, and cloud transformation for the world's largest operators.",
-    proof: '$1B+ delivered across 80+ Fortune 500 clients',
-    tint: 'rgba(0, 82, 204, 0.22)',
+    headline: ['We Build and Run', 'Enterprise Technology Systems.'],
+    sub: 'Data, AI, cloud, and applications. For companies that need it done right the first\u00A0time.',
+    cta: { label: 'What We Do', href: '/services' },
+    tint: 'rgba(0, 82, 204, 0.22)', // aci primary blue
   },
   {
-    eyebrow: '// who shows up',
-    headline: ['Senior architects only.', 'No juniors on your dime.'],
-    sub: 'Every engagement is led by a 10+ year practitioner. Nothing is delegated down.',
-    proof: 'Avg. 14 years per engagement lead',
-    tint: 'rgba(217, 119, 6, 0.24)',
+    headline: [
+      'From Raw Data to Decisions',
+      'That Actually Move the Business.',
+    ],
+    sub: 'We have done this at RaceTrac, MSCI, Sodexo, and Nestlé. The infrastructure is proven. The outcomes are\u00A0documented.',
+    cta: { label: 'See the Work', href: '/case-studies' },
+    tint: 'rgba(13, 148, 136, 0.22)', // teal 600
   },
   {
-    eyebrow: '// how we deliver',
-    headline: ['Ten playbooks.', 'Hundreds of deployments.'],
-    sub: 'Post-acquisition integration, multi-location rollouts, global data platforms, and seven more.',
-    proof: '10 playbooks . in production',
-    tint: 'rgba(13, 148, 136, 0.22)',
+    headline: ['Enterprise AI', 'That Ships to Production.'],
+    sub: 'ArqAI is where we build and deploy AI for enterprises. From strategy to working systems, in production, at\u00A0scale.',
+    cta: { label: 'See ArqAI', href: '#arqai' },
+    tint: 'rgba(124, 58, 237, 0.22)', // violet 600, AI signal
   },
   {
-    eyebrow: '// after go-live',
-    headline: ['We answer', 'the 2am call.'],
-    sub: '24/7 operations with documented SLAs. The call lands here, not with a junior on a shared inbox.',
-    proof: 'Operations across 14 time zones',
-    tint: 'rgba(185, 28, 28, 0.22)',
+    headline: ['Start With', 'Your Problem.'],
+    sub: 'We have documented the architectures, the decisions, and the outcomes from our enterprise deployments. Find the one that looks like\u00A0yours.',
+    cta: { label: 'See the Playbooks', href: '/playbooks' },
+    tint: 'rgba(67, 56, 202, 0.22)', // indigo 700
   },
 ];
 
@@ -250,22 +258,13 @@ export default function HeroRotator() {
                 exit="exit"
                 className="absolute inset-0"
               >
-                {/* Eyebrow */}
-                <motion.div
-                  variants={lineVariants}
-                  className="font-mono uppercase tracking-[0.18em] text-[#C4FF61]/90 mb-5"
-                  style={{ fontSize: 'clamp(11px, 1vw, 13px)' }}
-                >
-                  {active.eyebrow}
-                </motion.div>
-
                 {/* H1 - clip-path mask wipes the couplet from bottom to top.
                     The two lines are authored in the scene data and rendered
                     as explicit block spans, so every scene reads as a clean
                     two-line couplet across every viewport. */}
                 <motion.h1
                   variants={headlineVariants}
-                  className="font-bold text-white font-[var(--font-title)] mb-5"
+                  className="font-bold text-white font-[var(--font-title)] mb-6"
                   style={{
                     fontSize: 'clamp(36px, 5.2vw, 72px)',
                     lineHeight: 1.05,
@@ -280,7 +279,7 @@ export default function HeroRotator() {
                 {/* Supporting sentence */}
                 <motion.p
                   variants={lineVariants}
-                  className="max-w-[600px] mb-6 text-white/85"
+                  className="max-w-[640px] text-white/85"
                   style={{
                     fontSize: 'clamp(16px, 1.4vw, 20px)',
                     lineHeight: 1.5,
@@ -289,20 +288,6 @@ export default function HeroRotator() {
                 >
                   {active.sub}
                 </motion.p>
-
-                {/* Proof point with lead hairline */}
-                <motion.div
-                  variants={lineVariants}
-                  className="flex items-center gap-4"
-                >
-                  <span className="block w-10 h-px bg-[#C4FF61]" />
-                  <span
-                    className="font-mono text-white/75"
-                    style={{ fontSize: 'clamp(12px, 1.1vw, 14px)', letterSpacing: '0.02em' }}
-                  >
-                    {active.proof}
-                  </span>
-                </motion.div>
               </motion.div>
             </AnimatePresence>
           </div>
@@ -312,7 +297,8 @@ export default function HeroRotator() {
               the button is always visible inside the first viewport. */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-6 md:mt-8">
             <Link
-              href={`/contact?reason=home-hero-v2&scene=${sceneIndex + 1}`}
+              key={`cta-${sceneIndex}`}
+              href={active.cta.href}
               onFocus={() => setPaused(true)}
               onBlur={() => {
                 if (!pauseTimeoutRef.current) setPaused(false);
@@ -320,7 +306,7 @@ export default function HeroRotator() {
               className="group inline-flex items-center gap-3 px-8 py-4 bg-[#C4FF61] text-[#0A1628] text-lg font-semibold rounded-lg hover:-translate-y-0.5 transition-all duration-200"
             >
               <span className="flex-shrink-0 w-1.5 h-1.5 bg-[#0A1628] rounded-full" />
-              Start here
+              {active.cta.label}
               <span className="ml-1 transition-transform duration-200 group-hover:translate-x-1">
                 -&gt;
               </span>

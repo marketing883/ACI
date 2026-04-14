@@ -61,7 +61,10 @@ export default function PreviewHomePage() {
         headline="In The News"
         subheadline="Recent recognition and partnerships"
       />
-      <ArqAISection />
+      {/* id anchor so the hero "See ArqAI" CTA scrolls here. */}
+      <div id="arqai" className="scroll-mt-24">
+        <ArqAISection />
+      </div>
       <DynamicBlogSection
         headline="Thoughts and Insights"
         subheadline="Technical depth from engineers who've been there"

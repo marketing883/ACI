@@ -286,7 +286,7 @@ export default function Navigation() {
             {/* Desktop CTA - Standard button styling */}
             <div className="hidden lg:flex items-center gap-4">
               <Button href="/contact?reason=architecture-call" variant="primary" size="md" withLimeDot>
-                Talk to an Architect
+                Start here
               </Button>
             </div>
 
@@ -800,7 +800,7 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
                 <span
                   className="flex-shrink-0 w-1.5 h-1.5 bg-[#C4FF61] rounded-full"
                 />
-                Talk to an Architect
+                Start here
               </Link>
             </div>
           </div>
