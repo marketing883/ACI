@@ -239,7 +239,11 @@ export default function HeroRotator() {
 
       {/* Content. Tighter vertical padding keeps the CTA row inside the
           first viewport at typical desktop heights (900-1100px). */}
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-8 md:px-16 lg:px-[120px] py-24 md:py-28 lg:py-32">
+      {/* Asymmetric vertical padding: heavier top so the H1 has real
+          breathing room below the fixed nav instead of crowding into
+          it. The section is flex items-center, so padding is the
+          lever that shifts the visible content block downward. */}
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-8 md:px-16 lg:px-[120px] pt-40 pb-24 md:pt-48 md:pb-28 lg:pt-56 lg:pb-32">
         {/* The content column spans the full padded width so the longest
             headline ("Senior architects only. No juniors on your dime.")
             still resolves to two lines. The sub + proof are constrained
