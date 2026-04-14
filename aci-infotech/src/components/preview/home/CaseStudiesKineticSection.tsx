@@ -125,9 +125,50 @@ function shorten(s: string | null | undefined, max = 220): string {
   return v.slice(0, max - 1).trimEnd() + '.';
 }
 
+/**
+ * Strip the most common Markdown syntax out of CMS copy so the card
+ * renders clean prose. The case_studies.results / .solution /
+ * .challenge fields are authored as Markdown (headings, bold labels,
+ * occasional lists). A kinetic card has one-line slots, so full
+ * Markdown rendering would look broken; plain text is the right
+ * target here. The full Markdown view lives on /case-studies/[slug].
+ */
+function stripMarkdown(s: string | null | undefined): string {
+  if (!s) return '';
+  return s
+    // images ![alt](url) and links [text](url) -> visible text only
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    // ATX headings: "## Heading" -> "Heading"
+    .replace(/^#{1,6}\s+/gm, '')
+    // bold: **x** and __x__ -> x
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/__([^_]+)__/g, '$1')
+    // italic: *x* and _x_ -> x (keep intra-word stars/underscores alone)
+    .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?;:]|$)/g, '$1$2')
+    .replace(/(^|[\s(])_([^_\n]+)_(?=[\s).,!?;:]|$)/g, '$1$2')
+    // inline code: `x` -> x
+    .replace(/`([^`]+)`/g, '$1')
+    // blockquote markers and list bullets
+    .replace(/^\s*>\s?/gm, '')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/^\s*\d+\.\s+/gm, '')
+    // collapse any remaining run of whitespace to single spaces so
+    // stripped headings + body do not leave awkward double breaks
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function dbRowToKinetic(row: CaseStudyDB, fallbackIndex: number): KineticStudy {
   const { metric, metricLabel } = pickMetric(row.metrics);
   const placeholder = PLACEHOLDERS[fallbackIndex] ?? PLACEHOLDERS[0];
+  // CMS long-text fields are Markdown (## heads, **bold**, occasional
+  // lists). The card has one-line slots, so we strip the syntax before
+  // truncating. Full Markdown rendering lives on the case study detail
+  // page, not here.
+  const results = stripMarkdown(row.results);
+  const solution = stripMarkdown(row.solution);
+  const challenge = stripMarkdown(row.challenge);
   return {
     id: row.id,
     slug: row.slug,
@@ -135,8 +176,8 @@ function dbRowToKinetic(row: CaseStudyDB, fallbackIndex: number): KineticStudy {
     industry: row.industry || placeholder.industry,
     metric,
     metricLabel,
-    outcome: shorten(row.results) || row.title || placeholder.outcome,
-    approach: shorten(row.solution) || shorten(row.challenge) || placeholder.approach,
+    outcome: shorten(results) || row.title || placeholder.outcome,
+    approach: shorten(solution) || shorten(challenge) || placeholder.approach,
     playbookUsed: undefined,
     featuredImageUrl: row.featured_image_url ?? undefined,
     services: row.services ?? undefined,
