@@ -136,12 +136,22 @@ export default function AtherosNudge() {
   const handleOpen = useCallback(() => {
     if (typeof window === 'undefined') return;
     const seed = context?.seedPrompt ?? context?.message ?? '';
-    if (seed) {
-      window.dispatchEvent(
-        new CustomEvent('atheros:seed', { detail: { prompt: seed } }),
-      );
-    }
+    // Open the chat first so ChatColumn is mounted and listening when
+    // the seed-and-submit event fires next tick.
     window.dispatchEvent(new CustomEvent('atheros:open'));
+    if (seed) {
+      // Small delay lets the chat surface mount before we ask it to
+      // accept and send the seed message. The 'submit' flag tells
+      // ChatColumn to send the prompt as the visitor's first turn
+      // instead of just pre-filling the input field.
+      setTimeout(() => {
+        window.dispatchEvent(
+          new CustomEvent('atheros:seed', {
+            detail: { prompt: seed, submit: true },
+          }),
+        );
+      }, 60);
+    }
     // Hide the bubble after opening; do not write dismissedUntil so it
     // returns next session if the visitor closes the chat without
     // dismissing the bubble explicitly.
@@ -162,45 +172,45 @@ export default function AtherosNudge() {
   return (
     <div
       className={`fixed bottom-20 right-6 z-[60] max-w-[340px] ${transitionClass}`}
-      style={{
-        // Slight upward offset so the bubble sits above the chat
-        // button (which is roughly bottom-6 right-6 in ChatWidget).
-        opacity: 1,
-        transform: 'translateY(0)',
-      }}
     >
-      <button
-        type="button"
-        onClick={handleOpen}
-        aria-label={`Atheros: ${context.message}`}
-        className="group block w-full text-left rounded-xl border border-[#C4FF61]/30 bg-[#0A1628]/95 backdrop-blur-md px-4 py-3.5 shadow-2xl shadow-black/40 hover:border-[#C4FF61]/60 transition-colors cursor-pointer"
-      >
-        <div className="flex items-start gap-3">
-          {/* Atheros mark */}
-          <div className="flex-shrink-0 mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-md bg-[#C4FF61]/15 ring-1 ring-[#C4FF61]/40">
-            <Sparkles className="w-3.5 h-3.5 text-[#C4FF61]" aria-hidden />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C4FF61]/85 mb-1">
-              Atheros
+      {/* Bubble container is a positioned div, not a button, so the
+          dismiss button can sit beside the main click target as a
+          sibling instead of being nested inside it (nested <button>
+          is invalid HTML and breaks click handling in some browsers,
+          which was the cause of the earlier non-responsive behavior). */}
+      <div className="relative rounded-xl border border-[#C4FF61]/30 bg-[#0A1628]/95 backdrop-blur-md shadow-2xl shadow-black/40 hover:border-[#C4FF61]/60 transition-colors">
+        <button
+          type="button"
+          onClick={handleOpen}
+          aria-label={`Atheros: ${context.message}`}
+          className="group block w-full text-left px-4 py-3.5 pr-10 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#C4FF61]/60"
+        >
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-md bg-[#C4FF61]/15 ring-1 ring-[#C4FF61]/40">
+              <Sparkles className="w-3.5 h-3.5 text-[#C4FF61]" aria-hidden />
             </div>
-            <p className="text-sm leading-snug text-white">
-              {context.message}
-            </p>
+            <div className="flex-1 min-w-0">
+              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C4FF61]/85 mb-1">
+                Atheros
+              </div>
+              <p className="text-sm leading-snug text-white">
+                {context.message}
+              </p>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={handleDismiss}
-            aria-label="Dismiss"
-            className="flex-shrink-0 -mr-1 -mt-1 inline-flex items-center justify-center w-6 h-6 rounded text-white/55 hover:text-white hover:bg-white/10 transition-colors"
-          >
-            <X className="w-3.5 h-3.5" aria-hidden />
-          </button>
-        </div>
-      </button>
+        </button>
+        <button
+          type="button"
+          onClick={handleDismiss}
+          aria-label="Dismiss"
+          className="absolute top-2 right-2 inline-flex items-center justify-center w-6 h-6 rounded text-white/55 hover:text-white hover:bg-white/10 transition-colors"
+        >
+          <X className="w-3.5 h-3.5" aria-hidden />
+        </button>
+      </div>
       {/* Caret pointing down at the chat button. */}
       <div
-        className="absolute left-auto right-8 -bottom-1.5 w-3 h-3 rotate-45 bg-[#0A1628]/95 border-r border-b border-[#C4FF61]/30"
+        className="absolute right-8 -bottom-1.5 w-3 h-3 rotate-45 bg-[#0A1628]/95 border-r border-b border-[#C4FF61]/30"
         aria-hidden
       />
     </div>

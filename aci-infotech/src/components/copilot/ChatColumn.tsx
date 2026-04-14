@@ -136,15 +136,35 @@ export default function ChatColumn({
   const [busy, setBusy] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
 
+  // Forward ref to `send`, populated by the effect below `send`'s
+  // declaration. We need this because the seed-event handler (defined
+  // here near the top) wants to call `send`, but `send` is declared
+  // later and we cannot reorder useState/useEffect calls without
+  // changing hook order across renders.
+  const sendRef = useRef<((text: string) => void) | null>(null);
+
   // The proactive AtherosNudge fires `atheros:seed` when the visitor
-  // clicks the bubble. We pre-fill the input so they can review or
-  // edit before sending. The companion `atheros:open` event is
-  // handled higher up in ChatWidget to open the surface.
+  // clicks the bubble. If detail.submit is true, we send the prompt
+  // immediately as the visitor's first turn so Atheros begins
+  // responding without an extra click. Otherwise we just pre-fill the
+  // input. The companion `atheros:open` event is handled in
+  // ChatWidget to open the surface.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     function handleSeed(e: Event) {
-      const detail = (e as CustomEvent<{ prompt?: string }>).detail;
-      if (detail?.prompt) setInput(detail.prompt);
+      const detail = (e as CustomEvent<{ prompt?: string; submit?: boolean }>)
+        .detail;
+      if (!detail?.prompt) return;
+      if (detail.submit) {
+        // Wait one tick so the chat surface is fully mounted (the
+        // open event opens it just before this fires).
+        setTimeout(() => {
+          if (sendRef.current) sendRef.current(detail.prompt!);
+          else setInput(detail.prompt!);
+        }, 0);
+        return;
+      }
+      setInput(detail.prompt);
     }
     window.addEventListener('atheros:seed', handleSeed);
     return () => window.removeEventListener('atheros:seed', handleSeed);
@@ -401,6 +421,13 @@ export default function ChatColumn({
     },
     [busy, clearStatusSoon, leadState, messages, onLeadCaptured, onPanelRequest, pageContext, sessionId],
   );
+
+  // Keep the seed-event handler's ref pointed at the latest `send`
+  // so the AtherosNudge bubble can dispatch the prompt and have it
+  // sent immediately as the visitor's first turn.
+  useEffect(() => {
+    sendRef.current = send;
+  }, [send]);
 
   const onChip = useCallback(
     (value: string, label: string) => {
