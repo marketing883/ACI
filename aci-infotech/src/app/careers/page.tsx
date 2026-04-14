@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
+import Image from 'next/image';
 import { createClient } from '@supabase/supabase-js';
-import { Briefcase, Heart, Building2, Users, Globe, Zap, Award, Coffee, TrendingUp, ArrowRight } from 'lucide-react';
+import { Briefcase, Heart, Building2, Globe, Zap, Award, Coffee, TrendingUp, ArrowRight } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import CareersJobGrid from '@/components/careers/CareersJobGrid';
 
@@ -131,8 +131,26 @@ export default async function CareersPage() {
     <main className="min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-[var(--aci-secondary)] pt-32 pb-24 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
+        {/* Photographic background. The image is pre-optimised (44 KB
+            jpg / 29 KB webp); Next's Image optimiser serves AVIF/WebP
+            on modern browsers. A layered scrim (base dark fill + dark
+            gradient + subtle accent blobs) keeps the headline and
+            stats strip legible regardless of what is on top of the
+            photo. */}
+        <Image
+          src="/images/happy-team.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/80 via-[#0A1628]/75 to-[#0A1628]/90"
+          aria-hidden
+        />
+        <div className="absolute inset-0 opacity-10 pointer-events-none" aria-hidden>
           <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-3xl" />
           <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500 rounded-full blur-3xl" />
         </div>
