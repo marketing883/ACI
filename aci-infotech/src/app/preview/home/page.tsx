@@ -92,40 +92,17 @@ export default function PreviewHomePage() {
         </div>
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 font-[var(--font-title)] drop-shadow-lg">
-            Talk to people who&apos;ve actually deployed these systems.
+            {"Let's Turn Your Toughest Problems Into\u00A0Production."}
           </h2>
-          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            No sales teams. No junior consultants. Just senior practitioners
-            who&apos;ve architected and deployed the infrastructure
-            you&apos;re considering.
+          <p className="text-xl md:text-2xl text-white/90 mb-14 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+            {'Whatever you are building, modernizing, or fixing, we have the people and the track record to get it into production and keep it\u00A0running.'}
           </p>
-
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-6 sm:gap-10 mb-14">
-            <div className="flex items-center gap-3 text-white">
-              <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
-              <span className="text-base md:text-lg drop-shadow-md">
-                30-minute technical conversations with architects
-              </span>
-            </div>
-            <div className="flex items-center gap-3 text-white">
-              <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
-              <span className="text-base md:text-lg drop-shadow-md">
-                Architecture diagrams from live deployments
-              </span>
-            </div>
-            <div className="flex items-center gap-3 text-white">
-              <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
-              <span className="text-base md:text-lg drop-shadow-md">
-                Honest answers about feasibility, timeline, and risk
-              </span>
-            </div>
-          </div>
 
           <Link
             href="/contact?reason=home-final-cta-v2"
             className="group inline-flex items-center gap-2.5 px-9 py-4 bg-[#C4FF61] text-[#0A1628] text-lg font-semibold rounded-lg hover:-translate-y-0.5 transition-all duration-200"
           >
-            <span>Start here</span>
+            <span>Let&apos;s Get Started</span>
             <ArrowRight
               className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1"
               strokeWidth={2.25}
