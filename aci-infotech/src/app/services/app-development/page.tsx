@@ -252,39 +252,115 @@ export default function AppDevelopmentPage() {
               </div>
             </div>
 
-            {/* Visual - Application Stack Diagram */}
+            {/* Visual - Application Stack Diagram
+                Four-layer architecture read top-to-bottom: entry points ->
+                application -> integration/AI -> data & infrastructure.
+                Each stack layer lists the real technologies ACI ships
+                with, as chips, so the infographic tells the full story
+                from what the user touches to the foundation underneath. */}
             <div className="relative hidden lg:block">
-              <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <div className="text-sm text-gray-400 mb-4">Enterprise Application Stack</div>
-                <div className="space-y-4">
-                  {/* User Layer */}
+              <div className="bg-gray-800 rounded-2xl p-6 shadow-2xl">
+                <div className="text-sm text-gray-400 mb-4 text-center">
+                  Enterprise Application Stack
+                </div>
+                <div className="space-y-3">
+                  {/* Entry points */}
                   <div className="flex gap-2">
                     {['Web', 'Mobile', 'API'].map((src) => (
-                      <div key={src} className="flex-1 bg-gray-700 rounded-lg p-3 text-center text-xs text-gray-300">
+                      <div
+                        key={src}
+                        className="flex-1 bg-gray-700 rounded-lg py-2.5 text-center text-xs font-medium text-gray-200"
+                      >
                         {src}
                       </div>
                     ))}
                   </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  {/* App Layer */}
-                  <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4 text-center">
-                    <div className="text-[var(--aci-primary-light)] font-medium">Application Layer</div>
-                    <div className="text-xs text-gray-400 mt-1">Next.js • React • TypeScript • Node.js</div>
+                  <div className="text-center text-gray-500 text-lg leading-none">
+                    ↓
                   </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  {/* Integration Layer */}
-                  <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
-                    <div className="text-white font-bold">Integration & AI Layer</div>
-                    <div className="text-xs text-gray-300 mt-1">GraphQL • LangChain • Kafka • Event Bus</div>
+
+                  {/* Application Layer - blue */}
+                  <div className="bg-[var(--aci-primary)]/15 border border-[var(--aci-primary)]/30 rounded-lg p-4">
+                    <div className="text-[var(--aci-primary-light)] font-semibold text-sm mb-2.5 text-center">
+                      Application Layer
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 justify-center">
+                      {[
+                        'Next.js',
+                        'React',
+                        'TypeScript',
+                        'Node.js',
+                        '.NET Core',
+                        'Angular',
+                        'Blazor',
+                        'Python',
+                        'Django',
+                      ].map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-0.5 bg-[var(--aci-primary)]/20 border border-[var(--aci-primary)]/20 rounded text-[11px] text-gray-100"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  {/* Foundation */}
-                  <div className="flex gap-2">
-                    {['Data Platform', 'AI Stack', 'Cloud'].map((dest) => (
-                      <div key={dest} className="flex-1 bg-green-900/30 rounded-lg p-3 text-center text-xs text-green-300">
-                        {dest}
-                      </div>
-                    ))}
+                  <div className="text-center text-gray-500 text-lg leading-none">
+                    ↓
+                  </div>
+
+                  {/* Integration & AI Layer - violet */}
+                  <div className="bg-violet-500/15 border border-violet-500/30 rounded-lg p-4">
+                    <div className="text-violet-300 font-semibold text-sm mb-2.5 text-center">
+                      Integration & AI Layer
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 justify-center">
+                      {[
+                        'GraphQL',
+                        'LangChain',
+                        'Azure OpenAI',
+                        'Kafka',
+                        'Event Bus',
+                        'Vector DBs',
+                      ].map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-0.5 bg-violet-500/20 border border-violet-500/25 rounded text-[11px] text-gray-100"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="text-center text-gray-500 text-lg leading-none">
+                    ↓
+                  </div>
+
+                  {/* Data & Infrastructure Layer - teal, the foundation
+                      that ties application delivery back to the data
+                      platform work ACI is already known for. */}
+                  <div className="bg-teal-500/15 border border-teal-500/30 rounded-lg p-4">
+                    <div className="text-teal-300 font-semibold text-sm mb-2.5 text-center">
+                      Data & Infrastructure Layer
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 justify-center">
+                      {[
+                        'PostgreSQL',
+                        'SQL Server',
+                        'Snowflake',
+                        'Docker',
+                        'Kubernetes',
+                        'Azure',
+                        'Supabase',
+                      ].map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-0.5 bg-teal-500/20 border border-teal-500/25 rounded text-[11px] text-gray-100"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
