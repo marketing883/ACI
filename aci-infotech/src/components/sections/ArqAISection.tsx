@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Shield, FileCheck, Activity } from 'lucide-react';
+import { Workflow, Zap, Rocket, ArrowRight } from 'lucide-react';
 
 interface ArqAISectionProps {
   ctaUrl?: string;
@@ -12,19 +12,22 @@ export default function ArqAISection({
 }: ArqAISectionProps) {
   const features = [
     {
-      icon: Shield,
-      title: "Get Pilots to Production in 30 Days",
-      description: "Not 9 months. Deploy agents that pass Legal, Security, and Compliance review on the first try.",
+      icon: Workflow,
+      title: "End-to-End AI Delivery",
+      description:
+        "We handle the full build, from use case definition and model selection to deployment and ongoing operations. Not advisory. Not a pilot. A working\u00A0system.",
     },
     {
-      icon: FileCheck,
-      title: "Zero Shadow AI. Complete Visibility.",
-      description: "Every agent carries cryptographic identity. Every action logged. Every decision auditable.",
+      icon: Zap,
+      title: "Products That Accelerate Delivery",
+      description:
+        "ArqAI brings purpose-built products into every engagement so enterprises are not starting from zero. Faster deployment, fewer integration risks, lower total\u00A0cost.",
     },
     {
-      icon: Activity,
-      title: "Compliance That Enables, Not Blocks",
-      description: "Built for HIPAA, GDPR, SOX, PCI-DSS. Policies compiled into infrastructure, not checked after execution.",
+      icon: Rocket,
+      title: "From Pilot to Production",
+      description:
+        "Most enterprise AI gets stuck in proof of concept. We are built specifically to get past that stage, into live environments, with real users and measurable\u00A0outcomes.",
     },
   ];
 
@@ -52,12 +55,12 @@ export default function ArqAISection({
 
             {/* Headline */}
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              The Enterprise Foundry for Trusted AI
+              {'AI Services, Built for\u00A0Production.'}
             </h2>
 
             {/* Description */}
             <p className="text-lg text-gray-300 mb-8">
-              ArqAI is the only platform that lets regulated enterprises deploy autonomous agents at production scale without choosing between innovation and compliance.
+              {"ArqAI is ACI's AI services vertical. We take enterprises from AI strategy to working systems, with the products and the engineering capability to back it\u00A0up."}
             </p>
 
             {/* Features */}
@@ -83,12 +86,14 @@ export default function ArqAISection({
               href={ctaUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#0052CC] text-white font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
+              className="group inline-flex items-center gap-2.5 px-6 py-3 bg-[#0052CC] text-white font-semibold rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
             >
-              See ArqAI Live In Action
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
+              <span>See ArqAI</span>
+              <ArrowRight
+                className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                strokeWidth={2.25}
+                aria-hidden
+              />
             </a>
           </div>
 
