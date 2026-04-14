@@ -158,9 +158,6 @@ export default async function CaseStudiesKineticSection() {
       {/* Section header sits on white above the first study, then each study
           asserts its own palette below. */}
       <div className="max-w-[1320px] mx-auto px-5 md:px-10 pt-24 md:pt-32 pb-16 md:pb-20">
-        <div className="font-mono text-xs md:text-sm text-neutral-500 tracking-wider mb-5">
-          {`// ${studies.length.toString().padStart(2, '0')} case studies . live in production`}
-        </div>
         <h2
           className="text-[#0A1628] font-[var(--font-title)] font-bold max-w-3xl"
           style={{

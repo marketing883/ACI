@@ -317,7 +317,6 @@ const HOMEPAGE_PLAYBOOK_INDEXES = [0, 2, 4, 6, 8] as const;
 
 export default function PlaybooksConsole() {
   const homepagePlaybooks = HOMEPAGE_PLAYBOOK_INDEXES.map((i) => PLAYBOOKS[i]);
-  const total = pad2(homepagePlaybooks.length);
 
   return (
     <section className="relative py-24 md:py-32 overflow-hidden">
@@ -344,14 +343,10 @@ export default function PlaybooksConsole() {
 
       <div className="relative max-w-[1320px] mx-auto px-5 md:px-10">
         {/* Section header. Copy authored so the wrapped last line never
-            leaves a widow word (see CLAUDE.md). */}
+            leaves a widow word (see CLAUDE.md). The eyebrow count line
+            was removed because we have many more than five playbooks in
+            production; claiming "05 in production" here was misleading. */}
         <div className="mb-12 md:mb-16 px-1 md:px-8">
-          <div className="font-mono text-xs md:text-sm text-white/55 tracking-wider mb-6">
-            {`// ${total} playbooks . in production`}
-          </div>
-          {/* Non-breaking space between the final two words so the last
-              line of the wrapped headline is never a single orphan word
-              (widow rule, see CLAUDE.md). */}
           <h2
             className="text-white font-[var(--font-title)] font-bold max-w-3xl"
             style={{
