@@ -27,7 +27,8 @@ export interface Welcome {
 }
 
 const DEFAULT_WELCOME: Welcome = {
-  text: 'What brought you here, a specific topic or just looking around?',
+  text:
+    'Hi, Atheros here. Tell me what you are working on and I will find the right starting point.',
 };
 
 /**
@@ -36,28 +37,40 @@ const DEFAULT_WELCOME: Welcome = {
  */
 const EXACT: Record<string, Welcome> = {
   '/': {
-    text: 'What brought you here, a specific system or general scouting?',
+    text:
+      "Hi, Atheros here. I know ACI's work inside and out. Tell me what you are working on and I will point you at the right place to start.",
+  },
+  '/preview/home': {
+    text:
+      "Hi, Atheros here. I know ACI's work inside and out. Tell me what you are working on and I will point you at the right place to start.",
   },
   '/contact': {
-    text: 'Filling the form is the fastest path. I can answer questions while you type if it helps.',
+    text:
+      'Hi, Atheros here. The form is the fastest path. I can answer questions while you type if that helps.',
   },
   '/services': {
-    text: 'Six clusters here, all production. Which one are you weighing?',
+    text:
+      'Hi, Atheros here. Six clusters on this page, all in production. Which one are you weighing?',
   },
   '/industries': {
-    text: 'Pick a vertical and I can show you the patterns we ship there.',
+    text:
+      'Hi, Atheros here. Pick a vertical and I will show you the patterns we ship there.',
   },
   '/platforms': {
-    text: 'A platform is half the answer. Which one is on your roadmap?',
+    text:
+      'Hi, Atheros here. A platform is half the answer. Which one is on your roadmap?',
   },
   '/case-studies': {
-    text: 'Pick one and I can translate it to your stack.',
+    text:
+      'Hi, Atheros here. Pick a case study and I can translate it to your stack.',
   },
   '/playbooks': {
-    text: 'Every playbook started as a 3am fire. Which one looks closest to yours?',
+    text:
+      'Hi, Atheros here. Every playbook started as a 3am fire. Which one looks closest to yours?',
   },
   '/blogs': {
-    text: 'Tell me the question you came to answer and I can point you at the right piece.',
+    text:
+      'Hi, Atheros here. Tell me the question you came to answer and I will point you at the right piece.',
   },
 };
 
@@ -71,163 +84,163 @@ const PREFIX_OVERRIDES: Array<[string, Welcome]> = [
   [
     '/services/data-engineering',
     {
-      text: 'Data engineering page is up. Three reasons people land here: cost, latency, governance. Which one is on your plate?',
+      text: 'Hi, Atheros here. Data engineering page is up. Three reasons people land here: cost, latency, governance. Which one is on your plate?',
     },
   ],
   [
     '/services/applied-ai-ml',
     {
-      text: 'Applied AI page. Most asks are either GenAI in production or ML on existing data. Which is yours?',
+      text: 'Hi, Atheros here. Applied AI page. Most asks are either GenAI in production or ML on existing data. Which is yours?',
     },
   ],
   [
     '/services/cloud-modernization',
     {
-      text: 'Cloud modernization page. Are you migrating, optimizing, or both?',
+      text: 'Hi, Atheros here. Cloud modernization page. Are you migrating, optimizing, or both?',
     },
   ],
   [
     '/services/martech-cdp',
     {
-      text: 'On the MarTech and CDP page. Identity resolution is what trips most teams. Sound familiar, or is activation the bigger pain?',
+      text: 'Hi, Atheros here. On the MarTech and CDP page. Identity resolution is what trips most teams. Sound familiar, or is activation the bigger pain?',
     },
   ],
   [
     '/services/cyber-security',
     {
-      text: 'Security page. Zero trust, data residency, or audit are the three asks I hear most. Where are you?',
+      text: 'Hi, Atheros here. Security page. Zero trust, data residency, or audit are the three asks I hear most. Where are you?',
     },
   ],
   [
     '/services/digital-transformation',
     {
-      text: 'Automation page. Which loops are eating your team right now?',
+      text: 'Hi, Atheros here. Automation page. Which loops are eating your team right now?',
     },
   ],
   [
     '/services/app-development',
     {
-      text: 'App development page. Greenfield or rescue?',
+      text: 'Hi, Atheros here. App development page. Greenfield or rescue?',
     },
   ],
   [
     '/services/qa-testing',
     {
-      text: 'QA page. Most teams come here to cut cycle time. Is that you, or something else?',
+      text: 'Hi, Atheros here. QA page. Most teams come here to cut cycle time. Is that you, or something else?',
     },
   ],
   [
     '/platforms/databricks',
     {
-      text: 'Databricks page. Lakehouse, MLOps, cost optimization show up most often. Which one is the immediate need?',
+      text: 'Hi, Atheros here. Databricks page. Lakehouse, MLOps, cost optimization show up most often. Which one is the immediate need?',
     },
   ],
   [
     '/platforms/snowflake',
     {
-      text: 'Snowflake page. Are you consolidating warehouses, or moving toward a lakehouse?',
+      text: 'Hi, Atheros here. Snowflake page. Are you consolidating warehouses, or moving toward a lakehouse?',
     },
   ],
   [
     '/platforms/aws',
     {
-      text: 'AWS page. What are you running, and what is the next move?',
+      text: 'Hi, Atheros here. AWS page. What are you running, and what is the next move?',
     },
   ],
   [
     '/platforms/azure',
     {
-      text: 'Azure page. Fabric, Synapse, or both?',
+      text: 'Hi, Atheros here. Azure page. Fabric, Synapse, or both?',
     },
   ],
   [
     '/platforms/salesforce',
     {
-      text: 'Salesforce page. Sales, Service, or Data Cloud?',
+      text: 'Hi, Atheros here. Salesforce page. Sales, Service, or Data Cloud?',
     },
   ],
   [
     '/platforms/sap',
     {
-      text: 'SAP page. S/4 migration on the roadmap, or is this about a specific module?',
+      text: 'Hi, Atheros here. SAP page. S/4 migration on the roadmap, or is this about a specific module?',
     },
   ],
   [
     '/platforms/servicenow',
     {
-      text: 'ServiceNow page. ITSM or HR Service Delivery?',
+      text: 'Hi, Atheros here. ServiceNow page. ITSM or HR Service Delivery?',
     },
   ],
   [
     '/platforms/braze',
     {
-      text: 'Braze page. Are journeys clean, or is upstream identity the issue?',
+      text: 'Hi, Atheros here. Braze page. Are journeys clean, or is upstream identity the issue?',
     },
   ],
   [
     '/platforms/microsoft-dynamics',
     {
-      text: 'Dynamics page. Finance, Supply, or CRM?',
+      text: 'Hi, Atheros here. Dynamics page. Finance, Supply, or CRM?',
     },
   ],
   [
     '/industries/financial-services',
     {
-      text: 'Financial services page. Consolidation, fraud, or analytics modernization, where are you?',
+      text: 'Hi, Atheros here. Financial services page. Consolidation, fraud, or analytics modernization, where are you?',
     },
   ],
   [
     '/industries/healthcare',
     {
-      text: 'Healthcare page. FHIR ingest, claims data, or device telemetry, which one is in scope?',
+      text: 'Hi, Atheros here. Healthcare page. FHIR ingest, claims data, or device telemetry, which one is in scope?',
     },
   ],
   [
     '/industries/retail',
     {
-      text: 'Retail page. POS realtime or loyalty analytics?',
+      text: 'Hi, Atheros here. Retail page. POS realtime or loyalty analytics?',
     },
   ],
   [
     '/industries/manufacturing',
     {
-      text: 'Manufacturing page. OT or IT side first?',
+      text: 'Hi, Atheros here. Manufacturing page. OT or IT side first?',
     },
   ],
   [
     '/industries/hospitality',
     {
-      text: 'Hospitality page. The pattern that comes up most: unifying property data without breaking property-level reporting. Want to walk through it?',
+      text: 'Hi, Atheros here. Hospitality page. The pattern that comes up most: unifying property data without breaking property-level reporting. Want to walk through it?',
     },
   ],
   [
     '/industries/energy',
     {
-      text: 'Energy page. Grid, ops, or field?',
+      text: 'Hi, Atheros here. Energy page. Grid, ops, or field?',
     },
   ],
   [
     '/industries/transportation',
     {
-      text: 'Transportation page. Fleet, freight, or both?',
+      text: 'Hi, Atheros here. Transportation page. Fleet, freight, or both?',
     },
   ],
   [
     '/case-studies/',
     {
-      text: 'You are on a case study. Want me to translate any part of it to your stack?',
+      text: 'Hi, Atheros here. You are on a case study. Want me to translate any part of it to your stack?',
     },
   ],
   [
     '/playbooks/',
     {
-      text: 'Reading a playbook. Which step do you want to dig into?',
+      text: 'Hi, Atheros here. Reading a playbook. Which step do you want to dig into?',
     },
   ],
   [
     '/blogs/',
     {
-      text: 'Reading a piece. Want me to summarize the part that matters for your situation?',
+      text: 'Hi, Atheros here. Reading a piece. Want me to summarize the part that matters for your situation?',
     },
   ],
   // /lp/* routes are intentionally chat-suppressed (see ChatWidget.tsx
@@ -235,7 +248,7 @@ const PREFIX_OVERRIDES: Array<[string, Welcome]> = [
   [
     '/whitepapers/',
     {
-      text: 'Whitepaper page. Want a quick map of what it covers before you commit to the read?',
+      text: 'Hi, Atheros here. Whitepaper page. Want a quick map of what it covers before you commit to the read?',
     },
   ],
 ];
@@ -251,19 +264,19 @@ function dynamicWelcome(pathname: string): Welcome | null {
   if (serviceMatch) {
     const slug = serviceMatch[1] as ServiceClusterId;
     const s = services[slug];
-    if (s) return { text: `${s.title} page is up. ${trimEnd(s.tagline)}. What pulled you in?` };
+    if (s) return { text: `Hi, Atheros here. ${s.title} page is up. ${trimEnd(s.tagline)}. What pulled you in?` };
   }
   const industryMatch = pathname.match(/^\/industries\/([a-z0-9-]+)/);
   if (industryMatch) {
     const slug = industryMatch[1] as IndustryId;
     const i = industries[slug];
-    if (i) return { text: `${i.title} page is up. ${trimEnd(i.tagline)}. What pulled you in?` };
+    if (i) return { text: `Hi, Atheros here. ${i.title} page is up. ${trimEnd(i.tagline)}. What pulled you in?` };
   }
   const platformMatch = pathname.match(/^\/platforms\/([a-z0-9-]+)/);
   if (platformMatch) {
     const slug = platformMatch[1] as PlatformId;
     const p = platforms[slug];
-    if (p) return { text: `${p.title} page is up. ${trimEnd(p.tagline)}. What pulled you in?` };
+    if (p) return { text: `Hi, Atheros here. ${p.title} page is up. ${trimEnd(p.tagline)}. What pulled you in?` };
   }
   return null;
 }
