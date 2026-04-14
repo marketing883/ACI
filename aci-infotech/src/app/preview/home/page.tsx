@@ -54,9 +54,15 @@ export default function PreviewHomePage() {
   return (
     <>
       <HeroRotator />
-      <PlaybooksConsole />
+      {/* id anchors so the AtherosNudge contextMap can detect which
+          section is in view and so hero scene CTAs can scroll here. */}
+      <div id="playbooks" className="scroll-mt-24">
+        <PlaybooksConsole />
+      </div>
       <WhatWeBuildSection />
-      <CaseStudiesKineticSection />
+      <div id="case-studies" className="scroll-mt-24">
+        <CaseStudiesKineticSection />
+      </div>
       <PartnersSection
         headline="The Platforms We Build On"
         partners={partners}

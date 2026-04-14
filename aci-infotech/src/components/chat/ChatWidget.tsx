@@ -91,6 +91,19 @@ export default function ChatWidget() {
     setSessionId(next);
   }, []);
 
+  // Listen for proactive nudge open requests. The AtherosNudge bubble
+  // dispatches `atheros:open` when the visitor clicks it; we open the
+  // chat in response. Seeding the chat input is handled separately by
+  // ChatColumn, which listens for the `atheros:seed` companion event.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    function handleOpen() {
+      setIsOpen(true);
+    }
+    window.addEventListener('atheros:open', handleOpen);
+    return () => window.removeEventListener('atheros:open', handleOpen);
+  }, []);
+
   // Route-level + flag-level short-circuits.
   if (isChatSuppressedRoute(pathname)) return null;
   if (!sessionId) return null;

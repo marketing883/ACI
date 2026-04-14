@@ -136,6 +136,20 @@ export default function ChatColumn({
   const [busy, setBusy] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
 
+  // The proactive AtherosNudge fires `atheros:seed` when the visitor
+  // clicks the bubble. We pre-fill the input so they can review or
+  // edit before sending. The companion `atheros:open` event is
+  // handled higher up in ChatWidget to open the surface.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    function handleSeed(e: Event) {
+      const detail = (e as CustomEvent<{ prompt?: string }>).detail;
+      if (detail?.prompt) setInput(detail.prompt);
+    }
+    window.addEventListener('atheros:seed', handleSeed);
+    return () => window.removeEventListener('atheros:seed', handleSeed);
+  }, []);
+
   // Hydrate from localStorage on first mount; fall back to the welcome.
   // Keyed by sessionId so different visitors do not collide; pathname is
   // captured at mount so the welcome reflects the page the user actually

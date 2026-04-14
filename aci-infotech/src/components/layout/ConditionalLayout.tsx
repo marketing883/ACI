@@ -11,6 +11,13 @@ const ChatWidgetWrapper = dynamic(
   { ssr: false }
 );
 
+// Lazy load the Atheros proactive nudge bubble. Desktop-only,
+// dismissable, context-aware copy (see src/lib/atheros/contextMap.ts).
+const AtherosNudge = dynamic(
+  () => import('@/components/atheros/AtherosNudge'),
+  { ssr: false },
+);
+
 // Dark-hero routes. On these, the nav renders transparent and the hero
 // should extend beneath it, so we drop the usual pt-20 that pads every
 // other page below the fixed nav bar.
@@ -39,6 +46,7 @@ export default function ConditionalLayout({
       <main className={isOverlayHero ? '' : 'pt-20'}>{children}</main>
       <Footer />
       <ChatWidgetWrapper />
+      <AtherosNudge />
     </>
   );
 }
