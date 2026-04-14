@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Code2, Cpu, Plug, RefreshCw, Layers, Sparkles, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
+import { ArrowRight, CheckCircle, ChevronDown, Code2, Cpu, Plug, RefreshCw, Layers, Sparkles, Activity, FileCheck, TrendingUp, Users, Globe, Smartphone, Database } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
@@ -252,40 +252,84 @@ export default function AppDevelopmentPage() {
               </div>
             </div>
 
-            {/* Visual - Application Stack Diagram
-                Four-layer architecture read top-to-bottom: entry points ->
-                application -> integration/AI -> data & infrastructure.
-                Each stack layer lists the real technologies ACI ships
-                with, as chips, so the infographic tells the full story
-                from what the user touches to the foundation underneath. */}
+            {/* Visual - Enterprise Application Stack
+                Four-layer architecture diagram. Reads top-to-bottom
+                from entry points -> application -> integration/AI ->
+                data & infrastructure. Each layer has its own accent
+                color, a numbered header, an icon, and the full list
+                of technologies as proper chips. Flow lines connect
+                the layers so the stack reads as a system, not four
+                loose rectangles. */}
             <div className="relative hidden lg:block">
-              <div className="bg-gray-800 rounded-2xl p-6 shadow-2xl">
-                <div className="text-sm text-gray-400 mb-4 text-center">
-                  Enterprise Application Stack
-                </div>
-                <div className="space-y-3">
-                  {/* Entry points */}
-                  <div className="flex gap-2">
-                    {['Web', 'Mobile', 'API'].map((src) => (
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 via-[#0A1628] to-slate-950 shadow-2xl">
+                {/* Subtle dot-grid pattern behind everything */}
+                <div
+                  aria-hidden
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    backgroundImage:
+                      'radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)',
+                    backgroundSize: '18px 18px',
+                    opacity: 0.5,
+                  }}
+                />
+                {/* Accent glow blobs at corners */}
+                <div
+                  aria-hidden
+                  className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[var(--aci-primary)]/15 blur-3xl pointer-events-none"
+                />
+                <div
+                  aria-hidden
+                  className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-teal-500/10 blur-3xl pointer-events-none"
+                />
+
+                <div className="relative p-5">
+                  {/* Title strip */}
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center gap-2">
+                      <span className="relative inline-flex h-2 w-2">
+                        <span className="absolute inset-0 rounded-full bg-[#C4FF61] opacity-60 animate-ping" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-[#C4FF61]" />
+                      </span>
+                      <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-300">
+                        Enterprise Application Stack
+                      </div>
+                    </div>
+                    <div className="font-mono text-[10px] text-slate-500 tracking-wider">
+                      4 LAYERS
+                    </div>
+                  </div>
+
+                  {/* Entry points row - three icon cards */}
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { label: 'Web', Icon: Globe },
+                      { label: 'Mobile', Icon: Smartphone },
+                      { label: 'API', Icon: Plug },
+                    ].map(({ label, Icon }) => (
                       <div
-                        key={src}
-                        className="flex-1 bg-gray-700 rounded-lg py-2.5 text-center text-xs font-medium text-gray-200"
+                        key={label}
+                        className="group relative flex flex-col items-center justify-center gap-1 py-3 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 transition-colors"
                       >
-                        {src}
+                        <Icon
+                          className="w-4 h-4 text-slate-300 group-hover:text-white transition-colors"
+                          strokeWidth={1.5}
+                        />
+                        <span className="text-[11px] font-medium text-slate-200">
+                          {label}
+                        </span>
                       </div>
                     ))}
                   </div>
-                  <div className="text-center text-gray-500 text-lg leading-none">
-                    ↓
-                  </div>
 
-                  {/* Application Layer - blue */}
-                  <div className="bg-[var(--aci-primary)]/15 border border-[var(--aci-primary)]/30 rounded-lg p-4">
-                    <div className="text-[var(--aci-primary-light)] font-semibold text-sm mb-2.5 text-center">
-                      Application Layer
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 justify-center">
-                      {[
+                  {/* Layers: each with flow connector above */}
+                  {[
+                    {
+                      num: '01',
+                      title: 'Application Layer',
+                      Icon: Code2,
+                      accent: 'blue',
+                      techs: [
                         'Next.js',
                         'React',
                         'TypeScript',
@@ -295,73 +339,139 @@ export default function AppDevelopmentPage() {
                         'Blazor',
                         'Python',
                         'Django',
-                      ].map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-2 py-0.5 bg-[var(--aci-primary)]/20 border border-[var(--aci-primary)]/20 rounded text-[11px] text-gray-100"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="text-center text-gray-500 text-lg leading-none">
-                    ↓
-                  </div>
-
-                  {/* Integration & AI Layer - violet */}
-                  <div className="bg-violet-500/15 border border-violet-500/30 rounded-lg p-4">
-                    <div className="text-violet-300 font-semibold text-sm mb-2.5 text-center">
-                      Integration & AI Layer
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 justify-center">
-                      {[
+                      ],
+                    },
+                    {
+                      num: '02',
+                      title: 'Integration & AI Layer',
+                      Icon: Sparkles,
+                      accent: 'violet',
+                      techs: [
                         'GraphQL',
                         'LangChain',
                         'Azure OpenAI',
+                        'AWS Bedrock',
                         'Kafka',
                         'Event Bus',
                         'Vector DBs',
-                      ].map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-2 py-0.5 bg-violet-500/20 border border-violet-500/25 rounded text-[11px] text-gray-100"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="text-center text-gray-500 text-lg leading-none">
-                    ↓
-                  </div>
-
-                  {/* Data & Infrastructure Layer - teal, the foundation
-                      that ties application delivery back to the data
-                      platform work ACI is already known for. */}
-                  <div className="bg-teal-500/15 border border-teal-500/30 rounded-lg p-4">
-                    <div className="text-teal-300 font-semibold text-sm mb-2.5 text-center">
-                      Data & Infrastructure Layer
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 justify-center">
-                      {[
+                      ],
+                    },
+                    {
+                      num: '03',
+                      title: 'Data & Infrastructure Layer',
+                      Icon: Database,
+                      accent: 'teal',
+                      techs: [
                         'PostgreSQL',
                         'SQL Server',
                         'Snowflake',
                         'Docker',
                         'Kubernetes',
+                        'AWS',
                         'Azure',
-                        'Supabase',
-                      ].map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-2 py-0.5 bg-teal-500/20 border border-teal-500/25 rounded text-[11px] text-gray-100"
+                        'GCP',
+                      ],
+                    },
+                  ].map(({ num, title, Icon, accent, techs }) => {
+                    // Per-accent palette. Building strings explicitly so
+                    // Tailwind's JIT can see them at build time.
+                    const palettes: Record<
+                      string,
+                      {
+                        ring: string;
+                        bg: string;
+                        iconWrap: string;
+                        iconColor: string;
+                        chip: string;
+                        chipBorder: string;
+                        title: string;
+                        line: string;
+                      }
+                    > = {
+                      blue: {
+                        ring: 'ring-blue-500/25',
+                        bg: 'bg-blue-500/[0.04]',
+                        iconWrap: 'bg-blue-500/20 ring-blue-400/30',
+                        iconColor: 'text-blue-300',
+                        chip: 'bg-blue-500/10 hover:bg-blue-500/20',
+                        chipBorder: 'border-blue-400/20',
+                        title: 'text-blue-100',
+                        line: 'from-transparent via-blue-400/40 to-transparent',
+                      },
+                      violet: {
+                        ring: 'ring-violet-500/25',
+                        bg: 'bg-violet-500/[0.05]',
+                        iconWrap: 'bg-violet-500/20 ring-violet-400/30',
+                        iconColor: 'text-violet-300',
+                        chip: 'bg-violet-500/10 hover:bg-violet-500/20',
+                        chipBorder: 'border-violet-400/20',
+                        title: 'text-violet-100',
+                        line: 'from-transparent via-violet-400/40 to-transparent',
+                      },
+                      teal: {
+                        ring: 'ring-teal-500/25',
+                        bg: 'bg-teal-500/[0.05]',
+                        iconWrap: 'bg-teal-500/20 ring-teal-400/30',
+                        iconColor: 'text-teal-300',
+                        chip: 'bg-teal-500/10 hover:bg-teal-500/20',
+                        chipBorder: 'border-teal-400/20',
+                        title: 'text-teal-100',
+                        line: 'from-transparent via-teal-400/40 to-transparent',
+                      },
+                    };
+                    const p = palettes[accent];
+                    return (
+                      <div key={num}>
+                        {/* Flow connector: hairline vertical line with a
+                            gradient fade so the layers feel continuous
+                            instead of stacked as independent boxes. */}
+                        <div className="flex flex-col items-center my-1.5">
+                          <div
+                            className={`w-px h-6 bg-gradient-to-b ${p.line}`}
+                          />
+                          <div
+                            className={`w-1 h-1 rounded-full ${p.iconColor.replace('text-', 'bg-')}`}
+                            style={{ opacity: 0.6 }}
+                          />
+                        </div>
+                        {/* Layer panel */}
+                        <div
+                          className={`relative rounded-xl ${p.bg} border border-white/[0.06] ring-1 ${p.ring} p-3.5`}
                         >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                          <div className="flex items-center gap-2.5 mb-3">
+                            <div
+                              className={`flex-shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-md ring-1 ${p.iconWrap}`}
+                            >
+                              <Icon
+                                className={`w-3.5 h-3.5 ${p.iconColor}`}
+                                strokeWidth={1.75}
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-slate-500">
+                                {num}
+                              </div>
+                              <div
+                                className={`text-[13px] font-semibold ${p.title} leading-tight`}
+                              >
+                                {title}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {techs.map((t) => (
+                              <span
+                                key={t}
+                                className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10.5px] font-medium text-slate-100 border ${p.chipBorder} ${p.chip} transition-colors`}
+                              >
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
