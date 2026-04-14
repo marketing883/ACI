@@ -24,6 +24,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 interface Scene {
@@ -61,7 +62,7 @@ const SCENES: Scene[] = [
       'From Raw Data to Decisions',
       'That Actually Move the Business.',
     ],
-    sub: 'We have done this at RaceTrac, MSCI, Sodexo, and Nestlé. The infrastructure is proven. The outcomes are\u00A0documented.',
+    sub: 'We have done this for Fortune-scale operators across finance, retail, hospitality, and manufacturing. The infrastructure is proven. The outcomes are\u00A0documented.',
     cta: { label: 'See the Work', href: '/case-studies' },
     tint: 'rgba(13, 148, 136, 0.22)', // teal 600
   },
@@ -303,13 +304,14 @@ export default function HeroRotator() {
               onBlur={() => {
                 if (!pauseTimeoutRef.current) setPaused(false);
               }}
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#C4FF61] text-[#0A1628] text-lg font-semibold rounded-lg hover:-translate-y-0.5 transition-all duration-200"
+              className="group inline-flex items-center gap-2.5 px-8 py-4 bg-[#C4FF61] text-[#0A1628] text-lg font-semibold rounded-lg hover:-translate-y-0.5 transition-all duration-200"
             >
-              <span className="flex-shrink-0 w-1.5 h-1.5 bg-[#0A1628] rounded-full" />
-              {active.cta.label}
-              <span className="ml-1 transition-transform duration-200 group-hover:translate-x-1">
-                -&gt;
-              </span>
+              <span>{active.cta.label}</span>
+              <ArrowRight
+                className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1"
+                strokeWidth={2.25}
+                aria-hidden
+              />
             </Link>
 
             {/* Scene indicator dots; the active dot grows into a pill and

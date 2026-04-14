@@ -308,8 +308,16 @@ function PlaybookRow({ pb, index }: { pb: PlaybookData; index: number }) {
   );
 }
 
+// Which of the source PLAYBOOKS show on the homepage console, in display
+// order. These are the original PB-01, PB-03, PB-05, PB-07, PB-09
+// indexes (1-based), i.e. every other playbook starting from the first.
+// The homepage renumbers them Playbook 01 through Playbook 05 so the
+// visitor is not confronted with a jumping sequence.
+const HOMEPAGE_PLAYBOOK_INDEXES = [0, 2, 4, 6, 8] as const;
+
 export default function PlaybooksConsole() {
-  const total = pad2(PLAYBOOKS.length);
+  const homepagePlaybooks = HOMEPAGE_PLAYBOOK_INDEXES.map((i) => PLAYBOOKS[i]);
+  const total = pad2(homepagePlaybooks.length);
 
   return (
     <section className="relative py-24 md:py-32 overflow-hidden">
@@ -361,7 +369,7 @@ export default function PlaybooksConsole() {
 
         {/* Console rows */}
         <div className="border-t border-white/[0.06]">
-          {PLAYBOOKS.map((pb, i) => (
+          {homepagePlaybooks.map((pb, i) => (
             <PlaybookRow key={pb.id} pb={pb} index={i} />
           ))}
         </div>
