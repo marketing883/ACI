@@ -114,12 +114,28 @@ export async function POST(request: NextRequest) {
         });
 
       if (uploadError) {
+        // Hard-fail the application instead of silently storing it
+        // without the resume. The previous behavior left admins with
+        // candidates whose resume was simply missing, with no signal.
+        // The most common cause is the 'resumes' storage bucket not
+        // existing; the supabase/migrations/20260414_resumes_bucket.sql
+        // migration creates it.
         console.error('Resume upload error:', uploadError);
-        // Continue without resume if upload fails
-      } else {
-        resume_url = fileName;
-        resume_filename = resume.name;
+        return NextResponse.json(
+          {
+            error:
+              'We could not save your resume. Please try again, or email it directly to careers@aciinfotech.com.',
+            details:
+              process.env.NODE_ENV === 'development'
+                ? uploadError.message
+                : undefined,
+          },
+          { status: 500 },
+        );
       }
+
+      resume_url = fileName;
+      resume_filename = resume.name;
     }
 
     // Get client info
