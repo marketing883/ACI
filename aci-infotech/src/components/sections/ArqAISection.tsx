@@ -45,10 +45,10 @@ export default function ArqAISection({
             {/* ArqAI Logo */}
             <div className="mt-4 mb-6">
               <Image
-                src="/images/arqai/arq-ai-logo-white.svg"
+                src="/images/ArqAI-Logo-no-tagline.png"
                 alt="ArqAI"
-                width={180}
-                height={50}
+                width={717}
+                height={253}
                 className="h-12 w-auto"
               />
             </div>
