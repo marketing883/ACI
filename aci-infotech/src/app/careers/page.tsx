@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
-import { MapPin, Clock, Briefcase, ArrowRight, Heart, Building2, Users, Globe, Zap, Award, Coffee, TrendingUp, Search, Filter } from 'lucide-react';
+import { Briefcase, Heart, Building2, Users, Globe, Zap, Award, Coffee, TrendingUp, ArrowRight } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import CareersJobGrid from '@/components/careers/CareersJobGrid';
 
 // Revalidate every 60 seconds for fresh content
 export const revalidate = 60;
@@ -119,37 +120,12 @@ const benefits = [
   },
 ];
 
-function formatSalary(min: number | null, max: number | null, currency: string = 'USD'): string {
-  if (!min && !max) return '';
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    maximumFractionDigits: 0,
-  });
-  if (min && max) {
-    return `${formatter.format(min)} - ${formatter.format(max)}`;
-  }
-  if (min) return `From ${formatter.format(min)}`;
-  if (max) return `Up to ${formatter.format(max)}`;
-  return '';
-}
-
-function getDepartmentColor(department: string): string {
-  const dept = departments.find(d => d.value === department);
-  return dept?.color || 'bg-gray-100 text-gray-700 border-gray-200';
-}
-
 export default async function CareersPage() {
   const jobs = await getJobs();
-
-  // Group jobs by department for counts
-  const jobsByDepartment = jobs.reduce((acc, job) => {
-    if (!acc[job.department]) {
-      acc[job.department] = [];
-    }
-    acc[job.department].push(job);
-    return acc;
-  }, {} as Record<string, Job[]>);
+  // Distinct-department count is used only in the hero copy below.
+  // The filter + job grid handles its own per-department counts in
+  // the client component. No shared state needed here.
+  const departmentCount = new Set(jobs.map((j) => j.department)).size;
 
   return (
     <main className="min-h-screen">
@@ -272,7 +248,7 @@ export default async function CareersPage() {
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               {jobs.length > 0
-                ? `Find your next opportunity. ${jobs.length} roles across ${Object.keys(jobsByDepartment).length} departments.`
+                ? `Find your next opportunity. ${jobs.length} roles across ${departmentCount} departments.`
                 : 'No open positions at the moment. Check back soon or send us your resume.'}
             </p>
           </div>
@@ -289,146 +265,11 @@ export default async function CareersPage() {
               </Button>
             </div>
           ) : (
-            <>
-              {/* Filters */}
-              <div className="bg-gray-50 rounded-2xl p-6 mb-8">
-                <div className="flex flex-col lg:flex-row gap-6">
-                  {/* Department Filter */}
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Department
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {departments.map((dept) => {
-                        const count = dept.value === 'all' ? jobs.length : (jobsByDepartment[dept.value]?.length || 0);
-                        if (dept.value !== 'all' && count === 0) return null;
-                        return (
-                          <button
-                            key={dept.value}
-                            data-department={dept.value}
-                            className={`px-4 py-2 rounded-full text-sm font-medium border transition-all filter-btn ${
-                              dept.value === 'all'
-                                ? 'bg-[var(--aci-primary)] text-white border-[var(--aci-primary)]'
-                                : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
-                            }`}
-                          >
-                            {dept.name}
-                            <span className="ml-1 text-xs opacity-70">({count})</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Location Type Filter */}
-                  <div className="lg:w-64">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Work Type
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {locationTypes.map((type) => (
-                        <button
-                          key={type.value}
-                          data-location={type.value}
-                          className={`px-4 py-2 rounded-full text-sm font-medium border transition-all location-btn ${
-                            type.value === 'all'
-                              ? 'bg-[var(--aci-secondary)] text-white border-[var(--aci-secondary)]'
-                              : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          {type.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Job Grid */}
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="job-grid">
-                {jobs.map((job) => (
-                  <Link
-                    key={job.id}
-                    href={`/careers/${job.slug}`}
-                    data-job-department={job.department}
-                    data-job-location={job.location_type}
-                    className="group bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-blue-200 transition-all duration-300 job-card"
-                  >
-                    {/* Department Badge */}
-                    <div className="flex items-center justify-between mb-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getDepartmentColor(job.department)}`}>
-                        {job.department}
-                      </span>
-                      <span className="text-xs text-gray-400 capitalize">
-                        {job.location_type}
-                      </span>
-                    </div>
-
-                    {/* Job Title */}
-                    <h3 className="text-lg font-semibold text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors mb-3 line-clamp-2">
-                      {job.title}
-                    </h3>
-
-                    {/* Meta Info */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <MapPin className="w-4 h-4 flex-shrink-0" />
-                        <span className="truncate">{job.location}</span>
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          {job.employment_type.replace('-', ' ')}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Briefcase className="w-4 h-4" />
-                          {job.experience_level}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Skills */}
-                    {job.skills && job.skills.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {job.skills.slice(0, 3).map((skill) => (
-                          <span
-                            key={skill}
-                            className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                        {job.skills.length > 3 && (
-                          <span className="px-2 py-0.5 text-gray-400 text-xs">
-                            +{job.skills.length - 3}
-                          </span>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Salary if shown */}
-                    {job.show_salary && job.salary_min && (
-                      <p className="text-sm font-medium text-green-600 mb-4">
-                        {formatSalary(job.salary_min, job.salary_max, job.salary_currency)}
-                      </p>
-                    )}
-
-                    {/* CTA */}
-                    <div className="flex items-center text-[var(--aci-primary)] font-medium text-sm group-hover:gap-2 transition-all">
-                      View Position
-                      <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </Link>
-                ))}
-              </div>
-
-              {/* No results message (hidden by default, shown via JS) */}
-              <div id="no-results" className="hidden text-center py-16">
-                <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">No matching positions</h3>
-                <p className="text-gray-500">Try adjusting your filters to see more results.</p>
-              </div>
-            </>
+            <CareersJobGrid
+              jobs={jobs}
+              departments={departments}
+              locationTypes={locationTypes}
+            />
           )}
         </div>
       </section>
@@ -448,81 +289,6 @@ export default async function CareersPage() {
         </div>
       </section>
 
-      {/* Client-side filtering script */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            document.addEventListener('DOMContentLoaded', function() {
-              let activeDepartment = 'all';
-              let activeLocation = 'all';
-
-              const filterBtns = document.querySelectorAll('.filter-btn');
-              const locationBtns = document.querySelectorAll('.location-btn');
-              const jobCards = document.querySelectorAll('.job-card');
-              const noResults = document.getElementById('no-results');
-
-              function updateFilters() {
-                let visibleCount = 0;
-
-                jobCards.forEach(card => {
-                  const dept = card.dataset.jobDepartment;
-                  const loc = card.dataset.jobLocation;
-
-                  const deptMatch = activeDepartment === 'all' || dept === activeDepartment;
-                  const locMatch = activeLocation === 'all' || loc === activeLocation;
-
-                  if (deptMatch && locMatch) {
-                    card.style.display = '';
-                    visibleCount++;
-                  } else {
-                    card.style.display = 'none';
-                  }
-                });
-
-                if (noResults) {
-                  noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-                }
-              }
-
-              filterBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                  activeDepartment = this.dataset.department;
-
-                  filterBtns.forEach(b => {
-                    if (b.dataset.department === activeDepartment) {
-                      b.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
-                      b.classList.add('bg-[var(--aci-primary)]', 'text-white', 'border-[var(--aci-primary)]');
-                    } else {
-                      b.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
-                      b.classList.remove('bg-[var(--aci-primary)]', 'text-white', 'border-[var(--aci-primary)]');
-                    }
-                  });
-
-                  updateFilters();
-                });
-              });
-
-              locationBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                  activeLocation = this.dataset.location;
-
-                  locationBtns.forEach(b => {
-                    if (b.dataset.location === activeLocation) {
-                      b.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
-                      b.classList.add('bg-[var(--aci-secondary)]', 'text-white', 'border-[var(--aci-secondary)]');
-                    } else {
-                      b.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
-                      b.classList.remove('bg-[var(--aci-secondary)]', 'text-white', 'border-[var(--aci-secondary)]');
-                    }
-                  });
-
-                  updateFilters();
-                });
-              });
-            });
-          `,
-        }}
-      />
     </main>
   );
 }

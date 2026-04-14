@@ -44,10 +44,21 @@ interface Application {
   resume_filename: string | null;
   cover_letter: string | null;
   source: string;
+  referral_name: string | null;
   status: string;
   status_notes: string | null;
   internal_notes: string | null;
   rating: number | null;
+}
+
+// Build a /api/admin/resume/<path> URL from the storage path we
+// stored at application time. The route signs + redirects on click.
+function resumeDownloadUrl(storagePath: string): string {
+  const encoded = storagePath
+    .split('/')
+    .map(encodeURIComponent)
+    .join('/');
+  return `/api/admin/resume/${encoded}`;
 }
 
 const statusOptions = [
@@ -69,6 +80,42 @@ function JobApplicationsContent() {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [updating, setUpdating] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [statusNotes, setStatusNotes] = useState('');
+  const [internalNotes, setInternalNotes] = useState('');
+  const [notesSaving, setNotesSaving] = useState(false);
+
+  useEffect(() => {
+    if (selectedApp) {
+      setStatusNotes(selectedApp.status_notes ?? '');
+      setInternalNotes(selectedApp.internal_notes ?? '');
+    }
+  }, [selectedApp]);
+
+  async function saveNotes(
+    id: string,
+    patch: { status_notes?: string | null; internal_notes?: string | null },
+  ) {
+    setNotesSaving(true);
+    try {
+      const response = await fetch(`/api/admin/job-applications/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patch),
+      });
+      if (response.ok) {
+        setApplications((apps) =>
+          apps.map((app) => (app.id === id ? { ...app, ...patch } : app)),
+        );
+        if (selectedApp?.id === id) {
+          setSelectedApp({ ...selectedApp, ...patch });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to save notes:', error);
+    } finally {
+      setNotesSaving(false);
+    }
+  }
 
   useEffect(() => {
     fetchApplications();
@@ -437,18 +484,28 @@ function JobApplicationsContent() {
                 </div>
               )}
 
-              {/* Resume */}
-              {selectedApp.resume_filename && (
+              {/* Resume - now backed by the /api/admin/resume/[...path]
+                  signed-URL redirector so the file actually opens. */}
+              {selectedApp.resume_url && (
                 <div>
                   <h4 className="text-sm font-medium text-gray-500 mb-2">Resume</h4>
                   <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                     <FileText className="w-5 h-5 text-gray-400" />
-                    <span className="flex-1">{selectedApp.resume_filename}</span>
+                    <span className="flex-1 truncate">
+                      {selectedApp.resume_filename || selectedApp.resume_url.split('/').pop()}
+                    </span>
                     <a
-                      href={`/api/admin/resume/${selectedApp.resume_url}`}
+                      href={resumeDownloadUrl(selectedApp.resume_url)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 text-sm hover:underline"
+                      className="px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                    >
+                      View
+                    </a>
+                    <a
+                      href={resumeDownloadUrl(selectedApp.resume_url)}
+                      download={selectedApp.resume_filename ?? undefined}
+                      className="px-3 py-1.5 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
                     >
                       Download
                     </a>
@@ -500,10 +557,57 @@ function JobApplicationsContent() {
                 </div>
               </div>
 
+              {/* Status notes - reason/context for the current status,
+                  visible to everyone on the hiring team. */}
+              <div>
+                <label className="text-sm font-medium text-gray-500 block mb-2">
+                  Status notes
+                </label>
+                <textarea
+                  value={statusNotes}
+                  onChange={(e) => setStatusNotes(e.target.value)}
+                  onBlur={() => {
+                    if ((selectedApp.status_notes ?? '') !== statusNotes) {
+                      saveNotes(selectedApp.id, { status_notes: statusNotes || null });
+                    }
+                  }}
+                  placeholder="Reason for the current status, next-step summary, interview feedback shared with the team..."
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Internal notes - private notes not intended to be shared. */}
+              <div>
+                <label className="text-sm font-medium text-gray-500 block mb-2">
+                  Internal notes
+                </label>
+                <textarea
+                  value={internalNotes}
+                  onChange={(e) => setInternalNotes(e.target.value)}
+                  onBlur={() => {
+                    if ((selectedApp.internal_notes ?? '') !== internalNotes) {
+                      saveNotes(selectedApp.id, {
+                        internal_notes: internalNotes || null,
+                      });
+                    }
+                  }}
+                  placeholder="Private thoughts, red flags, salary expectations, anything not for external eyes..."
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                {notesSaving && (
+                  <p className="text-xs text-gray-400 mt-1">Saving...</p>
+                )}
+              </div>
+
               {/* Meta */}
-              <div className="text-xs text-gray-400 pt-4 border-t">
+              <div className="text-xs text-gray-400 pt-4 border-t space-y-1">
                 <p>Applied: {new Date(selectedApp.created_at).toLocaleString()}</p>
                 <p>Source: {selectedApp.source || 'Direct'}</p>
+                {selectedApp.referral_name && (
+                  <p>Referred by: {selectedApp.referral_name}</p>
+                )}
               </div>
 
               {/* Delete Button */}
