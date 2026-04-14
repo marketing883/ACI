@@ -285,7 +285,12 @@ export default function Navigation() {
 
             {/* Desktop CTA - Standard button styling */}
             <div className="hidden lg:flex items-center gap-4">
-              <Button href="/contact?reason=architecture-call" variant="primary" size="md" withLimeDot>
+              <Button
+                href="/contact?reason=architecture-call"
+                variant="primary"
+                size="md"
+                rightIcon={<ArrowRight className="w-4 h-4" strokeWidth={2.25} aria-hidden />}
+              >
                 Start here
               </Button>
             </div>
@@ -795,12 +800,14 @@ function MobileMenu({ isOpen, onClose, navData }: MobileMenuProps) {
               <Link
                 href="/contact?reason=architecture-call"
                 onClick={onClose}
-                className="w-full inline-flex items-center justify-center gap-2 py-4 px-8 bg-[#0052CC] text-white font-semibold text-lg rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
+                className="group w-full inline-flex items-center justify-center gap-2.5 py-4 px-8 bg-[#0052CC] text-white font-semibold text-lg rounded-lg hover:text-[#C4FF61] transition-all duration-200 cursor-pointer"
               >
-                <span
-                  className="flex-shrink-0 w-1.5 h-1.5 bg-[#C4FF61] rounded-full"
+                <span>Start here</span>
+                <ArrowRight
+                  className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1"
+                  strokeWidth={2.25}
+                  aria-hidden
                 />
-                Start here
               </Link>
             </div>
           </div>

@@ -21,6 +21,7 @@ export const revalidate = 60;
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import {
   DynamicBlogSection,
   DynamicNewsSection,
@@ -119,13 +120,14 @@ export default function PreviewHomePage() {
 
           <Link
             href="/contact?reason=home-final-cta-v2"
-            className="group inline-flex items-center gap-3 px-9 py-4 bg-[#C4FF61] text-[#0A1628] text-lg font-semibold rounded-lg hover:-translate-y-0.5 transition-all duration-200"
+            className="group inline-flex items-center gap-2.5 px-9 py-4 bg-[#C4FF61] text-[#0A1628] text-lg font-semibold rounded-lg hover:-translate-y-0.5 transition-all duration-200"
           >
-            <span className="flex-shrink-0 w-1.5 h-1.5 bg-[#0A1628] rounded-full" />
-            Start here
-            <span className="ml-1 transition-transform duration-200 group-hover:translate-x-1">
-              -&gt;
-            </span>
+            <span>Start here</span>
+            <ArrowRight
+              className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1"
+              strokeWidth={2.25}
+              aria-hidden
+            />
           </Link>
         </div>
       </section>
