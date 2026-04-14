@@ -57,7 +57,10 @@ export default function PreviewHomePage() {
       <PlaybooksConsole />
       <WhatWeBuildSection />
       <CaseStudiesKineticSection />
-      <PartnersSection partners={partners} />
+      <PartnersSection
+        headline="The Platforms We Build On"
+        partners={partners}
+      />
       <DynamicNewsSection
         headline="In The News"
         subheadline="Recent recognition and partnerships"
