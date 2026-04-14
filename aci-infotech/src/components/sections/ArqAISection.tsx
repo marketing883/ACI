@@ -45,7 +45,7 @@ export default function ArqAISection({
             {/* ArqAI Logo */}
             <div className="mt-4 mb-6">
               <Image
-                src="/images/ArqAI-Logo-no-tagline.png"
+                src="/images/ArqAI-Logo-white.png"
                 alt="ArqAI"
                 width={717}
                 height={253}
