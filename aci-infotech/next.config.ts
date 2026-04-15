@@ -61,7 +61,7 @@ const nextConfig: NextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https: http:",
               "media-src 'self' blob:",
-              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://px.ads.linkedin.com https://*.supabase.co",
+              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://px.ads.linkedin.com https://*.supabase.co https://api.aciinfotech.com",
               "frame-src 'self'",
               // Allow the PWA manifest to load through the GitHub Codespaces
               // auth tunnel (private port forwarding redirects /manifest.webmanifest
@@ -91,6 +91,16 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: '**.supabase.co',
+      },
+      {
+        // Supabase custom domain. After switching
+        // NEXT_PUBLIC_SUPABASE_URL to the custom domain, new storage
+        // public URLs (from supabase.storage.getPublicUrl) resolve
+        // against this host instead of .supabase.co. Keep both
+        // entries so pre-existing DB rows with .supabase.co URLs
+        // still optimise through next/image.
+        protocol: 'https',
+        hostname: 'api.aciinfotech.com',
       },
       {
         protocol: 'https',
