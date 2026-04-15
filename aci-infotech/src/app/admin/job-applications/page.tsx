@@ -305,7 +305,12 @@ function JobApplicationsContent() {
             <p className="text-gray-500">No applications found</p>
           </div>
         ) : (
-          <table className="w-full">
+          // Wrap the table in a horizontal-scroll container. The admin
+          // layout can render narrower than the six-column table on
+          // mobile Safari, where an unwrapped table blows the viewport
+          // and breaks position:sticky ancestors.
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[720px]">
             <thead className="bg-gray-50 border-b">
               <tr>
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Candidate</th>
@@ -400,6 +405,7 @@ function JobApplicationsContent() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

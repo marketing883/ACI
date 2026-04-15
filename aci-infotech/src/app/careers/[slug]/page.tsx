@@ -541,7 +541,12 @@ export default function JobDetailPage({ params }: PageProps) {
                 </label>
                 <input
                   type="file"
-                  accept=".pdf,.doc,.docx"
+                  // Extension-only accept lists ("accept='.pdf,.doc,.docx'")
+                  // are honored by Chrome/Firefox but Safari sometimes
+                  // rejects valid files when the MIME is missing. List
+                  // both the MIME and the extension so every engine
+                  // accepts the same set of files.
+                  accept="application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx"
                   onChange={(e) => setForm({ ...form, resume: e.target.files?.[0] || null })}
                   className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />

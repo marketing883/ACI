@@ -100,3 +100,33 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Cross-browser: prefer dynamic viewport height for full-screen sections.
+   iOS Safari collapses its URL bar as the visitor scrolls, which makes
+   100vh sections visibly taller than the visible viewport on first load.
+   100dvh tracks the actual visible viewport. Where 100dvh is supported
+   (Safari 15.4+, Chrome 108+, Firefox 101+), override the Tailwind
+   100vh utilities so every `min-h-screen` / `h-screen` / `max-h-screen`
+   in the app picks up the dynamic value automatically. No call-site
+   changes required. */
+@supports (min-height: 100dvh) {
+  .min-h-screen { min-height: 100dvh; }
+  .h-screen     { height:     100dvh; }
+  .max-h-screen { max-height: 100dvh; }
+  /* Same for `main`, which we set to min-h 100vh in the base layer. */
+  main          { min-height: 100dvh; }
+}
+
+/* Cross-browser: WebKit still honours `-webkit-backdrop-filter` even
+   where it now understands the unprefixed form. Tailwind v4 emits the
+   unprefixed property only. Mirror every `backdrop-blur-*` utility on
+   the site to the `-webkit-` variant so Safari (and older iOS WebViews)
+   render the frosted-glass look instead of a transparent panel. */
+.backdrop-blur-none { -webkit-backdrop-filter: blur(0); }
+.backdrop-blur-sm   { -webkit-backdrop-filter: blur(4px); }
+.backdrop-blur      { -webkit-backdrop-filter: blur(8px); }
+.backdrop-blur-md   { -webkit-backdrop-filter: blur(12px); }
+.backdrop-blur-lg   { -webkit-backdrop-filter: blur(16px); }
+.backdrop-blur-xl   { -webkit-backdrop-filter: blur(24px); }
+.backdrop-blur-2xl  { -webkit-backdrop-filter: blur(40px); }
+.backdrop-blur-3xl  { -webkit-backdrop-filter: blur(64px); }

@@ -108,19 +108,32 @@ const lineVariants = {
   },
 };
 
-// Headline gets the same stagger slot but with a masked clip wipe layered on.
+// Headline gets the same stagger slot but with a top-down reveal.
+// We used to drive the reveal with `clip-path: inset(...)` animated via
+// framer-motion; iOS Safari is flaky animating clip-path on block-level
+// elements (animation parser hiccups mid-reflow). `mask-image` with a
+// linear gradient whose stops animate is supported everywhere we care
+// about and avoids the WebKit foot-guns. The visual is identical: a
+// wipe from top to bottom paired with a soft vertical rise.
 const headlineVariants = {
-  initial: { opacity: 0, y: 28, clipPath: 'inset(100% 0% 0% 0%)' },
+  initial: {
+    opacity: 0,
+    y: 28,
+    WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 0%, transparent 0%, transparent 100%)',
+    maskImage: 'linear-gradient(to bottom, black 0%, black 0%, transparent 0%, transparent 100%)',
+  },
   enter: {
     opacity: 1,
     y: 0,
-    clipPath: 'inset(0% 0% 0% 0%)',
+    WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 100%, transparent 100%, transparent 100%)',
+    maskImage: 'linear-gradient(to bottom, black 0%, black 100%, transparent 100%, transparent 100%)',
     transition: { duration: 1.0, ease: EASE_OUT },
   },
   exit: {
     opacity: 0,
     y: -20,
-    clipPath: 'inset(0% 0% 0% 0%)',
+    WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 100%, transparent 100%, transparent 100%)',
+    maskImage: 'linear-gradient(to bottom, black 0%, black 100%, transparent 100%, transparent 100%)',
     transition: { duration: 0.45, ease: EASE_IN },
   },
 };
