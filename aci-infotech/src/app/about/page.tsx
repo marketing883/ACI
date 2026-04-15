@@ -452,7 +452,8 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Leadership Team Grid */}
+          {/* Leadership Team Grid - hidden pending updated roster + photography */}
+          {false && (
           <div>
             <h3 className="text-2xl font-bold text-[var(--aci-secondary)] text-center mb-10">
               Leadership Team
@@ -504,6 +505,7 @@ export default function AboutPage() {
               ))}
             </div>
           </div>
+          )}
         </div>
       </section>
 
