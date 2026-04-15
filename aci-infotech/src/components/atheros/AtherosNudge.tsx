@@ -140,17 +140,23 @@ export default function AtherosNudge() {
     // the seed-and-submit event fires next tick.
     window.dispatchEvent(new CustomEvent('atheros:open'));
     if (seed) {
-      // Small delay lets the chat surface mount before we ask it to
-      // accept and send the seed message. The 'submit' flag tells
-      // ChatColumn to send the prompt as the visitor's first turn
-      // instead of just pre-filling the input field.
-      setTimeout(() => {
+      // Yield to the mount cycle deterministically: request a frame,
+      // then a task, then dispatch. A fixed 60ms timeout was racing on
+      // slow iOS devices; this chain is both faster on fast devices
+      // and safer on slow ones. ChatColumn also queues the prompt if
+      // its send callback isn't wired yet, so a second layer of
+      // safety catches any remaining race.
+      const dispatchSeed = () =>
         window.dispatchEvent(
           new CustomEvent('atheros:seed', {
             detail: { prompt: seed, submit: true },
           }),
         );
-      }, 60);
+      if (typeof window.requestAnimationFrame === 'function') {
+        window.requestAnimationFrame(() => setTimeout(dispatchSeed, 0));
+      } else {
+        setTimeout(dispatchSeed, 0);
+      }
     }
     // Hide the bubble after opening; do not write dismissedUntil so it
     // returns next session if the visitor closes the chat without

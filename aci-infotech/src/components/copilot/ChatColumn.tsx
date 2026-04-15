@@ -149,22 +149,35 @@ export default function ChatColumn({
   // responding without an extra click. Otherwise we just pre-fill the
   // input. The companion `atheros:open` event is handled in
   // ChatWidget to open the surface.
+  //
+  // Mount-race guard: on iOS Safari the 'atheros:seed' event can
+  // arrive before the send callback's ref has populated (especially
+  // on slower devices where the 'converse' sheet mounts a tick behind
+  // ChatColumn). Queue the prompt in a ref and flush it in a
+  // dedicated effect once `sendRef.current` becomes available. No
+  // silent no-ops.
+  const pendingSeedRef = useRef<string | null>(null);
   useEffect(() => {
     if (typeof window === 'undefined') return;
     function handleSeed(e: Event) {
       const detail = (e as CustomEvent<{ prompt?: string; submit?: boolean }>)
         .detail;
-      if (!detail?.prompt) return;
-      if (detail.submit) {
-        // Wait one tick so the chat surface is fully mounted (the
-        // open event opens it just before this fires).
-        setTimeout(() => {
-          if (sendRef.current) sendRef.current(detail.prompt!);
-          else setInput(detail.prompt!);
-        }, 0);
+      const prompt = typeof detail?.prompt === 'string' ? detail.prompt.trim() : '';
+      if (!prompt) return;
+      if (detail?.submit) {
+        if (sendRef.current) {
+          try {
+            sendRef.current(prompt);
+          } catch (err) {
+            log.warn('render', err, { extra: { phase: 'seed-send' } });
+            pendingSeedRef.current = prompt;
+          }
+          return;
+        }
+        pendingSeedRef.current = prompt;
         return;
       }
-      setInput(detail.prompt);
+      setInput(prompt);
     }
     window.addEventListener('atheros:seed', handleSeed);
     return () => window.removeEventListener('atheros:seed', handleSeed);
@@ -427,6 +440,18 @@ export default function ChatColumn({
   // sent immediately as the visitor's first turn.
   useEffect(() => {
     sendRef.current = send;
+    // Drain any seed prompt that arrived before `send` was ready
+    // (mount race on slower mobile). Clear the pending slot before
+    // dispatching so a throw doesn't loop.
+    const pending = pendingSeedRef.current;
+    if (pending) {
+      pendingSeedRef.current = null;
+      try {
+        send(pending);
+      } catch (err) {
+        log.warn('render', err, { extra: { phase: 'queued-seed-send' } });
+      }
+    }
   }, [send]);
 
   const onChip = useCallback(
