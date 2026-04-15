@@ -115,6 +115,14 @@ export default function MobilePill({
       const target = panelTargetPath(panel);
       if (!target) return;
       if (pathname === '/contact') return; // never steal focus from the form
+      // If the target is the page we're already on, auto-nav has no
+      // visible effect - but historically we still closed the sheet,
+      // which made every tool-emitting turn on the homepage feel like
+      // the chat was dismissing itself. Skip entirely so the visitor
+      // keeps reading in-place.
+      const normalizedTarget = target.replace(/\/$/, '') || '/';
+      const normalizedCurrent = (pathname ?? '/').replace(/\/$/, '') || '/';
+      if (normalizedTarget === normalizedCurrent) return;
       dispatch({ type: 'CLOSE_CONVERSE' });
       presentWithAutoNav({
         sessionId,
