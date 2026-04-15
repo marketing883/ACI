@@ -35,11 +35,17 @@ const ROUTES: Array<{ path: string; name: string }> = [
 for (const route of ROUTES) {
   test(`route ${route.name} renders`, async ({ page }) => {
     await page.goto(route.path, { waitUntil: 'domcontentloaded' });
-    // Any heading proves the template rendered.
+    // `toBeAttached` checks DOM presence, not paint. Many public pages
+    // have their first-in-DOM heading inside a carousel / rotator /
+    // inactive tab where CSS hides it until user interaction, which
+    // would fail a `toBeVisible` check even though the page rendered
+    // correctly. The console-error fixture already catches actual
+    // render crashes; this assertion just confirms the route didn't
+    // 404 or render an empty body.
     const anyHeading = page
       .locator('h1, h2, h3')
       .filter({ hasText: /\S/ })
       .first();
-    await expect(anyHeading).toBeVisible({ timeout: 10_000 });
+    await expect(anyHeading).toBeAttached({ timeout: 10_000 });
   });
 }
