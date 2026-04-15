@@ -8,6 +8,7 @@ import MessageRenderer from '@/components/chat/MessageRenderer';
 import ActionChips from './ActionChips';
 import InlineField from './InlineField';
 import CitationPill from './CitationPill';
+import InlinePanelCard from './InlinePanelCard';
 import { streamAtherosReply } from '@/lib/copilot/clientStream';
 import { resolveWelcome } from '@/lib/copilot/welcome';
 import { subscribeAdminLive } from '@/lib/copilot/realtime';
@@ -28,6 +29,13 @@ export interface ChatColumnMessage {
   citations?: CiteSourceArgs[];
   actionButtons?: OfferActionButtonsArgs['buttons'];
   requestField?: RequestFieldArgs;
+  /**
+   * Content panels emitted by the model this turn. Only populated
+   * when `panelPlacement === 'inline-card'` (mobile). In desktop
+   * mode the panels route straight to `onPanelRequest` and don't
+   * land on the message.
+   */
+  panels?: ShowContentPanelArgs[];
   isStreaming?: boolean;
 }
 
@@ -41,6 +49,23 @@ export interface ChatColumnProps {
   onClose?: () => void;
   /** Optional pill contextual copy rendered at the top of the chat column. */
   subtitle?: string;
+  /**
+   * How `show_content_panel` tool calls should be surfaced.
+   *
+   *   'stream-immediate' (default, used on desktop): as soon as the
+   *   panel arrives during the stream, call `onPanelRequest` so the
+   *   desktop shell opens the side canvas alongside the chat. The
+   *   conversation continues unaffected.
+   *
+   *   'inline-card' (used on mobile): accumulate panels on the
+   *   message and render them as in-thread preview cards. The
+   *   visitor taps a card to invoke `onPanelRequest` (which on
+   *   mobile closes the sheet + navigates). This keeps the chat
+   *   mounted mid-stream so `onDone` runs and the prose bubble
+   *   fills in — the old auto-nav pattern was tearing down the
+   *   ChatColumn before the reply finished streaming.
+   */
+  panelPlacement?: 'stream-immediate' | 'inline-card';
 }
 
 /** localStorage key for thread persistence. Versioned so a future schema bump can be hard-rolled. */
@@ -126,6 +151,7 @@ export default function ChatColumn({
   onLeadCaptured,
   onClose,
   subtitle,
+  panelPlacement = 'stream-immediate',
 }: ChatColumnProps) {
   const pathname = usePathname();
   // Server-safe initial state. The mount effect below either restores a
@@ -360,7 +386,25 @@ export default function ChatColumn({
               case 'show_content_panel': {
                 const panel = args as ShowContentPanelArgs | undefined;
                 if (panel?.panelType && panel.entityRef) {
-                  onPanelRequest(panel);
+                  if (panelPlacement === 'inline-card') {
+                    // Defer visual handling to the message block; the
+                    // visitor taps the inline card if they want to
+                    // navigate. We do NOT call onPanelRequest here
+                    // because that would tear down the mobile sheet
+                    // mid-stream and cancel the rest of the reply.
+                    setMessages((m) =>
+                      m.map((msg) =>
+                        msg.id === pendingAssistantId
+                          ? {
+                              ...msg,
+                              panels: [...(msg.panels ?? []), panel],
+                            }
+                          : msg,
+                      ),
+                    );
+                  } else {
+                    onPanelRequest(panel);
+                  }
                   panelOpened = true;
                   firedPanels.push(panel);
                 }
@@ -450,7 +494,7 @@ export default function ChatColumn({
       setBusy(false);
       setStatus(null);
     },
-    [busy, clearStatusSoon, leadState, messages, onLeadCaptured, onPanelRequest, pageContext, sessionId],
+    [busy, clearStatusSoon, leadState, messages, onLeadCaptured, onPanelRequest, pageContext, panelPlacement, sessionId],
   );
 
   // Keep the seed-event handler's ref pointed at the latest `send`
@@ -481,6 +525,25 @@ export default function ChatColumn({
 
   const renderedMessages = useMemo(() => messages, [messages]);
 
+  // Thought gating (Change D). The model emits a `thought` event per
+  // turn with its internal plan for the reply. Surfacing that to the
+  // visitor reads as either a bug or an awkward tell that they're
+  // being qualified. Keep it in dev (so we can still inspect the
+  // model's reasoning during local testing) and gate it behind an
+  // opt-in query param in production so admins can still see it
+  // when debugging a live report. One-time read; window is safe
+  // inside render because ChatColumn is 'use client'.
+  const showThought = useMemo(() => {
+    if (process.env.NODE_ENV === 'development') return true;
+    if (typeof window === 'undefined') return false;
+    try {
+      return new URLSearchParams(window.location.search).has('debugThought');
+    } catch {
+      // copilot-allow-silent-catch: query-param parse is best-effort; default to hidden
+      return false;
+    }
+  }, []);
+
   return (
     <div className="flex h-full flex-col bg-white/92 backdrop-blur">
       <header className="flex items-center justify-between border-b border-gray-200/70 px-5 py-3">
@@ -506,7 +569,7 @@ export default function ChatColumn({
       <div ref={messagesRef} className="flex-1 overflow-y-auto px-5 py-4">
         {renderedMessages.map((m) => (
           <div key={m.id} className={`mb-3 ${m.role === 'user' ? 'flex justify-end' : ''}`}>
-            {m.thought ? (
+            {showThought && m.thought ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.55 }}
@@ -529,6 +592,17 @@ export default function ChatColumn({
                 <span>{m.content}</span>
               )}
             </div>
+            {m.panels && m.panels.length > 0 && (
+              <div className="mt-1 space-y-1.5">
+                {m.panels.map((p, i) => (
+                  <InlinePanelCard
+                    key={`${m.id}-panel-${i}`}
+                    panel={p}
+                    onOpen={(panel) => onPanelRequest(panel)}
+                  />
+                ))}
+              </div>
+            )}
             {m.citations && m.citations.length > 0 && (
               <div className="mt-1.5 flex flex-wrap gap-1.5">
                 {m.citations.map((c, i) => (

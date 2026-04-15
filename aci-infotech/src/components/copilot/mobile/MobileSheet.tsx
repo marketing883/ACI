@@ -205,6 +205,10 @@ export default function MobileSheet({
                 onPanelRequest={onPanelRequest}
                 onClose={onClose}
                 subtitle={subtitle}
+                // Mobile uses inline preview cards instead of auto-nav
+                // so the sheet stays mounted while the reply finishes
+                // streaming. Visitor taps a card to navigate.
+                panelPlacement="inline-card"
               />
             </div>
           </motion.div>
