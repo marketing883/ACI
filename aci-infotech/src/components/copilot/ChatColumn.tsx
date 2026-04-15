@@ -228,26 +228,44 @@ export default function ChatColumn({
   // Live takeover: subscribe to admin messages for this session. When an
   // admin claims the conversation and types a relay message, it lands in
   // chat_messages with role='admin'; we surface it as an amber bubble.
+  //
+  // Wrapped in try/catch because Supabase Realtime constructs a
+  // WebSocket during subscribe(), and iOS Safari throws "operation is
+  // insecure" from `new WebSocket()` under Intelligent Tracking
+  // Prevention / private browsing. subscribeAdminLive already contains
+  // its own guards, but the belt-and-suspenders wrapper here means
+  // any future realtime-js change can't take down the whole chat.
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const off = subscribeAdminLive({
-      onMessageInsert: (row) => {
-        if ((row as { session_id?: string }).session_id !== sessionId) return;
-        const role = (row as { role?: string }).role;
-        if (role !== 'admin') return;
-        const content = (row as { content?: string }).content ?? '';
-        const messageId =
-          (row as { message_id?: string }).message_id ?? `admin_${Date.now()}`;
-        setMessages((m) => {
-          if (m.some((x) => x.id === messageId)) return m;
-          return [
-            ...m,
-            { id: messageId, role: 'assistant', content },
-          ];
-        });
-      },
-    });
-    return off;
+    let off: (() => void) | undefined;
+    try {
+      off = subscribeAdminLive({
+        onMessageInsert: (row) => {
+          if ((row as { session_id?: string }).session_id !== sessionId) return;
+          const role = (row as { role?: string }).role;
+          if (role !== 'admin') return;
+          const content = (row as { content?: string }).content ?? '';
+          const messageId =
+            (row as { message_id?: string }).message_id ?? `admin_${Date.now()}`;
+          setMessages((m) => {
+            if (m.some((x) => x.id === messageId)) return m;
+            return [
+              ...m,
+              { id: messageId, role: 'assistant', content },
+            ];
+          });
+        },
+      });
+    } catch (err) {
+      log.warn('other', err, { extra: { phase: 'admin-live-subscribe' } });
+    }
+    return () => {
+      try {
+        off?.();
+      } catch (err) {
+        log.warn('other', err, { extra: { phase: 'admin-live-unsubscribe' } });
+      }
+    };
   }, [sessionId]);
   const statusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
