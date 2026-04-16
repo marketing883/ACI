@@ -295,9 +295,9 @@ export const ENTITY_INDEX: Readonly<Record<string, EntityIndexEntry>> = {
     "panelType": "service",
     "title": "App Development"
   },
-  "qa-testing": {
+  "quality-engineering": {
     "panelType": "service",
-    "title": "QA Testing"
+    "title": "Quality Engineering"
   },
   "financial-services": {
     "panelType": "industry",
