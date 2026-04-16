@@ -47,6 +47,7 @@ import { checkRateLimit } from '@/lib/copilot/ratelimit';
 import {
   insertMessage,
   markSessionHandoff,
+  readLeadContext,
   upsertChatLead,
   upsertSession,
 } from '@/lib/copilot/session';
@@ -296,33 +297,11 @@ async function readAdminClaimedMode(sessionId: string): Promise<'relay' | 'copil
   }
 }
 
-/**
- * Fetch the deterministic lead_score for this session from chat_leads, set
- * by the intelligence-generation fire-and-forget after the first email
- * capture. Returns null if no row yet, or if intelligence hasn't run. The
- * score feeds the LEAD TEMPERATURE block in buildSystemPrompt so the model
- * can calibrate its ask pressure per turn.
- */
-async function readLeadScore(sessionId: string): Promise<number | null> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return null;
-  try {
-    const supabase = createClient(url, key, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
-    const { data } = await supabase
-      .from('chat_leads')
-      .select('lead_score')
-      .eq('session_id', sessionId)
-      .maybeSingle();
-    const score = data?.lead_score;
-    return typeof score === 'number' ? score : null;
-  } catch (err) {
-    log.warn('init', err, { sessionId, extra: { phase: 'readLeadScore' } });
-    return null;
-  }
-}
+// readLeadContext for {state, score} lives in src/lib/copilot/session.ts
+// so it's reusable from any caller that needs the reconstructed lead
+// state (e.g. admin views, reminder jobs, future routes). The v2 route
+// uses it at the top of each turn to seed the prompt's QUALIFICATION
+// STATE and LEAD TEMPERATURE blocks.
 
 // ---------------------------------------------------------------------------
 // Turn runner
@@ -406,12 +385,20 @@ async function runTurn(input: RunTurnInput): Promise<void> {
     });
   }
 
-  const leadScore = await readLeadScore(body.sessionId);
+  // Reconstruct the authoritative lead context from chat_leads. The
+  // QUALIFICATION STATE + LEAD TEMPERATURE blocks below both read from
+  // this. body.leadState is merged in as a secondary source (today the
+  // client passes an empty placeholder, but when client-side accumulation
+  // lands it'll carry in-flight captures); DB wins when both have a field.
+  const { state: dbLeadState, score: leadScore } = await readLeadContext(
+    body.sessionId,
+  );
+  const mergedLeadState = { ...(body.leadState ?? {}), ...dbLeadState };
 
   const systemPrompt = buildSystemPrompt({
     pageContext: enrichedContext,
     retrieved,
-    leadState: body.leadState ?? {},
+    leadState: mergedLeadState,
     turnIndex: body.turnIndex ?? body.messages.length,
     serverPanel: resolvedPanel,
     leadScore: leadScore ?? undefined,

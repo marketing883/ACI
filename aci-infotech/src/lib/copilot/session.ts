@@ -13,6 +13,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { log } from './logger';
 import { generateIntelligence } from '@/lib/intelligence';
+import type { ConversationLeadState } from './prompt';
 
 // Loose client type; see scripts/index-content.ts for rationale.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,6 +107,65 @@ export async function insertMessage(input: MessageInsertInput): Promise<void> {
       sessionId: input.session_id,
       extra: { phase: 'insertMessage', role: input.role },
     });
+  }
+}
+
+/**
+ * Read the current lead context for a session: the accumulated lead fields
+ * (ConversationLeadState shape, mapped from chat_leads columns) plus the
+ * lead_score from the intelligence pipeline.
+ *
+ * Used by the v2 route at the start of every turn so the system prompt's
+ * QUALIFICATION STATE and LEAD TEMPERATURE blocks reflect what's actually
+ * captured in the database, not whatever the client happens to be holding
+ * (which today is nothing — ChatWidget passes an empty placeholder).
+ *
+ * Returns an object with null-safe defaults. If no row exists yet, state
+ * is an empty object and score is null — callers treat these as the
+ * "pre-qualification" baseline.
+ *
+ * Note: industry and role are captured by qualify_lead but not yet
+ * persisted on chat_leads (columns missing). Sub-task 3 adds them; until
+ * then this helper returns them as undefined.
+ */
+export async function readLeadContext(
+  sessionId: string,
+): Promise<{ state: ConversationLeadState; score: number | null }> {
+  const supabase = serviceRoleClient();
+  if (!supabase) return { state: {}, score: null };
+  try {
+    const { data, error } = await supabase
+      .from('chat_leads')
+      .select(
+        'name, email, company, website, phone, job_title, service_interest, requirements, preferred_time, budget, priority, intent, pain_point, decision_role, lead_score',
+      )
+      .eq('session_id', sessionId)
+      .maybeSingle();
+    if (error || !data) return { state: {}, score: null };
+    // Map chat_leads columns -> ConversationLeadState, dropping nulls so
+    // undefined === not-captured in the prompt's LEAD_STATE_KEYS loop.
+    const state: ConversationLeadState = {};
+    if (data.name) state.name = data.name;
+    if (data.email) state.email = data.email;
+    if (data.company) state.company = data.company;
+    if (data.website) state.website = data.website;
+    if (data.phone) state.phone = data.phone;
+    if (data.job_title) state.jobTitle = data.job_title;
+    if (data.service_interest) state.serviceInterest = data.service_interest;
+    // chat_leads.requirements stores qualify_lead.team (legacy column name).
+    if (data.requirements) state.team = data.requirements;
+    // chat_leads.preferred_time stores qualify_lead.timeline (legacy name).
+    if (data.preferred_time) state.timeline = data.preferred_time;
+    if (data.budget) state.budget = data.budget;
+    if (data.priority) state.priority = data.priority;
+    if (data.intent) state.intent = data.intent;
+    if (data.pain_point) state.painPoint = data.pain_point;
+    if (data.decision_role) state.decisionRole = data.decision_role;
+    const score = typeof data.lead_score === 'number' ? data.lead_score : null;
+    return { state, score };
+  } catch (err) {
+    log.warn('tool', err, { sessionId, extra: { phase: 'readLeadContext' } });
+    return { state: {}, score: null };
   }
 }
 

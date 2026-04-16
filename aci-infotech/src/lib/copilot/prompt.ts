@@ -36,6 +36,8 @@ export interface ConversationLeadState {
   budget?: string;
   priority?: string;
   intent?: string;
+  painPoint?: string;
+  decisionRole?: string;
 }
 
 export interface PromptBuildInput {
@@ -305,6 +307,8 @@ const LEAD_STATE_KEYS: Array<keyof ConversationLeadState> = [
   'budget',
   'priority',
   'intent',
+  'painPoint',
+  'decisionRole',
 ];
 
 function formatLeadState(state: ConversationLeadState): string {
