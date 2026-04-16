@@ -558,15 +558,12 @@ export default function QualityEngineeringPage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-3xl mb-14">
-            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--aci-lime)] mb-3">
-              {'// agentic ai'}
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
               What AI does on the{'\u00a0'}team.
             </h2>
             <p className="text-lg text-gray-300">
-              Not a buzzword section. Four places agents earn their keep,
-              with the specific work they do and the problem they solve.
+              Four jobs that buy back engineer hours from test maintenance,
+              flake chasing, and defect{'\u00a0'}triage.
             </p>
           </div>
 
