@@ -87,18 +87,6 @@ const caseStudies = [
     technologies: ['Salesforce', 'Braze', 'AWS', 'Databricks'],
   },
   {
-    slug: 'retail-personalization',
-    client: 'National Retailer',
-    industry: 'Retail',
-    challenge: 'Generic marketing driving customers to competitors',
-    results: [
-      { metric: '25%', description: 'Increase in conversion' },
-      { metric: '15%', description: 'Lift in AOV' },
-      { metric: '3x', description: 'Email engagement' },
-    ],
-    technologies: ['Adobe Experience Platform', 'Target', 'Campaign'],
-  },
-  {
     slug: 'hospitality-loyalty',
     client: 'Global Hospitality Brand',
     industry: 'Hospitality',

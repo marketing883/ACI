@@ -87,18 +87,6 @@ const caseStudies = [
     technologies: ['Databricks ML', 'MLflow', 'Python'],
   },
   {
-    slug: 'retail-personalization',
-    client: 'National Retailer',
-    industry: 'Retail',
-    challenge: 'Generic recommendations driving customers to competitors',
-    results: [
-      { metric: '25%', description: 'Increase in conversion rate' },
-      { metric: 'Real-time', description: 'Personalization at scale' },
-      { metric: '15%', description: 'Lift in average order value' },
-    ],
-    technologies: ['TensorFlow', 'Spark', 'Redis'],
-  },
-  {
     slug: 'document-processing',
     client: 'Healthcare Provider',
     industry: 'Healthcare',

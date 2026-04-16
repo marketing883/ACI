@@ -223,10 +223,6 @@ export const ENTITY_INDEX: Readonly<Record<string, EntityIndexEntry>> = {
     "panelType": "case",
     "title": "Forecasting models took weeks to retrain and deploy, missing market changes"
   },
-  "retail-personalization": {
-    "panelType": "case",
-    "title": "Generic marketing driving customers to competitors"
-  },
   "document-processing": {
     "panelType": "case",
     "title": "Manual claims processing taking 72 hours average"

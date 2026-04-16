@@ -171,7 +171,8 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
   },
 };
 
-// Add more case studies with basic data for routing
+// Stub slugs that show a "Coming Soon" page when no Supabase row + no
+// hardcoded fallback exists. Live CMS slugs must NOT be listed here.
 const basicCaseStudies = [
   'fortune-100-retailer-ai',
   'healthcare-cloud-migration',
@@ -179,8 +180,6 @@ const basicCaseStudies = [
   'manufacturing-iot',
   'insurance-digital-platform',
   'energy-security-overhaul',
-  'intelligent-cms-modernization-productivity-engagement',
-  'how-aci-infotech-enabled-a-retail-leader-to-unlock-the-power-of-data',
   'logistics-optimization',
 ];
 

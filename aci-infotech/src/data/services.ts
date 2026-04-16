@@ -284,31 +284,6 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     slug: 'financial-forecasting'
   },
   {
-    client_descriptor: 'Fortune 500 Retail Client',
-    industry: 'Retail',
-    challenge: 'Generic recommendations driving customers to competitors',
-    results: [
-      {
-        metric: '25%',
-        description: 'Increase in conversion rate'
-      },
-      {
-        metric: 'Real-time',
-        description: 'Personalization at scale'
-      },
-      {
-        metric: '15%',
-        description: 'Lift in average order value'
-      }
-    ],
-    technologies: [
-      'TensorFlow',
-      'Spark',
-      'Redis'
-    ],
-    slug: 'retail-personalization'
-  },
-  {
     client_descriptor: 'Fortune 500 Healthcare Client',
     industry: 'Healthcare',
     challenge: 'Manual claims processing taking 72 hours average',
@@ -590,31 +565,6 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'Databricks'
     ],
     slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain'
-  },
-  {
-    client_descriptor: 'Fortune 500 Retail Client',
-    industry: 'Retail',
-    challenge: 'Generic marketing driving customers to competitors',
-    results: [
-      {
-        metric: '25%',
-        description: 'Increase in conversion'
-      },
-      {
-        metric: '15%',
-        description: 'Lift in AOV'
-      },
-      {
-        metric: '3x',
-        description: 'Email engagement'
-      }
-    ],
-    technologies: [
-      'Adobe Experience Platform',
-      'Target',
-      'Campaign'
-    ],
-    slug: 'retail-personalization'
   },
   {
     client_descriptor: 'Fortune 500 Hospitality Client',
