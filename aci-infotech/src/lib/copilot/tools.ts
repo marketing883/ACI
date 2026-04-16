@@ -49,6 +49,26 @@ export const prioritySchema = z.enum([
 
 export const intentSchema = z.enum(['low', 'medium', 'high']);
 
+// Decision-making posture of the human we're talking to, captured by the
+// model on a later turn when it's confident from the conversation:
+//   leading:      the visitor owns the decision outright
+//   scoping:      the visitor is scoping on behalf of the real decision-maker
+//   researching:  the visitor is a researcher/IC gathering signals (low intent)
+//   unclear:      explicitly ambiguous; flag rather than guess
+export const decisionRoleSchema = z.enum([
+  'leading',
+  'scoping',
+  'researching',
+  'unclear',
+]);
+
+// Handoff priority on handoff_to_human — distinct from qualify_lead.priority
+// (which is engagement timeline: this-quarter, this-half, etc.).
+//   critical: frustration, security/legal exposure, explicit escalation
+//   urgent:   hot lead in a hurry (tight timeline + high intent)
+//   normal:   everything else
+export const handoffPrioritySchema = z.enum(['critical', 'urgent', 'normal']);
+
 export const qualifyLeadSchema = z
   .object({
     name: z.string().trim().max(120).optional(),
@@ -70,6 +90,12 @@ export const qualifyLeadSchema = z
     budget: budgetBandSchema.optional(),
     priority: prioritySchema.optional(),
     intent: intentSchema.optional(),
+    // Concrete pain captured verbatim. The model is told to paste the
+    // visitor's own words, not paraphrase or guess.
+    painPoint: z.string().trim().max(400).optional(),
+    // Whether the visitor is leading the decision, scoping it, or merely
+    // researching. Only set when the conversation gives a clear signal.
+    decisionRole: decisionRoleSchema.optional(),
   })
   .refine(
     (v) => Object.values(v).some((x) => x !== undefined && x !== ''),
@@ -157,6 +183,7 @@ export const handoffToHumanSchema = z.object({
   ]),
   summary: z.string().trim().min(10).max(1200),
   stickyContext: z.string().trim().max(1200).optional(),
+  priority: handoffPrioritySchema.default('normal'),
 });
 
 export type QualifyLeadArgs = z.infer<typeof qualifyLeadSchema>;
@@ -254,6 +281,18 @@ export const TOOL_SPECS: ReadonlyArray<AtherosToolSpec> = [
           enum: ['low', 'medium', 'high'],
           description:
             'Your confidence that this lead is qualified and ready for sales engagement based on the whole conversation.',
+        },
+        painPoint: {
+          type: 'string',
+          maxLength: 400,
+          description:
+            'A concrete pain the visitor described in their own words (e.g. "month-end close takes 9 days", "flaky tests eat half a sprint", "we cannot onboard new vendors without manual rework"). Capture VERBATIM, do not paraphrase, do not invent. Omit if the visitor has not named a specific operational pain.',
+        },
+        decisionRole: {
+          type: 'string',
+          enum: ['leading', 'scoping', 'researching', 'unclear'],
+          description:
+            'Only set when the conversation gives a clear signal: "leading" (they own the decision), "scoping" (scoping on behalf of someone else), "researching" (IC/researcher gathering signals), "unclear" (explicitly ambiguous). If the title already clearly indicates a decision-maker (e.g. CIO, VP Data), infer "leading" without asking.',
         },
       },
     },
@@ -422,6 +461,12 @@ export const TOOL_SPECS: ReadonlyArray<AtherosToolSpec> = [
         },
         summary: { type: 'string' },
         stickyContext: { type: 'string' },
+        priority: {
+          type: 'string',
+          enum: ['critical', 'urgent', 'normal'],
+          description:
+            'Route priority for the admin handoff inbox. "critical" for frustration, security/legal exposure, or explicit escalation. "urgent" for a hot lead with a tight timeline. Otherwise "normal".',
+        },
       },
     },
   },

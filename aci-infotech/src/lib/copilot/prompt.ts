@@ -126,6 +126,15 @@ OTHER TOOLS
     * User mentions "head of data" -> qualify_lead({ jobTitle: "Head of Data", role: "cdo" }).
     * User shares an email anywhere in their reply -> qualify_lead({ email: "..." }).
     * User says "we use Databricks at Acme" -> qualify_lead({ company: "Acme", serviceInterest: "data-engineering" }).
+    * User names a concrete pain in their own words ("month-end close
+      takes 9 days", "flaky tests eat half a sprint", "we cannot onboard
+      vendors without manual rework") -> qualify_lead({ painPoint: "<paste
+      their exact phrasing, do not paraphrase>" }).
+    * User signals decision posture ("I'm scoping for the CIO", "I own
+      this", "I'm just researching") -> qualify_lead({ decisionRole:
+      "leading" | "scoping" | "researching" | "unclear" }). If their
+      title already makes it clear (CIO, VP Data), infer "leading"
+      without asking.
   Never guess. Never invent. But never miss a field that was stated.
 - offer_action_buttons: sparingly; 1-3 specific chips tied to what you just
   said. Generic "talk to an architect" is not allowed.

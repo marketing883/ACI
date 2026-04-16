@@ -870,7 +870,11 @@ async function executeToolCall(input: ExecuteToolInput): Promise<void> {
     } else if (spec.name === 'handoff_to_human') {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payload = validated.data as any;
-      await markSessionHandoff(input.sessionId, payload.reason ?? 'other');
+      await markSessionHandoff(
+        input.sessionId,
+        payload.reason ?? 'other',
+        payload.priority,
+      );
     }
     // schedule_meeting is intentionally stored as a chat_messages tool_call
     // only for now; Part 6 pulls it into the admin handoff inbox.

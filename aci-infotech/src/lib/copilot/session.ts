@@ -112,17 +112,22 @@ export async function insertMessage(input: MessageInsertInput): Promise<void> {
 export async function markSessionHandoff(
   sessionId: string,
   reason: string,
+  priority?: 'critical' | 'urgent' | 'normal',
 ): Promise<void> {
   const supabase = serviceRoleClient();
   if (!supabase) return;
   const { error } = await supabase
     .from('chat_sessions')
-    .update({ handoff_at: new Date().toISOString(), handoff_reason: reason })
+    .update({
+      handoff_at: new Date().toISOString(),
+      handoff_reason: reason,
+      handoff_priority: priority ?? 'normal',
+    })
     .eq('session_id', sessionId);
   if (error) {
     log.warn('tool', error, {
       sessionId,
-      extra: { phase: 'markSessionHandoff', reason },
+      extra: { phase: 'markSessionHandoff', reason, priority },
     });
   }
 }
@@ -166,6 +171,8 @@ export async function upsertChatLead(
     budget?: string;
     priority?: string;
     intent?: string;
+    painPoint?: string;
+    decisionRole?: string;
   },
   conversation?: Array<{ role: string; content: string }>,
 ): Promise<UpsertChatLeadResult> {
@@ -213,6 +220,8 @@ export async function upsertChatLead(
         budget: fields.budget ?? null,
         priority: fields.priority ?? null,
         intent: fields.intent ?? null,
+        pain_point: fields.painPoint ?? null,
+        decision_role: fields.decisionRole ?? null,
         conversation: conversation ?? [],
         source: 'atheros_v2',
       },
