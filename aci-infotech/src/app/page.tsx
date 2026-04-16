@@ -13,7 +13,6 @@ import {
 } from '@/components/sections';
 
 // Lazy-load below-fold client sections to reduce initial JS bundle
-const TestimonialsSection = dynamic(() => import('@/components/sections/TestimonialsSection'));
 const PlaybookVaultSection = dynamic(() => import('@/components/sections/PlaybookVaultSection'));
 const WhatWeBuildSection = dynamic(() => import('@/components/sections/WhatWeBuildSection'));
 const PartnersSection = dynamic(() => import('@/components/sections/PartnersSection'));
@@ -30,29 +29,6 @@ const partners = [
   { name: 'Braze', logo_url: '/images/Solution-Partners/braze.png' },
 ];
 
-const testimonials = [
-  {
-    quote: "I'm thrilled with our Data Team's achievement at ACI Infotech. They've flawlessly delivered top-tier Digital Data to Altria, marking a critical milestone for RaceTrac. Their dedication and expertise have made ACI Infotech a valuable partner to RaceTrac.",
-    author: 'Director of Data and MarTech',
-    company: 'RaceTrac',
-  },
-  {
-    quote: "I'm extremely satisfied with ACI Infotech, especially their work on IICS Informatica and MDM integrations. Their commitment to deliverables without compromising quality is impressive. It's a pleasure working with such a dedicated, professional team.",
-    author: 'Senior Director',
-    company: 'Sodexo',
-  },
-  {
-    quote: "It was truly a pleasure working with ACI Infotech. I am really impressed by the quality of the services Arcadia University received from ACI. Jag and the team have significantly contributed to the process of identifying the best ways to add values to the institution.",
-    author: 'Interim CIO',
-    company: 'Arcadia University',
-  },
-  {
-    quote: "ACI Infotech's dedicated resources consistently deliver excellent work quality, exceeding our expectations. Their dedicated onshore and onsite resources have been commendable, consistently demonstrating excellence.",
-    author: 'Director',
-    company: 'Gen II',
-  },
-];
-
 const badges = [
   { name: 'Great Place to Work', description: 'Certified 2024-25', image_url: '/images/certifications-awards/best-place-to-work.webp' },
   { name: 'ISO 27001:2022', description: 'Information Security Certified', image_url: '/images/certifications-awards/iso-27001.webp' },
@@ -66,12 +42,6 @@ export default function HomePage() {
     <>
       {/* Hero Section with Video Background */}
       <HeroSection />
-
-      {/* Testimonials Section - Light relief between dark sections */}
-      <TestimonialsSection
-        headline="What Enterprise Leaders Say"
-        testimonials={testimonials}
-      />
 
       {/* Playbook Vault Section */}
       <PlaybookVaultSection />
