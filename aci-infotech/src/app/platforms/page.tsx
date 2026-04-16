@@ -48,7 +48,7 @@ const platforms = [
     partnership: 'Agentforce Exclusive Partner',
     partnershipLevel: 'gold',
     capabilities: ['Data Cloud Implementation', 'Marketing Cloud', 'Agentforce AI', 'Integration Services', 'Custom Development'],
-    caseStudy: { client: 'RaceTrac', result: '25% improvement in promotion effectiveness' },
+    caseStudy: { client: 'Fortune 500 Convenience Retailer', result: '25% improvement in promotion effectiveness' },
     href: '/platforms/salesforce',
   },
   {
@@ -95,7 +95,7 @@ const platforms = [
     partnership: 'Partner',
     partnershipLevel: 'silver',
     capabilities: ['S/4HANA Migration', 'Integration Services', 'Data Migration', 'Change Management', 'Support Services'],
-    caseStudy: { client: 'MSCI', result: '$12M operational savings' },
+    caseStudy: { client: 'Global Financial Giant', result: '$12M operational savings' },
     href: '/platforms/sap',
   },
   {

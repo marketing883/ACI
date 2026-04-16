@@ -44,7 +44,7 @@ const capabilities = [
 
 const caseStudies = [
   {
-    client: 'MSCI',
+    client: 'Global Financial Giant',
     industry: 'Financial Services',
     challenge: '40+ finance systems post-acquisitions requiring consolidation with zero disruption',
     solution: 'SAP S/4HANA implementation with automated data quality gates and real-time integration',

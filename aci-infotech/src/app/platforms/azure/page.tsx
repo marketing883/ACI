@@ -44,7 +44,7 @@ const capabilities = [
 
 const caseStudies = [
   {
-    client: 'MSCI',
+    client: 'Global Financial Giant',
     industry: 'Financial Services',
     challenge: '40+ finance systems post-acquisitions requiring consolidation',
     solution: 'Azure-based SAP S/4HANA implementation with Azure DevOps CI/CD',

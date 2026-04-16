@@ -44,7 +44,7 @@ const capabilities = [
 
 const caseStudies = [
   {
-    client: 'RaceTrac',
+    client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     challenge: 'Fragmented engagement across 800+ convenience stores with no real-time capabilities',
     solution: 'Braze implementation with real-time triggers, location-based messaging, and loyalty integration',

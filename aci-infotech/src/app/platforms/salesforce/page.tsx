@@ -44,7 +44,7 @@ const capabilities = [
 
 const caseStudies = [
   {
-    client: 'RaceTrac',
+    client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     challenge: 'Fragmented customer data across 800+ locations preventing personalized engagement',
     solution: 'Salesforce Marketing Cloud with custom CDP integration and journey automation',
