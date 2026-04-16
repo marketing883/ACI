@@ -50,7 +50,7 @@ const solutions = [
 
 const caseStudies = [
   {
-    client: 'Sodexo',
+    client: 'Global Hospitality Leader',
     type: 'Global Food Services',
     challenge: 'Unify data across 400,000+ employees in 53 countries to enable real-time workforce analytics and operational visibility',
     solution: 'Enterprise data platform on Azure with Databricks, enabling global HR analytics and operational dashboards',
