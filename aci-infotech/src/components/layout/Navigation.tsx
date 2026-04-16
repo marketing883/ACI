@@ -430,7 +430,7 @@ function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
             Enterprise Data Transformation
           </h3>
           <p className="text-sm text-gray-300 mb-4">
-            See how we helped MSCI save $12M with unified data platform
+            See how a global financial giant saved $12M with a unified data{'\u00a0'}platform.
           </p>
         </div>
 
@@ -439,7 +439,7 @@ function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
           type="button"
           onClick={() => setVideoOpen(true)}
           className="relative aspect-video bg-black/30 rounded-xl overflow-hidden group cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-[var(--aci-primary)] focus:ring-offset-2 focus:ring-offset-[var(--aci-secondary)]"
-          aria-label="Play MSCI case study video"
+          aria-label="Play featured case study video"
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute inset-0 bg-[var(--aci-primary)]/20" />
@@ -465,7 +465,7 @@ function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
         open={videoOpen}
         onClose={() => setVideoOpen(false)}
         src="/video/Financial-giant-SAP-Modernization.mp4"
-        title="MSCI — Enterprise Data Transformation"
+        title="Enterprise Data Transformation"
       />
     </div>
   );
