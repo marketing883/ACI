@@ -40,7 +40,7 @@ export type KineticStudy = {
   slug: string;
   descriptor: string; // industry-and-scale phrase (e.g. "Fortune 500 Financial Services")
   industry: string; // chip label (e.g. "Financial Services")
-  metric: string; // huge display value (e.g. "$12M" or "67%")
+  metric: string; // huge display value (e.g. "$500K" or "67%")
   metricLabel: string; // sentence under metric (e.g. "saved in year one")
   outcome: string; // one-line outcome sentence
   approach: string; // one-line approach sentence

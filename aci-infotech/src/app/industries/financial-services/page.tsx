@@ -13,7 +13,7 @@ const solutions = [
   {
     title: 'Data Platform Modernization',
     description: 'Consolidate legacy systems into modern, cloud-native data platforms that support real-time analytics and AI.',
-    outcomes: ['40+ systems consolidated', '$12M+ annual savings', 'Zero reporting disruptions'],
+    outcomes: ['40+ systems consolidated', '$500K+ annual savings', 'Zero reporting disruptions'],
     services: ['Data Engineering', 'Cloud Modernization'],
   },
   {
@@ -55,7 +55,7 @@ const caseStudies = [
     challenge: '40+ finance systems post-acquisitions needed consolidation with zero disruption to financial reporting',
     solution: 'SAP S/4HANA implementation with automated data quality gates and real-time integration pipelines',
     results: [
-      { metric: '$12M', label: 'Operational savings in year one' },
+      { metric: '$500K', label: 'Operational savings in year one' },
       { metric: '18 months', label: 'Delivery timeline' },
       { metric: 'Zero', label: 'Financial reporting disruptions' },
     ],

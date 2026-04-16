@@ -30,24 +30,11 @@ interface CaseStudy {
   is_published?: boolean;
 }
 
-// Demo case study data - used as fallback
+// Demo case study data — used as fallback when Supabase is unavailable.
+// The MSCI/financial-giant entry is no longer here; the live CMS row at
+// 'modernizes-finance-reporting-with-sap-transformation' is the single
+// source of truth for that case study.
 const demoCaseStudies: CaseStudy[] = [
-  {
-    slug: 'modernizes-finance-reporting-with-sap-transformation',
-    client: 'Global Financial Giant',
-    industry: 'Financial Services',
-    service: 'Data Engineering',
-    headline: 'Consolidating 40+ Finance Systems Post-Acquisition',
-    challenge: '40+ finance systems post-acquisitions needed consolidation with zero disruption to financial reporting',
-    solution: 'SAP S/4HANA implementation with automated data quality gates and real-time integration pipelines',
-    results: [
-      { metric: '$12M', description: 'Operational savings in year one' },
-      { metric: '18 months', description: 'Delivery timeline' },
-      { metric: 'Zero', description: 'Financial reporting disruptions' },
-    ],
-    technologies: ['SAP S/4HANA', 'Python', 'Azure DevOps', 'Databricks'],
-    is_featured: true,
-  },
   {
     slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
     client: 'Fortune 500 Convenience Retailer',

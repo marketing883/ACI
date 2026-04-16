@@ -34,53 +34,12 @@ async function getCaseStudyBySlug(slug: string) {
   return data;
 }
 
-// Legacy hardcoded case study data (fallback for old URLs)
+// Legacy hardcoded case study data — fallback rendered only when the
+// Supabase lookup misses (network outage, draft row, etc.). The MSCI/
+// financial-giant entry was retired: the live CMS row at the same slug
+// ('modernizes-finance-reporting-with-sap-transformation') is the
+// source of truth.
 const caseStudiesData: Record<string, CaseStudyDetail> = {
-  'modernizes-finance-reporting-with-sap-transformation': {
-    slug: 'modernizes-finance-reporting-with-sap-transformation',
-    client: 'Global Financial Giant',
-    industry: 'Financial Services',
-    service: 'Data Engineering',
-    headline: 'Consolidating 40+ Finance Systems Post-Acquisition',
-    subheadline: 'How we helped a global financial giant achieve $12M in operational savings through SAP S/4HANA implementation',
-    challenge: {
-      summary: 'Following multiple acquisitions, the client faced a critical challenge: 40+ disparate finance systems needed consolidation without disrupting financial reporting cycles.',
-      points: [
-        'Multiple legacy ERP systems from acquired companies',
-        'Inconsistent data formats and business processes',
-        'Regulatory compliance requirements across jurisdictions',
-        'Zero tolerance for financial reporting disruptions',
-        'Aggressive 18-month timeline mandated by leadership',
-      ],
-    },
-    solution: {
-      summary: 'We designed and implemented a comprehensive SAP S/4HANA transformation with automated data quality gates and real-time integration pipelines.',
-      points: [
-        'Phased SAP S/4HANA rollout with parallel operation capability',
-        'Automated data migration with quality validation at every step',
-        'Real-time integration pipelines using Azure DevOps',
-        'Custom reporting dashboards for finance leadership',
-        'Comprehensive training program for 200+ finance users',
-      ],
-      approach: 'Our team worked in 2-week sprints with daily standups with client stakeholders. We used a parallel-run approach to validate data accuracy before each cutover phase.',
-    },
-    results: [
-      { metric: '$12M', description: 'Operational savings in year one', detail: 'Achieved through process automation and system consolidation' },
-      { metric: '18 months', description: 'Delivery timeline', detail: 'Completed on time despite COVID-19 disruptions' },
-      { metric: 'Zero', description: 'Financial reporting disruptions', detail: 'All quarterly closes completed without issues' },
-      { metric: '40+', description: 'Systems consolidated', detail: 'Migrated to single unified platform' },
-      { metric: '200+', description: 'Users trained', detail: 'Across 5 countries and 3 time zones' },
-    ],
-    technologies: ['SAP S/4HANA', 'Python', 'Azure DevOps', 'Databricks', 'Power BI', 'Azure Data Factory'],
-    timeline: '18 months',
-    teamSize: '25+ consultants',
-    testimonial: {
-      quote: "ACI Infotech's team demonstrated exceptional expertise in navigating our complex post-merger landscape. They delivered on an aggressive timeline while maintaining the highest quality standards.",
-      author: 'VP of Finance Operations',
-      title: 'Global Financial Giant',
-    },
-    relatedStudies: ['global-food-facilities-data-intelligence', 'intelligent-cms-modernization-productivity-engagement'],
-  },
   'databricks-modernization-ai-enablement-for-leading-c-store-chain': {
     slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
     client: 'Fortune 500 Convenience Retailer',

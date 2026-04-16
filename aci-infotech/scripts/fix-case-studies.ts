@@ -105,6 +105,88 @@ const updates: Update[] = [
   },
 ];
 
+// In-place text replacement for the MSCI live row. Scans every text-typed
+// column and the metrics JSON array for the OLD substring and writes the
+// REPLACEMENT. The old MSCI engagement was reported as $12M operational
+// savings; the corrected figure is $500K.
+const TEXT_REPLACEMENTS: Array<{ slug: string; old: string; new: string; why: string }> = [
+  {
+    slug: 'modernizes-finance-reporting-with-sap-transformation',
+    old: '$12M',
+    new: '$500K',
+    why: 'Correct the operational savings figure for the MSCI/financial-giant case study.',
+  },
+];
+
+const TEXT_FIELDS = ['title', 'excerpt', 'challenge', 'solution', 'results', 'meta_title', 'meta_description'] as const;
+
+async function applyTextReplacements() {
+  for (const r of TEXT_REPLACEMENTS) {
+    log(`\n--- text-replace in ${r.slug} ---`);
+    log(`      reason: ${r.why}`);
+    log(`      "${r.old}" -> "${r.new}"`);
+
+    const { data: row, error: readErr } = await supabase
+      .from('case_studies')
+      .select('*')
+      .eq('slug', r.slug)
+      .single();
+
+    if (readErr || !row) {
+      log(`      SKIP: row not found (${readErr?.message ?? 'no data'})`);
+      continue;
+    }
+
+    const updates: Record<string, unknown> = {};
+
+    // Plain text fields
+    for (const f of TEXT_FIELDS) {
+      const v = (row as Record<string, unknown>)[f];
+      if (typeof v === 'string' && v.includes(r.old)) {
+        const next = v.split(r.old).join(r.new);
+        updates[f] = next;
+        log(`      ${f}: "${v.slice(0, 80)}${v.length > 80 ? '…' : ''}"`);
+        log(`           -> "${next.slice(0, 80)}${next.length > 80 ? '…' : ''}"`);
+      }
+    }
+
+    // metrics JSON array — { label, value, description? }[]
+    if (Array.isArray(row.metrics)) {
+      const next = row.metrics.map((m: Record<string, unknown>) => {
+        const out = { ...m };
+        for (const k of Object.keys(out)) {
+          if (typeof out[k] === 'string' && (out[k] as string).includes(r.old)) {
+            out[k] = (out[k] as string).split(r.old).join(r.new);
+          }
+        }
+        return out;
+      });
+      if (JSON.stringify(next) !== JSON.stringify(row.metrics)) {
+        updates.metrics = next;
+        log(`      metrics: rewrote ${r.old} -> ${r.new} in ${next.length} entries`);
+      }
+    }
+
+    if (Object.keys(updates).length === 0) {
+      log(`      OK: no occurrences of "${r.old}" found.`);
+      continue;
+    }
+
+    if (dryRun) continue;
+
+    const { error: updErr } = await supabase
+      .from('case_studies')
+      .update(updates)
+      .eq('slug', r.slug);
+
+    if (updErr) {
+      log(`      *** UPDATE FAILED: ${updErr.message}`);
+    } else {
+      log(`      applied to ${Object.keys(updates).length} field(s).`);
+    }
+  }
+}
+
 async function main() {
   log(`\n=== fix-case-studies ${dryRun ? '(DRY RUN)' : '(APPLY)'} ===\n`);
 
@@ -151,6 +233,8 @@ async function main() {
       log(`      applied.`);
     }
   }
+
+  await applyTextReplacements();
 
   log('\nDone.\n');
 }

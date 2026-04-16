@@ -172,7 +172,7 @@ async function generateIntelligence(lead: LeadData): Promise<IntelligenceReport>
 ACI CONTEXT:
 - 80+ Fortune 500 clients, $1B+ value delivered, 95% retention
 - Services: Data Engineering (Databricks, Snowflake, dbt), AI/ML (MLOps, GenAI, ArqAI), Cloud (AWS, Azure, K8s), MarTech/CDP (Salesforce, Braze), Digital Transformation (SAP S/4HANA, ServiceNow), Cyber Security
-- Case Studies: Global Financial Giant ($12M savings, SAP consolidation), Fortune 500 Convenience Retailer (25% promotion lift, MarTech), Global Hospitality Leader (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
+- Case Studies: Global Financial Giant ($500K savings, SAP consolidation), Fortune 500 Convenience Retailer (25% promotion lift, MarTech), Global Hospitality Leader (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
 
 LEAD DATA:
 ${context}

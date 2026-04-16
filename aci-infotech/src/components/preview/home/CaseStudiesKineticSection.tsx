@@ -68,7 +68,7 @@ const PLACEHOLDERS: KineticStudy[] = [
     slug: 'post-acquisition-consolidation',
     descriptor: 'Fortune 500 Financial Services Client',
     industry: 'Financial Services',
-    metric: '$12M',
+    metric: '$500K',
     metricLabel: 'saved in year one',
     outcome:
       'Consolidated 40+ post-acquisition finance systems into a single audited platform.',

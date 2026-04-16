@@ -48,7 +48,7 @@ const caseStudies = [
     industry: 'Financial Services',
     challenge: '40+ finance systems post-acquisitions requiring consolidation',
     solution: 'Azure-based SAP S/4HANA implementation with Azure DevOps CI/CD',
-    results: ['$12M annual savings', '18-month delivery', 'Zero disruptions'],
+    results: ['$500K annual savings', '18-month delivery', 'Zero disruptions'],
   },
   {
     client: 'Manufacturing Enterprise',

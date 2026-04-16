@@ -48,7 +48,7 @@ const caseStudies = [
     industry: 'Financial Services',
     challenge: '40+ finance systems post-acquisitions requiring consolidation with zero disruption',
     solution: 'SAP S/4HANA implementation with automated data quality gates and real-time integration',
-    results: ['$12M annual savings', '18-month delivery', 'Zero financial disruptions'],
+    results: ['$500K annual savings', '18-month delivery', 'Zero financial disruptions'],
   },
   {
     client: 'Global Manufacturer',

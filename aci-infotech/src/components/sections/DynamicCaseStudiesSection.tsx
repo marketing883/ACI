@@ -56,11 +56,11 @@ const placeholderCaseStudies = [
   {
     id: '1',
     slug: 'post-acquisition-consolidation',
-    title: '$12M Saved in Year One',
+    title: '$500K Saved in Year One',
     client_industry: 'Financial Services',
     challenge: '40+ finance systems. Post-acquisition chaos. Manual reconciliation eating 200 hours/month.',
     metrics: [
-      { value: '$12M', label: 'saved annually' },
+      { value: '$500K', label: 'saved annually' },
       { value: '18 months', label: 'start to finish' },
       { value: 'Zero', label: 'reporting disruptions' },
       { value: '95%', label: 'less manual work' },

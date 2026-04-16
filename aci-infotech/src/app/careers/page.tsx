@@ -12,7 +12,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'Careers | Join Our Team | ACI Infotech',
-  description: 'Shape the future of enterprise technology. Join 6,250+ engineers working with Fortune 500 clients on transformative data, AI, and cloud projects.',
+  description: 'Shape the future of enterprise technology. Join 1,250+ engineers working with Fortune 500 clients on transformative data, AI, and cloud projects.',
   alternates: {
     canonical: `${siteUrl}/careers`,
   },
@@ -170,7 +170,7 @@ export default async function CareersPage() {
             </h1>
 
             <p className="text-xl md:text-2xl text-gray-300 mb-4 leading-relaxed max-w-3xl mx-auto">
-              Join 6,250+ engineers, architects, and data scientists building
+              Join 1,250+ engineers, architects, and data scientists building
               transformative solutions for the world's most ambitious companies.
             </p>
 
@@ -199,7 +199,7 @@ export default async function CareersPage() {
               <p className="text-sm text-gray-500 mt-1">Years in Business</p>
             </div>
             <div className="py-8 px-4 text-center">
-              <p className="text-3xl md:text-4xl font-bold text-[var(--aci-primary)]">6,250+</p>
+              <p className="text-3xl md:text-4xl font-bold text-[var(--aci-primary)]">1,250+</p>
               <p className="text-sm text-gray-500 mt-1">Technologists Globally</p>
             </div>
             <div className="py-8 px-4 text-center">

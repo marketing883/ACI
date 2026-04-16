@@ -95,7 +95,7 @@ const platforms = [
     partnership: 'Partner',
     partnershipLevel: 'silver',
     capabilities: ['S/4HANA Migration', 'Integration Services', 'Data Migration', 'Change Management', 'Support Services'],
-    caseStudy: { client: 'Global Financial Giant', result: '$12M operational savings' },
+    caseStudy: { client: 'Global Financial Giant', result: '$500K operational savings' },
     href: '/platforms/sap',
   },
   {

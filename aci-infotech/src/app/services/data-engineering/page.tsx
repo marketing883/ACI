@@ -82,7 +82,7 @@ const caseStudies = [
     industry: 'Financial Services',
     challenge: '40+ finance systems post-acquisitions needed consolidation into unified platform',
     results: [
-      { metric: '$12M', description: 'Operational savings in year one' },
+      { metric: '$500K', description: 'Operational savings in year one' },
       { metric: '18 months', description: 'Delivery timeline' },
       { metric: 'Zero', description: 'Financial reporting disruptions' },
     ],

@@ -79,7 +79,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     challenge: '40+ finance systems post-acquisitions needed consolidation into unified platform',
     results: [
       {
-        metric: '$12M',
+        metric: '$500K',
         description: 'Operational savings in year one'
       },
       {

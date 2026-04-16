@@ -210,7 +210,7 @@ export async function generateIntelligence(lead: LeadData): Promise<Intelligence
 ACI CONTEXT:
 - 80+ Fortune 500 clients, $1B+ value delivered, 95% retention
 - Services: Data Engineering (Databricks, Snowflake, dbt), AI/ML (MLOps, GenAI, ArqAI), Cloud (AWS, Azure, K8s), MarTech/CDP (Salesforce, Braze), Digital Transformation (SAP S/4HANA, ServiceNow), Cyber Security
-- Case Studies: Global Financial Giant ($12M savings, SAP consolidation), Fortune 500 Convenience Retailer (25% promotion lift, MarTech), Global Hospitality Leader (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
+- Case Studies: Global Financial Giant ($500K savings, SAP consolidation), Fortune 500 Convenience Retailer (25% promotion lift, MarTech), Global Hospitality Leader (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
 
 LEAD DATA:
 ${context}
@@ -347,7 +347,7 @@ function createFallbackNurturingContent(whitepaperSlug: string): WhitepaperNurtu
     return {
       relatedTopics: ['Modern Data Platform Architecture', 'Real-Time Analytics', 'Data Governance Best Practices'],
       valueProps: ['Production-grade data pipelines with SLAs', '80+ enterprise deployments', 'Databricks and Snowflake expertise'],
-      caseStudies: ['Global Financial Giant: $12M savings through SAP data consolidation', 'Fortune 500 Retailer: Real-time inventory analytics'],
+      caseStudies: ['Global Financial Giant: $500K savings through SAP data consolidation', 'Fortune 500 Retailer: Real-time inventory analytics'],
       nextSteps: ['Schedule a data architecture assessment', 'Review our data engineering case studies', 'Connect with a senior data architect'],
       ctaText: 'Schedule Data Strategy Assessment',
       ctaUrl: 'https://aci-infotech.com/contact?reason=data-strategy',
@@ -420,7 +420,7 @@ export async function generateWhitepaperNurturing(
 ACI CONTEXT:
 - 80+ Fortune 500 clients, $1B+ value delivered, 95% retention
 - Services: Data Engineering (Databricks, Snowflake, dbt), AI/ML (MLOps, GenAI, ArqAI), Cloud (AWS, Azure, K8s), MarTech/CDP (Salesforce, Braze), Digital Transformation (SAP S/4HANA, ServiceNow)
-- Case Studies: Global Financial Giant ($12M savings, SAP consolidation), Fortune 500 Convenience Retailer (25% promotion lift, MarTech), Global Hospitality Leader (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
+- Case Studies: Global Financial Giant ($500K savings, SAP consolidation), Fortune 500 Convenience Retailer (25% promotion lift, MarTech), Global Hospitality Leader (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
 
 CONTEXT:
 A lead named ${firstName} just downloaded the whitepaper: "${whitepaperTitle}" (slug: ${whitepaperSlug})
@@ -432,7 +432,7 @@ Return a JSON object with this EXACT structure (no markdown, just JSON):
 {
   "relatedTopics": ["<3 related topics they should explore based on the whitepaper they downloaded>"],
   "valueProps": ["<3 ACI value propositions that would resonate given their interest>"],
-  "caseStudies": ["<2 relevant case studies with brief descriptions, e.g., 'Global Financial Giant: $12M savings through data consolidation'>"],
+  "caseStudies": ["<2 relevant case studies with brief descriptions, e.g., 'Global Financial Giant: $500K savings through data consolidation'>"],
   "nextSteps": ["<3 actionable next steps for the lead>"],
   "ctaText": "<compelling CTA button text, 4-6 words>",
   "ctaUrl": "<appropriate ACI contact URL with reason parameter>"

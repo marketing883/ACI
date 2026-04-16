@@ -22,7 +22,7 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'SAP S/4HANA implementation with automated data quality gates and real-time integration pipelines',
     results: [
       {
-        metric: '$12M',
+        metric: '$500K',
         description: 'Operational savings in year one'
       },
       {
