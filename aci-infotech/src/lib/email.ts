@@ -322,7 +322,7 @@ export async function sendWhitepaperThankYouEmail(data: WhitepaperThankYouData):
     nurturing = {
       relatedTopics: ['Enterprise Architecture', 'Digital Transformation', 'Technology Strategy'],
       valueProps: ['80+ Fortune 500 clients', '$1B+ value delivered', '95% client retention'],
-      caseStudies: ['MSCI: Enterprise-wide data transformation', 'Sodexo: 400K employee platform'],
+      caseStudies: ['Global Financial Giant: Enterprise-wide data transformation', 'Global Hospitality Leader: 400K employee platform'],
       nextSteps: ['Schedule an architecture call', 'Explore our case studies', 'Connect with our architects'],
       ctaText: 'Schedule Architecture Call',
       ctaUrl: 'https://aci-infotech.com/contact?reason=architecture-call',
