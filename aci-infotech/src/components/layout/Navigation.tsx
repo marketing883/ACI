@@ -430,7 +430,7 @@ function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
             Enterprise Data Transformation
           </h3>
           <p className="text-sm text-gray-300 mb-4">
-            See how a global financial giant saved $12M with a unified data{'\u00a0'}platform.
+            See how a global financial giant saved $500K with a unified data{'\u00a0'}platform.
           </p>
         </div>
 
