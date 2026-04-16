@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import { z } from 'zod';
 
 // Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
@@ -85,6 +86,96 @@ export interface IntelligenceReport {
     confidence: 'Low' | 'Medium' | 'High';
   };
   generatedAt: string;
+}
+
+/**
+ * Runtime schema for the LLM intelligence response. Pragmatic validation:
+ *   - leadScore MUST be a number. This is what drives lead_score in the
+ *     DB and feeds the LEAD TEMPERATURE block in the system prompt;
+ *     silently accepting a string or missing value would poison both.
+ *   - Structural shape (nested objects, array-of-string fields,
+ *     booleans) is enforced so downstream consumers (admin views) don't
+ *     crash on malformed access.
+ *   - Enum-shaped string fields (seniority, size, intent, etc.) are
+ *     parsed as loose strings so minor drift from the model (e.g.
+ *     "Senior" instead of "VP") doesn't force a fallback. Admin views
+ *     display these as plain text anyway.
+ *   - generatedAt is optional at parse time; we overwrite it with the
+ *     server-set ISO timestamp after parse.
+ */
+const intelligenceReportSchema = z.object({
+  leadScore: z.number(),
+  person: z.object({
+    summary: z.string(),
+    inferredRole: z.string(),
+    seniority: z.string(),
+    decisionMaker: z.boolean(),
+    linkedInSearch: z.string(),
+  }),
+  company: z.object({
+    name: z.string(),
+    summary: z.string(),
+    industry: z.string(),
+    size: z.string(),
+    likelyTechStack: z.array(z.string()),
+    challenges: z.array(z.string()),
+    website: z.string(),
+  }),
+  opportunity: z.object({
+    painPoints: z.array(z.string()),
+    valueProps: z.array(z.string()),
+    relevantServices: z.array(z.string()),
+    caseStudies: z.array(z.string()),
+    competitors: z.string(),
+  }),
+  engagement: z.object({
+    talkingPoints: z.array(z.string()),
+    questions: z.array(z.string()),
+    objections: z.array(z.string()),
+    nextSteps: z.array(z.string()),
+  }),
+  signals: z.object({
+    intent: z.string(),
+    urgency: z.string(),
+    budget: z.string(),
+    timeline: z.string(),
+  }),
+  research: z.object({
+    sources: z.array(z.string()),
+    confidence: z.string(),
+  }),
+  generatedAt: z.string().optional(),
+});
+
+/**
+ * Parse + validate a raw LLM text response into an IntelligenceReport.
+ * Returns null if the text can't be located as JSON or fails structural
+ * validation; caller is expected to try the next model or fall back.
+ */
+function tryParseIntelligence(text: string, modelLabel: string): IntelligenceReport | null {
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    console.warn(`Intelligence: ${modelLabel} returned no JSON object`);
+    return null;
+  }
+  let raw: unknown;
+  try {
+    raw = JSON.parse(jsonMatch[0]);
+  } catch (err) {
+    console.warn(`Intelligence: ${modelLabel} returned invalid JSON:`, err);
+    return null;
+  }
+  const parsed = intelligenceReportSchema.safeParse(raw);
+  if (!parsed.success) {
+    console.warn(
+      `Intelligence: ${modelLabel} response failed schema validation:`,
+      parsed.error.flatten(),
+    );
+    return null;
+  }
+  // Server-side timestamp is authoritative; always overwrite whatever
+  // the model put there (or didn't).
+  return { ...parsed.data, generatedAt: new Date().toISOString() } as IntelligenceReport;
 }
 
 function buildContext(lead: LeadData): string {
@@ -280,15 +371,11 @@ CRITICAL FORMATTING: Never use em dashes (—) or en dashes (–) in any text co
 
         const textContent = response.content.find(block => block.type === 'text');
         const text = textContent && 'text' in textContent ? textContent.text : '';
-
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
-          report.generatedAt = new Date().toISOString();
+        const report = tryParseIntelligence(text, model);
+        if (report) {
           console.log(`Intelligence: successfully generated with ${model}`);
           return report;
         }
-        console.warn(`Intelligence: ${model} returned unparseable response`);
       } catch (error) {
         console.error(`Intelligence: Anthropic model ${model} failed:`, error);
         errors.push(`${model}: ${error}`);
@@ -309,15 +396,14 @@ CRITICAL FORMATTING: Never use em dashes (—) or en dashes (–) in any text co
 
         const content = response.choices[0]?.message?.content;
         if (content) {
-          const jsonMatch = content.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            const report = JSON.parse(jsonMatch[0]) as IntelligenceReport;
-            report.generatedAt = new Date().toISOString();
+          const report = tryParseIntelligence(content, `OpenAI ${model}`);
+          if (report) {
             console.log(`Intelligence: successfully generated with OpenAI ${model}`);
             return report;
           }
+        } else {
+          console.warn(`Intelligence: OpenAI ${model} returned no content`);
         }
-        console.warn(`Intelligence: OpenAI ${model} returned unparseable response`);
       } catch (error) {
         console.error(`Intelligence: OpenAI model ${model} failed:`, error);
         errors.push(`OpenAI ${model}: ${error}`);
