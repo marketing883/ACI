@@ -85,9 +85,9 @@ const NAV_DATA = {
       color: 'text-green-500',
     },
     {
-      label: 'QA & Testing',
-      href: '/services/qa-testing',
-      description: 'Ship fast. Break nothing.',
+      label: 'Quality Engineering',
+      href: '/services/quality-engineering',
+      description: 'Quality, engineered in.',
       icon: CheckCircle2,
       color: 'text-teal-500',
     },

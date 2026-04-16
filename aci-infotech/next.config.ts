@@ -18,6 +18,14 @@ const nextConfig: NextConfig = {
         destination: '/blogs',
         permanent: true,
       },
+      // QA & Testing rebranded to Quality Engineering. Keep the
+      // 301 so existing inbound links, sitemaps, and Google's
+      // cached results funnel to the new slug.
+      {
+        source: '/services/qa-testing',
+        destination: '/services/quality-engineering',
+        permanent: true,
+      },
     ];
   },
 

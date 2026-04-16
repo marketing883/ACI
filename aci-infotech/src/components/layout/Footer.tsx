@@ -13,7 +13,7 @@ const FOOTER_LINKS = {
     { label: 'MarTech & CDP', href: '/services/martech-cdp' },
     { label: 'Digital Transformation', href: '/services/digital-transformation' },
     { label: 'App Development', href: '/services/app-development' },
-    { label: 'QA & Testing', href: '/services/qa-testing' },
+    { label: 'Quality Engineering', href: '/services/quality-engineering' },
     { label: 'Cyber Security', href: '/services/cyber-security' },
   ],
   resources: [
