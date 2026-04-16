@@ -96,7 +96,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'Python',
       'Azure DevOps'
     ],
-    slug: 'financial-giant-sap-consolidation'
+    slug: 'modernizes-finance-reporting-with-sap-transformation'
   },
   {
     client_descriptor: 'Fortune 500 Retail Client',

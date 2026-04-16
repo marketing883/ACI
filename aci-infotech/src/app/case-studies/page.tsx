@@ -33,7 +33,7 @@ interface CaseStudy {
 // Demo case study data - used as fallback
 const demoCaseStudies: CaseStudy[] = [
   {
-    slug: 'financial-giant-sap-consolidation',
+    slug: 'modernizes-finance-reporting-with-sap-transformation',
     client: 'Global Financial Giant',
     industry: 'Financial Services',
     service: 'Data Engineering',

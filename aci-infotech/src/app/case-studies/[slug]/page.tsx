@@ -36,8 +36,8 @@ async function getCaseStudyBySlug(slug: string) {
 
 // Legacy hardcoded case study data (fallback for old URLs)
 const caseStudiesData: Record<string, CaseStudyDetail> = {
-  'financial-giant-sap-consolidation': {
-    slug: 'financial-giant-sap-consolidation',
+  'modernizes-finance-reporting-with-sap-transformation': {
+    slug: 'modernizes-finance-reporting-with-sap-transformation',
     client: 'Global Financial Giant',
     industry: 'Financial Services',
     service: 'Data Engineering',
@@ -123,7 +123,7 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
       author: 'Director of Data and MarTech',
       title: 'Fortune 500 Convenience Retailer',
     },
-    relatedStudies: ['retail-personalization', 'financial-giant-sap-consolidation'],
+    relatedStudies: ['retail-personalization', 'modernizes-finance-reporting-with-sap-transformation'],
   },
   'hospitality-leader-unified-data': {
     slug: 'hospitality-leader-unified-data',
@@ -167,7 +167,7 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
       author: 'Senior Director',
       title: 'Global Hospitality Leader',
     },
-    relatedStudies: ['financial-giant-sap-consolidation', 'pharma-data-lake'],
+    relatedStudies: ['modernizes-finance-reporting-with-sap-transformation', 'pharma-data-lake'],
   },
 };
 

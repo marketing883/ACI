@@ -44,7 +44,7 @@ interface CaseStudy {
 const mockCaseStudies: CaseStudy[] = [
   {
     id: '1',
-    slug: 'financial-giant-sap-consolidation',
+    slug: 'modernizes-finance-reporting-with-sap-transformation',
     title: 'Consolidating 40+ Finance Systems Post-Acquisition',
     client_name: 'Global Financial Giant',
     industry: 'Financial Services',

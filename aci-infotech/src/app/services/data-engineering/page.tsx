@@ -77,7 +77,7 @@ const offerings = [
 
 const caseStudies = [
   {
-    slug: 'financial-giant-sap-consolidation',
+    slug: 'modernizes-finance-reporting-with-sap-transformation',
     client: 'Global Financial Giant',
     industry: 'Financial Services',
     challenge: '40+ finance systems post-acquisitions needed consolidation into unified platform',

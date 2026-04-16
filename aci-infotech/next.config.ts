@@ -31,7 +31,12 @@ const nextConfig: NextConfig = {
       // inbound links funnel to the new descriptor-based slugs.
       {
         source: '/case-studies/msci-data-automation',
-        destination: '/case-studies/financial-giant-sap-consolidation',
+        destination: '/case-studies/modernizes-finance-reporting-with-sap-transformation',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/financial-giant-sap-consolidation',
+        destination: '/case-studies/modernizes-finance-reporting-with-sap-transformation',
         permanent: true,
       },
       {

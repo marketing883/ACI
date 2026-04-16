@@ -203,7 +203,7 @@ export const ENTITY_INDEX: Readonly<Record<string, EntityIndexEntry>> = {
     "panelType": "service",
     "title": "Data Engineering"
   },
-  "financial-giant-sap-consolidation": {
+  "modernizes-finance-reporting-with-sap-transformation": {
     "panelType": "case",
     "title": "40+ finance systems post-acquisitions needed consolidation into unified platform"
   },
