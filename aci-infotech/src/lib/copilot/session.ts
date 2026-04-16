@@ -137,7 +137,7 @@ export async function readLeadContext(
     const { data, error } = await supabase
       .from('chat_leads')
       .select(
-        'name, email, company, website, phone, job_title, service_interest, requirements, preferred_time, budget, priority, intent, pain_point, decision_role, lead_score',
+        'name, email, company, website, phone, job_title, industry, role, service_interest, requirements, preferred_time, budget, priority, intent, pain_point, decision_role, lead_score',
       )
       .eq('session_id', sessionId)
       .maybeSingle();
@@ -151,6 +151,8 @@ export async function readLeadContext(
     if (data.website) state.website = data.website;
     if (data.phone) state.phone = data.phone;
     if (data.job_title) state.jobTitle = data.job_title;
+    if (data.industry) state.industry = data.industry;
+    if (data.role) state.role = data.role;
     if (data.service_interest) state.serviceInterest = data.service_interest;
     // chat_leads.requirements stores qualify_lead.team (legacy column name).
     if (data.requirements) state.team = data.requirements;
@@ -238,28 +240,27 @@ export async function upsertChatLead(
 ): Promise<UpsertChatLeadResult> {
   const supabase = serviceRoleClient();
   if (!supabase) return { freshEmail: false };
-  // Email is required by the existing chat_leads schema. Upsert only when
-  // we have one; otherwise the row is created on the next qualify_lead turn
-  // that includes email.
-  if (!fields.email) return { freshEmail: false };
 
-  // Read the existing row once. Used for two things:
-  //   1. Decide whether to fire intelligence (needsIntelligence).
-  //   2. Merge incoming fields with existing column values so un-included
-  //      fields don't get overwritten to null on the upsert. qualify_lead
-  //      fires with only the fields that surfaced THIS turn, so a later
-  //      call like { email, painPoint } would previously null out name,
-  //      company, role, etc. The pick() helper below preserves existing
-  //      values when no new signal is present.
+  // Read the existing row once. Used for:
+  //   1. Decide whether this turn is the "fresh email" moment (first time
+  //      email surfaces on this session) so the caller can fire the
+  //      thank-you email exactly once.
+  //   2. Decide whether to fire intelligence (only after email is
+  //      captured — intelligence generation needs email + domain).
+  //   3. Merge incoming fields with existing column values so un-included
+  //      fields don't get overwritten to null on the upsert.
   let existing:
     | {
         id?: string;
         intelligence?: unknown;
         name?: string | null;
+        email?: string | null;
         company?: string | null;
         website?: string | null;
         phone?: string | null;
         job_title?: string | null;
+        industry?: string | null;
+        role?: string | null;
         service_interest?: string | null;
         requirements?: string | null;
         preferred_time?: string | null;
@@ -270,23 +271,40 @@ export async function upsertChatLead(
         decision_role?: string | null;
       }
     | null = null;
-  let needsIntelligence = false;
   try {
     const { data } = await supabase
       .from('chat_leads')
       .select(
-        'id, intelligence, name, company, website, phone, job_title, service_interest, requirements, preferred_time, budget, priority, intent, pain_point, decision_role',
+        'id, intelligence, name, email, company, website, phone, job_title, industry, role, service_interest, requirements, preferred_time, budget, priority, intent, pain_point, decision_role',
       )
       .eq('session_id', sessionId)
       .maybeSingle();
     existing = data ?? null;
-    needsIntelligence = !existing || existing.intelligence == null;
   } catch (err) {
-    // copilot-allow-silent-catch: read failure is non-fatal; we err on the
-    // side of generating (worst case: minor double-generation).
+    // copilot-allow-silent-catch: read failure is non-fatal. We proceed
+    // with existing=null; the upsert may insert a fresh row.
     log.warn('tool', err, { sessionId, extra: { phase: 'upsertChatLead.preCheck' } });
-    needsIntelligence = true;
   }
+
+  // Fresh email: this is the first turn where email lands on this
+  // session's row. Used by the caller to fire thank-you once, and by
+  // the intelligence gate below.
+  const incomingEmail =
+    typeof fields.email === 'string' && fields.email.trim().length > 0
+      ? fields.email.trim()
+      : undefined;
+  const existingEmail =
+    typeof existing?.email === 'string' && existing.email.trim().length > 0
+      ? existing.email.trim()
+      : undefined;
+  const freshEmail = Boolean(incomingEmail) && !existingEmail;
+  // Intelligence fires when:
+  //   - email just arrived (freshEmail), AND
+  //   - no prior intelligence attached to the row.
+  // If email is not present at all this turn, skip intelligence and just
+  // persist whatever fields we have.
+  const needsIntelligence =
+    freshEmail && (!existing || existing.intelligence == null);
 
   // pick: prefer a non-empty incoming value; otherwise keep whatever is
   // already in chat_leads; otherwise null. This is the core of the
@@ -306,11 +324,17 @@ export async function upsertChatLead(
       {
         session_id: sessionId,
         name: pick(fields.name, existing?.name),
-        email: fields.email,
+        // Email may be null on the first few qualify_lead calls; column
+        // is nullable per the 20260416_chat_leads_partial_capture
+        // migration. Once captured, subsequent turns preserve it via
+        // the pick() fallback.
+        email: pick(incomingEmail, existing?.email),
         company: pick(fields.company, existing?.company),
         website: pick(fields.website, existing?.website),
         phone: pick(fields.phone, existing?.phone),
         job_title: pick(fields.jobTitle, existing?.job_title),
+        industry: pick(fields.industry, existing?.industry),
+        role: pick(fields.role, existing?.role),
         location: null,
         service_interest: pick(fields.serviceInterest, existing?.service_interest),
         requirements: pick(fields.team, existing?.requirements),
@@ -335,20 +359,28 @@ export async function upsertChatLead(
     return { freshEmail: false };
   }
 
-  if (!needsIntelligence || !upserted?.id) return { freshEmail: false };
+  if (!needsIntelligence || !upserted?.id) return { freshEmail };
 
   // Fire-and-forget intelligence generation. Mirrors the legacy
   // /api/chat/lead/route.ts pattern. Failures land in chat_errors via
   // log.error; the user-facing turn is never blocked.
+  //
+  // Use the MERGED values (incoming fields OR existing row) so the
+  // intelligence report reflects everything we know about the lead at
+  // this moment, not just the fields that happened to arrive on the
+  // email-capture turn. Without this fallback, a session that captured
+  // name+company on turns 1-3 and email alone on turn 5 would hand the
+  // model a skeletal { email } payload and get a sparse report back.
   const leadId = upserted.id as string;
   void generateIntelligence({
-    name: fields.name,
-    email: fields.email,
-    company: fields.company ?? null,
-    job_title: fields.jobTitle ?? null,
+    name: fields.name ?? existing?.name ?? undefined,
+    email: incomingEmail ?? existing?.email ?? undefined,
+    company: fields.company ?? existing?.company ?? null,
+    job_title: fields.jobTitle ?? existing?.job_title ?? null,
     location: null,
-    service_interest: fields.serviceInterest ?? undefined,
-    requirements: fields.team ?? undefined,
+    service_interest:
+      fields.serviceInterest ?? existing?.service_interest ?? undefined,
+    requirements: fields.team ?? existing?.requirements ?? undefined,
     conversation: conversation ?? [],
   })
     .then(async (intelligence) => {
@@ -379,5 +411,5 @@ export async function upsertChatLead(
       });
     });
 
-  return { freshEmail: true };
+  return { freshEmail };
 }
