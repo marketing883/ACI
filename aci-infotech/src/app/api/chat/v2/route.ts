@@ -23,7 +23,7 @@
  * reply server-side.
  */
 
-import { NextResponse } from 'next/server';
+import { after, NextResponse } from 'next/server';
 import { z } from 'zod';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
@@ -855,6 +855,13 @@ async function executeToolCall(input: ExecuteToolInput): Promise<void> {
         input.sessionId,
         fields,
         input.conversation,
+        // Register the background intelligence run with Next.js so the
+        // serverless instance stays alive until the LLM call + DB
+        // write complete, even after the streaming response has been
+        // flushed to the client. Without this, a fast-responding chat
+        // turn followed by a slow intelligence run can have the second
+        // half killed mid-flight on Vercel.
+        { after },
       );
       // Fire a one-shot thank-you email the first time we capture an email
       // on this session. Fire-and-forget: Resend failure must never block

@@ -216,6 +216,18 @@ export interface UpsertChatLeadResult {
   freshEmail: boolean;
 }
 
+/**
+ * Optional adapter for scheduling background work that must outlive
+ * the HTTP response. In a Next.js route, pass `after` from
+ * `next/server` — the runtime keeps the function instance alive until
+ * the registered callback resolves. Without it, upsertChatLead falls
+ * back to a detached `void promise`, which on serverless platforms
+ * (Vercel) can be terminated mid-flight when the response is flushed.
+ */
+export interface UpsertChatLeadOptions {
+  after?: (fn: () => void | Promise<void>) => void;
+}
+
 export async function upsertChatLead(
   sessionId: string,
   fields: {
@@ -237,6 +249,7 @@ export async function upsertChatLead(
     decisionRole?: string;
   },
   conversation?: Array<{ role: string; content: string }>,
+  options?: UpsertChatLeadOptions,
 ): Promise<UpsertChatLeadResult> {
   const supabase = serviceRoleClient();
   if (!supabase) return { freshEmail: false };
@@ -413,9 +426,11 @@ export async function upsertChatLead(
 
   const runKind: 'initial' | 'refresh' = needsIntelligence ? 'initial' : 'refresh';
 
-  // Fire-and-forget intelligence generation. Mirrors the legacy
-  // /api/chat/lead/route.ts pattern. Failures land in chat_errors via
-  // log.error; the user-facing turn is never blocked.
+  // Background intelligence generation. Encapsulated as a named
+  // function so it can be scheduled via `after` (Next.js route
+  // runtime keeps the function instance alive until it resolves) when
+  // the caller provides it, or detached via `void backgroundWork()`
+  // otherwise.
   //
   // Use the MERGED values (incoming fields OR existing row) so the
   // intelligence report reflects everything we know about the lead at
@@ -424,18 +439,19 @@ export async function upsertChatLead(
   // name+company on turns 1-3 and email alone on turn 5 would hand the
   // model a skeletal { email } payload and get a sparse report back.
   const leadId = upserted.id as string;
-  void generateIntelligence({
-    name: fields.name ?? existing?.name ?? undefined,
-    email: incomingEmail ?? existing?.email ?? undefined,
-    company: fields.company ?? existing?.company ?? null,
-    job_title: fields.jobTitle ?? existing?.job_title ?? null,
-    location: null,
-    service_interest:
-      fields.serviceInterest ?? existing?.service_interest ?? undefined,
-    requirements: fields.team ?? existing?.requirements ?? undefined,
-    conversation: conversation ?? [],
-  })
-    .then(async (intelligence) => {
+  const backgroundWork = async (): Promise<void> => {
+    try {
+      const intelligence = await generateIntelligence({
+        name: fields.name ?? existing?.name ?? undefined,
+        email: incomingEmail ?? existing?.email ?? undefined,
+        company: fields.company ?? existing?.company ?? null,
+        job_title: fields.jobTitle ?? existing?.job_title ?? null,
+        location: null,
+        service_interest:
+          fields.serviceInterest ?? existing?.service_interest ?? undefined,
+        requirements: fields.team ?? existing?.requirements ?? undefined,
+        conversation: conversation ?? [],
+      });
       try {
         const { error: updateErr } = await supabase
           .from('chat_leads')
@@ -451,22 +467,32 @@ export async function upsertChatLead(
             extra: { phase: 'upsertChatLead.intelligencePersist', leadId, runKind },
           });
         } else {
-          log.info('tool', `intelligence ${runKind} stored for chat_lead ${leadId}`, {
-            sessionId,
-            extra: { runKind },
-          });
+          log.info(
+            'tool',
+            `intelligence ${runKind} stored for chat_lead ${leadId}`,
+            { sessionId, extra: { runKind } },
+          );
         }
       } catch (err) {
         // copilot-allow-silent-catch: persist failure already logged above
-        log.warn('tool', err, { sessionId, extra: { phase: 'upsertChatLead.persistCatch', runKind } });
+        log.warn('tool', err, {
+          sessionId,
+          extra: { phase: 'upsertChatLead.persistCatch', runKind },
+        });
       }
-    })
-    .catch((err) => {
+    } catch (err) {
       log.error('generate', err, {
         sessionId,
         extra: { phase: 'generateIntelligence', leadId, runKind },
       });
-    });
+    }
+  };
+
+  if (options?.after) {
+    options.after(backgroundWork);
+  } else {
+    void backgroundWork();
+  }
 
   return { freshEmail };
 }
