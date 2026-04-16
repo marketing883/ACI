@@ -6,36 +6,66 @@
  * Usage: from aci-infotech/, run:
  *   npx tsx scripts/audit-case-studies.ts
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
 
-// Load .env.local manually (no dotenv dep)
-try {
-  for (const line of readFileSync('.env.local', 'utf8').split('\n')) {
-    const m = line.match(/^([A-Z_]+)=(.*)$/);
-    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
-  }
-} catch {}
+// Load .env.local manually (no dotenv dep). Send all output to stdout so
+// `> file.txt` captures everything (including diagnostics).
+const log = (...args: unknown[]) => console.log(...args);
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing SUPABASE env vars in .env.local');
+if (!existsSync('.env.local')) {
+  log('FATAL: .env.local not found. Run from aci-infotech/ directory.');
   process.exit(1);
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+for (const line of readFileSync('.env.local', 'utf8').split('\n')) {
+  const m = line.match(/^([A-Z_]+)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+}
 
-async function main() {
-  const { data, error } = await supabase
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+log('=== Diagnostics ===');
+log('SUPABASE_URL:        ', supabaseUrl ? `${supabaseUrl.slice(0, 30)}...` : '(MISSING)');
+log('ANON_KEY:            ', anonKey ? `${anonKey.slice(0, 12)}...${anonKey.slice(-6)}` : '(MISSING)');
+log('SERVICE_ROLE_KEY:    ', serviceKey ? `${serviceKey.slice(0, 12)}...${serviceKey.slice(-6)}` : '(MISSING)');
+log('');
+
+if (!supabaseUrl || !anonKey) {
+  log('FATAL: Missing SUPABASE env vars.');
+  process.exit(1);
+}
+
+// Try anon first; if no rows, retry with service-role (RLS bypass).
+async function tryQuery(key: string, label: string) {
+  const supabase = createClient(supabaseUrl!, key);
+  log(`--- Query attempt with ${label} ---`);
+  const { data, error, count } = await supabase
     .from('case_studies')
-    .select('slug, title, client_name, client_descriptor, status, excerpt, services, industry, is_featured, published_at')
+    .select('slug, title, client_name, client_descriptor, status, excerpt, services, industry, is_featured, published_at', { count: 'exact' })
     .order('published_at', { ascending: false, nullsFirst: false });
 
   if (error) {
-    console.error('Query failed:', error);
-    process.exit(1);
+    log(`ERROR (${label}):`, JSON.stringify(error, null, 2));
+    return null;
+  }
+  log(`Rows returned (${label}): ${data?.length ?? 0} (count: ${count ?? 'n/a'})`);
+  return data;
+}
+
+async function main() {
+  let data = await tryQuery(anonKey!, 'anon');
+
+  if ((!data || data.length === 0) && serviceKey) {
+    log('\nAnon returned no rows — retrying with service_role to bypass RLS...\n');
+    data = await tryQuery(serviceKey, 'service_role');
+  }
+
+  if (!data || data.length === 0) {
+    log('\nNo case studies found via either key. Check RLS policies or table contents.');
+    return;
   }
 
   if (!data) {
