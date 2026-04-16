@@ -16,6 +16,9 @@ import {
   Gauge,
   ShieldCheck,
   Activity,
+  FileCheck,
+  TrendingUp,
+  Users,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
@@ -97,6 +100,65 @@ const aiInLoop = [
     id: 'defect-clustering',
     title: 'Defect pattern analysis',
     body: 'Bugs cluster. An agent reads the defect log, groups by root cause, and tells you which class of bug to eliminate next. Root cause, not whack-a-mole.',
+  },
+] as const;
+
+// Differentiators: why our QE is different from a staff-augmentation
+// QA vendor. Each has a claim, a one-line expansion, and a proof
+// line that tells the visitor what that claim actually looks like.
+const differentiators = [
+  {
+    title: 'Engineering discipline, not a testing vendor',
+    description:
+      'QE is engineering work. We staff it with engineers, not with QA-coded staff augmentation. Tests land in your repo and get reviewed like any other pull request.',
+    proof: 'Tests live in your repo, versioned like code',
+  },
+  {
+    title: 'Embedded in delivery, not parallel to it',
+    description:
+      'One team, one sprint cadence, one shared quality goal. Our engineers write, review, and maintain alongside yours. No separate testing phase that slows everything down.',
+    proof: 'One team, one cadence, shared ownership',
+  },
+  {
+    title: 'Automated from sprint one, not sprint thirty',
+    description:
+      'The cheapest time to instrument is now. We do not retrofit automation after the fact; coverage starts with the first feature, not when tech debt catches up.',
+    proof: '90%+ automation as a default, not a nice-to-have',
+  },
+  {
+    title: 'Accountable through production',
+    description:
+      'Tests are a living contract. We keep them true as the app evolves, on an SLA. No "handed over at go-live" and then silence.',
+    proof: '24/7 ownership of test infrastructure',
+  },
+] as const;
+
+// Beyond delivery. The operational side of QE; the work that keeps
+// the suite honest as the system around it changes.
+const beyondDelivery = [
+  {
+    title: 'Production operations',
+    description:
+      '24/7 monitoring of test infrastructure, alerts on flaky suites, continuous maintenance as the application evolves.',
+    icon: Activity,
+  },
+  {
+    title: 'SLA-backed support',
+    description:
+      'Contractual response times for CI failures, defined escalation paths, accountable ownership of quality gates.',
+    icon: FileCheck,
+  },
+  {
+    title: 'Continuous optimisation',
+    description:
+      'Test suite performance tuning, coverage gap analysis, defect trend monitoring. Quality improves over time, not degrades.',
+    icon: TrendingUp,
+  },
+  {
+    title: 'Evolution as partners',
+    description:
+      'As your application changes, the test strategy changes with it. We stay on the long arc, evolving coverage rather than maintaining it in place.',
+    icon: Users,
   },
 ] as const;
 
@@ -530,6 +592,87 @@ export default function QualityEngineeringPage() {
             detection shortly after, generation from stories and defect
             clustering once the baseline suite is stable.
           </p>
+        </div>
+      </section>
+
+      {/* Why ACI does QE differently */}
+      <section className="py-20 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mb-14">
+            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--aci-primary)] mb-3">
+              what makes us different
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4 leading-tight">
+              Why ACI does QE differently.
+            </h2>
+            <p className="text-lg text-gray-600">
+              Four claims we make, each with a proof line that tells you
+              what the claim actually looks like in practice.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {differentiators.map((diff) => (
+              <div
+                key={diff.title}
+                className="rounded-xl border border-gray-200 bg-white p-7 hover:border-[var(--aci-primary)]/30 hover:shadow-md transition-all"
+              >
+                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3 leading-snug">
+                  {diff.title}
+                </h3>
+                <p className="text-gray-600 mb-5 leading-relaxed">
+                  {diff.description}
+                </p>
+                <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
+                  <CheckCircle className="w-4 h-4 text-[var(--aci-primary)] flex-shrink-0" />
+                  <span className="text-sm text-[var(--aci-primary)] font-medium">
+                    {diff.proof}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Beyond delivery */}
+      <section className="py-20 lg:py-24 bg-gradient-to-br from-gray-50 to-blue-50/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mb-14">
+            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--aci-primary)] mb-3">
+              beyond delivery
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4 leading-tight">
+              Quality is not a one-time project.
+            </h2>
+            <p className="text-lg text-gray-600">
+              We stay with you to maintain, evolve, and optimise quality
+              infrastructure as the application grows.
+              <span className="block mt-2 font-semibold text-[var(--aci-secondary)]">
+                We run what we build.
+              </span>
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {beyondDelivery.map((pillar) => {
+              const Icon = pillar.icon;
+              return (
+                <div
+                  key={pillar.title}
+                  className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+                >
+                  <Icon className="w-8 h-8 text-[var(--aci-primary)] mb-4" />
+                  <h3 className="text-lg font-semibold text-[var(--aci-secondary)] mb-2 leading-snug">
+                    {pillar.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {pillar.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
     </>
