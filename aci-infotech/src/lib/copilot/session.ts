@@ -253,6 +253,7 @@ export async function upsertChatLead(
     | {
         id?: string;
         intelligence?: unknown;
+        intelligence_updated_at?: string | null;
         name?: string | null;
         email?: string | null;
         company?: string | null;
@@ -275,7 +276,7 @@ export async function upsertChatLead(
     const { data } = await supabase
       .from('chat_leads')
       .select(
-        'id, intelligence, name, email, company, website, phone, job_title, industry, role, service_interest, requirements, preferred_time, budget, priority, intent, pain_point, decision_role',
+        'id, intelligence, intelligence_updated_at, name, email, company, website, phone, job_title, industry, role, service_interest, requirements, preferred_time, budget, priority, intent, pain_point, decision_role',
       )
       .eq('session_id', sessionId)
       .maybeSingle();
@@ -298,13 +299,62 @@ export async function upsertChatLead(
       ? existing.email.trim()
       : undefined;
   const freshEmail = Boolean(incomingEmail) && !existingEmail;
-  // Intelligence fires when:
-  //   - email just arrived (freshEmail), AND
-  //   - no prior intelligence attached to the row.
-  // If email is not present at all this turn, skip intelligence and just
-  // persist whatever fields we have.
+  // Intelligence fires in two cases:
+  //   1. freshEmail AND no prior intelligence attached to the row (the
+  //      initial run — same semantics as before).
+  //   2. email already captured AND existing intelligence is stale —
+  //      i.e. a new high-signal field just arrived and the per-row
+  //      cooldown has expired. This keeps lead_score in sync with the
+  //      richer-than-first-fire state that accumulates over the course
+  //      of the conversation.
   const needsIntelligence =
     freshEmail && (!existing || existing.intelligence == null);
+
+  // Keys that warrant a refresh when they transition from empty to
+  // captured. Intentionally excludes name / phone / website (minor
+  // signal) and team (verbose, rarely moves the needle). painPoint +
+  // decisionRole carry the highest refresh value.
+  const HIGH_SIGNAL_FIELDS = [
+    { fieldKey: 'company', dbKey: 'company' },
+    { fieldKey: 'jobTitle', dbKey: 'job_title' },
+    { fieldKey: 'industry', dbKey: 'industry' },
+    { fieldKey: 'role', dbKey: 'role' },
+    { fieldKey: 'serviceInterest', dbKey: 'service_interest' },
+    { fieldKey: 'budget', dbKey: 'budget' },
+    { fieldKey: 'priority', dbKey: 'priority' },
+    { fieldKey: 'timeline', dbKey: 'preferred_time' },
+    { fieldKey: 'painPoint', dbKey: 'pain_point' },
+    { fieldKey: 'decisionRole', dbKey: 'decision_role' },
+  ] as const;
+
+  const REFRESH_COOLDOWN_MS = 60_000;
+
+  const hasNewHighSignal = HIGH_SIGNAL_FIELDS.some(({ fieldKey, dbKey }) => {
+    const incomingVal = (fields as Record<string, unknown>)[fieldKey];
+    const existingVal = (existing as Record<string, unknown> | null)?.[dbKey];
+    const incomingNonEmpty =
+      typeof incomingVal === 'string' && incomingVal.trim().length > 0;
+    const existingNonEmpty =
+      typeof existingVal === 'string' && existingVal.trim().length > 0;
+    return incomingNonEmpty && !existingNonEmpty;
+  });
+
+  const lastRefreshAt = existing?.intelligence_updated_at
+    ? new Date(existing.intelligence_updated_at).getTime()
+    : 0;
+  const cooldownExpired =
+    Number.isFinite(lastRefreshAt) &&
+    Date.now() - lastRefreshAt > REFRESH_COOLDOWN_MS;
+
+  const hasEmailNow = Boolean(incomingEmail ?? existing?.email);
+  const hasExistingIntelligence = Boolean(existing?.intelligence);
+  const needsRefresh =
+    hasEmailNow &&
+    hasExistingIntelligence &&
+    hasNewHighSignal &&
+    cooldownExpired;
+
+  const shouldFireIntelligence = needsIntelligence || needsRefresh;
 
   // pick: prefer a non-empty incoming value; otherwise keep whatever is
   // already in chat_leads; otherwise null. This is the core of the
@@ -359,7 +409,9 @@ export async function upsertChatLead(
     return { freshEmail: false };
   }
 
-  if (!needsIntelligence || !upserted?.id) return { freshEmail };
+  if (!shouldFireIntelligence || !upserted?.id) return { freshEmail };
+
+  const runKind: 'initial' | 'refresh' = needsIntelligence ? 'initial' : 'refresh';
 
   // Fire-and-forget intelligence generation. Mirrors the legacy
   // /api/chat/lead/route.ts pattern. Failures land in chat_errors via
@@ -387,27 +439,32 @@ export async function upsertChatLead(
       try {
         const { error: updateErr } = await supabase
           .from('chat_leads')
-          .update({ intelligence, lead_score: intelligence.leadScore })
+          .update({
+            intelligence,
+            lead_score: intelligence.leadScore,
+            intelligence_updated_at: new Date().toISOString(),
+          })
           .eq('id', leadId);
         if (updateErr) {
           log.warn('tool', updateErr, {
             sessionId,
-            extra: { phase: 'upsertChatLead.intelligencePersist', leadId },
+            extra: { phase: 'upsertChatLead.intelligencePersist', leadId, runKind },
           });
         } else {
-          log.info('tool', `intelligence stored for chat_lead ${leadId}`, {
+          log.info('tool', `intelligence ${runKind} stored for chat_lead ${leadId}`, {
             sessionId,
+            extra: { runKind },
           });
         }
       } catch (err) {
         // copilot-allow-silent-catch: persist failure already logged above
-        log.warn('tool', err, { sessionId, extra: { phase: 'upsertChatLead.persistCatch' } });
+        log.warn('tool', err, { sessionId, extra: { phase: 'upsertChatLead.persistCatch', runKind } });
       }
     })
     .catch((err) => {
       log.error('generate', err, {
         sessionId,
-        extra: { phase: 'generateIntelligence', leadId },
+        extra: { phase: 'generateIntelligence', leadId, runKind },
       });
     });
 
