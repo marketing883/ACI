@@ -124,9 +124,9 @@ const PREFIX_OVERRIDES: Array<[string, Welcome]> = [
     },
   ],
   [
-    '/services/qa-testing',
+    '/services/quality-engineering',
     {
-      text: 'Hi, Atheros here. QA page. Most teams come here to cut cycle time. Is that you, or something else?',
+      text: 'Hi, Atheros here. Quality Engineering page. Most teams come here to cut cycle time without losing the release. Is that you, or something else?',
     },
   ],
   [

@@ -104,9 +104,9 @@ export const ATHEROS_CONTEXTS: AtherosContextEntry[] = [
     seedPrompt: 'I want a security posture review framed for executives.',
   },
   {
-    match: { route: '/services/qa-testing' },
-    message: 'Want a test strategy for your release cadence?',
-    seedPrompt: 'Help me build a test strategy for our release cadence.',
+    match: { route: '/services/quality-engineering' },
+    message: 'Want a QE strategy for your release cadence?',
+    seedPrompt: 'Help me build a quality engineering strategy for our release cadence.',
   },
   {
     match: { route: '/services/martech-cdp' },

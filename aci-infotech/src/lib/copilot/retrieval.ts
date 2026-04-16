@@ -135,7 +135,20 @@ const CLUSTER_KEYWORDS: Record<ServiceClusterId, readonly string[]> = {
   ],
   'cyber-security': ['cyber security', 'cybersecurity', 'zero trust', 'identity', 'iam'],
   'app-development': ['app development', 'mobile app', 'web application'],
-  'qa-testing': ['qa testing', 'test automation', 'quality assurance'],
+  // Keep QA synonyms alongside QE terms so visitors who search for the
+  // old framing still hit this cluster. The page rename is cosmetic to
+  // retrieval; both names point at the same content.
+  'quality-engineering': [
+    'quality engineering',
+    'qe',
+    'qa testing',
+    'qa',
+    'test automation',
+    'quality assurance',
+    'agentic testing',
+    'continuous testing',
+    'shift left testing',
+  ],
 };
 
 function matchFirst<T extends string>(

@@ -115,7 +115,7 @@ const PREFIXES: Array<[string, PillCopy]> = [
     },
   ],
   [
-    '/services/qa-testing',
+    '/services/quality-engineering',
     {
       idle: 'Where does quality slip?',
       peek: 'Most test suites are slow. Ask me how we cut cycle time.',

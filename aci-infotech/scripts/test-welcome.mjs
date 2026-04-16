@@ -28,9 +28,9 @@ test('welcome: dynamic composition for service without override', () => {
   // exists in src/data/services.ts but check the dynamic path is used
   // when a path falls outside the override list. Use a sub-path that
   // does not match any override.
-  const w = welcome.resolveWelcome('/services/qa-testing');
-  assert.match(w.text, /QA/i);
-  assert.match(w.text, /What pulled you in|cycle time/);
+  const w = welcome.resolveWelcome('/services/quality-engineering');
+  assert.match(w.text, /Quality Engineering/i);
+  assert.match(w.text, /cycle time|pulled you in/);
 });
 
 test('welcome: dynamic composition for industry', () => {

@@ -79,7 +79,7 @@ WEAVE THE KNOWLEDGE — EVERY DIMENSION
 The <atheros-context> block carries chunks across every source we have:
 - service clusters (data-engineering, applied-ai-ml, cloud-modernization,
   martech-cdp, digital-transformation, cyber-security, app-development,
-  qa-testing)
+  quality-engineering)
 - platforms (databricks, snowflake, aws, azure, salesforce, sap,
   servicenow, braze, microsoft-dynamics)
 - industries (financial-services, healthcare, retail, manufacturing,

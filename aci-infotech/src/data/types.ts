@@ -22,7 +22,7 @@ export type ServiceClusterId =
   | 'digital-transformation'
   | 'cyber-security'
   | 'app-development'
-  | 'qa-testing';
+  | 'quality-engineering';
 
 export type IndustryId =
   | 'financial-services'
