@@ -10,7 +10,10 @@ const welcome = await import('../src/lib/copilot/welcome.ts');
 
 test('welcome: home route hand-authored', () => {
   const w = welcome.resolveWelcome('/');
-  assert.match(w.text, /brought you here/i);
+  // Distinctive phrase on the home and /preview/home welcomes. Picking
+  // the "work inside and out" line catches either of the two home-ish
+  // variants without being over-specific about wording.
+  assert.match(w.text, /work inside and out/i);
 });
 
 test('welcome: contact has form-friendly copy', () => {
@@ -51,12 +54,15 @@ test('welcome: case-study prefix returns translation prompt', () => {
 
 test('welcome: unknown path returns default fallback', () => {
   const w = welcome.resolveWelcome('/random-route-no-match');
-  assert.match(w.text, /What brought you here/i);
+  // DEFAULT_WELCOME signature. "find the right starting point" is
+  // specific to the fallback and not reused in any handcrafted
+  // override, so matching on it keeps the assertion tight.
+  assert.match(w.text, /find the right starting point/i);
 });
 
 test('welcome: null pathname returns default', () => {
   const w = welcome.resolveWelcome(null);
-  assert.match(w.text, /What brought you here/i);
+  assert.match(w.text, /find the right starting point/i);
 });
 
 test('welcome: auditWelcome returns no voice violations', () => {

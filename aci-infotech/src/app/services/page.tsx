@@ -169,7 +169,7 @@ export default function ServicesPage() {
             </h1>
             <p className="text-xl text-gray-300 mb-8">
               Six practice areas. One engineering standard. Every engagement staffed with senior architects
-              who've shipped production systems at Fortune 500 scale.
+              who&rsquo;ve shipped production systems at Fortune 500 scale.
             </p>
           </div>
 
@@ -404,7 +404,7 @@ export default function ServicesPage() {
               </div>
               <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">We Answer the 2am Call</h3>
               <p className="text-gray-600 text-sm">
-                When production breaks, we're there. Our teams provide ongoing support, not just delivery.
+                When production breaks, we&rsquo;re there. Our teams provide ongoing support, not just delivery.
               </p>
             </div>
             <div className="text-center">
@@ -424,7 +424,7 @@ export default function ServicesPage() {
       <section className="py-20 bg-[var(--aci-primary)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Let's Talk About Your Challenge
+            Let&rsquo;s Talk About Your Challenge
           </h2>
           <p className="text-xl text-blue-100 mb-8">
             Schedule a 30-minute architecture call with one of our senior consultants.
