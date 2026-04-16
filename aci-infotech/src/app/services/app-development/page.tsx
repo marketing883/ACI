@@ -77,7 +77,7 @@ const offerings = [
 const caseStudies = [
   {
     slug: 'racetrac-martech',
-    client: 'RaceTrac',
+    client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail — Convenience',
     challenge: 'Needed a unified digital guest experience and loyalty platform across 600+ locations with real-time personalization at the point of sale.',
     results: [
@@ -563,7 +563,7 @@ export default function AppDevelopmentPage() {
         </div>
       </section>
 
-      {/* Case Study - RaceTrac */}
+      {/* Case Study - Convenience Retailer */}
       <section className="py-20 bg-[var(--aci-secondary)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">

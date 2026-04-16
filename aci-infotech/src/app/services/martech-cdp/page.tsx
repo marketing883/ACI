@@ -76,7 +76,7 @@ const offerings = [
 const caseStudies = [
   {
     slug: 'racetrac-martech',
-    client: 'RaceTrac',
+    client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     challenge: 'Fragmented customer data across 600+ locations, no unified view',
     results: [

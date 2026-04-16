@@ -78,7 +78,7 @@ const offerings = [
 const caseStudies = [
   {
     slug: 'msci-data-automation',
-    client: 'MSCI',
+    client: 'Global Financial Giant',
     industry: 'Financial Services',
     challenge: '40+ finance systems post-acquisitions needed consolidation into unified platform',
     results: [
@@ -90,7 +90,7 @@ const caseStudies = [
   },
   {
     slug: 'racetrac-real-time-data',
-    client: 'RaceTrac',
+    client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     challenge: 'Payment systems across 600+ locations needed real-time data with zero downtime',
     results: [
@@ -102,7 +102,7 @@ const caseStudies = [
   },
   {
     slug: 'sodexo-unified-data',
-    client: 'Sodexo',
+    client: 'Global Hospitality Leader',
     industry: 'Hospitality',
     challenge: 'Global operations with data scattered across regional silos',
     results: [
