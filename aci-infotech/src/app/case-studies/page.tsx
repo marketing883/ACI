@@ -34,7 +34,7 @@ interface CaseStudy {
 const demoCaseStudies: CaseStudy[] = [
   {
     slug: 'msci-data-automation',
-    client: 'MSCI',
+    client: 'Global Financial Giant',
     industry: 'Financial Services',
     service: 'Data Engineering',
     headline: 'Consolidating 40+ Finance Systems Post-Acquisition',
@@ -50,7 +50,7 @@ const demoCaseStudies: CaseStudy[] = [
   },
   {
     slug: 'racetrac-martech',
-    client: 'RaceTrac',
+    client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     service: 'MarTech & CDP',
     headline: 'Real-Time Customer Engagement Across 600+ Locations',
@@ -66,7 +66,7 @@ const demoCaseStudies: CaseStudy[] = [
   },
   {
     slug: 'sodexo-unified-data',
-    client: 'Sodexo',
+    client: 'Global Hospitality Leader',
     industry: 'Hospitality',
     service: 'Data Engineering',
     headline: 'Unified Global Data Platform for 400K+ Employees',
