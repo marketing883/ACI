@@ -209,9 +209,9 @@ export const ENTITY_INDEX: Readonly<Record<string, EntityIndexEntry>> = {
   },
   "databricks-modernization-ai-enablement-for-leading-c-store-chain": {
     "panelType": "case",
-    "title": "Payment systems across 600+ locations needed real-time data with zero downtime"
+    "title": "Needed a unified digital guest experience and loyalty platform across 600+ locations with real-time personalization at the point of sale."
   },
-  "hospitality-leader-unified-data": {
+  "global-food-facilities-data-intelligence": {
     "panelType": "case",
     "title": "Global operations with data scattered across regional silos"
   },
@@ -250,10 +250,6 @@ export const ENTITY_INDEX: Readonly<Record<string, EntityIndexEntry>> = {
   "martech-cdp": {
     "panelType": "service",
     "title": "MarTech CDP"
-  },
-  "convenience-retailer-martech": {
-    "panelType": "case",
-    "title": "Needed a unified digital guest experience and loyalty platform across 600+ locations with real-time personalization at the point of sale."
   },
   "hospitality-loyalty": {
     "panelType": "case",

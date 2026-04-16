@@ -41,7 +41,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/case-studies/racetrac-martech',
-        destination: '/case-studies/convenience-retailer-martech',
+        destination: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/convenience-retailer-martech',
+        destination: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
         permanent: true,
       },
       {
@@ -56,7 +61,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/case-studies/sodexo-unified-data',
-        destination: '/case-studies/hospitality-leader-unified-data',
+        destination: '/case-studies/global-food-facilities-data-intelligence',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/hospitality-leader-unified-data',
+        destination: '/case-studies/global-food-facilities-data-intelligence',
         permanent: true,
       },
     ];

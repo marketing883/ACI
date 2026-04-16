@@ -56,7 +56,7 @@ const mockCaseStudies: CaseStudy[] = [
   },
   {
     id: '2',
-    slug: 'convenience-retailer-martech',
+    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
     title: 'Real-Time Customer Engagement Across 600+ Locations',
     client_name: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
@@ -68,7 +68,7 @@ const mockCaseStudies: CaseStudy[] = [
   },
   {
     id: '3',
-    slug: 'hospitality-leader-unified-data',
+    slug: 'global-food-facilities-data-intelligence',
     title: 'Unified Global Data Platform for 400K+ Employees',
     client_name: 'Global Hospitality Leader',
     industry: 'Hospitality',

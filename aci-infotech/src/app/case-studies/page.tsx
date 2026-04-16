@@ -49,7 +49,7 @@ const demoCaseStudies: CaseStudy[] = [
     is_featured: true,
   },
   {
-    slug: 'convenience-retailer-martech',
+    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
     client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     service: 'MarTech & CDP',
@@ -65,7 +65,7 @@ const demoCaseStudies: CaseStudy[] = [
     is_featured: true,
   },
   {
-    slug: 'hospitality-leader-unified-data',
+    slug: 'global-food-facilities-data-intelligence',
     client: 'Global Hospitality Leader',
     industry: 'Hospitality',
     service: 'Data Engineering',

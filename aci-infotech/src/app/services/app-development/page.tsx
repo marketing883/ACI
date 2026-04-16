@@ -76,7 +76,7 @@ const offerings = [
 
 const caseStudies = [
   {
-    slug: 'convenience-retailer-martech',
+    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
     client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail — Convenience',
     challenge: 'Needed a unified digital guest experience and loyalty platform across 600+ locations with real-time personalization at the point of sale.',

@@ -101,7 +101,7 @@ const caseStudies = [
     technologies: ['Databricks', 'Kafka', 'AWS', 'Braze'],
   },
   {
-    slug: 'hospitality-leader-unified-data',
+    slug: 'global-food-facilities-data-intelligence',
     client: 'Global Hospitality Leader',
     industry: 'Hospitality',
     challenge: 'Global operations with data scattered across regional silos',

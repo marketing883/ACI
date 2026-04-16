@@ -79,10 +79,10 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
       author: 'VP of Finance Operations',
       title: 'Global Financial Giant',
     },
-    relatedStudies: ['hospitality-leader-unified-data', 'pharma-data-lake'],
+    relatedStudies: ['global-food-facilities-data-intelligence', 'intelligent-cms-modernization-productivity-engagement'],
   },
-  'convenience-retailer-martech': {
-    slug: 'convenience-retailer-martech',
+  'databricks-modernization-ai-enablement-for-leading-c-store-chain': {
+    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
     client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     service: 'MarTech & CDP',
@@ -123,10 +123,10 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
       author: 'Director of Data and MarTech',
       title: 'Fortune 500 Convenience Retailer',
     },
-    relatedStudies: ['retail-personalization', 'modernizes-finance-reporting-with-sap-transformation'],
+    relatedStudies: ['how-aci-infotech-enabled-a-retail-leader-to-unlock-the-power-of-data', 'modernizes-finance-reporting-with-sap-transformation'],
   },
-  'hospitality-leader-unified-data': {
-    slug: 'hospitality-leader-unified-data',
+  'global-food-facilities-data-intelligence': {
+    slug: 'global-food-facilities-data-intelligence',
     client: 'Global Hospitality Leader',
     industry: 'Hospitality',
     service: 'Data Engineering',
@@ -167,7 +167,7 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
       author: 'Senior Director',
       title: 'Global Hospitality Leader',
     },
-    relatedStudies: ['modernizes-finance-reporting-with-sap-transformation', 'pharma-data-lake'],
+    relatedStudies: ['modernizes-finance-reporting-with-sap-transformation', 'intelligent-cms-modernization-productivity-engagement'],
   },
 };
 
@@ -179,8 +179,8 @@ const basicCaseStudies = [
   'manufacturing-iot',
   'insurance-digital-platform',
   'energy-security-overhaul',
-  'pharma-data-lake',
-  'retail-personalization',
+  'intelligent-cms-modernization-productivity-engagement',
+  'how-aci-infotech-enabled-a-retail-leader-to-unlock-the-power-of-data',
   'logistics-optimization',
 ];
 

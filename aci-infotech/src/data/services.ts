@@ -147,7 +147,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'MDM',
       'Cloud Integration'
     ],
-    slug: 'hospitality-leader-unified-data'
+    slug: 'global-food-facilities-data-intelligence'
   }
 ],
     processPhases: [
@@ -589,7 +589,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'AWS',
       'Databricks'
     ],
-    slug: 'convenience-retailer-martech'
+    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain'
   },
   {
     client_descriptor: 'Fortune 500 Retail Client',
@@ -1054,7 +1054,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'AWS',
       'Kafka'
     ],
-    slug: 'convenience-retailer-martech'
+    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain'
   }
 ],
     processPhases: [
