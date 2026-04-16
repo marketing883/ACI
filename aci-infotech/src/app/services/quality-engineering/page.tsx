@@ -19,6 +19,7 @@ import {
   FileCheck,
   TrendingUp,
   Users,
+  ChevronDown,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
@@ -245,16 +246,34 @@ const capabilities = [
   },
 ] as const;
 
-// Placeholder FAQs used only for the FAQSchema structured data in this
-// first pass. Full FAQ UI ships in a later sub-task and will replace
-// this array with the final copy.
-const faqsForSchema = [
+// Full FAQ set. Five questions; honest answers that do not oversell.
+const faqs = [
   {
     question: 'How is Quality Engineering different from QA and testing?',
     answer:
-      'QA ran at the end, by a separate team, against a spreadsheet of manual cases. QE runs throughout delivery, owned by the same engineers who write the code, with automated suites and AI agents maintaining coverage.',
+      'QA ran at the end, by a separate team, against a spreadsheet of manual cases. QE runs throughout delivery, owned by the same engineers who write the code, with automated suites and AI agents maintaining coverage. Same engineers, same repo, same accountability.',
   },
-];
+  {
+    question: 'Do you do manual regression testing?',
+    answer:
+      'Not as a standalone service. A short exploratory pass is part of any healthy QE practice, but we are not a manual regression shop. If that is what you need, we will tell you upfront and point you at a better-fit partner.',
+  },
+  {
+    question: 'What stack do you default to?',
+    answer:
+      'Playwright for end-to-end, Jest or Pytest for unit and integration, k6 or JMeter for performance, OWASP tooling for security. We meet you where you are; if your team runs Cypress or Selenium we plug into that rather than forcing a swap.',
+  },
+  {
+    question: 'How does agentic AI fit in practically?',
+    answer:
+      'Month one: self-healing UI selectors so your team stops babysitting drift. Month two or three: coverage gap detection from production traffic. Once the baseline suite is stable, agentic generation from user stories and defect clustering. Not all of it on day one.',
+  },
+  {
+    question: 'How do you plug into our CI/CD pipeline?',
+    answer:
+      'Whatever you run. GitHub Actions, GitLab CI, Jenkins, CircleCI, Azure DevOps. Quality gates wire into pull request checks, deploy stages, and post-deploy smoke. Results flow back into your existing tools; no context switching.',
+  },
+] as const;
 
 export default function QualityEngineeringPage() {
   return (
@@ -265,7 +284,7 @@ export default function QualityEngineeringPage() {
         url="/services/quality-engineering"
         serviceType="Quality Engineering Consulting"
       />
-      <FAQSchema faqs={faqsForSchema} />
+      <FAQSchema faqs={faqs as unknown as Array<{ question: string; answer: string }>} />
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -673,6 +692,76 @@ export default function QualityEngineeringPage() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 lg:py-24 bg-white">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--aci-primary)] mb-3">
+              common questions
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] leading-tight">
+              Five honest answers.
+            </h2>
+          </div>
+
+          <div className="space-y-3">
+            {faqs.map((faq) => (
+              <details
+                key={faq.question}
+                className="group rounded-xl border border-gray-200 bg-gray-50/60 hover:bg-gray-50 transition-colors"
+              >
+                <summary className="flex items-center justify-between cursor-pointer p-5 text-base font-medium text-[var(--aci-secondary)] list-none">
+                  <span className="pr-4">{faq.question}</span>
+                  <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="px-5 pb-5 text-sm text-gray-600 leading-relaxed">
+                  {faq.answer}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-20 lg:py-24 bg-[var(--aci-primary)] relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-[0.05] pointer-events-none"
+          aria-hidden
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+            backgroundSize: '32px 32px',
+          }}
+        />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+            Ship with proof, not hope.
+          </h2>
+          <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
+            Thirty-minute technical call with a QE engineer. No sales
+            pitch. We will tell you if we are not the right fit.
+          </p>
+
+          <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-2 mb-10 text-sm text-blue-100">
+            <span>Senior engineers, not sales reps</span>
+            <span className="text-blue-300">·</span>
+            <span>30-minute technical discussion</span>
+            <span className="text-blue-300">·</span>
+            <span>Honest answer either way</span>
+          </div>
+
+          <Button
+            href="/contact?service=quality-engineering"
+            variant="lime"
+            size="lg"
+          >
+            Talk to a QE engineer
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
         </div>
       </section>
     </>
