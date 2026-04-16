@@ -9,6 +9,7 @@ import {
   Sparkles,
   ArrowDown,
   RotateCcw,
+  X,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
@@ -66,6 +67,27 @@ const qualityLoopStages = [
     aiRole: 'coverage gap detection, defect clustering',
   },
 ] as const;
+
+// "From QA to QE" — an explicit positioning shift so visitors don't
+// read the rename as a cosmetic swap. Each side is a set of short,
+// concrete lines that describe how the work actually happens today
+// vs how it used to happen. Avoid abstractions; prefer the concrete.
+const qaVsQe = {
+  qa: [
+    'Executed by a separate team after the build is done',
+    'Manual test cases in a spreadsheet, regression sprints at the end',
+    'Staff-augmentation shops billing by headcount',
+    'Quality as a gate; releases held up or rolled back',
+    'Tests as an artefact maintained by someone else',
+  ],
+  qe: [
+    'Owned by the same team that writes the code',
+    'Tests as code, versioned and reviewed in the same pull request',
+    'Automation first; exploratory testing as the only manual step',
+    'Quality as a property of the system, watched in production',
+    'AI agents scaling the coverage humans cannot keep up with',
+  ],
+} as const;
 
 // Placeholder FAQs used only for the FAQSchema structured data in this
 // first pass. Full FAQ UI ships in a later sub-task and will replace
@@ -204,6 +226,77 @@ export default function QualityEngineeringPage() {
               <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* From QA to QE — positioning shift */}
+      <section className="py-20 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mb-12">
+            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--aci-primary)] mb-3">
+              the shift
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4 leading-tight">
+              From QA to QE.
+            </h2>
+            <p className="text-lg text-gray-600">
+              We rebranded because the work changed. The old framing stopped
+              describing what we actually do.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* QA, the old way */}
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-7">
+              <div className="flex items-center gap-2 mb-5">
+                <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-200 text-gray-500">
+                  <X className="w-4 h-4" />
+                </div>
+                <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-gray-500">
+                  qa, the old way
+                </div>
+              </div>
+              <ul className="space-y-3">
+                {qaVsQe.qa.map((line) => (
+                  <li
+                    key={line}
+                    className="flex items-start gap-3 text-gray-600 text-sm leading-relaxed"
+                  >
+                    <span className="mt-2 w-1 h-1 rounded-full bg-gray-400 flex-shrink-0" />
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* QE, the way we do it */}
+            <div className="rounded-2xl border border-[var(--aci-primary)]/25 bg-gradient-to-br from-[var(--aci-primary)]/[0.04] to-[var(--aci-primary)]/[0.08] p-7">
+              <div className="flex items-center gap-2 mb-5">
+                <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[var(--aci-primary)]/15 text-[var(--aci-primary)]">
+                  <CheckCircle className="w-4 h-4" />
+                </div>
+                <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-[var(--aci-primary)]">
+                  qe, the way we do it
+                </div>
+              </div>
+              <ul className="space-y-3">
+                {qaVsQe.qe.map((line) => (
+                  <li
+                    key={line}
+                    className="flex items-start gap-3 text-[var(--aci-secondary)] text-sm leading-relaxed"
+                  >
+                    <CheckCircle className="w-4 h-4 text-[var(--aci-primary)] flex-shrink-0 mt-0.5" />
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <p className="mt-10 text-sm text-gray-500 italic max-w-3xl">
+            Same engineering discipline, sharper name. Visitors who came
+            looking for QA find it here; what we actually ship is QE.
+          </p>
         </div>
       </section>
     </>
