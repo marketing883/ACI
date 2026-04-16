@@ -303,7 +303,7 @@ export default function QualityEngineeringPage() {
                 Quality Engineering
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mt-3 mb-6 leading-tight">
-                Quality, engineered in.
+                We engineer quality into every{'\u00a0'}release.
               </h1>
               <p className="text-lg text-gray-300 mb-8 max-w-xl">
                 Quality as an engineering discipline, not a test phase.
@@ -570,7 +570,7 @@ export default function QualityEngineeringPage() {
               {'// agentic ai'}
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
-              Where AI actually enters the loop.
+              What AI does on the{'\u00a0'}team.
             </h2>
             <p className="text-lg text-gray-300">
               Not a buzzword section. Four places agents earn their keep,
@@ -618,15 +618,11 @@ export default function QualityEngineeringPage() {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mb-14">
-            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--aci-primary)] mb-3">
-              what makes us different
-            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4 leading-tight">
-              Why ACI does QE differently.
+              What we do{'\u00a0'}differently.
             </h2>
             <p className="text-lg text-gray-600">
-              Four claims we make, each with a proof line that tells you
-              what the claim actually looks like in practice.
+              Four ways we work, and what that actually looks{'\u00a0'}like.
             </p>
           </div>
 
@@ -699,11 +695,8 @@ export default function QualityEngineeringPage() {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
-            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--aci-primary)] mb-3">
-              common questions
-            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] leading-tight">
-              Five honest answers.
+              Common questions.
             </h2>
           </div>
 
