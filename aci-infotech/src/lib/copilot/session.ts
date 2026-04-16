@@ -439,7 +439,45 @@ export async function upsertChatLead(
   // name+company on turns 1-3 and email alone on turn 5 would hand the
   // model a skeletal { email } payload and get a sparse report back.
   const leadId = upserted.id as string;
+  const RUN_LOCK_STALE_MS = 5 * 60 * 1000;
+
   const backgroundWork = async (): Promise<void> => {
+    // Claim the run via a conditional UPDATE that sets the lock only
+    // if no other run is in-flight (or the last one is stale enough
+    // that its owner must have died). If the update affects zero
+    // rows, another caller already owns the run — skip.
+    const claimedAt = new Date().toISOString();
+    const staleBefore = new Date(Date.now() - RUN_LOCK_STALE_MS).toISOString();
+    let claimed = false;
+    try {
+      const { data: claimRows } = await supabase
+        .from('chat_leads')
+        .update({ intelligence_running_since: claimedAt })
+        .eq('id', leadId)
+        .or(
+          `intelligence_running_since.is.null,intelligence_running_since.lt.${staleBefore}`,
+        )
+        .select('id');
+      claimed = Array.isArray(claimRows) && claimRows.length > 0;
+    } catch (err) {
+      // copilot-allow-silent-catch: claim failure is non-fatal. Proceed
+      // without the lock; worst case is a rare double-fire. Logged for
+      // visibility.
+      log.warn('tool', err, {
+        sessionId,
+        extra: { phase: 'upsertChatLead.claimRunLock', leadId, runKind },
+      });
+      claimed = true; // fall through to the work rather than silently drop
+    }
+    if (!claimed) {
+      log.info(
+        'tool',
+        `intelligence ${runKind} run already claimed for chat_lead ${leadId}, skipping`,
+        { sessionId, extra: { runKind } },
+      );
+      return;
+    }
+
     try {
       const intelligence = await generateIntelligence({
         name: fields.name ?? existing?.name ?? undefined,
@@ -485,6 +523,23 @@ export async function upsertChatLead(
         sessionId,
         extra: { phase: 'generateIntelligence', leadId, runKind },
       });
+    } finally {
+      // Always release the run lock so a later high-signal delta can
+      // kick off a refresh. A lingering lock would block all future
+      // refreshes for this session until the 5-minute staleness check
+      // finally lets another caller claim it.
+      try {
+        await supabase
+          .from('chat_leads')
+          .update({ intelligence_running_since: null })
+          .eq('id', leadId);
+      } catch (err) {
+        // copilot-allow-silent-catch: lock will auto-expire in 5 min.
+        log.warn('tool', err, {
+          sessionId,
+          extra: { phase: 'upsertChatLead.releaseRunLock', leadId, runKind },
+        });
+      }
     }
   };
 
