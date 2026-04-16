@@ -52,6 +52,14 @@ export interface PromptBuildInput {
    * answers without a panel reference in that case.
    */
   serverPanel?: ResolvedPanel | null;
+  /**
+   * 0-100 lead-quality score from the intelligence-report pipeline,
+   * set after the first email capture. Absent on turns before email
+   * is captured. Drives the LEAD TEMPERATURE block with explicit
+   * guidance for cold / warm / hot bands so the model can calibrate
+   * its ask pressure per turn.
+   */
+  leadScore?: number;
 }
 
 const AUDIENCE_SECTION = `
@@ -352,6 +360,35 @@ function formatQualificationState(
   return `${missingList}\n${nextLine}\n${meetingHint}`;
 }
 
+/**
+ * Bucket the 0-100 leadScore into a qualitative band and emit explicit
+ * guidance for this turn. Omitted entirely when no score is present
+ * (pre-email-capture turns) so the model isn't distracted by a block
+ * it can't act on.
+ *
+ * Boundaries: cold (<40), warm (40-70 inclusive), hot (>70).
+ */
+function formatLeadTemperature(leadScore: number | undefined): string | null {
+  if (typeof leadScore !== 'number' || Number.isNaN(leadScore)) return null;
+  const score = Math.max(0, Math.min(100, Math.round(leadScore)));
+  let band: 'cold' | 'warm' | 'hot';
+  let guidance: string;
+  if (score < 40) {
+    band = 'cold';
+    guidance =
+      'Keep delivering value. Do NOT push for email yet. Aim for one citation or one playbook offer this turn. The door is open but the visitor is not in buying posture.';
+  } else if (score <= 70) {
+    band = 'warm';
+    guidance =
+      'Earn one more concrete pain before asking for a meeting. Do NOT push schedule_meeting yet. This turn: one grounded insight tied to what they just said, one focused follow-up.';
+  } else {
+    band = 'hot';
+    guidance =
+      'Offer schedule_meeting. Explicit, specific windows. This is the moment. If email is captured and the visitor has surfaced a concrete pain, fire schedule_meeting with 2-3 natural-language windows.';
+  }
+  return `LEAD TEMPERATURE: ${band} (score ${score}).\nGUIDANCE: ${guidance}`;
+}
+
 function formatPageContext(ctx: PageContext): string {
   const parts: string[] = [];
   if (ctx.path) parts.push(`- path: ${ctx.path}`);
@@ -408,6 +445,11 @@ export function buildSystemPrompt(input: PromptBuildInput): string {
   lines.push('');
   lines.push('QUALIFICATION STATE (deterministic; trust this over your own memory)');
   lines.push(formatQualificationState(input.leadState, input.turnIndex));
+  const leadTemperature = formatLeadTemperature(input.leadScore);
+  if (leadTemperature) {
+    lines.push('');
+    lines.push(leadTemperature);
+  }
   if (input.engagementSignal) {
     lines.push('');
     lines.push(`ENGAGEMENT SIGNAL: ${input.engagementSignal}`);

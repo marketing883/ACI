@@ -296,6 +296,34 @@ async function readAdminClaimedMode(sessionId: string): Promise<'relay' | 'copil
   }
 }
 
+/**
+ * Fetch the deterministic lead_score for this session from chat_leads, set
+ * by the intelligence-generation fire-and-forget after the first email
+ * capture. Returns null if no row yet, or if intelligence hasn't run. The
+ * score feeds the LEAD TEMPERATURE block in buildSystemPrompt so the model
+ * can calibrate its ask pressure per turn.
+ */
+async function readLeadScore(sessionId: string): Promise<number | null> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  try {
+    const supabase = createClient(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { data } = await supabase
+      .from('chat_leads')
+      .select('lead_score')
+      .eq('session_id', sessionId)
+      .maybeSingle();
+    const score = data?.lead_score;
+    return typeof score === 'number' ? score : null;
+  } catch (err) {
+    log.warn('init', err, { sessionId, extra: { phase: 'readLeadScore' } });
+    return null;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Turn runner
 // ---------------------------------------------------------------------------
@@ -378,12 +406,15 @@ async function runTurn(input: RunTurnInput): Promise<void> {
     });
   }
 
+  const leadScore = await readLeadScore(body.sessionId);
+
   const systemPrompt = buildSystemPrompt({
     pageContext: enrichedContext,
     retrieved,
     leadState: body.leadState ?? {},
     turnIndex: body.turnIndex ?? body.messages.length,
     serverPanel: resolvedPanel,
+    leadScore: leadScore ?? undefined,
   });
 
   // Attempt each model in the chain until one streams successfully.
