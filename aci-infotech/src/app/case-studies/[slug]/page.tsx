@@ -188,6 +188,7 @@ interface CaseStudyDetail {
   slug: string;
   client: string;
   logo_url?: string;
+  featured_image?: string;
   industry: string;
   service: string;
   headline: string;
@@ -282,8 +283,21 @@ export default async function CaseStudyPage({ params }: PageProps) {
     return (
       <main className="min-h-screen">
         {/* Hero Section */}
-        <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative bg-[var(--aci-secondary)] pt-32 pb-20 overflow-hidden">
+          {dbStudy.featured_image_url && (
+            <>
+              <Image
+                src={dbStudy.featured_image_url}
+                alt=""
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover opacity-30"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[var(--aci-secondary)] via-[var(--aci-secondary)]/85 to-[var(--aci-secondary)]/50" />
+            </>
+          )}
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Breadcrumb */}
             <Link
               href="/case-studies"
@@ -500,8 +514,21 @@ export default async function CaseStudyPage({ params }: PageProps) {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-[var(--aci-secondary)] pt-32 pb-20 overflow-hidden">
+        {study.featured_image && (
+          <>
+            <Image
+              src={study.featured_image}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover opacity-30"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--aci-secondary)] via-[var(--aci-secondary)]/85 to-[var(--aci-secondary)]/50" />
+          </>
+        )}
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <Link
             href="/case-studies"
