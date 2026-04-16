@@ -10,6 +10,12 @@ import {
   ArrowDown,
   RotateCcw,
   X,
+  Zap,
+  Bot,
+  GitBranch,
+  Gauge,
+  ShieldCheck,
+  Activity,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
@@ -88,6 +94,68 @@ const qaVsQe = {
     'AI agents scaling the coverage humans cannot keep up with',
   ],
 } as const;
+
+// Six capabilities, delivered as part of engineering, not separate
+// from it. Each card stays short: one-line description, three
+// concrete outcomes, the tools we most often reach for. The tools
+// are starting points; the section below tells the visitor we meet
+// them on whatever stack they already run.
+const capabilities = [
+  {
+    id: 'in-sprint-automation',
+    title: 'In-sprint test automation',
+    icon: Zap,
+    description:
+      'End-to-end, integration, and unit suites written the same sprint the feature lands. Executable tests on every commit, not a spreadsheet of manual steps.',
+    outcomes: ['90%+ automation as a default', 'Tests run in under 10 minutes', 'Zero flaky-test policy'],
+    stack: ['Playwright', 'Cypress', 'Jest', 'Pytest', 'Selenium'],
+  },
+  {
+    id: 'agentic-ai-coverage',
+    title: 'Agentic AI test coverage',
+    icon: Bot,
+    description:
+      'Autonomous agents that generate, execute, and maintain suites. Reads user stories, code, and past defects to find cases your team did not think of.',
+    outcomes: ['Coverage up 3x', 'Self-healing UI selectors', 'Predictive defect analysis'],
+    stack: ['Mabl', 'Testim', 'Applitools', 'Custom agents'],
+  },
+  {
+    id: 'cicd-quality-gates',
+    title: 'CI/CD quality gates',
+    icon: GitBranch,
+    description:
+      'Tests wired into pull request checks, deploy stages, and post-deploy smoke. Bad merges blocked at source; every merge hits production with confidence.',
+    outcomes: ['Automated quality gates', 'Bad merges blocked at source', 'Deployment confidence'],
+    stack: ['GitHub Actions', 'GitLab CI', 'Jenkins', 'CircleCI', 'ArgoCD'],
+  },
+  {
+    id: 'performance-engineering',
+    title: 'Performance and load engineering',
+    icon: Gauge,
+    description:
+      'Real-scale validation before production finds it for you. Load testing, performance benchmarking, capacity planning, all part of delivery.',
+    outcomes: ['Validated scale targets', 'Performance SLA baselines', 'No surprise outages'],
+    stack: ['k6', 'JMeter', 'Gatling', 'Locust', 'BlazeMeter'],
+  },
+  {
+    id: 'security-as-engineering',
+    title: 'Security testing as engineering',
+    icon: ShieldCheck,
+    description:
+      'SAST, DAST, dependency scanning, and penetration testing in the pipeline. A continuous discipline, not a late-stage audit.',
+    outcomes: ['Vulnerabilities caught pre-prod', 'Continuous security scanning', 'Compliance-ready audits'],
+    stack: ['OWASP ZAP', 'Snyk', 'Checkmarx', 'Burp Suite'],
+  },
+  {
+    id: 'observability-fed-quality',
+    title: 'Observability-fed quality',
+    icon: Activity,
+    description:
+      'Production telemetry loops back into test strategy. Coverage gaps get detected from real traffic; flakiness quarantined before it breaks trust in CI.',
+    outcomes: ['Coverage driven by real traffic', 'Flaky tests quarantined fast', 'Quality trends, not hunches'],
+    stack: ['Datadog', 'SonarQube', 'Grafana', 'Custom dashboards'],
+  },
+] as const;
 
 // Placeholder FAQs used only for the FAQSchema structured data in this
 // first pass. Full FAQ UI ships in a later sub-task and will replace
@@ -296,6 +364,81 @@ export default function QualityEngineeringPage() {
           <p className="mt-10 text-sm text-gray-500 italic max-w-3xl">
             Same engineering discipline, sharper name. Visitors who came
             looking for QA find it here; what we actually ship is QE.
+          </p>
+        </div>
+      </section>
+
+      {/* Capabilities grid */}
+      <section className="py-20 lg:py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mb-14">
+            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--aci-primary)] mb-3">
+              what we actually ship
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4 leading-tight">
+              Six capabilities, delivered as part of engineering.
+            </h2>
+            <p className="text-lg text-gray-600">
+              Not as a separate phase, not by a different team, not on a
+              different contract. Part of how the system is built.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {capabilities.map((cap) => {
+              const Icon = cap.icon;
+              return (
+                <div
+                  key={cap.id}
+                  className="bg-white p-7 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col"
+                >
+                  <div className="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-[var(--aci-primary)]/10 text-[var(--aci-primary)] mb-4">
+                    <Icon className="w-5 h-5" />
+                  </div>
+
+                  <h3 className="text-lg font-semibold text-[var(--aci-secondary)] mb-2 leading-snug">
+                    {cap.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-5 leading-relaxed flex-grow">
+                    {cap.description}
+                  </p>
+
+                  <div className="mb-5">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-gray-500 mb-2">
+                      outcomes
+                    </div>
+                    <ul className="space-y-1.5">
+                      {cap.outcomes.map((o) => (
+                        <li
+                          key={o}
+                          className="flex items-start gap-2 text-xs text-gray-700"
+                        >
+                          <CheckCircle className="w-3 h-3 text-[var(--aci-primary)] flex-shrink-0 mt-0.5" />
+                          <span>{o}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5 pt-4 border-t border-gray-100">
+                    {cap.stack.slice(0, 4).map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-2 py-0.5 bg-gray-100 rounded text-[11px] text-gray-600 font-mono"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="mt-10 text-sm text-gray-500 max-w-3xl">
+            Default stacks above. We meet you where you are; if your team
+            runs a different toolchain we plug into that rather than
+            forcing a swap.
           </p>
         </div>
       </section>
