@@ -328,17 +328,9 @@ export default function QualityEngineeringPage() {
                   href="/contact?service=quality-engineering"
                   variant="primary"
                   size="lg"
+                  rightIcon={<ArrowRight className="w-4 h-4" />}
                 >
-                  Talk to a QE engineer
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-                <Button
-                  href="/services"
-                  variant="ghost"
-                  size="lg"
-                  className="text-white border-white hover:bg-white/10"
-                >
-                  See all services
+                  Get Started
                 </Button>
               </div>
             </div>
