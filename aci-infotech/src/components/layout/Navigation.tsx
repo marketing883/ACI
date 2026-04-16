@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import VideoLightbox from '@/components/ui/VideoLightbox';
 import {
   Menu,
   X,
@@ -378,6 +379,8 @@ interface ServicesMegaMenuProps {
 }
 
 function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
+  const [videoOpen, setVideoOpen] = useState(false);
+
   return (
     <div className="flex w-[850px]">
       {/* Services List */}
@@ -431,8 +434,13 @@ function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
           </p>
         </div>
 
-        {/* Video Placeholder with Play Button */}
-        <div className="relative aspect-video bg-black/30 rounded-xl overflow-hidden group cursor-pointer">
+        {/* Video tile — opens lightbox */}
+        <button
+          type="button"
+          onClick={() => setVideoOpen(true)}
+          className="relative aspect-video bg-black/30 rounded-xl overflow-hidden group cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-[var(--aci-primary)] focus:ring-offset-2 focus:ring-offset-[var(--aci-secondary)]"
+          aria-label="Play MSCI case study video"
+        >
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute inset-0 bg-[var(--aci-primary)]/20" />
           <div className="absolute inset-0 flex items-center justify-center">
@@ -441,9 +449,9 @@ function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
             </div>
           </div>
           <div className="absolute bottom-2 left-2 right-2">
-            <span className="text-xs text-white/80">2 min watch</span>
+            <span className="text-xs text-white/80">4 min watch</span>
           </div>
-        </div>
+        </button>
 
         <Link
           href="/case-studies/msci-data-automation"
@@ -452,6 +460,13 @@ function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
           View case study <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
+
+      <VideoLightbox
+        open={videoOpen}
+        onClose={() => setVideoOpen(false)}
+        src="/video/Financial-giant-SAP-Modernization.mp4"
+        title="MSCI — Enterprise Data Transformation"
+      />
     </div>
   );
 }
