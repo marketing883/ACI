@@ -1,5 +1,15 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import {
+  ArrowRight,
+  CheckCircle,
+  PenLine,
+  Code2,
+  Rocket,
+  Eye,
+  Sparkles,
+  ArrowDown,
+  RotateCcw,
+} from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
@@ -24,6 +34,38 @@ const heroKeyOutcomes = [
   'Production telemetry feeding test strategy, not guesswork',
   'Zero regressions as a default, not a promise',
 ];
+
+// The "Quality Loop" infographic. Four stages of delivery, each with
+// what the stage produces and the specific AI augmentation that
+// applies there. The loop-back arrow at the bottom is the whole
+// point of the visual: quality is a continuous property of the
+// system, not a late-stage gate.
+const qualityLoopStages = [
+  {
+    label: 'Design',
+    icon: PenLine,
+    work: 'Risk models, test-first specs, acceptance criteria tied to code.',
+    aiRole: 'agentic test generation from stories',
+  },
+  {
+    label: 'Build',
+    icon: Code2,
+    work: 'In-sprint automation, unit and integration coverage, static analysis.',
+    aiRole: 'self-healing suites, drift detection',
+  },
+  {
+    label: 'Ship',
+    icon: Rocket,
+    work: 'CI gates, load validation, security scans on every pull request.',
+    aiRole: 'flaky-test prediction, quarantine',
+  },
+  {
+    label: 'Observe',
+    icon: Eye,
+    work: 'Production telemetry, SRE-adjacent quality, feedback into tests.',
+    aiRole: 'coverage gap detection, defect clustering',
+  },
+] as const;
 
 // Placeholder FAQs used only for the FAQSchema structured data in this
 // first pass. Full FAQ UI ships in a later sub-task and will replace
@@ -104,15 +146,62 @@ export default function QualityEngineeringPage() {
               </div>
             </div>
 
-            {/* Right column: Quality Loop infographic. Built in a
-                follow-up sub-task so the page scaffold can land
-                first for review. */}
+            {/* Right column: Quality Loop. Four delivery stages as
+                stacked cards, each annotated with the AI role that
+                applies there. The loop-back arrow is the point of
+                the visual. */}
             <div className="relative hidden lg:block">
-              <div className="bg-gray-800/80 rounded-2xl p-8 shadow-2xl border border-gray-700/50 min-h-[460px] flex items-center justify-center">
-                <div className="text-sm text-gray-500 font-mono">
-                  Quality Loop infographic (next sub-task)
+              <div className="bg-gray-900/80 rounded-2xl p-6 shadow-2xl border border-gray-700/60 backdrop-blur-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-gray-500">
+                    the quality loop
+                  </div>
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-[var(--aci-lime)]/10 px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-[var(--aci-lime)] ring-1 ring-[var(--aci-lime)]/30">
+                    <Sparkles className="w-3 h-3" />
+                    ai-augmented
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  {qualityLoopStages.map((stage, idx) => {
+                    const StageIcon = stage.icon;
+                    const isLast = idx === qualityLoopStages.length - 1;
+                    return (
+                      <div key={stage.label}>
+                        <div className="rounded-xl border border-gray-700/60 bg-gray-800/60 p-3.5">
+                          <div className="flex items-center gap-2.5 mb-1.5">
+                            <StageIcon className="w-4 h-4 text-[var(--aci-primary-light)]" />
+                            <div className="text-sm font-semibold text-white tracking-wide">
+                              {stage.label}
+                            </div>
+                          </div>
+                          <p className="text-xs leading-snug text-gray-400 mb-2.5">
+                            {stage.work}
+                          </p>
+                          <div className="inline-flex items-center gap-1.5 rounded-md bg-[var(--aci-lime)]/10 px-2 py-0.5 text-[10px] font-mono text-[var(--aci-lime)]/90 ring-1 ring-[var(--aci-lime)]/20">
+                            <Sparkles className="w-2.5 h-2.5" />
+                            ai: {stage.aiRole}
+                          </div>
+                        </div>
+                        {!isLast && (
+                          <div className="flex justify-center py-0.5">
+                            <ArrowDown className="w-3.5 h-3.5 text-gray-600" />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Loop back to Design */}
+                <div className="mt-3 flex items-center justify-center gap-2 rounded-lg border border-dashed border-gray-700/60 bg-gray-800/30 py-2">
+                  <RotateCcw className="w-3.5 h-3.5 text-gray-500" />
+                  <span className="text-[11px] font-mono text-gray-500">
+                    feedback into the next design cycle
+                  </span>
                 </div>
               </div>
+              <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
             </div>
           </div>
         </div>
