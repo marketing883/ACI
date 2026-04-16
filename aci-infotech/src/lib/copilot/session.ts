@@ -243,17 +243,43 @@ export async function upsertChatLead(
   // that includes email.
   if (!fields.email) return { freshEmail: false };
 
-  // Detect "fresh email": is this session's row already in the table with
-  // intelligence already attached? If not, we'll fire intelligence after
-  // the upsert. We only fire once per session to avoid burning budget on
-  // every qualify_lead call.
+  // Read the existing row once. Used for two things:
+  //   1. Decide whether to fire intelligence (needsIntelligence).
+  //   2. Merge incoming fields with existing column values so un-included
+  //      fields don't get overwritten to null on the upsert. qualify_lead
+  //      fires with only the fields that surfaced THIS turn, so a later
+  //      call like { email, painPoint } would previously null out name,
+  //      company, role, etc. The pick() helper below preserves existing
+  //      values when no new signal is present.
+  let existing:
+    | {
+        id?: string;
+        intelligence?: unknown;
+        name?: string | null;
+        company?: string | null;
+        website?: string | null;
+        phone?: string | null;
+        job_title?: string | null;
+        service_interest?: string | null;
+        requirements?: string | null;
+        preferred_time?: string | null;
+        budget?: string | null;
+        priority?: string | null;
+        intent?: string | null;
+        pain_point?: string | null;
+        decision_role?: string | null;
+      }
+    | null = null;
   let needsIntelligence = false;
   try {
-    const { data: existing } = await supabase
+    const { data } = await supabase
       .from('chat_leads')
-      .select('id, intelligence')
+      .select(
+        'id, intelligence, name, company, website, phone, job_title, service_interest, requirements, preferred_time, budget, priority, intent, pain_point, decision_role',
+      )
       .eq('session_id', sessionId)
       .maybeSingle();
+    existing = data ?? null;
     needsIntelligence = !existing || existing.intelligence == null;
   } catch (err) {
     // copilot-allow-silent-catch: read failure is non-fatal; we err on the
@@ -262,26 +288,38 @@ export async function upsertChatLead(
     needsIntelligence = true;
   }
 
+  // pick: prefer a non-empty incoming value; otherwise keep whatever is
+  // already in chat_leads; otherwise null. This is the core of the
+  // non-destructive upsert.
+  const pick = (
+    incoming: string | undefined,
+    existingVal: string | null | undefined,
+  ): string | null => {
+    const trimmed = typeof incoming === 'string' ? incoming.trim() : '';
+    if (trimmed.length > 0) return trimmed;
+    return existingVal ?? null;
+  };
+
   const { data: upserted, error } = await supabase
     .from('chat_leads')
     .upsert(
       {
         session_id: sessionId,
-        name: fields.name ?? null,
+        name: pick(fields.name, existing?.name),
         email: fields.email,
-        company: fields.company ?? null,
-        website: fields.website ?? null,
-        phone: fields.phone ?? null,
-        job_title: fields.jobTitle ?? null,
+        company: pick(fields.company, existing?.company),
+        website: pick(fields.website, existing?.website),
+        phone: pick(fields.phone, existing?.phone),
+        job_title: pick(fields.jobTitle, existing?.job_title),
         location: null,
-        service_interest: fields.serviceInterest ?? null,
-        requirements: fields.team ?? null,
-        preferred_time: fields.timeline ?? null,
-        budget: fields.budget ?? null,
-        priority: fields.priority ?? null,
-        intent: fields.intent ?? null,
-        pain_point: fields.painPoint ?? null,
-        decision_role: fields.decisionRole ?? null,
+        service_interest: pick(fields.serviceInterest, existing?.service_interest),
+        requirements: pick(fields.team, existing?.requirements),
+        preferred_time: pick(fields.timeline, existing?.preferred_time),
+        budget: pick(fields.budget, existing?.budget),
+        priority: pick(fields.priority, existing?.priority),
+        intent: pick(fields.intent, existing?.intent),
+        pain_point: pick(fields.painPoint, existing?.pain_point),
+        decision_role: pick(fields.decisionRole, existing?.decision_role),
         conversation: conversation ?? [],
         source: 'atheros_v2',
       },
