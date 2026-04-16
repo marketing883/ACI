@@ -74,6 +74,32 @@ const qualityLoopStages = [
   },
 ] as const;
 
+// Four concrete places AI earns its keep in QE. Resist the urge to
+// abstract; each card describes a specific problem and a specific
+// agent behaviour. No "AI-powered" filler.
+const aiInLoop = [
+  {
+    id: 'test-generation',
+    title: 'Test generation',
+    body: 'Agents ingest user stories, code changes, and past defects, then generate the test cases humans miss. Coverage climbs without a proportional headcount climb.',
+  },
+  {
+    id: 'self-healing',
+    title: 'Self-healing suites',
+    body: 'UI selectors drift, tests break, engineers lose the week fixing them. An agent watches the drift, updates selectors, and flags the ones it cannot resolve. Your team writes new tests instead of babysitting old ones.',
+  },
+  {
+    id: 'flaky-prediction',
+    title: 'Flaky-test prediction',
+    body: 'Before a test becomes a chronic flake, a model sees the pattern and quarantines it. The pipeline stays trustworthy; engineers keep merging with confidence.',
+  },
+  {
+    id: 'defect-clustering',
+    title: 'Defect pattern analysis',
+    body: 'Bugs cluster. An agent reads the defect log, groups by root cause, and tells you which class of bug to eliminate next. Root cause, not whack-a-mole.',
+  },
+] as const;
+
 // "From QA to QE" — an explicit positioning shift so visitors don't
 // read the rename as a cosmetic swap. Each side is a set of short,
 // concrete lines that describe how the work actually happens today
@@ -439,6 +465,70 @@ export default function QualityEngineeringPage() {
             Default stacks above. We meet you where you are; if your team
             runs a different toolchain we plug into that rather than
             forcing a swap.
+          </p>
+        </div>
+      </section>
+
+      {/* Where AI Actually Enters the Loop */}
+      <section className="py-20 lg:py-24 bg-[var(--aci-secondary)] text-white relative overflow-hidden">
+        {/* subtle grid decoration */}
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" aria-hidden>
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
+              backgroundSize: '48px 48px',
+            }}
+          />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="max-w-3xl mb-14">
+            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--aci-lime)] mb-3">
+              {'// agentic ai'}
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+              Where AI actually enters the loop.
+            </h2>
+            <p className="text-lg text-gray-300">
+              Not a buzzword section. Four places agents earn their keep,
+              with the specific work they do and the problem they solve.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-5">
+            {aiInLoop.map((block, idx) => (
+              <div
+                key={block.id}
+                className="rounded-xl border border-gray-700/60 bg-gray-900/40 p-6 hover:bg-gray-900/70 transition-colors backdrop-blur-sm"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-[var(--aci-lime)]/10 text-[var(--aci-lime)] ring-1 ring-[var(--aci-lime)]/25">
+                    <span className="font-mono text-sm">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="w-3.5 h-3.5 text-[var(--aci-lime)]" />
+                      <h3 className="text-lg font-semibold text-white">
+                        {block.title}
+                      </h3>
+                    </div>
+                    <p className="text-sm text-gray-300 leading-relaxed">
+                      {block.body}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-10 text-sm text-gray-400 italic max-w-3xl">
+            Practical order: self-healing in the first month, coverage gap
+            detection shortly after, generation from stories and defect
+            clustering once the baseline suite is stable.
           </p>
         </div>
       </section>
