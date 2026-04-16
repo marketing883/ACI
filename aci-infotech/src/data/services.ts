@@ -122,7 +122,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'AWS',
       'Braze'
     ],
-    slug: 'convenience-retailer-realtime-data'
+    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain'
   },
   {
     client_descriptor: 'Fortune 500 Hospitality Client',

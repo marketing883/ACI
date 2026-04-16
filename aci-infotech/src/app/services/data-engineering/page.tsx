@@ -89,7 +89,7 @@ const caseStudies = [
     technologies: ['SAP S/4HANA', 'Python', 'Azure DevOps'],
   },
   {
-    slug: 'convenience-retailer-realtime-data',
+    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
     client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     challenge: 'Payment systems across 600+ locations needed real-time data with zero downtime',

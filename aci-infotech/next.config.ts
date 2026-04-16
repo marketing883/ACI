@@ -46,7 +46,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/case-studies/racetrac-real-time-data',
-        destination: '/case-studies/convenience-retailer-realtime-data',
+        destination: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/convenience-retailer-realtime-data',
+        destination: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
         permanent: true,
       },
       {

@@ -207,7 +207,7 @@ export const ENTITY_INDEX: Readonly<Record<string, EntityIndexEntry>> = {
     "panelType": "case",
     "title": "40+ finance systems post-acquisitions needed consolidation into unified platform"
   },
-  "convenience-retailer-realtime-data": {
+  "databricks-modernization-ai-enablement-for-leading-c-store-chain": {
     "panelType": "case",
     "title": "Payment systems across 600+ locations needed real-time data with zero downtime"
   },
