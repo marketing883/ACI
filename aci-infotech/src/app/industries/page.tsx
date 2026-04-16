@@ -153,11 +153,11 @@ export default function IndustriesPage() {
               <div className="text-gray-300">Enterprise Clients</div>
             </div>
             <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-white mb-2">98%</div>
+              <div className="text-4xl font-bold text-white mb-2">95%</div>
               <div className="text-gray-300">Client Retention</div>
             </div>
             <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-white mb-2">$500M+</div>
+              <div className="text-4xl font-bold text-white mb-2">$1B+</div>
               <div className="text-gray-300">Value Delivered</div>
             </div>
           </div>

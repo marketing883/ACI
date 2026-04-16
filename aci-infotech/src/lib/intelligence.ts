@@ -208,7 +208,7 @@ export async function generateIntelligence(lead: LeadData): Promise<Intelligence
   const prompt = `You are a B2B sales intelligence analyst for ACI Infotech, an enterprise tech consulting firm.
 
 ACI CONTEXT:
-- 80+ Fortune 500 clients, $500M+ value delivered, 98% retention
+- 80+ Fortune 500 clients, $1B+ value delivered, 95% retention
 - Services: Data Engineering (Databricks, Snowflake, dbt), AI/ML (MLOps, GenAI, ArqAI), Cloud (AWS, Azure, K8s), MarTech/CDP (Salesforce, Braze), Digital Transformation (SAP S/4HANA, ServiceNow), Cyber Security
 - Case Studies: MSCI ($12M savings, SAP consolidation), RaceTrac (25% promotion lift, MarTech), Sodexo (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
 
@@ -390,7 +390,7 @@ function createFallbackNurturingContent(whitepaperSlug: string): WhitepaperNurtu
   // Default fallback
   return {
     relatedTopics: ['Enterprise Architecture', 'Digital Transformation', 'Technology Strategy'],
-    valueProps: ['80+ Fortune 500 clients', '$500M+ value delivered', '98% client retention'],
+    valueProps: ['80+ Fortune 500 clients', '$1B+ value delivered', '95% client retention'],
     caseStudies: ['MSCI: Enterprise-wide data transformation', 'Sodexo: 400K employee platform'],
     nextSteps: ['Schedule an architecture call', 'Explore our case studies', 'Connect with our architects'],
     ctaText: 'Schedule Architecture Call',
@@ -418,7 +418,7 @@ export async function generateWhitepaperNurturing(
   const prompt = `You are a B2B content strategist for ACI Infotech, an enterprise tech consulting firm.
 
 ACI CONTEXT:
-- 80+ Fortune 500 clients, $500M+ value delivered, 98% retention
+- 80+ Fortune 500 clients, $1B+ value delivered, 95% retention
 - Services: Data Engineering (Databricks, Snowflake, dbt), AI/ML (MLOps, GenAI, ArqAI), Cloud (AWS, Azure, K8s), MarTech/CDP (Salesforce, Braze), Digital Transformation (SAP S/4HANA, ServiceNow)
 - Case Studies: MSCI ($12M savings, SAP consolidation), RaceTrac (25% promotion lift, MarTech), Sodexo (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
 

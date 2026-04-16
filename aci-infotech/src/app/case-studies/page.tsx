@@ -498,7 +498,7 @@ export default function CaseStudiesPage() {
                 <div className="text-gray-400">Client Engagements</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-white">$500M+</div>
+                <div className="text-4xl font-bold text-white">$1B+</div>
                 <div className="text-gray-400">Value Delivered</div>
               </div>
               <div className="text-center">

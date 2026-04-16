@@ -321,7 +321,7 @@ export async function sendWhitepaperThankYouEmail(data: WhitepaperThankYouData):
     console.error('[Email] Failed to generate nurturing content, using defaults:', error);
     nurturing = {
       relatedTopics: ['Enterprise Architecture', 'Digital Transformation', 'Technology Strategy'],
-      valueProps: ['80+ Fortune 500 clients', '$500M+ value delivered', '98% client retention'],
+      valueProps: ['80+ Fortune 500 clients', '$1B+ value delivered', '95% client retention'],
       caseStudies: ['MSCI: Enterprise-wide data transformation', 'Sodexo: 400K employee platform'],
       nextSteps: ['Schedule an architecture call', 'Explore our case studies', 'Connect with our architects'],
       ctaText: 'Schedule Architecture Call',

@@ -169,7 +169,7 @@ const trackRecord = [
   { number: '19 Years', label: 'In business since 2006', context: 'Stable, growing, here for the long term' },
   { number: '6,250+', label: 'Technologists globally', context: 'Engineers, architects, data scientists' },
   { number: '10 Countries', label: 'Global delivery centers', context: 'US, India, and beyond' },
-  { number: '85%+', label: 'Client retention rate', context: 'Clients come back because we deliver' },
+  { number: '95%', label: 'Client retention rate', context: 'Clients come back because we deliver' },
   { number: '70%', label: 'Senior engineers (10+ years)', context: 'Not junior analysts learning on your dime' },
   { number: '6-12 Months', label: 'Average project timeline', context: 'Enterprise scale, realistic timelines' },
 ];
