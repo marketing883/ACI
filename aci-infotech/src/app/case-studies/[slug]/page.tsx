@@ -38,13 +38,13 @@ async function getCaseStudyBySlug(slug: string) {
 const caseStudiesData: Record<string, CaseStudyDetail> = {
   'msci-data-automation': {
     slug: 'msci-data-automation',
-    client: 'MSCI',
+    client: 'Global Financial Giant',
     industry: 'Financial Services',
     service: 'Data Engineering',
     headline: 'Consolidating 40+ Finance Systems Post-Acquisition',
-    subheadline: 'How we helped MSCI achieve $12M in operational savings through SAP S/4HANA implementation',
+    subheadline: 'How we helped a global financial giant achieve $12M in operational savings through SAP S/4HANA implementation',
     challenge: {
-      summary: 'Following multiple acquisitions, MSCI faced a critical challenge: 40+ disparate finance systems needed consolidation without disrupting financial reporting cycles.',
+      summary: 'Following multiple acquisitions, the client faced a critical challenge: 40+ disparate finance systems needed consolidation without disrupting financial reporting cycles.',
       points: [
         'Multiple legacy ERP systems from acquired companies',
         'Inconsistent data formats and business processes',
@@ -62,7 +62,7 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
         'Custom reporting dashboards for finance leadership',
         'Comprehensive training program for 200+ finance users',
       ],
-      approach: 'Our team worked in 2-week sprints with daily standups with MSCI stakeholders. We used a parallel-run approach to validate data accuracy before each cutover phase.',
+      approach: 'Our team worked in 2-week sprints with daily standups with client stakeholders. We used a parallel-run approach to validate data accuracy before each cutover phase.',
     },
     results: [
       { metric: '$12M', description: 'Operational savings in year one', detail: 'Achieved through process automation and system consolidation' },
@@ -77,19 +77,19 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
     testimonial: {
       quote: "ACI Infotech's team demonstrated exceptional expertise in navigating our complex post-merger landscape. They delivered on an aggressive timeline while maintaining the highest quality standards.",
       author: 'VP of Finance Operations',
-      title: 'MSCI',
+      title: 'Global Financial Giant',
     },
     relatedStudies: ['sodexo-unified-data', 'pharma-data-lake'],
   },
   'racetrac-martech': {
     slug: 'racetrac-martech',
-    client: 'RaceTrac',
+    client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     service: 'MarTech & CDP',
     headline: 'Real-Time Customer Engagement Across 600+ Locations',
     subheadline: 'Building a unified customer data platform that increased promotion effectiveness by 25%',
     challenge: {
-      summary: 'RaceTrac needed to modernize their payment infrastructure and create a unified view of customers across 600+ convenience store locations.',
+      summary: 'The client needed to modernize their payment infrastructure and create a unified view of customers across 600+ convenience store locations.',
       points: [
         'Fragmented customer data across multiple systems',
         'Payment systems requiring modernization with zero downtime',
@@ -119,21 +119,21 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
     timeline: '12 months',
     teamSize: '18 consultants',
     testimonial: {
-      quote: "I'm thrilled with our Data Team's achievement at ACI Infotech. They've flawlessly delivered top-tier Digital Data to Altria, marking a critical milestone for RaceTrac.",
+      quote: "I'm thrilled with our Data Team's achievement at ACI Infotech. They've flawlessly delivered top-tier digital data capability, a critical milestone for our convenience retail operations.",
       author: 'Director of Data and MarTech',
-      title: 'RaceTrac',
+      title: 'Fortune 500 Convenience Retailer',
     },
     relatedStudies: ['retail-personalization', 'msci-data-automation'],
   },
   'sodexo-unified-data': {
     slug: 'sodexo-unified-data',
-    client: 'Sodexo',
+    client: 'Global Hospitality Leader',
     industry: 'Hospitality',
     service: 'Data Engineering',
     headline: 'Unified Global Data Platform for 400K+ Employees',
     subheadline: 'Creating a single source of truth across 80+ countries',
     challenge: {
-      summary: 'Sodexo\'s global operations spanning 80+ countries faced data fragmentation that hindered strategic decision-making.',
+      summary: 'The client\'s global operations spanning 80+ countries faced data fragmentation that hindered strategic decision-making.',
       points: [
         'Data scattered across regional silos with inconsistent formats',
         'No unified view of global supply chain operations',
@@ -165,7 +165,7 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
     testimonial: {
       quote: "I'm extremely satisfied with ACI Infotech, especially their work on IICS Informatica and MDM integrations. Their commitment to deliverables without compromising quality is impressive.",
       author: 'Senior Director',
-      title: 'Sodexo',
+      title: 'Global Hospitality Leader',
     },
     relatedStudies: ['msci-data-automation', 'pharma-data-lake'],
   },
