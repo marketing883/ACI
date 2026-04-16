@@ -203,15 +203,15 @@ export const ENTITY_INDEX: Readonly<Record<string, EntityIndexEntry>> = {
     "panelType": "service",
     "title": "Data Engineering"
   },
-  "msci-data-automation": {
+  "financial-giant-sap-consolidation": {
     "panelType": "case",
     "title": "40+ finance systems post-acquisitions needed consolidation into unified platform"
   },
-  "racetrac-real-time-data": {
+  "convenience-retailer-realtime-data": {
     "panelType": "case",
     "title": "Payment systems across 600+ locations needed real-time data with zero downtime"
   },
-  "sodexo-unified-data": {
+  "hospitality-leader-unified-data": {
     "panelType": "case",
     "title": "Global operations with data scattered across regional silos"
   },
@@ -251,7 +251,7 @@ export const ENTITY_INDEX: Readonly<Record<string, EntityIndexEntry>> = {
     "panelType": "service",
     "title": "MarTech CDP"
   },
-  "racetrac-martech": {
+  "convenience-retailer-martech": {
     "panelType": "case",
     "title": "Needed a unified digital guest experience and loyalty platform across 600+ locations with real-time personalization at the point of sale."
   },

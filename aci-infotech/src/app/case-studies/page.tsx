@@ -33,7 +33,7 @@ interface CaseStudy {
 // Demo case study data - used as fallback
 const demoCaseStudies: CaseStudy[] = [
   {
-    slug: 'msci-data-automation',
+    slug: 'financial-giant-sap-consolidation',
     client: 'Global Financial Giant',
     industry: 'Financial Services',
     service: 'Data Engineering',
@@ -49,7 +49,7 @@ const demoCaseStudies: CaseStudy[] = [
     is_featured: true,
   },
   {
-    slug: 'racetrac-martech',
+    slug: 'convenience-retailer-martech',
     client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     service: 'MarTech & CDP',
@@ -65,7 +65,7 @@ const demoCaseStudies: CaseStudy[] = [
     is_featured: true,
   },
   {
-    slug: 'sodexo-unified-data',
+    slug: 'hospitality-leader-unified-data',
     client: 'Global Hospitality Leader',
     industry: 'Hospitality',
     service: 'Data Engineering',

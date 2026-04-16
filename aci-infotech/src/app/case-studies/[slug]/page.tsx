@@ -36,8 +36,8 @@ async function getCaseStudyBySlug(slug: string) {
 
 // Legacy hardcoded case study data (fallback for old URLs)
 const caseStudiesData: Record<string, CaseStudyDetail> = {
-  'msci-data-automation': {
-    slug: 'msci-data-automation',
+  'financial-giant-sap-consolidation': {
+    slug: 'financial-giant-sap-consolidation',
     client: 'Global Financial Giant',
     industry: 'Financial Services',
     service: 'Data Engineering',
@@ -79,10 +79,10 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
       author: 'VP of Finance Operations',
       title: 'Global Financial Giant',
     },
-    relatedStudies: ['sodexo-unified-data', 'pharma-data-lake'],
+    relatedStudies: ['hospitality-leader-unified-data', 'pharma-data-lake'],
   },
-  'racetrac-martech': {
-    slug: 'racetrac-martech',
+  'convenience-retailer-martech': {
+    slug: 'convenience-retailer-martech',
     client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     service: 'MarTech & CDP',
@@ -123,10 +123,10 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
       author: 'Director of Data and MarTech',
       title: 'Fortune 500 Convenience Retailer',
     },
-    relatedStudies: ['retail-personalization', 'msci-data-automation'],
+    relatedStudies: ['retail-personalization', 'financial-giant-sap-consolidation'],
   },
-  'sodexo-unified-data': {
-    slug: 'sodexo-unified-data',
+  'hospitality-leader-unified-data': {
+    slug: 'hospitality-leader-unified-data',
     client: 'Global Hospitality Leader',
     industry: 'Hospitality',
     service: 'Data Engineering',
@@ -167,7 +167,7 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
       author: 'Senior Director',
       title: 'Global Hospitality Leader',
     },
-    relatedStudies: ['msci-data-automation', 'pharma-data-lake'],
+    relatedStudies: ['financial-giant-sap-consolidation', 'pharma-data-lake'],
   },
 };
 

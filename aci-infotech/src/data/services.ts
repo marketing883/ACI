@@ -96,7 +96,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'Python',
       'Azure DevOps'
     ],
-    slug: 'msci-data-automation'
+    slug: 'financial-giant-sap-consolidation'
   },
   {
     client_descriptor: 'Fortune 500 Retail Client',
@@ -122,7 +122,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'AWS',
       'Braze'
     ],
-    slug: 'racetrac-real-time-data'
+    slug: 'convenience-retailer-realtime-data'
   },
   {
     client_descriptor: 'Fortune 500 Hospitality Client',
@@ -147,7 +147,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'MDM',
       'Cloud Integration'
     ],
-    slug: 'sodexo-unified-data'
+    slug: 'hospitality-leader-unified-data'
   }
 ],
     processPhases: [
@@ -589,7 +589,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'AWS',
       'Databricks'
     ],
-    slug: 'racetrac-martech'
+    slug: 'convenience-retailer-martech'
   },
   {
     client_descriptor: 'Fortune 500 Retail Client',
@@ -1054,7 +1054,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       'AWS',
       'Kafka'
     ],
-    slug: 'racetrac-martech'
+    slug: 'convenience-retailer-martech'
   }
 ],
     processPhases: [

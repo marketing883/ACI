@@ -26,6 +26,29 @@ const nextConfig: NextConfig = {
         destination: '/services/quality-engineering',
         permanent: true,
       },
+      // Case-study slugs anonymized (real client names removed).
+      // Keep 301s so search results, social shares, and any
+      // inbound links funnel to the new descriptor-based slugs.
+      {
+        source: '/case-studies/msci-data-automation',
+        destination: '/case-studies/financial-giant-sap-consolidation',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/racetrac-martech',
+        destination: '/case-studies/convenience-retailer-martech',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/racetrac-real-time-data',
+        destination: '/case-studies/convenience-retailer-realtime-data',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/sodexo-unified-data',
+        destination: '/case-studies/hospitality-leader-unified-data',
+        permanent: true,
+      },
     ];
   },
 

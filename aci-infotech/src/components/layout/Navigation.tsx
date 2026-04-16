@@ -454,7 +454,7 @@ function ServicesMegaMenu({ items }: ServicesMegaMenuProps) {
         </button>
 
         <Link
-          href="/case-studies/msci-data-automation"
+          href="/case-studies/financial-giant-sap-consolidation"
           className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-white hover:text-blue-200 transition-colors"
         >
           View case study <ArrowRight className="w-4 h-4" />

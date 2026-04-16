@@ -77,7 +77,7 @@ const offerings = [
 
 const caseStudies = [
   {
-    slug: 'msci-data-automation',
+    slug: 'financial-giant-sap-consolidation',
     client: 'Global Financial Giant',
     industry: 'Financial Services',
     challenge: '40+ finance systems post-acquisitions needed consolidation into unified platform',
@@ -89,7 +89,7 @@ const caseStudies = [
     technologies: ['SAP S/4HANA', 'Python', 'Azure DevOps'],
   },
   {
-    slug: 'racetrac-real-time-data',
+    slug: 'convenience-retailer-realtime-data',
     client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail',
     challenge: 'Payment systems across 600+ locations needed real-time data with zero downtime',
@@ -101,7 +101,7 @@ const caseStudies = [
     technologies: ['Databricks', 'Kafka', 'AWS', 'Braze'],
   },
   {
-    slug: 'sodexo-unified-data',
+    slug: 'hospitality-leader-unified-data',
     client: 'Global Hospitality Leader',
     industry: 'Hospitality',
     challenge: 'Global operations with data scattered across regional silos',

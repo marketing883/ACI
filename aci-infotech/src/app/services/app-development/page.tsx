@@ -76,7 +76,7 @@ const offerings = [
 
 const caseStudies = [
   {
-    slug: 'racetrac-martech',
+    slug: 'convenience-retailer-martech',
     client: 'Fortune 500 Convenience Retailer',
     industry: 'Retail — Convenience',
     challenge: 'Needed a unified digital guest experience and loyalty platform across 600+ locations with real-time personalization at the point of sale.',
