@@ -721,28 +721,29 @@ export default function QualityEngineeringPage() {
         />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
-            Ship with proof, not hope.
+            Fewer flakes. Faster releases. One sprint to{'\u00a0'}see.
           </h2>
           <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
-            Thirty-minute technical call with a QE engineer. No sales
-            pitch. We will tell you if we are not the right fit.
+            Pick your worst-flaking area. We wire in a self-healing suite
+            for one sprint and you see the cycle-time shift in two weeks.
+            Go quarter by quarter after{'\u00a0'}that.
           </p>
 
           <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-2 mb-10 text-sm text-blue-100">
-            <span>Senior engineers, not sales reps</span>
+            <span>One sprint</span>
             <span className="text-blue-300">·</span>
-            <span>30-minute technical discussion</span>
+            <span>Your worst-flaking area</span>
             <span className="text-blue-300">·</span>
-            <span>Honest answer either way</span>
+            <span>Cycle-time read in two weeks</span>
           </div>
 
           <Button
             href="/contact?service=quality-engineering"
             variant="lime"
             size="lg"
+            rightIcon={<ArrowRight className="w-4 h-4" />}
           >
-            Talk to a QE engineer
-            <ArrowRight className="w-4 h-4 ml-2" />
+            Get Started
           </Button>
         </div>
       </section>
