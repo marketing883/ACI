@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Create Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
 // GET - Fetch active triggers
 export async function GET() {
+  const supabase = getSupabase();
   try {
     const { data: triggers, error } = await supabase
       .from('engagement_triggers')
@@ -30,6 +32,7 @@ export async function GET() {
 
 // POST - Create new trigger (admin only)
 export async function POST(request: NextRequest) {
+  const supabase = getSupabase();
   try {
     const trigger = await request.json();
 
@@ -86,6 +89,7 @@ export async function POST(request: NextRequest) {
 
 // PATCH - Update trigger (admin only)
 export async function PATCH(request: NextRequest) {
+  const supabase = getSupabase();
   try {
     const { id, ...updates } = await request.json();
 
@@ -120,6 +124,7 @@ export async function PATCH(request: NextRequest) {
 
 // DELETE - Delete trigger (admin only)
 export async function DELETE(request: NextRequest) {
+  const supabase = getSupabase();
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

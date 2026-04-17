@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 
-// Create Supabase client with service role
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
 interface SessionInitData {
   visitor_id: string;
@@ -34,6 +35,7 @@ interface SessionInitData {
 }
 
 export async function POST(request: NextRequest) {
+  const supabase = getSupabase();
   try {
     const data: SessionInitData = await request.json();
 
@@ -149,6 +151,7 @@ export async function POST(request: NextRequest) {
 
 // Heartbeat endpoint to keep session alive
 export async function PATCH(request: NextRequest) {
+  const supabase = getSupabase();
   try {
     const { session_id, engagement_score, page_count, total_time_seconds } =
       await request.json();
@@ -186,6 +189,7 @@ async function enrichVisitor(
   journeyId: string,
   ip: string
 ): Promise<void> {
+  const supabase = getSupabase();
   // Skip localhost/private IPs
   if (ip === 'unknown' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
     return;
