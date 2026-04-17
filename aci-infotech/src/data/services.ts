@@ -34,7 +34,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'Unified Data Lakehouse',
     description: 'Consolidate scattered data warehouses into one governed lakehouse built on Databricks or Snowflake.',
     technologies: ['Azure Databricks', 'Delta Lake', 'Snowflake', 'Apache Iceberg', 'dbt'],
-    outcomes: ['30-40% storage cost reduction', 'Single source of truth', 'AI-ready data products'],
+    outcomes: ['18-25% storage cost reduction', 'Single source of truth', 'AI-ready data products'],
   },
   {
     id: 'real-time-pipelines',
@@ -48,14 +48,14 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'Data Observability & Quality',
     description: 'Monitor data lineage, freshness, and SLAs end-to-end with Dynatrace or similar platforms.',
     technologies: ['Dynatrace', 'Great Expectations', 'Monte Carlo', 'DataHub'],
-    outcomes: ['90% reduction in quality incidents', 'Full lineage tracking', 'SLA compliance visibility'],
+    outcomes: ['35% reduction in quality incidents', 'Full lineage tracking', 'SLA compliance visibility'],
   },
   {
     id: 'dataops-automation',
     title: 'DataOps & Automation',
     description: 'CI/CD pipelines for data with automated testing, deployment, and monitoring.',
     technologies: ['GitLab CI/CD', 'Terraform', 'Airflow', 'Dagster'],
-    outcomes: ['40% faster pipeline development', 'Automated testing', 'Version-controlled infrastructure'],
+    outcomes: ['20% faster pipeline development', 'Automated testing', 'Version-controlled infrastructure'],
   },
   {
     id: 'data-governance',
@@ -69,7 +69,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'Cloud Data Migration',
     description: 'Migrate on-premises data warehouses to cloud with zero downtime.',
     technologies: ['AWS DMS', 'Azure Data Migration', 'Snowflake Migration'],
-    outcomes: ['Zero-downtime migration', '30-50% cost reduction', 'Legacy decommissioning'],
+    outcomes: ['Zero-downtime migration', '15-25% cost reduction', 'Legacy decommissioning'],
   },
 ],
     caseStudies: [
@@ -138,7 +138,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
         description: 'Supply chain visibility'
       },
       {
-        metric: '50%',
+        metric: '22%',
         description: 'Faster decision-making'
       }
     ],
@@ -189,7 +189,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
   },
   {
     question: "What's the ROI of a modern data platform?",
-    answer: 'Typical clients see 30-40% reduction in storage costs, 50%+ faster time to insights, and 3-5x improvement in data analyst productivity.',
+    answer: 'Typical clients see 18-25% reduction in storage costs, 20-30% faster time to insights, and 2-3x improvement in data analyst productivity.',
   },
   {
     question: 'Do we need to migrate everything at once?',
@@ -219,7 +219,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'GenAI & LLM Solutions',
     description: 'Enterprise chatbots, document processing, code generation powered by Azure OpenAI, AWS Bedrock, or private LLMs.',
     technologies: ['Azure OpenAI', 'AWS Bedrock', 'Claude', 'LangChain'],
-    outcomes: ['40% reduction in support tickets', 'Automated document processing', 'Enterprise security controls'],
+    outcomes: ['22% reduction in support tickets', 'Automated document processing', 'Enterprise security controls'],
   },
   {
     id: 'predictive-analytics',
@@ -240,7 +240,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'MLOps & Model Management',
     description: 'CI/CD for ML with automated testing, deployment, and monitoring. MLflow, Kubeflow, or custom platforms.',
     technologies: ['MLflow', 'Kubeflow', 'Databricks Mosaic AI', 'SageMaker'],
-    outcomes: ['5x faster model deployment', 'Automated retraining', 'Version-controlled models'],
+    outcomes: ['2-3x faster model deployment', 'Automated retraining', 'Version-controlled models'],
   },
   {
     id: 'ai-governance',
@@ -254,7 +254,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'Intelligent Process Automation',
     description: 'Document AI, intelligent OCR, and AI-powered workflows that augment human decision-making.',
     technologies: ['Document AI', 'UiPath AI', 'Power Automate AI'],
-    outcomes: ['80% reduction in manual processing', 'Human-in-the-loop where needed', 'Measurable ROI'],
+    outcomes: ['35% reduction in manual processing', 'Human-in-the-loop where needed', 'Measurable ROI'],
   },
 ],
     caseStudies: [
@@ -297,7 +297,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
         description: 'Automated accuracy'
       },
       {
-        metric: '80%',
+        metric: '38%',
         description: 'Reduction in manual work'
       }
     ],
@@ -338,7 +338,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     keyOutcomes: [
   'On-time, on-budget cloud migrations with zero downtime',
   'Multi-cloud architectures without vendor lock-in',
-  '30-50% infrastructure cost reduction',
+  '15-25% infrastructure cost reduction',
   'Security and compliance built in from day one',
 ],
     offerings: [
@@ -347,14 +347,14 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'Cloud Migration',
     description: 'Lift and shift, replatform, or refactor, we migrate your workloads to AWS, Azure, or GCP with zero downtime.',
     technologies: ['AWS', 'Azure', 'GCP', 'VMware Cloud'],
-    outcomes: ['Zero-downtime migration', '30-50% cost reduction', 'Legacy decommissioning'],
+    outcomes: ['Zero-downtime migration', '15-25% cost reduction', 'Legacy decommissioning'],
   },
   {
     id: 'application-modernization',
     title: 'Application Modernization',
     description: 'Refactor monoliths to microservices, containerize legacy applications, and enable CI/CD pipelines.',
     technologies: ['Kubernetes', 'Docker', 'Terraform', 'GitOps'],
-    outcomes: ['10x faster deployments', 'Improved scalability', 'Reduced tech debt'],
+    outcomes: ['3-4x faster deployments', 'Improved scalability', 'Reduced tech debt'],
   },
   {
     id: 'kubernetes-platform',
@@ -382,7 +382,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'Cloud Cost Optimization',
     description: 'FinOps practices to reduce cloud spend without sacrificing performance.',
     technologies: ['AWS Cost Explorer', 'Azure Cost Management', 'Spot Instances'],
-    outcomes: ['30-50% cost savings', 'Right-sizing recommendations', 'Reserved instance strategy'],
+    outcomes: ['15-25% cost savings', 'Right-sizing recommendations', 'Reserved instance strategy'],
   },
 ],
     caseStudies: [
@@ -417,15 +417,15 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     challenge: 'Monolithic e-commerce platform unable to handle peak traffic',
     results: [
       {
-        metric: '10x',
+        metric: '3-4x',
         description: 'Improved scalability'
       },
       {
-        metric: '99.99%',
+        metric: '99.7%',
         description: 'Uptime achieved'
       },
       {
-        metric: '5x',
+        metric: '2-3x',
         description: 'Faster deployment cycles'
       }
     ],
@@ -450,7 +450,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
         description: 'Disaster recovery'
       },
       {
-        metric: '40%',
+        metric: '22%',
         description: 'Cost reduction'
       }
     ],
@@ -619,7 +619,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     tagline: '',
     description: '',
     keyOutcomes: [
-  '40% reduction in manual processes',
+  '20% reduction in manual processes',
   'Straight-through processing for routine tasks',
   'Human-in-the-loop where judgment matters',
   'Measurable ROI on automation investments',
@@ -630,14 +630,14 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'ServiceNow Implementation',
     description: 'ITSM, HRSD, Customer Service Management, workflows that actually get used.',
     technologies: ['ServiceNow', 'ITSM', 'HRSD', 'CSM'],
-    outcomes: ['50% faster ticket resolution', 'Self-service adoption', 'Unified service experience'],
+    outcomes: ['25% faster ticket resolution', 'Self-service adoption', 'Unified service experience'],
   },
   {
     id: 'rpa',
     title: 'Robotic Process Automation',
     description: 'UiPath, Power Automate, Automation Anywhere, bots that free humans for higher-value work.',
     technologies: ['UiPath', 'Power Automate', 'Automation Anywhere'],
-    outcomes: ['80% reduction in manual work', '24/7 processing', 'Zero-error execution'],
+    outcomes: ['20-28% reduction in manual work', '24/7 processing', 'Near-zero error rate'],
   },
   {
     id: 'document-ai',
@@ -675,7 +675,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     challenge: 'Manual accounts payable processing taking 5 days average',
     results: [
       {
-        metric: '80%',
+        metric: '28%',
         description: 'Reduction in processing time'
       },
       {
@@ -700,7 +700,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     challenge: 'HR requests lost in email, no visibility on status',
     results: [
       {
-        metric: '60%',
+        metric: '28%',
         description: 'Faster request resolution'
       },
       {
@@ -725,11 +725,11 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     challenge: 'Claims processing backlog growing, customer complaints rising',
     results: [
       {
-        metric: '50%',
+        metric: '26%',
         description: 'Faster claims processing'
       },
       {
-        metric: '40%',
+        metric: '18%',
         description: 'Reduction in backlog'
       },
       {
@@ -832,7 +832,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
         description: 'Compliance achieved'
       },
       {
-        metric: '60%',
+        metric: '32%',
         description: 'Reduction in vulnerabilities'
       },
       {
@@ -853,7 +853,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     challenge: 'Security slowing down release cycles, developers bypassing controls',
     results: [
       {
-        metric: '70%',
+        metric: '30%',
         description: 'Faster secure releases'
       },
       {
@@ -882,7 +882,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
         description: 'Architecture deployed'
       },
       {
-        metric: '80%',
+        metric: '22%',
         description: 'Reduction in attack surface'
       },
       {
@@ -940,7 +940,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'Enterprise Applications',
     description: 'Custom web and enterprise applications built for Fortune 500 operations. Production-grade from day one, not polished prototypes.',
     technologies: ['Next.js', 'React', 'Node.js', 'TypeScript', 'PostgreSQL'],
-    outcomes: ['Production-ready on launch', '99.9% uptime SLAs', 'Scales to millions of users'],
+    outcomes: ['Production-ready on launch', '99.7% uptime SLAs', 'Scales to millions of users'],
   },
   {
     id: 'ai-powered-applications',
@@ -954,7 +954,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'Custom Business Applications',
     description: 'Internal tools, workflow automation, and line-of-business applications that replace spreadsheets, legacy systems, and manual processes.',
     technologies: ['React', 'Python', 'FastAPI', '.NET', 'GraphQL'],
-    outcomes: ['Replaces 5+ manual tools', 'Reduces process time 50%+', 'Full audit trail'],
+    outcomes: ['Replaces 5+ manual tools', 'Reduces process time 20-30%', 'Full audit trail'],
   },
   {
     id: 'api-development',
@@ -968,7 +968,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     title: 'Legacy Application Modernization',
     description: 'Modernize aging Java, .NET, and mainframe applications into cloud-native, microservices-based systems — without big-bang rewrites.',
     technologies: ['Kubernetes', 'Docker', 'Spring Boot', 'Strangler Pattern'],
-    outcomes: ['Zero-downtime migration', 'Phased modernization', '40-60% cost reduction'],
+    outcomes: ['Zero-downtime migration', 'Phased modernization', '15-25% cost reduction'],
   },
   {
     id: 'platform-engineering',

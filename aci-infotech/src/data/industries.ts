@@ -22,7 +22,7 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'SAP S/4HANA implementation with automated data quality gates and real-time integration pipelines',
     results: [
       {
-        metric: '$500K',
+        metric: '$180K',
         description: 'Operational savings in year one'
       },
       {
@@ -48,11 +48,11 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'ML-based fraud detection with real-time scoring and explainable AI for compliance',
     results: [
       {
-        metric: '$25M',
+        metric: '$230K',
         description: 'Annual fraud loss reduction'
       },
       {
-        metric: '85%',
+        metric: '52%',
         description: 'Reduction in false positives'
       },
       {
@@ -92,7 +92,7 @@ export const industries: Record<IndustryId, IndustryEntry> = {
         description: 'Patient records across all facilities'
       },
       {
-        metric: '99.99%',
+        metric: '99.7%',
         description: 'Platform uptime achieved'
       },
       {
@@ -115,7 +115,7 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'Unified data lake on Databricks with automated lineage tracking and collaboration',
     results: [
       {
-        metric: '40%',
+        metric: '24%',
         description: 'Faster research data access'
       },
       {
@@ -123,7 +123,7 @@ export const industries: Record<IndustryId, IndustryEntry> = {
         description: 'Data lineage compliance'
       },
       {
-        metric: '3x',
+        metric: '2x',
         description: 'Researcher productivity'
       }
     ],
@@ -180,7 +180,7 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'Salesforce Marketing Cloud with custom CDP integration and journey automation',
     results: [
       {
-        metric: '$2.3M',
+        metric: '$175K',
         description: 'Incremental revenue from personalization'
       },
       {
@@ -206,11 +206,11 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'ML-powered demand forecasting on Databricks with AutoML pipeline',
     results: [
       {
-        metric: '$18M',
+        metric: '$220K',
         description: 'Annual savings from forecast accuracy'
       },
       {
-        metric: '92%',
+        metric: '85%',
         description: 'Forecast accuracy achieved'
       },
       {
@@ -271,11 +271,11 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'IoT data platform with ML-based predictive maintenance across 50+ production lines',
     results: [
       {
-        metric: '67%',
+        metric: '28%',
         description: 'Reduction in unplanned downtime'
       },
       {
-        metric: '$8M',
+        metric: '$210K',
         description: 'Annual savings from avoided failures'
       },
       {
@@ -298,15 +298,15 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'Computer vision quality inspection with real-time defect detection and alerting',
     results: [
       {
-        metric: '35%',
+        metric: '21%',
         description: 'Reduction in defect rate'
       },
       {
-        metric: '80%',
+        metric: '35%',
         description: 'Faster defect detection'
       },
       {
-        metric: '$2M',
+        metric: '$160K',
         description: 'Annual savings from reduced rework'
       }
     ],
@@ -390,15 +390,15 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'Customer data platform with unified guest profiles powering personalized marketing and service delivery',
     results: [
       {
-        metric: '28%',
+        metric: '18%',
         description: 'Increase in loyalty engagement'
       },
       {
-        metric: '3.2x',
+        metric: '1.8x',
         description: 'ROI on marketing spend'
       },
       {
-        metric: '45%',
+        metric: '22%',
         description: 'Faster guest recognition'
       }
     ],
@@ -457,15 +457,15 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'IoT-based asset monitoring with ML predictive maintenance',
     results: [
       {
-        metric: '40%',
+        metric: '24%',
         description: 'Reduction in unplanned outages'
       },
       {
-        metric: '$15M',
+        metric: '$190K',
         description: 'Annual savings from optimized maintenance'
       },
       {
-        metric: '99.9%',
+        metric: '99.5%',
         description: 'Grid reliability achieved'
       }
     ],
@@ -522,11 +522,11 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'AI-powered route optimization platform with real-time fleet tracking and predictive analytics',
     results: [
       {
-        metric: '$30M',
+        metric: '$250K',
         description: 'Annual fuel cost savings'
       },
       {
-        metric: '22%',
+        metric: '16%',
         description: 'Improvement in on-time delivery'
       },
       {
@@ -549,11 +549,11 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     solution: 'Predictive maintenance system using telematics data and ML to forecast vehicle service needs',
     results: [
       {
-        metric: '40%',
+        metric: '26%',
         description: 'Reduction in breakdowns'
       },
       {
-        metric: '$4.2M',
+        metric: '$195K',
         description: 'Annual maintenance savings'
       },
       {

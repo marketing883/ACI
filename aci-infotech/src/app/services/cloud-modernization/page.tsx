@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const keyOutcomes = [
   'On-time, on-budget cloud migrations with zero downtime',
   'Multi-cloud architectures without vendor lock-in',
-  '30-50% infrastructure cost reduction',
+  '15-25% infrastructure cost reduction',
   'Security and compliance built in from day one',
 ];
 
@@ -29,7 +29,7 @@ const offerings = [
     description: 'Lift and shift, replatform, or refactor, we migrate your workloads to AWS, Azure, or GCP with zero downtime.',
     icon: Cloud,
     technologies: ['AWS', 'Azure', 'GCP', 'VMware Cloud'],
-    outcomes: ['Zero-downtime migration', '30-50% cost reduction', 'Legacy decommissioning'],
+    outcomes: ['Zero-downtime migration', '15-25% cost reduction', 'Legacy decommissioning'],
   },
   {
     id: 'application-modernization',
@@ -37,7 +37,7 @@ const offerings = [
     description: 'Refactor monoliths to microservices, containerize legacy applications, and enable CI/CD pipelines.',
     icon: RefreshCw,
     technologies: ['Kubernetes', 'Docker', 'Terraform', 'GitOps'],
-    outcomes: ['10x faster deployments', 'Improved scalability', 'Reduced tech debt'],
+    outcomes: ['3-4x faster deployments', 'Improved scalability', 'Reduced tech debt'],
   },
   {
     id: 'kubernetes-platform',
@@ -69,7 +69,7 @@ const offerings = [
     description: 'FinOps practices to reduce cloud spend without sacrificing performance.',
     icon: Gauge,
     technologies: ['AWS Cost Explorer', 'Azure Cost Management', 'Spot Instances'],
-    outcomes: ['30-50% cost savings', 'Right-sizing recommendations', 'Reserved instance strategy'],
+    outcomes: ['15-25% cost savings', 'Right-sizing recommendations', 'Reserved instance strategy'],
   },
 ];
 
@@ -93,8 +93,8 @@ const caseStudies = [
     challenge: 'Monolithic e-commerce platform unable to handle peak traffic',
     results: [
       { metric: '10x', description: 'Improved scalability' },
-      { metric: '99.99%', description: 'Uptime achieved' },
-      { metric: '5x', description: 'Faster deployment cycles' },
+      { metric: '99.7%', description: 'Uptime achieved' },
+      { metric: '2-3x', description: 'Faster deployment cycles' },
     ],
     technologies: ['Azure', 'Kubernetes', 'Microservices'],
   },
@@ -106,7 +106,7 @@ const caseStudies = [
     results: [
       { metric: 'Multi-cloud', description: 'Architecture deployed' },
       { metric: 'Active-active', description: 'Disaster recovery' },
-      { metric: '40%', description: 'Cost reduction' },
+      { metric: '20%', description: 'Cost reduction' },
     ],
     technologies: ['AWS', 'Azure', 'Terraform', 'Consul'],
   },
@@ -154,7 +154,7 @@ const differentiators = [
   {
     title: 'Cost Optimization Built In',
     description: "FinOps practices from day one. We optimize your cloud spend, not maximize it.",
-    proof: '30-50% average cost reduction',
+    proof: '15-25% average cost reduction',
   },
 ];
 

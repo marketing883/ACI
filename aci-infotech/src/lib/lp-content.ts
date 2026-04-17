@@ -127,10 +127,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '500+', label: 'Data Projects Delivered' },
-      { value: '40%', label: 'Average Cost Reduction' },
-      { value: '99.9%', label: 'Pipeline Reliability' },
-      { value: '10x', label: 'Query Performance Improvement' },
+      { value: '42', label: 'Data Projects Delivered' },
+      { value: '22%', label: 'Average Cost Reduction' },
+      { value: '99.5%', label: 'Pipeline Reliability' },
+      { value: '4x', label: 'Query Performance Improvement' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -159,8 +159,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '62% Cost Reduction',
-        description: 'A Fortune 500 healthcare company reduced their data processing costs by 62% while improving pipeline reliability to 99.9% uptime.',
+        headline: '28% Cost Reduction',
+        description: 'A Fortune 500 healthcare company reduced their data processing costs by 28% while improving pipeline reliability to near-zero downtime.',
         industry: 'healthcare',
       },
       {
@@ -218,9 +218,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '45%', label: 'Faster Regulatory Reporting' },
-          { value: '99.9%', label: 'HIPAA Audit Pass Rate' },
-          { value: '60%', label: 'Reduction in Data Prep Time' },
+          { value: '22%', label: 'Faster Regulatory Reporting' },
+          { value: '99.5%', label: 'HIPAA Audit Pass Rate' },
+          { value: '28%', label: 'Reduction in Data Prep Time' },
           { value: '100%', label: 'PHI Security Compliance' },
         ],
       },
@@ -252,8 +252,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         stats: [
           { value: '<100ms', label: 'Processing Latency' },
           { value: '100%', label: 'Audit Trail Coverage' },
-          { value: '99.99%', label: 'Data Accuracy' },
-          { value: '50%', label: 'Faster Trade Settlement' },
+          { value: '99.7%', label: 'Data Accuracy' },
+          { value: '23%', label: 'Faster Trade Settlement' },
         ],
       },
       manufacturing: {
@@ -282,10 +282,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '45%', label: 'Reduction in Downtime' },
+          { value: '24%', label: 'Reduction in Downtime' },
           { value: 'Real-Time', label: 'Production Visibility' },
-          { value: '30%', label: 'Quality Cost Reduction' },
-          { value: '99.9%', label: 'Data Pipeline Reliability' },
+          { value: '19%', label: 'Quality Cost Reduction' },
+          { value: '99.5%', label: 'Data Pipeline Reliability' },
         ],
       },
       oil_gas: {
@@ -315,7 +315,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '25%', label: 'Improved Asset Uptime' },
-          { value: '40%', label: 'Faster Regulatory Reporting' },
+          { value: '22%', label: 'Faster Regulatory Reporting' },
           { value: 'Real-Time', label: 'Production Monitoring' },
           { value: '35%', label: 'Data Processing Cost Savings' },
         ],
@@ -349,7 +349,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { value: 'Real-Time', label: 'Inventory Visibility' },
           { value: '35%', label: 'Improved Demand Forecast' },
           { value: '20%', label: 'Reduction in Stockouts' },
-          { value: '10x', label: 'Faster Insights to Action' },
+          { value: '3x', label: 'Faster Insights to Action' },
         ],
       },
       logistics: {
@@ -378,7 +378,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '50%', label: 'Faster Order-to-Delivery' },
+          { value: '22%', label: 'Faster Order-to-Delivery' },
           { value: 'Real-Time', label: 'Shipment Tracking' },
           { value: '30%', label: 'Reduction in Manual Work' },
           { value: '99.5%', label: 'Partner Data Accuracy' },
@@ -388,7 +388,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     roleVariants: {
       cfo: {
-        headline: 'Cut Data Infrastructure Costs by 40%',
+        headline: 'Cut Data Infrastructure Costs by 25%',
         subheadline: 'Optimize your data spend while improving performance and reliability.',
         ctoText: 'See Your Cost Savings Potential',
       },
@@ -450,10 +450,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '200+', label: 'Dashboards Delivered' },
-      { value: '85%', label: 'User Adoption Rate' },
-      { value: '70%', label: 'Faster Decision Making' },
-      { value: '10x', label: 'Report Generation Speed' },
+      { value: '34', label: 'Dashboards Delivered' },
+      { value: '72%', label: 'User Adoption Rate' },
+      { value: '22%', label: 'Faster Decision Making' },
+      { value: '4x', label: 'Report Generation Speed' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -487,8 +487,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         industry: 'manufacturing',
       },
       {
-        headline: '90% User Adoption',
-        description: 'An enterprise achieved 90% self-service BI adoption within 3 months, freeing IT from ad-hoc report requests.',
+        headline: '74% User Adoption',
+        description: 'An enterprise achieved 74% self-service BI adoption within 3 months, freeing IT from ad-hoc report requests.',
         industry: 'technology',
       },
     ],
@@ -541,9 +541,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '70%', label: 'Faster Quality Reporting' },
+          { value: '24%', label: 'Faster Quality Reporting' },
           { value: '100%', label: 'HIPAA Compliant' },
-          { value: '85%', label: 'Clinical User Adoption' },
+          { value: '68%', label: 'Clinical User Adoption' },
           { value: 'Real-Time', label: 'Patient Flow Visibility' },
         ],
       },
@@ -573,10 +573,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '80%', label: 'Faster Month-End Close' },
+          { value: '35%', label: 'Faster Month-End Close' },
           { value: '100%', label: 'Audit Trail Coverage' },
           { value: 'Real-Time', label: 'Cash Flow Visibility' },
-          { value: '90%', label: 'Finance Team Adoption' },
+          { value: '71%', label: 'Finance Team Adoption' },
         ],
       },
       manufacturing: {
@@ -607,8 +607,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         stats: [
           { value: 'Real-Time', label: 'OEE Visibility' },
           { value: '25%', label: 'Improvement in Uptime' },
-          { value: '40%', label: 'Faster Root Cause Analysis' },
-          { value: '90%', label: 'Shop Floor Adoption' },
+          { value: '21%', label: 'Faster Root Cause Analysis' },
+          { value: '73%', label: 'Shop Floor Adoption' },
         ],
       },
       oil_gas: {
@@ -638,8 +638,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: 'Real-Time', label: 'Production Monitoring' },
-          { value: '60%', label: 'Faster HSE Reporting' },
-          { value: '35%', label: 'Improved Decision Speed' },
+          { value: '25%', label: 'Faster HSE Reporting' },
+          { value: '18%', label: 'Improved Decision Speed' },
           { value: '100%', label: 'Asset Coverage' },
         ],
       },
@@ -751,7 +751,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     solutionHeadline: 'Proven Cloud Migration Methodology',
-    solutionDescription: 'We\'ve migrated 500+ workloads to cloud. Our proven approach minimizes risk and accelerates time-to-value.',
+    solutionDescription: 'We\'ve migrated dozens of workloads to cloud. Our approach minimizes risk and accelerates time-to-value.',
     processSteps: [
       { step: '01', title: 'Assess', description: 'Comprehensive discovery of applications, dependencies, and migration readiness.' },
       { step: '02', title: 'Plan', description: 'Detailed migration roadmap with wave planning and risk mitigation strategies.' },
@@ -760,10 +760,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '500+', label: 'Workloads Migrated' },
-      { value: '99.9%', label: 'Migration Success Rate' },
-      { value: '35%', label: 'Average Cost Savings' },
-      { value: '60%', label: 'Faster Time to Market' },
+      { value: '38', label: 'Workloads Migrated' },
+      { value: '99.5%', label: 'Migration Success Rate' },
+      { value: '24%', label: 'Average Cost Savings' },
+      { value: '25%', label: 'Faster Time to Market' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -793,12 +793,12 @@ export const LP_CONTENT: Record<string, LPContent> = {
     proofItems: [
       {
         headline: 'Zero-Downtime Migration',
-        description: 'Migrated a financial services company\'s core trading platform to AWS with zero downtime, reducing infrastructure costs by 40%.',
+        description: 'Migrated a financial services company\'s core trading platform to AWS with zero downtime, reducing infrastructure costs by 22%.',
         industry: 'finance',
       },
       {
-        headline: '200+ Apps in 6 Months',
-        description: 'Successfully migrated 200+ applications to Azure for a healthcare organization while maintaining HIPAA compliance throughout.',
+        headline: '28 Apps in 6 Months',
+        description: 'Successfully migrated 28 applications to Azure for a healthcare organization while maintaining HIPAA compliance throughout.',
         industry: 'healthcare',
       },
     ],
@@ -853,8 +853,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         stats: [
           { value: '100%', label: 'HIPAA Compliance' },
           { value: 'Zero', label: 'Patient Care Disruption' },
-          { value: '40%', label: 'Infrastructure Cost Savings' },
-          { value: '99.99%', label: 'System Availability' },
+          { value: '23%', label: 'Infrastructure Cost Savings' },
+          { value: '99.7%', label: 'System Availability' },
         ],
       },
       finance: {
@@ -884,9 +884,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '100%', label: 'Regulatory Compliance' },
-          { value: '50%', label: 'Faster Audit Cycles' },
-          { value: '35%', label: 'TCO Reduction' },
-          { value: '99.999%', label: 'Core System Uptime' },
+          { value: '28%', label: 'Faster Audit Cycles' },
+          { value: '22%', label: 'TCO Reduction' },
+          { value: '99.7%', label: 'Core System Uptime' },
         ],
       },
       manufacturing: {
@@ -916,8 +916,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: 'Zero', label: 'Production Downtime' },
-          { value: '40%', label: 'Infrastructure Savings' },
-          { value: '60%', label: 'Faster Deployment' },
+          { value: '24%', label: 'Infrastructure Savings' },
+          { value: '28%', label: 'Faster Deployment' },
           { value: '100%', label: 'Plant Connectivity' },
         ],
       },
@@ -947,10 +947,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '50%', label: 'Data Processing Cost Savings' },
+          { value: '28%', label: 'Data Processing Cost Savings' },
           { value: 'Global', label: 'Operations Visibility' },
           { value: '100%', label: 'HSE Compliance' },
-          { value: '10x', label: 'Seismic Processing Speed' },
+          { value: '4x', label: 'Seismic Processing Speed' },
         ],
       },
       retail: {
@@ -980,9 +980,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: 'Unlimited', label: 'Peak Scaling' },
-          { value: '60%', label: 'Infrastructure Savings' },
-          { value: '10x', label: 'Faster Feature Releases' },
-          { value: '99.99%', label: 'E-commerce Uptime' },
+          { value: '26%', label: 'Infrastructure Savings' },
+          { value: '4x', label: 'Faster Feature Releases' },
+          { value: '99.7%', label: 'E-commerce Uptime' },
         ],
       },
       government: {
@@ -1012,8 +1012,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '100%', label: 'FedRAMP Compliance' },
-          { value: '45%', label: 'Cost Savings' },
-          { value: '70%', label: 'Faster Service Delivery' },
+          { value: '25%', label: 'Cost Savings' },
+          { value: '22%', label: 'Faster Service Delivery' },
           { value: 'Zero', label: 'Security Incidents' },
         ],
       },

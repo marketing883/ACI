@@ -10,7 +10,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'About ACI Infotech | The Engineers Behind Enterprise Modernization',
-  description: '1,250+ engineers building data platforms, AI systems, and cloud architectures for 80+ Fortune 500 clients. 19 years of production-grade engineering. We answer the 2am call.',
+  description: '280+ projects delivered building data platforms, AI systems, and cloud architectures for 25+ enterprise clients. 19 years of production-grade engineering. We answer the 2am call.',
   keywords: 'enterprise technology consulting, data engineering company, AI ML consulting, Fortune 500 technology partner, production-grade engineering',
   alternates: {
     canonical: `${siteUrl}/about`,
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
 // About page data
 const stats = [
   { number: '19', unit: 'Years', description: 'Founded 2006' },
-  { number: '80+', unit: 'Fortune 500', description: 'Clients served' },
-  { number: '$1B+', unit: 'Value', description: 'Delivered to clients' },
-  { number: '1,250+', unit: 'Engineers', description: 'Technologists globally' },
+  { number: '25+', unit: 'Enterprise', description: 'Clients served' },
+  { number: '$45M+', unit: 'Value', description: 'Delivered to clients' },
+  { number: '280+', unit: 'Projects', description: 'Delivered globally' },
   { number: '10', unit: 'Countries', description: 'Global delivery' },
 ];
 
@@ -94,7 +94,7 @@ const ceo = {
   title: 'Founder & CEO',
   vision: `At ACI Infotech, our purpose is to drive enterprise excellence through innovation and intelligence. We partner with organizations to help them reimagine their business models, modernize operations, and unlock value through technology.
 
-Under Jag's leadership, ACI has grown from a small team of passionate engineers to a 1,250+ strong global organization serving 80+ Fortune 500 clients. His vision is simple yet powerful: deliver production-grade systems that create measurable business value, backed by engineers who take ownership and stay accountable.
+Under Jag's leadership, ACI has grown from a small team of passionate engineers to a global organization that has delivered 280+ projects for 25+ enterprise clients. His vision is simple yet powerful: deliver production-grade systems that create measurable business value, backed by engineers who take ownership and stay accountable.
 
 "We don't just deliver projects. We build partnerships. When your system goes down at 2am, we're the team that answers the phone. That's not a policy. That's who we are."`,
   photo_url: '/images/about-team/Jag.png',
@@ -164,10 +164,10 @@ const certifications = [
 ];
 
 const trackRecord = [
-  { number: '$1B+', label: 'Total value delivered to clients', context: 'Measurable ROI, not estimated' },
-  { number: '80+', label: 'Fortune 500 clients served', context: 'Across banking, healthcare, retail, manufacturing' },
+  { number: '$45M+', label: 'Total value delivered to clients', context: 'Measurable ROI, not estimated' },
+  { number: '25+', label: 'Enterprise clients served', context: 'Across banking, healthcare, retail, manufacturing' },
   { number: '19 Years', label: 'In business since 2006', context: 'Stable, growing, here for the long term' },
-  { number: '1,250+', label: 'Technologists globally', context: 'Engineers, architects, data scientists' },
+  { number: '280+', label: 'Projects delivered', context: 'Engineers, architects, data scientists' },
   { number: '10 Countries', label: 'Global delivery centers', context: 'US, India, and beyond' },
   { number: '95%', label: 'Client retention rate', context: 'Clients come back because we deliver' },
   { number: '70%', label: 'Senior engineers (10+ years)', context: 'Not junior analysts learning on your dime' },
@@ -193,7 +193,7 @@ export default function AboutPage() {
               The Engineers Behind Enterprise Modernization
             </h1>
             <p className="text-lg md:text-xl text-gray-300">
-              We're the 1,250-person technical team between your strategy and your operations.
+              We're the technical team between your strategy and your operations.
               We build data platforms, deploy AI systems, and stabilize cloud architectures, then
               we stand behind them with SLAs. We're the team that answers the 2am call.
             </p>
@@ -230,7 +230,7 @@ export default function AboutPage() {
                   Our Vision
                 </h2>
                 <p className="text-lg md:text-xl text-gray-700 leading-relaxed font-medium">
-                  To be the engineering partner that Fortune 500s trust to turn ambitious technology strategies into production-grade reality, while setting the standard for what a modern, agile enterprise consultancy can achieve.
+                  To be the engineering partner that enterprises trust to turn ambitious technology strategies into production-grade reality, while setting the standard for what a modern, agile consultancy can achieve.
                 </p>
                 <p className="mt-4 text-gray-600">
                   We envision a world where enterprises don't have to choose between scale and speed, between capability and cost. We're building that alternative.
@@ -272,7 +272,7 @@ export default function AboutPage() {
               <div className="space-y-4 text-gray-600">
                 <p>
                   ACI Infotech isn't trying to be the next Accenture. We're the alternative: large
-                  enough to staff Fortune 500 projects, small enough to make decisions in days not
+                  enough to staff enterprise projects, small enough to make decisions in days not
                   months, and focused enough to deliver deep expertise in the platforms enterprises
                   actually use.
                 </p>
@@ -282,7 +282,7 @@ export default function AboutPage() {
                   code that runs in production, carries SLAs, and delivers measurable ROI.
                 </p>
                 <p>
-                  Our clients are Fortune 500 companies in banking, healthcare, retail, manufacturing,
+                  Our clients are enterprise companies in banking, healthcare, retail, manufacturing,
                   and hospitality. They choose us because we combine Big 4 capabilities with boutique
                   speed and cost. Senior architects lead every project. We move fast. We cost 40-60% less.
                 </p>
@@ -341,7 +341,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What We've Built 80+ Times
+              What We've Built Across 280+ Projects
             </h2>
             <p className="text-lg text-gray-600">
               Four capability areas where we have deep, proven expertise
