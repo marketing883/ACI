@@ -29,7 +29,7 @@ const offerings = [
     description: 'Enterprise chatbots, document processing, code generation powered by Azure OpenAI, AWS Bedrock, or private LLMs.',
     icon: Sparkles,
     technologies: ['Azure OpenAI', 'AWS Bedrock', 'Claude', 'LangChain'],
-    outcomes: ['40% reduction in support tickets', 'Automated document processing', 'Enterprise security controls'],
+    outcomes: ['20% reduction in support tickets', 'Automated document processing', 'Enterprise security controls'],
   },
   {
     id: 'predictive-analytics',
@@ -45,7 +45,7 @@ const offerings = [
     description: 'Personalization engines for retail, media, and financial services. Real-time recommendations at scale.',
     icon: Brain,
     technologies: ['Spark MLlib', 'TensorFlow Recommenders', 'Feature Stores'],
-    outcomes: ['25% increase in conversion', 'Real-time personalization', 'A/B testing built-in'],
+    outcomes: ['15% increase in conversion', 'Real-time personalization', 'A/B testing built-in'],
   },
   {
     id: 'mlops',
@@ -53,7 +53,7 @@ const offerings = [
     description: 'CI/CD for ML with automated testing, deployment, and monitoring. MLflow, Kubeflow, or custom platforms.',
     icon: Cpu,
     technologies: ['MLflow', 'Kubeflow', 'Databricks Mosaic AI', 'SageMaker'],
-    outcomes: ['5x faster model deployment', 'Automated retraining', 'Version-controlled models'],
+    outcomes: ['2-3x faster model deployment', 'Automated retraining', 'Version-controlled models'],
   },
   {
     id: 'ai-governance',
@@ -69,7 +69,7 @@ const offerings = [
     description: 'Document AI, intelligent OCR, and AI-powered workflows that augment human decision-making.',
     icon: Bot,
     technologies: ['Document AI', 'UiPath AI', 'Power Automate AI'],
-    outcomes: ['80% reduction in manual processing', 'Human-in-the-loop where needed', 'Measurable ROI'],
+    outcomes: ['35% reduction in manual processing', 'Human-in-the-loop where needed', 'Measurable ROI'],
   },
 ];
 
@@ -93,8 +93,8 @@ const caseStudies = [
     challenge: 'Manual claims processing taking 72 hours average',
     results: [
       { metric: '4 hours', description: 'Reduced processing time' },
-      { metric: '95%', description: 'Automated accuracy' },
-      { metric: '80%', description: 'Reduction in manual work' },
+      { metric: '88%', description: 'Automated accuracy' },
+      { metric: '35%', description: 'Reduction in manual work' },
     ],
     technologies: ['Document AI', 'Azure OpenAI', 'Python'],
   },

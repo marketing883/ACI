@@ -48,14 +48,14 @@ const caseStudies = [
     industry: 'Healthcare',
     challenge: 'On-premise infrastructure limiting ability to scale telehealth services',
     solution: 'Full AWS migration with HIPAA-compliant architecture and auto-scaling',
-    results: ['99.99% uptime', '40% cost reduction', 'HIPAA compliant'],
+    results: ['99.7% uptime', '20% cost reduction', 'HIPAA compliant'],
   },
   {
     client: 'E-commerce Platform',
     industry: 'Retail',
     challenge: 'Legacy infrastructure unable to handle peak shopping periods',
     solution: 'Serverless architecture on AWS with auto-scaling and CDN optimization',
-    results: ['10x traffic capacity', '65% faster page loads', 'Zero downtime'],
+    results: ['3-4x traffic capacity', '22% faster page loads', 'Zero downtime'],
   },
 ];
 

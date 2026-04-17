@@ -92,7 +92,7 @@ const caseStudies = [
     industry: 'Retail',
     challenge: 'Monolithic e-commerce platform unable to handle peak traffic',
     results: [
-      { metric: '10x', description: 'Improved scalability' },
+      { metric: '3-4x', description: 'Improved scalability' },
       { metric: '99.7%', description: 'Uptime achieved' },
       { metric: '2-3x', description: 'Faster deployment cycles' },
     ],

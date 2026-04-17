@@ -30,7 +30,7 @@ const offerings = [
     description: 'Custom web and enterprise applications built for Fortune 500 operations. Production-grade from day one, not polished prototypes.',
     icon: Layers,
     technologies: ['Next.js', 'React', 'Node.js', 'TypeScript', 'PostgreSQL'],
-    outcomes: ['Production-ready on launch', '99.9% uptime SLAs', 'Scales to millions of users'],
+    outcomes: ['Production-ready on launch', '99.5% uptime SLAs', 'Scales to millions of users'],
   },
   {
     id: 'ai-powered-applications',
@@ -46,7 +46,7 @@ const offerings = [
     description: 'Internal tools, workflow automation, and line-of-business applications that replace spreadsheets, legacy systems, and manual processes.',
     icon: Code2,
     technologies: ['React', 'Python', 'FastAPI', '.NET', 'GraphQL'],
-    outcomes: ['Replaces 5+ manual tools', 'Reduces process time 50%+', 'Full audit trail'],
+    outcomes: ['Replaces 5+ manual tools', 'Reduces process time 22%+', 'Full audit trail'],
   },
   {
     id: 'api-development',
@@ -62,7 +62,7 @@ const offerings = [
     description: 'Modernize aging Java, .NET, and mainframe applications into cloud-native, microservices-based systems — without big-bang rewrites.',
     icon: RefreshCw,
     technologies: ['Kubernetes', 'Docker', 'Spring Boot', 'Strangler Pattern'],
-    outcomes: ['Zero-downtime migration', 'Phased modernization', '40-60% cost reduction'],
+    outcomes: ['Zero-downtime migration', 'Phased modernization', '18-28% cost reduction'],
   },
   {
     id: 'platform-engineering',
@@ -82,7 +82,7 @@ const caseStudies = [
     challenge: 'Needed a unified digital guest experience and loyalty platform across 600+ locations with real-time personalization at the point of sale.',
     results: [
       { metric: '600+', description: 'Locations with zero downtime' },
-      { metric: '25%', description: 'Improvement in promotion effectiveness' },
+      { metric: '15%', description: 'Improvement in promotion effectiveness' },
       { metric: '2.5x', description: 'Email engagement lift' },
     ],
     technologies: ['Salesforce', 'Braze', 'Databricks', 'AWS', 'Kafka'],

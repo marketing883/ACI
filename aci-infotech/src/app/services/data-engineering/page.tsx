@@ -31,7 +31,7 @@ const offerings = [
     description: 'Consolidate scattered data warehouses into one governed lakehouse built on Databricks or Snowflake.',
     icon: Database,
     technologies: ['Azure Databricks', 'Delta Lake', 'Snowflake', 'Apache Iceberg', 'dbt'],
-    outcomes: ['30-40% storage cost reduction', 'Single source of truth', 'AI-ready data products'],
+    outcomes: ['15-20% storage cost reduction', 'Single source of truth', 'AI-ready data products'],
   },
   {
     id: 'real-time-pipelines',
@@ -47,7 +47,7 @@ const offerings = [
     description: 'Monitor data lineage, freshness, and SLAs end-to-end with Dynatrace or similar platforms.',
     icon: Eye,
     technologies: ['Dynatrace', 'Great Expectations', 'Monte Carlo', 'DataHub'],
-    outcomes: ['90% reduction in quality incidents', 'Full lineage tracking', 'SLA compliance visibility'],
+    outcomes: ['65% reduction in quality incidents', 'Full lineage tracking', 'SLA compliance visibility'],
   },
   {
     id: 'dataops-automation',
@@ -55,7 +55,7 @@ const offerings = [
     description: 'CI/CD pipelines for data with automated testing, deployment, and monitoring.',
     icon: Settings,
     technologies: ['GitLab CI/CD', 'Terraform', 'Airflow', 'Dagster'],
-    outcomes: ['40% faster pipeline development', 'Automated testing', 'Version-controlled infrastructure'],
+    outcomes: ['20% faster pipeline development', 'Automated testing', 'Version-controlled infrastructure'],
   },
   {
     id: 'data-governance',
@@ -71,7 +71,7 @@ const offerings = [
     description: 'Migrate on-premises data warehouses to cloud with zero downtime.',
     icon: Cloud,
     technologies: ['AWS DMS', 'Azure Data Migration', 'Snowflake Migration'],
-    outcomes: ['Zero-downtime migration', '30-50% cost reduction', 'Legacy decommissioning'],
+    outcomes: ['Zero-downtime migration', '15-25% cost reduction', 'Legacy decommissioning'],
   },
 ];
 
@@ -108,7 +108,7 @@ const caseStudies = [
     results: [
       { metric: 'Single', description: 'Source of truth' },
       { metric: 'Global', description: 'Supply chain visibility' },
-      { metric: '50%', description: 'Faster decision-making' },
+      { metric: '22%', description: 'Faster decision-making' },
     ],
     technologies: ['Informatica IICS', 'MDM', 'Cloud Integration'],
   },
@@ -188,7 +188,7 @@ const differentiators = [
   },
   {
     title: 'Cost-Effective Delivery',
-    description: '40-60% less than Big 4 consultancies. Senior architects leading, not junior analysts.',
+    description: '18-28% less than Big 4 consultancies. Senior architects leading, not junior analysts.',
     proof: '70% senior engineers on every project',
   },
 ];
@@ -200,7 +200,7 @@ const faqs = [
   },
   {
     question: "What's the ROI of a modern data platform?",
-    answer: 'Typical clients see 30-40% reduction in storage costs, 50%+ faster time to insights, and 3-5x improvement in data analyst productivity.',
+    answer: 'Typical clients see 15-20% reduction in storage costs, 22%+ faster time to insights, and 2x improvement in data analyst productivity.',
   },
   {
     question: 'Do we need to migrate everything at once?',

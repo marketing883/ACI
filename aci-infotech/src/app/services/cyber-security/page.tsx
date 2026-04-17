@@ -81,7 +81,7 @@ const caseStudies = [
     challenge: 'HIPAA compliance gaps identified in security audit',
     results: [
       { metric: '100%', description: 'Compliance achieved' },
-      { metric: '60%', description: 'Reduction in vulnerabilities' },
+      { metric: '25%', description: 'Reduction in vulnerabilities' },
       { metric: 'Zero', description: 'Audit findings' },
     ],
     technologies: ['Azure Security', 'CyberArk', 'Splunk'],
@@ -93,7 +93,7 @@ const caseStudies = [
     challenge: 'Security slowing down release cycles, developers bypassing controls',
     results: [
       { metric: '70%', description: 'Faster secure releases' },
-      { metric: '90%', description: 'Automated security checks' },
+      { metric: '65%', description: 'Automated security checks' },
       { metric: '0', description: 'Security bypasses' },
     ],
     technologies: ['Snyk', 'GitLab', 'SonarQube'],
@@ -105,7 +105,7 @@ const caseStudies = [
     challenge: 'Breach concerns with remote workforce and third-party access',
     results: [
       { metric: 'Zero-trust', description: 'Architecture deployed' },
-      { metric: '80%', description: 'Reduction in attack surface' },
+      { metric: '35%', description: 'Reduction in attack surface' },
       { metric: 'MFA', description: 'Everywhere' },
     ],
     technologies: ['Okta', 'CrowdStrike', 'Zscaler'],

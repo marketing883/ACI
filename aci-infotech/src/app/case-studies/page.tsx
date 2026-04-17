@@ -77,8 +77,8 @@ const demoCaseStudies: CaseStudy[] = [
     solution: 'ML-powered demand forecasting with AutoML pipeline and real-time inventory optimization',
     results: [
       { metric: '23%', description: 'Reduction in stockouts' },
-      { metric: '$18M', description: 'Annual inventory savings' },
-      { metric: '92%', description: 'Forecast accuracy achieved' },
+      { metric: '$2.4M', description: 'Annual inventory savings' },
+      { metric: '87%', description: 'Forecast accuracy achieved' },
     ],
     technologies: ['Databricks', 'MLflow', 'Python', 'Azure ML'],
     is_featured: false,
@@ -92,8 +92,8 @@ const demoCaseStudies: CaseStudy[] = [
     challenge: 'Legacy on-premise systems, compliance concerns, 24/7 availability requirements',
     solution: 'Phased cloud migration with zero downtime, HIPAA-compliant architecture on AWS',
     results: [
-      { metric: '40%', description: 'Infrastructure cost reduction' },
-      { metric: '99.99%', description: 'Uptime achieved' },
+      { metric: '22%', description: 'Infrastructure cost reduction' },
+      { metric: '99.5%', description: 'Uptime achieved' },
       { metric: 'Zero', description: 'Compliance incidents' },
     ],
     technologies: ['AWS', 'Terraform', 'Kubernetes', 'CloudWatch'],
@@ -104,12 +104,12 @@ const demoCaseStudies: CaseStudy[] = [
     client: 'Major Financial Institution',
     industry: 'Financial Services',
     service: 'Applied AI & ML',
-    headline: 'Real-Time Fraud Detection Reducing Losses by $25M',
+    headline: 'Real-Time Fraud Detection Reducing Losses by $3.2M',
     challenge: 'Rising fraud losses, slow manual review process, high false positive rates',
     solution: 'ML-based fraud detection with real-time scoring and explainable AI for compliance',
     results: [
-      { metric: '$25M', description: 'Annual fraud loss reduction' },
-      { metric: '85%', description: 'Reduction in false positives' },
+      { metric: '$3.2M', description: 'Annual fraud loss reduction' },
+      { metric: '60%', description: 'Reduction in false positives' },
       { metric: '<100ms', description: 'Transaction scoring time' },
     ],
     technologies: ['Python', 'TensorFlow', 'Kafka', 'Databricks'],
@@ -124,8 +124,8 @@ const demoCaseStudies: CaseStudy[] = [
     challenge: 'Unplanned downtime costing $2M+ monthly, reactive maintenance culture',
     solution: 'IoT sensor deployment with real-time analytics and predictive maintenance ML models',
     results: [
-      { metric: '67%', description: 'Reduction in unplanned downtime' },
-      { metric: '$18M', description: 'Annual maintenance savings' },
+      { metric: '35%', description: 'Reduction in unplanned downtime' },
+      { metric: '$1.8M', description: 'Annual maintenance savings' },
       { metric: '12', description: 'Plants connected globally' },
     ],
     technologies: ['Azure IoT', 'Databricks', 'Power BI', 'Python'],
@@ -157,7 +157,7 @@ const demoCaseStudies: CaseStudy[] = [
     solution: 'Zero-trust architecture implementation with SOC modernization and threat hunting',
     results: [
       { metric: '100%', description: 'NERC CIP compliance achieved' },
-      { metric: '90%', description: 'Reduction in incident response time' },
+      { metric: '45%', description: 'Reduction in incident response time' },
       { metric: 'Zero', description: 'Security breaches since implementation' },
     ],
     technologies: ['Splunk', 'CrowdStrike', 'Azure Sentinel', 'Palo Alto'],
@@ -168,11 +168,11 @@ const demoCaseStudies: CaseStudy[] = [
     client: 'Fortune 500 Logistics Company',
     industry: 'Transportation',
     service: 'Applied AI & ML',
-    headline: 'Route Optimization Saving $30M in Fuel Costs',
+    headline: 'Route Optimization Saving $2.8M in Fuel Costs',
     challenge: 'Inefficient routing, rising fuel costs, driver scheduling complexities',
     solution: 'ML-powered route optimization with real-time traffic integration and dynamic scheduling',
     results: [
-      { metric: '$30M', description: 'Annual fuel cost savings' },
+      { metric: '$2.8M', description: 'Annual fuel cost savings' },
       { metric: '15%', description: 'Improvement in on-time delivery' },
       { metric: '22%', description: 'Reduction in carbon emissions' },
     ],
@@ -189,9 +189,9 @@ const demoCaseStudies: CaseStudy[] = [
     challenge: '30-50 disparate systems post-merger with multiple data formats, finance teams manually reconciling, and regulatory compliance requiring unified audit trails',
     solution: 'Phased migration with parallel runs, automated data quality gates catching 95% of issues, SOX compliance designed in from day one',
     results: [
-      { metric: '$9.2M', description: 'Average year-one operational savings' },
+      { metric: '$210K', description: 'Average year-one operational savings' },
       { metric: 'Zero', description: 'Financial reporting disruptions' },
-      { metric: '78%', description: 'Manual effort reduction' },
+      { metric: '32%', description: 'Manual effort reduction' },
     ],
     technologies: ['SAP S/4HANA', 'Python ETL', 'Azure/AWS Data Lakes', 'PowerBI', 'Automated Reconciliation'],
     is_featured: false,
@@ -205,8 +205,8 @@ const demoCaseStudies: CaseStudy[] = [
     challenge: '300-1000+ physical locations generating transaction data with zero tolerance for payment downtime, legacy batch ETL creating 12-24hr latency',
     solution: 'Payment integration with dual-write pattern, auto-scaling for 3x weekend traffic spikes, Dynatrace observability preventing 90% of production issues',
     results: [
-      { metric: '64%', description: 'Average latency reduction' },
-      { metric: '99.97%', description: 'Uptime maintained during rollout' },
+      { metric: '28%', description: 'Average latency reduction' },
+      { metric: '99.5%', description: 'Uptime maintained during rollout' },
       { metric: 'Zero', description: 'Payment processing disruptions' },
     ],
     technologies: ['Kafka/Kinesis', 'Databricks Lakehouse', 'Delta Lake', 'Salesforce/Braze CDP', 'Dynatrace'],
@@ -281,13 +281,13 @@ const demoCaseStudies: CaseStudy[] = [
     client: 'Enterprise Financial Institution',
     industry: 'Financial Services',
     service: 'Cloud Modernization',
-    headline: 'Legacy to Cloud Migration: 68% Cost Reduction',
+    headline: 'Legacy to Cloud Migration: 24% Cost Reduction',
     challenge: 'On-premise Hadoop/Teradata/Oracle aging, infrastructure costs growing 15-20% annually, scaling requiring 6-12 month hardware procurement, maintenance consuming 40%+ of team time',
     solution: 'Re-architecture for 3x better ROI, zero-downtime migration with parallel run strategy, cloud cost optimization designed in from start',
     results: [
-      { metric: '68%', description: 'Infrastructure cost reduction' },
-      { metric: '10x', description: 'Processing speed improvement' },
-      { metric: '$3.2M', description: 'Average TCO savings over 3 years' },
+      { metric: '24%', description: 'Infrastructure cost reduction' },
+      { metric: '3x', description: 'Processing speed improvement' },
+      { metric: '$420K', description: 'Average TCO savings over 3 years' },
     ],
     technologies: ['AWS/Azure/GCP', 'Databricks/Snowflake', 'Automated Migration Tools', 'Data Validation', 'Terraform IaC', 'Cost Optimization'],
     is_featured: false,
@@ -437,23 +437,23 @@ export default function CaseStudiesPage() {
               Client Success Stories
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              80+ Enterprise Transformations.
+              280+ Projects Delivered.
               <br />
               <span className="text-[var(--aci-primary-light)]">Real Results.</span>
             </h1>
             <p className="text-xl text-gray-400 mb-8">
-              Explore how we've helped Fortune 500 companies and industry leaders
+              Explore how we've helped enterprise companies and industry leaders
               solve their most complex data, AI, and technology challenges.
             </p>
 
             {/* Stats */}
             <div className="flex flex-wrap justify-center gap-8 mt-12">
               <div className="text-center">
-                <div className="text-4xl font-bold text-white">80+</div>
-                <div className="text-gray-400">Client Engagements</div>
+                <div className="text-4xl font-bold text-white">25+</div>
+                <div className="text-gray-400">Enterprise Clients</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-white">$1B+</div>
+                <div className="text-4xl font-bold text-white">$45M+</div>
                 <div className="text-gray-400">Value Delivered</div>
               </div>
               <div className="text-center">

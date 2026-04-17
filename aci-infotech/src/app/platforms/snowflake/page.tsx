@@ -48,14 +48,14 @@ const caseStudies = [
     industry: 'Financial Services',
     challenge: 'Legacy Teradata warehouse with $2M+ annual costs and limited scalability',
     solution: 'Full migration to Snowflake with automated data pipelines and real-time dashboards',
-    results: ['60% cost reduction', '10x faster queries', 'Unlimited scalability'],
+    results: ['25% cost reduction', '3-4x faster queries', 'Unlimited scalability'],
   },
   {
     client: 'Major Retailer',
     industry: 'Retail',
     challenge: 'Siloed data preventing unified customer analytics across channels',
     solution: 'Snowflake data mesh with secure data sharing between business units',
-    results: ['Single customer view', '45% faster insights', 'Self-service analytics'],
+    results: ['Single customer view', '22% faster insights', 'Self-service analytics'],
   },
 ];
 
@@ -125,7 +125,7 @@ export default function SnowflakePage() {
               </div>
               <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Proven ROI</h3>
               <p className="text-gray-600 text-sm">
-                Average 50% reduction in total cost of ownership for our clients.
+                Average 22% reduction in total cost of ownership for our clients.
               </p>
             </div>
             <div className="text-center">

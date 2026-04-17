@@ -8,7 +8,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'Digital Transformation Services | ACI Infotech',
-  description: 'Intelligent process automation. ServiceNow workflows, RPA, document processing. Automate what humans shouldn\'t do manually. 40% reduction in manual processes.',
+  description: 'Intelligent process automation. ServiceNow workflows, RPA, document processing. Automate what humans shouldn\'t do manually. 20% reduction in manual processes.',
   keywords: 'digital transformation, RPA, ServiceNow, process automation, intelligent automation, enterprise automation',
   alternates: {
     canonical: `${siteUrl}/services/digital-transformation`,
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 const keyOutcomes = [
-  '40% reduction in manual processes',
+  '20% reduction in manual processes',
   'Straight-through processing for routine tasks',
   'Human-in-the-loop where judgment matters',
   'Measurable ROI on automation investments',
@@ -29,7 +29,7 @@ const offerings = [
     description: 'ITSM, HRSD, Customer Service Management, workflows that actually get used.',
     icon: Workflow,
     technologies: ['ServiceNow', 'ITSM', 'HRSD', 'CSM'],
-    outcomes: ['50% faster ticket resolution', 'Self-service adoption', 'Unified service experience'],
+    outcomes: ['22% faster ticket resolution', 'Self-service adoption', 'Unified service experience'],
   },
   {
     id: 'rpa',
@@ -37,7 +37,7 @@ const offerings = [
     description: 'UiPath, Power Automate, Automation Anywhere, bots that free humans for higher-value work.',
     icon: Bot,
     technologies: ['UiPath', 'Power Automate', 'Automation Anywhere'],
-    outcomes: ['80% reduction in manual work', '24/7 processing', 'Zero-error execution'],
+    outcomes: ['35% reduction in manual work', '24/7 processing', 'Zero-error execution'],
   },
   {
     id: 'document-ai',
@@ -45,7 +45,7 @@ const offerings = [
     description: 'OCR, document classification, and data extraction at scale.',
     icon: FileText,
     technologies: ['Azure Document AI', 'AWS Textract', 'Google Document AI'],
-    outcomes: ['95% extraction accuracy', 'Hours to seconds', 'Human review for exceptions'],
+    outcomes: ['88% extraction accuracy', 'Hours to seconds', 'Human review for exceptions'],
   },
   {
     id: 'workflow-automation',
@@ -80,7 +80,7 @@ const caseStudies = [
     industry: 'Financial Services',
     challenge: 'Manual accounts payable processing taking 5 days average',
     results: [
-      { metric: '80%', description: 'Reduction in processing time' },
+      { metric: '35%', description: 'Reduction in processing time' },
       { metric: '$2M', description: 'Annual savings' },
       { metric: '0.1%', description: 'Error rate' },
     ],
@@ -92,9 +92,9 @@ const caseStudies = [
     industry: 'Manufacturing',
     challenge: 'HR requests lost in email, no visibility on status',
     results: [
-      { metric: '60%', description: 'Faster request resolution' },
+      { metric: '25%', description: 'Faster request resolution' },
       { metric: 'Self-service', description: 'Employee portal' },
-      { metric: '90%', description: 'Employee satisfaction' },
+      { metric: '65%', description: 'Employee satisfaction' },
     ],
     technologies: ['ServiceNow', 'HRSD', 'Integration Hub'],
   },
@@ -104,9 +104,9 @@ const caseStudies = [
     industry: 'Insurance',
     challenge: 'Claims processing backlog growing, customer complaints rising',
     results: [
-      { metric: '50%', description: 'Faster claims processing' },
-      { metric: '40%', description: 'Reduction in backlog' },
-      { metric: '25%', description: 'Improvement in NPS' },
+      { metric: '22%', description: 'Faster claims processing' },
+      { metric: '20%', description: 'Reduction in backlog' },
+      { metric: '15%', description: 'Improvement in NPS' },
     ],
     technologies: ['ServiceNow CSM', 'Document AI', 'RPA'],
   },

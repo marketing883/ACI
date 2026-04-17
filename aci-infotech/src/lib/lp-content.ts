@@ -670,9 +670,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: 'Real-Time', label: 'Sales Visibility' },
-          { value: '30%', label: 'Better Inventory Turns' },
-          { value: '85%', label: 'Store Manager Adoption' },
-          { value: '50%', label: 'Faster Promo Analysis' },
+          { value: '20%', label: 'Better Inventory Turns' },
+          { value: '72%', label: 'Store Manager Adoption' },
+          { value: '23%', label: 'Faster Promo Analysis' },
         ],
       },
       professional_services: {
@@ -703,8 +703,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         stats: [
           { value: 'Real-Time', label: 'Utilization Tracking' },
           { value: '15%', label: 'Improved Margins' },
-          { value: '40%', label: 'Faster Invoicing' },
-          { value: '95%', label: 'Partner Adoption' },
+          { value: '22%', label: 'Faster Invoicing' },
+          { value: '78%', label: 'Partner Adoption' },
         ],
       },
     },
@@ -1070,10 +1070,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '150+', label: 'D365 Implementations' },
-      { value: '95%', label: 'On-Time Delivery' },
-      { value: '40%', label: 'Productivity Improvement' },
-      { value: '30%', label: 'Sales Cycle Reduction' },
+      { value: '34', label: 'D365 Implementations' },
+      { value: '92%', label: 'On-Time Delivery' },
+      { value: '22%', label: 'Productivity Improvement' },
+      { value: '18%', label: 'Sales Cycle Reduction' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -1102,8 +1102,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '50% Faster Quote-to-Cash',
-        description: 'A manufacturing company reduced their quote-to-cash cycle by 50% with Dynamics 365 Sales and Finance integration.',
+        headline: '28% Faster Quote-to-Cash',
+        description: 'A manufacturing company reduced their quote-to-cash cycle by 28% with Dynamics 365 Sales and Finance integration.',
         industry: 'manufacturing',
       },
       {
@@ -1161,10 +1161,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '40%', label: 'Inventory Reduction' },
-          { value: '25%', label: 'Faster Order-to-Delivery' },
-          { value: '99%', label: 'On-Time Delivery' },
-          { value: '30%', label: 'Production Efficiency Gain' },
+          { value: '22%', label: 'Inventory Reduction' },
+          { value: '18%', label: 'Faster Order-to-Delivery' },
+          { value: '96%', label: 'On-Time Delivery' },
+          { value: '15%', label: 'Production Efficiency Gain' },
         ],
       },
       retail: {
@@ -1194,9 +1194,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '360°', label: 'Customer View' },
-          { value: '30%', label: 'Increase in AOV' },
-          { value: '50%', label: 'Faster Checkout' },
-          { value: '25%', label: 'Improved Inventory Turns' },
+          { value: '18%', label: 'Increase in AOV' },
+          { value: '24%', label: 'Faster Checkout' },
+          { value: '15%', label: 'Improved Inventory Turns' },
         ],
       },
       distribution: {
@@ -1225,10 +1225,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '50%', label: 'Faster Order Processing' },
-          { value: '30%', label: 'Warehouse Productivity' },
-          { value: '99.5%', label: 'Order Accuracy' },
-          { value: '40%', label: 'Reduced DSO' },
+          { value: '25%', label: 'Faster Order Processing' },
+          { value: '18%', label: 'Warehouse Productivity' },
+          { value: '98%', label: 'Order Accuracy' },
+          { value: '22%', label: 'Reduced DSO' },
         ],
       },
       professional_services: {
@@ -1257,9 +1257,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '85%', label: 'Utilization Achieved' },
-          { value: '60%', label: 'Faster Invoicing' },
-          { value: '15%', label: 'Margin Improvement' },
+          { value: '82%', label: 'Utilization Achieved' },
+          { value: '28%', label: 'Faster Invoicing' },
+          { value: '12%', label: 'Margin Improvement' },
           { value: '100%', label: 'Project Visibility' },
         ],
       },
@@ -1316,9 +1316,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '50+', label: 'Gen AI Projects Delivered' },
-      { value: '10x', label: 'Productivity Gains Achieved' },
-      { value: '80%', label: 'Reduction in Manual Work' },
+      { value: '27', label: 'Gen AI Projects Delivered' },
+      { value: '4x', label: 'Productivity Gains Achieved' },
+      { value: '35%', label: 'Reduction in Manual Work' },
       { value: '4 Weeks', label: 'Average Time to POC' },
     ],
 
@@ -1348,13 +1348,13 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '80% Faster Document Processing',
-        description: 'A legal services firm automated contract review with AI, reducing document processing time by 80%.',
+        headline: '38% Faster Document Processing',
+        description: 'A legal services firm automated contract review with AI, reducing document processing time by 38%.',
         industry: 'finance',
       },
       {
         headline: 'AI-Powered Customer Service',
-        description: 'An enterprise deployed an AI copilot that handles 60% of customer inquiries, improving response time by 5x.',
+        description: 'An enterprise deployed an AI copilot that handles 30% of customer inquiries, improving response time by 3x.',
         industry: 'technology',
       },
     ],
@@ -1407,10 +1407,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '70%', label: 'Reduction in Documentation Time' },
+          { value: '30%', label: 'Reduction in Documentation Time' },
           { value: '100%', label: 'HIPAA Compliant' },
-          { value: '50%', label: 'Faster Prior Auth' },
-          { value: '95%', label: 'Coding Accuracy' },
+          { value: '22%', label: 'Faster Prior Auth' },
+          { value: '93%', label: 'Coding Accuracy' },
         ],
       },
       finance: {
@@ -1439,10 +1439,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '80%', label: 'Faster Document Processing' },
+          { value: '35%', label: 'Faster Document Processing' },
           { value: '100%', label: 'Audit Trail Coverage' },
-          { value: '60%', label: 'Call Deflection' },
-          { value: '70%', label: 'Reduction in False Positives' },
+          { value: '28%', label: 'Call Deflection' },
+          { value: '32%', label: 'Reduction in False Positives' },
         ],
       },
       legal: {
@@ -1471,10 +1471,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '70%', label: 'Faster Contract Review' },
-          { value: '10x', label: 'Research Speed' },
-          { value: '50%', label: 'Reduction in Drafting Time' },
-          { value: '90%', label: 'Issue Identification Accuracy' },
+          { value: '32%', label: 'Faster Contract Review' },
+          { value: '4x', label: 'Research Speed' },
+          { value: '25%', label: 'Reduction in Drafting Time' },
+          { value: '88%', label: 'Issue Identification Accuracy' },
         ],
       },
       manufacturing: {
@@ -1503,10 +1503,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '40%', label: 'Faster Problem Resolution' },
-          { value: '50%', label: 'Reduction in Training Time' },
+          { value: '22%', label: 'Faster Problem Resolution' },
+          { value: '25%', label: 'Reduction in Training Time' },
           { value: '100%', label: 'Knowledge Captured' },
-          { value: '30%', label: 'Maintenance Efficiency Gain' },
+          { value: '18%', label: 'Maintenance Efficiency Gain' },
         ],
       },
       retail: {
@@ -1535,10 +1535,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '10x', label: 'Faster Content Creation' },
-          { value: '50%', label: 'Customer Service Automation' },
-          { value: '35%', label: 'Increase in Conversions' },
-          { value: '80%', label: 'Reduction in Content Costs' },
+          { value: '5x', label: 'Faster Content Creation' },
+          { value: '25%', label: 'Customer Service Automation' },
+          { value: '18%', label: 'Increase in Conversions' },
+          { value: '33%', label: 'Reduction in Content Costs' },
         ],
       },
     },
@@ -1594,7 +1594,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '100+', label: 'ML Models in Production' },
+      { value: '26', label: 'ML Models in Production' },
       { value: '35%', label: 'Average Efficiency Gain' },
       { value: '92%', label: 'Model Accuracy Achieved' },
       { value: '6 Weeks', label: 'Average Time to POC' },
@@ -1631,8 +1631,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         industry: 'technology',
       },
       {
-        headline: '$2M Annual Savings',
-        description: 'A manufacturing firm implemented predictive maintenance ML, reducing unplanned downtime by 45% and saving $2M annually.',
+        headline: '$200K Annual Savings',
+        description: 'A manufacturing firm implemented predictive maintenance ML, reducing unplanned downtime by 25% and saving $200K annually.',
         industry: 'manufacturing',
       },
     ],
@@ -1685,10 +1685,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '30%', label: 'Reduction in Readmissions' },
-          { value: '25%', label: 'Fewer Denials' },
-          { value: '40%', label: 'Better Resource Utilization' },
-          { value: '$5M+', label: 'Annual Savings' },
+          { value: '18%', label: 'Reduction in Readmissions' },
+          { value: '15%', label: 'Fewer Denials' },
+          { value: '22%', label: 'Better Resource Utilization' },
+          { value: '$180K', label: 'Annual Savings' },
         ],
       },
       finance: {
@@ -1717,10 +1717,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '60%', label: 'Reduction in Fraud Losses' },
-          { value: '25%', label: 'Better Credit Decisions' },
-          { value: '35%', label: 'Reduction in Churn' },
-          { value: '70%', label: 'Fewer AML False Positives' },
+          { value: '28%', label: 'Reduction in Fraud Losses' },
+          { value: '18%', label: 'Better Credit Decisions' },
+          { value: '22%', label: 'Reduction in Churn' },
+          { value: '33%', label: 'Fewer AML False Positives' },
         ],
       },
       manufacturing: {
@@ -1749,10 +1749,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '45%', label: 'Reduction in Downtime' },
-          { value: '30%', label: 'Fewer Quality Defects' },
-          { value: '25%', label: 'Improved Forecast Accuracy' },
-          { value: '20%', label: 'Energy Cost Savings' },
+          { value: '24%', label: 'Reduction in Downtime' },
+          { value: '18%', label: 'Fewer Quality Defects' },
+          { value: '15%', label: 'Improved Forecast Accuracy' },
+          { value: '12%', label: 'Energy Cost Savings' },
         ],
       },
       oil_gas: {
@@ -1781,10 +1781,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '15%', label: 'Production Increase' },
-          { value: '40%', label: 'Reduction in Failures' },
-          { value: '10x', label: 'Faster Reservoir Analysis' },
-          { value: '50%', label: 'Reduction in Safety Incidents' },
+          { value: '10%', label: 'Production Increase' },
+          { value: '22%', label: 'Reduction in Failures' },
+          { value: '4x', label: 'Faster Reservoir Analysis' },
+          { value: '25%', label: 'Reduction in Safety Incidents' },
         ],
       },
       retail: {
@@ -1813,10 +1813,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '30%', label: 'Reduction in Stockouts' },
-          { value: '25%', label: 'Increase in Conversions' },
-          { value: '5-15%', label: 'Revenue Lift from Pricing' },
-          { value: '40%', label: 'Improvement in Retention' },
+          { value: '20%', label: 'Reduction in Stockouts' },
+          { value: '15%', label: 'Increase in Conversions' },
+          { value: '5-10%', label: 'Revenue Lift from Pricing' },
+          { value: '22%', label: 'Improvement in Retention' },
         ],
       },
     },
@@ -1872,10 +1872,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '80%', label: 'Task Automation Rate' },
-      { value: '10x', label: 'Throughput Improvement' },
+      { value: '42%', label: 'Task Automation Rate' },
+      { value: '4x', label: 'Throughput Improvement' },
       { value: '24/7', label: 'Autonomous Operation' },
-      { value: '95%', label: 'Accuracy with Oversight' },
+      { value: '91%', label: 'Accuracy with Oversight' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -1904,7 +1904,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '90% Reduction in Processing Time',
+        headline: '38% Reduction in Processing Time',
         description: 'An insurance company deployed AI agents for claims processing, reducing average handling time from 2 days to 4 hours.',
         industry: 'finance',
       },
@@ -1963,10 +1963,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '70%', label: 'Straight-Through Processing' },
+          { value: '33%', label: 'Straight-Through Processing' },
           { value: '4 Hours', label: 'Avg Claim Resolution' },
           { value: '100%', label: 'Audit Trail Coverage' },
-          { value: '50%', label: 'Cost Per Transaction Reduction' },
+          { value: '25%', label: 'Cost Per Transaction Reduction' },
         ],
       },
       healthcare: {
@@ -1995,9 +1995,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '60%', label: 'Faster Prior Auth' },
-          { value: '30%', label: 'Reduction in No-Shows' },
-          { value: '40%', label: 'More Denials Worked' },
+          { value: '28%', label: 'Faster Prior Auth' },
+          { value: '18%', label: 'Reduction in No-Shows' },
+          { value: '22%', label: 'More Denials Worked' },
           { value: '100%', label: 'HIPAA Compliant' },
         ],
       },

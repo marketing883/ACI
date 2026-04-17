@@ -21,9 +21,9 @@ const allPlaybooks = [
       'Regulatory compliance needs unified audit',
     ],
     outcomes: [
-      { metric: '$9.2M', description: 'Year-one savings' },
+      { metric: '$210K', description: 'Year-one savings' },
       { metric: '0', description: 'Disruptions' },
-      { metric: '78%', description: 'Effort reduced' },
+      { metric: '32%', description: 'Effort reduced' },
     ],
     industries: ['Financial Services', 'Private Equity', 'Healthcare', 'Manufacturing'],
     technologies: ['SAP S/4HANA', 'Python ETL', 'Azure/AWS', 'PowerBI'],
@@ -35,7 +35,7 @@ const allPlaybooks = [
     displayTitle: '600 Stores, Real-Time',
     fullTitle: 'Multi-Location Real-Time Data Platform',
     deployments: 47,
-    description: 'Battle-tested architecture for real-time data across 300-1000+ locations with zero tolerance for payment downtime.',
+    description: 'Production architecture for real-time data across 300-1000+ locations with zero tolerance for payment downtime.',
     challengePattern: [
       '300-1000+ locations generating data',
       'Zero tolerance for payment downtime',
@@ -43,8 +43,8 @@ const allPlaybooks = [
       'Legacy batch ETL causing 12-24hr latency',
     ],
     outcomes: [
-      { metric: '64%', description: 'Latency reduced' },
-      { metric: '99.97%', description: 'Uptime' },
+      { metric: '28%', description: 'Latency reduced' },
+      { metric: '99.5%', description: 'Uptime' },
       { metric: '0', description: 'Disruptions' },
     ],
     industries: ['Retail', 'QSR/Fast Food', 'Convenience Stores', 'Hospitality'],
@@ -153,9 +153,9 @@ const allPlaybooks = [
       'Maintenance consuming 40%+ team time',
     ],
     outcomes: [
-      { metric: '68%', description: 'Cost cut' },
-      { metric: '10x', description: 'Speed gain' },
-      { metric: '$3.2M', description: '3yr savings' },
+      { metric: '24%', description: 'Cost cut' },
+      { metric: '3x', description: 'Speed gain' },
+      { metric: '$420K', description: '3yr savings' },
     ],
     industries: ['Financial Services', 'Healthcare', 'Retail', 'Education'],
     technologies: ['AWS/Azure/GCP', 'Databricks/Snowflake', 'Migration Tools', 'Terraform IaC'],
@@ -197,8 +197,8 @@ const allPlaybooks = [
       'No boundaries between autonomous vs. human-approved decisions',
     ],
     outcomes: [
-      { metric: '40-60%', description: 'Faster operations' },
-      { metric: '2-3x', description: 'Scale without headcount' },
+      { metric: '20-30%', description: 'Faster operations' },
+      { metric: '1.5x', description: 'Scale without headcount' },
       { metric: '100%', description: 'Audit coverage' },
     ],
     industries: ['Financial Services', 'Healthcare', 'Retail', 'Technology', 'Manufacturing'],
@@ -220,7 +220,7 @@ const allPlaybooks = [
     ],
     outcomes: [
       { metric: '100%', description: 'AI visibility' },
-      { metric: '70%', description: 'Faster audits' },
+      { metric: '40%', description: 'Faster audits' },
       { metric: '<5 days', description: 'Governance cycle' },
     ],
     industries: ['Financial Services', 'Healthcare', 'Insurance', 'Government'],
@@ -285,7 +285,7 @@ export default function PlaybooksPage() {
                 <div className="text-gray-400">Total Deployments</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-white">100+</div>
+                <div className="text-4xl font-bold text-white">40+</div>
                 <div className="text-gray-400">Enterprise Patterns</div>
               </div>
             </div>
@@ -377,7 +377,7 @@ export default function PlaybooksPage() {
             Can't Find Your Exact Scenario?
           </h2>
           <p className="text-xl text-gray-400 mb-8">
-            We've documented 100+ patterns beyond these featured playbooks.
+            We've documented 40+ patterns beyond these featured playbooks.
             Talk to an architect who can help identify the right approach for your specific challenge.
           </p>
           <Button href="/contact?reason=architecture-call" variant="lime" size="lg">

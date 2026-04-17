@@ -45,7 +45,7 @@ const offerings = [
     description: 'AI-driven personalization for web, email, mobile, and paid media.',
     icon: Sparkles,
     technologies: ['Einstein AI', 'Adobe Sensei', 'Dynamic Yield'],
-    outcomes: ['25% increase in conversion', 'Product recommendations', 'Next-best-action'],
+    outcomes: ['15% increase in conversion', 'Product recommendations', 'Next-best-action'],
   },
   {
     id: 'email-marketing',
@@ -81,7 +81,7 @@ const caseStudies = [
     challenge: 'Fragmented customer data across 600+ locations, no unified view',
     results: [
       { metric: '30%', description: 'Reduction in data latency' },
-      { metric: '25%', description: 'Improvement in promotions' },
+      { metric: '15%', description: 'Improvement in promotions' },
       { metric: '600+', description: 'Locations integrated' },
     ],
     technologies: ['Salesforce', 'Braze', 'AWS', 'Databricks'],

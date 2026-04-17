@@ -43,7 +43,7 @@ const CLOUD_SERVICE: ServiceData = {
   deployments: '52',
   deploymentsLabel: 'deployments',
   techStack: ['AWS', 'Azure', 'GCP', 'Terraform', 'Kubernetes'],
-  keyOutcome: '68% average infrastructure cost reduction',
+  keyOutcome: '22% average infrastructure cost reduction',
   icon: Cloud,
   href: '/services/cloud-modernization',
 };
@@ -58,7 +58,7 @@ const ERP_SERVICE: ServiceData = {
   deployments: '40',
   deploymentsLabel: 'implementations',
   techStack: ['SAP S/4HANA', 'Oracle ERP', 'Microsoft Dynamics', 'Workday', 'NetSuite'],
-  keyOutcome: '$9.2M average year-one savings from consolidations',
+  keyOutcome: '$195K average year-one savings from consolidations',
   icon: Building2,
   href: '/services/enterprise-applications',
 };
@@ -73,7 +73,7 @@ const DATA_SERVICE: ServiceData = {
   deployments: '100+',
   deploymentsLabel: 'deployments',
   techStack: ['Databricks', 'Snowflake', 'Kafka', 'Dynatrace', 'dbt'],
-  keyOutcome: '64% average data latency reduction',
+  keyOutcome: '28% average data latency reduction',
   icon: Database,
   href: '/services/data-engineering',
 };
@@ -87,7 +87,7 @@ const AI_SERVICE: ServiceData = {
   deployments: '50',
   deploymentsLabel: 'deployments',
   techStack: ['OpenAI', 'Databricks ML', 'SageMaker', 'MLflow', 'ArqAI'],
-  keyOutcome: '3x faster model deployment cycles',
+  keyOutcome: '2x faster model deployment cycles',
   icon: Brain,
   href: '/services/applied-ai-ml',
 };
@@ -101,7 +101,7 @@ const MARTECH_SERVICE: ServiceData = {
   deployments: '34',
   deploymentsLabel: 'deployments',
   techStack: ['Salesforce', 'Adobe AEP', 'Braze', 'Segment', 'Twilio'],
-  keyOutcome: '25% average campaign effectiveness lift',
+  keyOutcome: '15% average campaign effectiveness lift',
   icon: Users,
   href: '/services/martech-cdp',
 };
@@ -116,7 +116,7 @@ const DIGITAL_SERVICE: ServiceData = {
   deployments: '40',
   deploymentsLabel: 'deployments',
   techStack: ['ServiceNow', 'UiPath', 'Power Automate', 'Appian', 'Camunda'],
-  keyOutcome: '78% average process time reduction',
+  keyOutcome: '32% average process time reduction',
   icon: Zap,
   href: '/services/digital-transformation',
 };
