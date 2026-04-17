@@ -70,6 +70,7 @@ const navItems: NavItem[] = [
     icon: BarChart3,
     children: [
       { href: '/admin/analytics', label: 'Real-Time Analytics', icon: BarChart3 },
+      { href: '/admin/analytics/funnel', label: 'Conversion Funnel', icon: BarChart3 },
       { href: '/admin/analytics/triggers', label: 'Engagement Triggers', icon: Sparkles },
     ]
   },
