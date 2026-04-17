@@ -107,17 +107,13 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://snap.licdn.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://snap.licdn.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https: http:",
               "media-src 'self' blob:",
-              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://px.ads.linkedin.com https://*.supabase.co https://api.aciinfotech.com",
-              "frame-src 'self'",
-              // Allow the PWA manifest to load through the GitHub Codespaces
-              // auth tunnel (private port forwarding redirects /manifest.webmanifest
-              // through https://github.dev/pf-signin?...). On a real production
-              // domain the manifest is served from 'self' so this is a no-op.
+              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://px.ads.linkedin.com https://*.supabase.co https://api.aciinfotech.com",
+              "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net https://bid.g.doubleclick.net",
               "manifest-src 'self' https://*.github.dev https://github.dev",
             ].join('; '),
           },
