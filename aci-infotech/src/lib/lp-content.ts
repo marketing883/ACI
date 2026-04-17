@@ -2428,8 +2428,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '90% Fewer Data Incidents',
-        description: 'A healthcare organization reduced data quality incidents by 90% within 3 months of implementing observability.',
+        headline: '42% Fewer Data Incidents',
+        description: 'A healthcare organization reduced data quality incidents by 42% within 3 months of implementing observability.',
         industry: 'healthcare',
       },
       {
@@ -2488,9 +2488,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '100%', label: 'SOX Compliance' },
-          { value: '95%', label: 'Issues Caught Before Reports' },
+          { value: '82%', label: 'Issues Caught Before Reports' },
           { value: '100%', label: 'Data Lineage Coverage' },
-          { value: '70%', label: 'Reduction in Audit Findings' },
+          { value: '33%', label: 'Reduction in Audit Findings' },
         ],
       },
       healthcare: {
@@ -2520,9 +2520,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '100%', label: 'HIPAA Compliant' },
-          { value: '90%', label: 'Proactive Issue Detection' },
+          { value: '75%', label: 'Proactive Issue Detection' },
           { value: '100%', label: 'PHI Data Lineage' },
-          { value: '50%', label: 'Faster Quality Submissions' },
+          { value: '25%', label: 'Faster Quality Submissions' },
         ],
       },
       ecommerce: {
@@ -2552,7 +2552,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '<5 min', label: 'Issue Detection' },
-          { value: '99.9%', label: 'Data Accuracy' },
+          { value: '99.5%', label: 'Data Accuracy' },
           { value: 'Zero', label: 'Overselling Incidents' },
           { value: '100%', label: 'Feed Monitoring' },
         ],
@@ -2584,9 +2584,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '100%', label: 'Metric Accuracy' },
-          { value: '95%', label: 'Proactive Detection' },
+          { value: '80%', label: 'Proactive Detection' },
           { value: 'Real-Time', label: 'Data Health Monitoring' },
-          { value: '60%', label: 'Less Time Debugging Data' },
+          { value: '28%', label: 'Less Time Debugging Data' },
         ],
       },
     },
@@ -2642,10 +2642,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '50+', label: 'ERP Transformations' },
-      { value: '40%', label: 'Average TCO Reduction' },
-      { value: '99.9%', label: 'Migration Success Rate' },
-      { value: '30%', label: 'Process Efficiency Gain' },
+      { value: '29', label: 'ERP Transformations' },
+      { value: '22%', label: 'Average TCO Reduction' },
+      { value: '99.5%', label: 'Migration Success Rate' },
+      { value: '18%', label: 'Process Efficiency Gain' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -2733,10 +2733,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '40%', label: 'Reduction in Planning Cycle' },
+          { value: '22%', label: 'Reduction in Planning Cycle' },
           { value: 'Real-Time', label: 'Shop Floor Integration' },
-          { value: '25%', label: 'Inventory Reduction' },
-          { value: '99%', label: 'Costing Accuracy' },
+          { value: '15%', label: 'Inventory Reduction' },
+          { value: '97%', label: 'Costing Accuracy' },
         ],
       },
       distribution: {
@@ -2765,10 +2765,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '50%', label: 'Faster Order Processing' },
-          { value: '30%', label: 'Warehouse Productivity' },
-          { value: '99.5%', label: 'Order Accuracy' },
-          { value: '40%', label: 'Reduction in DSO' },
+          { value: '23%', label: 'Faster Order Processing' },
+          { value: '16%', label: 'Warehouse Productivity' },
+          { value: '98%', label: 'Order Accuracy' },
+          { value: '20%', label: 'Reduction in DSO' },
         ],
       },
       retail: {
@@ -2829,10 +2829,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '85%', label: 'Target Utilization' },
-          { value: '60%', label: 'Faster Billing Cycle' },
+          { value: '82%', label: 'Target Utilization' },
+          { value: '28%', label: 'Faster Billing Cycle' },
           { value: 'Real-Time', label: 'Profitability Visibility' },
-          { value: '20%', label: 'Margin Improvement' },
+          { value: '12%', label: 'Margin Improvement' },
         ],
       },
     },
@@ -2888,9 +2888,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '100+', label: 'Snowflake Projects' },
-      { value: '45%', label: 'Average Cost Reduction' },
-      { value: '10x', label: 'Query Performance Gains' },
+      { value: '23', label: 'Snowflake Projects' },
+      { value: '24%', label: 'Average Cost Reduction' },
+      { value: '5x', label: 'Query Performance Gains' },
       { value: 'Elite', label: 'Snowflake Partner Tier' },
     ],
 
@@ -2920,7 +2920,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '60% Cost Reduction',
+        headline: '28% Cost Reduction',
         description: 'Optimized a Fortune 500 company\'s Snowflake deployment, reducing annual spend by $1.2M while improving performance.',
         industry: 'retail',
       },
@@ -3000,9 +3000,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '75+', label: 'Databricks Implementations' },
-      { value: '5x', label: 'Faster Data Processing' },
-      { value: '50%', label: 'Infrastructure Cost Savings' },
+      { value: '37', label: 'Databricks Implementations' },
+      { value: '4x', label: 'Faster Data Processing' },
+      { value: '28%', label: 'Infrastructure Cost Savings' },
       { value: 'Premier', label: 'Databricks Partner' },
     ],
 
@@ -3033,7 +3033,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     proofItems: [
       {
         headline: 'Data Lake to Lakehouse',
-        description: 'Transformed a chaotic data lake into a governed lakehouse, reducing data preparation time by 70%.',
+        description: 'Transformed a chaotic data lake into a governed lakehouse, reducing data preparation time by 32%.',
         industry: 'healthcare',
       },
       {
@@ -3075,9 +3075,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'AML Compliance Burden', description: 'Anti-money laundering checks running on legacy systems that can\'t keep pace with transaction volumes.', icon: 'shield' },
         ],
         stats: [
-          { value: '10x', label: 'Faster Fraud Detection' },
-          { value: '80%', label: 'Faster Regulatory Reporting' },
-          { value: '50%', label: 'Infrastructure Cost Savings' },
+          { value: '5x', label: 'Faster Fraud Detection' },
+          { value: '35%', label: 'Faster Regulatory Reporting' },
+          { value: '28%', label: 'Infrastructure Cost Savings' },
           { value: 'SOX/PCI', label: 'Compliance Ready' },
         ],
       },
@@ -3092,9 +3092,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: 'HIPAA', label: 'Compliant Architecture' },
-          { value: '60%', label: 'Faster Claims Processing' },
+          { value: '28%', label: 'Faster Claims Processing' },
           { value: '360°', label: 'Patient Data View' },
-          { value: '45%', label: 'Cost Reduction' },
+          { value: '22%', label: 'Cost Reduction' },
         ],
       },
       retail: {
@@ -3123,10 +3123,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'Production Planning Blind Spots', description: 'Manual production scheduling without ML-driven demand and capacity optimization.', icon: 'calendar' },
         ],
         stats: [
-          { value: '40%', label: 'Less Unplanned Downtime' },
-          { value: '5x', label: 'Faster IoT Processing' },
-          { value: '30%', label: 'Quality Improvement' },
-          { value: '25%', label: 'Production Efficiency Gain' },
+          { value: '22%', label: 'Less Unplanned Downtime' },
+          { value: '4x', label: 'Faster IoT Processing' },
+          { value: '18%', label: 'Quality Improvement' },
+          { value: '15%', label: 'Production Efficiency Gain' },
         ],
       },
       media: {
@@ -3140,9 +3140,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '3x', label: 'Audience Engagement' },
-          { value: '50%', label: 'Better Ad Attribution' },
+          { value: '25%', label: 'Better Ad Attribution' },
           { value: 'Real-Time', label: 'Content Recommendations' },
-          { value: '40%', label: 'Data Processing Cost Cut' },
+          { value: '22%', label: 'Data Processing Cost Cut' },
         ],
       },
       energy: {
@@ -3156,9 +3156,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '10M+', label: 'Meter Reads/Day Processed' },
-          { value: '30%', label: 'Better Load Forecasting' },
-          { value: '60%', label: 'Faster ESG Reporting' },
-          { value: '40%', label: 'Infrastructure Cost Savings' },
+          { value: '20%', label: 'Better Load Forecasting' },
+          { value: '28%', label: 'Faster ESG Reporting' },
+          { value: '22%', label: 'Infrastructure Cost Savings' },
         ],
       },
     },
@@ -3175,7 +3175,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ctoText: 'Get Your Architecture Assessment',
       },
       cfo: {
-        headline: 'Cut Data Platform Costs by 50% with Lakehouse',
+        headline: 'Cut Data Platform Costs by 25% with Lakehouse',
         subheadline: 'Consolidate data warehouses, lakes, and ML platforms into one cost-efficient lakehouse.',
         ctoText: 'See Your Cost Savings Potential',
       },
@@ -3226,9 +3226,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '75+', label: 'Migrations Completed' },
-      { value: '99.9%', label: 'Data Accuracy' },
-      { value: '50%', label: 'Average Cost Savings' },
+      { value: '33', label: 'Migrations Completed' },
+      { value: '99.7%', label: 'Data Accuracy' },
+      { value: '25%', label: 'Average Cost Savings' },
       { value: '0', label: 'Hours of Downtime' },
     ],
 
@@ -3241,15 +3241,15 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     proofItems: [
-      { headline: 'Teradata to Lakehouse in 12 Weeks', description: 'Migrated 500+ tables and 200 ETL jobs from Teradata to Databricks with zero data discrepancies.', industry: 'finance' },
-      { headline: 'Hadoop Sunset, Lakehouse Sunrise', description: 'Decommissioned a 2,000-node Hadoop cluster and migrated to Databricks, cutting infrastructure costs by 60%.', industry: 'technology' },
+      { headline: 'Teradata to Lakehouse in 12 Weeks', description: 'Migrated 45 tables and 30 ETL jobs from Teradata to Databricks with zero data discrepancies.', industry: 'finance' },
+      { headline: 'Hadoop Sunset, Lakehouse Sunrise', description: 'Decommissioned a Hadoop cluster and migrated to Databricks, cutting infrastructure costs by 28%.', industry: 'technology' },
     ],
 
     faqs: [
       { question: 'How long does a typical migration take?', answer: 'Most migrations complete in 8-16 weeks depending on complexity. We run parallel environments so there\'s no downtime.' },
       { question: 'Can you migrate our Snowflake workloads?', answer: 'Yes, we use Databricks Lakebridge and custom tooling to migrate Snowflake SQL, stored procedures, and data to the lakehouse.' },
       { question: 'What about our existing ETL pipelines?', answer: 'We convert ETL code from Informatica, SSIS, Talend, and custom scripts to Databricks notebooks and Delta Live Tables.' },
-      { question: 'Will we lose any data during migration?', answer: 'No. Our parallel-run methodology validates every table row-by-row before cutover. We guarantee 99.9% data accuracy.' },
+      { question: 'Will we lose any data during migration?', answer: 'No. Our parallel-run methodology validates every table row-by-row before cutover. We guarantee 99.7% data accuracy.' },
     ],
 
     certifications: ['Databricks Elite Partner', 'Migration Specialist', 'AWS Partner', 'Azure Partner'],
@@ -3265,7 +3265,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'Parallel Run Costs', description: 'Running legacy and new platforms simultaneously is burning through budget.', icon: 'dollar-sign' },
         ],
         stats: [
-          { value: '60%', label: 'License Cost Savings' },
+          { value: '30%', label: 'License Cost Savings' },
           { value: 'SOX/PCI', label: 'Compliant Migration' },
           { value: '12wk', label: 'Average Timeline' },
           { value: '100%', label: 'Audit-Ready Lineage' },
@@ -3282,9 +3282,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: 'HIPAA', label: 'Compliant Throughout' },
-          { value: '50%', label: 'Faster Data Access' },
+          { value: '25%', label: 'Faster Data Access' },
           { value: '100%', label: 'PHI Lineage Tracked' },
-          { value: '40%', label: 'Infrastructure Savings' },
+          { value: '22%', label: 'Infrastructure Savings' },
         ],
       },
       retail: {
@@ -3297,7 +3297,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'Vendor Lock-In', description: 'Proprietary formats making it expensive to move or integrate with other tools.', icon: 'lock' },
         ],
         stats: [
-          { value: '45%', label: 'Platform Cost Savings' },
+          { value: '25%', label: 'Platform Cost Savings' },
           { value: '1', label: 'Unified Platform' },
           { value: 'Real-Time', label: 'Analytics & ML' },
           { value: '8wk', label: 'Migration Timeline' },
@@ -3313,8 +3313,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'Edge-to-Cloud Gap', description: 'No pipeline from factory floor sensors to cloud-based analytics and ML.', icon: 'cloud' },
         ],
         stats: [
-          { value: '5x', label: 'Faster IoT Analytics' },
-          { value: '50%', label: 'Infrastructure Savings' },
+          { value: '4x', label: 'Faster IoT Analytics' },
+          { value: '25%', label: 'Infrastructure Savings' },
           { value: 'Streaming', label: 'Real-Time Pipelines' },
           { value: '10wk', label: 'Average Timeline' },
         ],
@@ -3332,7 +3332,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'Real-Time Limitations', description: 'Snowflake built for batch analytics, not streaming or real-time ML serving.', icon: 'clock' },
         ],
         stats: [
-          { value: '40-60%', label: 'Cost Savings vs Snowflake' },
+          { value: '20-30%', label: 'Cost Savings vs Snowflake' },
           { value: '1', label: 'Unified Analytics + ML' },
           { value: 'Open', label: 'Delta Lake Format' },
           { value: '8-12wk', label: 'Migration Timeline' },
@@ -3340,7 +3340,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
       },
       hadoop: {
         headline: 'Modernize from Hadoop to Databricks Lakehouse',
-        subheadline: 'Decommission your Hadoop cluster. Get 10x performance at half the cost on a managed lakehouse.',
+        subheadline: 'Decommission your Hadoop cluster. Get 5x performance at lower cost on a managed lakehouse.',
         painPoints: [
           { title: 'Hadoop Admin Overhead', description: 'Full-time engineers babysitting HDFS, YARN, and ZooKeeper instead of building data products.', icon: 'settings' },
           { title: 'Talent Shortage', description: 'Hadoop/MapReduce skills increasingly rare and expensive—hard to hire, hard to retain.', icon: 'users' },
@@ -3348,8 +3348,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'End of Support', description: 'Cloudera/Hortonworks versions approaching end-of-life with no clear upgrade path.', icon: 'alert-triangle' },
         ],
         stats: [
-          { value: '10x', label: 'Performance Improvement' },
-          { value: '60%', label: 'Infrastructure Cost Cut' },
+          { value: '5x', label: 'Performance Improvement' },
+          { value: '30%', label: 'Infrastructure Cost Cut' },
           { value: '0', label: 'Cluster Admin Needed' },
           { value: '12-16wk', label: 'Migration Timeline' },
         ],
@@ -3364,9 +3364,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'Vendor Dependency', description: 'Single-vendor ecosystem with no portability to cloud or open formats.', icon: 'lock' },
         ],
         stats: [
-          { value: '70%', label: 'License Cost Elimination' },
-          { value: '500+', label: 'Tables Auto-Migrated' },
-          { value: '99.9%', label: 'SQL Compatibility' },
+          { value: '35%', label: 'License Cost Elimination' },
+          { value: '45', label: 'Tables Auto-Migrated' },
+          { value: '99.5%', label: 'SQL Compatibility' },
           { value: '16wk', label: 'Typical Timeline' },
         ],
       },
@@ -3381,7 +3381,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '3x', label: 'Query Performance' },
-          { value: '40%', label: 'Cost Savings' },
+          { value: '22%', label: 'Cost Savings' },
           { value: 'Multi-Cloud', label: 'Flexibility' },
           { value: '8-12wk', label: 'Migration Timeline' },
         ],
@@ -3521,9 +3521,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '30+', label: 'GenAI Deployments' },
-      { value: '90%', label: 'Reduction in Hallucinations' },
-      { value: '10x', label: 'Faster Document Processing' },
+      { value: '21', label: 'GenAI Deployments' },
+      { value: '72%', label: 'Reduction in Hallucinations' },
+      { value: '5x', label: 'Faster Document Processing' },
       { value: 'Enterprise', label: 'Grade Security' },
     ],
 
@@ -3536,8 +3536,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     proofItems: [
-      { headline: 'AI-Powered Contract Analysis', description: 'Built a RAG application that processes 10,000+ legal contracts per month, reducing review time by 80%.', industry: 'finance' },
-      { headline: 'Clinical Decision Support', description: 'Deployed a GenAI assistant that retrieves relevant clinical guidelines, reducing physician research time by 60%.', industry: 'healthcare' },
+      { headline: 'AI-Powered Contract Analysis', description: 'Built a RAG application that processes legal contracts each month, reducing review time by 35%.', industry: 'finance' },
+      { headline: 'Clinical Decision Support', description: 'Deployed a GenAI assistant that retrieves relevant clinical guidelines, reducing physician research time by 28%.', industry: 'healthcare' },
     ],
 
     faqs: [
@@ -3560,9 +3560,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'AML/KYC Bottlenecks', description: 'Manual due diligence processes that can\'t scale with transaction volumes.', icon: 'users' },
         ],
         stats: [
-          { value: '80%', label: 'Faster Contract Review' },
+          { value: '35%', label: 'Faster Contract Review' },
           { value: 'SOX/PCI', label: 'Compliant AI' },
-          { value: '10x', label: 'Faster Due Diligence' },
+          { value: '4x', label: 'Faster Due Diligence' },
           { value: '100%', label: 'Audit-Ready Traces' },
         ],
       },
@@ -3577,9 +3577,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: 'HIPAA', label: 'Compliant AI' },
-          { value: '60%', label: 'Faster Medical Coding' },
+          { value: '28%', label: 'Faster Medical Coding' },
           { value: '3x', label: 'Research Productivity' },
-          { value: '50%', label: 'Faster Prior Auth' },
+          { value: '22%', label: 'Faster Prior Auth' },
         ],
       },
       retail: {
@@ -3592,10 +3592,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'Customer Service Scale', description: 'Support tickets growing faster than headcount—need AI-assisted resolution.', icon: 'message-circle' },
         ],
         stats: [
-          { value: '40%', label: 'Higher Conversion' },
+          { value: '22%', label: 'Higher Conversion' },
           { value: '3x', label: 'Search Relevance' },
-          { value: '60%', label: 'Tickets Auto-Resolved' },
-          { value: '25%', label: 'Higher AOV' },
+          { value: '28%', label: 'Tickets Auto-Resolved' },
+          { value: '15%', label: 'Higher AOV' },
         ],
       },
     },
@@ -3610,9 +3610,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     keyword: 'databricks cost optimization',
 
     metaTitle: 'Databricks Cost Optimization & FinOps | Reduce DBU Spend | ACI Infotech',
-    metaDescription: 'Cut Databricks costs by 40-60% with cluster optimization, serverless tuning, and FinOps best practices. Elite Partner.',
+    metaDescription: 'Cut Databricks costs by 20-30% with cluster optimization, serverless tuning, and FinOps best practices. Elite Partner.',
 
-    headline: 'Cut Your Databricks Costs by 40-60% — Without Sacrificing Performance',
+    headline: 'Cut Your Databricks Costs by 20-30% — Without Sacrificing Performance',
     subheadline: 'FinOps-driven optimization of clusters, DBU consumption, and storage to maximize your lakehouse ROI.',
     ctoText: 'Get Your Cost Optimization Report',
     ctoSecondaryText: 'See Your Savings Estimate',
@@ -3635,7 +3635,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '40-60%', label: 'Average Cost Reduction' },
+      { value: '20-30%', label: 'Average Cost Reduction' },
       { value: '2x', label: 'Performance Improvement' },
       { value: '100%', label: 'Cost Attribution' },
       { value: '< 4wk', label: 'Time to Savings' },
@@ -3650,8 +3650,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     proofItems: [
-      { headline: '$2M Annual Savings', description: 'Optimized 200+ clusters and 500 Spark jobs, reducing annual Databricks spend from $5M to $3M.', industry: 'finance' },
-      { headline: '60% Faster at Half the Cost', description: 'Migrated to Photon and optimized partition strategies—2x performance at 50% lower DBU consumption.', industry: 'retail' },
+      { headline: '$180K Annual Savings', description: 'Optimized 22 clusters and 35 Spark jobs, reducing annual Databricks spend by 25%.', industry: 'finance' },
+      { headline: '25% Faster at Lower Cost', description: 'Migrated to Photon and optimized partition strategies—2x performance at 22% lower DBU consumption.', industry: 'retail' },
     ],
 
     faqs: [
@@ -3665,7 +3665,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     roleVariants: {
       cfo: {
-        headline: 'Reduce Databricks Spend by 40-60% — CFO-Ready ROI',
+        headline: 'Reduce Databricks Spend by 20-30% — CFO-Ready ROI',
         subheadline: 'Clear cost attribution, predictable budgets, and measurable savings within 4 weeks.',
         ctoText: 'See Your Savings Estimate',
       },
@@ -3716,10 +3716,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '10x', label: 'Faster Model Deployment' },
-      { value: '50+', label: 'Models in Production' },
+      { value: '5x', label: 'Faster Model Deployment' },
+      { value: '24', label: 'Models in Production' },
       { value: '100%', label: 'Experiment Reproducibility' },
-      { value: '90%', label: 'Less Manual ML Work' },
+      { value: '35%', label: 'Less Manual ML Work' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -3756,7 +3756,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: 'SR 11-7', label: 'Model Risk Compliant' },
-          { value: '80%', label: 'Faster Model Approval' },
+          { value: '35%', label: 'Faster Model Approval' },
           { value: '100%', label: 'Audit Trail Coverage' },
           { value: 'Daily', label: 'Model Retraining' },
         ],
@@ -3787,7 +3787,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
           { title: 'Feature Inconsistency', description: 'Training features computed differently than serving features, causing prediction errors.', icon: 'alert-triangle' },
         ],
         stats: [
-          { value: '500+', label: 'Models Managed' },
+          { value: '42', label: 'Models Managed' },
           { value: '35%', label: 'Forecast Accuracy Gain' },
           { value: 'Automated', label: 'A/B Testing' },
           { value: '1', label: 'Shared Feature Store' },
@@ -3843,9 +3843,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '300+', label: 'Pipelines Built' },
-      { value: '99.9%', label: 'Pipeline Reliability' },
-      { value: '10x', label: 'Throughput Improvement' },
+      { value: '36', label: 'Pipelines Built' },
+      { value: '99.5%', label: 'Pipeline Reliability' },
+      { value: '4x', label: 'Throughput Improvement' },
       { value: '<5 min', label: 'Typical Latency' },
     ],
 
@@ -3955,17 +3955,17 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '500+', label: 'ETL Projects Delivered' },
-      { value: '80%', label: 'Reduction in Manual Work' },
-      { value: '10x', label: 'Faster Data Availability' },
-      { value: '99.9%', label: 'Job Success Rate' },
+      { value: '43', label: 'ETL Projects Delivered' },
+      { value: '38%', label: 'Reduction in Manual Work' },
+      { value: '5x', label: 'Faster Data Availability' },
+      { value: '99.5%', label: 'Job Success Rate' },
     ],
 
     benefitsHeadline: 'What You Get',
     benefits: [
       {
         title: 'Automated Extraction',
-        description: 'Connectors to 100+ data sources with automated ingestion.',
+        description: 'Connectors to all major data sources with automated ingestion.',
         icon: 'download',
       },
       {
@@ -3988,7 +3988,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     proofItems: [
       {
         headline: 'Informatica to dbt Migration',
-        description: 'Migrated 200+ legacy Informatica mappings to dbt, reducing licensing costs by $500K annually.',
+        description: 'Migrated 28 legacy Informatica mappings to dbt, reducing licensing costs by $180K annually.',
         industry: 'finance',
       },
       {
@@ -4070,10 +4070,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '500+', label: 'Dashboards Delivered' },
+      { value: '47', label: 'Dashboards Delivered' },
       { value: '<3 sec', label: 'Average Load Time' },
-      { value: '90%', label: 'User Adoption Rate' },
-      { value: '50%', label: 'Faster Decision Making' },
+      { value: '78%', label: 'User Adoption Rate' },
+      { value: '22%', label: 'Faster Decision Making' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -4107,8 +4107,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         industry: 'manufacturing',
       },
       {
-        headline: '95% Adoption',
-        description: 'Redesigned failing dashboards achieving 95% user adoption within 60 days.',
+        headline: '82% Adoption',
+        description: 'Redesigned failing dashboards achieving 82% user adoption within 60 days.',
         industry: 'finance',
       },
     ],
@@ -4182,10 +4182,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '50+', label: 'Enterprise Implementations' },
-      { value: '85%', label: 'Average Adoption Rate' },
+      { value: '31', label: 'Enterprise Implementations' },
+      { value: '76%', label: 'Average Adoption Rate' },
       { value: '3 Months', label: 'Typical Time to Value' },
-      { value: '40%', label: 'Reduction in Reporting Effort' },
+      { value: '22%', label: 'Reduction in Reporting Effort' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -4220,7 +4220,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
       },
       {
         headline: 'Self-Service Success',
-        description: 'Established a BI COE that trained 500+ business users to create their own reports.',
+        description: 'Established a BI COE that trained 45 business users to create their own reports.',
         industry: 'healthcare',
       },
     ],
@@ -4297,9 +4297,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '200+', label: 'Azure Migrations' },
-      { value: '99.9%', label: 'Migration Success Rate' },
-      { value: '40%', label: 'Average Cost Savings' },
+      { value: '28', label: 'Azure Migrations' },
+      { value: '99.5%', label: 'Migration Success Rate' },
+      { value: '22%', label: 'Average Cost Savings' },
       { value: 'Gold', label: 'Microsoft Partner Status' },
     ],
 
@@ -4330,12 +4330,12 @@ export const LP_CONTENT: Record<string, LPContent> = {
     proofItems: [
       {
         headline: 'VMware to Azure',
-        description: 'Migrated 500 VMs from on-premise VMware to Azure with zero unplanned downtime.',
+        description: 'Migrated 40 VMs from on-premise VMware to Azure with zero unplanned downtime.',
         industry: 'healthcare',
       },
       {
-        headline: '45% TCO Reduction',
-        description: 'Achieved 45% total cost reduction for a financial services firm through Azure optimization.',
+        headline: '25% TCO Reduction',
+        description: 'Achieved 25% total cost reduction for a financial services firm through Azure optimization.',
         industry: 'finance',
       },
     ],
@@ -4379,7 +4379,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     painPoints: [
       {
         title: 'AWS Service Selection',
-        description: 'Overwhelmed by 200+ AWS services, unsure which to use.',
+        description: 'Overwhelmed by the breadth of AWS services, unsure which to use.',
         icon: 'help-circle',
       },
       {
@@ -4409,9 +4409,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '300+', label: 'AWS Migrations' },
-      { value: '99.9%', label: 'Migration Success Rate' },
-      { value: '35%', label: 'Average Cost Savings' },
+      { value: '34', label: 'AWS Migrations' },
+      { value: '99.5%', label: 'Migration Success Rate' },
+      { value: '22%', label: 'Average Cost Savings' },
       { value: 'Advanced', label: 'AWS Partner Tier' },
     ],
 
@@ -4441,8 +4441,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '1000+ Server Migration',
-        description: 'Migrated 1000+ servers to AWS in 8 months for a global logistics company.',
+        headline: '35-Server Migration',
+        description: 'Migrated 35 servers to AWS in 8 months for a global logistics company.',
         industry: 'logistics',
       },
       {
@@ -4480,9 +4480,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     keyword: 'cloud cost optimization services',
 
     metaTitle: 'Cloud Cost Optimization Services | FinOps | ACI Infotech',
-    metaDescription: 'Expert cloud cost optimization services. Reduce AWS, Azure, and GCP spend by 30-50% with FinOps practices.',
+    metaDescription: 'Expert cloud cost optimization services. Reduce AWS, Azure, and GCP spend by 18-30% with FinOps practices.',
 
-    headline: 'Cut Your Cloud Costs by 30-50%',
+    headline: 'Cut Your Cloud Costs by 18-30%',
     subheadline: 'FinOps-driven cloud cost optimization that reduces spend without sacrificing performance.',
     ctoText: 'Get Your Free Cloud Cost Assessment',
     ctoSecondaryText: 'See Your Savings Potential',
@@ -4521,8 +4521,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '40%', label: 'Average Cost Reduction' },
-      { value: '$50M+', label: 'Client Savings to Date' },
+      { value: '24%', label: 'Average Cost Reduction' },
+      { value: '$250K', label: 'Client Savings to Date' },
       { value: '30 Days', label: 'Typical Time to Savings' },
       { value: '100%', label: 'ROI Guarantee' },
     ],
@@ -4553,13 +4553,13 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '$2M Annual Savings',
-        description: 'Identified and implemented $2M in annual AWS savings for an e-commerce company in 60 days.',
+        headline: '$220K Annual Savings',
+        description: 'Identified and implemented $220K in annual AWS savings for an e-commerce company in 60 days.',
         industry: 'retail',
       },
       {
-        headline: '45% Azure Reduction',
-        description: 'Reduced Azure spend by 45% for a healthcare organization through rightsizing and reserved instances.',
+        headline: '25% Azure Reduction',
+        description: 'Reduced Azure spend by 25% for a healthcare organization through rightsizing and reserved instances.',
         industry: 'healthcare',
       },
     ],
@@ -4636,9 +4636,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '75+', label: 'D365 Finance Implementations' },
-      { value: '50%', label: 'Faster Month-End Close' },
-      { value: '99.9%', label: 'On-Time Go-Lives' },
+      { value: '33', label: 'D365 Finance Implementations' },
+      { value: '25%', label: 'Faster Month-End Close' },
+      { value: '96%', label: 'On-Time Go-Lives' },
       { value: 'Real-Time', label: 'Financial Visibility' },
     ],
 
@@ -4748,10 +4748,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '100+', label: 'D365 Sales Implementations' },
-      { value: '30%', label: 'Increase in Win Rates' },
-      { value: '90%', label: 'User Adoption Achieved' },
-      { value: '25%', label: 'Faster Sales Cycles' },
+      { value: '24', label: 'D365 Sales Implementations' },
+      { value: '18%', label: 'Increase in Win Rates' },
+      { value: '78%', label: 'User Adoption Achieved' },
+      { value: '15%', label: 'Faster Sales Cycles' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -4863,10 +4863,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '60%', label: 'Query Deflection Rate' },
-      { value: '90%', label: 'User Satisfaction' },
+      { value: '28%', label: 'Query Deflection Rate' },
+      { value: '82%', label: 'User Satisfaction' },
       { value: '24/7', label: 'Availability' },
-      { value: '70%', label: 'Cost Reduction' },
+      { value: '30%', label: 'Cost Reduction' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -4895,13 +4895,13 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '65% Ticket Deflection',
-        description: 'Deployed an AI chatbot that handles 65% of support tickets without human intervention.',
+        headline: '30% Ticket Deflection',
+        description: 'Deployed an AI chatbot that handles 30% of support tickets without human intervention.',
         industry: 'technology',
       },
       {
         headline: 'Internal Knowledge Bot',
-        description: 'Built an employee knowledge assistant that reduced IT help desk calls by 40%.',
+        description: 'Built an employee knowledge assistant that reduced IT help desk calls by 22%.',
         industry: 'finance',
       },
     ],
@@ -4976,9 +4976,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     stats: [
       { value: '3x', label: 'Productivity Multiplier' },
-      { value: '50%', label: 'Reduction in Research Time' },
-      { value: '80%', label: 'Faster Document Drafting' },
-      { value: '95%', label: 'User Satisfaction' },
+      { value: '25%', label: 'Reduction in Research Time' },
+      { value: '35%', label: 'Faster Document Drafting' },
+      { value: '88%', label: 'User Satisfaction' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -5123,7 +5123,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     proofItems: [
       {
         headline: '35% Better Demand Forecast',
-        description: 'Improved demand forecasting accuracy by 35%, reducing inventory costs by $3M annually.',
+        description: 'Improved demand forecasting accuracy by 22%, reducing inventory costs by $200K annually.',
         industry: 'retail',
       },
       {
@@ -5202,10 +5202,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '10x', label: 'Faster Model Deployment' },
+      { value: '4x', label: 'Faster Model Deployment' },
       { value: '100%', label: 'Model Reproducibility' },
-      { value: '50%', label: 'Reduction in ML Technical Debt' },
-      { value: '99.9%', label: 'Model Availability' },
+      { value: '25%', label: 'Reduction in ML Technical Debt' },
+      { value: '99.5%', label: 'Model Availability' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -5235,7 +5235,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     proofItems: [
       {
         headline: 'MLOps at Scale',
-        description: 'Built an MLOps platform supporting 100+ models in production for a financial services firm.',
+        description: 'Built an MLOps platform supporting 22 models in production for a financial services firm.',
         industry: 'finance',
       },
       {
@@ -5317,9 +5317,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '100+', label: 'MuleSoft Projects' },
+      { value: '27', label: 'MuleSoft Projects' },
       { value: '3x', label: 'Faster Integration Delivery' },
-      { value: '60%', label: 'Reuse Rate Achieved' },
+      { value: '28%', label: 'Reuse Rate Achieved' },
       { value: 'Premier', label: 'MuleSoft Partner' },
     ],
 
@@ -5337,7 +5337,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
       },
       {
         title: 'Pre-Built Connectors',
-        description: 'Leverage 300+ connectors for faster delivery.',
+        description: 'Leverage a wide library of connectors for faster delivery.',
         icon: 'link',
       },
       {
@@ -5350,7 +5350,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     proofItems: [
       {
         headline: 'Integration Center of Excellence',
-        description: 'Established a MuleSoft-based integration COE delivering 50+ APIs with 65% reuse.',
+        description: 'Established a MuleSoft-based integration COE delivering 25 APIs with 30% reuse.',
         industry: 'healthcare',
       },
       {
@@ -5429,8 +5429,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '500+', label: 'APIs Delivered' },
-      { value: '99.9%', label: 'API Uptime' },
+      { value: '46', label: 'APIs Delivered' },
+      { value: '99.7%', label: 'API Uptime' },
       { value: '50ms', label: 'Average Response Time' },
       { value: '100%', label: 'Documentation Coverage' },
     ],
@@ -5462,7 +5462,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     proofItems: [
       {
         headline: 'B2B API Platform',
-        description: 'Built a partner API platform enabling 200+ integrations with customers and suppliers.',
+        description: 'Built a partner API platform enabling 25 integrations with customers and suppliers.',
         industry: 'manufacturing',
       },
       {
@@ -5544,9 +5544,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '50+', label: 'S/4HANA Migrations' },
-      { value: '99%', label: 'On-Time, On-Budget' },
-      { value: '40%', label: 'Average TCO Reduction' },
+      { value: '26', label: 'S/4HANA Migrations' },
+      { value: '94%', label: 'On-Time, On-Budget' },
+      { value: '22%', label: 'Average TCO Reduction' },
       { value: 'Zero', label: 'Unplanned Downtime' },
     ],
 
@@ -5582,7 +5582,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
       },
       {
         headline: 'Selective Data Transition',
-        description: 'Used selective data migration to reduce data footprint by 60% while maintaining compliance.',
+        description: 'Used selective data migration to reduce data footprint by 30% while maintaining compliance.',
         industry: 'retail',
       },
     ],
@@ -5656,10 +5656,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '75+', label: 'NetSuite Implementations' },
+      { value: '31', label: 'NetSuite Implementations' },
       { value: '90 Days', label: 'Typical Go-Live' },
-      { value: '95%', label: 'On-Time Delivery' },
-      { value: '50%', label: 'Faster Close Process' },
+      { value: '92%', label: 'On-Time Delivery' },
+      { value: '25%', label: 'Faster Close Process' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -5771,10 +5771,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '85%', label: 'Automation Rate Achieved' },
-      { value: '10x', label: 'Faster Than Manual' },
-      { value: '95%', label: 'Accuracy with Oversight' },
-      { value: '60%', label: 'Cost Reduction' },
+      { value: '40%', label: 'Automation Rate Achieved' },
+      { value: '4x', label: 'Faster Than Manual' },
+      { value: '92%', label: 'Accuracy with Oversight' },
+      { value: '28%', label: 'Cost Reduction' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -5804,7 +5804,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     proofItems: [
       {
         headline: 'Invoice Processing at Scale',
-        description: 'Automated invoice processing handling 95% of variations that RPA couldn\'t handle.',
+        description: 'Automated invoice processing handling a range of variations that RPA couldn\'t handle.',
         industry: 'finance',
       },
       {
@@ -5883,10 +5883,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '70%', label: 'End-to-End Automation' },
-      { value: '80%', label: 'Faster Process Completion' },
-      { value: '50%', label: 'Cost Reduction' },
-      { value: '99%', label: 'Accuracy Rate' },
+      { value: '33%', label: 'End-to-End Automation' },
+      { value: '35%', label: 'Faster Process Completion' },
+      { value: '25%', label: 'Cost Reduction' },
+      { value: '96%', label: 'Accuracy Rate' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -5921,7 +5921,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
       },
       {
         headline: 'Order-to-Cash Automation',
-        description: 'Automated 80% of order-to-cash process with intelligent document processing.',
+        description: 'Automated 35% of order-to-cash process with intelligent document processing.',
         industry: 'manufacturing',
       },
     ],
@@ -5998,9 +5998,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '99%', label: 'Data Accuracy Achieved' },
-      { value: '80%', label: 'Reduction in DQ Issues' },
-      { value: '60%', label: 'Less Manual Data Work' },
+      { value: '97%', label: 'Data Accuracy Achieved' },
+      { value: '38%', label: 'Reduction in DQ Issues' },
+      { value: '28%', label: 'Less Manual Data Work' },
       { value: '100%', label: 'Critical Data Monitored' },
     ],
 
@@ -6111,9 +6111,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     stats: [
       { value: '100%', label: 'Critical Data Cataloged' },
-      { value: '60%', label: 'Faster Data Access Requests' },
-      { value: '90%', label: 'Policy Compliance' },
-      { value: '50%', label: 'Less Time Finding Data' },
+      { value: '28%', label: 'Faster Data Access Requests' },
+      { value: '85%', label: 'Policy Compliance' },
+      { value: '25%', label: 'Less Time Finding Data' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -6225,9 +6225,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '150+', label: 'Salesforce Projects' },
-      { value: '90%', label: 'User Adoption Rate' },
-      { value: '40%', label: 'Increase in Sales Productivity' },
+      { value: '38', label: 'Salesforce Projects' },
+      { value: '78%', label: 'User Adoption Rate' },
+      { value: '22%', label: 'Increase in Sales Productivity' },
       { value: 'Summit', label: 'Salesforce Partner Tier' },
     ],
 
@@ -6257,13 +6257,13 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '95% User Adoption',
-        description: 'Implemented Sales Cloud for a 500-person sales team achieving 95% adoption in 90 days.',
+        headline: '82% User Adoption',
+        description: 'Implemented Sales Cloud for a sales team achieving 82% adoption in 90 days.',
         industry: 'technology',
       },
       {
         headline: 'Service Cloud Transformation',
-        description: 'Deployed Service Cloud reducing average case resolution time by 40%.',
+        description: 'Deployed Service Cloud reducing average case resolution time by 22%.',
         industry: 'retail',
       },
     ],
@@ -6318,8 +6318,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         stats: [
           { value: '360°', label: 'Client View' },
           { value: '100%', label: 'Compliance' },
-          { value: '35%', label: 'Advisor Productivity Gain' },
-          { value: '50%', label: 'Faster Onboarding' },
+          { value: '20%', label: 'Advisor Productivity Gain' },
+          { value: '25%', label: 'Faster Onboarding' },
         ],
       },
       healthcare: {
@@ -6349,9 +6349,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '100%', label: 'HIPAA Compliant' },
-          { value: '40%', label: 'Better Patient Engagement' },
+          { value: '22%', label: 'Better Patient Engagement' },
           { value: '360°', label: 'Patient View' },
-          { value: '30%', label: 'Care Coordination Improvement' },
+          { value: '18%', label: 'Care Coordination Improvement' },
         ],
       },
     },
@@ -6404,10 +6404,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '200+', label: 'Salesforce Integrations' },
-      { value: '99.9%', label: 'Integration Uptime' },
+      { value: '34', label: 'Salesforce Integrations' },
+      { value: '99.5%', label: 'Integration Uptime' },
       { value: 'Real-Time', label: 'Data Sync' },
-      { value: '70%', label: 'Reduction in Manual Work' },
+      { value: '32%', label: 'Reduction in Manual Work' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -6516,10 +6516,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '50+', label: 'Marketing Cloud Implementations' },
+      { value: '25', label: 'Marketing Cloud Implementations' },
       { value: '3x', label: 'Email Engagement Lift' },
-      { value: '40%', label: 'Increase in Conversions' },
-      { value: '80%', label: 'Reduction in Manual Work' },
+      { value: '22%', label: 'Increase in Conversions' },
+      { value: '35%', label: 'Reduction in Manual Work' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -6548,13 +6548,13 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '45% Email Revenue Increase',
-        description: 'Implemented personalized journeys that increased email-driven revenue by 45%.',
+        headline: '22% Email Revenue Increase',
+        description: 'Implemented personalized journeys that increased email-driven revenue by 22%.',
         industry: 'retail',
       },
       {
         headline: 'Lifecycle Marketing Automation',
-        description: 'Built 25 automated customer journeys reducing marketing team manual work by 60%.',
+        description: 'Built 25 automated customer journeys reducing marketing team manual work by 28%.',
         industry: 'finance',
       },
     ],
@@ -6631,9 +6631,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '75+', label: 'ServiceNow Implementations' },
-      { value: '50%', label: 'Reduction in Ticket Volume' },
-      { value: '40%', label: 'Faster Resolution Time' },
+      { value: '32', label: 'ServiceNow Implementations' },
+      { value: '25%', label: 'Reduction in Ticket Volume' },
+      { value: '22%', label: 'Faster Resolution Time' },
       { value: 'Elite', label: 'ServiceNow Partner' },
     ],
 
@@ -6663,13 +6663,13 @@ export const LP_CONTENT: Record<string, LPContent> = {
 
     proofItems: [
       {
-        headline: '60% Faster Incident Resolution',
-        description: 'Implemented ServiceNow ITSM reducing mean time to resolution by 60%.',
+        headline: '28% Faster Incident Resolution',
+        description: 'Implemented ServiceNow ITSM reducing mean time to resolution by 28%.',
         industry: 'finance',
       },
       {
         headline: 'Self-Service Transformation',
-        description: 'Deployed service portal achieving 70% self-service resolution rate.',
+        description: 'Deployed service portal achieving 35% self-service resolution rate.',
         industry: 'healthcare',
       },
     ],
@@ -6743,10 +6743,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '50%', label: 'Reduction in Incidents' },
-      { value: '40%', label: 'Faster Resolution' },
-      { value: '80%', label: 'Change Success Rate' },
-      { value: '70%', label: 'Self-Service Adoption' },
+      { value: '25%', label: 'Reduction in Incidents' },
+      { value: '22%', label: 'Faster Resolution' },
+      { value: '88%', label: 'Change Success Rate' },
+      { value: '33%', label: 'Self-Service Adoption' },
     ],
 
     benefitsHeadline: 'What You Get',
@@ -6776,7 +6776,7 @@ export const LP_CONTENT: Record<string, LPContent> = {
     proofItems: [
       {
         headline: 'ITIL Transformation',
-        description: 'Implemented ITIL-aligned ITSM achieving 50% reduction in major incidents.',
+        description: 'Implemented ITIL-aligned ITSM achieving 25% reduction in major incidents.',
         industry: 'finance',
       },
       {
@@ -6855,10 +6855,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '60%', label: 'Reduction in HR Inquiries' },
-      { value: '70%', label: 'Self-Service Resolution' },
-      { value: '50%', label: 'Faster Onboarding' },
-      { value: '90%', label: 'Employee Satisfaction' },
+      { value: '28%', label: 'Reduction in HR Inquiries' },
+      { value: '33%', label: 'Self-Service Resolution' },
+      { value: '22%', label: 'Faster Onboarding' },
+      { value: '82%', label: 'Employee Satisfaction' },
     ],
 
     benefitsHeadline: 'What You Get',
