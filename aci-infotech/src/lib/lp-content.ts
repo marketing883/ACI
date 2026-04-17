@@ -2028,9 +2028,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
         ],
         stats: [
           { value: '3x', label: 'Faster Quote Turnaround' },
-          { value: '25%', label: 'Reduction in Claims Leakage' },
-          { value: '80%', label: 'Auto-Process Simple Endorsements' },
-          { value: '60%', label: 'Faster FNOL Resolution' },
+          { value: '18%', label: 'Reduction in Claims Leakage' },
+          { value: '35%', label: 'Auto-Process Simple Endorsements' },
+          { value: '28%', label: 'Faster FNOL Resolution' },
         ],
       },
       customer_service: {
@@ -2059,10 +2059,10 @@ export const LP_CONTENT: Record<string, LPContent> = {
           },
         ],
         stats: [
-          { value: '60%', label: 'Autonomous Resolution' },
+          { value: '30%', label: 'Autonomous Resolution' },
           { value: '24/7', label: 'Coverage Without Staffing' },
           { value: '5 min', label: 'Average Resolution Time' },
-          { value: '95%', label: 'Customer Satisfaction' },
+          { value: '89%', label: 'Customer Satisfaction' },
         ],
       },
     },
@@ -2118,9 +2118,9 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '200+', label: 'Integrations Delivered' },
-      { value: '99.9%', label: 'Data Sync Reliability' },
-      { value: '60%', label: 'Reduction in Manual Work' },
+      { value: '32', label: 'Integrations Delivered' },
+      { value: '99.5%', label: 'Data Sync Reliability' },
+      { value: '28%', label: 'Reduction in Manual Work' },
       { value: '<5 min', label: 'Average Sync Latency' },
     ],
 
@@ -2275,8 +2275,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         stats: [
           { value: 'Real-Time', label: 'Shop Floor to ERP' },
           { value: '100%', label: 'IoT Data Captured' },
-          { value: '50%', label: 'Faster Supply Chain Response' },
-          { value: '99.9%', label: 'Data Reliability' },
+          { value: '25%', label: 'Faster Supply Chain Response' },
+          { value: '99.5%', label: 'Data Reliability' },
         ],
       },
       oil_gas: {
@@ -2307,8 +2307,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         stats: [
           { value: 'Real-Time', label: 'OT to IT Data Flow' },
           { value: '100%', label: 'Asset Data Unified' },
-          { value: '40%', label: 'Faster Decision Making' },
-          { value: '99.9%', label: 'Data Pipeline Uptime' },
+          { value: '22%', label: 'Faster Decision Making' },
+          { value: '99.5%', label: 'Data Pipeline Uptime' },
         ],
       },
       retail: {
@@ -2339,8 +2339,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
         stats: [
           { value: 'Real-Time', label: 'Inventory Sync' },
           { value: '360°', label: 'Customer View' },
-          { value: '99.9%', label: 'Order Data Accuracy' },
-          { value: '50%', label: 'Faster Vendor Onboarding' },
+          { value: '99.5%', label: 'Order Data Accuracy' },
+          { value: '25%', label: 'Faster Vendor Onboarding' },
         ],
       },
     },
@@ -2396,8 +2396,8 @@ export const LP_CONTENT: Record<string, LPContent> = {
     ],
 
     stats: [
-      { value: '90%', label: 'Issues Caught Proactively' },
-      { value: '70%', label: 'Reduction in Data Incidents' },
+      { value: '78%', label: 'Issues Caught Proactively' },
+      { value: '35%', label: 'Reduction in Data Incidents' },
       { value: '100%', label: 'Pipeline Coverage' },
       { value: '<15 min', label: 'Average Detection Time' },
     ],
