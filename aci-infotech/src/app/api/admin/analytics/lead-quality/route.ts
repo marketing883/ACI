@@ -35,6 +35,10 @@ export interface Band {
   share: number;
   /** Average score inside the band, or null if the band is empty. */
   avgScore: number | null;
+  /** Previous period count for WoW comparison. Null if no previous data. */
+  previousCount: number | null;
+  delta: number | null;
+  deltaPercent: number | null;
 }
 
 export interface HistogramBucket {
@@ -73,6 +77,8 @@ export interface LeadQualityResponse {
   histogram: HistogramBucket[];
   byIntent: CrossCutRow[];
   byDecisionRole: CrossCutRow[];
+  byIndustry: CrossCutRow[];
+  byServiceInterest: CrossCutRow[];
   insight: {
     hotShare: number | null;
     message: string | null;
@@ -121,7 +127,7 @@ export async function GET(request: NextRequest) {
   // if a single window exceeds that we'd move to aggregated RPCs.
   const { data, error } = await supabase
     .from('chat_leads')
-    .select('id, lead_score, intent, decision_role, created_at')
+    .select('id, lead_score, intent, decision_role, industry, service_interest, created_at')
     .gte('created_at', startIso)
     .lte('created_at', endIso)
     .limit(10_000);
@@ -133,6 +139,8 @@ export async function GET(request: NextRequest) {
     lead_score: number | null;
     intent: string | null;
     decision_role: string | null;
+    industry: string | null;
+    service_interest: string | null;
     created_at: string;
   }>;
 
@@ -164,10 +172,43 @@ export async function GET(request: NextRequest) {
     xs.length === 0 ? null : Math.round(xs.reduce((a, b) => a + b, 0) / xs.length);
   const share = (n: number): number =>
     leadsWithScore === 0 ? 0 : n / leadsWithScore;
+
+  // Previous-period bands for WoW comparison.
+  const prevEnd = new Date(rangeStart.getTime());
+  const prevStart = new Date(prevEnd.getTime() - WINDOW_MS[since]);
+  const { data: prevData } = await supabase
+    .from('chat_leads')
+    .select('lead_score')
+    .gte('created_at', prevStart.toISOString())
+    .lte('created_at', prevEnd.toISOString())
+    .not('lead_score', 'is', null)
+    .limit(10_000);
+  const prevBandCounts: Record<'cold' | 'warm' | 'hot', number> = {
+    cold: 0,
+    warm: 0,
+    hot: 0,
+  };
+  for (const r of (prevData ?? []) as Array<{ lead_score: number }>) {
+    prevBandCounts[bandKey(r.lead_score)] += 1;
+  }
+  const hasPrevData = (prevData ?? []).length > 0;
+
+  const makeBand = (bk: 'cold' | 'warm' | 'hot'): Band => {
+    const count = bandBuckets[bk].length;
+    const pc = hasPrevData ? prevBandCounts[bk] : null;
+    return {
+      count,
+      share: share(count),
+      avgScore: avg(bandBuckets[bk]),
+      previousCount: pc,
+      delta: pc !== null ? count - pc : null,
+      deltaPercent: pc !== null && pc > 0 ? (count - pc) / pc : null,
+    };
+  };
   const bands = {
-    cold: { count: bandBuckets.cold.length, share: share(bandBuckets.cold.length), avgScore: avg(bandBuckets.cold) },
-    warm: { count: bandBuckets.warm.length, share: share(bandBuckets.warm.length), avgScore: avg(bandBuckets.warm) },
-    hot: { count: bandBuckets.hot.length, share: share(bandBuckets.hot.length), avgScore: avg(bandBuckets.hot) },
+    cold: makeBand('cold'),
+    warm: makeBand('warm'),
+    hot: makeBand('hot'),
   };
 
   // Histogram: 10 buckets of 10. Last bucket includes 100 (90-100 inclusive).
@@ -219,12 +260,46 @@ export async function GET(request: NextRequest) {
     return result;
   };
 
+  // Dynamic cross-cut: discovers keys from data, sorts by count, caps
+  // at maxRows. Used for industry + service_interest where the values
+  // are free-form strings, not fixed enums.
+  const crossCutDynamic = (
+    keyFn: (row: (typeof rows)[number]) => string | null,
+    maxRows = 10,
+  ): CrossCutRow[] => {
+    const groups = new Map<string, Array<(typeof rows)[number]>>();
+    for (const r of rows) {
+      const key = keyFn(r)?.trim();
+      if (!key) continue;
+      const list = groups.get(key) ?? [];
+      list.push(r);
+      groups.set(key, list);
+    }
+    const result: CrossCutRow[] = [];
+    for (const [key, bucket] of groups.entries()) {
+      const scored = bucket.filter((r) => typeof r.lead_score === 'number');
+      const scores = scored.map((r) => r.lead_score as number);
+      result.push({
+        key,
+        label: key,
+        count: bucket.length,
+        avgScore: avg(scores),
+        cold: scores.filter((s) => s < 40).length,
+        warm: scores.filter((s) => s >= 40 && s <= 70).length,
+        hot: scores.filter((s) => s > 70).length,
+      });
+    }
+    return result.sort((a, b) => b.count - a.count).slice(0, maxRows);
+  };
+
   const byIntent = crossCut((r) => r.intent, INTENT_ORDER, INTENT_LABELS);
   const byDecisionRole = crossCut(
     (r) => r.decision_role,
     DECISION_ROLE_ORDER,
     DECISION_ROLE_LABELS,
   );
+  const byIndustry = crossCutDynamic((r) => r.industry);
+  const byServiceInterest = crossCutDynamic((r) => r.service_interest);
 
   // Insight: hot share interpretation. No hard benchmarks — just describe.
   const hotShare = leadsWithScore > 0 ? bands.hot.share : null;
@@ -250,6 +325,8 @@ export async function GET(request: NextRequest) {
     histogram,
     byIntent,
     byDecisionRole,
+    byIndustry,
+    byServiceInterest,
     insight: { hotShare, message: insightMsg },
     generatedAt: new Date().toISOString(),
   };

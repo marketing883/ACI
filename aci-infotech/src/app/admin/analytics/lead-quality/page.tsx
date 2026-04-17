@@ -7,6 +7,10 @@ import {
   TrendingUp,
   Thermometer,
   Hourglass,
+  ArrowUpRight,
+  ArrowDownRight,
+  Building2,
+  Briefcase,
 } from 'lucide-react';
 import type {
   LeadQualityResponse,
@@ -215,6 +219,20 @@ export default function LeadQualityPage() {
               rows={data.byDecisionRole}
               emptyLabel="No decisionRole captures yet. Watch this once leads surface the signal."
             />
+            <CrossCutTable
+              title="By industry"
+              icon={<Building2 className="w-4 h-4 text-gray-400" />}
+              subtitle="Which industries produce the highest-quality leads?"
+              rows={data.byIndustry}
+              emptyLabel="No industry data captured yet."
+            />
+            <CrossCutTable
+              title="By service interest"
+              icon={<Briefcase className="w-4 h-4 text-gray-400" />}
+              subtitle="Which services attract the strongest leads?"
+              rows={data.byServiceInterest}
+              emptyLabel="No service interest captured yet."
+            />
           </div>
         </>
       )}
@@ -254,9 +272,29 @@ function BandCard({
         <span className={`text-sm font-semibold ${a.text}`}>{label}</span>
         <span className="text-xs text-gray-500">{hint}</span>
       </div>
-      <div className="text-3xl font-bold text-gray-900 mb-1">{formatInt(band.count)}</div>
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-3xl font-bold text-gray-900">{formatInt(band.count)}</span>
+        {band.delta !== null && band.delta !== 0 && (
+          <span
+            className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[11px] font-semibold ${
+              band.delta > 0
+                ? 'bg-emerald-100 text-emerald-700'
+                : 'bg-red-100 text-red-700'
+            }`}
+          >
+            {band.delta > 0 ? (
+              <ArrowUpRight className="w-3 h-3" />
+            ) : (
+              <ArrowDownRight className="w-3 h-3" />
+            )}
+            {band.deltaPercent !== null && Number.isFinite(band.deltaPercent)
+              ? `${Math.abs(band.deltaPercent * 100).toFixed(0)}%`
+              : formatInt(Math.abs(band.delta))}
+          </span>
+        )}
+      </div>
       <div className="text-sm text-gray-500">
-        {total > 0 ? formatPct(band.share) : '—'} of scored
+        {total > 0 ? formatPct(band.share) : '\u2014'} of scored
         {band.avgScore !== null && (
           <span className="ml-2 text-gray-400">
             · avg score{' '}
@@ -304,16 +342,21 @@ function CrossCutTable({
   subtitle,
   rows,
   emptyLabel,
+  icon,
 }: {
   title: string;
   subtitle: string;
   rows: CrossCutRow[];
   emptyLabel: string;
+  icon?: React.ReactNode;
 }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5">
       <div className="mb-4">
-        <h2 className="text-base font-semibold text-gray-900 mb-1">{title}</h2>
+        <div className="flex items-center gap-2 mb-1">
+          {icon}
+          <h2 className="text-base font-semibold text-gray-900">{title}</h2>
+        </div>
         <p className="text-xs text-gray-500">{subtitle}</p>
       </div>
       {rows.length === 0 ? (
