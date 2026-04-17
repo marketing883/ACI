@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BarChart3, TrendingDown, TrendingUp, RefreshCw, AlertTriangle, Info, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { BarChart3, TrendingDown, TrendingUp, RefreshCw, AlertTriangle, Info, ArrowUpRight, ArrowDownRight, Download } from 'lucide-react';
+import { downloadCSV } from '@/lib/admin/csv';
 import type { FunnelResponse, FunnelStage } from '@/app/api/admin/analytics/funnel/route';
 
 type SinceKey = '24h' | '7d' | '30d';
@@ -81,15 +82,40 @@ export default function ConversionFunnelPage() {
             overall conversion from the top.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => setRefreshCounter((n) => n + 1)}
-          disabled={loading}
-          className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors disabled:opacity-50"
-          aria-label="Refresh"
-        >
-          <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-        </button>
+        <div className="flex items-center gap-1">
+          {data && data.stages.length > 0 && (
+            <button
+              type="button"
+              onClick={() =>
+                downloadCSV(
+                  data.stages.map((s) => ({
+                    stage: s.label,
+                    count: s.count,
+                    conversion_from_previous: s.conversionFromPrevious,
+                    conversion_from_top: s.conversionFromTop,
+                    previous_count: s.previousCount,
+                    delta: s.delta,
+                    delta_percent: s.deltaPercent,
+                  })),
+                  `funnel-${since}`,
+                )
+              }
+              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+              aria-label="Export CSV"
+            >
+              <Download className="w-5 h-5" />
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setRefreshCounter((n) => n + 1)}
+            disabled={loading}
+            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors disabled:opacity-50"
+            aria-label="Refresh"
+          >
+            <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+          </button>
+        </div>
       </div>
 
       {/* Time range selector */}

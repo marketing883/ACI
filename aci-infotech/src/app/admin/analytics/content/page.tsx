@@ -11,7 +11,9 @@ import {
   Eye,
   Search,
   ArrowUpDown,
+  Download,
 } from 'lucide-react';
+import { downloadCSV } from '@/lib/admin/csv';
 import type { ContentResponse } from '@/app/api/admin/analytics/content/route';
 
 type SinceKey = '24h' | '7d' | '30d';
@@ -117,6 +119,28 @@ export default function ContentPerformancePage() {
         >
           <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
         </button>
+        {data && data.pages.length > 0 && (
+          <button
+            type="button"
+            onClick={() =>
+              downloadCSV(
+                filteredAndSorted.map((r) => ({
+                  page: r.pagePath,
+                  views: r.views,
+                  chat_opens: r.chatOpens,
+                  open_rate: r.chatOpenRate,
+                  email_captures: r.emailCaptures,
+                  conversion_rate: r.conversionRate,
+                })),
+                `content-perf-${since}`,
+              )
+            }
+            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+            aria-label="Export CSV"
+          >
+            <Download className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Time range */}

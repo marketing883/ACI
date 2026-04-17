@@ -7,7 +7,9 @@ import {
   AlertCircle,
   Users,
   Cpu,
+  Download,
 } from 'lucide-react';
+import { downloadCSV } from '@/lib/admin/csv';
 import type {
   InsightsResponse,
   PainPointEntry,
@@ -85,6 +87,30 @@ export default function InsightsPage() {
         >
           <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
         </button>
+        {data && data.models.length > 0 && (
+          <button
+            type="button"
+            onClick={() =>
+              downloadCSV(
+                data.models.map((m) => ({
+                  model: m.model,
+                  messages: m.messages,
+                  sessions: m.sessions,
+                  conversions: m.conversions,
+                  conversion_rate: m.conversionRate,
+                  avg_latency_ms: m.avgLatencyMs,
+                  total_cost_usd: m.totalCostUsd,
+                  cost_per_msg: m.avgCostPerMessage,
+                })),
+                `insights-models-${since}`,
+              )
+            }
+            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+            aria-label="Export CSV"
+          >
+            <Download className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Time range — default 30d for insights (want more data) */}

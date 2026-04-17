@@ -11,7 +11,9 @@ import {
   ArrowDownRight,
   Building2,
   Briefcase,
+  Download,
 } from 'lucide-react';
+import { downloadCSV } from '@/lib/admin/csv';
 import type {
   LeadQualityResponse,
   CrossCutRow,
@@ -93,6 +95,23 @@ export default function LeadQualityPage() {
         >
           <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
         </button>
+        {data && data.leadsWithScore > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              const rows = [
+                { band: 'cold', count: data.bands.cold.count, share: data.bands.cold.share, avgScore: data.bands.cold.avgScore, previousCount: data.bands.cold.previousCount, delta: data.bands.cold.delta },
+                { band: 'warm', count: data.bands.warm.count, share: data.bands.warm.share, avgScore: data.bands.warm.avgScore, previousCount: data.bands.warm.previousCount, delta: data.bands.warm.delta },
+                { band: 'hot', count: data.bands.hot.count, share: data.bands.hot.share, avgScore: data.bands.hot.avgScore, previousCount: data.bands.hot.previousCount, delta: data.bands.hot.delta },
+              ];
+              downloadCSV(rows, `lead-quality-${since}`);
+            }}
+            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+            aria-label="Export CSV"
+          >
+            <Download className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Time range */}
