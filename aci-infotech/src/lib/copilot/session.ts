@@ -12,7 +12,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { log } from './logger';
-import { generateIntelligence } from '@/lib/intelligence';
+import { generateIntelligence, categorizePainPoint } from '@/lib/intelligence';
 import type { ConversationLeadState } from './prompt';
 
 // Loose client type; see scripts/index-content.ts for rationale.
@@ -420,6 +420,52 @@ export async function upsertChatLead(
       extra: { phase: 'upsertChatLead' },
     });
     return { freshEmail: false };
+  }
+
+  // Schedule pain-point categorization if a new painPoint was captured
+  // and the existing row doesn't already have a category. Non-blocking
+  // via after(); Haiku completes in ~300ms in the background.
+  const incomingPainPoint = fields.painPoint?.trim();
+  const needsCategorization =
+    upserted?.id &&
+    incomingPainPoint &&
+    incomingPainPoint.length >= 5 &&
+    !existing?.pain_point;
+  if (needsCategorization) {
+    const catLeadId = upserted.id as string;
+    const catWork = async (): Promise<void> => {
+      try {
+        const category = await categorizePainPoint(incomingPainPoint);
+        if (category) {
+          const { error: catErr } = await supabase
+            .from('chat_leads')
+            .update({ pain_point_category: category })
+            .eq('id', catLeadId);
+          if (catErr) {
+            log.warn('tool', catErr, {
+              sessionId,
+              extra: { phase: 'upsertChatLead.categorizePainPoint', catLeadId },
+            });
+          } else {
+            log.info(
+              'tool',
+              `pain_point_category="${category}" stored for chat_lead ${catLeadId}`,
+              { sessionId },
+            );
+          }
+        }
+      } catch (err) {
+        log.warn('tool', err, {
+          sessionId,
+          extra: { phase: 'categorizePainPoint', catLeadId },
+        });
+      }
+    };
+    if (options?.after) {
+      options.after(catWork);
+    } else {
+      void catWork();
+    }
   }
 
   if (!shouldFireIntelligence || !upserted?.id) return { freshEmail };

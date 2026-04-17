@@ -28,6 +28,105 @@ function getOpenAIClient(): OpenAI | null {
   return new OpenAI({ apiKey });
 }
 
+// ---------------------------------------------------------------------------
+// Pain-point categorization (lightweight, Haiku-powered)
+// ---------------------------------------------------------------------------
+
+const CATEGORIZE_PROMPT = `You are a B2B enterprise tech pain-point classifier. Given a verbatim pain point from a website visitor, return ONLY a short category label (2-5 words, lowercase, no quotes, no punctuation at the end).
+
+The label should be:
+- Specific enough to cluster similar pains together (not "general problem")
+- Generic enough to absorb variations ("month-end close takes 9 days" and "financial reporting is slow" should both map to "slow financial close")
+- In the vocabulary of a senior engineer, not marketing language
+
+Examples:
+"our month-end close takes 9 days" -> slow financial close
+"flaky tests eat half a sprint" -> flaky test suites
+"we cannot onboard new vendors without manual rework" -> manual vendor onboarding
+"data silos across 40 systems" -> data fragmentation
+"cloud costs are out of control" -> cloud cost overruns
+"our CDI pipeline breaks every week" -> fragile data pipelines
+"compliance audits take months to prepare" -> slow audit preparation
+
+Pain point: "PAIN_POINT_HERE"
+Category:`;
+
+/**
+ * Categorize a single verbatim pain point into a short (2-5 word) label
+ * suitable for aggregation. Uses Claude Haiku for speed (~300ms) and cost
+ * (~$0.00003 per call). Falls back to null on any failure — caller treats
+ * null as "uncategorized" and renders it in a separate bucket.
+ *
+ * Temperature 0 for maximum determinism: similar inputs should produce
+ * the same category across calls so the Insights page clusters cleanly.
+ */
+export async function categorizePainPoint(
+  painPoint: string,
+): Promise<string | null> {
+  const text = painPoint.trim();
+  if (!text || text.length < 5) return null;
+
+  const anthropic = getAnthropicClient();
+  if (anthropic) {
+    try {
+      const response = await anthropic.messages.create({
+        model: MODELS.anthropic.fallback,
+        max_tokens: 20,
+        temperature: 0,
+        messages: [
+          {
+            role: 'user',
+            content: CATEGORIZE_PROMPT.replace('PAIN_POINT_HERE', text),
+          },
+        ],
+      });
+      const block = response.content.find((b) => b.type === 'text');
+      if (block && 'text' in block) {
+        const cat = block.text
+          .trim()
+          .toLowerCase()
+          .replace(/^["']|["']$/g, '')
+          .replace(/\.$/g, '');
+        if (cat.length > 0 && cat.length <= 60) return cat;
+      }
+    } catch (err) {
+      console.warn('categorizePainPoint: Haiku failed, skipping:', err);
+    }
+  }
+
+  // OpenAI fallback (GPT-4o-mini is comparable cost/speed to Haiku).
+  const openai = getOpenAIClient();
+  if (openai) {
+    try {
+      const response = await openai.chat.completions.create({
+        model: MODELS.openai.fallback,
+        max_tokens: 20,
+        temperature: 0,
+        messages: [
+          {
+            role: 'user',
+            content: CATEGORIZE_PROMPT.replace('PAIN_POINT_HERE', text),
+          },
+        ],
+      });
+      const cat = response.choices[0]?.message?.content
+        ?.trim()
+        .toLowerCase()
+        .replace(/^["']|["']$/g, '')
+        .replace(/\.$/g, '');
+      if (cat && cat.length > 0 && cat.length <= 60) return cat;
+    } catch (err) {
+      console.warn('categorizePainPoint: OpenAI fallback failed, skipping:', err);
+    }
+  }
+
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// Lead intelligence
+// ---------------------------------------------------------------------------
+
 export interface LeadData {
   name?: string;
   email?: string;

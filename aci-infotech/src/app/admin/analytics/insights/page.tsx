@@ -12,7 +12,7 @@ import {
 import { downloadCSV } from '@/lib/admin/csv';
 import type {
   InsightsResponse,
-  PainPointEntry,
+  PainPointCluster,
   DecisionRoleEntry,
   ModelEntry,
   CorrelationInsight,
@@ -139,9 +139,10 @@ export default function InsightsPage() {
 
       {data && (
         <div className="space-y-6">
-          {/* Section 1: Pain Points */}
-          <PainPointsSection
-            painPoints={data.painPoints}
+          {/* Section 1: Pain Point Clusters */}
+          <PainPointClustersSection
+            clusters={data.painPointClusters}
+            uncategorized={data.uncategorizedPainPoints}
             total={data.totalLeadsWithPainPoint}
           />
 
@@ -174,13 +175,18 @@ export default function InsightsPage() {
 /* Pain Points                                                           */
 /* -------------------------------------------------------------------- */
 
-function PainPointsSection({
-  painPoints,
+function PainPointClustersSection({
+  clusters,
+  uncategorized,
   total,
 }: {
-  painPoints: PainPointEntry[];
+  clusters: PainPointCluster[];
+  uncategorized: string[];
   total: number;
 }) {
+  const [expandedCat, setExpandedCat] = useState<string | null>(null);
+  const maxCount = clusters.length > 0 ? clusters[0].count : 1;
+
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6">
       <div className="flex items-center gap-3 mb-1">
@@ -190,11 +196,12 @@ function PainPointsSection({
         </h2>
       </div>
       <p className="text-xs text-gray-500 mb-4">
-        Verbatim pain points captured by qualify_lead.painPoint.{' '}
+        Pain points clustered by LLM-generated category (Claude Haiku,
+        temperature 0). Click a category to see the raw verbatim captures.{' '}
         {total > 0 ? `${fmtInt(total)} leads with a pain point.` : ''}
       </p>
 
-      {painPoints.length === 0 ? (
+      {clusters.length === 0 && uncategorized.length === 0 ? (
         <div className="py-8 text-center text-sm text-gray-400 italic">
           No pain points captured yet. This field populates as the chatbot
           detects concrete operational pains in conversation (slow closes,
@@ -202,30 +209,78 @@ function PainPointsSection({
         </div>
       ) : (
         <div className="space-y-2">
-          {painPoints.map((pp, i) => {
-            const maxCount = painPoints[0].count;
-            const widthPct = Math.max(8, (pp.count / maxCount) * 100);
+          {clusters.map((cluster) => {
+            const widthPct = Math.max(8, (cluster.count / maxCount) * 100);
+            const isExpanded = expandedCat === cluster.category;
             return (
-              <div key={i} className="flex items-center gap-3">
-                <div className="flex-1">
-                  <div className="relative h-8 bg-orange-50 rounded-lg overflow-hidden">
-                    <div
-                      className="h-full bg-orange-200 rounded-lg transition-all duration-500"
-                      style={{ width: `${widthPct}%` }}
-                    />
-                    <div className="absolute inset-0 flex items-center px-3">
-                      <span className="text-sm text-gray-800 truncate">
-                        {pp.text}
-                      </span>
+              <div key={cluster.category}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setExpandedCat(isExpanded ? null : cluster.category)
+                  }
+                  className="w-full flex items-center gap-3 group"
+                >
+                  <div className="flex-1">
+                    <div className="relative h-9 bg-orange-50 rounded-lg overflow-hidden">
+                      <div
+                        className="h-full bg-orange-200 group-hover:bg-orange-300 rounded-lg transition-all duration-500"
+                        style={{ width: `${widthPct}%` }}
+                      />
+                      <div className="absolute inset-0 flex items-center px-3 justify-between">
+                        <span className="text-sm font-medium text-gray-800">
+                          {cluster.category}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {isExpanded ? 'collapse' : `${cluster.count} lead${cluster.count === 1 ? '' : 's'}`}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="w-10 text-right text-sm font-semibold text-gray-700">
-                  {pp.count}
-                </div>
+                  <div className="w-10 text-right text-sm font-bold text-gray-700">
+                    {cluster.count}
+                  </div>
+                </button>
+                {isExpanded && (
+                  <div className="mt-1 ml-4 pl-3 border-l-2 border-orange-200 space-y-1 py-2">
+                    {cluster.rawPoints.map((rp, i) => (
+                      <div
+                        key={i}
+                        className="text-xs text-gray-600 leading-relaxed"
+                      >
+                        &ldquo;{rp}&rdquo;
+                      </div>
+                    ))}
+                    {cluster.count > cluster.rawPoints.length && (
+                      <div className="text-xs text-gray-400 italic">
+                        +{cluster.count - cluster.rawPoints.length} more
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}
+
+          {uncategorized.length > 0 && (
+            <div className="mt-4 pt-3 border-t border-gray-100">
+              <div className="text-xs font-semibold text-gray-500 mb-2">
+                Uncategorized ({uncategorized.length})
+              </div>
+              <div className="space-y-1">
+                {uncategorized.slice(0, 5).map((pp, i) => (
+                  <div key={i} className="text-xs text-gray-500 italic">
+                    &ldquo;{pp}&rdquo;
+                  </div>
+                ))}
+                {uncategorized.length > 5 && (
+                  <div className="text-xs text-gray-400">
+                    +{uncategorized.length - 5} more (categorization pending)
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

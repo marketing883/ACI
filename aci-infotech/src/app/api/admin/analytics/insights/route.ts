@@ -27,6 +27,13 @@ function parseSince(raw: string | null): SinceKey {
   return '7d';
 }
 
+export interface PainPointCluster {
+  category: string;
+  count: number;
+  rawPoints: string[];
+}
+
+/** @deprecated use PainPointCluster */
 export interface PainPointEntry {
   text: string;
   count: number;
@@ -58,7 +65,8 @@ export interface CorrelationInsight {
 
 export interface InsightsResponse {
   since: SinceKey;
-  painPoints: PainPointEntry[];
+  painPointClusters: PainPointCluster[];
+  uncategorizedPainPoints: string[];
   decisionRoles: DecisionRoleEntry[];
   models: ModelEntry[];
   correlations: CorrelationInsight[];
@@ -94,7 +102,7 @@ export async function GET(request: NextRequest) {
   const [leadsResult, messagesResult, leadsWithSessionResult] = await Promise.all([
     supabase
       .from('chat_leads')
-      .select('pain_point, decision_role, lead_score')
+      .select('pain_point, pain_point_category, decision_role, lead_score')
       .gte('created_at', startIso)
       .lte('created_at', endIso)
       .limit(10_000),
@@ -116,6 +124,7 @@ export async function GET(request: NextRequest) {
 
   const leads = (leadsResult.data ?? []) as Array<{
     pain_point: string | null;
+    pain_point_category: string | null;
     decision_role: string | null;
     lead_score: number | null;
   }>;
@@ -137,18 +146,30 @@ export async function GET(request: NextRequest) {
     if (r.session_id && r.email?.trim()) convertedSessions.add(r.session_id);
   }
 
-  // --- Pain points: frequency-count unique values ---
-  const painMap = new Map<string, number>();
+  // --- Pain points: cluster by LLM-generated category ---
+  const clusterMap = new Map<string, string[]>();
+  const uncategorized: string[] = [];
   for (const r of leads) {
     const pp = r.pain_point?.trim();
     if (!pp) continue;
-    const lower = pp.toLowerCase();
-    painMap.set(lower, (painMap.get(lower) ?? 0) + 1);
+    const cat = r.pain_point_category?.trim();
+    if (cat) {
+      const list = clusterMap.get(cat) ?? [];
+      list.push(pp);
+      clusterMap.set(cat, list);
+    } else {
+      uncategorized.push(pp);
+    }
   }
-  const painPoints: PainPointEntry[] = [...painMap.entries()]
-    .map(([text, count]) => ({ text, count }))
+  const painPointClusters: PainPointCluster[] = [...clusterMap.entries()]
+    .map(([category, rawPoints]) => ({
+      category,
+      count: rawPoints.length,
+      rawPoints: rawPoints.slice(0, 10),
+    }))
     .sort((a, b) => b.count - a.count)
-    .slice(0, 30);
+    .slice(0, 20);
+  const uncategorizedPainPoints = uncategorized.slice(0, 20);
   const totalLeadsWithPainPoint = leads.filter((r) => r.pain_point?.trim()).length;
 
   // --- Decision role distribution ---
@@ -266,7 +287,8 @@ export async function GET(request: NextRequest) {
 
   const response: InsightsResponse = {
     since,
-    painPoints,
+    painPointClusters,
+    uncategorizedPainPoints,
     decisionRoles,
     models,
     correlations,
