@@ -341,9 +341,19 @@ export default function ChatColumn({
         content: m.content,
       }));
 
+      // Use the VisitorTracker's visitor_id (persisted in localStorage by
+      // the analytics tracker) so chat_sessions.visitor_id matches
+      // visitor_sessions.visitor_id — enabling per-lead UTM attribution.
+      // Falls back to the Atheros sessionId when the analytics tracker
+      // hasn't initialized (consent not granted or first visit).
+      const analyticsVisitorId =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem('aci_visitor_id')
+          : null;
+
       const result = await streamAtherosReply({
         sessionId,
-        visitorId: sessionId,
+        visitorId: analyticsVisitorId || sessionId,
         pageContext,
         leadState,
         messages: nextMessages,

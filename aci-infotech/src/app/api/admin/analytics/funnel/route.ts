@@ -79,7 +79,98 @@ async function computeStageCounts(
   supabase: SupabaseClient,
   startIso: string,
   endIso: string,
+  entryPage?: string,
 ): Promise<RawStageCounts> {
+  // When entryPage filter is active, first resolve the matching
+  // chat_session IDs so downstream stages (engaged, email, intent) can
+  // be scoped to those sessions.
+  let filteredSessionIds: string[] | null = null;
+  if (entryPage) {
+    const { data: sessionRows } = await supabase
+      .from('chat_sessions')
+      .select('session_id')
+      .eq('page_entry', entryPage)
+      .gte('started_at', startIso)
+      .lte('started_at', endIso)
+      .limit(10_000);
+    filteredSessionIds = (sessionRows ?? []).map(
+      (r: { session_id: string }) => r.session_id,
+    );
+  }
+
+  // Build the queries. When entryPage is set, visitor_sessions and
+  // chat_sessions get a direct WHERE; chat_messages and chat_leads use
+  // the pre-resolved session_id list.
+  let visitorsQuery = supabase
+    .from('visitor_sessions')
+    .select('visitor_id', { count: 'exact', head: false })
+    .gte('started_at', startIso)
+    .lte('started_at', endIso)
+    .limit(50_000);
+  if (entryPage) visitorsQuery = visitorsQuery.eq('entry_page_path', entryPage);
+
+  let chatOpenedQuery = supabase
+    .from('chat_sessions')
+    .select('session_id', { count: 'exact', head: true })
+    .gte('started_at', startIso)
+    .lte('started_at', endIso);
+  if (entryPage) chatOpenedQuery = chatOpenedQuery.eq('page_entry', entryPage);
+
+  let engagedQuery = supabase
+    .from('chat_messages')
+    .select('session_id')
+    .eq('role', 'user')
+    .gte('created_at', startIso)
+    .lte('created_at', endIso)
+    .limit(50_000);
+  if (filteredSessionIds !== null && filteredSessionIds.length > 0) {
+    engagedQuery = engagedQuery.in('session_id', filteredSessionIds);
+  } else if (filteredSessionIds !== null) {
+    // No matching sessions — skip the query, engaged = 0.
+  }
+
+  let emailQuery = supabase
+    .from('chat_leads')
+    .select('id', { count: 'exact', head: true })
+    .not('email', 'is', null)
+    .gte('created_at', startIso)
+    .lte('created_at', endIso);
+  if (filteredSessionIds !== null && filteredSessionIds.length > 0) {
+    emailQuery = emailQuery.in('session_id', filteredSessionIds);
+  }
+
+  let intentQuery = supabase
+    .from('chat_leads')
+    .select('id', { count: 'exact', head: true })
+    .or('lead_score.gte.70,intent.eq.high')
+    .gte('created_at', startIso)
+    .lte('created_at', endIso);
+  if (filteredSessionIds !== null && filteredSessionIds.length > 0) {
+    intentQuery = intentQuery.in('session_id', filteredSessionIds);
+  }
+
+  let handoffQuery = supabase
+    .from('chat_sessions')
+    .select('session_id', { count: 'exact', head: true })
+    .not('handoff_at', 'is', null)
+    .gte('handoff_at', startIso)
+    .lte('handoff_at', endIso);
+  if (entryPage) handoffQuery = handoffQuery.eq('page_entry', entryPage);
+
+  // Short-circuit if the filter produced zero matching sessions.
+  if (filteredSessionIds !== null && filteredSessionIds.length === 0) {
+    const visitorsResult = await visitorsQuery;
+    const visitors = (() => {
+      if (!visitorsResult.data) return 0;
+      const seen = new Set<string>();
+      for (const r of visitorsResult.data as Array<{ visitor_id: string | null }>) {
+        if (r.visitor_id) seen.add(r.visitor_id);
+      }
+      return seen.size;
+    })();
+    return { visitors, chatOpened: 0, engaged: 0, emailCaptured: 0, highIntent: 0, handoff: 0 };
+  }
+
   const [
     visitorsResult,
     chatOpenedResult,
@@ -88,45 +179,12 @@ async function computeStageCounts(
     highIntentResult,
     handoffResult,
   ] = await Promise.all([
-    supabase
-      .from('visitor_sessions')
-      .select('visitor_id', { count: 'exact', head: false })
-      .gte('started_at', startIso)
-      .lte('started_at', endIso)
-      .limit(50_000),
-    supabase
-      .from('chat_sessions')
-      .select('session_id', { count: 'exact', head: true })
-      .gte('started_at', startIso)
-      .lte('started_at', endIso),
-    // Engaged: sessions with >= 2 user messages. Broader than qualify_lead
-    // — captures rapport-building conversations where qualifying fields
-    // haven't surfaced yet but the visitor is genuinely engaged.
-    supabase
-      .from('chat_messages')
-      .select('session_id')
-      .eq('role', 'user')
-      .gte('created_at', startIso)
-      .lte('created_at', endIso)
-      .limit(50_000),
-    supabase
-      .from('chat_leads')
-      .select('id', { count: 'exact', head: true })
-      .not('email', 'is', null)
-      .gte('created_at', startIso)
-      .lte('created_at', endIso),
-    supabase
-      .from('chat_leads')
-      .select('id', { count: 'exact', head: true })
-      .or('lead_score.gte.70,intent.eq.high')
-      .gte('created_at', startIso)
-      .lte('created_at', endIso),
-    supabase
-      .from('chat_sessions')
-      .select('session_id', { count: 'exact', head: true })
-      .not('handoff_at', 'is', null)
-      .gte('handoff_at', startIso)
-      .lte('handoff_at', endIso),
+    visitorsQuery,
+    chatOpenedQuery,
+    engagedQuery,
+    emailQuery,
+    intentQuery,
+    handoffQuery,
   ]);
 
   // Distinct visitor count.
@@ -264,6 +322,7 @@ export async function GET(request: NextRequest) {
 
   const url = new URL(request.url);
   const since = parseSince(url.searchParams.get('since'));
+  const entryPage = url.searchParams.get('page') || undefined;
   const windowMs = WINDOW_MS[since];
   const rangeEnd = new Date();
   const rangeStart = new Date(rangeEnd.getTime() - windowMs);
@@ -277,11 +336,13 @@ export async function GET(request: NextRequest) {
     supabase,
     rangeStart.toISOString(),
     rangeEnd.toISOString(),
+    entryPage,
   );
   const previousCounts = await computeStageCounts(
     supabase,
     previousStart.toISOString(),
     previousEnd.toISOString(),
+    entryPage,
   );
 
   const stages = buildStages(currentCounts, previousCounts);

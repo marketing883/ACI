@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BarChart3, TrendingDown, TrendingUp, RefreshCw, AlertTriangle, Info, ArrowUpRight, ArrowDownRight, Download, ExternalLink } from 'lucide-react';
+import { BarChart3, TrendingDown, TrendingUp, RefreshCw, AlertTriangle, Info, ArrowUpRight, ArrowDownRight, Download, ExternalLink, Filter } from 'lucide-react';
 import Link from 'next/link';
 import { downloadCSV } from '@/lib/admin/csv';
 import type { FunnelResponse, FunnelStage } from '@/app/api/admin/analytics/funnel/route';
@@ -36,14 +36,18 @@ export default function ConversionFunnelPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshCounter, setRefreshCounter] = useState(0);
+  const [pageFilter, setPageFilter] = useState('');
+  const [appliedPageFilter, setAppliedPageFilter] = useState('');
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
       setLoading(true);
       setError(null);
+      const params = new URLSearchParams({ since });
+      if (appliedPageFilter) params.set('page', appliedPageFilter);
       try {
-        const res = await fetch(`/api/admin/analytics/funnel?since=${since}`, {
+        const res = await fetch(`/api/admin/analytics/funnel?${params.toString()}`, {
           cache: 'no-store',
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -61,7 +65,7 @@ export default function ConversionFunnelPage() {
     return () => {
       cancelled = true;
     };
-  }, [since, refreshCounter]);
+  }, [since, refreshCounter, appliedPageFilter]);
 
   const topStageEmpty = data && data.stages[0].count === 0;
   const allStagesEmpty = data && data.stages.every((s) => s.count === 0);
@@ -135,6 +139,30 @@ export default function ConversionFunnelPage() {
             {opt.label}
           </button>
         ))}
+      </div>
+
+      {/* Entry page filter */}
+      <div className="flex items-center gap-2 mb-6">
+        <Filter className="w-4 h-4 text-gray-400" />
+        <input
+          type="text"
+          placeholder="Filter by entry page (e.g. /services/data-engineering)"
+          value={pageFilter}
+          onChange={(e) => setPageFilter(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') setAppliedPageFilter(pageFilter.trim());
+          }}
+          className="flex-1 max-w-md px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        {appliedPageFilter && (
+          <button
+            type="button"
+            onClick={() => { setPageFilter(''); setAppliedPageFilter(''); }}
+            className="px-3 py-2 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+          >
+            Clear filter
+          </button>
+        )}
       </div>
 
       {error && (

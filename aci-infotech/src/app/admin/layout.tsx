@@ -29,6 +29,7 @@ import {
   BarChart3,
 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
+import HotLeadToast from '@/components/admin/HotLeadToast';
 
 type NavItem =
   | { href: string; label: string; icon: typeof LayoutDashboard; description?: string }
@@ -74,6 +75,7 @@ const navItems: NavItem[] = [
       { href: '/admin/analytics/lead-quality', label: 'Lead Quality', icon: BarChart3 },
       { href: '/admin/analytics/content', label: 'Content Performance', icon: BarChart3 },
       { href: '/admin/analytics/insights', label: 'Lead Insights', icon: BarChart3 },
+      { href: '/admin/analytics/repeat-visitors', label: 'Repeat Visitors', icon: Users },
       { href: '/admin/analytics/triggers', label: 'Engagement Triggers', icon: Sparkles },
     ]
   },
@@ -368,6 +370,9 @@ export default function AdminLayout({
         <main className="flex-1 p-4 lg:p-8">
           {children}
         </main>
+
+        {/* Real-time hot-lead alert toasts */}
+        <HotLeadToast />
 
         {/* Footer */}
         <footer className="border-t border-gray-100 bg-white px-4 lg:px-8 py-4">
