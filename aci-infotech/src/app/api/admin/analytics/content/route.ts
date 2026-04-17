@@ -38,12 +38,22 @@ export interface ContentRow {
   conversionRate: number | null;
 }
 
+export interface ChannelRow {
+  source: string;
+  medium: string;
+  visitors: number;
+  topLandingPages: string[];
+  chatOpens: number;
+  emailCaptures: number;
+  conversionRate: number | null;
+}
+
 export interface ContentResponse {
   since: SinceKey;
   rangeStart: string;
   rangeEnd: string;
   pages: ContentRow[];
-  /** Avg minutes from chat open to email capture, across all sessions. */
+  channels: ChannelRow[];
   avgTimeToQualifyMinutes: number | null;
   p50TimeToQualifyMinutes: number | null;
   p95TimeToQualifyMinutes: number | null;
@@ -70,8 +80,8 @@ export async function GET(request: NextRequest) {
   const startIso = rangeStart.toISOString();
   const endIso = rangeEnd.toISOString();
 
-  // Fire all three queries in parallel.
-  const [viewsResult, sessionsResult, leadsResult] = await Promise.all([
+  // Fire all four queries in parallel.
+  const [viewsResult, sessionsResult, leadsResult, utmResult] = await Promise.all([
     // 1. Page views in window, grouped client-side by page_path.
     supabase
       .from('page_views')
@@ -94,6 +104,13 @@ export async function GET(request: NextRequest) {
       .gte('created_at', startIso)
       .lte('created_at', endIso)
       .limit(10_000),
+    // 4. Visitor sessions with UTM data for channel attribution.
+    supabase
+      .from('visitor_sessions')
+      .select('utm_source, utm_medium, utm_campaign, entry_page_path')
+      .gte('started_at', startIso)
+      .lte('started_at', endIso)
+      .limit(50_000),
   ]);
 
   // ----- Aggregate page views by path -----
@@ -187,11 +204,72 @@ export async function GET(request: NextRequest) {
   const p50TimeToQualifyMinutes = percentile(sortedDeltas, 0.5);
   const p95TimeToQualifyMinutes = percentile(sortedDeltas, 0.95);
 
+  // ----- Channel attribution (UTM) -----
+  // Group visitor_sessions by (utm_source, utm_medium). For each channel,
+  // collect the landing pages and cross-reference with the page-level
+  // chat/email data we already computed above.
+  const channelKey = (s: string | null, m: string | null) =>
+    `${(s || 'direct').toLowerCase()}::${(m || 'none').toLowerCase()}`;
+
+  const channelMap = new Map<
+    string,
+    { source: string; medium: string; visitors: number; landingPages: Map<string, number> }
+  >();
+  for (const row of (utmResult.data ?? []) as Array<{
+    utm_source: string | null;
+    utm_medium: string | null;
+    entry_page_path: string | null;
+  }>) {
+    const src = row.utm_source?.trim() || 'direct';
+    const med = row.utm_medium?.trim() || 'none';
+    const key = channelKey(src, med);
+    const entry = channelMap.get(key) ?? {
+      source: src,
+      medium: med,
+      visitors: 0,
+      landingPages: new Map<string, number>(),
+    };
+    entry.visitors += 1;
+    const lp = row.entry_page_path ?? '/';
+    entry.landingPages.set(lp, (entry.landingPages.get(lp) ?? 0) + 1);
+    channelMap.set(key, entry);
+  }
+
+  const channels: ChannelRow[] = [...channelMap.values()]
+    .map((ch) => {
+      // Top 3 landing pages by visitor count.
+      const topPages = [...ch.landingPages.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([p]) => p);
+      // Sum chat opens + email captures across the channel's landing pages.
+      let chChatOpens = 0;
+      let chEmailCaptures = 0;
+      for (const lp of ch.landingPages.keys()) {
+        chChatOpens += chatOpensByPath.get(lp) ?? 0;
+        chEmailCaptures += emailsByPath.get(lp) ?? 0;
+      }
+      return {
+        source: ch.source,
+        medium: ch.medium,
+        visitors: ch.visitors,
+        topLandingPages: topPages,
+        chatOpens: chChatOpens,
+        emailCaptures: chEmailCaptures,
+        conversionRate:
+          chChatOpens > 0 ? chEmailCaptures / chChatOpens : null,
+      };
+    })
+    .filter((ch) => ch.source !== 'direct' || ch.visitors >= 3)
+    .sort((a, b) => b.emailCaptures - a.emailCaptures || b.visitors - a.visitors)
+    .slice(0, 20);
+
   const response: ContentResponse = {
     since,
     rangeStart: startIso,
     rangeEnd: endIso,
     pages: pages.slice(0, 50),
+    channels,
     avgTimeToQualifyMinutes,
     p50TimeToQualifyMinutes,
     p95TimeToQualifyMinutes,

@@ -292,6 +292,56 @@ export default function ContentPerformancePage() {
         </div>
       )}
 
+      {/* Channel attribution */}
+      {data && data.channels.length > 0 && (
+        <div className="mt-6 bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <div className="px-5 py-4 border-b border-gray-100">
+            <h2 className="text-base font-semibold text-gray-900">Channel Performance</h2>
+            <p className="text-xs text-gray-500 mt-1">
+              Which traffic sources (UTM) drive visitors to pages that convert.
+              Sorted by email captures. Only channels with tracked UTM params appear.
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th className="text-left px-5 py-3 font-semibold text-gray-700">Source / Medium</th>
+                  <th className="text-right px-4 py-3 font-semibold text-gray-700">Visitors</th>
+                  <th className="text-left px-4 py-3 font-semibold text-gray-700">Top landing pages</th>
+                  <th className="text-right px-4 py-3 font-semibold text-gray-700">Chat opens</th>
+                  <th className="text-right px-4 py-3 font-semibold text-gray-700">Emails</th>
+                  <th className="text-right px-5 py-3 font-semibold text-gray-700">Conversion</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {data.channels.map((ch) => (
+                  <tr key={`${ch.source}::${ch.medium}`} className="hover:bg-gray-50">
+                    <td className="px-5 py-3">
+                      <div className="font-medium text-gray-900 text-sm">{ch.source}</div>
+                      <div className="text-xs text-gray-500">{ch.medium}</div>
+                    </td>
+                    <td className="text-right px-4 py-3 tabular-nums text-gray-900">{fmtInt(ch.visitors)}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-1">
+                        {ch.topLandingPages.map((p) => (
+                          <span key={p} className="inline-block px-2 py-0.5 bg-gray-100 rounded text-xs text-gray-600 font-mono truncate max-w-[180px]">{p}</span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="text-right px-4 py-3 tabular-nums text-gray-900">{fmtInt(ch.chatOpens)}</td>
+                    <td className="text-right px-4 py-3 tabular-nums text-gray-900 font-medium">{fmtInt(ch.emailCaptures)}</td>
+                    <td className="text-right px-5 py-3">
+                      <ConversionBadge rate={ch.conversionRate} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {data && !loading && (
         <div className="mt-4 text-xs text-gray-400 text-right">
           Generated {new Date(data.generatedAt).toLocaleString()}
