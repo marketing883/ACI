@@ -20,6 +20,7 @@ export interface RepeatVisitorRow {
   visitorId: string;
   company: string | null;
   industry: string | null;
+  isIsp: boolean;
   totalSessions: number;
   engagementScore: number | null;
   firstSeen: string;
@@ -40,6 +41,44 @@ export interface RepeatVisitorResponse {
     highValueUntapped: number;
   };
   generatedAt: string;
+}
+
+// Patterns that indicate an ISP, hosting provider, or cloud infra —
+// NOT a real company. Case-insensitive partial match against
+// company_name from the IP-API enrichment.
+const ISP_PATTERNS = [
+  // Telecom / ISP keywords
+  'telecom', 'broadband', 'cable', ' isp', 'communications inc',
+  'infocomm', 'cablevision',
+  // Major ISPs (global)
+  'comcast', 'verizon', 'at&t', 'spectrum', 'charter', 'cox',
+  't-mobile', 'sprint', 'centurylink', 'lumen',
+  'vodafone', 'orange', 'telefonica', 'deutsche telekom',
+  // Major ISPs (India)
+  'reliance jio', 'bharti airtel', 'airtel', 'bsnl', 'mtnl',
+  'act fibernet', 'atria convergence', 'hathway', 'tikona',
+  'you broadband', 'excitel', 'spectra',
+  // Major ISPs (Middle East / Africa)
+  'etisalat', 'du telecom', 'stc', 'mobily', 'zain',
+  // Cloud / hosting / CDN
+  'aws', 'amazon web services', 'google cloud', 'google llc',
+  'microsoft azure', 'digitalocean', 'linode', 'akamai',
+  'hetzner', 'ovh', 'cloudflare', 'fastly', 'vultr',
+  // Crawlers / bots often resolve to these
+  'facebook', 'meta platforms', 'twitter', 'bytedance',
+  'semrush', 'ahrefs', 'moz.com',
+  // Generic patterns
+  'data center', 'datacenter', 'hosting', 'colo ',
+  'internet services', 'network solutions',
+  // Misc
+  'tata communications', 'optimum online', 'arcor-ip',
+  'adsl streamyx',
+];
+
+function isLikelyIsp(companyName: string | null): boolean {
+  if (!companyName) return false;
+  const lower = companyName.toLowerCase();
+  return ISP_PATTERNS.some((p) => lower.includes(p));
 }
 
 export async function GET(request: NextRequest) {
@@ -118,6 +157,7 @@ export async function GET(request: NextRequest) {
     visitorId: v.visitor_id,
     company: v.company_name,
     industry: v.company_industry,
+    isIsp: isLikelyIsp(v.company_name),
     totalSessions: v.total_sessions,
     engagementScore: v.engagement_score,
     firstSeen: v.first_seen_at,
@@ -129,8 +169,15 @@ export async function GET(request: NextRequest) {
     leadScore: null,
   }));
 
+  // Sort: real companies first (by visits DESC), then ISPs.
+  visitors.sort((a, b) => {
+    if (a.isIsp !== b.isIsp) return a.isIsp ? 1 : -1;
+    return b.totalSessions - a.totalSessions;
+  });
+
   const highValueUntapped = visitors.filter(
     (v) =>
+      !v.isIsp &&
       v.totalSessions >= 3 &&
       (v.engagementScore ?? 0) >= 40 &&
       !v.hasChatted,

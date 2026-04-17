@@ -171,6 +171,7 @@ export default function RepeatVisitorsPage() {
               <tbody className="divide-y divide-gray-100">
                 {data.visitors.map((v) => {
                   const isHighValue =
+                    !v.isIsp &&
                     v.totalSessions >= 3 &&
                     (v.engagementScore ?? 0) >= 40 &&
                     !v.hasChatted;
@@ -180,13 +181,22 @@ export default function RepeatVisitorsPage() {
                       className={`hover:bg-gray-50 ${isHighValue ? 'bg-amber-50/40' : ''}`}
                     >
                       <td className="px-5 py-3">
-                        <div className="font-medium text-gray-900">
-                          {v.company || 'Unknown company'}
-                          {isHighValue && (
-                            <Star className="inline w-3.5 h-3.5 text-amber-500 ml-1.5 -mt-0.5" />
+                        <div className={`font-medium ${v.isIsp ? 'text-gray-400' : 'text-gray-900'}`}>
+                          {v.isIsp ? (
+                            <>
+                              <span className="text-gray-400">{v.company}</span>
+                              <span className="ml-1.5 inline-block px-1.5 py-0.5 text-[10px] font-semibold bg-gray-100 text-gray-500 rounded">ISP</span>
+                            </>
+                          ) : (
+                            <>
+                              {v.company || 'Unknown company'}
+                              {isHighValue && (
+                                <Star className="inline w-3.5 h-3.5 text-amber-500 ml-1.5 -mt-0.5" />
+                              )}
+                            </>
                           )}
                         </div>
-                        <div className="text-xs text-gray-500">{v.industry || ''}</div>
+                        <div className="text-xs text-gray-500">{v.isIsp ? '' : (v.industry || '')}</div>
                       </td>
                       <td className="text-right px-4 py-3 tabular-nums font-bold text-gray-900">
                         {v.totalSessions}
