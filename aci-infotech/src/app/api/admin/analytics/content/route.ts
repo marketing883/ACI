@@ -45,6 +45,8 @@ export interface ContentResponse {
   pages: ContentRow[];
   /** Avg minutes from chat open to email capture, across all sessions. */
   avgTimeToQualifyMinutes: number | null;
+  p50TimeToQualifyMinutes: number | null;
+  p95TimeToQualifyMinutes: number | null;
   totalViews: number;
   totalChatOpens: number;
   totalEmailCaptures: number;
@@ -167,15 +169,23 @@ export async function GET(request: NextRequest) {
       b.emailCaptures - a.emailCaptures || b.chatOpens - a.chatOpens,
   );
 
-  // ----- Time to qualify -----
+  // ----- Time to qualify (avg + percentiles) -----
+  const sortedDeltas = qualifyDeltas.slice().sort((a, b) => a - b);
+  const percentile = (arr: number[], p: number): number | null => {
+    if (arr.length === 0) return null;
+    const idx = Math.ceil(arr.length * p) - 1;
+    return Math.round(arr[Math.max(0, idx)] / 60_000);
+  };
   const avgTimeToQualifyMinutes =
-    qualifyDeltas.length > 0
+    sortedDeltas.length > 0
       ? Math.round(
-          qualifyDeltas.reduce((a, b) => a + b, 0) /
-            qualifyDeltas.length /
+          sortedDeltas.reduce((a, b) => a + b, 0) /
+            sortedDeltas.length /
             60_000,
         )
       : null;
+  const p50TimeToQualifyMinutes = percentile(sortedDeltas, 0.5);
+  const p95TimeToQualifyMinutes = percentile(sortedDeltas, 0.95);
 
   const response: ContentResponse = {
     since,
@@ -183,6 +193,8 @@ export async function GET(request: NextRequest) {
     rangeEnd: endIso,
     pages: pages.slice(0, 50),
     avgTimeToQualifyMinutes,
+    p50TimeToQualifyMinutes,
+    p95TimeToQualifyMinutes,
     totalViews,
     totalChatOpens,
     totalEmailCaptures,

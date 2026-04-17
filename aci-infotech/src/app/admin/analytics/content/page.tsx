@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import {
   FileText,
   RefreshCw,
@@ -8,10 +9,13 @@ import {
   MessageSquare,
   Mail,
   Eye,
+  Search,
+  ArrowUpDown,
 } from 'lucide-react';
 import type { ContentResponse } from '@/app/api/admin/analytics/content/route';
 
 type SinceKey = '24h' | '7d' | '30d';
+type SortKey = 'emailCaptures' | 'chatOpens' | 'views' | 'conversionRate' | 'chatOpenRate';
 
 const RANGE_OPTIONS: Array<{ key: SinceKey; label: string }> = [
   { key: '24h', label: 'Last 24 hours' },
@@ -29,6 +33,34 @@ export default function ContentPerformancePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshCounter, setRefreshCounter] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<SortKey>('emailCaptures');
+  const [sortAsc, setSortAsc] = useState(false);
+
+  const filteredAndSorted = useMemo(() => {
+    if (!data) return [];
+    let rows = data.pages;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      rows = rows.filter((r) => r.pagePath.toLowerCase().includes(q));
+    }
+    return rows.slice().sort((a, b) => {
+      const valA = a[sortBy] ?? -Infinity;
+      const valB = b[sortBy] ?? -Infinity;
+      return sortAsc
+        ? (valA as number) - (valB as number)
+        : (valB as number) - (valA as number);
+    });
+  }, [data, searchQuery, sortBy, sortAsc]);
+
+  const toggleSort = (key: SortKey) => {
+    if (sortBy === key) {
+      setSortAsc((prev) => !prev);
+    } else {
+      setSortBy(key);
+      setSortAsc(false);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -135,10 +167,10 @@ export default function ContentPerformancePage() {
           <StatCard
             icon={<Clock className="w-5 h-5 text-amber-600" />}
             bg="bg-amber-50"
-            label="Avg. time to qualify"
+            label="Time to qualify (avg / p50 / p95)"
             value={
               data.avgTimeToQualifyMinutes !== null
-                ? `${data.avgTimeToQualifyMinutes} min`
+                ? `${data.avgTimeToQualifyMinutes}m / ${data.p50TimeToQualifyMinutes ?? '\u2014'}m / ${data.p95TimeToQualifyMinutes ?? '\u2014'}m`
                 : '\u2014'
             }
           />
@@ -162,9 +194,22 @@ export default function ContentPerformancePage() {
         </div>
       )}
 
-      {/* Page table */}
+      {/* Search bar + page table */}
       {data && !empty && (
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          {/* Search */}
+          <div className="px-5 py-3 border-b border-gray-100">
+            <div className="relative max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Filter pages..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -172,25 +217,15 @@ export default function ContentPerformancePage() {
                   <th className="text-left px-5 py-3 font-semibold text-gray-700">
                     Page
                   </th>
-                  <th className="text-right px-4 py-3 font-semibold text-gray-700 whitespace-nowrap">
-                    Views
-                  </th>
-                  <th className="text-right px-4 py-3 font-semibold text-gray-700 whitespace-nowrap">
-                    Chat opens
-                  </th>
-                  <th className="text-right px-4 py-3 font-semibold text-gray-700 whitespace-nowrap">
-                    Open rate
-                  </th>
-                  <th className="text-right px-4 py-3 font-semibold text-gray-700 whitespace-nowrap">
-                    Emails
-                  </th>
-                  <th className="text-right px-5 py-3 font-semibold text-gray-700 whitespace-nowrap">
-                    Conversion
-                  </th>
+                  <SortableHeader label="Views" sortKey="views" currentSort={sortBy} asc={sortAsc} onSort={toggleSort} />
+                  <SortableHeader label="Chat opens" sortKey="chatOpens" currentSort={sortBy} asc={sortAsc} onSort={toggleSort} />
+                  <SortableHeader label="Open rate" sortKey="chatOpenRate" currentSort={sortBy} asc={sortAsc} onSort={toggleSort} />
+                  <SortableHeader label="Emails" sortKey="emailCaptures" currentSort={sortBy} asc={sortAsc} onSort={toggleSort} />
+                  <SortableHeader label="Conversion" sortKey="conversionRate" currentSort={sortBy} asc={sortAsc} onSort={toggleSort} />
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {data.pages.map((row) => (
+                {filteredAndSorted.map((row) => (
                   <tr
                     key={row.pagePath}
                     className="hover:bg-gray-50 transition-colors"
@@ -220,6 +255,11 @@ export default function ContentPerformancePage() {
               </tbody>
             </table>
           </div>
+          {filteredAndSorted.length === 0 && searchQuery && (
+            <div className="px-5 py-8 text-center text-sm text-gray-400">
+              No pages matching &ldquo;{searchQuery}&rdquo;
+            </div>
+          )}
           {data.pages.length >= 50 && (
             <div className="px-5 py-3 bg-gray-50 text-xs text-gray-400 border-t border-gray-100">
               Showing top 50 pages by email captures.
@@ -271,5 +311,38 @@ function ConversionBadge({ rate }: { rate: number | null }) {
     >
       {pct.toFixed(1)}%
     </span>
+  );
+}
+
+function SortableHeader({
+  label,
+  sortKey,
+  currentSort,
+  asc,
+  onSort,
+}: {
+  label: string;
+  sortKey: SortKey;
+  currentSort: SortKey;
+  asc: boolean;
+  onSort: (key: SortKey) => void;
+}) {
+  const active = currentSort === sortKey;
+  return (
+    <th className="text-right px-4 py-3 whitespace-nowrap">
+      <button
+        type="button"
+        onClick={() => onSort(sortKey)}
+        className={`inline-flex items-center gap-1 text-xs font-semibold transition-colors ${
+          active ? 'text-blue-700' : 'text-gray-700 hover:text-gray-900'
+        }`}
+      >
+        {label}
+        <ArrowUpDown
+          className={`w-3 h-3 ${active ? 'text-blue-500' : 'text-gray-300'}`}
+          style={active && asc ? { transform: 'scaleY(-1)' } : undefined}
+        />
+      </button>
+    </th>
   );
 }
