@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, User, MessageSquare } from 'lucide-react';
@@ -22,6 +22,20 @@ function formatTimeAgo(iso: string): string {
 }
 
 export default function DrillDownPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="max-w-6xl mx-auto py-12 text-center text-gray-400">
+          Loading...
+        </div>
+      }
+    >
+      <DrillDownContent />
+    </Suspense>
+  );
+}
+
+function DrillDownContent() {
   const searchParams = useSearchParams();
   const type = searchParams.get('type') ?? 'leads';
   const since = searchParams.get('since') ?? '7d';
