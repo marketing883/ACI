@@ -13,6 +13,7 @@ import type {
   PainPointEntry,
   DecisionRoleEntry,
   ModelEntry,
+  CorrelationInsight,
 } from '@/app/api/admin/analytics/insights/route';
 
 type SinceKey = '24h' | '7d' | '30d';
@@ -126,6 +127,11 @@ export default function InsightsPage() {
 
           {/* Section 3: Model Performance */}
           <ModelPerformanceSection models={data.models} />
+
+          {/* Section 4: Correlations */}
+          {data.correlations.length > 0 && (
+            <CorrelationsSection correlations={data.correlations} />
+          )}
         </div>
       )}
 
@@ -290,8 +296,8 @@ function ModelPerformanceSection({ models }: { models: ModelEntry[] }) {
         </h2>
       </div>
       <p className="text-xs text-gray-500 mb-4">
-        Per-model message count, average latency, and cost. Sorted by message
-        volume.
+        Per-model stats including conversion rate: what percentage of sessions
+        where this model was the primary responder led to an email capture.
       </p>
 
       {models.length === 0 ? (
@@ -306,16 +312,25 @@ function ModelPerformanceSection({ models }: { models: ModelEntry[] }) {
                 <th className="text-left py-2 pr-4 font-semibold text-gray-700">
                   Model
                 </th>
-                <th className="text-right py-2 px-4 font-semibold text-gray-700">
-                  Messages
+                <th className="text-right py-2 px-3 font-semibold text-gray-700">
+                  Msgs
                 </th>
-                <th className="text-right py-2 px-4 font-semibold text-gray-700">
+                <th className="text-right py-2 px-3 font-semibold text-gray-700">
+                  Sessions
+                </th>
+                <th className="text-right py-2 px-3 font-semibold text-gray-700">
+                  Conversions
+                </th>
+                <th className="text-right py-2 px-3 font-semibold text-gray-700">
+                  Conv. rate
+                </th>
+                <th className="text-right py-2 px-3 font-semibold text-gray-700">
                   Avg latency
                 </th>
-                <th className="text-right py-2 px-4 font-semibold text-gray-700">
+                <th className="text-right py-2 px-3 font-semibold text-gray-700">
                   Total cost
                 </th>
-                <th className="text-right py-2 pl-4 font-semibold text-gray-700">
+                <th className="text-right py-2 pl-3 font-semibold text-gray-700">
                   $/msg
                 </th>
               </tr>
@@ -328,18 +343,41 @@ function ModelPerformanceSection({ models }: { models: ModelEntry[] }) {
                       {m.model}
                     </span>
                   </td>
-                  <td className="text-right py-2.5 px-4 tabular-nums text-gray-900">
+                  <td className="text-right py-2.5 px-3 tabular-nums text-gray-900">
                     {fmtInt(m.messages)}
                   </td>
-                  <td className="text-right py-2.5 px-4 tabular-nums text-gray-600">
+                  <td className="text-right py-2.5 px-3 tabular-nums text-gray-600">
+                    {fmtInt(m.sessions)}
+                  </td>
+                  <td className="text-right py-2.5 px-3 tabular-nums text-gray-900 font-medium">
+                    {fmtInt(m.conversions)}
+                  </td>
+                  <td className="text-right py-2.5 px-3">
+                    {m.conversionRate !== null ? (
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          m.conversionRate >= 0.2
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : m.conversionRate >= 0.05
+                              ? 'bg-amber-100 text-amber-700'
+                              : 'bg-gray-100 text-gray-600'
+                        }`}
+                      >
+                        {(m.conversionRate * 100).toFixed(1)}%
+                      </span>
+                    ) : (
+                      <span className="text-gray-400">{'\u2014'}</span>
+                    )}
+                  </td>
+                  <td className="text-right py-2.5 px-3 tabular-nums text-gray-600">
                     {m.avgLatencyMs !== null
                       ? `${fmtInt(m.avgLatencyMs)} ms`
                       : '\u2014'}
                   </td>
-                  <td className="text-right py-2.5 px-4 tabular-nums text-gray-900">
+                  <td className="text-right py-2.5 px-3 tabular-nums text-gray-900">
                     ${m.totalCostUsd.toFixed(4)}
                   </td>
-                  <td className="text-right py-2.5 pl-4 tabular-nums text-gray-500">
+                  <td className="text-right py-2.5 pl-3 tabular-nums text-gray-500">
                     {m.avgCostPerMessage !== null
                       ? `$${m.avgCostPerMessage.toFixed(4)}`
                       : '\u2014'}
@@ -350,6 +388,54 @@ function ModelPerformanceSection({ models }: { models: ModelEntry[] }) {
           </table>
         </div>
       )}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------- */
+/* Correlations                                                          */
+/* -------------------------------------------------------------------- */
+
+function CorrelationsSection({
+  correlations,
+}: {
+  correlations: CorrelationInsight[];
+}) {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200 p-6">
+      <div className="flex items-center gap-3 mb-4">
+        <Brain className="w-5 h-5 text-violet-600" />
+        <h2 className="text-lg font-semibold text-gray-900">
+          Correlations
+        </h2>
+      </div>
+      <div className="space-y-3">
+        {correlations.map((c, i) => (
+          <div
+            key={i}
+            className={`p-4 rounded-xl border ${
+              c.positive
+                ? 'bg-emerald-50 border-emerald-200'
+                : 'bg-amber-50 border-amber-200'
+            }`}
+          >
+            <div
+              className={`text-sm font-semibold mb-1 ${
+                c.positive ? 'text-emerald-800' : 'text-amber-800'
+              }`}
+            >
+              {c.label}
+            </div>
+            <div
+              className={`text-sm ${
+                c.positive ? 'text-emerald-700' : 'text-amber-700'
+              }`}
+            >
+              {c.description}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
