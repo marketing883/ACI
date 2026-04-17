@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { BarChart3, TrendingDown, TrendingUp, RefreshCw, AlertTriangle, Info, ArrowUpRight, ArrowDownRight, Download, ExternalLink, Filter } from 'lucide-react';
 import Link from 'next/link';
+import DateRangeSelector, { type DateRange, dateRangeToParams } from '@/components/admin/DateRangeSelector';
 import { downloadCSV } from '@/lib/admin/csv';
 import type { FunnelResponse, FunnelStage } from '@/app/api/admin/analytics/funnel/route';
 
@@ -31,7 +32,8 @@ function stageWidthPercent(stage: FunnelStage): number {
 }
 
 export default function ConversionFunnelPage() {
-  const [since, setSince] = useState<SinceKey>('7d');
+  const [dateRange, setDateRange] = useState<DateRange>({ since: '7d' });
+  const since = dateRange.since === 'custom' ? 'custom' : dateRange.since;
   const [data, setData] = useState<FunnelResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +46,7 @@ export default function ConversionFunnelPage() {
     async function load() {
       setLoading(true);
       setError(null);
-      const params = new URLSearchParams({ since });
+      const params = dateRangeToParams(dateRange);
       if (appliedPageFilter) params.set('page', appliedPageFilter);
       try {
         const res = await fetch(`/api/admin/analytics/funnel?${params.toString()}`, {
@@ -65,7 +67,7 @@ export default function ConversionFunnelPage() {
     return () => {
       cancelled = true;
     };
-  }, [since, refreshCounter, appliedPageFilter]);
+  }, [dateRange, refreshCounter, appliedPageFilter]);
 
   const topStageEmpty = data && data.stages[0].count === 0;
   const allStagesEmpty = data && data.stages.every((s) => s.count === 0);
@@ -124,21 +126,8 @@ export default function ConversionFunnelPage() {
       </div>
 
       {/* Time range selector */}
-      <div className="flex gap-2 mb-6">
-        {RANGE_OPTIONS.map((opt) => (
-          <button
-            key={opt.key}
-            type="button"
-            onClick={() => setSince(opt.key)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              since === opt.key
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
+      <div className="mb-6">
+        <DateRangeSelector value={dateRange} onChange={setDateRange} />
       </div>
 
       {/* Entry page filter */}

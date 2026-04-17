@@ -9,6 +9,7 @@ import {
   Cpu,
   Download,
 } from 'lucide-react';
+import DateRangeSelector, { type DateRange, dateRangeToParams } from '@/components/admin/DateRangeSelector';
 import { downloadCSV } from '@/lib/admin/csv';
 import type {
   InsightsResponse,
@@ -29,7 +30,8 @@ const RANGE_OPTIONS: Array<{ key: SinceKey; label: string }> = [
 const fmtInt = (n: number) => n.toLocaleString();
 
 export default function InsightsPage() {
-  const [since, setSince] = useState<SinceKey>('30d');
+  const [dateRange, setDateRange] = useState<DateRange>({ since: '30d' });
+  const since = dateRange.since === 'custom' ? 'custom' : dateRange.since;
   const [data, setData] = useState<InsightsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +44,7 @@ export default function InsightsPage() {
       setError(null);
       try {
         const res = await fetch(
-          `/api/admin/analytics/insights?since=${since}`,
+          `/api/admin/analytics/insights?${dateRangeToParams(dateRange).toString()}`,
           { cache: 'no-store' },
         );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -59,7 +61,7 @@ export default function InsightsPage() {
     return () => {
       cancelled = true;
     };
-  }, [since, refreshCounter]);
+  }, [dateRange, refreshCounter]);
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -113,22 +115,8 @@ export default function InsightsPage() {
         )}
       </div>
 
-      {/* Time range — default 30d for insights (want more data) */}
-      <div className="flex gap-2 mb-6">
-        {RANGE_OPTIONS.map((opt) => (
-          <button
-            key={opt.key}
-            type="button"
-            onClick={() => setSince(opt.key)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              since === opt.key
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
+      <div className="mb-6">
+        <DateRangeSelector value={dateRange} onChange={setDateRange} />
       </div>
 
       {error && (

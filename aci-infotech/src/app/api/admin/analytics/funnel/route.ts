@@ -321,11 +321,26 @@ export async function GET(request: NextRequest) {
   });
 
   const url = new URL(request.url);
-  const since = parseSince(url.searchParams.get('since'));
   const entryPage = url.searchParams.get('page') || undefined;
-  const windowMs = WINDOW_MS[since];
-  const rangeEnd = new Date();
-  const rangeStart = new Date(rangeEnd.getTime() - windowMs);
+
+  // Support custom date ranges: ?startDate=ISO&endDate=ISO
+  // Falls back to the preset ?since=24h|7d|30d
+  const customStart = url.searchParams.get('startDate');
+  const customEnd = url.searchParams.get('endDate');
+  let rangeStart: Date;
+  let rangeEnd: Date;
+  let windowMs: number;
+  const since = parseSince(url.searchParams.get('since'));
+
+  if (customStart && customEnd) {
+    rangeStart = new Date(customStart);
+    rangeEnd = new Date(customEnd);
+    windowMs = rangeEnd.getTime() - rangeStart.getTime();
+  } else {
+    windowMs = WINDOW_MS[since];
+    rangeEnd = new Date();
+    rangeStart = new Date(rangeEnd.getTime() - windowMs);
+  }
   const previousEnd = new Date(rangeStart.getTime());
   const previousStart = new Date(previousEnd.getTime() - windowMs);
 

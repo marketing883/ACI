@@ -137,7 +137,27 @@ export default function AdminLayout({
 
   const isActiveLink = (href: string) => {
     if (href === '/admin') return pathname === href;
-    return pathname.startsWith(href);
+    // Exact match OR the pathname is a direct child (e.g. /admin/analytics
+    // matches /admin/analytics but NOT /admin/analytics/funnel — because
+    // /admin/analytics/funnel has its own nav entry).
+    if (pathname === href) return true;
+    // Only startsWith if the href has a trailing segment that isn't a
+    // sibling nav item. Check: is there a MORE SPECIFIC nav item that
+    // matches? If yes, this one shouldn't highlight.
+    if (pathname.startsWith(href + '/')) {
+      // See if a longer (more specific) href in navItems also matches.
+      for (const item of navItems) {
+        if ('children' in item && item.children) {
+          for (const child of item.children) {
+            if (child.href !== href && child.href.startsWith(href) && pathname.startsWith(child.href)) {
+              return false;
+            }
+          }
+        }
+      }
+      return true;
+    }
+    return false;
   };
 
   const getCurrentPageTitle = () => {
