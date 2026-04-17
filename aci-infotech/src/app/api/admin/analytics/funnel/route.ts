@@ -1,24 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 /**
  * GET /api/admin/analytics/funnel?since=24h|7d|30d
  *
- * Returns the visitor -> chat -> engagement -> lead -> handoff funnel for
- * the selected rolling window. Each stage reports absolute count, the
- * conversion rate from the previous stage, and the overall conversion
- * rate from the top.
+ * Visitor → chat → engagement → lead → handoff funnel with period-over-
+ * period comparison. Each stage reports absolute count, stage-to-stage
+ * conversion, overall conversion from the top, AND the delta from the
+ * previous period of equal duration so trends are visible.
  *
- * Data sources:
- *   visitors         -> visitor_sessions (distinct visitor_id in window)
- *   chat_opened      -> chat_sessions (distinct session_id in window)
- *   engaged          -> chat_messages (distinct session_id with tool_name=qualify_lead)
- *   email_captured   -> chat_leads (email IS NOT NULL, created_at in window)
- *   high_intent      -> chat_leads (lead_score >= 70 OR intent='high')
- *   handoff          -> chat_sessions (handoff_at in window)
- *
- * All queries use service-role key so RLS doesn't truncate the numbers.
- * The admin page is already auth-gated by middleware.
+ * "Engaged" is defined as sessions with at least 2 user messages (the
+ * visitor typed more than once — a sign of genuine conversation, not a
+ * one-shot open-and-close). This is broader than the previous definition
+ * (qualify_lead fired) and catches conversations where the model builds
+ * rapport before capturing fields.
  */
 
 type SinceKey = '24h' | '7d' | '30d';
@@ -39,52 +34,52 @@ export interface FunnelStage {
   label: string;
   count: number;
   description: string;
-  /** Percentage of the previous stage that reached this stage. Null for the top. */
   conversionFromPrevious: number | null;
-  /** Percentage of the top stage that reached this stage. Null for the top. */
   conversionFromTop: number | null;
+  previousCount: number | null;
+  delta: number | null;
+  deltaPercent: number | null;
 }
 
 export interface FunnelInsight {
   biggestDropoff: {
     fromStage: string;
     toStage: string;
-    /** Drop rate, 0..1. 0.6 means 60% of the previous stage did NOT convert. */
     dropRate: number;
   } | null;
-  /** Warning string when visitors < chat_opened (consent coverage is low). */
   coverageWarning: string | null;
+  trendSummary: string | null;
 }
 
 export interface FunnelResponse {
   since: SinceKey;
   rangeStart: string;
   rangeEnd: string;
+  previousRangeStart: string;
+  previousRangeEnd: string;
   stages: FunnelStage[];
   insight: FunnelInsight;
   generatedAt: string;
 }
 
-export async function GET(request: NextRequest) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!supabaseUrl || !serviceKey) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
-  }
+// ---------------------------------------------------------------------------
+// Stage counting — extracted so we can compute current + previous in one call
+// ---------------------------------------------------------------------------
 
-  const supabase = createClient(supabaseUrl, serviceKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+interface RawStageCounts {
+  visitors: number;
+  chatOpened: number;
+  engaged: number;
+  emailCaptured: number;
+  highIntent: number;
+  handoff: number;
+}
 
-  const url = new URL(request.url);
-  const since = parseSince(url.searchParams.get('since'));
-  const rangeEnd = new Date();
-  const rangeStart = new Date(rangeEnd.getTime() - WINDOW_MS[since]);
-  const startIso = rangeStart.toISOString();
-  const endIso = rangeEnd.toISOString();
-
-  // Fire all six count queries in parallel. Each is a single COUNT so the
-  // total latency is bounded by the slowest query (typically < 200ms).
+async function computeStageCounts(
+  supabase: SupabaseClient,
+  startIso: string,
+  endIso: string,
+): Promise<RawStageCounts> {
   const [
     visitorsResult,
     chatOpenedResult,
@@ -93,9 +88,6 @@ export async function GET(request: NextRequest) {
     highIntentResult,
     handoffResult,
   ] = await Promise.all([
-    // visitor_sessions: distinct visitor_id in window. No easy distinct-
-    // count in PostgREST — pull the ids and reduce client-side. Capped at
-    // 50k for safety; above that we'd move this to a Postgres function.
     supabase
       .from('visitor_sessions')
       .select('visitor_id', { count: 'exact', head: false })
@@ -107,11 +99,13 @@ export async function GET(request: NextRequest) {
       .select('session_id', { count: 'exact', head: true })
       .gte('started_at', startIso)
       .lte('started_at', endIso),
-    // engaged: distinct session_ids with a qualify_lead tool call in range.
+    // Engaged: sessions with >= 2 user messages. Broader than qualify_lead
+    // — captures rapport-building conversations where qualifying fields
+    // haven't surfaced yet but the visitor is genuinely engaged.
     supabase
       .from('chat_messages')
-      .select('session_id', { count: 'exact', head: false })
-      .eq('tool_name', 'qualify_lead')
+      .select('session_id')
+      .eq('role', 'user')
       .gte('created_at', startIso)
       .lte('created_at', endIso)
       .limit(50_000),
@@ -135,84 +129,164 @@ export async function GET(request: NextRequest) {
       .lte('handoff_at', endIso),
   ]);
 
-  // Reduce visitor_sessions rows to a distinct visitor count.
-  const visitorsCount = (() => {
+  // Distinct visitor count.
+  const visitors = (() => {
     if (!visitorsResult.data) return 0;
     const seen = new Set<string>();
-    for (const row of visitorsResult.data as Array<{ visitor_id: string | null }>) {
-      if (row.visitor_id) seen.add(row.visitor_id);
+    for (const r of visitorsResult.data as Array<{ visitor_id: string | null }>) {
+      if (r.visitor_id) seen.add(r.visitor_id);
     }
     return seen.size;
   })();
 
-  // Reduce engaged rows to distinct session_ids.
-  const engagedCount = (() => {
+  // Engaged: distinct sessions with >= 2 user messages.
+  const engaged = (() => {
     if (!engagedRowsResult.data) return 0;
-    const seen = new Set<string>();
-    for (const row of engagedRowsResult.data as Array<{ session_id: string | null }>) {
-      if (row.session_id) seen.add(row.session_id);
+    const counts = new Map<string, number>();
+    for (const r of engagedRowsResult.data as Array<{ session_id: string | null }>) {
+      if (r.session_id) counts.set(r.session_id, (counts.get(r.session_id) ?? 0) + 1);
     }
-    return seen.size;
+    let n = 0;
+    for (const c of counts.values()) if (c >= 2) n++;
+    return n;
   })();
 
-  const stageDefs: Array<{ key: string; label: string; description: string; count: number }> = [
-    {
-      key: 'visitors',
-      label: 'Unique visitors',
-      description: 'Distinct visitors tracked in this window (consent-gated; undercount if visitors decline cookies).',
-      count: visitorsCount,
-    },
-    {
-      key: 'chat_opened',
-      label: 'Chat opened',
-      description: 'Atheros sessions that started in this window.',
-      count: chatOpenedResult.count ?? 0,
-    },
-    {
-      key: 'engaged',
-      label: 'Engaged in conversation',
-      description: 'Sessions where the model fired qualify_lead at least once (real signal was shared).',
-      count: engagedCount,
-    },
-    {
-      key: 'email_captured',
-      label: 'Email captured',
-      description: 'Leads that shared an email address.',
-      count: emailCapturedResult.count ?? 0,
-    },
-    {
-      key: 'high_intent',
-      label: 'Qualified (high intent)',
-      description: 'Leads with lead_score ≥ 70 or intent = high.',
-      count: highIntentResult.count ?? 0,
-    },
-    {
-      key: 'handoff',
-      label: 'Handed to a human',
-      description: 'Sessions escalated via handoff_to_human.',
-      count: handoffResult.count ?? 0,
-    },
-  ];
+  return {
+    visitors,
+    chatOpened: chatOpenedResult.count ?? 0,
+    engaged,
+    emailCaptured: emailCapturedResult.count ?? 0,
+    highIntent: highIntentResult.count ?? 0,
+    handoff: handoffResult.count ?? 0,
+  };
+}
 
-  // Compute conversion rates.
-  const topCount = stageDefs[0].count;
-  const stages: FunnelStage[] = stageDefs.map((s, i) => {
-    const prev = i > 0 ? stageDefs[i - 1].count : null;
+// ---------------------------------------------------------------------------
+// Stage definition + conversion math
+// ---------------------------------------------------------------------------
+
+const STAGE_META: Array<{
+  key: string;
+  label: string;
+  description: string;
+  field: keyof RawStageCounts;
+}> = [
+  {
+    key: 'visitors',
+    label: 'Unique visitors',
+    description:
+      'Distinct visitors tracked in this window (consent-gated; undercount if visitors decline cookies).',
+    field: 'visitors',
+  },
+  {
+    key: 'chat_opened',
+    label: 'Chat opened',
+    description: 'Atheros sessions that started in this window.',
+    field: 'chatOpened',
+  },
+  {
+    key: 'engaged',
+    label: 'Engaged in conversation',
+    description:
+      'Sessions where the visitor sent at least 2 messages (genuine back-and-forth, not a one-shot open).',
+    field: 'engaged',
+  },
+  {
+    key: 'email_captured',
+    label: 'Email captured',
+    description: 'Leads that shared an email address.',
+    field: 'emailCaptured',
+  },
+  {
+    key: 'high_intent',
+    label: 'Qualified (high intent)',
+    description: 'Leads with lead_score >= 70 or intent = high.',
+    field: 'highIntent',
+  },
+  {
+    key: 'handoff',
+    label: 'Handed to a human',
+    description: 'Sessions escalated via handoff_to_human.',
+    field: 'handoff',
+  },
+];
+
+function buildStages(
+  current: RawStageCounts,
+  previous: RawStageCounts | null,
+): FunnelStage[] {
+  const topCount = current[STAGE_META[0].field];
+  return STAGE_META.map((meta, i) => {
+    const count = current[meta.field];
+    const prevStageCount = i > 0 ? current[STAGE_META[i - 1].field] : null;
     const conversionFromPrevious =
-      prev === null ? null : prev === 0 ? null : s.count / prev;
+      prevStageCount === null
+        ? null
+        : prevStageCount === 0
+          ? null
+          : count / prevStageCount;
     const conversionFromTop =
-      i === 0 ? null : topCount === 0 ? null : s.count / topCount;
+      i === 0 ? null : topCount === 0 ? null : count / topCount;
+    const previousCount = previous ? previous[meta.field] : null;
+    const delta =
+      previousCount !== null ? count - previousCount : null;
+    const deltaPercent =
+      previousCount !== null && previousCount > 0
+        ? (count - previousCount) / previousCount
+        : null;
     return {
-      key: s.key,
-      label: s.label,
-      description: s.description,
-      count: s.count,
+      key: meta.key,
+      label: meta.label,
+      description: meta.description,
+      count,
       conversionFromPrevious,
       conversionFromTop,
+      previousCount,
+      delta,
+      deltaPercent,
     };
   });
+}
 
-  // Biggest drop-off (stage-to-stage with the largest relative drop).
+// ---------------------------------------------------------------------------
+// Route handler
+// ---------------------------------------------------------------------------
+
+export async function GET(request: NextRequest) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !serviceKey) {
+    return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
+  }
+  const supabase = createClient(supabaseUrl, serviceKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+
+  const url = new URL(request.url);
+  const since = parseSince(url.searchParams.get('since'));
+  const windowMs = WINDOW_MS[since];
+  const rangeEnd = new Date();
+  const rangeStart = new Date(rangeEnd.getTime() - windowMs);
+  const previousEnd = new Date(rangeStart.getTime());
+  const previousStart = new Date(previousEnd.getTime() - windowMs);
+
+  // Compute both periods. Sequential to stay within connection pool limits
+  // (6 queries per call, so 12 total if parallel — borderline for default
+  // Supabase pooling). Sequential adds ~200ms but is safer.
+  const currentCounts = await computeStageCounts(
+    supabase,
+    rangeStart.toISOString(),
+    rangeEnd.toISOString(),
+  );
+  const previousCounts = await computeStageCounts(
+    supabase,
+    previousStart.toISOString(),
+    previousEnd.toISOString(),
+  );
+
+  const stages = buildStages(currentCounts, previousCounts);
+
+  // Biggest drop-off.
   let biggestDropoff: FunnelInsight['biggestDropoff'] = null;
   for (let i = 1; i < stages.length; i++) {
     const prev = stages[i - 1];
@@ -228,17 +302,34 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  // Coverage warning.
   const coverageWarning =
     stages[0].count > 0 && stages[1].count > stages[0].count
-      ? `Chat sessions (${stages[1].count}) exceed tracked visitors (${stages[0].count}) — visitor tracking is consent-gated and is undercounting the top of funnel. Consider enabling anonymous page-view tracking.`
+      ? `Chat sessions (${stages[1].count}) exceed tracked visitors (${stages[0].count}). Visitor tracking is consent-gated and undercounting the top of funnel.`
       : null;
+
+  // Trend summary: overall pipeline direction.
+  const emailStage = stages.find((s) => s.key === 'email_captured');
+  let trendSummary: string | null = null;
+  if (emailStage?.deltaPercent !== null && emailStage?.deltaPercent !== undefined) {
+    const pct = Math.abs(emailStage.deltaPercent * 100).toFixed(0);
+    if (emailStage.deltaPercent > 0.05) {
+      trendSummary = `Email captures are up ${pct}% compared to the previous ${since} window. Pipeline is growing.`;
+    } else if (emailStage.deltaPercent < -0.05) {
+      trendSummary = `Email captures are down ${pct}% compared to the previous ${since} window. Investigate content or chatbot changes.`;
+    } else {
+      trendSummary = `Email captures are flat compared to the previous ${since} window. Stable pipeline.`;
+    }
+  }
 
   const response: FunnelResponse = {
     since,
-    rangeStart: startIso,
-    rangeEnd: endIso,
+    rangeStart: rangeStart.toISOString(),
+    rangeEnd: rangeEnd.toISOString(),
+    previousRangeStart: previousStart.toISOString(),
+    previousRangeEnd: previousEnd.toISOString(),
     stages,
-    insight: { biggestDropoff, coverageWarning },
+    insight: { biggestDropoff, coverageWarning, trendSummary },
     generatedAt: new Date().toISOString(),
   };
 

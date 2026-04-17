@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BarChart3, TrendingDown, RefreshCw, AlertTriangle, Info } from 'lucide-react';
+import { BarChart3, TrendingDown, TrendingUp, RefreshCw, AlertTriangle, Info, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import type { FunnelResponse, FunnelStage } from '@/app/api/admin/analytics/funnel/route';
 
 type SinceKey = '24h' | '7d' | '30d';
@@ -174,27 +174,43 @@ export default function ConversionFunnelPage() {
         </div>
       )}
 
-      {/* Biggest drop-off insight */}
-      {data?.insight.biggestDropoff && !allStagesEmpty && (
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 flex items-start gap-4">
-          <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center flex-shrink-0">
-            <TrendingDown className="w-5 h-5 text-orange-600" />
-          </div>
-          <div>
-            <div className="font-semibold text-gray-900 mb-1">Biggest drop-off</div>
-            <div className="text-sm text-gray-600">
-              <span className="font-medium text-gray-900">
-                {data.insight.biggestDropoff.fromStage}
-              </span>{' '}
-              →{' '}
-              <span className="font-medium text-gray-900">
-                {data.insight.biggestDropoff.toStage}
-              </span>
-              . {formatPercent(data.insight.biggestDropoff.dropRate)} of the
-              previous stage does not progress. Often the highest-leverage
-              place to work on copy, UX, or qualification choreography.
+      {/* Trend summary + biggest drop-off insights */}
+      {data && !allStagesEmpty && (
+        <div className="space-y-3 mb-6">
+          {data.insight.trendSummary && (
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 flex items-start gap-4">
+              <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <div className="font-semibold text-gray-900 mb-1">Pipeline trend</div>
+                <div className="text-sm text-gray-600">{data.insight.trendSummary}</div>
+              </div>
             </div>
-          </div>
+          )}
+
+          {data.insight.biggestDropoff && (
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 flex items-start gap-4">
+              <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center flex-shrink-0">
+                <TrendingDown className="w-5 h-5 text-orange-600" />
+              </div>
+              <div>
+                <div className="font-semibold text-gray-900 mb-1">Biggest drop-off</div>
+                <div className="text-sm text-gray-600">
+                  <span className="font-medium text-gray-900">
+                    {data.insight.biggestDropoff.fromStage}
+                  </span>{' '}
+                  to{' '}
+                  <span className="font-medium text-gray-900">
+                    {data.insight.biggestDropoff.toStage}
+                  </span>
+                  . {formatPercent(data.insight.biggestDropoff.dropRate)} of the
+                  previous stage does not progress. Often the highest-leverage
+                  place to work on copy, UX, or qualification choreography.
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -241,9 +257,10 @@ function FunnelRow({
   return (
     <div className="group">
       <div className="flex items-baseline justify-between mb-1.5">
-        <div>
+        <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-900">{stage.label}</span>
-          <span className="ml-2 text-sm text-gray-500">{formatCount(stage.count)}</span>
+          <span className="text-sm text-gray-500">{formatCount(stage.count)}</span>
+          <DeltaBadge delta={stage.delta} deltaPercent={stage.deltaPercent} />
         </div>
         <div className="flex items-center gap-3 text-xs">
           {!isTop && (
@@ -279,5 +296,36 @@ function FunnelRow({
 
       <div className="mt-1 text-xs text-gray-400">{stage.description}</div>
     </div>
+  );
+}
+
+function DeltaBadge({
+  delta,
+  deltaPercent,
+}: {
+  delta: number | null;
+  deltaPercent: number | null;
+}) {
+  if (delta === null || delta === 0) return null;
+  const up = delta > 0;
+  const pctStr =
+    deltaPercent !== null && Number.isFinite(deltaPercent)
+      ? `${Math.abs(deltaPercent * 100).toFixed(0)}%`
+      : '';
+  return (
+    <span
+      className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[11px] font-semibold ${
+        up
+          ? 'bg-emerald-100 text-emerald-700'
+          : 'bg-red-100 text-red-700'
+      }`}
+    >
+      {up ? (
+        <ArrowUpRight className="w-3 h-3" />
+      ) : (
+        <ArrowDownRight className="w-3 h-3" />
+      )}
+      {pctStr || formatCount(Math.abs(delta))}
+    </span>
   );
 }
