@@ -81,7 +81,6 @@ export default function AnalyticsDashboard() {
           event: '*',
           schema: 'public',
           table: 'visitor_sessions',
-          filter: 'is_active=eq.true',
         },
         (payload: RealtimePostgresChangesPayload<ActiveVisitor>) => {
           console.log('Session change:', payload);
@@ -135,13 +134,16 @@ export default function AnalyticsDashboard() {
     setIsLoading(true);
 
     try {
-      // Fetch active sessions
+      // Fetch active sessions — use last_activity_at recency instead of
+      // the is_active flag, which is never cleaned up (no cron job calls
+      // mark_inactive_sessions). A 30-minute window = "currently active".
+      const thirtyMinAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
       const { data: sessions } = await supabase
         .from('visitor_sessions')
         .select('*')
-        .eq('is_active', true)
+        .gte('last_activity_at', thirtyMinAgo)
         .order('last_activity_at', { ascending: false })
-        .limit(50);
+        .limit(100);
 
       if (sessions) {
         setActiveVisitors(sessions);
