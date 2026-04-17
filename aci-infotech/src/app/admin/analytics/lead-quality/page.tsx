@@ -12,7 +12,9 @@ import {
   Building2,
   Briefcase,
   Download,
+  ExternalLink,
 } from 'lucide-react';
+import Link from 'next/link';
 import { downloadCSV } from '@/lib/admin/csv';
 import type {
   LeadQualityResponse,
@@ -183,6 +185,7 @@ export default function LeadQualityPage() {
               band={data.bands.cold}
               total={data.leadsWithScore}
               accent="sky"
+              drillHref={`/admin/analytics/drill-down?type=leads&band=cold&since=${since}`}
             />
             <BandCard
               label="Warm"
@@ -190,6 +193,7 @@ export default function LeadQualityPage() {
               band={data.bands.warm}
               total={data.leadsWithScore}
               accent="amber"
+              drillHref={`/admin/analytics/drill-down?type=leads&band=warm&since=${since}`}
             />
             <BandCard
               label="Hot"
@@ -197,6 +201,7 @@ export default function LeadQualityPage() {
               band={data.bands.hot}
               total={data.leadsWithScore}
               accent="rose"
+              drillHref={`/admin/analytics/drill-down?type=leads&band=hot&since=${since}`}
             />
           </div>
 
@@ -271,12 +276,14 @@ function BandCard({
   band,
   total,
   accent,
+  drillHref,
 }: {
   label: string;
   hint: string;
   band: Band;
   total: number;
   accent: 'sky' | 'amber' | 'rose';
+  drillHref: string;
 }) {
   const accents: Record<typeof accent, { bg: string; dot: string; text: string }> = {
     sky: { bg: 'bg-sky-50', dot: 'bg-sky-500', text: 'text-sky-700' },
@@ -321,6 +328,14 @@ function BandCard({
           </span>
         )}
       </div>
+      {band.count > 0 && (
+        <Link
+          href={drillHref}
+          className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          View leads <ExternalLink className="w-3 h-3" />
+        </Link>
+      )}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BarChart3, TrendingDown, TrendingUp, RefreshCw, AlertTriangle, Info, ArrowUpRight, ArrowDownRight, Download } from 'lucide-react';
+import { BarChart3, TrendingDown, TrendingUp, RefreshCw, AlertTriangle, Info, ArrowUpRight, ArrowDownRight, Download, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 import { downloadCSV } from '@/lib/admin/csv';
 import type { FunnelResponse, FunnelStage } from '@/app/api/admin/analytics/funnel/route';
 
@@ -172,14 +173,24 @@ export default function ConversionFunnelPage() {
       {data && !allStagesEmpty && (
         <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
           <div className="space-y-3">
-            {data.stages.map((stage, i) => (
-              <FunnelRow
-                key={stage.key}
-                stage={stage}
-                isTop={i === 0}
-                topCount={data.stages[0].count}
-              />
-            ))}
+            {data.stages.map((stage, i) => {
+              const DRILL_MAP: Record<string, string> = {
+                chat_opened: `/admin/analytics/drill-down?type=sessions&stage=chat_opened&since=${since}`,
+                engaged: `/admin/analytics/drill-down?type=sessions&stage=engaged&since=${since}`,
+                email_captured: `/admin/analytics/drill-down?type=leads&since=${since}`,
+                high_intent: `/admin/analytics/drill-down?type=leads&band=hot&since=${since}`,
+                handoff: `/admin/analytics/drill-down?type=sessions&stage=handoff&since=${since}`,
+              };
+              return (
+                <FunnelRow
+                  key={stage.key}
+                  stage={stage}
+                  isTop={i === 0}
+                  topCount={data.stages[0].count}
+                  drillHref={DRILL_MAP[stage.key]}
+                />
+              );
+            })}
           </div>
         </div>
       )}
@@ -253,10 +264,12 @@ function FunnelRow({
   stage,
   isTop,
   topCount,
+  drillHref,
 }: {
   stage: FunnelStage;
   isTop: boolean;
   topCount: number;
+  drillHref?: string;
 }) {
   const widthPct = stageWidthPercent(stage);
   // Color ramp: top is deep blue, bottom is lime. Gives an intuitive
@@ -320,7 +333,17 @@ function FunnelRow({
         />
       </div>
 
-      <div className="mt-1 text-xs text-gray-400">{stage.description}</div>
+      <div className="flex items-center justify-between mt-1">
+        <span className="text-xs text-gray-400">{stage.description}</span>
+        {drillHref && stage.count > 0 && (
+          <Link
+            href={drillHref}
+            className="text-xs text-blue-600 hover:text-blue-800 inline-flex items-center gap-0.5"
+          >
+            View <ExternalLink className="w-3 h-3" />
+          </Link>
+        )}
+      </div>
     </div>
   );
 }
