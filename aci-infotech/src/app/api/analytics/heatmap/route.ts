@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { getServiceSupabase } from '@/lib/supabase';
 
 // GET - Fetch heatmap data for a page
 export async function GET(request: NextRequest) {
   try {
+    const supabase = getServiceSupabase();
     const { searchParams } = new URL(request.url);
     const pagePath = searchParams.get('page');
     const startDate = searchParams.get('start');
@@ -125,6 +121,7 @@ export async function GET(request: NextRequest) {
 // POST - Record click for heatmap (called from tracker)
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getServiceSupabase();
     const { page_path, clicks, device_type } = await request.json();
 
     if (!page_path || !clicks) {

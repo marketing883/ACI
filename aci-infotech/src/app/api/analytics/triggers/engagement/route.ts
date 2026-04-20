@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { getServiceSupabase } from '@/lib/supabase';
 
 // POST - Record trigger engagement (user responded)
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getServiceSupabase();
     const { session_id, trigger_id, response } = await request.json();
 
     if (!session_id || !trigger_id) {

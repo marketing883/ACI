@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getServiceSupabase } from '@/lib/supabase';
 import { headers } from 'next/headers';
-
-// Create Supabase client with service role
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 interface SessionInitData {
   visitor_id: string;
@@ -35,6 +29,7 @@ interface SessionInitData {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getServiceSupabase();
     const data: SessionInitData = await request.json();
 
     // Get IP address
@@ -150,6 +145,7 @@ export async function POST(request: NextRequest) {
 // Heartbeat endpoint to keep session alive
 export async function PATCH(request: NextRequest) {
   try {
+    const supabase = getServiceSupabase();
     const { session_id, engagement_score, page_count, total_time_seconds } =
       await request.json();
 
@@ -192,6 +188,7 @@ async function enrichVisitor(
   }
 
   try {
+    const supabase = getServiceSupabase();
     // Use ip-api.com free service (1000 requests/day)
     const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,regionName,city,org,isp`);
 

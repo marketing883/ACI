@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-// Create Supabase client with service role for server-side operations
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { getServiceSupabase } from '@/lib/supabase';
 
 interface VisitorEvent {
   session_id: string;
@@ -30,6 +24,7 @@ interface VisitorEvent {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getServiceSupabase();
     const body = await request.json();
     const events: VisitorEvent[] = body.events;
 
