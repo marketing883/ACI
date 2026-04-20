@@ -99,6 +99,13 @@ const NAV_DATA = {
       icon: Shield,
       color: 'text-red-500',
     },
+    {
+      label: 'Managed Operations',
+      href: '/services/managed-operations',
+      description: '24/7 NOC and SOC coverage',
+      icon: Server,
+      color: 'text-amber-500',
+    },
   ],
   platforms: [
     { label: 'Databricks', href: '/platforms/databricks', icon: Database, color: 'text-[#FF3621]' },

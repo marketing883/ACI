@@ -307,6 +307,101 @@ export default function CloudModernizationPage() {
         </div>
       </section>
 
+      {/* Managed NOC */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
+                Managed NOC
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mt-3 mb-4">
+                We can run the cloud we just migrated for&nbsp;you.
+              </h2>
+              <p className="text-lg text-gray-600 mb-6">
+                After migration, someone has to keep the estate up. We operate 24/7
+                Network Operations Centers for clients who want the same engineers who
+                designed the platform to stay on the pager.
+              </p>
+
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start gap-3 text-gray-700">
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span>Follow the sun coverage across India, US, and EU shifts</span>
+                </li>
+                <li className="flex items-start gap-3 text-gray-700">
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span>L1 triage, L2 resolution, L3 engineering escalation with runbooks tied to your service catalog</span>
+                </li>
+                <li className="flex items-start gap-3 text-gray-700">
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span>P1 response in fifteen minutes, uptime targets of 99.95 percent or higher</span>
+                </li>
+              </ul>
+
+              <div className="mb-8">
+                <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+                  Platforms we operate
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {['SolarWinds NPM / SAM', 'Datadog', 'Dynatrace (partner)', 'Genesys (incident intake)', 'ServiceNow ITSM'].map((p) => (
+                    <span
+                      key={p}
+                      className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700 font-medium"
+                    >
+                      {p}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <Button href="/services/managed-operations" variant="primary" size="lg">
+                See the full Managed Operations practice
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+
+            {/* Visual */}
+            <div className="relative hidden lg:block">
+              <div className="bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 rounded-2xl p-8 shadow-2xl">
+                <div className="flex items-center gap-3 mb-6">
+                  <Activity className="w-6 h-6 text-[var(--aci-primary-light)]" />
+                  <div className="text-sm text-gray-400">24/7 Network Operations</div>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    {['Infra', 'Apps', 'Network', 'Cloud'].map((src) => (
+                      <div key={src} className="flex-1 bg-gray-800 rounded-lg p-3 text-center text-xs text-gray-300">
+                        {src}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-center text-gray-500">↓</div>
+                  <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4 text-center">
+                    <div className="text-[var(--aci-primary-light)] font-medium">Observability</div>
+                    <div className="text-xs text-gray-400 mt-1">SolarWinds • Datadog • Dynatrace</div>
+                  </div>
+                  <div className="text-center text-gray-500">↓</div>
+                  <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
+                    <div className="text-white font-bold">Triage & Response</div>
+                    <div className="text-xs text-gray-300 mt-1">L1 to L3 shift coverage, SLA backed</div>
+                  </div>
+                  <div className="text-center text-gray-500">↓</div>
+                  <div className="flex gap-2">
+                    {['Resolved', 'Documented', 'Reported'].map((dest) => (
+                      <div key={dest} className="flex-1 bg-green-900/30 rounded-lg p-3 text-center text-xs text-green-300">
+                        {dest}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Case Studies */}
       <section className="py-20 bg-[var(--aci-secondary)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -323,13 +323,13 @@ export default function ServicesPage() {
                 NOC &amp; SOC Operations
               </h3>
               <p className="mt-2 text-sm text-gray-600 leading-relaxed">
-                24/7 network and security operations backed by the same observability stack we deploy. Proactive monitoring, incident response, and documented escalation paths.
+                24/7 network and security operations on the platforms you already run. SolarWinds, Datadog, Dynatrace on the NOC side. LogRhythm, Splunk, Sentinel on the SOC side. One escalation path.
               </p>
               <Link
-                href="/services/cyber-security?source=services-managed-noc-soc"
+                href="/services/managed-operations"
                 className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aci-primary)] hover:text-[var(--aci-secondary)] transition-colors"
               >
-                See our Security practice
+                See our Managed Operations practice
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
