@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Shield, Eye, Lock, AlertTriangle, FileCheck, Server, Activity } from 'lucide-react';
+import { ArrowRight, CheckCircle, ChevronDown, Shield, ShieldCheck, Eye, Lock, AlertTriangle, FileCheck, Server, Activity, Network } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
@@ -154,17 +154,42 @@ const faqs = [
   },
   {
     question: 'Do you run NOC and SOC operations, or just set them up?',
-    answer: "Both. We design, implement, and operate. For clients who want ACI to stay on post-deployment, we provide 24/7 NOC and SOC coverage backed by SLAs, using the same observability stack we built for you. No handoff to a separate managed services team that doesn't know your environment.",
+    answer: "Both. Design, implement, operate. Our NOC runs on SolarWinds, Datadog, Dynatrace, and Genesys for infrastructure, application, network, and contact-center coverage. Our SOC runs on LogRhythm, Splunk, Microsoft Sentinel, and CrowdStrike for detection and response. Same engineers across both, same phone line, SLA-backed. No handoff to a separate managed services team that doesn't know your environment.",
   },
 ];
 
-const managedSecurityOutcomes = [
-  '24/7 infrastructure and security monitoring with documented escalation paths',
-  'Rapid incident detection, triage, and response: proactive, not reactive',
-  'SLA-backed operations aligned to your compliance and audit requirements',
+const managedOpsOutcomes = [
+  '24/7 coverage with SLA-backed escalation paths',
+  'Incident detection and response measured in minutes, not hours',
+  'Runbooks written by the people who built the systems they operate',
 ];
 
-const managedSecurityTech = ['Dynatrace', 'Splunk', 'CrowdStrike', 'Microsoft Sentinel', 'PagerDuty'];
+const operationsPillars = [
+  {
+    id: 'noc',
+    label: 'Network Operations',
+    icon: Network,
+    oneLiner: 'Uptime, performance, customer-facing systems. The business never finds out before you do.',
+    tools: ['SolarWinds', 'Datadog', 'Dynatrace', 'Genesys'],
+    outcomes: [
+      'Infra, app, and network health monitored in one pane',
+      'Contact center and telephony watched alongside the stack that feeds it',
+      'Performance degradation caught and fixed before the ticket lands',
+    ],
+  },
+  {
+    id: 'soc',
+    label: 'Security Operations',
+    icon: ShieldCheck,
+    oneLiner: "Threat detection, triage, response. The alerts that matter, without the ones that don't.",
+    tools: ['LogRhythm', 'Splunk', 'Microsoft Sentinel', 'CrowdStrike'],
+    outcomes: [
+      'SIEM tuned to your environment, not out-of-the-box noise',
+      'Incident response with documented escalation paths',
+      'Audit-ready logs aligned to your compliance framework',
+    ],
+  },
+];
 
 export default function CyberSecurityPage() {
   return (
@@ -211,7 +236,7 @@ export default function CyberSecurityPage() {
               </ul>
 
               <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                ISO 27001 Certified | SOC 2 Compliant | Dynatrace Security Partner
+                ISO 27001 Certified | SOC 2 Compliant | 24/7 NOC and SOC | Dynatrace Partner
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -298,27 +323,28 @@ export default function CyberSecurityPage() {
         </div>
       </section>
 
-      {/* Managed Security Operations */}
+      {/* Managed Operations: NOC and SOC */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Managed Security Operations
+                Managed Operations
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mt-3 mb-4">
-                We don&apos;t just build your security infrastructure. We run it.
+                We run what we build. NOC and SOC.
               </h2>
               <p className="text-lg text-gray-600 mb-8">
-                For enterprises that need eyes on their environment around the clock,
-                ACI provides 24/7 NOC and SOC operations backed by SLAs, using the same
-                observability stack we designed and deployed. No handoff to a separate
-                team that doesn&apos;t know your environment. No ramp-up time. Just continuous
-                coverage from the people who built it.
+                For enterprises that need eyes on the environment around the clock, we run
+                both sides. Network Operations keeps the infrastructure, applications, and
+                customer-facing systems up and performing. Security Operations watches for
+                the things those systems weren&apos;t supposed to do. Same observability stack
+                we designed for you, same engineers who built it, one phone to pick up
+                when something goes wrong.
               </p>
 
               <ul className="space-y-3 mb-8">
-                {managedSecurityOutcomes.map((outcome) => (
+                {managedOpsOutcomes.map((outcome) => (
                   <li key={outcome} className="flex items-start gap-3 text-gray-700">
                     <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span>{outcome}</span>
@@ -326,23 +352,12 @@ export default function CyberSecurityPage() {
                 ))}
               </ul>
 
-              <div className="flex flex-wrap gap-2 mb-8">
-                {managedSecurityTech.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700 font-medium"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
               <Button href="/contact?service=cyber-security" variant="primary" size="lg">
                 Talk to a Security Architect <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
 
-            {/* Visual - NOC/SOC Operations Diagram */}
+            {/* Visual: 24/7 Operations Center */}
             <div className="relative hidden lg:block">
               <div className="bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 rounded-2xl p-8 shadow-2xl">
                 <div className="flex items-center gap-3 mb-6">
@@ -359,16 +374,32 @@ export default function CyberSecurityPage() {
                     ))}
                   </div>
                   <div className="text-center text-gray-500">↓</div>
-                  {/* Observability */}
-                  <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4 text-center">
-                    <div className="text-[var(--aci-primary-light)] font-medium">Observability & Detection</div>
-                    <div className="text-xs text-gray-400 mt-1">Dynatrace • Splunk • Sentinel</div>
+                  {/* NOC + SOC split */}
+                  <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="text-center">
+                        <div className="text-[var(--aci-primary-light)] font-medium text-sm">NOC</div>
+                        <div className="text-xs text-gray-400 mt-1 leading-relaxed">
+                          SolarWinds · Datadog
+                          <br />
+                          Dynatrace · Genesys
+                        </div>
+                      </div>
+                      <div className="text-center border-l border-white/10 pl-3">
+                        <div className="text-[var(--aci-primary-light)] font-medium text-sm">SOC</div>
+                        <div className="text-xs text-gray-400 mt-1 leading-relaxed">
+                          LogRhythm · Splunk
+                          <br />
+                          Sentinel · CrowdStrike
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div className="text-center text-gray-500">↓</div>
                   {/* Response */}
                   <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
-                    <div className="text-white font-bold">Triage & Response</div>
-                    <div className="text-xs text-gray-300 mt-1">24/7 on-call • SLA-backed escalation</div>
+                    <div className="text-white font-bold">Triage and Response</div>
+                    <div className="text-xs text-gray-300 mt-1">24/7 on-call, SLA-backed escalation</div>
                   </div>
                   <div className="text-center text-gray-500">↓</div>
                   {/* Outcome */}
@@ -383,6 +414,50 @@ export default function CyberSecurityPage() {
               </div>
               <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
             </div>
+          </div>
+
+          {/* NOC and SOC pillars */}
+          <div className="grid md:grid-cols-2 gap-8 mt-16">
+            {operationsPillars.map((pillar) => {
+              const Icon = pillar.icon;
+              return (
+                <div
+                  key={pillar.id}
+                  className="bg-gray-50 p-8 rounded-xl border border-gray-100"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <Icon className="w-8 h-8 text-[var(--aci-primary)]" />
+                    <h3 className="text-xl font-semibold text-[var(--aci-secondary)]">
+                      {pillar.label}
+                    </h3>
+                  </div>
+                  <p className="text-gray-700 mb-6">{pillar.oneLiner}</p>
+
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {pillar.tools.map((tool) => (
+                      <span
+                        key={tool}
+                        className="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm text-gray-700 font-medium"
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+
+                  <ul className="space-y-2">
+                    {pillar.outcomes.map((outcome) => (
+                      <li
+                        key={outcome}
+                        className="flex items-start gap-2 text-sm text-gray-600"
+                      >
+                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span>{outcome}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
