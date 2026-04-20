@@ -154,17 +154,72 @@ const faqs = [
   },
   {
     question: 'Do you run NOC and SOC operations, or just set them up?',
-    answer: "Both. We design, implement, and operate. For clients who want ACI to stay on post-deployment, we provide 24/7 NOC and SOC coverage backed by SLAs, using the same observability stack we built for you. No handoff to a separate managed services team that doesn't know your environment.",
+    answer: "Both. We design, implement, and operate. NOC runs on SolarWinds, Datadog, Dynatrace, and Genesys for incident intake, wired into ServiceNow ITSM. SOC runs on LogRhythm, Splunk, Microsoft Sentinel, and CrowdStrike with PagerDuty on escalation. The same engineers who built your stack stay on it post-deployment. No handoff to a managed services team that does not know your environment.",
   },
 ];
 
-const managedSecurityOutcomes = [
-  '24/7 infrastructure and security monitoring with documented escalation paths',
-  'Rapid incident detection, triage, and response: proactive, not reactive',
-  'SLA-backed operations aligned to your compliance and audit requirements',
+const nocCapability = {
+  eyebrow: 'Network Operations',
+  title: 'Network Operations Center',
+  icon: Activity,
+  intro:
+    'Keeping the estate up. Infrastructure, network, application, and cloud monitoring around the clock.',
+  platforms: [
+    'SolarWinds NPM / SAM',
+    'Datadog',
+    'Dynatrace (partner)',
+    'Genesys (incident intake)',
+    'ServiceNow ITSM',
+  ],
+  coverage:
+    'Follow the sun across India, US, and EU shifts. L1 triage, L2 resolution, L3 engineering escalation, with runbooks tied to your service catalog.',
+  slas: [
+    { label: 'P1 response', value: '15 min' },
+    { label: 'P2 response', value: '1 hour' },
+    { label: 'Uptime target', value: '99.95%' },
+  ],
+  runFor:
+    'Multi-site manufacturers, hospital networks, national telcos, and cloud-first SaaS operators.',
+};
+
+const socCapability = {
+  eyebrow: 'Security Operations',
+  title: 'Security Operations Center',
+  icon: Shield,
+  intro:
+    'Keeping the estate safe. Threat detection, incident response, forensics, and audit evidence the auditor will actually accept.',
+  platforms: [
+    'LogRhythm',
+    'Splunk',
+    'Microsoft Sentinel',
+    'CrowdStrike',
+    'PagerDuty',
+  ],
+  coverage:
+    'Tier 1 through Tier 3 analysts on shift with a weekly threat hunting cadence. Incident response playbooks tied to your compliance obligations.',
+  slas: [
+    { label: 'P1 response', value: '10 min' },
+    { label: 'Threat hunts', value: 'Weekly' },
+    { label: 'Frameworks', value: 'SOC 2, ISO 27001, HIPAA' },
+  ],
+  runFor:
+    'Regulated healthcare, financial services, and retail payment environments.',
+};
+
+const handoffSteps = [
+  'NOC picks up the alert',
+  'Shared ticket in ServiceNow',
+  'SOC triages in parallel',
+  'Joint incident bridge',
+  'Contain, restore, report',
 ];
 
-const managedSecurityTech = ['Dynatrace', 'Splunk', 'CrowdStrike', 'Microsoft Sentinel', 'PagerDuty'];
+const operationsMetrics = [
+  { value: '24/7/365', label: 'Follow the sun coverage across three time zones' },
+  { value: '15 min', label: 'P1 response SLA, NOC and SOC' },
+  { value: '10+', label: 'Observability and SIEM platforms we operate' },
+  { value: 'L1 to L3', label: 'Full escalation ladder in both centers' },
+];
 
 export default function CyberSecurityPage() {
   return (
@@ -298,91 +353,142 @@ export default function CyberSecurityPage() {
         </div>
       </section>
 
-      {/* Managed Security Operations */}
+      {/* Managed Operations: NOC and SOC */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
+          {/* Section header */}
+          <div className="text-center mb-12 max-w-3xl mx-auto">
+            <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
+              Managed Operations
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mt-3 mb-4">
+              Two centers. One escalation&nbsp;path.
+            </h2>
+            <p className="text-lg text-gray-600">
+              NOC keeps the estate up. SOC keeps it safe. They sit in the same room,
+              the same ticketing system, and the same on call bridge.
+            </p>
+          </div>
+
+          {/* Side-by-side NOC and SOC cards */}
+          <div className="grid lg:grid-cols-2 gap-8 mb-16">
+            {[nocCapability, socCapability].map((center) => {
+              const Icon = center.icon;
+              return (
+                <div
+                  key={center.title}
+                  className="bg-gray-50 rounded-2xl p-8 border border-gray-200 flex flex-col"
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <Icon className="w-7 h-7 text-[var(--aci-primary)]" />
+                    <span className="text-[var(--aci-primary-light)] font-semibold text-xs uppercase tracking-wide">
+                      {center.eyebrow}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-[var(--aci-secondary)] mb-3">
+                    {center.title}
+                  </h3>
+                  <p className="text-gray-700 mb-6">{center.intro}</p>
+
+                  <div className="mb-6">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+                      Platforms we operate
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {center.platforms.map((p) => (
+                        <span
+                          key={p}
+                          className="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm text-gray-700 font-medium"
+                        >
+                          {p}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mb-6">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+                      Coverage model
+                    </div>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      {center.coverage}
+                    </p>
+                  </div>
+
+                  <div className="mb-6 grid grid-cols-3 gap-3">
+                    {center.slas.map((sla) => (
+                      <div
+                        key={sla.label}
+                        className="bg-white rounded-lg p-3 border border-gray-200"
+                      >
+                        <div className="text-base font-bold text-[var(--aci-secondary)]">
+                          {sla.value}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">{sla.label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-auto">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+                      Running this for
+                    </div>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      {center.runFor}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Cross-discipline handoff */}
+          <div className="bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 rounded-2xl p-8 lg:p-12 mb-16">
+            <div className="text-center mb-10 max-w-2xl mx-auto">
               <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Managed Security Operations
+                Cross-discipline handoff
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mt-3 mb-4">
-                We don&apos;t just build your security infrastructure. We run it.
-              </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                For enterprises that need eyes on their environment around the clock,
-                ACI provides 24/7 NOC and SOC operations backed by SLAs, using the same
-                observability stack we designed and deployed. No handoff to a separate
-                team that doesn&apos;t know your environment. No ramp-up time. Just continuous
-                coverage from the people who built it.
+              <h3 className="text-2xl md:text-3xl font-bold text-white mt-3 mb-4">
+                When an outage turns out to be an attack, no one has to call&nbsp;anyone.
+              </h3>
+              <p className="text-gray-300">
+                Our NOC and SOC share the platform and the ticketing system. An alert
+                that starts as a latency spike and ends as an intrusion never crosses
+                an org chart. It stays on the same bridge until it closes.
               </p>
-
-              <ul className="space-y-3 mb-8">
-                {managedSecurityOutcomes.map((outcome) => (
-                  <li key={outcome} className="flex items-start gap-3 text-gray-700">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span>{outcome}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="flex flex-wrap gap-2 mb-8">
-                {managedSecurityTech.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700 font-medium"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
-              <Button href="/contact?service=cyber-security" variant="primary" size="lg">
-                Talk to a Security Architect <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
             </div>
 
-            {/* Visual - NOC/SOC Operations Diagram */}
-            <div className="relative hidden lg:block">
-              <div className="bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 rounded-2xl p-8 shadow-2xl">
-                <div className="flex items-center gap-3 mb-6">
-                  <Activity className="w-6 h-6 text-[var(--aci-primary-light)]" />
-                  <div className="text-sm text-gray-400">24/7 Operations Center</div>
+            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-center gap-3">
+              {handoffSteps.map((step, idx) => (
+                <div key={step} className="flex flex-col md:flex-row items-center gap-3">
+                  <div className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-sm text-gray-200 text-center min-w-[160px]">
+                    {step}
+                  </div>
+                  {idx < handoffSteps.length - 1 && (
+                    <ArrowRight className="w-4 h-4 text-[var(--aci-primary-light)] flex-shrink-0 rotate-90 md:rotate-0" />
+                  )}
                 </div>
-                <div className="space-y-4">
-                  {/* Monitor layer */}
-                  <div className="flex gap-2">
-                    {['Infra', 'Apps', 'Network', 'Identity'].map((src) => (
-                      <div key={src} className="flex-1 bg-gray-800 rounded-lg p-3 text-center text-xs text-gray-300">
-                        {src}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  {/* Observability */}
-                  <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4 text-center">
-                    <div className="text-[var(--aci-primary-light)] font-medium">Observability & Detection</div>
-                    <div className="text-xs text-gray-400 mt-1">Dynatrace • Splunk • Sentinel</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  {/* Response */}
-                  <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
-                    <div className="text-white font-bold">Triage & Response</div>
-                    <div className="text-xs text-gray-300 mt-1">24/7 on-call • SLA-backed escalation</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  {/* Outcome */}
-                  <div className="flex gap-2">
-                    {['Contained', 'Resolved', 'Reported'].map((dest) => (
-                      <div key={dest} className="flex-1 bg-green-900/30 rounded-lg p-3 text-center text-xs text-green-300">
-                        {dest}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
+              ))}
             </div>
+          </div>
+
+          {/* Operations metrics strip */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {operationsMetrics.map((metric) => (
+              <div key={metric.label} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-[var(--aci-primary)] mb-2">
+                  {metric.value}
+                </div>
+                <div className="text-sm text-gray-600 leading-snug">{metric.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="text-center">
+            <Button href="/contact?service=cyber-security" variant="primary" size="lg">
+              Talk to a Security Architect <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           </div>
         </div>
       </section>
