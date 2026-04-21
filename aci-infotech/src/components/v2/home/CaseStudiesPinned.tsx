@@ -282,12 +282,29 @@ function CaseHead() {
 }
 
 function CaseSlide({ slide, theme }: { slide: HomeCaseStudy; theme: (typeof THEMES)[number] }) {
+  // Layer the featured image behind the content when one is
+  // published. A strong diagonal gradient (theme-tinted -> near-
+  // solid page bg) sits on top so the image reads as atmospheric
+  // depth, not a photo backdrop that competes with the text.
+  // ~E6 alpha = 90% opacity — image peeks through at ~10%.
+  const hasImage = Boolean(slide.featured_image_url);
+  const bgStyles: React.CSSProperties = hasImage
+    ? {
+        backgroundImage: `linear-gradient(135deg, ${theme.bg}E6 0%, #050B1FF2 100%), url("${slide.featured_image_url}")`,
+        backgroundSize: 'cover, cover',
+        backgroundPosition: 'center, center',
+        backgroundRepeat: 'no-repeat, no-repeat',
+      }
+    : {
+        background: `linear-gradient(135deg, ${theme.bg} 0%, var(--v2-bg) 100%)`,
+      };
+
   return (
     <article
       style={{
         width: '100vw',
         flex: '0 0 100vw',
-        background: `linear-gradient(135deg, ${theme.bg} 0%, var(--v2-bg) 100%)`,
+        ...bgStyles,
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)',
         gap: 60,
