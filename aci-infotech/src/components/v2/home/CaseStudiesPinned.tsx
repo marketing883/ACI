@@ -18,7 +18,13 @@
 
 import { useRef } from 'react';
 import Link from 'next/link';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useReducedMotion,
+} from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import type { HomeCaseStudy } from '@/lib/v2/fetch-home-data';
 import { displayClient } from '@/lib/content/anonymize';
@@ -144,11 +150,23 @@ export default function CaseStudiesPinned({ caseStudies }: Props) {
     offset: ['start start', 'end end'],
   });
 
+  // Smooth the raw scroll progress through a spring so the translate
+  // eases into its target instead of sticking rigidly to the scroll
+  // wheel. Stiffness 90 + damping 30 gives a premium, lightly
+  // lagged feel — responsive but not twitchy. restDelta prevents
+  // the spring from doing extra work once it's close to rest.
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 30,
+    restDelta: 0.0005,
+    mass: 0.5,
+  });
+
   // Translate X moves the track by (slideCount - 1) viewport widths so the
   // last slide ends flush with the right edge of the viewport. Hardcoded
   // -75% is only correct for exactly 4 slides — generalize it here.
   const translateEnd = slides.length > 1 ? `-${(slides.length - 1) * 100}vw` : '0vw';
-  const x = useTransform(scrollYProgress, [0, 1], ['0vw', translateEnd]);
+  const x = useTransform(smoothProgress, [0, 1], ['0vw', translateEnd]);
 
   // If reduced motion: render as a vertical stack, bypass the sticky pin.
   if (reduced) {
@@ -227,13 +245,17 @@ export default function CaseStudiesPinned({ caseStudies }: Props) {
 
           {/* Slides track. Each slide is explicitly 100vw wide so the
               horizontal scroll math stays correct regardless of the
-              number of slides the CMS returned. */}
+              number of slides the CMS returned. willChange hints let
+              the browser promote the track to its own compositor
+              layer for smoother GPU-driven translation. */}
           <motion.div
             style={{
               x,
               display: 'flex',
               width: `${slides.length * 100}vw`,
               height: '100%',
+              willChange: 'transform',
+              backfaceVisibility: 'hidden',
             }}
           >
             {slides.map((s, i) => (
