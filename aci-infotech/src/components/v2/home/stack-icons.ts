@@ -19,10 +19,11 @@
 
 /** Verified slugs on Simple Icons CDN. Tested 200 OK. */
 export const STACK_CDN_SLUGS: Record<string, string> = {
-  // Data & analytics
+  // Data & analytics. "Unity Catalog" is a Databricks sub-product;
+  // deliberately NOT aliased to the Databricks logo because both
+  // appear in the same stack and would render duplicate chips.
   Databricks: 'databricks',
   Snowflake: 'snowflake',
-  'Unity Catalog': 'databricks',
   Kafka: 'apachekafka',
   Trino: 'trino',
 
@@ -72,9 +73,12 @@ export type LocalLogoEntry = {
 
 export const STACK_LOCAL_LOGOS: Record<string, LocalLogoEntry> = {
   AWS: { src: '/images/Solution-Partners/aws.png' },
+  // AWS sub-products mapped to the AWS logo only when they appear
+  // in a stack that does NOT also list AWS — prevents duplicate
+  // chips. GuardDuty and Bedrock don't share a panel with AWS.
+  // Karpenter does (Cloud practice), so it stays as a text chip.
   'AWS GuardDuty': { src: '/images/Solution-Partners/aws.png' },
   Bedrock: { src: '/images/Solution-Partners/aws.png' },
-  Karpenter: { src: '/images/Solution-Partners/aws.png' },
   Azure: { src: '/images/Solution-Partners/azure.png', invert: true },
   'Azure OpenAI': { src: '/images/Solution-Partners/azure.png', invert: true },
   'Microsoft Sentinel': { src: '/images/Solution-Partners/azure.png', invert: true },
@@ -101,7 +105,10 @@ export const STACK_DASHBOARD_SLUGS: Record<string, string> = {
   'Microsoft Power BI': 'powerbi',
   Oracle: 'oracle',
   SolarWinds: 'solarwinds',
-  LogRhythm: 'solarwinds',
+  // LogRhythm was acquired by SolarWinds' competitor (and is now
+  // part of Exabeam). Previously aliased to the SolarWinds logo,
+  // which produced a duplicate chip in the Managed Services panel
+  // where both were listed. Leave LogRhythm as a text chip.
   OpenAI: 'openai',
   Cloudflare: 'cloudflare',
   Netlify: 'netlify',
