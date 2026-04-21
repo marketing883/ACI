@@ -25,9 +25,12 @@ import {
 
 const LOGO_TINT_HEX = '9AA7C2'; // --v2-text-secondary without the #
 
-// CSS filter to knock native-color logos down to a light gray
-// silhouette that harmonizes with the Simple Icons monochromes.
-const MONOCHROME_FILTER = 'brightness(0) invert(0.72)';
+// Mild grayscale + slight dim so native-color logos don't shout
+// next to the Simple Icons monochromes, while still preserving the
+// shape detail that makes a logo recognizable. A full monochrome
+// filter flattened wordmark-heavy logos (Microsoft, Oracle, Power BI)
+// into unreadable silhouettes — this keeps them identifiable.
+const SOFTEN_FILTER = 'grayscale(0.25) brightness(0.95)';
 
 interface StackChipProps {
   label: string;
@@ -85,7 +88,7 @@ export default function StackChip({ label, compact = false }: StackChipProps) {
             height: rasterHeight,
             width: 'auto',
             display: 'block',
-            filter: MONOCHROME_FILTER,
+            filter: SOFTEN_FILTER,
             opacity: 0.95,
           }}
           loading="lazy"
@@ -105,7 +108,7 @@ export default function StackChip({ label, compact = false }: StackChipProps) {
             height: rasterHeight,
             width: 'auto',
             display: 'block',
-            filter: MONOCHROME_FILTER,
+            filter: SOFTEN_FILTER,
             opacity: 0.95,
           }}
           loading="lazy"

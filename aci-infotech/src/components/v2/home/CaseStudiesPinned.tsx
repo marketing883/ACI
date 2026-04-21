@@ -221,8 +221,9 @@ export default function CaseStudiesPinned({ caseStudies }: Props) {
             alignItems: 'flex-start',
           }}
         >
-          {/* Progress rail (right edge) */}
-          <RailProgress count={slides.length} progress={scrollYProgress} labels={slides.map((s, i) => `${String(i + 1).padStart(2, '0')} · ${getShortLabel(s)}`)} />
+          {/* progress rail removed per feedback — the pinned scroll +
+              theme-tinted slides already carry enough visual signal
+              about where the user is in the sequence. */}
 
           {/* Slides track. Each slide is explicitly 100vw wide so the
               horizontal scroll math stays correct regardless of the
@@ -243,11 +244,6 @@ export default function CaseStudiesPinned({ caseStudies }: Props) {
       </div>
     </section>
   );
-}
-
-function getShortLabel(s: HomeCaseStudy): string {
-  if (s.industry) return s.industry.split(' ')[0];
-  return s.slug.split('-')[0] || 'Case';
 }
 
 function CaseHead() {
@@ -583,79 +579,3 @@ function CaseSlideContent({ slide, theme }: { slide: HomeCaseStudy; theme: (type
   );
 }
 
-function RailProgress({
-  count,
-  progress,
-  labels,
-}: {
-  count: number;
-  progress: ReturnType<typeof useScroll>['scrollYProgress'];
-  labels: string[];
-}) {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        right: 24,
-        top: '50%',
-        transform: 'translateY(-50%)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 14,
-        zIndex: 10,
-      }}
-    >
-      {Array.from({ length: count }).map((_, i) => {
-        const start = i / count;
-        const end = (i + 1) / count;
-        return <RailTick key={i} progress={progress} start={start} end={end} label={labels[i]} />;
-      })}
-    </div>
-  );
-}
-
-function RailTick({
-  progress,
-  start,
-  end,
-  label,
-}: {
-  progress: ReturnType<typeof useScroll>['scrollYProgress'];
-  start: number;
-  end: number;
-  label: string;
-}) {
-  const opacity = useTransform(progress, [start, start + 0.001, end, end + 0.001], [0.3, 1, 1, 0.3]);
-  const active = useTransform(progress, (v) => v >= start && v < end);
-
-  return (
-    <motion.div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        opacity,
-      }}
-    >
-      <motion.span
-        style={{
-          width: 2,
-          height: 22,
-          background: useTransform(active, (a) => (a ? 'var(--v2-accent)' : 'var(--v2-border-strong)')),
-        }}
-      />
-      <motion.span
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: 10,
-          letterSpacing: '0.16em',
-          textTransform: 'uppercase',
-          color: useTransform(active, (a) => (a ? 'var(--v2-accent)' : 'transparent')),
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {label}
-      </motion.span>
-    </motion.div>
-  );
-}
