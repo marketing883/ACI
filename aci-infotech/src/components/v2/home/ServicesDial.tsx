@@ -17,6 +17,12 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { SERVICES } from './services-data';
+import { STACK_LOGO_SLUGS } from './stack-icons';
+
+// Hex of --v2-text-secondary, passed to the Simple Icons CDN to tint
+// logos in our muted palette. The CDN returns monochrome SVGs at this
+// color when a hex is appended to the slug path.
+const LOGO_TINT_HEX = '9AA7C2';
 
 const CYCLE_MS = 3400;
 
@@ -440,31 +446,17 @@ export default function ServicesDial() {
                   {active.diagram}
                 </pre>
 
-                {/* Stack chips */}
+                {/* Stack chips — logos where we have a Simple Icons
+                    mapping, uppercase mono text where we do not. */}
                 <div
                   style={{
                     display: 'flex',
                     flexWrap: 'wrap',
-                    gap: 6,
+                    gap: 8,
                   }}
                 >
                   {active.stack.map((s) => (
-                    <span
-                      key={s}
-                      style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: 10,
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        padding: '4px 8px',
-                        background: 'var(--v2-surface-3)',
-                        border: '1px solid var(--v2-border)',
-                        borderRadius: 2,
-                        color: 'var(--v2-text-secondary)',
-                      }}
-                    >
-                      {s}
-                    </span>
+                    <StackChip key={s} label={s} />
                   ))}
                 </div>
               </motion.div>
@@ -474,5 +466,55 @@ export default function ServicesDial() {
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * StackChip — one chip in the tech-stack row. If the label has a
+ * Simple Icons slug mapped in stack-icons.ts, renders the monochrome
+ * logo; otherwise renders the label as uppercase mono text. Chip box
+ * stays the same size either way so the row looks consistent.
+ */
+function StackChip({ label }: { label: string }) {
+  const slug = STACK_LOGO_SLUGS[label];
+
+  const shellStyle: React.CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 32,
+    padding: '0 12px',
+    background: 'var(--v2-surface-3)',
+    border: '1px solid var(--v2-border)',
+    borderRadius: 4,
+  };
+
+  if (!slug) {
+    return (
+      <span
+        style={{
+          ...shellStyle,
+          fontFamily: 'var(--font-mono)',
+          fontSize: 10,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          color: 'var(--v2-text-secondary)',
+        }}
+      >
+        {label}
+      </span>
+    );
+  }
+
+  return (
+    <span title={label} style={shellStyle}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`https://cdn.simpleicons.org/${slug}/${LOGO_TINT_HEX}`}
+        alt={label}
+        style={{ height: 14, width: 'auto', display: 'block', opacity: 0.9 }}
+        loading="lazy"
+      />
+    </span>
   );
 }
