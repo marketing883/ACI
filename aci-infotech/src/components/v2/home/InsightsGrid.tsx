@@ -113,15 +113,17 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                 margin: 0,
               }}
             >
-              Writing from our{' '}
+              Perspectives from the{' '}
               <em
                 style={{
                   fontStyle: 'italic',
                   fontWeight: 500,
-                  color: 'var(--v2-accent)',
+                  // Keep the emphasis dark so it reads on the light
+                  // section surface. Lime-accent pops on dark, not here.
+                  color: '#0A1530',
                 }}
               >
-                engineers.
+                practice.
               </em>
             </h2>
             <p
@@ -134,8 +136,8 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                 maxWidth: 520,
               }}
             >
-              Architecture reviews, post-mortems, and technical perspectives
-              from the practitioners on our delivery teams.
+              Architecture reviews, post-mortems, and technical write-ups
+              from the teams running our client engagements.
             </p>
           </div>
           <Link
