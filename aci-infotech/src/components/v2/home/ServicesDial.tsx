@@ -139,21 +139,23 @@ export default function ServicesDial() {
           </p>
         </div>
 
-        {/* Stage: two columns */}
+        {/* Stage: two columns. Right column sticks while the list
+            on the left scrolls past it, so the live preview is
+            always visible regardless of which row is active. */}
         <div
           className="svc-stage"
           style={{
             display: 'grid',
             gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)',
             gap: 80,
-            minHeight: 620,
-            alignItems: 'stretch',
+            alignItems: 'start',
           }}
         >
           <style>{`
             @media (max-width: 960px) {
               .svc-stage { grid-template-columns: 1fr !important; gap: 40px !important; }
               .svc-row-title { font-size: clamp(28px, 6vw, 44px) !important; }
+              .svc-preview-sticky { position: static !important; }
             }
           `}</style>
 
@@ -269,10 +271,12 @@ export default function ServicesDial() {
             <div style={{ height: 1, background: 'var(--v2-border-subtle)' }} />
           </div>
 
-          {/* RIGHT — live preview panel */}
+          {/* RIGHT — live preview panel (sticky on desktop) */}
           <aside
+            className="svc-preview-sticky"
             style={{
-              position: 'relative',
+              position: 'sticky',
+              top: 96,
               borderRadius: 6,
               border: '1px solid var(--v2-border-strong)',
               background: 'var(--v2-surface-2)',
@@ -280,6 +284,9 @@ export default function ServicesDial() {
                 'linear-gradient(var(--v2-border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--v2-border-subtle) 1px, transparent 1px)',
               backgroundSize: '40px 40px',
               overflow: 'hidden',
+              maxHeight: 'calc(100vh - 128px)',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
             <div
@@ -339,7 +346,7 @@ export default function ServicesDial() {
               }
             `}</style>
 
-            {/* Fading body */}
+            {/* Fading body (scrolls inside the sticky panel if needed) */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.id}
@@ -347,7 +354,13 @@ export default function ServicesDial() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                style={{ padding: 26, position: 'relative' }}
+                style={{
+                  padding: 26,
+                  position: 'relative',
+                  overflowY: 'auto',
+                  flex: 1,
+                  minHeight: 0,
+                }}
               >
                 <h3
                   style={{
