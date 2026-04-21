@@ -107,8 +107,9 @@ export default function FooterV2() {
                 color: 'var(--v2-text-secondary)',
               }}
             >
-              Production-grade engineering at enterprise scale. 1,600+ engineers across NJ,
-              Hyderabad, Bengaluru and Toronto. Est. 2003.
+              An engineering services firm for enterprises. We design, build,
+              and run production data platforms, cloud infrastructure, and
+              AI systems.
             </p>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {['SOC 2', 'ISO 27001', 'HIPAA', 'GDPR'].map((c) => (
