@@ -22,6 +22,22 @@ import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion
 import { ArrowRight } from 'lucide-react';
 import type { HomeCaseStudy } from '@/lib/v2/fetch-home-data';
 import { displayClient } from '@/lib/content/anonymize';
+import StackChip from './StackChip';
+
+/**
+ * Trim a potentially long challenge/solution string to a homepage-friendly
+ * excerpt. Strips any HTML, collapses whitespace, tries to end on a word
+ * boundary, and appends an ellipsis when truncated.
+ */
+function excerpt(text: string | null | undefined, maxChars: number): string {
+  if (!text) return '';
+  const plain = text.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  if (plain.length <= maxChars) return plain;
+  const cut = plain.slice(0, maxChars);
+  const lastSpace = cut.lastIndexOf(' ');
+  const base = lastSpace > maxChars * 0.6 ? cut.slice(0, lastSpace) : cut;
+  return base.replace(/[,;:\-\s]+$/, '') + '…';
+}
 
 interface Props {
   caseStudies: HomeCaseStudy[];
@@ -280,10 +296,10 @@ function CaseSlide({ slide, theme }: { slide: HomeCaseStudy; theme: (typeof THEM
         flex: '0 0 100vw',
         background: `linear-gradient(135deg, ${theme.bg} 0%, var(--v2-bg) 100%)`,
         display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 1fr)',
-        gap: 40,
+        gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)',
+        gap: 60,
         padding: '60px 80px',
-        alignItems: 'center',
+        alignItems: 'start',
       }}
     >
       <CaseSlideContent slide={slide} theme={theme} />
@@ -291,116 +307,162 @@ function CaseSlide({ slide, theme }: { slide: HomeCaseStudy; theme: (typeof THEM
   );
 }
 
+/**
+ * CaseSlideContent — the per-slide content.
+ *
+ * Left column: the story
+ *   - industry + anonymized client descriptor (never the real name)
+ *   - title
+ *   - short excerpt from the challenge/problem statement
+ *   - a short solution summary
+ *   - the stack as monochrome logo chips
+ *   - CTA to the full case study
+ *
+ * Right column: the impact
+ *   - every measured outcome from the CMS, rendered as stacked tiles
+ *   - lime accent border on each tile to echo the theme
+ */
 function CaseSlideContent({ slide, theme }: { slide: HomeCaseStudy; theme: (typeof THEMES)[number] }) {
   const anon = displayClient({ client_descriptor: slide.client_descriptor });
+  const problemExcerpt = excerpt(slide.challenge, 200);
+  const solutionExcerpt = excerpt(slide.solution, 180);
+  const impactMetrics = slide.metrics.slice(0, 4);
+  const stack = slide.technologies.slice(0, 7);
+
   return (
     <>
-      <div style={{ position: 'relative', zIndex: 2 }}>
+      {/* LEFT — the story */}
+      <div style={{ position: 'relative', zIndex: 2, minWidth: 0 }}>
         <div
           style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 11,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            color: 'var(--v2-text-muted)',
-            marginBottom: 12,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            marginBottom: 18,
+            flexWrap: 'wrap',
           }}
         >
-          {slide.industry ?? 'CASE STUDY'}
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: theme.accent,
+            }}
+          >
+            {slide.industry ?? 'Case study'}
+          </span>
+          <span
+            aria-hidden
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: '50%',
+              background: 'var(--v2-border-strong)',
+              display: 'inline-block',
+            }}
+          />
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              color: 'var(--v2-text-secondary)',
+            }}
+          >
+            {anon}
+          </span>
         </div>
-        <div
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 13,
-            color: 'var(--v2-text-secondary)',
-            marginBottom: 24,
-          }}
-        >
-          {anon}
-        </div>
+
         <h3
           style={{
             fontFamily: 'var(--font-title)',
             fontSize: 'clamp(22px, 2.6vw, 38px)',
             fontWeight: 700,
-            lineHeight: 1.05,
-            letterSpacing: '-0.025em',
+            lineHeight: 1.1,
+            letterSpacing: '-0.02em',
             color: 'var(--v2-text-primary)',
-            margin: '0 0 20px 0',
+            margin: '0 0 18px 0',
+            maxWidth: 640,
           }}
         >
           {slide.title}
         </h3>
-        {slide.challenge && (
+
+        {problemExcerpt && (
           <p
             style={{
               color: 'var(--v2-text-secondary)',
               fontSize: 15,
               lineHeight: 1.6,
-              maxWidth: 520,
-              margin: '0 0 28px 0',
+              maxWidth: 600,
+              margin: '0 0 22px 0',
             }}
           >
-            {slide.challenge}
+            {problemExcerpt}
           </p>
         )}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-            gap: 12,
-            marginBottom: 28,
-            maxWidth: 520,
-          }}
-        >
-          {slide.metrics.slice(0, 3).map((m) => (
+
+        {solutionExcerpt && (
+          <div style={{ margin: '0 0 24px 0', maxWidth: 600 }}>
             <div
-              key={m.label}
               style={{
-                borderLeft: `2px solid ${theme.accent}`,
-                padding: '10px 12px',
-                background: 'var(--v2-bg)',
-                borderRadius: 4,
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color: 'var(--v2-text-muted)',
+                marginBottom: 8,
               }}
             >
-              <div
-                style={{
-                  fontFamily: 'var(--font-title)',
-                  fontSize: 24,
-                  fontWeight: 700,
-                  letterSpacing: '-0.02em',
-                  color: 'var(--v2-text-primary)',
-                  lineHeight: 1,
-                }}
-              >
-                {m.value}
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 10,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  color: 'var(--v2-text-muted)',
-                  marginTop: 8,
-                }}
-              >
-                {m.label}
-              </div>
+              Solution
             </div>
-          ))}
-        </div>
+            <p
+              style={{
+                color: 'var(--v2-text-primary)',
+                fontSize: 14,
+                lineHeight: 1.55,
+                margin: 0,
+              }}
+            >
+              {solutionExcerpt}
+            </p>
+          </div>
+        )}
+
+        {stack.length > 0 && (
+          <div style={{ margin: '0 0 28px 0' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color: 'var(--v2-text-muted)',
+                marginBottom: 10,
+              }}
+            >
+              Stack
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {stack.map((t) => (
+                <StackChip key={t} label={t} compact />
+              ))}
+            </div>
+          </div>
+        )}
+
         <Link
           href={`/case-studies/${slide.slug}`}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            padding: '14px 20px',
+            padding: '12px 18px',
             background: 'transparent',
             color: 'var(--v2-text-primary)',
             fontFamily: 'var(--font-sans)',
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: 500,
             letterSpacing: '0.02em',
             textTransform: 'uppercase',
@@ -415,44 +477,19 @@ function CaseSlideContent({ slide, theme }: { slide: HomeCaseStudy; theme: (type
         </Link>
       </div>
 
-      {/* Right visual panel */}
-      <div
-        style={{
-          position: 'relative',
-          background: 'var(--v2-surface-2)',
-          border: '1px solid var(--v2-border-strong)',
-          borderRadius: 6,
-          padding: 32,
-          minHeight: 360,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          aria-hidden
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage:
-              'linear-gradient(var(--v2-border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--v2-border-subtle) 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-            opacity: 0.4,
-            pointerEvents: 'none',
-          }}
-        />
+      {/* RIGHT — impact metrics stacked vertically */}
+      <div style={{ position: 'relative', zIndex: 2, minWidth: 0 }}>
         <div
           style={{
-            position: 'relative',
-            display: 'inline-flex',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 10,
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            color: 'var(--v2-text-muted)',
+            marginBottom: 16,
+            display: 'flex',
             alignItems: 'center',
             gap: 10,
-            fontFamily: 'var(--font-mono)',
-            fontSize: 11,
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color: theme.accent,
           }}
         >
           <span
@@ -461,40 +498,80 @@ function CaseSlideContent({ slide, theme }: { slide: HomeCaseStudy; theme: (type
               height: 6,
               borderRadius: '50%',
               background: theme.accent,
-              boxShadow: `0 0 10px ${theme.accent}`,
-              animation: 'v2-pulse 1.6s ease-in-out infinite',
+              boxShadow: `0 0 8px ${theme.accent}`,
+              display: 'inline-block',
             }}
           />
-          {slide.industry ?? 'LIVE'} · {slide.slug.slice(0, 18)}
+          Impact delivered
         </div>
-        <div
-          style={{
-            position: 'relative',
-            fontFamily: 'var(--font-title)',
-            fontSize: 'clamp(72px, 10vw, 180px)',
-            fontWeight: 700,
-            letterSpacing: '-0.04em',
-            color: theme.accent,
-            lineHeight: 0.9,
-            textShadow: `0 0 60px ${theme.accent}40`,
-          }}
-        >
-          {slide.metrics[0]?.value ?? '—'}
-        </div>
-        <div
-          style={{
-            position: 'relative',
-            display: 'flex',
-            justifyContent: 'space-between',
-            fontFamily: 'var(--font-mono)',
-            fontSize: 10,
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color: 'var(--v2-text-muted)',
-          }}
-        >
-          <span>{slide.technologies.slice(0, 2).join(' · ')}</span>
-          <span>{slide.services.slice(0, 1).join('') || 'ACI'}</span>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {impactMetrics.length === 0 && (
+            <div
+              style={{
+                padding: '20px',
+                background: 'var(--v2-surface-2)',
+                border: '1px solid var(--v2-border-subtle)',
+                borderRadius: 4,
+                color: 'var(--v2-text-muted)',
+                fontSize: 13,
+              }}
+            >
+              Impact metrics not published yet.
+            </div>
+          )}
+          {impactMetrics.map((m) => (
+            <div
+              key={m.label}
+              style={{
+                borderLeft: `2px solid ${theme.accent}`,
+                padding: '16px 18px',
+                background: 'var(--v2-surface-2)',
+                border: '1px solid var(--v2-border-subtle)',
+                borderLeftWidth: 2,
+                borderLeftColor: theme.accent,
+                borderRadius: 4,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: 'var(--font-title)',
+                  fontSize: 'clamp(28px, 3vw, 42px)',
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  color: theme.accent,
+                  lineHeight: 1,
+                }}
+              >
+                {m.value}
+              </div>
+              <div
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 10,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: 'var(--v2-text-secondary)',
+                  marginTop: 8,
+                  lineHeight: 1.4,
+                }}
+              >
+                {m.label}
+              </div>
+              {m.description && (
+                <div
+                  style={{
+                    color: 'var(--v2-text-muted)',
+                    fontSize: 12,
+                    lineHeight: 1.5,
+                    marginTop: 6,
+                  }}
+                >
+                  {m.description}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </>

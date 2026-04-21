@@ -17,12 +17,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { SERVICES } from './services-data';
-import { STACK_CDN_SLUGS, STACK_LOCAL_LOGOS } from './stack-icons';
-
-// Hex of --v2-text-secondary, passed to the Simple Icons CDN to tint
-// logos in our muted palette. The CDN returns monochrome SVGs at this
-// color when a hex is appended to the slug path.
-const LOGO_TINT_HEX = '9AA7C2';
+import StackChip from './StackChip';
 
 const CYCLE_MS = 3400;
 
@@ -469,82 +464,3 @@ export default function ServicesDial() {
   );
 }
 
-/**
- * StackChip — one chip in the tech-stack row.
- *
- * Resolution order:
- *   1. Simple Icons CDN slug (monochrome SVG, tinted via URL color)
- *   2. Local partner-logo PNG (tinted via CSS filter to blend with SVGs)
- *   3. Uppercase mono text fallback
- *
- * Chip shell stays the same size in every branch so the row reads as
- * a clean grid regardless of source.
- */
-function StackChip({ label }: { label: string }) {
-  const cdnSlug = STACK_CDN_SLUGS[label];
-  const localSrc = cdnSlug ? null : STACK_LOCAL_LOGOS[label];
-
-  const shellStyle: React.CSSProperties = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 44,
-    padding: '0 16px',
-    background: 'var(--v2-surface-3)',
-    border: '1px solid var(--v2-border)',
-    borderRadius: 4,
-  };
-
-  if (cdnSlug) {
-    return (
-      <span title={label} style={shellStyle}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`https://cdn.simpleicons.org/${cdnSlug}/${LOGO_TINT_HEX}`}
-          alt={label}
-          style={{ height: 22, width: 'auto', display: 'block', opacity: 0.9 }}
-          loading="lazy"
-        />
-      </span>
-    );
-  }
-
-  if (localSrc) {
-    return (
-      <span title={label} style={shellStyle}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={localSrc}
-          alt={label}
-          style={{
-            height: 24,
-            width: 'auto',
-            display: 'block',
-            // Drop to monochrome and tone down so the native brand colors
-            // don't clash with the Simple Icons SVGs rendered next to
-            // them. The sequence (brightness -> invert) produces a
-            // light-gray silhouette that reads on dark surfaces.
-            filter: 'brightness(0) invert(0.65)',
-            opacity: 0.95,
-          }}
-          loading="lazy"
-        />
-      </span>
-    );
-  }
-
-  return (
-    <span
-      style={{
-        ...shellStyle,
-        fontFamily: 'var(--font-mono)',
-        fontSize: 11,
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        color: 'var(--v2-text-secondary)',
-      }}
-    >
-      {label}
-    </span>
-  );
-}
