@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "../styles/design-system.css" layer(base);
+@import "../styles/design-system-v2.css" layer(base);
 
 @theme inline {
   /* ACI Brand Colors - Updated Design System */
@@ -18,6 +19,24 @@
   /* Fonts - Funnel Display for headers, Funnel Sans for body */
   --font-sans: 'Funnel Sans', system-ui, -apple-system, sans-serif;
   --font-title: 'Funnel Display', system-ui, -apple-system, sans-serif;
+
+  /* --- v2 palette (parallel to --color-aci-*, does not override) ---
+     Exposes Tailwind utilities like bg-v2-bg, text-v2-text-primary,
+     border-v2-border, etc. Safe to coexist with v1 utilities. */
+  --color-v2-bg: #0A0A0A;
+  --color-v2-surface-1: #111111;
+  --color-v2-surface-2: #171717;
+  --color-v2-surface-3: #1F1F1F;
+  --color-v2-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-v2-border: rgba(255, 255, 255, 0.10);
+  --color-v2-border-strong: rgba(255, 255, 255, 0.16);
+  --color-v2-text-primary: #FAFAFA;
+  --color-v2-text-secondary: #A1A1A1;
+  --color-v2-text-muted: #6B6B6B;
+  --color-v2-accent: #C4FF61;
+  --color-v2-accent-dim: #8FC63D;
+  --color-v2-positive: #7CE98B;
+  --color-v2-negative: #FF7676;
 }
 
 /* Cross-browser fix: Tailwind v4 Preflight resets padding/margin using physical
