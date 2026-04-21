@@ -1,60 +1,75 @@
 /**
- * Mapping from stack item labels used in services-data.ts to Simple Icons
- * slugs (see simpleicons.org). Logos render from cdn.simpleicons.org in
- * monochrome — we pass the hex of --v2-text-secondary to the CDN path.
+ * Stack chip logo resolution for the ServicesDial preview panel.
  *
- * Items not present in this map render as uppercase mono text chips
- * (Advisory artifacts, Databricks sub-products, vendor tools without a
- * Simple Icons entry, etc.). This is intentional — don't pad with
- * approximations because a mis-branded logo is worse than no logo.
+ * Two sources in priority order:
+ *   1. STACK_CDN_SLUGS — Simple Icons CDN slug. All entries here are
+ *      verified to return 200 at cdn.simpleicons.org. Icons arrive as
+ *      monochrome SVGs tinted by the color suffix in the URL.
+ *   2. STACK_LOCAL_LOGOS — fall-back for brands Simple Icons has
+ *      removed (AWS, Azure, Salesforce, ServiceNow, and others have
+ *      been pulled at the trademark holder's request). We use the
+ *      local partner-logo PNGs shipped under
+ *      public/images/Solution-Partners/ and tint them via CSS filter
+ *      so the row reads uniform.
  *
- * If we productionize beyond preview, mirror these SVGs under /public
- * and swap the CDN path. External CDN is fine for the preview build.
+ * Labels with no entry in either map render as uppercase mono text
+ * (Advisory artifacts like "TCO models", or AI tooling without
+ * recognizable public logos like LangGraph or Ragas).
  */
 
-export const STACK_LOGO_SLUGS: Record<string, string> = {
+/** Verified slugs on Simple Icons CDN. Tested 200 OK. */
+export const STACK_CDN_SLUGS: Record<string, string> = {
   // Data & analytics
   Databricks: 'databricks',
   Snowflake: 'snowflake',
   'Unity Catalog': 'databricks',
-  dbt: 'dbt',
   Kafka: 'apachekafka',
   Trino: 'trino',
 
-  // Cloud / infra
-  AWS: 'amazonwebservices',
-  Azure: 'microsoftazure',
-  GCP: 'googlecloud',
+  // Cloud / infra / platform
   Kubernetes: 'kubernetes',
   Terraform: 'terraform',
   ArgoCD: 'argo',
-  Crossplane: 'crossplane',
-  Karpenter: 'amazonwebservices',
-
-  // Platform engineering
+  GCP: 'googlecloud',
   Tekton: 'tekton',
+  Backstage: 'backstage',
 
   // Digital / experience
   'Next.js': 'nextdotjs',
   Vercel: 'vercel',
   Contentful: 'contentful',
   Algolia: 'algolia',
-  commercetools: 'commercetools',
   Stripe: 'stripe',
 
   // Cyber
-  Zscaler: 'zscaler',
-  CrowdStrike: 'crowdstrike',
   Snyk: 'snyk',
-  'AWS GuardDuty': 'amazonwebservices',
+  Vault: 'vault',
 
   // Managed ops
   PagerDuty: 'pagerduty',
   Datadog: 'datadog',
   Grafana: 'grafana',
   Splunk: 'splunk',
+  OpsGenie: 'opsgenie',
+};
 
-  // AI (most of these are not in Simple Icons, so left as text)
-  'Azure OpenAI': 'microsoftazure',
-  Bedrock: 'amazonwebservices',
+/**
+ * Local fall-back logos for brands Simple Icons dropped. Paths are
+ * relative to /public. Shipped PNGs come in their native brand
+ * colors; we neutralize with a CSS filter in the render site so the
+ * chip row looks consistent with the monochrome SVGs.
+ */
+export const STACK_LOCAL_LOGOS: Record<string, string> = {
+  AWS: '/images/Solution-Partners/aws.png',
+  'AWS GuardDuty': '/images/Solution-Partners/aws.png',
+  Bedrock: '/images/Solution-Partners/aws.png',
+  Karpenter: '/images/Solution-Partners/aws.png',
+  Azure: '/images/Solution-Partners/azure.png',
+  'Azure OpenAI': '/images/Solution-Partners/azure.png',
+  'Microsoft Sentinel': '/images/Solution-Partners/azure.png',
+  SAP: '/images/Solution-Partners/sap.png',
+  ServiceNow: '/images/Solution-Partners/servicenow.png',
+  Salesforce: '/images/Solution-Partners/salesforce.png',
+  Dynatrace: '/images/Solution-Partners/dynatrace.png',
+  Braze: '/images/Solution-Partners/braze.png',
 };
