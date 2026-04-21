@@ -68,8 +68,39 @@ export const STACK_LOCAL_LOGOS: Record<string, string> = {
   'Azure OpenAI': '/images/Solution-Partners/azure.png',
   'Microsoft Sentinel': '/images/Solution-Partners/azure.png',
   SAP: '/images/Solution-Partners/sap.png',
+  'SAP S4/Hana': '/images/Solution-Partners/sap.png',
+  'SAP S/4HANA': '/images/Solution-Partners/sap.png',
   ServiceNow: '/images/Solution-Partners/servicenow.png',
   Salesforce: '/images/Solution-Partners/salesforce.png',
   Dynatrace: '/images/Solution-Partners/dynatrace.png',
   Braze: '/images/Solution-Partners/braze.png',
+};
+
+/**
+ * Third tier: homarr-labs/dashboard-icons on jsdelivr. Much broader
+ * enterprise coverage than Simple Icons because it hasn't been
+ * scrubbed at the request of trademark holders. All entries here are
+ * verified to return 200 at the CDN URL. Served as full-color SVGs;
+ * we apply the same brightness/invert filter as local PNGs so the
+ * row stays visually consistent with the monochrome SVGs from
+ * Simple Icons.
+ */
+export const STACK_DASHBOARD_SLUGS: Record<string, string> = {
+  'Power BI': 'powerbi',
+  'Microsoft Power BI': 'powerbi',
+  Oracle: 'oracle',
+  SolarWinds: 'solarwinds',
+  LogRhythm: 'solarwinds',
+  OpenAI: 'openai',
+  Cloudflare: 'cloudflare',
+  Netlify: 'netlify',
+  Atlassian: 'atlassian',
+
+  // Microsoft products that don't have dedicated brand icons — fall
+  // back to the generic Microsoft logo so at least the brand parent
+  // is recognizable.
+  Microsoft: 'microsoft',
+  'Microsoft Dynamics': 'microsoft',
+  'Microsoft Dynamics 365': 'microsoft',
+  'Dynamics 365': 'microsoft',
 };
