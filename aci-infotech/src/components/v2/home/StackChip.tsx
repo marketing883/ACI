@@ -25,12 +25,18 @@ import {
 
 const LOGO_TINT_HEX = '9AA7C2'; // --v2-text-secondary without the #
 
-// Mild grayscale + slight dim so native-color logos don't shout
-// next to the Simple Icons monochromes, while still preserving the
-// shape detail that makes a logo recognizable. A full monochrome
-// filter flattened wordmark-heavy logos (Microsoft, Oracle, Power BI)
-// into unreadable silhouettes — this keeps them identifiable.
+// Default logo filter: mild grayscale + slight dim. Keeps logos in
+// their native colors enough to remain recognizable (Microsoft blue,
+// AWS orange, Power BI yellow, etc.) while toning them down so the
+// row reads as an editorial strip.
 const SOFTEN_FILTER = 'grayscale(0.25) brightness(0.95)';
+
+// Applied to brand PNGs that are dark-on-white by default (SAP blue,
+// Azure wordmark, Salesforce cloud mark) so they don't disappear
+// against our dark card surface. Inverts the image to light-on-
+// transparent then adds a mild brightness lift so the stroke weight
+// reads clearly.
+const INVERT_FILTER = 'invert(1) brightness(1.15)';
 
 interface StackChipProps {
   label: string;
@@ -40,9 +46,9 @@ interface StackChipProps {
 
 export default function StackChip({ label, compact = false }: StackChipProps) {
   const cdnSlug = STACK_CDN_SLUGS[label];
-  const localSrc = !cdnSlug ? STACK_LOCAL_LOGOS[label] : null;
+  const localEntry = !cdnSlug ? STACK_LOCAL_LOGOS[label] : undefined;
   const dashSlug =
-    !cdnSlug && !localSrc ? STACK_DASHBOARD_SLUGS[label] : null;
+    !cdnSlug && !localEntry ? STACK_DASHBOARD_SLUGS[label] : null;
 
   // Sizes are intentionally generous — the row reads as a brand strip,
   // not an afterthought.
@@ -77,18 +83,18 @@ export default function StackChip({ label, compact = false }: StackChipProps) {
     );
   }
 
-  if (localSrc) {
+  if (localEntry) {
     return (
       <span title={label} style={shellStyle}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={localSrc}
+          src={localEntry.src}
           alt={label}
           style={{
             height: rasterHeight,
             width: 'auto',
             display: 'block',
-            filter: SOFTEN_FILTER,
+            filter: localEntry.invert ? INVERT_FILTER : SOFTEN_FILTER,
             opacity: 0.95,
           }}
           loading="lazy"

@@ -56,24 +56,35 @@ export const STACK_CDN_SLUGS: Record<string, string> = {
 /**
  * Local fall-back logos for brands Simple Icons dropped. Paths are
  * relative to /public. Shipped PNGs come in their native brand
- * colors; we neutralize with a CSS filter in the render site so the
- * chip row looks consistent with the monochrome SVGs.
+ * colors.
+ *
+ * Some brand logos (SAP, Azure wordmark, Salesforce) are dark-on-
+ * white by default and disappear against our dark card surface.
+ * Those entries specify an `invert` flag so we apply a light-on-dark
+ * filter instead of the default soften filter.
  */
-export const STACK_LOCAL_LOGOS: Record<string, string> = {
-  AWS: '/images/Solution-Partners/aws.png',
-  'AWS GuardDuty': '/images/Solution-Partners/aws.png',
-  Bedrock: '/images/Solution-Partners/aws.png',
-  Karpenter: '/images/Solution-Partners/aws.png',
-  Azure: '/images/Solution-Partners/azure.png',
-  'Azure OpenAI': '/images/Solution-Partners/azure.png',
-  'Microsoft Sentinel': '/images/Solution-Partners/azure.png',
-  SAP: '/images/Solution-Partners/sap.png',
-  'SAP S4/Hana': '/images/Solution-Partners/sap.png',
-  'SAP S/4HANA': '/images/Solution-Partners/sap.png',
-  ServiceNow: '/images/Solution-Partners/servicenow.png',
-  Salesforce: '/images/Solution-Partners/salesforce.png',
-  Dynatrace: '/images/Solution-Partners/dynatrace.png',
-  Braze: '/images/Solution-Partners/braze.png',
+export type LocalLogoEntry = {
+  src: string;
+  /** True when the native logo is dark-on-white and needs inversion
+   *  to read on the dark card surface. */
+  invert?: boolean;
+};
+
+export const STACK_LOCAL_LOGOS: Record<string, LocalLogoEntry> = {
+  AWS: { src: '/images/Solution-Partners/aws.png' },
+  'AWS GuardDuty': { src: '/images/Solution-Partners/aws.png' },
+  Bedrock: { src: '/images/Solution-Partners/aws.png' },
+  Karpenter: { src: '/images/Solution-Partners/aws.png' },
+  Azure: { src: '/images/Solution-Partners/azure.png', invert: true },
+  'Azure OpenAI': { src: '/images/Solution-Partners/azure.png', invert: true },
+  'Microsoft Sentinel': { src: '/images/Solution-Partners/azure.png', invert: true },
+  SAP: { src: '/images/Solution-Partners/sap.png', invert: true },
+  'SAP S4/Hana': { src: '/images/Solution-Partners/sap.png', invert: true },
+  'SAP S/4HANA': { src: '/images/Solution-Partners/sap.png', invert: true },
+  ServiceNow: { src: '/images/Solution-Partners/servicenow.png' },
+  Salesforce: { src: '/images/Solution-Partners/salesforce.png', invert: true },
+  Dynatrace: { src: '/images/Solution-Partners/dynatrace.png' },
+  Braze: { src: '/images/Solution-Partners/braze.png' },
 };
 
 /**
