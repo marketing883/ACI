@@ -86,7 +86,8 @@ export default function ServicesDial() {
                 maxWidth: 900,
               }}
             >
-              Eight practices.{' '}
+              Eight practices.
+              <br />
               <em
                 style={{
                   fontStyle: 'italic',
