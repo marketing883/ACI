@@ -189,7 +189,6 @@ export default function FooterV2() {
           }}
         >
           <span>© 2026 ACI Infotech, Inc.</span>
-          <span>Iselin, NJ · Hyderabad · Bengaluru · Toronto</span>
           <span>
             <Link href="/privacy-policy" style={{ color: 'inherit', textDecoration: 'none' }}>
               Privacy
