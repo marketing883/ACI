@@ -1,0 +1,164 @@
+'use client';
+
+/**
+ * CTABand — enormous closing headline, one subhead, two CTAs. The
+ * emotional peak of the page. Background is the same 80x80 blue grid
+ * as the hero with a radial mask for a vignette effect.
+ */
+
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+
+export default function CTABand() {
+  return (
+    <section
+      id="contact"
+      style={{
+        position: 'relative',
+        background: 'var(--v2-bg)',
+        paddingTop: 'clamp(100px, 14vw, 180px)',
+        paddingBottom: 'clamp(100px, 14vw, 180px)',
+        paddingLeft: 'var(--v2-container-px)',
+        paddingRight: 'var(--v2-container-px)',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage:
+            'linear-gradient(rgba(27, 42, 88, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(27, 42, 88, 0.4) 1px, transparent 1px)',
+          backgroundSize: '80px 80px',
+          maskImage: 'radial-gradient(700px 500px at 50% 50%, black 0%, transparent 75%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: '0 auto',
+          textAlign: 'center',
+          position: 'relative',
+        }}
+      >
+        <div
+          style={{
+            color: 'var(--v2-accent)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 11,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            fontWeight: 500,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
+            marginBottom: 24,
+          }}
+        >
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: '50%',
+              background: 'var(--v2-accent)',
+              boxShadow: '0 0 8px var(--v2-accent)',
+              display: 'inline-block',
+            }}
+          />
+          Let{'’'}s build · 007
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: '50%',
+              background: 'var(--v2-accent)',
+              boxShadow: '0 0 8px var(--v2-accent)',
+              display: 'inline-block',
+            }}
+          />
+        </div>
+        <h2
+          style={{
+            fontFamily: 'var(--font-title)',
+            fontSize: 'clamp(56px, 10vw, 160px)',
+            fontWeight: 700,
+            lineHeight: 0.9,
+            letterSpacing: '-0.035em',
+            margin: '0 0 40px 0',
+            color: 'var(--v2-text-primary)',
+          }}
+        >
+          Turn your toughest problems{' '}
+          <em
+            style={{
+              fontStyle: 'italic',
+              fontWeight: 500,
+              color: 'var(--v2-accent)',
+            }}
+          >
+            into production.
+          </em>
+        </h2>
+        <p
+          style={{
+            color: 'var(--v2-text-secondary)',
+            fontSize: 17,
+            lineHeight: 1.55,
+            maxWidth: 620,
+            margin: '0 auto 40px',
+          }}
+        >
+          Tell us where you are, where you are going, and where it hurts. A senior engineer
+          comes back in 48 hours with a plan worth arguing about.
+        </p>
+        <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link
+            href="/contact?source=v2-cta"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '22px 28px',
+              background: 'var(--v2-accent)',
+              color: 'var(--v2-text-inverted)',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 13,
+              fontWeight: 600,
+              letterSpacing: '0.02em',
+              textTransform: 'uppercase',
+              borderRadius: 2,
+              textDecoration: 'none',
+            }}
+          >
+            <span>Start a project</span>
+            <ArrowRight size={14} />
+          </Link>
+          <Link
+            href="/contact?reason=working-session"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '22px 28px',
+              background: 'transparent',
+              color: 'var(--v2-text-primary)',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 13,
+              fontWeight: 500,
+              letterSpacing: '0.02em',
+              textTransform: 'uppercase',
+              borderRadius: 2,
+              border: '1px solid var(--v2-border-strong)',
+              textDecoration: 'none',
+            }}
+          >
+            Book a working session
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}

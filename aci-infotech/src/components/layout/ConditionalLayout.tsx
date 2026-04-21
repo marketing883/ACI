@@ -31,9 +31,14 @@ export default function ConditionalLayout({
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith('/admin');
   const isLandingPage = pathname?.startsWith('/lp');
+  // v2 preview routes render standalone so the new dark aesthetic can
+  // be judged without v1 nav/footer chrome on top. Only affects
+  // /preview/v2* routes; /preview/home and all other existing routes
+  // keep their existing layout behavior.
+  const isV2Preview = pathname?.startsWith('/preview/v2');
 
-  // Admin routes and landing pages have their own layouts
-  if (isAdminRoute || isLandingPage) {
+  // Admin routes, landing pages, and v2 previews have their own layouts
+  if (isAdminRoute || isLandingPage || isV2Preview) {
     return <>{children}</>;
   }
 

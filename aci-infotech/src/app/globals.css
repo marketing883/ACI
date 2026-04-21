@@ -23,20 +23,29 @@
   /* --- v2 palette (parallel to --color-aci-*, does not override) ---
      Exposes Tailwind utilities like bg-v2-bg, text-v2-text-primary,
      border-v2-border, etc. Safe to coexist with v1 utilities. */
-  --color-v2-bg: #0A0A0A;
-  --color-v2-surface-1: #111111;
-  --color-v2-surface-2: #171717;
-  --color-v2-surface-3: #1F1F1F;
-  --color-v2-border-subtle: rgba(255, 255, 255, 0.06);
-  --color-v2-border: rgba(255, 255, 255, 0.10);
-  --color-v2-border-strong: rgba(255, 255, 255, 0.16);
-  --color-v2-text-primary: #FAFAFA;
-  --color-v2-text-secondary: #A1A1A1;
-  --color-v2-text-muted: #6B6B6B;
-  --color-v2-accent: #C4FF61;
-  --color-v2-accent-dim: #8FC63D;
-  --color-v2-positive: #7CE98B;
-  --color-v2-negative: #FF7676;
+  --color-v2-bg: #050B1F;
+  --color-v2-surface-1: #070F28;
+  --color-v2-surface-2: #0A1530;
+  --color-v2-surface-3: #0E1A3C;
+  --color-v2-footer-bg: #030712;
+  --color-v2-border-subtle: #142146;
+  --color-v2-border: #18254F;
+  --color-v2-border-strong: #1B2A58;
+  --color-v2-border-hot: #2A3F7A;
+  --color-v2-text-primary: #E8ECF5;
+  --color-v2-text-secondary: #9AA7C2;
+  --color-v2-text-muted: #6B7A99;
+  --color-v2-accent: #C6FF3D;
+  --color-v2-accent-dim: #9BE600;
+  --color-v2-accent-ink: #0A1A00;
+  --color-v2-positive: #5BE39A;
+  --color-v2-negative: #FF5577;
+  --color-v2-warn: #FFB648;
+  --color-v2-light-bg: #F3F3EE;
+  --color-v2-light-ink: #0A1530;
+
+  /* Mono font for terminal/eyebrow/ASCII */
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /* Cross-browser fix: Tailwind v4 Preflight resets padding/margin using physical
