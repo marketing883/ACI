@@ -244,7 +244,7 @@ function CaseHead() {
         <h2
           style={{
             fontFamily: 'var(--font-title)',
-            fontSize: 'clamp(40px, 6.5vw, 88px)',
+            fontSize: 'clamp(32px, 5vw, 68px)',
             lineHeight: 0.95,
             letterSpacing: '-0.03em',
             fontWeight: 700,
@@ -327,7 +327,7 @@ function CaseSlideContent({ slide, theme }: { slide: HomeCaseStudy; theme: (type
         <h3
           style={{
             fontFamily: 'var(--font-title)',
-            fontSize: 'clamp(32px, 4vw, 56px)',
+            fontSize: 'clamp(22px, 2.6vw, 38px)',
             fontWeight: 700,
             lineHeight: 1.05,
             letterSpacing: '-0.025em',

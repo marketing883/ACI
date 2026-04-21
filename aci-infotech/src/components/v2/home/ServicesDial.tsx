@@ -101,7 +101,7 @@ export default function ServicesDial() {
             <h2
               style={{
                 fontFamily: 'var(--font-title)',
-                fontSize: 'clamp(40px, 6.5vw, 88px)',
+                fontSize: 'clamp(32px, 5vw, 68px)',
                 lineHeight: 0.95,
                 letterSpacing: '-0.03em',
                 fontWeight: 700,
@@ -157,7 +157,7 @@ export default function ServicesDial() {
           <style>{`
             @media (max-width: 960px) {
               .svc-stage { grid-template-columns: 1fr !important; gap: 40px !important; }
-              .svc-row-title { font-size: clamp(28px, 6vw, 44px) !important; }
+              .svc-row-title { font-size: clamp(24px, 5vw, 36px) !important; }
               .svc-preview-sticky { position: static !important; }
             }
           `}</style>
@@ -231,7 +231,7 @@ export default function ServicesDial() {
                     className="svc-row-title"
                     style={{
                       fontFamily: 'var(--font-title)',
-                      fontSize: 'clamp(34px, 4.2vw, 64px)',
+                      fontSize: 'clamp(28px, 3.2vw, 50px)',
                       fontWeight: 700,
                       lineHeight: 1.05,
                       letterSpacing: '-0.02em',
@@ -368,7 +368,7 @@ export default function ServicesDial() {
                 <h3
                   style={{
                     fontFamily: 'var(--font-title)',
-                    fontSize: 28,
+                    fontSize: 22,
                     fontWeight: 700,
                     letterSpacing: '-0.015em',
                     margin: 0,

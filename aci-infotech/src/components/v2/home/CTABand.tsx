@@ -83,7 +83,7 @@ export default function CTABand() {
         <h2
           style={{
             fontFamily: 'var(--font-title)',
-            fontSize: 'clamp(56px, 10vw, 160px)',
+            fontSize: 'clamp(44px, 7.5vw, 116px)',
             fontWeight: 700,
             lineHeight: 0.9,
             letterSpacing: '-0.035em',

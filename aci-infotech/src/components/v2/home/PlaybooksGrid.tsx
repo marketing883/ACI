@@ -84,7 +84,7 @@ export default function PlaybooksGrid() {
             <h2
               style={{
                 fontFamily: 'var(--font-title)',
-                fontSize: 'clamp(40px, 6.5vw, 88px)',
+                fontSize: 'clamp(32px, 5vw, 68px)',
                 lineHeight: 0.95,
                 letterSpacing: '-0.03em',
                 fontWeight: 700,
@@ -242,9 +242,9 @@ function PlaybookCard({
       <h3
         style={{
           fontFamily: 'var(--font-title)',
-          fontSize: 24,
+          fontSize: 20,
           fontWeight: 600,
-          lineHeight: 1.2,
+          lineHeight: 1.25,
           letterSpacing: '-0.015em',
           margin: 0,
           color: 'var(--v2-text-primary)',

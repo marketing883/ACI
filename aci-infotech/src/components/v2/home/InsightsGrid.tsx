@@ -129,7 +129,7 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
             <h2
               style={{
                 fontFamily: 'var(--font-title)',
-                fontSize: 'clamp(40px, 6.5vw, 88px)',
+                fontSize: 'clamp(32px, 5vw, 68px)',
                 lineHeight: 0.95,
                 letterSpacing: '-0.03em',
                 fontWeight: 700,

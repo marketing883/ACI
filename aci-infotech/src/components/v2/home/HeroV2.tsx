@@ -241,7 +241,7 @@ export default function HeroV2() {
           aria-label="Engineering the signal in the noise."
           style={{
             fontFamily: 'var(--font-title)',
-            fontSize: 'clamp(56px, 8.5vw, 140px)',
+            fontSize: 'clamp(44px, 6.5vw, 104px)',
             fontWeight: 700,
             lineHeight: 0.92,
             letterSpacing: '-0.035em',
