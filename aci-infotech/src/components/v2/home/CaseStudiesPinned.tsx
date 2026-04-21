@@ -116,14 +116,24 @@ export default function CaseStudiesPinned({ caseStudies }: Props) {
   const reduced = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
 
-  // Hydrate from CMS data (up to 4), fall back to placeholders.
-  const slides = (caseStudies.length >= 2 ? caseStudies : PLACEHOLDERS).slice(0, 4);
+  // Hydrate from CMS data. If there are fewer than 4 published featured
+  // case studies we pad from the placeholder set so the horizontal scroll
+  // always has 4 panels — less than 4 looks broken (pinned scroll without
+  // enough content to scroll through feels like dead space).
+  const cms = caseStudies.slice(0, 4);
+  const filler = PLACEHOLDERS.slice(0, Math.max(0, 4 - cms.length));
+  const slides = [...cms, ...filler];
 
   const { scrollYProgress } = useScroll({
     target: stageRef,
     offset: ['start start', 'end end'],
   });
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-75%']);
+
+  // Translate X moves the track by (slideCount - 1) viewport widths so the
+  // last slide ends flush with the right edge of the viewport. Hardcoded
+  // -75% is only correct for exactly 4 slides — generalize it here.
+  const translateEnd = slides.length > 1 ? `-${(slides.length - 1) * 100}vw` : '0vw';
+  const x = useTransform(scrollYProgress, [0, 1], ['0vw', translateEnd]);
 
   // If reduced motion: render as a vertical stack, bypass the sticky pin.
   if (reduced) {
@@ -196,12 +206,14 @@ export default function CaseStudiesPinned({ caseStudies }: Props) {
           {/* Progress rail (right edge) */}
           <RailProgress count={slides.length} progress={scrollYProgress} labels={slides.map((s, i) => `${String(i + 1).padStart(2, '0')} · ${getShortLabel(s)}`)} />
 
-          {/* Slides track */}
+          {/* Slides track. Each slide is explicitly 100vw wide so the
+              horizontal scroll math stays correct regardless of the
+              number of slides the CMS returned. */}
           <motion.div
             style={{
               x,
               display: 'flex',
-              width: `${slides.length * 100}%`,
+              width: `${slides.length * 100}vw`,
               height: '100%',
             }}
           >
@@ -265,8 +277,8 @@ function CaseSlide({ slide, theme }: { slide: HomeCaseStudy; theme: (typeof THEM
   return (
     <article
       style={{
-        width: '100%',
-        flex: '0 0 auto',
+        width: '100vw',
+        flex: '0 0 100vw',
         background: `linear-gradient(135deg, ${theme.bg} 0%, var(--v2-bg) 100%)`,
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 1fr)',
