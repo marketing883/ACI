@@ -55,7 +55,7 @@ export default function CTABand() {
             color: 'var(--v2-text-primary)',
           }}
         >
-          Turn your toughest problems{' '}
+          Talk to an{' '}
           <em
             style={{
               fontStyle: 'italic',
@@ -63,7 +63,7 @@ export default function CTABand() {
               color: 'var(--v2-accent)',
             }}
           >
-            into production.
+            architect.
           </em>
         </h2>
         <p
@@ -75,9 +75,9 @@ export default function CTABand() {
             margin: '0 auto 40px',
           }}
         >
-          Tell us where you are, where you need to be, and where the system
-          currently breaks. A senior engineer comes back inside 48 hours with
-          a plan worth arguing about.
+          Describe your current architecture and where it is falling short.
+          A senior engineer will respond within 48 hours with a written
+          assessment.
         </p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link

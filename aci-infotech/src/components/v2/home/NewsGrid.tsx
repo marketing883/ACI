@@ -72,7 +72,7 @@ export default function NewsGrid({ items }: { items: HomeNewsItem[] }) {
       }}
     >
       <div style={{ maxWidth: 'var(--v2-container-max)', margin: '0 auto' }}>
-        <SectionHead headline="Press and" emphasized="recognition." />
+        <SectionHead headline="Press and" emphasized="announcements." />
 
         <div
           style={{
@@ -245,23 +245,10 @@ export function SectionHead({
             style={{
               fontStyle: 'italic',
               fontWeight: 500,
-              position: 'relative',
-              display: 'inline-block',
+              color: 'var(--v2-accent)',
             }}
           >
-            <span style={{ position: 'relative', zIndex: 1 }}>{emphasized}</span>
-            <span
-              aria-hidden
-              style={{
-                position: 'absolute',
-                left: -4,
-                right: -4,
-                bottom: '0.1em',
-                height: '0.14em',
-                background: 'var(--v2-accent)',
-                zIndex: 0,
-              }}
-            />
+            {emphasized}
           </em>
         </h2>
       </div>

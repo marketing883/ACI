@@ -215,23 +215,10 @@ export default function HeroV2() {
               style={{
                 fontStyle: 'italic',
                 fontWeight: 500,
-                position: 'relative',
-                display: 'inline-block',
+                color: 'var(--v2-accent)',
               }}
             >
-              <span style={{ position: 'relative', zIndex: 1 }}>systems</span>
-              <span
-                aria-hidden
-                style={{
-                  position: 'absolute',
-                  left: -4,
-                  right: -4,
-                  bottom: '0.12em',
-                  height: '0.16em',
-                  background: 'var(--v2-accent)',
-                  zIndex: 0,
-                }}
-              />
+              systems
             </em>
           </motion.span>
           <motion.span
@@ -267,8 +254,8 @@ export default function HeroV2() {
               margin: 0,
             }}
           >
-            Data platforms, cloud architectures, AI systems, and the managed
-            operations that keep all three in production.{' '}
+            Data platforms. Cloud architectures. AI systems. Managed
+            operations.{' '}
             <strong style={{ color: 'var(--v2-text-primary)', fontWeight: 500 }}>
               280+ engagements
             </strong>{' '}

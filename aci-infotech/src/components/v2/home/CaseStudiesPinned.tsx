@@ -261,27 +261,21 @@ function CaseHead() {
             margin: 0,
           }}
         >
-          Receipts,{' '}
-          <em style={{ fontStyle: 'italic', fontWeight: 500, position: 'relative', display: 'inline-block' }}>
-            <span style={{ position: 'relative', zIndex: 1 }}>not references.</span>
-            <span
-              aria-hidden
-              style={{
-                position: 'absolute',
-                left: -4,
-                right: -4,
-                bottom: '0.12em',
-                height: '0.14em',
-                background: 'var(--v2-accent)',
-                zIndex: 0,
-              }}
-            />
+          Recent{' '}
+          <em
+            style={{
+              fontStyle: 'italic',
+              fontWeight: 500,
+              color: 'var(--v2-accent)',
+            }}
+          >
+            engagements.
           </em>
         </h2>
       </div>
       <p style={{ color: 'var(--v2-text-secondary)', fontSize: 15, lineHeight: 1.6, maxWidth: 420, margin: 0 }}>
-        Four production engagements. The outcome we signed up for, and the
-        metric that tells you we hit it.
+        Production systems delivered for enterprise clients. Each with a
+        defined outcome and a measured result.
       </p>
     </div>
   );

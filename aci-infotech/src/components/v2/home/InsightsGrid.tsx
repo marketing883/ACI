@@ -113,28 +113,15 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                 margin: 0,
               }}
             >
-              Field notes from the{' '}
+              Writing from our{' '}
               <em
                 style={{
                   fontStyle: 'italic',
                   fontWeight: 500,
-                  position: 'relative',
-                  display: 'inline-block',
+                  color: 'var(--v2-accent)',
                 }}
               >
-                <span style={{ position: 'relative', zIndex: 1 }}>engine room.</span>
-                <span
-                  aria-hidden
-                  style={{
-                    position: 'absolute',
-                    left: -4,
-                    right: -4,
-                    bottom: '0.1em',
-                    height: '0.14em',
-                    background: 'var(--v2-accent)',
-                    zIndex: 0,
-                  }}
-                />
+                engineers.
               </em>
             </h2>
             <p
@@ -147,9 +134,8 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                 maxWidth: 520,
               }}
             >
-              Architecture reviews, post-mortems, and field notes from the
-              engineers who actually ship our systems. No thought-leadership
-              in the LinkedIn sense of the phrase.
+              Architecture reviews, post-mortems, and technical perspectives
+              from the practitioners on our delivery teams.
             </p>
           </div>
           <Link

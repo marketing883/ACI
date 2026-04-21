@@ -66,28 +66,15 @@ export default function PlaybooksGrid() {
                 margin: 0,
               }}
             >
-              Engagement models we have{' '}
+              Repeatable engagement{' '}
               <em
                 style={{
                   fontStyle: 'italic',
                   fontWeight: 500,
-                  position: 'relative',
-                  display: 'inline-block',
+                  color: 'var(--v2-accent)',
                 }}
               >
-                <span style={{ position: 'relative', zIndex: 1 }}>run to the end.</span>
-                <span
-                  aria-hidden
-                  style={{
-                    position: 'absolute',
-                    left: -4,
-                    right: -4,
-                    bottom: '0.12em',
-                    height: '0.14em',
-                    background: 'var(--v2-accent)',
-                    zIndex: 0,
-                  }}
-                />
+                models.
               </em>
             </h2>
           </div>
@@ -100,9 +87,9 @@ export default function PlaybooksGrid() {
               margin: 0,
             }}
           >
-            Fixed scope, fixed outcome, named senior engineer on the hook from
-            kickoff. Each playbook has run enough times that the surprises are
-            priced in before the first sprint.
+            Fixed scope. Fixed outcome. A senior engineer assigned at kickoff.
+            Each playbook has been delivered enough times that the risks are
+            known before work starts.
           </p>
         </div>
 

@@ -87,20 +87,14 @@ export default function ServicesDial() {
               }}
             >
               Eight practices.{' '}
-              <em style={{ fontStyle: 'italic', fontWeight: 500, position: 'relative', display: 'inline-block' }}>
-                <span style={{ position: 'relative', zIndex: 1 }}>One delivery team.</span>
-                <span
-                  aria-hidden
-                  style={{
-                    position: 'absolute',
-                    left: -4,
-                    right: -4,
-                    bottom: '0.1em',
-                    height: '0.14em',
-                    background: 'var(--v2-accent)',
-                    zIndex: 0,
-                  }}
-                />
+              <em
+                style={{
+                  fontStyle: 'italic',
+                  fontWeight: 500,
+                  color: 'var(--v2-accent)',
+                }}
+              >
+                One delivery team.
               </em>
             </h2>
           </div>
@@ -113,9 +107,8 @@ export default function ServicesDial() {
               margin: 0,
             }}
           >
-            Eight engineering practices under one roof. Each one owns delivery
-            end to end, from architecture to the runbook your SRE opens on a bad
-            Tuesday.
+            Each practice owns delivery end to end. Architecture, build,
+            deployment, and operations, handled by the same team.
           </p>
         </div>
 
