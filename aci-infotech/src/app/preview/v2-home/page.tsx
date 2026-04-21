@@ -49,7 +49,11 @@ export default async function V2HomePage() {
         color: 'var(--v2-text-primary)',
         fontFamily: 'var(--font-sans)',
         minHeight: '100vh',
-        overflowX: 'clip',
+        // NOTE: no overflow on <main>. Any overflow (including
+        // overflow-x: clip) can break position: sticky on nested
+        // children in some browser implementations. Horizontal
+        // clipping for the case-studies pinned-scroll track lives
+        // on the cs-pin element, which is where it belongs.
       }}
     >
       <NavV2 />

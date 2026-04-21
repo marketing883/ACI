@@ -33,7 +33,7 @@ const PLACEHOLDERS: HomeBlogPost[] = [
   {
     id: 'b3',
     slug: 'lakehouse-audit-ready',
-    title: 'Lakehouse patterns that actually survive audit, billing and 3 AM',
+    title: 'Lakehouse patterns that survive audit, billing, and the on-call bridge',
     excerpt: null,
     category: 'Data',
     read_time_minutes: 12,

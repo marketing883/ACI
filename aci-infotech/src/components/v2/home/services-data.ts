@@ -147,7 +147,7 @@ user ─┤                        ├──▶ CMS + commerce
     emphasis: '&',
     titleSuffix: ' Trust',
     desc:
-      'Zero-trust architectures, cloud security programs, and compliance readiness for SOC 2, HIPAA, and PCI. Designed for the 3 AM when a novel exploit lands in the feed and the CISO needs a straight answer.',
+      'Zero-trust architectures, cloud security programs, and compliance readiness for SOC 2, HIPAA, and PCI. Incident response runbooks ready for the day a novel exploit reaches the feed.',
     stats: [
       { value: '0', label: 'Breaches on our watch' },
       { value: '<4h', label: 'MTTR' },

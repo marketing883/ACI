@@ -268,7 +268,7 @@ export default function HeroV2() {
             }}
           >
             Data platforms, cloud architectures, AI systems, and the managed
-            operations that keep all three running at 3 AM.{' '}
+            operations that keep all three in production.{' '}
             <strong style={{ color: 'var(--v2-text-primary)', fontWeight: 500 }}>
               280+ engagements
             </strong>{' '}
