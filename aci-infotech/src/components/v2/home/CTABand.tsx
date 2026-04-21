@@ -75,7 +75,7 @@ export default function CTABand() {
             margin: '0 auto 40px',
           }}
         >
-          A senior team responds within 48 hours with a written delivery plan.
+          Tell us about the work.
         </p>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Link
