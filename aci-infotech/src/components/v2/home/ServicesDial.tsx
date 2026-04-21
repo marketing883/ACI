@@ -488,8 +488,8 @@ function StackChip({ label }: { label: string }) {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 32,
-    padding: '0 12px',
+    height: 44,
+    padding: '0 16px',
     background: 'var(--v2-surface-3)',
     border: '1px solid var(--v2-border)',
     borderRadius: 4,
@@ -502,7 +502,7 @@ function StackChip({ label }: { label: string }) {
         <img
           src={`https://cdn.simpleicons.org/${cdnSlug}/${LOGO_TINT_HEX}`}
           alt={label}
-          style={{ height: 14, width: 'auto', display: 'block', opacity: 0.9 }}
+          style={{ height: 22, width: 'auto', display: 'block', opacity: 0.9 }}
           loading="lazy"
         />
       </span>
@@ -517,7 +517,7 @@ function StackChip({ label }: { label: string }) {
           src={localSrc}
           alt={label}
           style={{
-            height: 16,
+            height: 24,
             width: 'auto',
             display: 'block',
             // Drop to monochrome and tone down so the native brand colors
@@ -538,7 +538,7 @@ function StackChip({ label }: { label: string }) {
       style={{
         ...shellStyle,
         fontFamily: 'var(--font-mono)',
-        fontSize: 10,
+        fontSize: 11,
         letterSpacing: '0.08em',
         textTransform: 'uppercase',
         color: 'var(--v2-text-secondary)',
