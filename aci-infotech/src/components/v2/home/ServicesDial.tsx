@@ -118,23 +118,24 @@ export default function ServicesDial() {
           </p>
         </div>
 
-        {/* Stage: two columns. Right column sticks while the list
-            on the left scrolls past it, so the live preview is
-            always visible regardless of which row is active. */}
+        {/* Stage: two columns. Grid uses the default `stretch` align so
+            both columns take the full row height (set by the taller
+            service list). The right column's inner aside is then
+            position: sticky with room to stick inside that tall cell,
+            so the live preview stays pinned while the list scrolls. */}
         <div
           className="svc-stage"
           style={{
             display: 'grid',
             gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)',
             gap: 80,
-            alignItems: 'start',
           }}
         >
           <style>{`
             @media (max-width: 960px) {
               .svc-stage { grid-template-columns: 1fr !important; gap: 40px !important; }
               .svc-row-title { font-size: clamp(24px, 5vw, 36px) !important; }
-              .svc-preview-sticky { position: static !important; }
+              .svc-preview-sticky { position: static !important; max-height: none !important; }
             }
           `}</style>
 
@@ -250,7 +251,14 @@ export default function ServicesDial() {
             <div style={{ height: 1, background: 'var(--v2-border-subtle)' }} />
           </div>
 
-          {/* RIGHT — live preview panel (sticky on desktop) */}
+          {/* RIGHT — grid cell wrapper stretches to the row height
+              (default grid alignment). The sticky aside lives inside
+              and pins to the top of the viewport while the cell
+              scrolls past. Without this wrapper, sticky applied
+              directly to the grid item has nowhere to stick because
+              the grid cell would only be as tall as the aside's own
+              content. */}
+          <div style={{ position: 'relative' }}>
           <aside
             className="svc-preview-sticky"
             style={{
@@ -462,6 +470,7 @@ export default function ServicesDial() {
               </motion.div>
             </AnimatePresence>
           </aside>
+          </div>
         </div>
       </div>
     </section>
