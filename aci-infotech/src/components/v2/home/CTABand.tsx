@@ -44,42 +44,6 @@ export default function CTABand() {
           position: 'relative',
         }}
       >
-        <div
-          style={{
-            color: 'var(--v2-accent)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: 11,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            fontWeight: 500,
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 10,
-            marginBottom: 24,
-          }}
-        >
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              background: 'var(--v2-accent)',
-              boxShadow: '0 0 8px var(--v2-accent)',
-              display: 'inline-block',
-            }}
-          />
-          Let{'’'}s build · 007
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              background: 'var(--v2-accent)',
-              boxShadow: '0 0 8px var(--v2-accent)',
-              display: 'inline-block',
-            }}
-          />
-        </div>
         <h2
           style={{
             fontFamily: 'var(--font-title)',

@@ -224,23 +224,6 @@ function CaseHead() {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 32, flexWrap: 'wrap' }}>
       <div style={{ maxWidth: 760 }}>
-        <div
-          style={{
-            color: 'var(--v2-text-muted)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: 11,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            fontWeight: 500,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            marginBottom: 16,
-          }}
-        >
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--v2-text-muted)', display: 'inline-block' }} />
-          Case studies · 004
-        </div>
         <h2
           style={{
             fontFamily: 'var(--font-title)',
@@ -271,8 +254,8 @@ function CaseHead() {
         </h2>
       </div>
       <p style={{ color: 'var(--v2-text-secondary)', fontSize: 15, lineHeight: 1.6, maxWidth: 420, margin: 0 }}>
-        Scroll to step through four production builds. Each pinned panel shows the outcome we
-        locked in, not the deliverables we shipped.
+        Four production builds. The outcome we locked in, not the deliverables
+        we shipped.
       </p>
     </div>
   );

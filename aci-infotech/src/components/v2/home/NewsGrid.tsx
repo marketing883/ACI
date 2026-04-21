@@ -70,7 +70,7 @@ export default function NewsGrid({ items }: { items: HomeNewsItem[] }) {
       }}
     >
       <div style={{ maxWidth: 'var(--v2-container-max)', margin: '0 auto' }}>
-        <SectionHead label="News · 005" headline="In the" emphasized="press." />
+        <SectionHead headline="In the" emphasized="press." />
 
         <div
           style={{
@@ -159,12 +159,10 @@ export default function NewsGrid({ items }: { items: HomeNewsItem[] }) {
 }
 
 export function SectionHead({
-  label,
   headline,
   emphasized,
   aside,
 }: {
-  label: string;
   headline: string;
   emphasized: string;
   aside?: string;
@@ -180,32 +178,6 @@ export function SectionHead({
       }}
     >
       <div>
-        <div
-          style={{
-            color: 'var(--v2-accent)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: 11,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            fontWeight: 500,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            marginBottom: 16,
-          }}
-        >
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              background: 'var(--v2-accent)',
-              boxShadow: '0 0 8px var(--v2-accent)',
-              display: 'inline-block',
-            }}
-          />
-          {label}
-        </div>
         <h2
           style={{
             fontFamily: 'var(--font-title)',

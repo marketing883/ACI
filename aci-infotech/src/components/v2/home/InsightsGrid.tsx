@@ -101,31 +101,6 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
           }}
         >
           <div>
-            <div
-              style={{
-                color: '#627089',
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                fontWeight: 500,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                marginBottom: 16,
-              }}
-            >
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  background: '#0A1530',
-                  display: 'inline-block',
-                }}
-              />
-              Insights · 006
-            </div>
             <h2
               style={{
                 fontFamily: 'var(--font-title)',

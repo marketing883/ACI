@@ -175,66 +175,11 @@ export default function HeroV2() {
         }
       `}</style>
 
-      {/* ===== TOP BAR ===== */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 4,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          color: 'var(--v2-text-muted)',
-          fontFamily: 'var(--font-mono)',
-          fontSize: 11,
-          letterSpacing: '0.16em',
-          textTransform: 'uppercase',
-          marginBottom: 'auto',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              background: 'var(--v2-accent)',
-              boxShadow: '0 0 10px var(--v2-accent)',
-              animation: 'v2-hero-pulse 1.6s ease-in-out infinite',
-            }}
-          />
-          <span>Production-grade engineering at enterprise scale</span>
-        </div>
-        <div>v2026.4 · NJ ↔ HYD ↔ BLR ↔ TOR</div>
-      </div>
-
-      <style>{`
-        @keyframes v2-hero-pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50%      { opacity: 0.5; transform: scale(1.5); }
-        }
-      `}</style>
+      {/* spacer pushes hero content to the bottom half of the viewport */}
+      <div style={{ flex: 1 }} aria-hidden />
 
       {/* ===== MAIN CONTENT ===== */}
       <div style={{ position: 'relative', zIndex: 4, maxWidth: 1200, marginTop: 'auto' }}>
-        {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 12,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            color: 'var(--v2-text-muted)',
-            marginBottom: 20,
-          }}
-        >
-          <span>/ 001</span>
-          <span style={{ color: 'var(--v2-border-strong)', margin: '0 12px' }}>—</span>
-          <span>DIGITAL ENGINEERING &amp; AI</span>
-        </motion.div>
-
         {/* Headline */}
         <h1
           className="v2-hero-headline"
@@ -315,16 +260,18 @@ export default function HeroV2() {
         >
           <p
             style={{
-              maxWidth: 460,
+              maxWidth: 480,
               color: 'var(--v2-text-secondary)',
               fontSize: 17,
               lineHeight: 1.55,
               margin: 0,
             }}
           >
-            We build, ship and run <strong style={{ color: 'var(--v2-text-primary)', fontWeight: 500 }}>production-grade systems</strong> for Fortune 500
-            operations. AI, cloud, data, and the unglamorous platform work that holds them
-            together.
+            We build, ship and run the systems enterprises{' '}
+            <strong style={{ color: 'var(--v2-text-primary)', fontWeight: 500 }}>
+              cannot afford to get wrong
+            </strong>
+            . AI, cloud, data, and the platform work that keeps them running at 3 AM.
           </p>
           <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
             <Link

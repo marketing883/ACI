@@ -73,31 +73,6 @@ export default function ServicesDial() {
         {/* Section head */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2rem', flexWrap: 'wrap', marginBottom: '4rem' }}>
           <div>
-            <div
-              style={{
-                color: 'var(--v2-text-muted)',
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                fontWeight: 500,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                marginBottom: '1rem',
-              }}
-            >
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  background: 'var(--v2-text-muted)',
-                  display: 'inline-block',
-                }}
-              />
-              Services · 003
-            </div>
             <h2
               style={{
                 fontFamily: 'var(--font-title)',
@@ -137,8 +112,8 @@ export default function ServicesDial() {
               margin: 0,
             }}
           >
-            Eight capabilities, one engineering floor. Hover the list to inspect,
-            each one has a live preview of how we run the practice.
+            Eight capabilities, one engineering floor. Each one ships production
+            systems, not assessments that stall at the demo.
           </p>
         </div>
 

@@ -55,32 +55,6 @@ export default function PlaybooksGrid() {
           }}
         >
           <div style={{ maxWidth: 720 }}>
-            <div
-              style={{
-                color: 'var(--v2-accent)',
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                fontWeight: 500,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                marginBottom: 16,
-              }}
-            >
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  background: 'var(--v2-accent)',
-                  boxShadow: '0 0 8px var(--v2-accent)',
-                  display: 'inline-block',
-                }}
-              />
-              Playbooks · 002
-            </div>
             <h2
               style={{
                 fontFamily: 'var(--font-title)',
@@ -126,8 +100,8 @@ export default function PlaybooksGrid() {
               margin: 0,
             }}
           >
-            Proven, opinionated engagements scoped in weeks, not quarters. Each one
-            comes with a fixed outcome and a named senior team.
+            Opinionated engagements. Scoped in weeks, not quarters. Each one ships
+            with a fixed outcome and a named senior team on the hook.
           </p>
         </div>
 
