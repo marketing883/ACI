@@ -107,8 +107,9 @@ export default function PlaybooksGrid() {
               tag={`PB-${String(i + 1).padStart(2, '0')} · ${PB_TAGS[pb.category] ?? pb.category.toUpperCase()}`}
               title={pb.displayTitle}
               desc={pb.challengePattern[0] ?? pb.keyLearnings[0] ?? ''}
-              metric={pb.deployments}
-              metricLabel="deployments"
+              outcomeValue={pb.outcomes[0]?.metric}
+              outcomeLabel={pb.outcomes[0]?.description}
+              deployments={pb.deployments}
               slug={pb.slug}
             />
           ))}
@@ -122,15 +123,20 @@ function PlaybookCard({
   tag,
   title,
   desc,
-  metric,
-  metricLabel,
+  outcomeValue,
+  outcomeLabel,
+  deployments,
   slug,
 }: {
   tag: string;
   title: string;
   desc: string;
-  metric: number;
-  metricLabel: string;
+  /** Lead outcome metric from the playbook, e.g. "$9.2M" or "64%". */
+  outcomeValue?: string;
+  /** Label for the outcome, e.g. "Year-one savings". */
+  outcomeLabel?: string;
+  /** Deployment count shown in the footer. */
+  deployments: number;
   slug: string;
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -155,7 +161,7 @@ function PlaybookCard({
         border: '1px solid var(--v2-border-strong)',
         borderRadius: 6,
         padding: 26,
-        minHeight: 280,
+        minHeight: 340,
         color: 'var(--v2-text-primary)',
         textDecoration: 'none',
         overflow: 'hidden',
@@ -221,16 +227,56 @@ function PlaybookCard({
           lineHeight: 1.55,
           color: 'var(--v2-text-secondary)',
           marginTop: 12,
-          marginBottom: 20,
+          marginBottom: 18,
           flex: 1,
           position: 'relative',
         }}
       >
         {desc}
       </p>
+
+      {/* Lead business outcome — the impactful number from the
+          playbook's own outcomes[]. Lime accent bar on the left
+          echoes the case-study impact tiles. */}
+      {outcomeValue && outcomeLabel && (
+        <div
+          style={{
+            position: 'relative',
+            borderLeft: '2px solid var(--v2-accent)',
+            paddingLeft: 12,
+            marginBottom: 20,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--font-title)',
+              fontSize: 22,
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              lineHeight: 1,
+              color: 'var(--v2-text-primary)',
+            }}
+          >
+            {outcomeValue}
+          </div>
+          <div
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 10,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--v2-text-muted)',
+              marginTop: 6,
+            }}
+          >
+            {outcomeLabel}
+          </div>
+        </div>
+      )}
+
       <div
         style={{
-          paddingTop: 16,
+          paddingTop: 14,
           borderTop: '1px dashed var(--v2-border)',
           display: 'flex',
           alignItems: 'center',
@@ -249,9 +295,9 @@ function PlaybookCard({
               fontSize: 15,
             }}
           >
-            {metric}
+            {deployments}
           </strong>{' '}
-          {metricLabel}
+          deployments
         </span>
         <span
           className="v2-pb-arrow"
