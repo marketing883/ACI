@@ -215,7 +215,10 @@ export default function CaseStudiesPinned({ caseStudies }: Props) {
             height: '100vh',
             overflow: 'hidden',
             display: 'flex',
-            alignItems: 'center',
+            // Anchor slide content to the top of the viewport so the
+            // title and eyebrow are always visible. Centering clipped
+            // the top of tall slides equally with the bottom.
+            alignItems: 'flex-start',
           }}
         >
           {/* Progress rail (right edge) */}
@@ -298,7 +301,9 @@ function CaseSlide({ slide, theme }: { slide: HomeCaseStudy; theme: (typeof THEM
         display: 'grid',
         gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)',
         gap: 60,
-        padding: '60px 80px',
+        // Top-heavy padding: breathing room above the title, minimal
+        // padding below since content anchors from the top of the pin.
+        padding: '80px 80px 32px',
         alignItems: 'start',
       }}
     >
