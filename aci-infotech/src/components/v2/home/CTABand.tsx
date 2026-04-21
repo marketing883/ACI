@@ -55,7 +55,7 @@ export default function CTABand() {
             color: 'var(--v2-text-primary)',
           }}
         >
-          Talk to an{' '}
+          Put your next system{' '}
           <em
             style={{
               fontStyle: 'italic',
@@ -63,7 +63,7 @@ export default function CTABand() {
               color: 'var(--v2-accent)',
             }}
           >
-            architect.
+            in production.
           </em>
         </h2>
         <p
@@ -71,15 +71,13 @@ export default function CTABand() {
             color: 'var(--v2-text-secondary)',
             fontSize: 17,
             lineHeight: 1.55,
-            maxWidth: 620,
+            maxWidth: 560,
             margin: '0 auto 40px',
           }}
         >
-          Describe your current architecture and where it is falling short.
-          A senior engineer will respond within 48 hours with a written
-          assessment.
+          A senior team responds within 48 hours with a written delivery plan.
         </p>
-        <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Link
             href="/contact?source=v2-cta"
             style={{
@@ -100,27 +98,6 @@ export default function CTABand() {
           >
             <span>Start a project</span>
             <ArrowRight size={14} />
-          </Link>
-          <Link
-            href="/contact?reason=working-session"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '22px 28px',
-              background: 'transparent',
-              color: 'var(--v2-text-primary)',
-              fontFamily: 'var(--font-sans)',
-              fontSize: 13,
-              fontWeight: 500,
-              letterSpacing: '0.02em',
-              textTransform: 'uppercase',
-              borderRadius: 2,
-              border: '1px solid var(--v2-border-strong)',
-              textDecoration: 'none',
-            }}
-          >
-            Book a working session
           </Link>
         </div>
       </div>
