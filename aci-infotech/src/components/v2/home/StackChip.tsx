@@ -26,17 +26,17 @@ export default function StackChip({ label, compact = false }: StackChipProps) {
   const cdnSlug = STACK_CDN_SLUGS[label];
   const localSrc = cdnSlug ? null : STACK_LOCAL_LOGOS[label];
 
-  const shellHeight = compact ? 34 : 44;
-  const svgHeight = compact ? 16 : 22;
-  const pngHeight = compact ? 18 : 24;
-  const textSize = compact ? 10 : 11;
+  const shellHeight = compact ? 40 : 44;
+  const svgHeight = compact ? 20 : 22;
+  const pngHeight = compact ? 22 : 24;
+  const textSize = compact ? 11 : 11;
 
   const shellStyle: React.CSSProperties = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
     height: shellHeight,
-    padding: compact ? '0 12px' : '0 16px',
+    padding: compact ? '0 14px' : '0 16px',
     background: 'var(--v2-surface-3)',
     border: '1px solid var(--v2-border)',
     borderRadius: 4,
