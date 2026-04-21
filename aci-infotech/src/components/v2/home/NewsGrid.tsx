@@ -95,56 +95,104 @@ export default function NewsGrid({ items }: { items: HomeNewsItem[] }) {
                 background: 'var(--v2-surface-1)',
                 border: '1px solid var(--v2-border-subtle)',
                 borderRadius: 6,
-                padding: 24,
-                minHeight: 280,
+                minHeight: 340,
                 color: 'var(--v2-text-primary)',
                 textDecoration: 'none',
+                overflow: 'hidden',
                 transition: 'transform 300ms var(--v2-ease), border-color 300ms var(--v2-ease)',
               }}
             >
+              {/* Featured image (or fallback pattern) */}
               <div
                 style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 10,
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  color: 'var(--v2-text-muted)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: 32,
+                  position: 'relative',
+                  width: '100%',
+                  aspectRatio: '16 / 9',
+                  background: 'var(--v2-surface-2)',
+                  overflow: 'hidden',
                 }}
               >
-                <span>{n.source ?? 'News'}</span>
-                <strong style={{ color: 'var(--v2-text-secondary)', fontWeight: 500 }}>
-                  {formatDate(n.published_at)}
-                </strong>
+                {n.image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={n.image_url}
+                    alt={n.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
+                    loading="lazy"
+                  />
+                ) : (
+                  <div
+                    aria-hidden
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      backgroundImage:
+                        'linear-gradient(var(--v2-border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--v2-border-subtle) 1px, transparent 1px)',
+                      backgroundSize: '20px 20px',
+                      opacity: 0.6,
+                    }}
+                  />
+                )}
               </div>
-              <h4
+
+              {/* Text content */}
+              <div
                 style={{
-                  fontFamily: 'var(--font-title)',
-                  fontSize: 18,
-                  fontWeight: 600,
-                  lineHeight: 1.3,
-                  letterSpacing: '-0.01em',
-                  margin: 0,
-                  color: 'var(--v2-text-primary)',
+                  padding: 22,
+                  display: 'flex',
+                  flexDirection: 'column',
                   flex: 1,
                 }}
               >
-                {n.title}
-              </h4>
-              <span
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 11,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  color: 'var(--v2-accent)',
-                  marginTop: 24,
-                }}
-              >
-                Read release →
-              </span>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 10,
+                    letterSpacing: '0.18em',
+                    textTransform: 'uppercase',
+                    color: 'var(--v2-text-muted)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: 14,
+                  }}
+                >
+                  <span>{n.source ?? 'News'}</span>
+                  <strong style={{ color: 'var(--v2-text-secondary)', fontWeight: 500 }}>
+                    {formatDate(n.published_at)}
+                  </strong>
+                </div>
+                <h4
+                  style={{
+                    fontFamily: 'var(--font-title)',
+                    fontSize: 17,
+                    fontWeight: 600,
+                    lineHeight: 1.3,
+                    letterSpacing: '-0.01em',
+                    margin: 0,
+                    color: 'var(--v2-text-primary)',
+                    flex: 1,
+                  }}
+                >
+                  {n.title}
+                </h4>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 11,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: 'var(--v2-accent)',
+                    marginTop: 18,
+                  }}
+                >
+                  Read release →
+                </span>
+              </div>
             </a>
           ))}
         </div>

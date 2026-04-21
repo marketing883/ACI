@@ -186,103 +186,132 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                   flexDirection: 'column',
                   background: '#FFFFFF',
                   borderRadius: 6,
-                  padding: 22,
-                  minHeight: 340,
+                  minHeight: 360,
                   color: '#0A1530',
                   textDecoration: 'none',
+                  overflow: 'hidden',
                   transition: 'transform 300ms var(--v2-ease), box-shadow 300ms var(--v2-ease)',
                 }}
               >
+                {/* Thumbnail: real featured image when published, else a
+                    category-hued fallback so the layout stays intact. */}
                 <div
                   style={{
                     position: 'relative',
-                    height: 120,
+                    width: '100%',
+                    aspectRatio: '16 / 9',
                     background: color.bg,
-                    borderRadius: 4,
-                    marginBottom: 18,
                     overflow: 'hidden',
                   }}
                 >
-                  <div
-                    aria-hidden
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      backgroundImage:
-                        'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
-                      backgroundSize: '20px 20px',
-                    }}
-                  />
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: 12,
-                      left: 12,
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: 9,
-                      letterSpacing: '0.18em',
-                      textTransform: 'uppercase',
-                      color: 'var(--v2-text-inverted)',
-                      background: 'var(--v2-accent)',
-                      padding: '3px 8px',
-                      borderRadius: 2,
-                    }}
-                  >
-                    {p.category ?? 'Post'}
-                  </span>
-                  <span
-                    aria-hidden
-                    style={{
-                      position: 'absolute',
-                      right: 16,
-                      bottom: 8,
-                      fontFamily: 'var(--font-title)',
-                      fontSize: 52,
-                      fontWeight: 700,
-                      color: color.glyphColor,
-                      opacity: 0.85,
-                      letterSpacing: '-0.04em',
-                    }}
-                  >
-                    {color.glyph}
-                  </span>
+                  {p.featured_image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={p.featured_image_url}
+                      alt={p.title}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <>
+                      <div
+                        aria-hidden
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          backgroundImage:
+                            'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
+                          backgroundSize: '20px 20px',
+                        }}
+                      />
+                      <span
+                        aria-hidden
+                        style={{
+                          position: 'absolute',
+                          right: 16,
+                          bottom: 8,
+                          fontFamily: 'var(--font-title)',
+                          fontSize: 64,
+                          fontWeight: 700,
+                          color: color.glyphColor,
+                          opacity: 0.85,
+                          letterSpacing: '-0.04em',
+                        }}
+                      >
+                        {color.glyph}
+                      </span>
+                    </>
+                  )}
+                  {p.category && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        top: 12,
+                        left: 12,
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 9,
+                        letterSpacing: '0.18em',
+                        textTransform: 'uppercase',
+                        color: 'var(--v2-text-inverted)',
+                        background: 'var(--v2-accent)',
+                        padding: '3px 8px',
+                        borderRadius: 2,
+                      }}
+                    >
+                      {p.category}
+                    </span>
+                  )}
                 </div>
                 <div
                   style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: 10,
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
-                    color: '#627089',
-                    marginBottom: 10,
-                  }}
-                >
-                  {p.category ?? 'Article'}
-                  {p.read_time_minutes ? ` · ${p.read_time_minutes} min read` : ''}
-                </div>
-                <h4
-                  style={{
-                    fontFamily: 'var(--font-title)',
-                    fontSize: 17,
-                    fontWeight: 600,
-                    lineHeight: 1.3,
-                    letterSpacing: '-0.01em',
-                    margin: 0,
+                    padding: 22,
+                    display: 'flex',
+                    flexDirection: 'column',
                     flex: 1,
                   }}
                 >
-                  {p.title}
-                </h4>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: 11,
-                    letterSpacing: '0.12em',
-                    color: '#627089',
-                    marginTop: 18,
-                  }}
-                >
-                  {formatDate(p.published_at)}
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 10,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: '#627089',
+                      marginBottom: 10,
+                    }}
+                  >
+                    {p.category ?? 'Article'}
+                    {p.read_time_minutes ? ` · ${p.read_time_minutes} min read` : ''}
+                  </div>
+                  <h4
+                    style={{
+                      fontFamily: 'var(--font-title)',
+                      fontSize: 17,
+                      fontWeight: 600,
+                      lineHeight: 1.3,
+                      letterSpacing: '-0.01em',
+                      margin: 0,
+                      flex: 1,
+                    }}
+                  >
+                    {p.title}
+                  </h4>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 11,
+                      letterSpacing: '0.12em',
+                      color: '#627089',
+                      marginTop: 16,
+                    }}
+                  >
+                    {formatDate(p.published_at)}
+                  </div>
                 </div>
               </Link>
             );
