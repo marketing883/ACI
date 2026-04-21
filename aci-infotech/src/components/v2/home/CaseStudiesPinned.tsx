@@ -116,13 +116,12 @@ export default function CaseStudiesPinned({ caseStudies }: Props) {
   const reduced = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
 
-  // Hydrate from CMS data. If there are fewer than 4 published featured
-  // case studies we pad from the placeholder set so the horizontal scroll
-  // always has 4 panels — less than 4 looks broken (pinned scroll without
-  // enough content to scroll through feels like dead space).
-  const cms = caseStudies.slice(0, 4);
-  const filler = PLACEHOLDERS.slice(0, Math.max(0, 4 - cms.length));
-  const slides = [...cms, ...filler];
+  // Render exactly what the CMS returned. If the admin publishes two
+  // featured case studies, the horizontal scroll shows two. Placeholders
+  // are only used when the CMS is completely empty (dev without data,
+  // misconfigured env, etc.) so the preview still demonstrates the
+  // intended layout.
+  const slides = (caseStudies.length > 0 ? caseStudies : PLACEHOLDERS).slice(0, 4);
 
   const { scrollYProgress } = useScroll({
     target: stageRef,

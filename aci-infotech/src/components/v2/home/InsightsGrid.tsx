@@ -75,7 +75,9 @@ function formatDate(iso: string | null): string {
 }
 
 export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
-  const list = (posts.length >= 2 ? posts : PLACEHOLDERS).slice(0, 4);
+  // Show real published blog posts. Placeholders only used when the
+  // CMS returns nothing at all (dev, misconfigured env).
+  const list = (posts.length > 0 ? posts : PLACEHOLDERS).slice(0, 4);
 
   return (
     <section

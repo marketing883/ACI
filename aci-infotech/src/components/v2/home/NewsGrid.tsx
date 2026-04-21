@@ -55,7 +55,9 @@ function formatDate(iso: string | null): string {
 }
 
 export default function NewsGrid({ items }: { items: HomeNewsItem[] }) {
-  const list = (items.length >= 2 ? items : PLACEHOLDERS).slice(0, 4);
+  // Show real published news items. Placeholders are only used when
+  // the CMS returns nothing at all (e.g. local dev without data access).
+  const list = (items.length > 0 ? items : PLACEHOLDERS).slice(0, 4);
 
   return (
     <section

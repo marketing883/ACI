@@ -7,12 +7,22 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
+/**
+ * Prefers the service-role key (bypasses RLS, works for admin routes
+ * and server components that need to read any row). Falls back to the
+ * anon key so the v2 preview still renders real data on developer
+ * machines that only have the public keys configured. Published +
+ * featured content should be readable by anon via RLS on the
+ * relevant tables.
+ */
 function getClient() {
-  if (!supabaseUrl || !supabaseServiceKey) return null;
-  return createClient(supabaseUrl, supabaseServiceKey, {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!url) return null;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const key = serviceKey || anonKey;
+  if (!key) return null;
+  return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
