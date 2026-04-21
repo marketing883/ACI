@@ -42,7 +42,7 @@ export default function ServicesDial() {
     <section
       ref={sectionRef}
       id="services"
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         background: 'var(--v2-bg)',
         paddingTop: 'var(--v2-section-py)',
@@ -51,7 +51,9 @@ export default function ServicesDial() {
         paddingRight: 'var(--v2-container-px)',
       }}
     >
-      {/* subtle grid background */}
+      {/* subtle grid background. Mask handles its own bounds; avoid
+          putting overflow:hidden on the section because it would break
+          position:sticky on the preview panel below. */}
       <div
         aria-hidden
         style={{
@@ -61,6 +63,7 @@ export default function ServicesDial() {
             'linear-gradient(var(--v2-border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--v2-border-subtle) 1px, transparent 1px)',
           backgroundSize: '80px 80px',
           maskImage: 'radial-gradient(ellipse 80% 60% at 70% 50%, black 0%, transparent 75%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 70% 50%, black 0%, transparent 75%)',
           opacity: 0.4,
           pointerEvents: 'none',
         }}
