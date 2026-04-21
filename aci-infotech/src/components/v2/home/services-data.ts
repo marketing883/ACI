@@ -39,7 +39,7 @@ export const SERVICES: ServiceDefinition[] = [
     emphasis: 'AI',
     titleSuffix: ' & GenAI',
     desc:
-      'Production-grade copilots, agents and document intelligence. RAG-to-retire in 12 weeks, behind your firewall, with an eval harness that catches drift in hours.',
+      'Production copilots, agentic systems, and document intelligence. From first RAG to running in production with evaluation harnesses that catch model drift in hours rather than audits.',
     stats: [
       { value: '12', label: 'Live engagements' },
       { value: '94%', label: 'Eval pass rate' },
@@ -61,7 +61,7 @@ export const SERVICES: ServiceDefinition[] = [
     emphasis: '&',
     titleSuffix: ' Infrastructure',
     desc:
-      'AWS, Azure, GCP, and hybrid. Landing zones, FinOps, cutovers from mainframe and VMware, with a runbook your SRE actually trusts.',
+      'Landing zones, migrations, and FinOps programs across AWS, Azure, and GCP. Cutovers from VMware, Hadoop, and mainframe environments, handed over with a runbook your SRE actually opens.',
     stats: [
       { value: '140+', label: 'Clusters managed' },
       { value: '$18M', label: 'Annual takeout' },
@@ -84,7 +84,7 @@ on-prem ──▶ IaC → GitOps → policy
     emphasis: '&',
     titleSuffix: ' Analytics',
     desc:
-      'Lakehouse in 10 weeks. Streaming + batch on one plane. Governance, lineage, cost, treated as first-class features, not month-six regrets.',
+      'Lakehouse architectures, streaming and batch pipelines on one plane, governance that holds up to audit. Built so the number on the dashboard matches the number in the ledger.',
     stats: [
       { value: '40', label: 'Warehouses live' },
       { value: '2.4M/s', label: 'Events ingested' },
@@ -104,7 +104,7 @@ on-prem ──▶ IaC → GitOps → policy
     titlePrefix: 'Platform ',
     emphasis: 'Engineering',
     desc:
-      'Paved roads, not policy PDFs. Internal developer platforms that cut lead time from weeks to hours, with golden paths your engineers actually want to use.',
+      'Internal developer platforms with golden paths your engineers actually adopt. Lead time from commit to production measured in hours, without the governance theater.',
     stats: [
       { value: '17', label: 'IDPs running' },
       { value: '4x', label: 'Faster shipping' },
@@ -125,7 +125,7 @@ on-prem ──▶ IaC → GitOps → policy
     emphasis: '&',
     titleSuffix: ' Experience',
     desc:
-      'Headless commerce, composable content, edge personalization. For retailers and banks that refuse to lose to a startup on page load or personalization.',
+      'Headless commerce, composable content, and edge personalization for retailers and banks. Built for organizations that expect to win on page-load speed and experience depth, not catalog size.',
     stats: [
       { value: '+18%', label: 'Conversion lift' },
       { value: '1.1s', label: 'LCP p75' },
@@ -147,7 +147,7 @@ user ─┤                        ├──▶ CMS + commerce
     emphasis: '&',
     titleSuffix: ' Trust',
     desc:
-      'Zero-trust architectures, cloud security, threat modeling. Built for SOC2, HIPAA, PCI, and for 3AM when a novel exploit hits the feed.',
+      'Zero-trust architectures, cloud security programs, and compliance readiness for SOC 2, HIPAA, and PCI. Designed for the 3 AM when a novel exploit lands in the feed and the CISO needs a straight answer.',
     stats: [
       { value: '0', label: 'Breaches on our watch' },
       { value: '<4h', label: 'MTTR' },
@@ -170,7 +170,7 @@ user ─┤                        ├──▶ CMS + commerce
     titlePrefix: 'Managed ',
     emphasis: 'Services',
     desc:
-      'SLOs, chaos drills, on-call rotations. A pager that rings before yours does, across cloud, data and apps, on three continents.',
+      'SLO-driven operations with documented on-call rotations and quarterly chaos drills. Follow-the-sun coverage across cloud, data, and applications, on a pager that rings before yours does.',
     stats: [
       { value: '99.5%', label: 'Rolling uptime' },
       { value: '8m', label: 'MTTA' },
@@ -193,7 +193,7 @@ user ─┤                        ├──▶ CMS + commerce
     emphasis: '&',
     titleSuffix: ' Strategy',
     desc:
-      'Tech strategy grounded in delivery. No 80-slide deck and a handshake, our advisors show up with the engineers who will actually ship it.',
+      'Technology strategy grounded in delivery. Our advisors arrive with the engineers who will build what the strategy recommends, not with a deck and a calendar invite for six weeks out.',
     stats: [
       { value: '48h', label: 'To a written plan' },
       { value: '86', label: 'CTOs advised' },

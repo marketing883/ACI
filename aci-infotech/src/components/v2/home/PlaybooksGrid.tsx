@@ -66,7 +66,7 @@ export default function PlaybooksGrid() {
                 margin: 0,
               }}
             >
-              Repeatable moves that{' '}
+              Engagement models we have{' '}
               <em
                 style={{
                   fontStyle: 'italic',
@@ -75,7 +75,7 @@ export default function PlaybooksGrid() {
                   display: 'inline-block',
                 }}
               >
-                <span style={{ position: 'relative', zIndex: 1 }}>move the number.</span>
+                <span style={{ position: 'relative', zIndex: 1 }}>run to the end.</span>
                 <span
                   aria-hidden
                   style={{
@@ -100,8 +100,9 @@ export default function PlaybooksGrid() {
               margin: 0,
             }}
           >
-            Opinionated engagements. Scoped in weeks, not quarters. Each one ships
-            with a fixed outcome and a named senior team on the hook.
+            Fixed scope, fixed outcome, named senior engineer on the hook from
+            kickoff. Each playbook has run enough times that the surprises are
+            priced in before the first sprint.
           </p>
         </div>
 

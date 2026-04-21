@@ -75,8 +75,9 @@ export default function CTABand() {
             margin: '0 auto 40px',
           }}
         >
-          Tell us where you are, where you are going, and where it hurts. A senior engineer
-          comes back in 48 hours with a plan worth arguing about.
+          Tell us where you are, where you need to be, and where the system
+          currently breaks. A senior engineer comes back inside 48 hours with
+          a plan worth arguing about.
         </p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link

@@ -247,9 +247,9 @@ function CaseHead() {
             margin: 0,
           }}
         >
-          Receipts, not{' '}
+          Receipts,{' '}
           <em style={{ fontStyle: 'italic', fontWeight: 500, position: 'relative', display: 'inline-block' }}>
-            <span style={{ position: 'relative', zIndex: 1 }}>references.</span>
+            <span style={{ position: 'relative', zIndex: 1 }}>not references.</span>
             <span
               aria-hidden
               style={{
@@ -266,8 +266,8 @@ function CaseHead() {
         </h2>
       </div>
       <p style={{ color: 'var(--v2-text-secondary)', fontSize: 15, lineHeight: 1.6, maxWidth: 420, margin: 0 }}>
-        Four production builds. The outcome we locked in, not the deliverables
-        we shipped.
+        Four production engagements. The outcome we signed up for, and the
+        metric that tells you we hit it.
       </p>
     </div>
   );

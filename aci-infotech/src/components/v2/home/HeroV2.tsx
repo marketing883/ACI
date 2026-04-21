@@ -183,7 +183,7 @@ export default function HeroV2() {
         {/* Headline */}
         <h1
           className="v2-hero-headline"
-          aria-label="Engineering the signal in the noise."
+          aria-label="We engineer the systems enterprises run on."
           style={{
             fontFamily: 'var(--font-title)',
             fontSize: 'clamp(44px, 6.5vw, 104px)',
@@ -201,7 +201,7 @@ export default function HeroV2() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             aria-hidden
           >
-            Engineering
+            We engineer
           </motion.span>
           <motion.span
             style={{ display: 'block' }}
@@ -219,7 +219,7 @@ export default function HeroV2() {
                 display: 'inline-block',
               }}
             >
-              <span style={{ position: 'relative', zIndex: 1 }}>signal</span>
+              <span style={{ position: 'relative', zIndex: 1 }}>systems</span>
               <span
                 aria-hidden
                 style={{
@@ -241,7 +241,7 @@ export default function HeroV2() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
             aria-hidden
           >
-            in the noise.
+            enterprises run on.
           </motion.span>
         </h1>
 
@@ -260,18 +260,19 @@ export default function HeroV2() {
         >
           <p
             style={{
-              maxWidth: 480,
+              maxWidth: 500,
               color: 'var(--v2-text-secondary)',
               fontSize: 17,
               lineHeight: 1.55,
               margin: 0,
             }}
           >
-            We build, ship and run the systems enterprises{' '}
+            Data platforms, cloud architectures, AI systems, and the managed
+            operations that keep all three running at 3 AM.{' '}
             <strong style={{ color: 'var(--v2-text-primary)', fontWeight: 500 }}>
-              cannot afford to get wrong
-            </strong>
-            . AI, cloud, data, and the platform work that keeps them running at 3 AM.
+              280+ engagements
+            </strong>{' '}
+            across financial services, healthcare, retail, and manufacturing.
           </p>
           <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
             <Link

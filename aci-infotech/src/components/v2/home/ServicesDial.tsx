@@ -85,9 +85,9 @@ export default function ServicesDial() {
                 maxWidth: 900,
               }}
             >
-              What we{' '}
+              Eight practices.{' '}
               <em style={{ fontStyle: 'italic', fontWeight: 500, position: 'relative', display: 'inline-block' }}>
-                <span style={{ position: 'relative', zIndex: 1 }}>actually do.</span>
+                <span style={{ position: 'relative', zIndex: 1 }}>One delivery team.</span>
                 <span
                   aria-hidden
                   style={{
@@ -112,8 +112,9 @@ export default function ServicesDial() {
               margin: 0,
             }}
           >
-            Eight capabilities, one engineering floor. Each one ships production
-            systems, not assessments that stall at the demo.
+            Eight engineering practices under one roof. Each one owns delivery
+            end to end, from architecture to the runbook your SRE opens on a bad
+            Tuesday.
           </p>
         </div>
 

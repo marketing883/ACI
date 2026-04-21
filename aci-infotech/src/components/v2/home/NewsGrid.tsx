@@ -70,7 +70,7 @@ export default function NewsGrid({ items }: { items: HomeNewsItem[] }) {
       }}
     >
       <div style={{ maxWidth: 'var(--v2-container-max)', margin: '0 auto' }}>
-        <SectionHead headline="In the" emphasized="press." />
+        <SectionHead headline="Press and" emphasized="recognition." />
 
         <div
           style={{

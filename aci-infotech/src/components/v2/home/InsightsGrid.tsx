@@ -111,7 +111,7 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                 margin: 0,
               }}
             >
-              Notes from the{' '}
+              Field notes from the{' '}
               <em
                 style={{
                   fontStyle: 'italic',
@@ -135,6 +135,20 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                 />
               </em>
             </h2>
+            <p
+              style={{
+                color: '#627089',
+                fontSize: 15,
+                lineHeight: 1.6,
+                marginTop: 16,
+                marginBottom: 0,
+                maxWidth: 520,
+              }}
+            >
+              Architecture reviews, post-mortems, and field notes from the
+              engineers who actually ship our systems. No thought-leadership
+              in the LinkedIn sense of the phrase.
+            </p>
           </div>
           <Link
             href="/blogs"
