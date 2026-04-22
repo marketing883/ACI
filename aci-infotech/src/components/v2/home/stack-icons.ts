@@ -87,9 +87,17 @@ export const STACK_LOCAL_LOGOS: Record<string, LocalLogoEntry> = {
   // Karpenter does (Cloud practice), so it stays as a text chip.
   'AWS GuardDuty': { src: '/images/Solution-Partners/aws.png', invert: true },
   Bedrock: { src: '/images/Solution-Partners/aws.png', invert: true },
-  Azure: { src: '/images/Solution-Partners/azure.png', invert: true },
-  'Azure OpenAI': { src: '/images/Solution-Partners/azure.png', invert: true },
-  'Microsoft Sentinel': { src: '/images/Solution-Partners/azure.png', invert: true },
+  // Azure ships with a wide "Microsoft Azure" wordmark PNG where the
+  // actual A-peak icon takes up only a small fraction of the image.
+  // When the chip constrains by height, the whole wordmark shrinks
+  // and the brand mark becomes illegible. We route to a purpose-drawn
+  // icon-only SVG (two overlapping triangles forming the A-peak) so
+  // the mark fills the chip the way other single-letter brand icons
+  // do. Same asset serves Azure OpenAI and Microsoft Sentinel since
+  // both sit under the Azure umbrella.
+  Azure: { src: '/brand/azure-mono.svg', mono: true },
+  'Azure OpenAI': { src: '/brand/azure-mono.svg', mono: true },
+  'Microsoft Sentinel': { src: '/brand/azure-mono.svg', mono: true },
   SAP: { src: '/images/Solution-Partners/sap.png', invert: true },
   'SAP S4/Hana': { src: '/images/Solution-Partners/sap.png', invert: true },
   'SAP S/4HANA': { src: '/images/Solution-Partners/sap.png', invert: true },

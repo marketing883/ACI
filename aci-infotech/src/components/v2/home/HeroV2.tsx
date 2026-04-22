@@ -19,6 +19,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Play } from 'lucide-react';
+import StackChip from './StackChip';
 
 export default function HeroV2() {
   const reduced = useReducedMotion();
@@ -366,45 +367,82 @@ export default function HeroV2() {
         </motion.div>
       </div>
 
-      {/* ===== HERO FOOT ===== */}
+      {/* ===== HERO FOOT =====
+          Platform partner strip: small mono eyebrow on the left, the
+          chips the firm is certified on filling the rest of the row,
+          subtle scroll cue pinned to the right. Compliance badges
+          (SOC 2, ISO 27001, HIPAA) and the year-anniversary numbers
+          live in the certifications marquee further down the page,
+          so this strip focuses purely on ecosystem depth — the
+          fastest trust signal for enterprise buyers. */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.9 }}
+        className="v2-hero-foot"
         style={{
           position: 'relative',
           zIndex: 4,
           marginTop: 60,
-          paddingTop: 16,
+          paddingTop: 18,
           borderTop: '1px dashed var(--v2-border)',
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
-          gap: 16,
+          gap: 20,
           flexWrap: 'wrap',
-          fontFamily: 'var(--font-mono)',
-          fontSize: 11,
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          color: 'var(--v2-text-muted)',
         }}
       >
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          {['SOC 2', 'ISO 27001', 'HIPAA', 'GDPR'].map((p) => (
-            <span
-              key={p}
-              style={{
-                padding: '8px 12px',
-                border: '1px solid var(--v2-border-strong)',
-                borderRadius: 2,
-              }}
-            >
-              {p}
-            </span>
+        <span
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 10,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            color: 'var(--v2-text-muted)',
+            flexShrink: 0,
+          }}
+        >
+          / Certified partner across
+        </span>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 8,
+            flex: 1,
+            minWidth: 0,
+          }}
+        >
+          {[
+            'Databricks',
+            'Snowflake',
+            'AWS',
+            'Azure',
+            'Google Cloud',
+            'SAP',
+            'ServiceNow',
+            'Microsoft Dynamics 365',
+            'Salesforce',
+          ].map((label) => (
+            <StackChip key={label} label={label} compact />
           ))}
         </div>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
+            fontFamily: 'var(--font-mono)',
+            fontSize: 11,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'var(--v2-text-muted)',
+            marginLeft: 'auto',
+            flexShrink: 0,
+          }}
+        >
           <span
+            aria-hidden
             style={{
               width: 6,
               height: 6,
@@ -414,7 +452,7 @@ export default function HeroV2() {
               display: 'inline-block',
             }}
           />
-          ~1,600 engineers online · scroll ↓
+          Scroll ↓
         </span>
       </motion.div>
     </header>
