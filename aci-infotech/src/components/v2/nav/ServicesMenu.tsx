@@ -60,7 +60,7 @@ export default function ServicesMenu() {
             margin: 0,
           }}
         >
-          Ten practices.
+          Our services.
           <br />
           <em
             style={{
@@ -69,7 +69,7 @@ export default function ServicesMenu() {
               color: 'var(--v2-accent)',
             }}
           >
-            One engineering bar.
+            Across the enterprise stack.
           </em>
         </h3>
         <p
@@ -81,9 +81,8 @@ export default function ServicesMenu() {
             marginBottom: 24,
           }}
         >
-          Every practice owns delivery end to end. Architecture, build,
-          deployment, and operations, all held to the same production
-          standard.
+          Delivered end to end, from architecture through operations. Measured
+          on the metric you came in with.
         </p>
         <Link
           href="/services"

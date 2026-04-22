@@ -86,7 +86,7 @@ export default function ServicesDial() {
                 maxWidth: 900,
               }}
             >
-              Ten practices.
+              Our services.
               <br />
               <em
                 style={{
@@ -95,7 +95,7 @@ export default function ServicesDial() {
                   color: 'var(--v2-accent)',
                 }}
               >
-                One engineering bar.
+                Across the enterprise stack.
               </em>
             </h2>
           </div>
@@ -108,9 +108,8 @@ export default function ServicesDial() {
               margin: 0,
             }}
           >
-            Each practice owns delivery end to end. Architecture, build,
-            deployment, and operations, all held to the same production
-            standard.
+            Delivered end to end, from architecture through operations. Measured
+            on the metric you came in with.
           </p>
         </div>
 
@@ -259,7 +258,7 @@ export default function ServicesDial() {
             className="svc-preview-sticky"
             style={{
               position: 'sticky',
-              top: 96,
+              top: 80,
               borderRadius: 6,
               border: '1px solid var(--v2-border-strong)',
               background: 'var(--v2-surface-2)',
@@ -267,7 +266,7 @@ export default function ServicesDial() {
                 'linear-gradient(var(--v2-border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--v2-border-subtle) 1px, transparent 1px)',
               backgroundSize: '40px 40px',
               overflow: 'hidden',
-              maxHeight: 'calc(100vh - 128px)',
+              maxHeight: 'calc(100vh - 96px)',
               display: 'flex',
               flexDirection: 'column',
             }}
@@ -287,7 +286,7 @@ export default function ServicesDial() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                padding: '18px 22px',
+                padding: '14px 20px',
                 borderBottom: '1px solid var(--v2-border-subtle)',
                 fontFamily: 'var(--font-mono)',
                 fontSize: 11,
@@ -338,7 +337,7 @@ export default function ServicesDial() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                 style={{
-                  padding: 26,
+                  padding: '20px 22px 22px',
                   position: 'relative',
                   overflowY: 'auto',
                   flex: 1,
@@ -361,9 +360,9 @@ export default function ServicesDial() {
                   style={{
                     color: 'var(--v2-text-secondary)',
                     fontSize: 14,
-                    lineHeight: 1.6,
-                    marginTop: 12,
-                    marginBottom: 20,
+                    lineHeight: 1.55,
+                    marginTop: 10,
+                    marginBottom: 16,
                   }}
                 >
                   {active.desc}
@@ -374,8 +373,8 @@ export default function ServicesDial() {
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(3, 1fr)',
-                    gap: 12,
-                    marginBottom: 20,
+                    gap: 10,
+                    marginBottom: 16,
                   }}
                 >
                   {active.stats.map((s) => (
@@ -422,15 +421,15 @@ export default function ServicesDial() {
                   style={{
                     fontFamily: 'var(--font-mono)',
                     fontSize: 11,
-                    lineHeight: 1.55,
+                    lineHeight: 1.5,
                     color: 'var(--v2-text-secondary)',
                     background: 'var(--v2-bg)',
                     border: '1px solid var(--v2-border-subtle)',
-                    padding: 16,
+                    padding: 14,
                     borderRadius: 4,
                     overflowX: 'auto',
                     margin: 0,
-                    marginBottom: 20,
+                    marginBottom: 16,
                   }}
                 >
                   {active.diagram}
