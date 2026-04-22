@@ -79,6 +79,57 @@ export default function HeroV2() {
         padding: '44px',
       }}
     >
+      {/* ===== AMBIENT VIDEO LAYER =====
+          Stylized dark-premium treatment: heavy grayscale + dim +
+          slight blur so the clip reads as atmospheric motion rather
+          than a featured video. Sits at the bottom of the stack
+          with a navy overlay on top; the parallax grid, node mesh,
+          and glow layers then render above. Desktop only — mobile
+          skips the video (static parallax is enough) to save the
+          1.2MB asset on metered connections. */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden
+        className="v2-hero-video"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: 0,
+          opacity: 0.45,
+          filter: 'grayscale(0.55) brightness(0.65) contrast(1.05) blur(0.5px)',
+          pointerEvents: 'none',
+        }}
+      >
+        <source src="/hero-bg-compressed.webm" type="video/webm" />
+        <source src="/hero-bg-compressed.mp4" type="video/mp4" />
+      </video>
+      {/* Navy overlay: keeps text readable over the video while
+          letting just enough motion through to feel alive. */}
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          background:
+            'linear-gradient(135deg, rgba(5, 11, 31, 0.55) 0%, rgba(5, 11, 31, 0.82) 60%, rgba(5, 11, 31, 0.92) 100%)',
+        }}
+      />
+
+      <style>{`
+        @media (max-width: 767px) {
+          .v2-hero-video { display: none; }
+        }
+      `}</style>
+
       {/* ===== PARALLAX LAYERS ===== */}
       {/* Layer 1: grid */}
       <div
@@ -91,12 +142,13 @@ export default function HeroV2() {
           backgroundSize: '80px 80px',
           maskImage: 'radial-gradient(ellipse 70% 60% at 30% 50%, black 0%, transparent 80%)',
           pointerEvents: 'none',
+          zIndex: 2,
           ...p(0.5),
         }}
       />
 
       {/* Layer 2: node mesh */}
-      <div aria-hidden style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none', ...p(1) }}>
+      <div aria-hidden style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none', zIndex: 2, ...p(1) }}>
         <svg
           viewBox="0 0 1600 900"
           preserveAspectRatio="xMidYMid slice"
@@ -140,12 +192,13 @@ export default function HeroV2() {
           background:
             'radial-gradient(600px 400px at 25% 45%, rgba(198, 255, 61, 0.14), transparent 60%)',
           pointerEvents: 'none',
+          zIndex: 2,
           ...p(0.75),
         }}
       />
 
       {/* Layer 4: dust particles */}
-      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', ...p(2) }}>
+      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, ...p(2) }}>
         {Array.from({ length: 40 }).map((_, i) => {
           const top = ((i * 37) % 100).toString() + '%';
           const left = ((i * 53) % 100).toString() + '%';
