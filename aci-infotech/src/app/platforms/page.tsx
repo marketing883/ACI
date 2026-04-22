@@ -87,6 +87,18 @@ const platforms = [
     href: '/platforms/azure',
   },
   {
+    id: 'gcp',
+    name: 'Google Cloud',
+    logo: '',
+    tagline: 'Data, AI, and Container-Native Cloud',
+    description: 'Google Cloud implementations centered on BigQuery, Vertex AI, and GKE. For enterprises where analytics breadth and container-native operations are the primary cloud workloads.',
+    partnership: 'Partner',
+    partnershipLevel: 'silver',
+    capabilities: ['BigQuery & Dataflow', 'Vertex AI & Gemini', 'Google Kubernetes Engine', 'Anthos Hybrid', 'FinOps & Cost Governance'],
+    caseStudy: { client: 'Global CPG & F&B Leader', result: 'Self-service analytics for brand managers' },
+    href: '/platforms/gcp',
+  },
+  {
     id: 'sap',
     name: 'SAP',
     logo: '/images/Solution-Partners/sap.png',
@@ -165,7 +177,7 @@ export default function PlatformsPage() {
               <span className="text-[var(--aci-primary-light)]"> Enterprises Trust</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8">
-              We're not just consultants, we're certified partners with deep expertise in the platforms
+              We&apos;re not just consultants, we&apos;re certified partners with deep expertise in the platforms
               that power Fortune 500 operations. Our teams hold advanced certifications and have
               delivered hundreds of enterprise implementations.
             </p>

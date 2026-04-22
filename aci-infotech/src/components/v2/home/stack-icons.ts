@@ -32,6 +32,7 @@ export const STACK_CDN_SLUGS: Record<string, string> = {
   Terraform: 'terraform',
   ArgoCD: 'argo',
   GCP: 'googlecloud',
+  'Google Cloud': 'googlecloud',
   Tekton: 'tekton',
   Backstage: 'backstage',
 
@@ -69,16 +70,23 @@ export type LocalLogoEntry = {
   /** True when the native logo is dark-on-white and needs inversion
    *  to read on the dark card surface. */
   invert?: boolean;
+  /** True when the asset is already rendered in the correct tint
+   *  (e.g. a purpose-drawn monochrome SVG), so StackChip should
+   *  skip both SOFTEN_FILTER and INVERT_FILTER. */
+  mono?: boolean;
 };
 
 export const STACK_LOCAL_LOGOS: Record<string, LocalLogoEntry> = {
-  AWS: { src: '/images/Solution-Partners/aws.png' },
+  // The AWS "Smile" wordmark ships pure black on transparent, so on
+  // the dark chip surface it reads as black-on-dark. Invert pulls it
+  // to light-on-transparent so the logo is actually visible.
+  AWS: { src: '/images/Solution-Partners/aws.png', invert: true },
   // AWS sub-products mapped to the AWS logo only when they appear
   // in a stack that does NOT also list AWS — prevents duplicate
   // chips. GuardDuty and Bedrock don't share a panel with AWS.
   // Karpenter does (Cloud practice), so it stays as a text chip.
-  'AWS GuardDuty': { src: '/images/Solution-Partners/aws.png' },
-  Bedrock: { src: '/images/Solution-Partners/aws.png' },
+  'AWS GuardDuty': { src: '/images/Solution-Partners/aws.png', invert: true },
+  Bedrock: { src: '/images/Solution-Partners/aws.png', invert: true },
   Azure: { src: '/images/Solution-Partners/azure.png', invert: true },
   'Azure OpenAI': { src: '/images/Solution-Partners/azure.png', invert: true },
   'Microsoft Sentinel': { src: '/images/Solution-Partners/azure.png', invert: true },
@@ -92,6 +100,18 @@ export const STACK_LOCAL_LOGOS: Record<string, LocalLogoEntry> = {
   Salesforce: { src: '/images/Solution-Partners/salesforce.png', invert: true },
   Dynatrace: { src: '/images/Solution-Partners/dynatrace.png' },
   Braze: { src: '/images/Solution-Partners/braze.png', invert: true },
+
+  // Microsoft renders from a purpose-drawn four-square SVG rather than
+  // from the dashboard-icons full-color version. The full-color logo
+  // stood out against the otherwise-monochrome row; flattening it
+  // with a brightness/invert chain fused the four squares into a
+  // single white block because the squares touch in that source file.
+  // The SVG here keeps the 1-unit gap between squares so the iconic
+  // window pattern reads even at chip size.
+  Microsoft: { src: '/brand/microsoft-mono.svg', mono: true },
+  'Microsoft Dynamics': { src: '/brand/microsoft-mono.svg', mono: true },
+  'Microsoft Dynamics 365': { src: '/brand/microsoft-mono.svg', mono: true },
+  'Dynamics 365': { src: '/brand/microsoft-mono.svg', mono: true },
 };
 
 /**
@@ -116,12 +136,4 @@ export const STACK_DASHBOARD_SLUGS: Record<string, string> = {
   Cloudflare: 'cloudflare',
   Netlify: 'netlify',
   Atlassian: 'atlassian',
-
-  // Microsoft products that don't have dedicated brand icons — fall
-  // back to the generic Microsoft logo so at least the brand parent
-  // is recognizable.
-  Microsoft: 'microsoft',
-  'Microsoft Dynamics': 'microsoft',
-  'Microsoft Dynamics 365': 'microsoft',
-  'Dynamics 365': 'microsoft',
 };

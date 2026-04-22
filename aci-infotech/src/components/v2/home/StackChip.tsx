@@ -84,6 +84,11 @@ export default function StackChip({ label, compact = false }: StackChipProps) {
   }
 
   if (localEntry) {
+    const localFilter = localEntry.mono
+      ? 'none'
+      : localEntry.invert
+        ? INVERT_FILTER
+        : SOFTEN_FILTER;
     return (
       <span title={label} style={shellStyle}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -94,7 +99,7 @@ export default function StackChip({ label, compact = false }: StackChipProps) {
             height: rasterHeight,
             width: 'auto',
             display: 'block',
-            filter: localEntry.invert ? INVERT_FILTER : SOFTEN_FILTER,
+            filter: localFilter,
             opacity: 0.95,
           }}
           loading="lazy"

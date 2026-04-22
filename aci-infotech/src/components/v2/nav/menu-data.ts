@@ -176,6 +176,11 @@ export const PLATFORM_CATEGORIES: PlatformCategory[] = [
         href: '/platforms/azure',
         capability: 'Landing zones, OpenAI, AI',
       },
+      {
+        label: 'Google Cloud',
+        href: '/platforms/gcp',
+        capability: 'BigQuery, Vertex AI, GKE',
+      },
     ],
   },
   {
