@@ -85,10 +85,13 @@ export const STACK_LOCAL_LOGOS: Record<string, LocalLogoEntry> = {
   SAP: { src: '/images/Solution-Partners/sap.png', invert: true },
   'SAP S4/Hana': { src: '/images/Solution-Partners/sap.png', invert: true },
   'SAP S/4HANA': { src: '/images/Solution-Partners/sap.png', invert: true },
-  ServiceNow: { src: '/images/Solution-Partners/servicenow.png' },
+  // ServiceNow and Braze ship as dark-on-white wordmarks, so they need
+  // inversion to stay legible against the dark card surface — same
+  // treatment as SAP / Azure / Salesforce above.
+  ServiceNow: { src: '/images/Solution-Partners/servicenow.png', invert: true },
   Salesforce: { src: '/images/Solution-Partners/salesforce.png', invert: true },
   Dynatrace: { src: '/images/Solution-Partners/dynatrace.png' },
-  Braze: { src: '/images/Solution-Partners/braze.png' },
+  Braze: { src: '/images/Solution-Partners/braze.png', invert: true },
 };
 
 /**
