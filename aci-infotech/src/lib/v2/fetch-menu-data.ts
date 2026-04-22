@@ -1,9 +1,10 @@
 /**
  * Server-side fetchers that power the Resources and Company mega menus.
  *
- * Pattern mirrors fetch-home-data.ts: prefer service role key, fall
- * back to anon. Every function fails safe — returns null on any error
- * so the menu can render with a static fallback rather than crash.
+ * Configuration errors fail loud: `getClient()` throws when Supabase
+ * URL or keys are missing, matching the pattern in fetch-home-data.ts.
+ * Runtime errors (network / query failures) are still caught per-call
+ * and return null so a flaky backend doesn't break the menu.
  *
  * Case studies and blogs already have fetchers in fetch-home-data.ts;
  * this file adds the missing whitepaper fetcher. Playbooks are not a
@@ -14,11 +15,20 @@ import { createClient } from '@supabase/supabase-js';
 
 function getClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!url) return null;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url) {
+    throw new Error(
+      '[fetch-menu-data] NEXT_PUBLIC_SUPABASE_URL is missing. Set it in the env file this build is using (.env for prod, .env.staging for staging) and rebuild.',
+    );
+  }
   const key = serviceKey || anonKey;
-  if (!key) return null;
+  if (!key) {
+    throw new Error(
+      '[fetch-menu-data] No Supabase key available. Set SUPABASE_SERVICE_ROLE_KEY (preferred) or NEXT_PUBLIC_SUPABASE_ANON_KEY in the env file this build is using and rebuild.',
+    );
+  }
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
@@ -33,7 +43,6 @@ export interface MenuWhitepaper {
 
 export async function fetchFeaturedWhitepaper(): Promise<MenuWhitepaper | null> {
   const supabase = getClient();
-  if (!supabase) return null;
   try {
     const { data, error } = await supabase
       .from('whitepapers')

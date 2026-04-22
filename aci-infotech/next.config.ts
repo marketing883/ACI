@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const nextConfig: NextConfig = {
+  // Pin the file-tracing root to this Next.js app directory. On the
+  // VPS the repo is checked out as `/var/www/<env>/aci-infotech/`, so
+  // without this setting Next could walk up to the wrapper directory
+  // (or even further) looking for a lockfile and confuse the trace
+  // output — especially when prod and staging sit under the same
+  // parent. Pin it explicitly so every build traces from the exact
+  // app root.
+  outputFileTracingRoot: path.join(__dirname),
+
   // Configure sharp for server-side image processing
   serverExternalPackages: ['sharp'],
 

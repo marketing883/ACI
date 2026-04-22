@@ -36,9 +36,17 @@ export default function ConditionalLayout({
   // /preview/v2* routes; /preview/home and all other existing routes
   // keep their existing layout behavior.
   const isV2Preview = pathname?.startsWith('/preview/v2');
+  // Staging builds set NEXT_PUBLIC_USE_V2_HOME=true, which flips `/`
+  // to the v2 homepage. That page renders its own NavV2 / FooterV2,
+  // so the v1 chrome must be suppressed here too. The env var is
+  // inlined at build time — on production builds this expression
+  // folds to `false` and the branch is pruned.
+  const isV2Root =
+    pathname === '/' && process.env.NEXT_PUBLIC_USE_V2_HOME === 'true';
 
-  // Admin routes, landing pages, and v2 previews have their own layouts
-  if (isAdminRoute || isLandingPage || isV2Preview) {
+  // Admin routes, landing pages, v2 previews, and the staging v2
+  // root all bypass the v1 Navigation / Footer / chat widgets.
+  if (isAdminRoute || isLandingPage || isV2Preview || isV2Root) {
     return <>{children}</>;
   }
 

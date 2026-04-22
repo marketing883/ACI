@@ -1,132 +1,32 @@
-// ISR: Revalidate every 60 seconds for fast cached responses
-// Blog/case study sections use unstable_noStore() internally for fresh data
+/**
+ * Root route — build-time switch between v1 and v2 homepage.
+ *
+ *   - When `NEXT_PUBLIC_USE_V2_HOME=true` at build time (staging), `/`
+ *     renders the v2 homepage (dark-premium, editorial layout).
+ *   - When unset (production), `/` renders the v1 homepage exactly as
+ *     it has always rendered.
+ *
+ * `NEXT_PUBLIC_*` env vars are inlined at build time, so the constant
+ * below collapses to a literal `true` or `false` before the Next.js
+ * bundler runs — the inactive branch is pruned out of the bundle and
+ * there is no runtime switch. This guarantees deterministic output
+ * per environment and no shared bundle state between prod and
+ * staging builds.
+ *
+ * Both builds also expose `/v1` (always v1) and `/preview/v2-home`
+ * (always v2) so the other version remains reachable for comparison.
+ */
+
 export const revalidate = 60;
 
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import Button from '@/components/ui/Button';
-import {
-  HeroSection,
-  DynamicCaseStudiesSection,
-  DynamicBlogSection,
-  DynamicNewsSection,
-} from '@/components/sections';
+import V2HomeContent from '@/components/v2/home/V2HomeContent';
+import V1HomePage from './v1/page';
 
-// Lazy-load below-fold client sections to reduce initial JS bundle
-const PlaybookVaultSection = dynamic(() => import('@/components/sections/PlaybookVaultSection'));
-const WhatWeBuildSection = dynamic(() => import('@/components/sections/WhatWeBuildSection'));
-const PartnersSection = dynamic(() => import('@/components/sections/PartnersSection'));
-const ArqAISection = dynamic(() => import('@/components/sections/ArqAISection'));
+const USE_V2_HOME = process.env.NEXT_PUBLIC_USE_V2_HOME === 'true';
 
-const partners = [
-  { name: 'Databricks', logo_url: '/images/Solution-Partners/databricks.png' },
-  { name: 'Dynatrace', logo_url: '/images/Solution-Partners/dynatrace.png' },
-  { name: 'Salesforce', logo_url: '/images/Solution-Partners/salesforce.png' },
-  { name: 'AWS', logo_url: '/images/Solution-Partners/aws.png' },
-  { name: 'Microsoft Azure', logo_url: '/images/Solution-Partners/azure.png' },
-  { name: 'SAP', logo_url: '/images/Solution-Partners/sap.png' },
-  { name: 'ServiceNow', logo_url: '/images/Solution-Partners/servicenow.png' },
-  { name: 'Braze', logo_url: '/images/Solution-Partners/braze.png' },
-];
-
-const badges = [
-  { name: 'Great Place to Work', description: 'Certified 2024-25', image_url: '/images/certifications-awards/best-place-to-work.webp' },
-  { name: 'ISO 27001:2022', description: 'Information Security Certified', image_url: '/images/certifications-awards/iso-27001.webp' },
-  { name: 'CMMi Level 3', description: 'Process Maturity Certified', image_url: '/images/certifications-awards/cmmi.webp' },
-  { name: '5 Best Data Analytics Companies', description: 'To Watch in 2025', image_url: '/images/certifications-awards/best-data-analytics-company.webp' },
-];
-
-
-export default function HomePage() {
-  return (
-    <>
-      {/* Hero Section with Video Background */}
-      <HeroSection />
-
-      {/* Playbook Vault Section */}
-      <PlaybookVaultSection />
-
-      {/* What We Build - System Architecture Diagram */}
-      <WhatWeBuildSection />
-
-      {/* Case Studies Section - Dynamic from CMS */}
-      <DynamicCaseStudiesSection
-        headline="Here's What We Built. Here's What It Delivered."
-        subheadline="Real projects. Real Fortune 500 clients. Real outcomes."
-      />
-
-      {/* Partners Section */}
-      <PartnersSection partners={partners} />
-
-      {/* News Section - Dynamic from CMS */}
-      <DynamicNewsSection
-        headline="In The News"
-        subheadline="Recent recognition and partnerships"
-      />
-
-      {/* ArqAI Platform Section */}
-      <ArqAISection />
-
-      {/* Awards Section - Deactivated for now, may be used later
-      <AwardsSection
-        headline="Trusted & Certified"
-        subheadline="Our work, culture, and capabilities have been validated by global benchmarks"
-        badges={badges}
-      />
-      */}
-
-      {/* Blog Preview Section - Dynamic from Database */}
-      <DynamicBlogSection
-        headline="Thoughts and Insights"
-        subheadline="Technical depth from engineers who've been there"
-        limit={4}
-      />
-
-      {/* Final CTA Section */}
-      <section className="relative py-28 overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/aci-cta-home-bg.jpg"
-            alt=""
-            fill
-            quality={75}
-            loading="lazy"
-            className="object-cover"
-          />
-          {/* Dark Overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/70 via-[#0A1628]/80 to-[#0A1628]/70" />
-        </div>
-
-        {/* Content */}
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 font-[var(--font-title)] drop-shadow-lg">
-            Talk to People Who&apos;ve Actually Deployed These Systems.
-          </h2>
-          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            No sales teams. No junior consultants. Just senior practitioners who&apos;ve architected and deployed the infrastructure you&apos;re considering.
-          </p>
-
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-6 sm:gap-10 mb-14">
-            <div className="flex items-center gap-3 text-white">
-              <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
-              <span className="text-base md:text-lg drop-shadow-md">30-minute technical conversations with architects</span>
-            </div>
-            <div className="flex items-center gap-3 text-white">
-              <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
-              <span className="text-base md:text-lg drop-shadow-md">Architecture diagrams from live deployments</span>
-            </div>
-            <div className="flex items-center gap-3 text-white">
-              <span className="w-2.5 h-2.5 bg-[#C4FF61] rounded-full flex-shrink-0 shadow-lg shadow-[#C4FF61]/30" />
-              <span className="text-base md:text-lg drop-shadow-md">Honest answers about feasibility, timeline, and risk</span>
-            </div>
-          </div>
-
-          <Button href="/contact" variant="lime" size="lg">
-            Schedule a Discussion
-          </Button>
-        </div>
-      </section>
-    </>
-  );
+export default async function HomePage() {
+  if (USE_V2_HOME) {
+    return <V2HomeContent />;
+  }
+  return <V1HomePage />;
 }
