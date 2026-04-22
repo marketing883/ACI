@@ -86,7 +86,7 @@ export default function ServicesDial() {
                 maxWidth: 900,
               }}
             >
-              Eight practices.
+              Ten practices.
               <br />
               <em
                 style={{
@@ -95,7 +95,7 @@ export default function ServicesDial() {
                   color: 'var(--v2-accent)',
                 }}
               >
-                One delivery team.
+                One engineering bar.
               </em>
             </h2>
           </div>
@@ -109,7 +109,8 @@ export default function ServicesDial() {
             }}
           >
             Each practice owns delivery end to end. Architecture, build,
-            deployment, and operations, handled by the same team.
+            deployment, and operations, all held to the same production
+            standard.
           </p>
         </div>
 
@@ -129,7 +130,7 @@ export default function ServicesDial() {
           <style>{`
             @media (max-width: 960px) {
               .svc-stage { grid-template-columns: 1fr !important; gap: 40px !important; }
-              .svc-row-title { font-size: clamp(24px, 5vw, 36px) !important; }
+              .svc-row-title { font-size: clamp(20px, 4.4vw, 28px) !important; }
               .svc-preview-sticky { position: static !important; max-height: none !important; }
             }
           `}</style>
@@ -203,9 +204,9 @@ export default function ServicesDial() {
                     className="svc-row-title"
                     style={{
                       fontFamily: 'var(--font-title)',
-                      fontSize: 'clamp(28px, 3.2vw, 50px)',
+                      fontSize: 'clamp(22px, 2.4vw, 36px)',
                       fontWeight: 700,
-                      lineHeight: 1.05,
+                      lineHeight: 1.08,
                       letterSpacing: '-0.02em',
                       color: 'var(--v2-text-primary)',
                     }}

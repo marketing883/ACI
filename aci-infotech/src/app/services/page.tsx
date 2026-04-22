@@ -15,6 +15,8 @@ import {
   ShieldCheck,
   Headphones,
   Target,
+  Compass,
+  Building2,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
@@ -117,6 +119,30 @@ const services = [
     technologies: ['Splunk', 'CrowdStrike', 'Azure Sentinel', 'Palo Alto', 'Okta'],
     href: '/services/cyber-security',
     image: '/images/cyber-security.jpg',
+  },
+  {
+    id: 'advisory-strategy',
+    icon: Compass,
+    title: 'Advisory & Strategy',
+    tagline: 'Strategy Grounded in Delivery',
+    description:
+      'Technology strategy written to be built. North-star architecture, capability audits, TCO modeling, and ROI frameworks, with the build pod that delivers the plan.',
+    capabilities: ['North-Star Architecture', 'Capability Audit', 'TCO & FinOps Modeling', 'Transformation Roadmap'],
+    technologies: ['North-star maps', 'TCO models', 'Capability audits', 'ROI frameworks'],
+    href: '/services/advisory-strategy',
+    image: '/images/services-hero-bg.jpg',
+  },
+  {
+    id: 'gcc',
+    icon: Building2,
+    title: 'GCC & Captive Operations',
+    tagline: 'Your Team. Your Operating Model. Offshore.',
+    description:
+      'Global Capability Centers stood up in India or LatAm and run like a first-party team. Entity, hiring, facilities, IT, and operating model delivered in one engagement, with a documented build-operate-transfer path.',
+    capabilities: ['Feasibility & Site Selection', 'Entity & Compliance', 'Talent Pipeline', 'Build-Operate-Transfer'],
+    technologies: ['Entity setup', 'Talent pipeline', 'Facilities', 'IT & security', 'BOT framework'],
+    href: '/services/gcc',
+    image: '/images/services-hero-bg.jpg',
   },
 ];
 

@@ -60,7 +60,7 @@ export default function ServicesMenu() {
             margin: 0,
           }}
         >
-          Eight practices.
+          Ten practices.
           <br />
           <em
             style={{
@@ -69,7 +69,7 @@ export default function ServicesMenu() {
               color: 'var(--v2-accent)',
             }}
           >
-            One delivery team.
+            One engineering bar.
           </em>
         </h3>
         <p
@@ -82,7 +82,8 @@ export default function ServicesMenu() {
           }}
         >
           Every practice owns delivery end to end. Architecture, build,
-          deployment, and operations, handled by the same team.
+          deployment, and operations, all held to the same production
+          standard.
         </p>
         <Link
           href="/services"

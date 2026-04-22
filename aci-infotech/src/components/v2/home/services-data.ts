@@ -1,8 +1,9 @@
 /**
- * Eight services for the ServicesDial. Each entry matches the design
- * handoff verbatim (see design_handoff_aci_homepage/reference/index.html
- * SERVICES array). ASCII diagrams preserve the original "live terminal"
- * feel — they are rendered inside a <pre> with mono font.
+ * Ten services for the ServicesDial. Wording follows the editorial
+ * homepage framing (italic emphasis word, "X & Y" shape). The ten
+ * entries here and the ten items in the nav mega menu track each
+ * other. ASCII diagrams preserve the "live terminal" feel — they
+ * are rendered inside a <pre> with mono font.
  *
  * The `emphasis` field is the italicized word inside the title. The
  * title is rendered as a React fragment with the emphasis styled
@@ -96,8 +97,30 @@ on-prem ──▶ IaC → GitOps → policy
                               └──▶ feature store ──▶ ML`,
   },
   {
-    id: 'platform',
+    id: 'martech',
     index: '04',
+    tag: '/ MARTECH · CAPABILITY',
+    status: 'live · 11 activations',
+    title: 'MarTech & CDP',
+    titlePrefix: 'MarTech ',
+    emphasis: '&',
+    titleSuffix: ' CDP',
+    desc:
+      'Customer data unified across every touchpoint and activated in real time across marketing cloud, paid, and owned channels. Segments that refresh with the event, not with the next batch.',
+    stats: [
+      { value: '11', label: 'Activations live' },
+      { value: '340', label: 'Segments in use' },
+      { value: '<1s', label: 'Signal to touch' },
+    ],
+    stack: ['Salesforce', 'Braze', 'Segment', 'Snowflake', 'Iterable', 'mParticle'],
+    diagram: `sources ──▶ identity ──▶ CDP ──▶ segments
+                                           │
+                                           ▼
+                            marketing cloud · paid · owned`,
+  },
+  {
+    id: 'platform',
+    index: '05',
     tag: '/ PLATFORM · CAPABILITY',
     status: 'live · 17 IDPs',
     title: 'Platform Engineering',
@@ -117,7 +140,7 @@ on-prem ──▶ IaC → GitOps → policy
   },
   {
     id: 'digital',
-    index: '05',
+    index: '06',
     tag: '/ DX · CAPABILITY',
     status: 'live · 9 storefronts',
     title: 'Digital & Experience',
@@ -139,7 +162,7 @@ user ─┤                        ├──▶ CMS + commerce
   },
   {
     id: 'cyber',
-    index: '06',
+    index: '07',
     tag: '/ CYBER · CAPABILITY',
     status: 'live · zero breaches',
     title: 'Cyber & Trust',
@@ -163,7 +186,7 @@ user ─┤                        ├──▶ CMS + commerce
   },
   {
     id: 'managed',
-    index: '07',
+    index: '08',
     tag: '/ OPS · CAPABILITY',
     status: 'live · 99.5% uptime',
     title: 'Managed Services',
@@ -185,7 +208,7 @@ user ─┤                        ├──▶ CMS + commerce
   },
   {
     id: 'advisory',
-    index: '08',
+    index: '09',
     tag: '/ ADVISORY · CAPABILITY',
     status: 'live · C-suite mandate',
     title: 'Advisory & Strategy',
@@ -207,5 +230,27 @@ user ─┤                        ├──▶ CMS + commerce
                        │
                        ▼
                     outcomes`,
+  },
+  {
+    id: 'gcc',
+    index: '10',
+    tag: '/ GCC · CAPABILITY',
+    status: 'live · 3 centers',
+    title: 'GCC & Captive Ops',
+    titlePrefix: 'GCC ',
+    emphasis: '&',
+    titleSuffix: ' Captive Ops',
+    desc:
+      'Stand up a captive delivery center and run it like a first-party team, not an outsourcing contract. Entity setup, hiring, facilities, and operating model delivered in one engagement, with a documented build-operate-transfer path onto your payroll when you are ready.',
+    stats: [
+      { value: '90d', label: 'To first live pod' },
+      { value: '340+', label: 'Engineers placed' },
+      { value: 'BOT', label: 'Path to full transfer' },
+    ],
+    stack: ['Entity setup', 'Talent pipeline', 'Facilities', 'IT & security', 'Operating model', 'BOT framework'],
+    diagram: `design ──▶ entity ──▶ hiring ──▶ pods live
+                                      │
+                                      ▼
+                         build ─ operate ─ transfer`,
   },
 ];
