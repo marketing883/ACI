@@ -65,38 +65,15 @@ export default function FooterV2() {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: 10,
                 marginBottom: 18,
               }}
             >
-              <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 6,
-                  background: 'var(--v2-accent)',
-                  color: 'var(--v2-text-inverted)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: 'var(--font-title)',
-                  fontSize: 18,
-                  fontWeight: 700,
-                }}
-              >
-                A
-              </div>
-              <span
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 13,
-                  letterSpacing: '0.14em',
-                  color: 'var(--v2-text-primary)',
-                  fontWeight: 500,
-                }}
-              >
-                ACI.INFOTECH
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/aci-infotech-logo-white.png"
+                alt="ACI Infotech"
+                style={{ height: 36, width: 'auto', display: 'block' }}
+              />
             </div>
             <p
               style={{

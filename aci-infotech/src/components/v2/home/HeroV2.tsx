@@ -102,16 +102,16 @@ export default function HeroV2() {
           height: '100%',
           objectFit: 'cover',
           zIndex: 0,
-          opacity: 0.45,
-          filter: 'grayscale(0.55) brightness(0.65) contrast(1.05) blur(0.5px)',
+          opacity: 0.6,
+          filter: 'grayscale(0.35) brightness(0.85) contrast(1.05)',
           pointerEvents: 'none',
         }}
       >
         <source src="/hero-bg-compressed.webm" type="video/webm" />
         <source src="/hero-bg-compressed.mp4" type="video/mp4" />
       </video>
-      {/* Navy overlay: keeps text readable over the video while
-          letting just enough motion through to feel alive. */}
+      {/* Navy overlay: lighter than before so the video reads more
+          clearly while text stays legible over the darker corner. */}
       <div
         aria-hidden
         style={{
@@ -120,7 +120,7 @@ export default function HeroV2() {
           zIndex: 1,
           pointerEvents: 'none',
           background:
-            'linear-gradient(135deg, rgba(5, 11, 31, 0.55) 0%, rgba(5, 11, 31, 0.82) 60%, rgba(5, 11, 31, 0.92) 100%)',
+            'linear-gradient(135deg, rgba(5, 11, 31, 0.35) 0%, rgba(5, 11, 31, 0.62) 60%, rgba(5, 11, 31, 0.78) 100%)',
         }}
       />
 

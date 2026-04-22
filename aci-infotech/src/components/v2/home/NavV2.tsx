@@ -51,41 +51,20 @@ export default function NavV2() {
     >
       <Link
         href="/"
+        aria-label="ACI Infotech home"
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: 10,
           textDecoration: 'none',
           color: 'var(--v2-text-primary)',
         }}
       >
-        <div
-          style={{
-            width: 28,
-            height: 28,
-            borderRadius: 6,
-            background: 'var(--v2-accent)',
-            color: 'var(--v2-text-inverted)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily: 'var(--font-title)',
-            fontSize: 16,
-            fontWeight: 700,
-          }}
-        >
-          A
-        </div>
-        <span
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 12,
-            letterSpacing: '0.14em',
-            fontWeight: 500,
-          }}
-        >
-          ACI.INFOTECH
-        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/brand/aci-infotech-logo-white.png"
+          alt="ACI Infotech"
+          style={{ height: 32, width: 'auto', display: 'block' }}
+        />
       </Link>
 
       <div
