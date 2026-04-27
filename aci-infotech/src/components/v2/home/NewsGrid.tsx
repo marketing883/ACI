@@ -7,7 +7,6 @@
  */
 
 import type { HomeNewsItem } from '@/lib/v2/fetch-home-data';
-import { Watermark } from '../craft/Watermark';
 
 const PLACEHOLDERS: HomeNewsItem[] = [
   {
@@ -72,7 +71,6 @@ export default function NewsGrid({ items }: { items: HomeNewsItem[] }) {
         borderTop: '1px solid var(--v2-border-subtle)',
       }}
     >
-      <Watermark text="NEWS" size="20vw" opacity={0.03} offsetY="30%" />
       <div style={{ maxWidth: 'var(--v2-container-max)', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <SectionHead headline="Press and" emphasized="announcements." />
 

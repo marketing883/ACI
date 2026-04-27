@@ -104,13 +104,13 @@ export default function HeroV2() {
           height: '100%',
           objectFit: 'cover',
           zIndex: 0,
-          opacity: 0.55,
-          mixBlendMode: 'screen' as const,
-          filter: 'brightness(0.9) contrast(1.2) saturate(0.8)',
+          opacity: 0.5,
+          filter: 'grayscale(0.3) brightness(0.8) contrast(1.1)',
           pointerEvents: 'none',
         }}
       >
-        <source src="/videos/23730-336607640_tiny.mp4" type="video/mp4" />
+        <source src="/hero-bg-compressed.webm" type="video/webm" />
+        <source src="/hero-bg-compressed.mp4" type="video/mp4" />
       </video>
       {/* Navy overlay: lighter than before so the video reads more
           clearly while text stays legible over the darker corner. */}
@@ -122,7 +122,7 @@ export default function HeroV2() {
           zIndex: 1,
           pointerEvents: 'none',
           background:
-            'linear-gradient(135deg, rgba(5, 11, 31, 0.25) 0%, rgba(5, 11, 31, 0.5) 60%, rgba(5, 11, 31, 0.7) 100%), radial-gradient(ellipse 40% 50% at 30% 70%, rgba(198, 255, 61, 0.06) 0%, transparent 70%)',
+            'linear-gradient(135deg, rgba(5, 11, 31, 0.4) 0%, rgba(5, 11, 31, 0.65) 60%, rgba(5, 11, 31, 0.8) 100%)',
         }}
       />
 
@@ -238,7 +238,7 @@ export default function HeroV2() {
         {/* Headline */}
         <h1
           className="v2-hero-headline"
-          aria-label="Enterprise systems. In production."
+          aria-label="Enterprise technology. Delivered."
           style={{
             fontFamily: 'var(--font-title)',
             fontSize: 'clamp(44px, 6.5vw, 104px)',
@@ -256,7 +256,7 @@ export default function HeroV2() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             aria-hidden
           >
-            Enterprise systems.
+            Enterprise technology.
           </motion.span>
           <motion.span
             style={{ display: 'block' }}
@@ -272,7 +272,7 @@ export default function HeroV2() {
                 color: 'var(--v2-accent)',
               }}
             >
-              In production.
+              Delivered.
             </em>
           </motion.span>
         </h1>

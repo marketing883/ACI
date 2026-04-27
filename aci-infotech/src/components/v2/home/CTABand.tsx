@@ -8,7 +8,6 @@
 
 import { ArrowRight } from 'lucide-react';
 import { MagneticButton } from '../craft/MagneticButton';
-import { Watermark } from '../craft/Watermark';
 
 export default function CTABand() {
   return (
@@ -24,7 +23,6 @@ export default function CTABand() {
         overflow: 'hidden',
       }}
     >
-      <Watermark text="BUILD" size="28vw" opacity={0.03} offsetY="40%" />
       <div
         aria-hidden
         style={{

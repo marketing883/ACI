@@ -26,7 +26,6 @@ import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { PLAYBOOKS, type PlaybookData } from '@/components/sections/PlaybookVaultSection';
-import { Watermark } from '../craft/Watermark';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -48,7 +47,6 @@ export default function PlaybooksGrid() {
         borderTop: '1px solid var(--v2-border-subtle)',
       }}
     >
-      <Watermark text="PLAYBOOKS" size="15vw" opacity={0.03} offsetY="35%" />
       <div style={{ maxWidth: 'var(--v2-container-max)', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Head */}
         <div

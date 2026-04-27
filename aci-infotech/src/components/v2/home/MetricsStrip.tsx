@@ -1,7 +1,6 @@
 'use client';
 
 import { CounterRoll } from '../craft/CounterRoll';
-import { Watermark } from '../craft/Watermark';
 
 const metrics = [
   { value: '280+', label: 'Projects delivered' },
@@ -19,7 +18,6 @@ export function MetricsStrip() {
         overflow: 'hidden',
       }}
     >
-      <Watermark text="PROOF" size="22vw" opacity={0.03} offsetY="30%" />
 
       <div
         style={{
