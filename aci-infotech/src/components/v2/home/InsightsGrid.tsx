@@ -113,6 +113,7 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                 letterSpacing: '-0.03em',
                 fontWeight: 700,
                 margin: 0,
+                color: 'var(--v2-text-primary, #E8ECF5)',
               }}
             >
               From the{' '}
