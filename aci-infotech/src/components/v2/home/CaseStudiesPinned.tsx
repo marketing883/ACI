@@ -29,6 +29,7 @@ import { ArrowRight } from 'lucide-react';
 import type { HomeCaseStudy } from '@/lib/v2/fetch-home-data';
 import { displayClient } from '@/lib/content/anonymize';
 import StackChip from './StackChip';
+import { Watermark } from '../craft/Watermark';
 
 /**
  * Trim a potentially long challenge/solution string to a homepage-friendly
@@ -222,6 +223,8 @@ export default function CaseStudiesPinned({ caseStudies }: Props) {
       >
         <CaseHead />
       </div>
+
+      <Watermark text="WORK" size="25vw" opacity={0.025} offsetY="20%" />
 
       {/* Stage: 400vh provides 4 screens of scroll runway */}
       <div ref={stageRef} style={{ height: `${slides.length * 100}vh`, position: 'relative' }}>

@@ -18,6 +18,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { SERVICES } from './services-data';
 import StackChip from './StackChip';
+import { Watermark } from '../craft/Watermark';
 
 const CYCLE_MS = 3400;
 
@@ -70,7 +71,8 @@ export default function ServicesDial() {
         }}
       />
 
-      <div style={{ maxWidth: 'var(--v2-container-max)', margin: '0 auto', position: 'relative' }}>
+      <Watermark text="SERVICES" size="18vw" opacity={0.03} offsetY="30%" />
+      <div style={{ maxWidth: 'var(--v2-container-max)', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Section head */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2rem', flexWrap: 'wrap', marginBottom: '4rem' }}>
           <div>

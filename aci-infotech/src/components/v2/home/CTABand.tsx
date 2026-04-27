@@ -6,8 +6,9 @@
  * as the hero with a radial mask for a vignette effect.
  */
 
-import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { MagneticButton } from '../craft/MagneticButton';
+import { Watermark } from '../craft/Watermark';
 
 export default function CTABand() {
   return (
@@ -23,6 +24,7 @@ export default function CTABand() {
         overflow: 'hidden',
       }}
     >
+      <Watermark text="BUILD" size="28vw" opacity={0.03} offsetY="40%" />
       <div
         aria-hidden
         style={{
@@ -78,7 +80,7 @@ export default function CTABand() {
           Tell us what you need&nbsp;built.
         </p>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Link
+          <MagneticButton
             href="/contact?source=v2-cta"
             style={{
               display: 'inline-flex',
@@ -94,11 +96,12 @@ export default function CTABand() {
               textTransform: 'uppercase',
               borderRadius: 2,
               textDecoration: 'none',
+              boxShadow: '0 0 30px rgba(198, 255, 61, 0.25), 0 0 60px rgba(198, 255, 61, 0.1)',
             }}
           >
             <span>Start a project</span>
             <ArrowRight size={14} />
-          </Link>
+          </MagneticButton>
         </div>
       </div>
     </section>

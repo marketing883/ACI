@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Play } from 'lucide-react';
 import StackChip from './StackChip';
+import { MagneticButton } from '../craft/MagneticButton';
 
 export default function HeroV2() {
   const reduced = useReducedMotion();
@@ -324,7 +325,7 @@ export default function HeroV2() {
             </strong>
           </p>
           <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-            <Link
+            <MagneticButton
               href="/contact?source=v2-hero"
               className="v2-btn-primary"
               style={{
@@ -341,15 +342,16 @@ export default function HeroV2() {
                 textTransform: 'uppercase',
                 borderRadius: 2,
                 textDecoration: 'none',
-                transition: 'background 200ms var(--v2-ease), transform 200ms var(--v2-ease)',
+                transition: 'background 200ms var(--v2-ease)',
               }}
             >
               <span>Start a project</span>
               <ArrowRight size={14} />
-            </Link>
-            <Link
+            </MagneticButton>
+            <MagneticButton
               href="/case-studies"
               className="v2-btn-ghost"
+              strength={0.2}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -370,7 +372,7 @@ export default function HeroV2() {
             >
               <Play size={12} fill="currentColor" />
               <span>Explore case studies</span>
-            </Link>
+            </MagneticButton>
           </div>
         </motion.div>
       </div>

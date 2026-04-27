@@ -15,6 +15,7 @@
  */
 
 import { MotionConfig } from 'framer-motion';
+import { SmoothScrollInit } from '@/components/v2/craft/SmoothScroll';
 import NavV2 from '@/components/v2/nav/NavV2';
 import HeroV2 from '@/components/v2/home/HeroV2';
 import ServicesDial from '@/components/v2/home/ServicesDial';
@@ -61,6 +62,7 @@ export default async function V2HomeContent() {
         // on the cs-pin element, which is where it belongs.
       }}
     >
+      <SmoothScrollInit />
       <MotionConfig reducedMotion="user">
         <NavV2
           resources={{

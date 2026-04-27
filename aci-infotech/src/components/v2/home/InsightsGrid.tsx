@@ -8,6 +8,7 @@
 
 import Link from 'next/link';
 import type { HomeBlogPost } from '@/lib/v2/fetch-home-data';
+import { Watermark } from '../craft/Watermark';
 
 const PLACEHOLDERS: HomeBlogPost[] = [
   {
@@ -91,7 +92,8 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
         paddingRight: 'var(--v2-container-px)',
       }}
     >
-      <div style={{ maxWidth: 'var(--v2-container-max)', margin: '0 auto' }}>
+      <Watermark text="INSIGHTS" size="16vw" opacity={0.03} offsetY="35%" />
+      <div style={{ maxWidth: 'var(--v2-container-max)', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div
           style={{
             display: 'flex',
