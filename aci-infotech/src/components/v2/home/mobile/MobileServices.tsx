@@ -29,7 +29,7 @@ export default function MobileServices() {
       <ul className="m-services__list">
         {SERVICES.map((s, idx) => (
           <li key={s.href} className="m-services__item">
-            <details className="m-services__det">
+            <details name="m-services-accordion" className="m-services__det">
               <summary className="m-services__summary">
                 <span className="m-services__index">
                   {String(idx + 1).padStart(2, '0')}
