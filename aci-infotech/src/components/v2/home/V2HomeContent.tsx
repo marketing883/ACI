@@ -13,15 +13,24 @@
  * URLs as v2 content evolves. The component is a pure async server
  * component: no props, no state, all CMS fetching done inline.
  *
- * Below-fold sections are lazy-loaded via next/dynamic to cut TTI.
- * Only HeroV2 and NavV2 are eagerly loaded (above the fold).
+ * Below-fold sections use content-visibility: auto to skip rendering
+ * until they approach the viewport. No dynamic() imports — those
+ * cause React hydration mismatches in server components.
  */
 
-import dynamic from 'next/dynamic';
 import { MotionConfig } from 'framer-motion';
 import { SmoothScrollInit } from '@/components/v2/craft/SmoothScroll';
 import NavV2 from '@/components/v2/nav/NavV2';
 import HeroV2 from '@/components/v2/home/HeroV2';
+import ServicesDial from '@/components/v2/home/ServicesDial';
+import CaseStudiesPinned from '@/components/v2/home/CaseStudiesPinned';
+import { MetricsStrip } from '@/components/v2/home/MetricsStrip';
+import PlaybooksGrid from '@/components/v2/home/PlaybooksGrid';
+import ArqAIV2 from '@/components/v2/home/ArqAIV2';
+import Marquee from '@/components/v2/home/Marquee';
+import NewsGrid from '@/components/v2/home/NewsGrid';
+import InsightsGrid from '@/components/v2/home/InsightsGrid';
+import CTABand from '@/components/v2/home/CTABand';
 import FooterV2 from '@/components/v2/home/FooterV2';
 import {
   fetchFeaturedCaseStudies,
@@ -30,15 +39,10 @@ import {
 } from '@/lib/v2/fetch-home-data';
 import { fetchFeaturedWhitepaper } from '@/lib/v2/fetch-menu-data';
 
-const ServicesDial = dynamic(() => import('@/components/v2/home/ServicesDial'));
-const CaseStudiesPinned = dynamic(() => import('@/components/v2/home/CaseStudiesPinned'));
-const MetricsStrip = dynamic(() => import('@/components/v2/home/MetricsStrip').then(m => ({ default: m.MetricsStrip })));
-const PlaybooksGrid = dynamic(() => import('@/components/v2/home/PlaybooksGrid'));
-const ArqAIV2 = dynamic(() => import('@/components/v2/home/ArqAIV2'));
-const Marquee = dynamic(() => import('@/components/v2/home/Marquee'));
-const NewsGrid = dynamic(() => import('@/components/v2/home/NewsGrid'));
-const InsightsGrid = dynamic(() => import('@/components/v2/home/InsightsGrid'));
-const CTABand = dynamic(() => import('@/components/v2/home/CTABand'));
+const LAZY_SECTION: React.CSSProperties = {
+  contentVisibility: 'auto' as string,
+  containIntrinsicSize: 'auto 600px',
+} as React.CSSProperties;
 
 export default async function V2HomeContent() {
   const [caseStudies, news, blogs, whitepaper] = await Promise.all([
@@ -76,13 +80,11 @@ export default async function V2HomeContent() {
                 logo: 'https://aciinfotech.com/brand/aci-infotech-logo.png',
                 description:
                   'Enterprise technology services firm delivering data & AI, cloud infrastructure, and managed operations for Fortune 500 companies.',
-                sameAs: [],
                 contactPoint: {
                   '@type': 'ContactPoint',
                   contactType: 'sales',
                   url: 'https://aciinfotech.com/contact',
                 },
-                numberOfEmployees: { '@type': 'QuantitativeValue', minValue: 200 },
                 foundingDate: '2005',
                 knowsAbout: [
                   'Data Engineering',
@@ -146,15 +148,15 @@ export default async function V2HomeContent() {
           }}
         />
         <HeroV2 />
-        <ServicesDial />
-        <CaseStudiesPinned caseStudies={caseStudies} />
-        <MetricsStrip />
-        <PlaybooksGrid />
-        <ArqAIV2 />
-        <Marquee />
-        <NewsGrid items={news} />
-        <InsightsGrid posts={blogs} />
-        <CTABand />
+        <div style={LAZY_SECTION}><ServicesDial /></div>
+        <div style={LAZY_SECTION}><CaseStudiesPinned caseStudies={caseStudies} /></div>
+        <div style={LAZY_SECTION}><MetricsStrip /></div>
+        <div style={LAZY_SECTION}><PlaybooksGrid /></div>
+        <div style={LAZY_SECTION}><ArqAIV2 /></div>
+        <div style={LAZY_SECTION}><Marquee /></div>
+        <div style={LAZY_SECTION}><NewsGrid items={news} /></div>
+        <div style={LAZY_SECTION}><InsightsGrid posts={blogs} /></div>
+        <div style={LAZY_SECTION}><CTABand /></div>
         <FooterV2 />
       </MotionConfig>
     </main>
