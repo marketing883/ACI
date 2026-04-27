@@ -5,11 +5,12 @@
  *
  * Layout: full-bleed dark background with a single subtle radial
  * lime glow at top-right. Brand mark, two-line headline, one-line
- * subhead, primary CTA, and a quiet secondary text link.
+ * subhead. No CTAs in the hero itself — the conversion surface lives
+ * later, in the dedicated CTA section. Senior buyers landing here
+ * are scanning to confirm they're at the right firm; the CTAs at the
+ * bottom of the page (and in the nav menu) catch them when they're
+ * ready to move.
  */
-
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 
 export default function MobileHero() {
   return (
@@ -32,23 +33,10 @@ export default function MobileHero() {
         teams. We build them, ship them, and run&nbsp;them.
       </p>
 
-      <div className="m-hero__ctas">
-        <Link
-          href="/contact?source=v2-mobile-hero"
-          className="m-btn m-btn--primary"
-        >
-          <span>Start a project</span>
-          <ArrowRight size={14} aria-hidden />
-        </Link>
-        <Link href="/case-studies" className="m-hero__link">
-          See what we&apos;ve&nbsp;shipped
-        </Link>
-      </div>
-
       <style>{`
         .m-hero {
           position: relative;
-          padding: 96px 24px 64px;
+          padding: 64px 24px 56px;
           background: var(--v2-bg);
           color: var(--v2-text-primary);
           overflow: hidden;
@@ -76,7 +64,7 @@ export default function MobileHero() {
           letter-spacing: 0.18em;
           text-transform: uppercase;
           color: var(--v2-text-muted);
-          margin-bottom: 36px;
+          margin-bottom: 28px;
           animation: m-fadeUp 600ms ease-out 50ms both;
         }
         .m-hero__brand-dot {
@@ -106,35 +94,13 @@ export default function MobileHero() {
         .m-hero__sub {
           position: relative;
           z-index: 1;
-          margin: 0 0 32px;
+          margin: 0;
           font-family: var(--font-sans);
           font-size: 16px;
           line-height: 1.55;
           color: var(--v2-text-secondary);
           max-width: 32ch;
           animation: m-fadeUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 220ms both;
-        }
-        .m-hero__ctas {
-          position: relative;
-          z-index: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 18px;
-          align-items: flex-start;
-          animation: m-fadeUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 320ms both;
-        }
-        .m-hero__link {
-          font-family: var(--font-mono);
-          font-size: 12px;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: var(--v2-text-muted);
-          text-decoration: none;
-          padding: 8px 0;
-          border-bottom: 1px solid var(--v2-border-strong);
-        }
-        .m-hero__link:active {
-          color: var(--v2-text-primary);
         }
         @keyframes m-fadeUp {
           from { opacity: 0; transform: translateY(12px); }
@@ -143,8 +109,7 @@ export default function MobileHero() {
         @media (prefers-reduced-motion: reduce) {
           .m-hero__brand,
           .m-hero__h1,
-          .m-hero__sub,
-          .m-hero__ctas {
+          .m-hero__sub {
             animation: none;
           }
         }

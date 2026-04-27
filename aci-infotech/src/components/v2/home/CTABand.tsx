@@ -99,7 +99,7 @@ export default function CTABand() {
               boxShadow: '0 0 30px rgba(198, 255, 61, 0.25), 0 0 60px rgba(198, 255, 61, 0.1)',
             }}
           >
-            <span>Start a project</span>
+            <span>Get in Touch</span>
             <ArrowRight size={14} />
           </MagneticButton>
         </div>

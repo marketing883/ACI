@@ -378,7 +378,7 @@ export default function HeroV2() {
                 transition: 'background 200ms var(--v2-ease)',
               }}
             >
-              <span>Start a project</span>
+              <span>Get in Touch</span>
               <ArrowRight size={14} />
             </MagneticButton>
             <MagneticButton

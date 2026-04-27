@@ -253,7 +253,7 @@ export default function NavV2({ resources, company }: NavV2Props) {
               transition: 'background 200ms var(--v2-ease)',
             }}
           >
-            Start a project
+            Get in Touch
             <ArrowRight size={14} />
           </Link>
 

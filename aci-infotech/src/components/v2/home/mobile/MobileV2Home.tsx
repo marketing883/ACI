@@ -15,6 +15,7 @@
  */
 
 import type { HomeCaseStudy } from '@/lib/v2/fetch-home-data';
+import MobileNav from './MobileNav';
 import MobileHero from './MobileHero';
 import MobileServices from './MobileServices';
 import MobileCaseStudies from './MobileCaseStudies';
@@ -84,6 +85,7 @@ export default function MobileV2Home({ caseStudies }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
       />
 
+      <MobileNav />
       <main className="m-root">
         <MobileHero />
         <MobileServices />

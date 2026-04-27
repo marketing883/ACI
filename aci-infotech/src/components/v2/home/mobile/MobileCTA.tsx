@@ -23,7 +23,7 @@ export default function MobileCTA() {
         href="/contact?source=v2-mobile-cta"
         className="m-btn m-btn--primary m-cta__btn"
       >
-        <span>Start a project</span>
+        <span>Get in Touch</span>
         <ArrowRight size={14} aria-hidden />
       </Link>
 

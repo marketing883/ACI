@@ -1,13 +1,20 @@
 /**
- * MobileCaseStudies — condensed list of up to 3 case studies for the
- * mobile homepage. No carousels, no images: just industry tag, title,
- * the headline metric, and a chevron. Tap routes to the case-study
- * detail page.
+ * MobileCaseStudies — condensed case study list. No carousels, no
+ * images, no decontextualised percentages. Each card carries the
+ * three things a senior buyer is scanning for:
  *
- * Reuses the same `HomeCaseStudy` shape the desktop tree fetches, so
- * one Supabase query feeds both layouts. Renders a discreet empty
- * state when the CMS returns nothing rather than collapsing the
- * section silently.
+ *   1. Industry  — does this match my world?
+ *   2. Title     — what got shipped?
+ *   3. Stack     — was it built on something I'd take seriously?
+ *
+ * The headline percentages that previously sat at the bottom of each
+ * card looked impressive in isolation but read as advertising once
+ * you'd seen three in a row. Replacing them with the stack chips
+ * gives the same proof signal in a way an exec actually wants to
+ * read.
+ *
+ * Reuses the `HomeCaseStudy` shape the desktop tree fetches, so one
+ * Supabase query feeds both layouts.
  */
 
 import Link from 'next/link';
@@ -19,11 +26,7 @@ interface Props {
   caseStudies: HomeCaseStudy[];
 }
 
-function pickHeadlineMetric(cs: HomeCaseStudy): { value: string; label: string } | null {
-  const m = cs.metrics?.[0];
-  if (!m) return null;
-  return { value: m.value, label: m.label };
-}
+const MAX_STACK_CHIPS = 4;
 
 export default function MobileCaseStudies({ caseStudies }: Props) {
   const top = caseStudies.slice(0, 3);
@@ -39,8 +42,7 @@ export default function MobileCaseStudies({ caseStudies }: Props) {
 
       {top.length === 0 ? (
         <p className="m-cases__empty">
-          Featured case studies are publishing soon. In the meantime, the
-          full library is on{' '}
+          Featured case studies are publishing soon. The full library is on{' '}
           <Link href="/case-studies" className="m-cases__empty-link">
             our case studies page
           </Link>
@@ -49,8 +51,9 @@ export default function MobileCaseStudies({ caseStudies }: Props) {
       ) : (
         <ul className="m-cases__list">
           {top.map((cs) => {
-            const metric = pickHeadlineMetric(cs);
             const tag = cs.industry?.trim() || displayClient(cs);
+            const stack = (cs.technologies ?? []).slice(0, MAX_STACK_CHIPS);
+            const moreCount = Math.max(0, (cs.technologies?.length ?? 0) - MAX_STACK_CHIPS);
             return (
               <li key={cs.id}>
                 <Link
@@ -67,11 +70,19 @@ export default function MobileCaseStudies({ caseStudies }: Props) {
                     />
                   </div>
                   <p className="m-cases__title">{cs.title}</p>
-                  {metric && (
-                    <p className="m-cases__metric">
-                      <span className="m-cases__metric-value">{metric.value}</span>
-                      <span className="m-cases__metric-label">{metric.label}</span>
-                    </p>
+                  {stack.length > 0 && (
+                    <div className="m-cases__stack" aria-label="Technology stack">
+                      {stack.map((t) => (
+                        <span key={t} className="m-cases__chip">
+                          {t}
+                        </span>
+                      ))}
+                      {moreCount > 0 && (
+                        <span className="m-cases__chip m-cases__chip--more">
+                          +{moreCount}
+                        </span>
+                      )}
+                    </div>
                   )}
                 </Link>
               </li>
@@ -114,7 +125,7 @@ export default function MobileCaseStudies({ caseStudies }: Props) {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 10px;
+          margin-bottom: 12px;
         }
         .m-cases__industry {
           font-family: var(--font-mono);
@@ -130,38 +141,40 @@ export default function MobileCaseStudies({ caseStudies }: Props) {
           color: var(--v2-accent);
         }
         .m-cases__title {
-          margin: 0 0 14px;
+          margin: 0 0 16px;
           font-family: var(--font-sans);
           font-size: 16px;
           font-weight: 600;
           line-height: 1.35;
           color: var(--v2-text-primary);
           display: -webkit-box;
-          -webkit-line-clamp: 2;
+          -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
-        .m-cases__metric {
-          margin: 0;
+        .m-cases__stack {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
           padding-top: 12px;
           border-top: 1px solid var(--v2-border-subtle);
-          display: flex;
-          align-items: baseline;
-          gap: 10px;
         }
-        .m-cases__metric-value {
-          font-family: var(--font-title);
-          font-size: 22px;
-          font-weight: 600;
-          color: var(--v2-accent);
-          line-height: 1;
-        }
-        .m-cases__metric-label {
+        .m-cases__chip {
+          display: inline-flex;
+          align-items: center;
+          padding: 5px 9px;
           font-family: var(--font-mono);
           font-size: 10px;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          color: var(--v2-text-secondary);
+          background: var(--v2-surface-3);
+          border: 1px solid var(--v2-border-subtle);
+          border-radius: 4px;
+          line-height: 1;
+        }
+        .m-cases__chip--more {
           color: var(--v2-text-muted);
+          background: transparent;
         }
         .m-cases__more {
           display: inline-flex;

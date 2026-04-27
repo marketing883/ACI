@@ -140,7 +140,7 @@ export default function MobileMenu({ open, onClose }: Props) {
                 textDecoration: 'none',
               }}
             >
-              Start a project
+              Get in Touch
               <ArrowRight size={16} />
             </Link>
           </div>

@@ -1,13 +1,17 @@
 /**
- * MobilePartners — 4x2 grid of certified-partner logos. The eight
- * shipped PNGs in /public/images/Solution-Partners are 2-3 KB each,
- * so all eight cost ~25 KB total — affordable on mobile and worth it
- * for the visual proof.
+ * MobilePartners — 4-cell grid of certified-partner logos.
  *
- * The dark-on-white logos (AWS, SAP, Salesforce) need inverting to
- * read on the dark surface; that flag is set per row. Azure uses the
- * purpose-drawn icon-only SVG so the brand mark fills the cell
- * instead of shrinking to fit a wide wordmark.
+ * Visibility strategy: every logo gets the same monochrome tint
+ * (`brightness(0) invert(1)`), so the source PNG's native color
+ * doesn't matter — black-on-white wordmarks (AWS, SAP, Salesforce)
+ * and color marks (Databricks, ServiceNow, Braze) all render as the
+ * same soft white silhouette on the dark surface. Brand color is
+ * sacrificed for legibility, which is the right tradeoff at chip
+ * size on a phone screen.
+ *
+ * The shipped PNGs in /public/images/Solution-Partners are 2-3 KB
+ * each; the seven listed below total ~18 KB. Lazy-loaded via
+ * next/image so they don't block LCP.
  */
 
 import Image from 'next/image';
@@ -15,25 +19,22 @@ import Image from 'next/image';
 interface PartnerLogo {
   name: string;
   src: string;
-  invert?: boolean;
-  mono?: boolean;
 }
 
+// Seven partners that have local PNG assets shipped under
+// /public/images/Solution-Partners. Snowflake doesn't ship a logo
+// here, so we leave it off the mobile grid rather than render a
+// placeholder. The grid uses 4 columns × 2 rows; the trailing cell
+// holds a "+ more" tile that links to the full partners page.
 const PARTNERS: PartnerLogo[] = [
   { name: 'Databricks', src: '/images/Solution-Partners/databricks.png' },
-  { name: 'Snowflake', src: '/images/Solution-Partners/aws.png' }, // placeholder removed below
-  { name: 'AWS', src: '/images/Solution-Partners/aws.png', invert: true },
-  { name: 'Microsoft Azure', src: '/brand/azure-mono.svg', mono: true },
-  { name: 'SAP', src: '/images/Solution-Partners/sap.png', invert: true },
+  { name: 'AWS', src: '/images/Solution-Partners/aws.png' },
+  { name: 'Microsoft Azure', src: '/brand/azure-mono.svg' },
+  { name: 'SAP', src: '/images/Solution-Partners/sap.png' },
   { name: 'ServiceNow', src: '/images/Solution-Partners/servicenow.png' },
-  { name: 'Salesforce', src: '/images/Solution-Partners/salesforce.png', invert: true },
+  { name: 'Salesforce', src: '/images/Solution-Partners/salesforce.png' },
   { name: 'Braze', src: '/images/Solution-Partners/braze.png' },
 ];
-
-// Snowflake doesn't have a shipped logo in /public/images/Solution-
-// Partners; drop it from the eight rather than ship a duplicate AWS
-// mark. Final grid is 7 brands; CSS auto-fills the empty cell.
-const FINAL_PARTNERS = PARTNERS.filter((p) => p.name !== 'Snowflake');
 
 export default function MobilePartners() {
   return (
@@ -46,26 +47,24 @@ export default function MobilePartners() {
       </h2>
 
       <ul className="m-partners__grid">
-        {FINAL_PARTNERS.map((p) => (
+        {PARTNERS.map((p) => (
           <li key={p.name} className="m-partners__cell">
             <Image
               src={p.src}
               alt={`${p.name} partner logo`}
-              width={100}
-              height={36}
+              width={120}
+              height={48}
               loading="lazy"
               decoding="async"
               sizes="(max-width: 768px) 25vw, 100px"
-              className={[
-                'm-partners__logo',
-                p.invert ? 'm-partners__logo--invert' : '',
-                p.mono ? 'm-partners__logo--mono' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
+              className="m-partners__logo"
+              unoptimized={p.src.endsWith('.svg')}
             />
           </li>
         ))}
+        <li className="m-partners__cell m-partners__cell--more">
+          <span className="m-partners__more">+ more</span>
+        </li>
       </ul>
 
       <style>{`
@@ -91,21 +90,28 @@ export default function MobilePartners() {
           align-items: center;
           justify-content: center;
           background: var(--v2-surface-1);
-          padding: 12px;
+          padding: 14px;
         }
         .m-partners__logo {
           width: auto;
           height: 28px;
           max-width: 100%;
           object-fit: contain;
-          opacity: 0.85;
-          filter: grayscale(0.2);
+          /* Force every logo to a uniform white silhouette regardless
+             of source color. Drops brand color but guarantees the
+             mark is actually visible on the dark cell. */
+          filter: brightness(0) invert(1);
+          opacity: 0.9;
         }
-        .m-partners__logo--invert {
-          filter: grayscale(0.2) invert(1) brightness(1.6);
+        .m-partners__cell--more {
+          background: var(--v2-surface-2);
         }
-        .m-partners__logo--mono {
-          filter: brightness(0) invert(1) opacity(0.9);
+        .m-partners__more {
+          font-family: var(--font-mono);
+          font-size: 11px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--v2-text-muted);
         }
       `}</style>
     </section>
