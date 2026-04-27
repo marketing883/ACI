@@ -191,48 +191,21 @@ function PlaybookCard({ pb, index }: { pb: PlaybookData; index: number }) {
           }
         `}</style>
 
-        {/* ArqAI badge */}
-        <div
+        <h3
           style={{
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 8,
+            fontFamily: 'var(--font-title)',
+            fontSize: 20,
+            fontWeight: 600,
+            lineHeight: 1.25,
+            letterSpacing: '-0.015em',
+            margin: 0,
             marginBottom: 12,
+            color: 'var(--v2-text-primary)',
+            position: 'relative',
           }}
         >
-          <h3
-            style={{
-              fontFamily: 'var(--font-title)',
-              fontSize: 20,
-              fontWeight: 600,
-              lineHeight: 1.25,
-              letterSpacing: '-0.015em',
-              margin: 0,
-              color: 'var(--v2-text-primary)',
-            }}
-          >
-            {pb.displayTitle}
-          </h3>
-          <span
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 9,
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'var(--v2-bg, #050B1F)',
-              background: 'var(--v2-accent)',
-              padding: '3px 8px',
-              borderRadius: 2,
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
-            }}
-          >
-            ArqAI
-          </span>
-        </div>
+          {pb.displayTitle}
+        </h3>
 
         {/* AI acceleration line */}
         {pb.arqaiAcceleration && (
