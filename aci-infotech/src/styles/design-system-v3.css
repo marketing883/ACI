@@ -1,0 +1,22 @@
+:root {
+  --v3-bg: #0A0A0A;
+  --v3-bg-deep: #000000;
+  --v3-surface: #111111;
+  --v3-surface-elevated: #1A1A1A;
+  --v3-border: rgba(255, 255, 255, 0.08);
+  --v3-border-strong: rgba(255, 255, 255, 0.16);
+
+  --v3-text: #FAFAFA;
+  --v3-text-secondary: #A1A1A1;
+  --v3-text-muted: #666666;
+
+  --v3-lime: #C4FF61;
+  --v3-lime-glow: rgba(196, 255, 97, 0.15);
+  --v3-lime-bright: rgba(196, 255, 97, 0.5);
+  --v3-teal: #2DD4BF;
+  --v3-teal-fog: rgba(45, 212, 191, 0.06);
+
+  --v3-font-display: 'Funnel Display', sans-serif;
+  --v3-font-body: 'Funnel Sans', sans-serif;
+  --v3-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
