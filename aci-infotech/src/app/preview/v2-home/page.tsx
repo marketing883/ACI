@@ -8,20 +8,43 @@
  * both URLs.
  *
  * Route: /preview/v2-home
- *
- * Wrapped in ConditionalLayout's v2-preview bypass (path starts with
- * `/preview/v2`), so no v1 Nav/Footer is rendered on top of this.
  */
 
+import type { Metadata } from 'next';
 import V2HomeContent from '@/components/v2/home/V2HomeContent';
 
-// Keep the page dynamic so CMS changes show up without a rebuild.
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'ACI Infotech — Engineering the signal in the noise',
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+
+export const metadata: Metadata = {
+  title: 'ACI Infotech | Enterprise Technology Services — Data & AI, Cloud, Managed Operations',
   description:
-    'We build, ship and run production-grade systems for Fortune 500 operations. AI, cloud, data, and the unglamorous platform work that holds them together.',
+    'ACI Infotech builds, ships, and runs production-grade enterprise systems. Data & AI, cloud infrastructure, and managed operations for Fortune 500 companies. 280+ deployments across financial services, healthcare, retail, and manufacturing.',
+  keywords:
+    'enterprise technology services, data engineering, AI ML, cloud modernization, managed operations, Databricks, Snowflake, AWS, Azure, SAP, ServiceNow, Fortune 500, digital transformation',
+  openGraph: {
+    title: 'ACI Infotech | Enterprise Technology. Delivered.',
+    description:
+      'Data & AI. Cloud. Managed operations. 280+ production systems for enterprises in financial services, healthcare, retail, and manufacturing.',
+    url: siteUrl,
+    siteName: 'ACI Infotech',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ACI Infotech | Enterprise Technology. Delivered.',
+    description:
+      'Data & AI. Cloud. Managed operations. 280+ production systems for Fortune 500 enterprises.',
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default async function V2HomePreviewPage() {

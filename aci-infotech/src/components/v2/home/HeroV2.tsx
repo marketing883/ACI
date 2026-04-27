@@ -32,14 +32,21 @@ export default function HeroV2() {
     if (reduced) return;
     const el = heroRef.current;
     if (!el) return;
+    let rafId: number;
     const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect();
-      const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
-      const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
-      setMouse({ x, y });
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const rect = el.getBoundingClientRect();
+        const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
+        const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
+        setMouse({ x, y });
+      });
     };
-    el.addEventListener('mousemove', onMove);
-    return () => el.removeEventListener('mousemove', onMove);
+    el.addEventListener('mousemove', onMove, { passive: true });
+    return () => {
+      el.removeEventListener('mousemove', onMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, [reduced]);
 
   // Generate static node positions once — same every render, no jitter.
@@ -59,11 +66,13 @@ export default function HeroV2() {
     return out;
   }, []);
 
-  const p = (depth: number) => ({
+  const p = (depth: number): React.CSSProperties => ({
     transform: reduced
       ? 'none'
       : `translate3d(${mouse.x * depth * -20}px, ${mouse.y * depth * -20}px, 0)`,
     transition: 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+    willChange: 'transform',
+    backfaceVisibility: 'hidden',
   });
 
   return (
@@ -94,7 +103,7 @@ export default function HeroV2() {
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         aria-hidden
         className="v2-hero-video"
         style={{
@@ -201,7 +210,7 @@ export default function HeroV2() {
 
       {/* Layer 4: dust particles */}
       <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, ...p(2) }}>
-        {Array.from({ length: 40 }).map((_, i) => {
+        {Array.from({ length: 18 }).map((_, i) => {
           const top = ((i * 37) % 100).toString() + '%';
           const left = ((i * 53) % 100).toString() + '%';
           return (
