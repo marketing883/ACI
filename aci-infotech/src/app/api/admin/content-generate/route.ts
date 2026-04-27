@@ -1,0 +1,1381 @@
+import { NextRequest, NextResponse } from 'next/server';
+import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client for fetching related content
+function getSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
+
+// Fetch existing blog posts for internal linking
+async function fetchExistingBlogPosts(): Promise<{ title: string; slug: string; category: string }[]> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
+
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('title, slug, category')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (error) {
+      console.error('Error fetching blog posts for internal links:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    return [];
+  }
+}
+
+// Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
+const MODELS = {
+  anthropic: {
+    primary: 'claude-sonnet-4-20250514',
+    fallback: 'claude-3-5-haiku-20241022',
+  },
+  openai: {
+    primary: 'gpt-4o',
+    fallback: 'gpt-4o-mini',
+  },
+} as const;
+
+interface GenerateRequest {
+  type: 'blog' | 'case_study' | 'whitepaper' | 'webinar';
+  field: 'title' | 'excerpt' | 'content' | 'outline' | 'challenge' | 'solution' | 'results' | 'description' | 'meta_title' | 'meta_description' | 'faqs' | 'highlights' | 'metrics' | 'seo_fix';
+  context: {
+    keyword?: string;
+    title?: string;
+    category?: string;
+    existingContent?: string;
+    clientName?: string;
+    industry?: string;
+    technologies?: string[];
+    description?: string;
+    excerpt?: string;
+    topics?: string;
+    // Enhanced AEO/GEO fields
+    audience?: string;
+    tone?: string;
+    length?: string;
+    includes?: string;
+    articleType?: string;
+    authorName?: string;
+    content?: string;
+    existingFaqs?: { question: string; answer: string }[];
+    // SEO fix fields
+    seoIssue?: string;
+    currentValue?: string;
+    // Metrics fields
+    existingMetrics?: { label: string; value: string; description?: string }[];
+    // Current field value for enhancement mode
+    currentFieldValue?: string;
+    // Output format
+    outputFormat?: 'markdown' | 'html';
+  };
+}
+
+// Initialize Anthropic client
+function getAnthropicClient(): Anthropic | null {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return null;
+  return new Anthropic({ apiKey });
+}
+
+// Initialize OpenAI client
+function getOpenAIClient(): OpenAI | null {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
+  return new OpenAI({ apiKey });
+}
+
+// Generate content with 4-layer model fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
+async function generateWithFallback(
+  anthropic: Anthropic | null,
+  prompt: string,
+  maxTokens: number
+): Promise<{ content: string; model: string }> {
+  const errors: string[] = [];
+
+  // Try Claude models first (Sonnet -> Haiku)
+  if (anthropic) {
+    for (const model of [MODELS.anthropic.primary, MODELS.anthropic.fallback]) {
+      try {
+        console.log(`Attempting generation with Anthropic model: ${model}`);
+        const response = await anthropic.messages.create({
+          model,
+          max_tokens: maxTokens,
+          messages: [{ role: 'user', content: prompt }],
+        });
+
+        const textContent = response.content.find(block => block.type === 'text');
+        if (textContent && 'text' in textContent && textContent.text.trim()) {
+          console.log(`Anthropic model (${model}) succeeded`);
+          return { content: textContent.text, model };
+        }
+        throw new Error(`Empty response from ${model}`);
+      } catch (error) {
+        console.error(`Anthropic model (${model}) failed:`, error);
+        errors.push(`${model}: ${error}`);
+      }
+    }
+  }
+
+  // Try OpenAI models as fallback (GPT-4o -> GPT-4o-mini)
+  const openai = getOpenAIClient();
+  if (openai) {
+    for (const model of [MODELS.openai.primary, MODELS.openai.fallback]) {
+      try {
+        console.log(`Attempting generation with OpenAI model: ${model}`);
+        const response = await openai.chat.completions.create({
+          model,
+          max_tokens: maxTokens,
+          messages: [{ role: 'user', content: prompt }],
+        });
+
+        const content = response.choices[0]?.message?.content;
+        if (content && content.trim()) {
+          console.log(`OpenAI model (${model}) succeeded`);
+          return { content, model };
+        }
+        throw new Error(`Empty response from ${model}`);
+      } catch (error) {
+        console.error(`OpenAI model (${model}) failed:`, error);
+        errors.push(`OpenAI ${model}: ${error}`);
+      }
+    }
+  } else {
+    errors.push('OpenAI: API key not configured');
+  }
+
+  // All models failed
+  throw new Error(`All AI models failed. ${errors.join('; ')}`);
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json() as GenerateRequest;
+    const { type, field, context } = body;
+
+    // Get AI clients (may return null if not configured)
+    const anthropic = getAnthropicClient();
+    const openai = getOpenAIClient();
+
+    // Check if at least one AI service is available - NO MOCK FALLBACK
+    if (!anthropic && !openai) {
+      return NextResponse.json(
+        { error: 'No AI service configured. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY environment variable.' },
+        { status: 503 }
+      );
+    }
+
+    // Fetch existing blog posts for internal linking if needed
+    let existingPosts: { title: string; slug: string; category: string }[] = [];
+    if (type === 'blog' && field === 'content' && context.includes?.toLowerCase().includes('internal links')) {
+      existingPosts = await fetchExistingBlogPosts();
+      console.log(`Fetched ${existingPosts.length} existing blog posts for internal linking`);
+    }
+
+    const prompt = buildPrompt(type, field, context, existingPosts);
+
+    // Use higher token limit for full content generation
+    const maxTokens = field === 'content' ? 8000 : 2000;
+
+    // Generate with fallback support
+    const { content, model } = await generateWithFallback(anthropic, prompt, maxTokens);
+
+    console.log(`Content generated successfully using model: ${model}`);
+
+    // Handle FAQ JSON parsing
+    if (field === 'faqs') {
+      try {
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed)) {
+          return NextResponse.json({ faqs: parsed, content: parsed, model });
+        }
+      } catch {
+        // Try to extract JSON from the response
+        const jsonMatch = content.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          try {
+            const parsed = JSON.parse(jsonMatch[0]);
+            return NextResponse.json({ faqs: parsed, content: parsed, model });
+          } catch {
+            // Fall through to error
+          }
+        }
+        return NextResponse.json(
+          { error: 'Failed to parse FAQ response as JSON' },
+          { status: 500 }
+        );
+      }
+    }
+
+    // Handle metrics JSON parsing
+    if (field === 'metrics') {
+      try {
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed)) {
+          return NextResponse.json({ metrics: parsed, content: parsed, model });
+        }
+      } catch {
+        // Try to extract JSON from the response
+        const jsonMatch = content.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          try {
+            const parsed = JSON.parse(jsonMatch[0]);
+            return NextResponse.json({ metrics: parsed, content: parsed, model });
+          } catch {
+            // Fall through to error
+          }
+        }
+        return NextResponse.json(
+          { error: 'Failed to parse metrics response as JSON' },
+          { status: 500 }
+        );
+      }
+    }
+
+    // Return both 'content' and 'generated' for backward compatibility
+    return NextResponse.json({ content, generated: content, model });
+
+  } catch (error) {
+    console.error('Content generation error:', error);
+    return NextResponse.json(
+      { error: 'Failed to generate content' },
+      { status: 500 }
+    );
+  }
+}
+
+function buildPrompt(type: string, field: string, context: GenerateRequest['context'], existingPosts: { title: string; slug: string; category: string }[] = []): string {
+  const { keyword, title, category, existingContent, clientName, industry, technologies, audience, tone, length, includes, articleType, authorName, content, existingFaqs, seoIssue, currentValue, existingMetrics, currentFieldValue, outputFormat } = context;
+
+  // HTML output format instructions
+  const isHtmlOutput = outputFormat === 'html';
+  const FORMAT_INSTRUCTIONS = isHtmlOutput ? `
+OUTPUT FORMAT: HTML
+- Output content as clean, semantic HTML
+- Use proper HTML tags: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <a>, <blockquote>
+- For links, use: <a href="/blogs/slug">anchor text</a>
+- For emphasis, use: <strong>bold</strong> and <em>italic</em>
+- For lists, use: <ul><li>item</li></ul> or <ol><li>item</li></ol>
+- For blockquotes: <blockquote>quote text</blockquote>
+- Do NOT include <html>, <head>, <body> tags - just the content HTML
+- Do NOT use markdown syntax at all
+` : `
+OUTPUT FORMAT: MARKDOWN
+- Use markdown formatting (## H2, ### H3, **bold**, *italic*)
+- For links, use: [anchor text](/blogs/slug)
+- For lists, use: - bullet or 1. numbered
+- For blockquotes, use: > quote text
+`;
+
+  // Determine if we're in enhancement mode (user has entered content to enhance)
+  const isEnhancementMode = currentFieldValue && currentFieldValue.length > 10;
+
+  // Helper to check article type (handles both ID and label formats)
+  const isArticleType = (types: string[]): boolean => {
+    if (!articleType) return false;
+    const normalized = articleType.toLowerCase();
+    return types.some(t =>
+      normalized === t.toLowerCase() ||
+      normalized.includes(t.toLowerCase()) ||
+      t.toLowerCase().includes(normalized.replace(/[^a-z]/g, ''))
+    );
+  };
+
+  const isHowTo = isArticleType(['how-to', 'how to', 'how-to guide']);
+  const isListicle = isArticleType(['listicle', 'list']);
+  const isIndustryAnalysis = isArticleType(['industry-analysis', 'industry analysis', 'analysis']);
+  const isThoughtLeadership = isArticleType(['thought-leadership', 'thought leadership']);
+  const isCaseStudy = isArticleType(['case-study', 'case study']);
+  const isComparison = isArticleType(['comparison', 'versus', 'vs']);
+  const isExplainer = isArticleType(['explainer', 'what is', 'what-is']);
+  const isNews = isArticleType(['news', 'commentary']);
+  const isUltimateGuide = isArticleType(['ultimate-guide', 'ultimate guide', 'comprehensive']);
+  const isInterview = isArticleType(['interview', 'q&a', 'qa']);
+
+  // CRITICAL: No dashes rule - applies to ALL generated content
+  const NO_DASHES_RULE = `
+CRITICAL FORMATTING RULE:
+- NEVER use em dashes (—) or en dashes (–) in any content
+- Use commas, semicolons, colons, or periods instead
+- Use "to" for ranges (e.g., "10 to 20" not "10–20")
+- Use hyphens (-) ONLY for compound words (e.g., "real-time", "AI-powered")
+- This is a strict requirement with no exceptions
+`;
+
+  // AEO/GEO optimization guidelines that apply to all content
+  const AEO_GEO_GUIDELINES = `
+${NO_DASHES_RULE}
+
+AEO (Answer Engine Optimization) Requirements:
+- Include clear definitions (e.g., "X is a...", "X refers to...")
+- Add question-based headings where appropriate (What, How, Why, When)
+- Create 40-60 word paragraphs that directly answer questions (optimal for featured snippets)
+- Include numbered steps for processes
+- Use bulleted lists for features/benefits
+
+GEO (Generative Engine Optimization) Requirements:
+- Include specific statistics and data points with context
+- Reference authoritative sources when making claims
+- Use clear entity names (specific tools, companies, technologies)
+- Add unique insights from experience (e.g., "In our experience...", "Based on 80+ deployments...")
+- Ensure comprehensive topic coverage
+- Write at a professional but accessible reading level
+`;
+
+  if (type === 'blog') {
+    switch (field) {
+      case 'title':
+        return `Generate a compelling, SEO/AEO-optimized blog post title about "${keyword || title}".
+
+Article Type: ${articleType || 'How-To Guide'}
+Target Audience: ${audience || 'C-Suite Executives, IT Decision Makers'}
+Category: ${category || 'Enterprise Technology'}
+
+Requirements:
+- 50-60 characters (strict limit for full SERP display)
+- Include the main keyword naturally at the beginning if possible
+- Match the article type format:
+  * How-To: "How to [Action] [Benefit]"
+  * Listicle: "[Number] [Topic] for [Audience/Goal]"
+  * Explainer: "What is [Topic]? [Benefit/Context]"
+  * Industry Analysis: "[Year] [Topic] Trends: [Key Insight]"
+  * Ultimate Guide: "The Complete Guide to [Topic]"
+- Use power words (Transform, Essential, Proven, Strategic)
+- Front-load value proposition
+- Professional tone for ${audience || 'enterprise decision makers'}
+
+Return ONLY the title, nothing else.`;
+
+      case 'excerpt':
+        return `Write a compelling excerpt for a ${articleType || 'blog post'} titled "${title}".
+
+Target Audience: ${audience || 'Enterprise decision makers'}
+Tone: ${tone || 'Authoritative & Trustworthy'}
+
+Requirements:
+- 150-160 characters max
+- Start with the key benefit or answer
+- Include the main keyword naturally
+- End with implicit value (what they'll gain)
+- Avoid generic phrases like "Learn more" or "Read on"
+- Be specific about the value proposition
+
+AEO Optimization:
+- If the title is a question, start with a direct answer
+- Include a specific metric or outcome if possible
+
+Return ONLY the excerpt, nothing else.`;
+
+      case 'outline':
+        return `Create a comprehensive, value-packed outline for an EXCEPTIONAL ${articleType || 'How-To Guide'} about "${keyword || title}".
+
+CONTEXT:
+- Article Type: ${articleType || 'How-To Guide'}
+- Target Word Count: ${length || '1,500-2,000 words'}
+- Target Audience: ${audience || 'C-Suite Executives, IT Decision Makers'}
+- Tone: ${tone || 'Authoritative & Trustworthy'}
+- Must Include: ${includes || 'Statistics, FAQ Section, Actionable Tips'}
+- Category: ${category || 'Enterprise Technology'}
+
+OUTLINE REQUIREMENTS:
+
+The outline should be DETAILED enough that it serves as a complete blueprint. Each section should include:
+- The heading (## or ###)
+- 2-3 bullet points of what SPECIFICALLY to cover
+- Any statistics, examples, or case studies to include
+- The key insight or takeaway for that section
+
+STRUCTURE BY ARTICLE TYPE:
+
+${isHowTo || isUltimateGuide || !articleType ? `
+FOR: ${articleType || 'How-To Guide'}
+
+## Introduction
+- Opening hook with striking statistic or expert quote
+- The problem/opportunity this solves
+- "In this guide, you'll learn..." (3-4 specific outcomes)
+- Who this is for and estimated reading time
+
+## Why [Topic] Matters Now
+- Current market context
+- The cost of NOT doing this (quantified)
+- Recent developments making this urgent
+
+## Prerequisites: What You Need Before Starting
+- Required knowledge/skills
+- Tools/technologies needed
+- Organizational readiness checklist
+
+## Step 1: [Specific Action]
+- Detailed explanation
+- Specific example or mini case study
+- Common pitfall to avoid
+- Pro tip from practitioner experience
+
+[Continue with Steps 2-5+]
+
+## Common Mistakes That Derail [Topic] Projects
+- Mistake 1 with why it happens and how to avoid
+- Mistake 2...
+- Include: "In our experience, 70% of failures come from..."
+
+## Quick-Reference Checklist
+- Bulleted checklist they can screenshot/print
+
+## FAQ Section
+- 4-5 questions people actually search for
+- Each answer: 40-60 words, direct and specific
+
+## What's Next: Taking Action
+- Immediate next step they can take today
+- Resources for deeper learning
+- When to consider expert help
+` : ''}
+
+${isIndustryAnalysis || isThoughtLeadership ? `
+FOR: ${articleType}
+
+## Executive Summary
+- 3 key findings in bullets
+- The "so what" for decision makers
+- Reading time estimate
+
+## The Current State of [Topic] in 2025
+- Market size and growth trajectory
+- Key players and their positioning
+- Recent major developments (last 6 months)
+
+## Trend 1: [Specific Trend Name]
+- What's happening
+- Supporting data (cite Gartner, Forrester, etc.)
+- Real-world example
+- Implication for enterprises
+
+[Trends 2-5...]
+
+## What the Experts Are Saying
+- Quotes/predictions from industry leaders
+- Our own prediction based on client work
+
+## Risk Assessment: What Could Go Wrong
+- Potential disruptions
+- Regulatory considerations
+- Technology risks
+
+## Opportunity Map: Where to Place Your Bets
+- High-confidence opportunities
+- Emerging opportunities worth watching
+- What to avoid
+
+## Your 90-Day Action Plan
+- Immediate actions (this month)
+- Near-term initiatives (next quarter)
+- Strategic planning (this year)
+
+## FAQ Section
+` : ''}
+
+${isExplainer ? `
+FOR: ${articleType}
+
+## What is [Topic]? (The 60-Word Definition)
+- Clear, jargon-free definition
+- What category it belongs to
+- Its core purpose/function
+
+## Why [Topic] Has Become Critical in 2025
+- The business drivers
+- Statistics on adoption/impact
+- What's changed recently
+
+## How [Topic] Actually Works
+- The core mechanism (simplified)
+- Key components and how they interact
+- Analogy for non-technical readers
+
+## The Real Benefits (Beyond the Hype)
+- Benefit 1 with specific metrics
+- Benefit 2 with use case
+- What vendors won't tell you
+
+## [Topic] in Action: 3 Use Cases
+- Use case 1: Industry + specific example
+- Use case 2...
+- Use case 3...
+
+## [Topic] vs. [Main Alternative]
+- Head-to-head comparison
+- When to choose which
+- Hybrid approaches
+
+## Getting Started: A Practical Roadmap
+- Assessment: Are you ready?
+- Phase 1: Quick wins (30 days)
+- Phase 2: Foundation (90 days)
+- Phase 3: Scale (6-12 months)
+
+## FAQ Section
+` : ''}
+
+${isListicle ? `
+FOR: ${articleType}
+
+## Introduction: Why This List Matters
+- Hook with the problem/opportunity
+- Why these specific items were chosen
+- What readers will gain
+
+## 1. [First Item] - [Key Benefit]
+- What it is and why it matters
+- Specific example or case study
+- Pro tip for implementation
+- When to use/avoid
+
+## 2. [Second Item] - [Key Benefit]
+[Same structure...]
+
+[Continue for 7-10 items]
+
+## Quick Comparison Table
+- Side-by-side summary of all items
+- Best for X, Best for Y recommendations
+
+## FAQ Section
+
+## Your Next Step
+- How to choose which one to start with
+- Resources for deeper exploration
+` : ''}
+
+${isComparison ? `
+FOR: ${articleType}
+
+## Introduction: The Decision You're Facing
+- Why this comparison matters
+- What's at stake
+- Who this guide is for
+
+## Quick Verdict (TL;DR)
+- The bottom line recommendation by use case
+- "Choose X if..., Choose Y if..."
+
+## What is [Option A]?
+- Definition and core purpose
+- Key strengths
+- Ideal use cases
+
+## What is [Option B]?
+- Definition and core purpose
+- Key strengths
+- Ideal use cases
+
+## Head-to-Head Comparison
+### Performance
+### Cost
+### Ease of Implementation
+### Scalability
+### Vendor Support/Ecosystem
+
+## Real-World Decision Framework
+- Decision tree or flowchart logic
+- "If you have X, choose Y"
+
+## Migration Considerations
+- Switching costs
+- Compatibility issues
+- Hybrid approaches
+
+## FAQ Section
+
+## Making Your Decision
+- Summary of key differentiators
+- Recommended next steps
+` : ''}
+
+${isNews ? `
+FOR: ${articleType}
+
+## The News: What Happened
+- The key development in one paragraph
+- Why it's significant
+- Initial market/industry reaction
+
+## Context: Why This Matters
+- Background leading to this development
+- Historical perspective
+- Market conditions
+
+## Analysis: What It Really Means
+- Expert interpretation
+- Hidden implications
+- Who wins and loses
+
+## Impact Assessment
+### For Enterprise IT Teams
+### For Business Leaders
+### For the Industry
+
+## What to Watch Next
+- Key indicators to monitor
+- Timeline of expected developments
+
+## Our Take
+- ACI's perspective based on client experience
+- How we're advising clients to respond
+
+## FAQ Section
+` : ''}
+
+${AEO_GEO_GUIDELINES}
+
+Return a detailed outline in markdown format that serves as a complete blueprint for an exceptional article.`;
+
+      case 'content':
+        // Parse word count for explicit guidance (handles formats like "1,500-2,000 words" or "1500-2000")
+        // Extract all numbers from the length string
+        const lengthStr = (length || '1,500-2,000 words').replace(/,/g, ''); // Remove commas
+        const numbers = lengthStr.match(/\d+/g) || ['1500', '2000']; // Extract all numbers
+        const minWords = parseInt(numbers[0]) || 1500;
+        const maxWords = numbers.length > 1 ? parseInt(numbers[1]) || 2000 : minWords + 500;
+
+        // Log for debugging
+        console.log(`Content generation - length input: "${length}", parsed: ${minWords}-${maxWords} words`);
+
+        return `You are a world-renowned expert in ${category || 'enterprise technology'} and related technologies. You excel at merging cutting-edge technologies with business strategy, providing highly accurate, insightful, and actionable information. You are a master at creating compelling content that resonates deeply with ${audience || 'enterprise decision makers'}.
+
+CRITICAL: Create an EXCEPTIONAL article, NOT a generic fluff piece. Every paragraph must deliver genuine value, unique insights, and actionable intelligence.
+
+═══════════════════════════════════════════════════════════════
+STRICT REQUIREMENTS - YOU MUST FOLLOW THESE:
+═══════════════════════════════════════════════════════════════
+
+📏 WORD COUNT: ${length || '1,500-2,000 words'}
+   - Your article MUST be between ${minWords} and ${maxWords} words
+   - This is NOT a suggestion - it is a strict requirement
+   - Too short = not comprehensive enough
+   - Count your words and ensure you hit the target
+
+👥 TARGET AUDIENCE: ${audience || 'C-Suite Executives, IT Decision Makers'}
+   - Write specifically for THIS audience's concerns, vocabulary, and priorities
+   - ${audience?.toLowerCase().includes('c-suite') || audience?.toLowerCase().includes('executive') ?
+     'Focus on: business impact, ROI, strategic decisions, risk mitigation, competitive advantage' : ''}
+   - ${audience?.toLowerCase().includes('technical') || audience?.toLowerCase().includes('practitioner') ?
+     'Focus on: implementation details, code examples, technical architecture, best practices' : ''}
+   - ${audience?.toLowerCase().includes('it decision') ?
+     'Focus on: vendor evaluation, build vs buy, integration complexity, team capabilities, TCO' : ''}
+   - Use vocabulary and examples that resonate with this specific audience
+   - Address THEIR pain points, not generic ones
+
+🎯 ARTICLE TYPE: ${articleType || 'How-To Guide'}
+   - Follow the structure and conventions of this specific article type
+   - See ARTICLE TYPE-SPECIFIC GUIDANCE below
+
+🎨 TONE: ${tone || 'Authoritative & Trustworthy'}
+   - Maintain this tone consistently throughout
+   - ${tone?.toLowerCase().includes('authoritative') ? 'Be confident, cite data, speak from experience' : ''}
+   - ${tone?.toLowerCase().includes('approachable') ? 'Use conversational language, analogies, relatable examples' : ''}
+   - ${tone?.toLowerCase().includes('technical') ? 'Be precise, use proper terminology, include technical depth' : ''}
+
+═══════════════════════════════════════════════════════════════
+
+PRIMARY CONTEXT:
+- Topic/Keyword: "${keyword || title}"
+- Author Perspective: ${authorName || 'ACI Team'} (enterprise data & AI consultancy)
+- Category: ${category || 'Enterprise Technology'}
+- Must Include: ${includes || 'Statistics, FAQ Section, Actionable Tips'}
+
+${existingContent ? `
+IMPORTANT - FOLLOW THIS OUTLINE EXACTLY:
+The article MUST follow this structure. Each section in the outline below should become a section in the final article:
+
+${existingContent}
+
+---
+` : ''}
+
+${AEO_GEO_GUIDELINES}
+
+ARTICLE TYPE-SPECIFIC GUIDANCE:
+${isHowTo || isUltimateGuide ? `
+You are writing a ${articleType}. This format requires:
+- Step-by-step numbered instructions with clear action verbs
+- Prerequisites section before the steps
+- Each step should include: the action, why it matters, an example, and a common pitfall
+- Include a troubleshooting or "Common Mistakes" section
+- End with a quick-reference checklist
+` : ''}
+${isListicle ? `
+You are writing a ${articleType}. This format requires:
+- A clear number in the title (e.g., "7 Best...", "10 Ways to...")
+- Each item should follow the same structure: heading, explanation, example, pro tip
+- Items should be ranked or ordered logically
+- Include a comparison table summarizing all items
+- Make items scannable with bold key points
+` : ''}
+${isIndustryAnalysis || isThoughtLeadership ? `
+You are writing a ${articleType}. This format requires:
+- Executive summary with 3 key findings upfront
+- Data-driven insights with specific statistics and sources
+- Expert quotes or references (Gartner, Forrester, McKinsey)
+- Bold predictions backed by reasoning
+- Clear implications for different stakeholders
+- Action items prioritized by impact and effort
+` : ''}
+${isExplainer ? `
+You are writing a ${articleType}. This format requires:
+- A crystal-clear definition in the first paragraph (40-60 words for featured snippets)
+- "Why it matters" section with business impact
+- "How it works" section with technical details made accessible
+- Real-world use cases by industry
+- Comparison with alternatives or traditional approaches
+- Getting started roadmap
+` : ''}
+${isComparison ? `
+You are writing a ${articleType}. This format requires:
+- Quick verdict/TL;DR near the top
+- Fair, balanced assessment of both options
+- Clear comparison criteria (performance, cost, scalability, etc.)
+- Specific scenarios where each option wins
+- Decision framework or flowchart logic
+- Migration considerations if switching
+` : ''}
+${isNews ? `
+You are writing a ${articleType}. This format requires:
+- Lead with the news in the first paragraph
+- Provide context and background
+- Expert analysis of implications
+- Impact assessment for different audiences
+- What to watch next / future implications
+- Your organization's perspective
+` : ''}
+
+CONTENT EXCELLENCE REQUIREMENTS:
+
+1. SENSATIONAL OPENING (Critical):
+   - Start with an engaging, intelligent hook that front-loads value
+   - Consider opening with a powerful, relevant quote from a renowned industry expert (Satya Nadella, Jensen Huang, or similar)
+   - Include a striking statistic that brings home the importance (e.g., "Organizations with mature data strategies see 2.6x revenue growth...")
+   - Set a tone that promises an exciting, value-packed read
+   - First 100 words must establish: why this matters NOW, what's at stake, what they'll gain
+
+2. BODY CONTENT (Deep Value):
+   - Go IN-DEPTH on every point demanded by the topic
+   - Provide REAL solutions, not generic advice
+   - Include SPECIFIC real-world use cases and examples (e.g., "When we helped a Fortune 100 retailer...")
+   - Add industry-specific facts and statistics with context
+   - Provide step-by-step guidance where appropriate
+   - Address the ACTUAL challenges the target audience faces
+   - Share contrarian or non-obvious insights that demonstrate expertise
+   - Use clear headings and subheadings that explain the content (not just label it)
+
+3. UNIQUE VOICE & INSIGHTS:
+   - Include "In our experience working with 80+ Fortune 500 clients..." type insights
+   - Share specific patterns you've observed (e.g., "The #1 mistake we see enterprises make is...")
+   - Provide the "insider perspective" that only practitioners would know
+   - Challenge conventional wisdom where appropriate
+   - Make bold, defensible predictions about the future
+
+4. PRACTICAL & ACTIONABLE:
+   - Every section should answer "So what? What do I do with this?"
+   - Include checklists, frameworks, or decision trees where valuable
+   - Provide specific tool/technology recommendations with reasoning
+   - Add "Pro Tips" or "Insider Notes" with genuinely useful insider knowledge
+   - Include pitfalls to avoid with specific examples of what goes wrong
+
+5. CONCLUSION (Strong Close):
+   - Do NOT start with "In conclusion" or similar
+   - Tie everything together into a coherent narrative
+   - Provide a clear call-to-action or next steps
+   - End with a memorable, resonant closing sentence that stays with the reader
+   - Leave them feeling they've gained significant value
+
+6. FORMATTING & SEO:
+${FORMAT_INSTRUCTIONS}
+   - Include bulleted lists and numbered steps
+   - Use blockquotes for important callouts
+   - Create 40-60 word paragraphs for featured snippet optimization
+${existingPosts.length > 0 ? `
+7. INTERNAL LINKS (REQUIRED):
+   You MUST include 3-5 internal links to related articles from our blog. Use these existing posts:
+
+${existingPosts.slice(0, 20).map(p => `   - "${p.title}" → /blogs/${p.slug} (Category: ${p.category})`).join('\n')}
+
+   IMPORTANT:
+   - Add internal links naturally within the content where relevant
+   - Use descriptive anchor text (not "click here" or "read more")
+   - Format as: [descriptive text](/blogs/slug)
+   - Example: "For more on data governance, see our guide on [building enterprise data platforms](/blogs/enterprise-data-platforms)"
+   - Distribute links throughout the article, not just at the end
+   - Only link to posts that are genuinely relevant to the context
+` : ''}
+
+QUALITY CHECKLIST (Self-verify before output):
+- [ ] WORD COUNT: Is the article between ${minWords} and ${maxWords} words? (MANDATORY)
+- [ ] AUDIENCE: Is this written specifically for ${audience || 'C-Suite/IT Decision Makers'}? (Not generic)
+- [ ] ARTICLE TYPE: Does it follow ${articleType || 'How-To Guide'} conventions?
+- [ ] TONE: Is the ${tone || 'Authoritative'} tone maintained throughout?
+- [ ] Would a busy CTO/VP find this genuinely valuable?
+- [ ] Are there at least 5 specific, cited statistics?
+- [ ] Does every section provide actionable takeaways?
+- [ ] Is there at least one non-obvious insight per major section?
+- [ ] Does the opening hook grab attention immediately?
+- [ ] Is the advice specific (not generic platitudes)?
+${existingPosts.length > 0 ? `- [ ] INTERNAL LINKS: Did you include 3-5 internal links to related blog posts? (MANDATORY when requested)` : ''}
+
+Return the full article in ${isHtmlOutput ? 'HTML' : 'markdown'} format. Make it EXCEPTIONAL and ensure it meets ALL requirements above.`;
+
+      case 'meta_title':
+        return `Generate an AEO-optimized meta title for this ${articleType || 'blog post'}.
+
+Blog Title: "${title}"
+${keyword ? `Target Keyword: "${keyword}"` : ''}
+Article Type: ${articleType || 'How-To Guide'}
+Category: ${category || 'Enterprise Technology'}
+
+Requirements:
+- Maximum 60 characters (strict limit)
+- Front-load the keyword
+- Include year (2025) if relevant for freshness
+- Match article type patterns:
+  * How-To: "How to [X]: Step-by-Step Guide [Year]"
+  * Listicle: "[Number] Best [X] for [Goal] in [Year]"
+  * Explainer: "What is [X]? Definition & Guide [Year]"
+- Make it click-worthy but accurate
+
+Return ONLY the meta title, nothing else.`;
+
+      case 'meta_description':
+        return `Generate an AEO-optimized meta description for this ${articleType || 'blog post'}.
+
+Blog Title: "${title}"
+${keyword ? `Target Keyword: "${keyword}"` : ''}
+Article Type: ${articleType || 'How-To Guide'}
+Target Audience: ${audience || 'Enterprise decision makers'}
+${existingContent ? `Content Preview: ${existingContent.substring(0, 300)}` : ''}
+
+Requirements:
+- 150-160 characters (strict limit)
+- Start with the answer/value if the title is a question
+- Include the main keyword in first 100 characters
+- End with implicit CTA (value statement, not "click here")
+- Be specific: include a number, stat, or concrete benefit
+
+Example patterns:
+- "Learn how to [X] in [Y] steps. Includes [benefit] + [bonus]. Updated for 2025."
+- "[X] is [definition]. Discover [specific benefit] + [unique angle]."
+
+Return ONLY the meta description, nothing else.`;
+
+      case 'faqs':
+        return `Generate 4-5 FAQ questions and answers for a ${articleType || 'blog post'} about "${title}".
+
+Topic/Keyword: ${keyword || title}
+Article Type: ${articleType || 'How-To Guide'}
+Category: ${category || 'Enterprise Technology'}
+Target Audience: ${audience || 'Enterprise decision makers'}
+${content ? `Article Content Preview:\n${content.substring(0, 1000)}` : ''}
+${existingFaqs && existingFaqs.length > 0 ? `Existing FAQs (don't duplicate):\n${existingFaqs.map(f => f.question).join('\n')}` : ''}
+
+Requirements for each FAQ:
+
+QUESTIONS:
+- Use natural question formats: "What is...", "How do I...", "Why should...", "When is...", "What are the benefits of..."
+- Target questions people actually search for (People Also Ask style)
+- Include long-tail question variations
+- Mix informational and transactional intent questions
+
+ANSWERS:
+- 40-60 words each (optimal for featured snippets)
+- Start with a direct answer in the first sentence
+- Include specific details/examples
+- Use active voice
+- Don't start with "Yes" or "No" - incorporate the answer naturally
+- Reference the company perspective where relevant: "At ACI, we..."
+
+Return as a JSON array:
+[
+  {"question": "What is...", "answer": "..."},
+  {"question": "How do...", "answer": "..."}
+]
+
+Return ONLY the JSON array, nothing else.`;
+
+      default:
+        return `Generate content for ${field}`;
+    }
+  }
+
+  if (type === 'whitepaper') {
+    switch (field) {
+      case 'description':
+        return `Write a compelling, GEO-optimized description for a whitepaper titled "${title}".
+Category: ${category || 'Enterprise Technology'}
+
+${AEO_GEO_GUIDELINES}
+
+Requirements:
+- 150-200 words
+- Start with the core problem/opportunity this whitepaper addresses
+- Include 2-3 specific outcomes readers will achieve
+- Reference data/research if applicable ("Based on analysis of 80+ enterprises...")
+- Highlight unique insights not found elsewhere
+- End with clear value proposition for C-suite executives
+- Use specific numbers where possible (page count, case studies included, frameworks)
+
+Structure:
+1. Opening hook (problem statement)
+2. What's covered (specific topics)
+3. Key outcomes (what they'll be able to do)
+4. Credibility signal (based on real experience)
+
+Return ONLY the description, nothing else.`;
+
+      case 'excerpt':
+        return `Write a short, compelling excerpt for a whitepaper to display on a homepage card.
+
+Whitepaper Title: "${title}"
+Category: ${category || 'Enterprise Technology'}
+${context.description ? `Full Description: ${context.description}` : ''}
+
+Requirements:
+- Maximum 150 characters (strict limit - this is for a card)
+- One compelling sentence that creates urgency to download
+- Focus on the key benefit or transformation
+- Avoid generic phrases
+- Make it action-oriented
+
+Examples of good excerpts:
+- "Build resilient, AI-ready data platforms that scale with your business needs."
+- "Learn the framework used by Fortune 500 companies to cut data costs by 40%."
+- "Discover proven strategies for real-time analytics at enterprise scale."
+
+Return ONLY the excerpt, nothing else.`;
+
+      case 'highlights':
+        return `Generate 3 key takeaways/highlights for a whitepaper to display on a homepage card.
+
+Whitepaper Title: "${title}"
+Category: ${category || 'Enterprise Technology'}
+${context.description ? `Description: ${context.description}` : ''}
+${context.excerpt ? `Excerpt: ${context.excerpt}` : ''}
+
+Requirements:
+- Exactly 3 bullet points
+- Each bullet: 8-15 words max
+- Start each with an action word or specific benefit
+- Be specific - include numbers, frameworks, or outcomes where possible
+- These appear with checkmarks on the homepage card
+
+Examples of good highlights:
+- "Framework for AI-powered data architecture"
+- "Cost optimization strategies that drive 40% savings"
+- "Real-world case studies from Fortune 500 implementations"
+- "12-step compliance checklist for data governance"
+- "ROI calculator for data platform investments"
+
+Return ONLY 3 highlights, one per line (no bullets, numbers, or dashes).`;
+
+      case 'meta_title':
+        return `Generate an AEO-optimized meta title for a whitepaper.
+
+Whitepaper Title: "${title}"
+Category: ${category || 'Enterprise Technology'}
+${context.description ? `Description: ${context.description}` : ''}
+
+Requirements:
+- Maximum 60 characters (strict limit)
+- Include "[Free Whitepaper]" or "[Guide]" if space permits
+- Front-load the main topic/keyword
+- Include year for freshness signals (2025)
+- Make it compelling for lead generation
+- Pattern: "[Topic]: [Benefit] | Free Whitepaper"
+
+Return ONLY the meta title, nothing else.`;
+
+      case 'meta_description':
+        return `Generate an AEO/GEO-optimized meta description for a whitepaper.
+
+Whitepaper Title: "${title}"
+Category: ${category || 'Enterprise Technology'}
+${context.description ? `Description: ${context.description}` : ''}
+
+Requirements:
+- 150-160 characters (strict limit)
+- Start with what makes this whitepaper valuable
+- Include a specific benefit or statistic
+- Strong CTA: "Download free" or "Get your copy"
+- Target: CIOs, CTOs, VP of Engineering
+- Include credibility signal if possible
+
+Pattern: "[Key topic insight]. [Specific benefit/outcome]. Download your free copy."
+
+Return ONLY the meta description, nothing else.`;
+
+      default:
+        return `Generate ${field} content for whitepaper`;
+    }
+  }
+
+  if (type === 'webinar') {
+    switch (field) {
+      case 'description':
+        return `Write a compelling description for a webinar titled "${title}".
+Category: ${category || 'Enterprise Technology'}
+${context.topics ? `Topics: ${context.topics}` : ''}
+
+Requirements:
+- 150-200 words
+- Explain what attendees will learn
+- Highlight key topics and speakers
+- Include value proposition for enterprise decision makers
+- Create urgency to register
+- Professional yet engaging tone
+
+Return ONLY the description, nothing else.`;
+
+      case 'meta_title':
+        return `Generate an SEO-optimized meta title for a webinar.
+
+Webinar Title: "${title}"
+${context.topics ? `Topics: ${context.topics}` : ''}
+${context.description ? `Description: ${context.description}` : ''}
+
+Requirements:
+- Maximum 60 characters (strict limit)
+- Include the main topic naturally
+- Make it compelling and attention-grabbing
+- Consider including "Webinar" or "Live" if space permits
+- Professional tone for enterprise audience
+
+Return ONLY the meta title, nothing else.`;
+
+      case 'meta_description':
+        return `Generate an SEO-optimized meta description for a webinar.
+
+Webinar Title: "${title}"
+${context.topics ? `Topics: ${context.topics}` : ''}
+${context.description ? `Description: ${context.description}` : ''}
+
+Requirements:
+- 150-160 characters (strict limit)
+- Summarize what attendees will learn
+- Include a call-to-action (e.g., "Register now", "Save your spot")
+- Create urgency without being pushy
+- Target enterprise decision makers
+
+Return ONLY the meta description, nothing else.`;
+
+      default:
+        return `Generate ${field} content for webinar`;
+    }
+  }
+
+  if (type === 'case_study') {
+    switch (field) {
+      case 'excerpt':
+        return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
+
+CURRENT CONTENT TO ENHANCE:
+"""
+${currentFieldValue}
+"""
+
+Your task: Take this content and make it more compelling, professional, and GEO-optimized. Keep the same facts and details the user provided, but improve the writing quality, add professional polish, and ensure it follows best practices.
+
+` : ''}Write a compelling, GEO-optimized excerpt for a case study.
+
+Title: "${title}"
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+
+${AEO_GEO_GUIDELINES}
+
+Requirements:
+- 100-150 words
+- Lead with the most impressive result/metric
+- Follow Problem → Solution → Result structure
+- Include specific numbers (%, $, time)
+- Name the technologies used
+- End with the business transformation achieved
+- Professional tone that showcases expertise
+${isEnhancementMode ? `- IMPORTANT: Preserve all specific details, metrics, and facts from the user's original content
+- Enhance the writing quality and structure, don't replace the substance` : ''}
+
+Follow this general flow: Client faced challenge. Using technologies, ACI Infotech implemented solution. The result: specific metrics. Today, ongoing benefit.
+
+FORMATTING GUIDELINES:
+- Write in plain prose for excerpts (1-2 paragraphs)
+- You may use **bold** to emphasize key metrics or results
+- Keep it concise and scannable
+
+Return ONLY the excerpt content.`;
+
+      case 'challenge':
+        return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
+
+CURRENT CONTENT TO ENHANCE:
+"""
+${currentFieldValue}
+"""
+
+Your task: Take this content and make it more compelling, professional, and GEO-optimized. Keep the same facts and details the user provided, but improve the writing quality, add professional polish, and ensure it follows best practices.
+
+` : ''}Write a compelling, GEO-optimized "Challenge" section for a case study.
+
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies that will be used: ${technologies?.join(', ') || 'Data & Analytics'}
+
+${AEO_GEO_GUIDELINES}
+
+Requirements:
+- 150-200 words
+- Start with business context (company size, industry pressures)
+- Describe 2-3 specific, quantifiable challenges
+- Include the "before" metrics if possible
+- Explain business impact in dollars or percentages
+- Reference industry-specific pain points
+- Explain why existing solutions failed (without naming competitors)
+${isEnhancementMode ? `- IMPORTANT: Preserve all specific details, metrics, and facts from the user's original content
+- Enhance the writing quality and structure, don't replace the substance` : ''}
+
+Cover these points in your content:
+- Context about industry pressures
+- Specific technical limitations and their business impact
+- Operational inefficiencies and costs
+- Competitive/market pressures
+
+FORMATTING GUIDELINES:
+- You may use Markdown formatting for better readability
+- Use **bold** to emphasize key challenges or metrics
+- Use bullet points or numbered lists to organize multiple challenges
+- Use ### subheadings if covering distinct challenge areas
+- Keep paragraphs focused and scannable
+- IMPORTANT: Do NOT start with a heading like "The Challenge:" or "Challenge:" - the page already has section titles. Jump straight into the content.
+
+Return the formatted content.`;
+
+      case 'solution':
+        return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
+
+CURRENT CONTENT TO ENHANCE:
+"""
+${currentFieldValue}
+"""
+
+Your task: Take this content and make it more compelling, professional, and GEO-optimized. Keep the same facts, technologies, and implementation details the user provided, but improve the writing quality, add professional polish, and ensure it follows best practices.
+
+` : ''}Write a compelling, GEO-optimized "Solution" section for a case study.
+
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies: ${technologies?.join(', ') || 'Databricks, Snowflake, AWS'}
+
+${AEO_GEO_GUIDELINES}
+
+Requirements:
+- 200-250 words
+- Name specific technologies and how they were configured
+- Include implementation timeline if realistic
+- Describe the architecture approach
+- Mention team collaboration and change management
+- Reference ACI's methodology or unique approach
+- Use technical specifics that establish expertise
+${isEnhancementMode ? `- IMPORTANT: Preserve all specific technologies, approaches, and details from the user's original content
+- Enhance the writing quality and structure, don't replace the substance` : ''}
+
+Cover these points in your content:
+- The approach and strategy ACI Infotech designed
+- Technology architecture and how it was configured
+- Implementation milestones and challenges overcome
+- What made this solution unique
+- How ACI collaborated with client teams
+
+FORMATTING GUIDELINES:
+- You may use Markdown formatting for better readability
+- Use **bold** to emphasize key technologies or approaches
+- Use bullet points or numbered lists to organize solution components
+- Use ### subheadings for distinct phases or aspects of the solution
+- Keep paragraphs focused and scannable
+- IMPORTANT: Do NOT start with a heading like "The Solution:" or "Our Solution:" - the page already has section titles. Jump straight into the content.
+
+Return the formatted content.`;
+
+      case 'results':
+        return `${isEnhancementMode ? `ENHANCEMENT MODE: Improve and expand the following user-written content while preserving its core meaning and facts.
+
+CURRENT CONTENT TO ENHANCE:
+"""
+${currentFieldValue}
+"""
+
+Your task: Take this content and make it more compelling, professional, and GEO-optimized. Keep the same metrics, numbers, and results the user provided, but improve the writing quality, add professional polish, and ensure it follows best practices.
+
+` : ''}Write a compelling, GEO-optimized "Results" section for a case study.
+
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+
+${AEO_GEO_GUIDELINES}
+
+Requirements:
+- 150-200 words
+- Lead with the most impressive metric
+- Include 4-5 quantifiable results with specific numbers
+- Mix immediate and long-term outcomes
+- Reference before/after comparison
+- Include business value in dollars where possible
+- End with client transformation/competitive advantage
+${isEnhancementMode ? `- IMPORTANT: Preserve all specific metrics, numbers, and results from the user's original content
+- Enhance the writing quality and structure, don't replace the substance` : ''}
+
+Include results from these categories:
+- Performance improvements (speed, processing time)
+- Cost savings (annual savings, operational costs)
+- Efficiency gains (hours saved, productivity)
+- Business impact (revenue enabled, time to market)
+
+FORMATTING GUIDELINES:
+- You may use Markdown formatting for better readability
+- Use **bold** to emphasize key metrics and results (e.g., **40% reduction**, **$2M savings**)
+- Use bullet points or numbered lists to organize distinct results
+- Use ### subheadings to categorize results (e.g., Performance, Cost Savings, Business Impact)
+- Keep the content scannable and impactful
+- IMPORTANT: Do NOT start with a heading like "Results:" or "The Results:" - the page already has section titles. Jump straight into the content.
+
+Return the formatted content.`;
+
+      case 'meta_title':
+        return `Generate an AEO-optimized meta title for a case study.
+
+Case Study Title: "${title}"
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+
+Requirements:
+- Maximum 60 characters (strict limit)
+- Lead with the result or transformation
+- Include industry for relevance
+- Pattern: "[Industry] Case Study: [Key Result] | ACI"
+- Or: "How [Industry Client] Achieved [Result]"
+- Make it compelling for enterprise decision makers
+
+Return ONLY the meta title, nothing else.`;
+
+      case 'meta_description':
+        return `Generate an AEO/GEO-optimized meta description for a case study.
+
+Case Study Title: "${title}"
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+
+${NO_DASHES_RULE}
+
+Requirements:
+- 150-160 characters (strict limit)
+- Lead with the most impressive metric
+- Include the industry and key technology
+- End with invitation to learn more
+- Pattern: "See how [industry] client achieved [specific metric] using [technology]. Read the full case study."
+
+Return ONLY the meta description, nothing else.`;
+
+      case 'metrics':
+        return `Generate 4 compelling, quantifiable metrics for a case study.
+
+Client: ${clientName || 'Enterprise client'}
+Industry: ${industry || 'Enterprise'}
+Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+${existingContent ? `Challenge/Solution Context:\n${existingContent}` : ''}
+${existingMetrics && existingMetrics.length > 0 ? `Existing Metrics (improve or complement these):\n${existingMetrics.map(m => `${m.value} - ${m.label}`).join('\n')}` : ''}
+
+${NO_DASHES_RULE}
+
+Requirements:
+- Generate exactly 4 metrics
+- Each metric must have: value (number with unit), label (what it measures), description (optional context)
+- Mix categories: performance, cost savings, efficiency, business impact
+- Use realistic enterprise-scale numbers
+- Values should be specific (not rounded to nearest 10)
+
+Examples of good metrics:
+- Value: "73%", Label: "Reduction in Processing Time", Description: "From 4 hours to 65 minutes"
+- Value: "$2.3M", Label: "Annual Cost Savings", Description: "Infrastructure and operations"
+- Value: "12x", Label: "Faster Data Pipeline", Description: "Real-time vs batch processing"
+- Value: "99.9%", Label: "System Uptime", Description: "SLA-backed reliability"
+
+Return as JSON array:
+[
+  {"value": "73%", "label": "Reduction in Processing Time", "description": "From 4 hours to 65 minutes"},
+  {"value": "$2.3M", "label": "Annual Cost Savings", "description": "Infrastructure and operations"},
+  {"value": "12x", "label": "Faster Data Pipeline", "description": "Real-time vs batch"},
+  {"value": "99.9%", "label": "System Uptime", "description": "SLA-backed"}
+]
+
+Return ONLY the JSON array, nothing else.`;
+
+      case 'seo_fix':
+        return `Fix the following SEO issue for a case study.
+
+Issue: ${seoIssue || 'Content needs improvement'}
+Current Value: "${currentValue || ''}"
+
+Case Study Context:
+- Title: "${title}"
+- Client: ${clientName || 'Enterprise client'}
+- Industry: ${industry || 'Enterprise'}
+- Technologies: ${technologies?.join(', ') || 'Data & Analytics'}
+${existingContent ? `Additional Context:\n${existingContent}` : ''}
+
+${NO_DASHES_RULE}
+
+Fix Requirements:
+${seoIssue?.includes('title') || seoIssue?.includes('Title') ? `
+- Meta title must be 50-60 characters
+- Front-load keywords
+- Include industry or key result
+- Pattern: "[Result] for [Industry] | ACI Case Study"
+` : ''}
+${seoIssue?.includes('description') || seoIssue?.includes('Description') ? `
+- Meta description must be 150-160 characters
+- Start with the key metric or result
+- Include industry and technology
+- End with call to action
+` : ''}
+${seoIssue?.includes('missing') || seoIssue?.includes('Missing') ? `
+- Provide a complete, optimized value
+- Follow best practices for this field type
+` : ''}
+${seoIssue?.includes('keyword') || seoIssue?.includes('Keyword') ? `
+- Naturally incorporate relevant keywords
+- Don't keyword stuff
+- Front-load important terms
+` : ''}
+
+Return ONLY the fixed/improved content, nothing else.`;
+
+      default:
+        return `Generate ${field} content for case study. ${NO_DASHES_RULE}`;
+    }
+  }
+
+  return `Generate ${field} content for ${type}`;
+}
+
+// Mock functions removed - all content is now AI-generated with model fallback

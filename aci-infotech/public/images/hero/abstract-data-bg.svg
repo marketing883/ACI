@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="50%" style="stop-color:#1e3a5f"/>
+      <stop offset="100%" style="stop-color:#0a1628"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+
+  <!-- Grid pattern -->
+  <g stroke="#3b82f6" stroke-opacity="0.1" stroke-width="1">
+    <line x1="0" y1="0" x2="1920" y2="0"/>
+    <line x1="0" y1="108" x2="1920" y2="108"/>
+    <line x1="0" y1="216" x2="1920" y2="216"/>
+    <line x1="0" y1="324" x2="1920" y2="324"/>
+    <line x1="0" y1="432" x2="1920" y2="432"/>
+    <line x1="0" y1="540" x2="1920" y2="540"/>
+    <line x1="0" y1="648" x2="1920" y2="648"/>
+    <line x1="0" y1="756" x2="1920" y2="756"/>
+    <line x1="0" y1="864" x2="1920" y2="864"/>
+    <line x1="0" y1="972" x2="1920" y2="972"/>
+    <line x1="0" y1="0" x2="0" y2="1080"/>
+    <line x1="192" y1="0" x2="192" y2="1080"/>
+    <line x1="384" y1="0" x2="384" y2="1080"/>
+    <line x1="576" y1="0" x2="576" y2="1080"/>
+    <line x1="768" y1="0" x2="768" y2="1080"/>
+    <line x1="960" y1="0" x2="960" y2="1080"/>
+    <line x1="1152" y1="0" x2="1152" y2="1080"/>
+    <line x1="1344" y1="0" x2="1344" y2="1080"/>
+    <line x1="1536" y1="0" x2="1536" y2="1080"/>
+    <line x1="1728" y1="0" x2="1728" y2="1080"/>
+  </g>
+
+  <!-- Data nodes -->
+  <g fill="#3b82f6" fill-opacity="0.3">
+    <circle cx="192" cy="216" r="4"/>
+    <circle cx="576" cy="324" r="6"/>
+    <circle cx="384" cy="540" r="4"/>
+    <circle cx="768" cy="432" r="8"/>
+    <circle cx="960" cy="216" r="4"/>
+    <circle cx="1152" cy="540" r="6"/>
+    <circle cx="1344" cy="324" r="4"/>
+    <circle cx="1536" cy="648" r="8"/>
+    <circle cx="1728" cy="432" r="4"/>
+  </g>
+
+  <!-- Connection lines -->
+  <g stroke="#3b82f6" stroke-opacity="0.2" stroke-width="2">
+    <line x1="192" y1="216" x2="576" y2="324"/>
+    <line x1="576" y1="324" x2="768" y2="432"/>
+    <line x1="768" y1="432" x2="960" y2="216"/>
+    <line x1="768" y1="432" x2="1152" y2="540"/>
+    <line x1="1152" y1="540" x2="1344" y2="324"/>
+    <line x1="1344" y1="324" x2="1536" y2="648"/>
+    <line x1="1536" y1="648" x2="1728" y2="432"/>
+  </g>
+
+  <!-- Glow effects -->
+  <ellipse cx="768" cy="540" rx="400" ry="300" fill="url(#glow)"/>
+  <ellipse cx="1344" cy="400" rx="300" ry="250" fill="url(#glow)"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60" fill="none">
+  <!-- A Symbol - Two overlapping triangles -->
+  <g>
+    <!-- Back triangle (lighter, tilted right) -->
+    <path d="M28 8 L48 52 L8 52 Z" fill="white" opacity="0.6"/>
+    <!-- Front triangle (main A shape) -->
+    <path d="M18 52 L38 8 L58 52 L48 52 L38 28 L28 52 Z" fill="white"/>
+    <!-- Crossbar of A -->
+    <path d="M24 40 L52 40 L48 48 L28 48 Z" fill="#0a1628"/>
+  </g>
+  <!-- Text: aciinfotech -->
+  <text x="70" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="600" fill="white">
+    aciinfotech
+  </text>
+</svg>

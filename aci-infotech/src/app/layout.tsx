@@ -1,0 +1,95 @@
+import type { Metadata } from "next";
+import "./globals.css";
+import ConditionalLayout from "@/components/layout/ConditionalLayout";
+import ClientProviders from "@/components/layout/ClientProviders";
+import GlobalStructuredData from "@/components/seo/StructuredData";
+
+export const metadata: Metadata = {
+  title: {
+    default: "ACI Infotech | Production-Grade Engineering at Enterprise Scale",
+    template: "%s | ACI Infotech",
+  },
+  description:
+    "We build data platforms, AI systems, and cloud architectures for Fortune 500 operations. Senior architects. Production code with SLAs. We answer the 2am call.",
+  keywords:
+    "enterprise data engineering, AI ML consulting, cloud modernization, Fortune 500 technology consulting, production-grade engineering",
+  authors: [{ name: "ACI Infotech" }],
+  creator: "ACI Infotech",
+  publisher: "ACI Infotech",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL("https://aciinfotech.com"),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://aciinfotech.com",
+    siteName: "ACI Infotech",
+    title: "ACI Infotech | Production-Grade Engineering at Enterprise Scale",
+    description:
+      "We build data platforms, AI systems, and cloud architectures for Fortune 500 operations. Senior architects. Production code with SLAs.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "ACI Infotech - Enterprise Technology Consulting",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ACI Infotech | Production-Grade Engineering at Enterprise Scale",
+    description:
+      "We build data platforms, AI systems, and cloud architectures for Fortune 500 operations.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: [
+      { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/favicon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    shortcut: "/brand/favicon-32.png",
+    apple: "/brand/favicon-192.png",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <head>
+        {/* Font preconnects */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+          rel="stylesheet"
+        />
+        {/* Preload critical hero assets for lightning-fast load */}
+        <link rel="preload" href="/images/hero-poster.webp" as="image" type="image/webp" />
+      </head>
+      <body className="antialiased font-sans" suppressHydrationWarning>
+        <GlobalStructuredData />
+        <ConditionalLayout>{children}</ConditionalLayout>
+        <ClientProviders />
+      </body>
+    </html>
+  );
+}

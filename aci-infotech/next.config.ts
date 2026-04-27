@@ -1,0 +1,184 @@
+import type { NextConfig } from "next";
+import path from "node:path";
+
+const nextConfig: NextConfig = {
+  // Pin the file-tracing root to this Next.js app directory. On the
+  // VPS the repo is checked out as `/var/www/<env>/aci-infotech/`, so
+  // without this setting Next could walk up to the wrapper directory
+  // (or even further) looking for a lockfile and confuse the trace
+  // output — especially when prod and staging sit under the same
+  // parent. Pin it explicitly so every build traces from the exact
+  // app root.
+  outputFileTracingRoot: path.join(__dirname),
+
+  // Configure sharp for server-side image processing
+  serverExternalPackages: ['sharp'],
+
+  // Redirects for legacy URLs
+  async redirects() {
+    return [
+      // Redirect /blog/* to /blogs/* (canonical URL is /blogs)
+      {
+        source: '/blog/:slug',
+        destination: '/blogs/:slug',
+        permanent: true, // 301 redirect for SEO
+      },
+      {
+        source: '/blog',
+        destination: '/blogs',
+        permanent: true,
+      },
+      // QA & Testing rebranded to Quality Engineering. Keep the
+      // 301 so existing inbound links, sitemaps, and Google's
+      // cached results funnel to the new slug.
+      {
+        source: '/services/qa-testing',
+        destination: '/services/quality-engineering',
+        permanent: true,
+      },
+      // Case-study slugs anonymized (real client names removed).
+      // Keep 301s so search results, social shares, and any
+      // inbound links funnel to the new descriptor-based slugs.
+      {
+        source: '/case-studies/msci-data-automation',
+        destination: '/case-studies/modernizes-finance-reporting-with-sap-transformation',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/financial-giant-sap-consolidation',
+        destination: '/case-studies/modernizes-finance-reporting-with-sap-transformation',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/racetrac-martech',
+        destination: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/convenience-retailer-martech',
+        destination: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/racetrac-real-time-data',
+        destination: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/convenience-retailer-realtime-data',
+        destination: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/sodexo-unified-data',
+        destination: '/case-studies/global-food-facilities-data-intelligence',
+        permanent: true,
+      },
+      {
+        source: '/case-studies/hospitality-leader-unified-data',
+        destination: '/case-studies/global-food-facilities-data-intelligence',
+        permanent: true,
+      },
+    ];
+  },
+
+  // Cache control and security headers
+  async headers() {
+    return [
+      {
+        // Security + cache headers for all pages
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://snap.licdn.com https://static.hotjar.com https://script.hotjar.com https://www.clarity.ms https://cdn-in.pagesense.io",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: blob: https: http:",
+              "media-src 'self' blob:",
+              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://px.ads.linkedin.com https://*.supabase.co https://api.aciinfotech.com https://*.hotjar.com https://*.hotjar.io https://www.clarity.ms https://cdn-in.pagesense.io ",
+              "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net https://bid.g.doubleclick.net https://vars.hotjar.com",
+              "manifest-src 'self' https://*.github.dev https://github.dev",
+            ].join('; '),
+          },
+        ],
+      },
+      {
+        // Allow longer caching for static assets
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+
+  images: {
+    // Remote image patterns for external images
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+      },
+      {
+        // Supabase custom domain. After switching
+        // NEXT_PUBLIC_SUPABASE_URL to the custom domain, new storage
+        // public URLs (from supabase.storage.getPublicUrl) resolve
+        // against this host instead of .supabase.co. Keep both
+        // entries so pre-existing DB rows with .supabase.co URLs
+        // still optimise through next/image.
+        protocol: 'https',
+        hostname: 'api.aciinfotech.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.cloudinary.com',
+      },
+    ],
+    // Image formats for optimization
+    formats: ['image/avif', 'image/webp'],
+    // Device sizes for responsive images
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    // Image sizes for layout optimization
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  },
+};
+
+export default nextConfig;

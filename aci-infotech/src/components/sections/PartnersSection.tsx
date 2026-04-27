@@ -1,0 +1,120 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+
+interface Partner {
+  name: string;
+  logo_url: string;
+}
+
+interface PartnersSectionProps {
+  headline?: string;
+  subheadline?: string;
+  partners: Partner[];
+}
+
+export default function PartnersSection({
+  headline = "Platform Partners We Trust",
+  subheadline = "The platforms we've mastered. Certified, battle-tested, production-proven across 246+ deployments.",
+  partners,
+}: PartnersSectionProps) {
+  const isOdd = partners.length % 2 !== 0;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Auto-scroll for marquee effect when odd number of partners
+  useEffect(() => {
+    if (!isOdd || !scrollRef.current) return;
+
+    const scrollContainer = scrollRef.current;
+    let animationId: number;
+    let scrollPosition = 0;
+    const scrollSpeed = 0.5; // pixels per frame
+
+    const animate = () => {
+      if (!isHovered) {
+        scrollPosition += scrollSpeed;
+        // Reset when we've scrolled through half (the duplicated content)
+        if (scrollPosition >= scrollContainer.scrollWidth / 2) {
+          scrollPosition = 0;
+        }
+        scrollContainer.scrollLeft = scrollPosition;
+      }
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animationId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationId);
+  }, [isOdd, isHovered]);
+
+  // For marquee, duplicate the partners array
+  const displayPartners = isOdd ? [...partners, ...partners] : partners;
+
+  return (
+    <section className="py-16 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)] mb-3">
+            {headline}
+          </h2>
+          <p className="text-gray-600">{subheadline}</p>
+        </div>
+
+        {isOdd ? (
+          /* Marquee/Carousel for odd number of partners */
+          <div
+            className="overflow-hidden"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <div
+              ref={scrollRef}
+              className="flex gap-12 overflow-x-hidden"
+              style={{ scrollBehavior: 'auto' }}
+            >
+              {displayPartners.map((partner, index) => (
+                <div
+                  key={`${partner.name}-${index}`}
+                  className="flex-shrink-0 flex items-center justify-center p-6"
+                >
+                  <div className="relative h-16 w-44 hover:scale-105 transition-all duration-300">
+                    <Image
+                      src={partner.logo_url}
+                      alt={partner.name}
+                      fill
+                      className="object-contain"
+                      unoptimized
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          /* 4-column Grid for partners */
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-10 items-center justify-items-center max-w-5xl mx-auto">
+            {partners.map((partner) => (
+              <div
+                key={partner.name}
+                className="flex items-center justify-center p-6"
+              >
+                <div className="relative h-16 w-44 hover:scale-105 transition-all duration-300">
+                  <Image
+                    src={partner.logo_url}
+                    alt={partner.name}
+                    fill
+                    className="object-contain"
+                    unoptimized
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}

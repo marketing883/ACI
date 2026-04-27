@@ -1,0 +1,129 @@
+/*
+============================================================
+ACI Infotech — v2 Design Tokens (Dark Premium)
+============================================================
+
+Parallel to v1 (src/styles/design-system.css). Does NOT override
+any v1 token. All custom properties use --v2-* prefix. Components
+that opt into the v2 aesthetic reference these tokens; everything
+else renders exactly as before.
+
+Aesthetic: Vercel / Linear dark, lime accent, ambient meshes.
+*/
+
+:root {
+  /* --- Surfaces (deep navy, not pure black — matches brand handoff) */
+  --v2-bg:           #050B1F;   /* primary dark blue */
+  --v2-surface-1:    #070F28;   /* card surface */
+  --v2-surface-2:    #0A1530;   /* deep panel */
+  --v2-surface-3:    #0E1A3C;   /* elevated / hover */
+  --v2-footer-bg:    #030712;   /* deeper footer */
+
+  /* --- Borders ---------------------------------------------------- */
+  --v2-border-subtle: #142146;   /* line */
+  --v2-border:        #18254F;
+  --v2-border-strong: #1B2A58;   /* line-2 */
+  --v2-border-hot:    #2A3F7A;   /* active border */
+
+  /* --- Text ------------------------------------------------------- */
+  --v2-text-primary:   #E8ECF5;   /* on dark */
+  --v2-text-secondary: #9AA7C2;   /* on dark, dim */
+  --v2-text-muted:     #6B7A99;   /* tertiary */
+  --v2-text-inverted:  #0A1A00;   /* on lime */
+
+  /* --- Light section palette (for Insights color flip) ------------ */
+  --v2-light-bg:  #F3F3EE;
+  --v2-light-ink: #0A1530;
+  --v2-light-mut: #627089;
+
+  /* --- Accent (signature lime) ----------------------------------- */
+  --v2-accent:      #C6FF3D;      /* lime primary */
+  --v2-accent-dim:  #9BE600;      /* lime shade, hover */
+  --v2-accent-glow: rgba(198, 255, 61, 0.25);
+
+  /* --- Ambient gradient meshes ----------------------------------- */
+  --v2-mesh-blue:   rgba(80, 120, 255, 0.12);
+  --v2-mesh-violet: rgba(130, 90, 220, 0.10);
+  --v2-mesh-lime:   rgba(198, 255, 61, 0.12);
+
+  /* --- Mono (terminal, ASCII diagrams, eyebrow labels) ----------- */
+  --v2-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* --- Status (used sparingly) ------------------------------------ */
+  --v2-positive: #7CE98B;
+  --v2-negative: #FF7676;
+
+  /* --- Typography scale ------------------------------------------- */
+  --v2-type-display: clamp(3.5rem, 7vw, 5.5rem);
+  --v2-type-h1:      clamp(2.5rem, 5vw, 3.75rem);
+  --v2-type-h2:      clamp(2rem, 4vw, 2.75rem);
+  --v2-type-h3:      1.5rem;
+  --v2-type-body-lg: 1.125rem;
+  --v2-type-body:    1rem;
+  --v2-type-body-sm: 0.875rem;
+  --v2-type-caption: 0.75rem;
+
+  --v2-tracking-tight:   -0.02em;
+  --v2-tracking-normal:  -0.01em;
+  --v2-tracking-eyebrow:  0.18em;
+
+  --v2-leading-tight:  1.05;
+  --v2-leading-snug:   1.2;
+  --v2-leading-normal: 1.6;
+
+  /* --- Spacing rhythm --------------------------------------------- */
+  --v2-section-py:     8rem;
+  --v2-section-py-lg:  10rem;
+  --v2-container-max:  1280px;
+  --v2-container-px:   1.5rem;
+
+  /* --- Motion ----------------------------------------------------- */
+  --v2-ease:          cubic-bezier(0.16, 1, 0.3, 1);
+  --v2-ease-sharp:    cubic-bezier(0.65, 0, 0.35, 1);
+  --v2-dur-fast:      200ms;
+  --v2-dur-base:      400ms;
+  --v2-dur-reveal:    700ms;
+  --v2-dur-cinematic: 1200ms;
+
+  /* --- Radius ----------------------------------------------------- */
+  --v2-radius-sm:   6px;
+  --v2-radius:      12px;
+  --v2-radius-lg:   20px;
+  --v2-radius-full: 9999px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --v2-section-py:     4.5rem;
+    --v2-section-py-lg:  6rem;
+    --v2-container-px:   1.25rem;
+  }
+}
+
+/* Grain noise overlay — optional class applied to dark surfaces to
+   break up flat black. Pure CSS, no network request. 3% opacity,
+   overlay blend. Use as `<div className="v2-grain">...</div>`. */
+.v2-grain {
+  position: relative;
+  isolation: isolate;
+}
+.v2-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.9'/></svg>");
+}
+
+/* Reduced-motion override, applies to any v2 animation that did not
+   already guard itself in JS. Safety net. */
+@media (prefers-reduced-motion: reduce) {
+  .v2-animates,
+  .v2-animates * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

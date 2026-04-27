@@ -1,0 +1,160 @@
+@import "tailwindcss";
+@import "../styles/design-system.css" layer(base);
+@import "../styles/design-system-v2.css" layer(base);
+
+@theme inline {
+  /* ACI Brand Colors - Updated Design System */
+  --color-aci-primary: #0052CC;
+  --color-aci-primary-dark: #003D99;
+  --color-aci-primary-light: #3B6FD4;
+  --color-aci-secondary: #0A1628;
+  --color-aci-secondary-light: #666666;
+  --color-aci-off-white: #FAFAFA;
+  --color-aci-lime: #C4FF61;
+
+  /* Override defaults */
+  --color-background: #ffffff;
+  --color-foreground: #0A1628;
+
+  /* Fonts - Funnel Display for headers, Funnel Sans for body */
+  --font-sans: 'Funnel Sans', system-ui, -apple-system, sans-serif;
+  --font-title: 'Funnel Display', system-ui, -apple-system, sans-serif;
+
+  /* --- v2 palette (parallel to --color-aci-*, does not override) ---
+     Exposes Tailwind utilities like bg-v2-bg, text-v2-text-primary,
+     border-v2-border, etc. Safe to coexist with v1 utilities. */
+  --color-v2-bg: #050B1F;
+  --color-v2-surface-1: #070F28;
+  --color-v2-surface-2: #0A1530;
+  --color-v2-surface-3: #0E1A3C;
+  --color-v2-footer-bg: #030712;
+  --color-v2-border-subtle: #142146;
+  --color-v2-border: #18254F;
+  --color-v2-border-strong: #1B2A58;
+  --color-v2-border-hot: #2A3F7A;
+  --color-v2-text-primary: #E8ECF5;
+  --color-v2-text-secondary: #9AA7C2;
+  --color-v2-text-muted: #6B7A99;
+  --color-v2-accent: #C6FF3D;
+  --color-v2-accent-dim: #9BE600;
+  --color-v2-accent-ink: #0A1A00;
+  --color-v2-positive: #5BE39A;
+  --color-v2-negative: #FF5577;
+  --color-v2-warn: #FFB648;
+  --color-v2-light-bg: #F3F3EE;
+  --color-v2-light-ink: #0A1530;
+
+  /* Mono font for terminal/eyebrow/ASCII */
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Cross-browser fix: Tailwind v4 Preflight resets padding/margin using physical
+   shorthand (padding: 0) but utilities use logical properties (padding-inline).
+   Some browsers (Edge) don't correctly resolve physical vs logical across @layer
+   boundaries. This ensures the reset also uses logical properties so utilities
+   can properly override them. */
+@layer base {
+  *, ::before, ::after, ::backdrop {
+    padding-inline: 0;
+    padding-block: 0;
+    margin-inline: 0;
+    margin-block: 0;
+  }
+
+  .lucide, [class*="lucide-"] {
+    stroke-width: 1.5 !important;
+  }
+
+  /* Hero section CSS-only animations (no JS dependency = instant paint) */
+  @keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes heroFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Ensure smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Remove default margins */
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* Improve font rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Fix for sticky header */
+  main {
+    min-height: 100vh;
+  }
+}
+
+/* Custom scrollbar - keep unlayered for pseudo-element compatibility */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--aci-gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--aci-gray-400);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--aci-gray-500);
+}
+
+/* Hide scrollbar for carousel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Cross-browser: prefer dynamic viewport height for full-screen sections.
+   iOS Safari collapses its URL bar as the visitor scrolls, which makes
+   100vh sections visibly taller than the visible viewport on first load.
+   100dvh tracks the actual visible viewport. Where 100dvh is supported
+   (Safari 15.4+, Chrome 108+, Firefox 101+), override the Tailwind
+   100vh utilities so every `min-h-screen` / `h-screen` / `max-h-screen`
+   in the app picks up the dynamic value automatically. No call-site
+   changes required. */
+@supports (min-height: 100dvh) {
+  .min-h-screen { min-height: 100dvh; }
+  .h-screen     { height:     100dvh; }
+  .max-h-screen { max-height: 100dvh; }
+  /* Same for `main`, which we set to min-h 100vh in the base layer. */
+  main          { min-height: 100dvh; }
+}
+
+/* Cross-browser: WebKit still honours `-webkit-backdrop-filter` even
+   where it now understands the unprefixed form. Tailwind v4 emits the
+   unprefixed property only. Mirror every `backdrop-blur-*` utility on
+   the site to the `-webkit-` variant so Safari (and older iOS WebViews)
+   render the frosted-glass look instead of a transparent panel. */
+.backdrop-blur-none { -webkit-backdrop-filter: blur(0); }
+.backdrop-blur-sm   { -webkit-backdrop-filter: blur(4px); }
+.backdrop-blur      { -webkit-backdrop-filter: blur(8px); }
+.backdrop-blur-md   { -webkit-backdrop-filter: blur(12px); }
+.backdrop-blur-lg   { -webkit-backdrop-filter: blur(16px); }
+.backdrop-blur-xl   { -webkit-backdrop-filter: blur(24px); }
+.backdrop-blur-2xl  { -webkit-backdrop-filter: blur(40px); }
+.backdrop-blur-3xl  { -webkit-backdrop-filter: blur(64px); }
