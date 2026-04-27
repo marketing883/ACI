@@ -301,7 +301,7 @@ export const PLAYBOOKS: PlaybookData[] = [
     outcomes: [
       { metric: '68%', description: 'Cost cut' },
       { metric: '10x', description: 'Speed gain' },
-      { metric: '$3.2M', description: '3yr savings' },
+      { metric: '$20M', description: '3yr savings' },
     ],
     industries: ['Financial Services', 'Healthcare', 'Retail', 'Education'],
     architecture: ['AWS/Azure/GCP', 'Databricks/Snowflake', 'Migration Tools', 'Data Validation', 'Terraform IaC', 'Cost Optimization'],

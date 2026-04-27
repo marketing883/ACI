@@ -320,7 +320,7 @@ const playbooksData: Record<string, PlaybookDetail> = {
     outcomes: [
       { metric: '68%', description: 'Cost reduction', detail: 'Infrastructure, licensing, and operational savings versus legacy platform' },
       { metric: '10x', description: 'Processing speed', detail: 'Cloud-native architecture delivers order of magnitude performance improvement' },
-      { metric: '$3.2M', description: '3-year savings', detail: 'Average total cost of ownership reduction over legacy platform' },
+      { metric: '$20M', description: '3-year savings', detail: 'Average TCO reduction across mid-size mainframe migrations (~$6.5M/yr against a typical $9-10M/yr baseline). Larger footprints land north of $40M.' },
       { metric: 'Zero', description: 'Downtime', detail: 'Parallel run strategy enables seamless cutover with no business disruption' },
     ],
     industries: ['Financial Services', 'Healthcare', 'Retail', 'Education'],
