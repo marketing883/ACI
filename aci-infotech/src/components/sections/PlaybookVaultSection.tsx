@@ -35,6 +35,7 @@ export interface PlaybookData {
   category: 'data' | 'cloud' | 'analytics' | 'integration' | 'ai';
   gradient: string;
   iconType: 'zap' | 'radio' | 'globe' | 'barchart' | 'shield' | 'truck' | 'cloud' | 'gitmerge' | 'sparkles';
+  arqaiAcceleration?: string;
 }
 
 export const PLAYBOOKS: PlaybookData[] = [
@@ -42,7 +43,8 @@ export const PLAYBOOKS: PlaybookData[] = [
     id: 'post-acquisition',
     name: 'Post-Acquisition System Consolidation',
     shortName: 'Post-Acquisition',
-    displayTitle: 'Post-M&A System Consolidation',
+    displayTitle: 'Post-Acquisition ERP Unification',
+    arqaiAcceleration: 'AI maps schema differences across ERPs and auto-generates reconciliation rules.',
     slug: 'post-acquisition-consolidation',
     deployments: 23,
     challengePattern: [
@@ -71,7 +73,8 @@ export const PLAYBOOKS: PlaybookData[] = [
     id: 'multi-location',
     name: 'Multi-Location Real-Time Data Platform',
     shortName: 'Real-Time Platform',
-    displayTitle: 'Multi-Location Real-Time Data',
+    displayTitle: 'Real-Time Inventory Platform',
+    arqaiAcceleration: 'AI auto-tunes pipeline parameters and predicts bottlenecks before they hit production.',
     slug: 'real-time-data-platform',
     deployments: 47,
     challengePattern: [
@@ -100,7 +103,8 @@ export const PLAYBOOKS: PlaybookData[] = [
     id: 'global-unification',
     name: 'Global Data Unification',
     shortName: 'Global Unification',
-    displayTitle: 'Global Operations Data Unification',
+    displayTitle: 'Multi-Region Data Consolidation',
+    arqaiAcceleration: 'AI-powered entity resolution and fuzzy matching finds duplicates rule-based systems miss.',
     slug: 'global-data-unification',
     deployments: 31,
     challengePattern: [
@@ -129,7 +133,8 @@ export const PLAYBOOKS: PlaybookData[] = [
     id: 'self-service-analytics',
     name: 'Enterprise Self-Service Analytics',
     shortName: 'Self-Service Analytics',
-    displayTitle: 'Enterprise Self-Service Analytics',
+    displayTitle: 'Self-Service Analytics',
+    arqaiAcceleration: 'AI auto-generates data dictionaries and powers natural language exploration.',
     slug: 'self-service-analytics',
     deployments: 19,
     challengePattern: [
@@ -158,7 +163,8 @@ export const PLAYBOOKS: PlaybookData[] = [
     id: 'agentic-ai',
     name: 'Enterprise Agentic AI Deployment',
     shortName: 'Agentic AI',
-    displayTitle: 'AI Agent → Workflow',
+    displayTitle: 'Agentic AI Deployment',
+    arqaiAcceleration: 'ArqAI provides the evaluation harness and guardrails that get agents past pilot.',
     slug: 'agentic-ai-deployment',
     deployments: 18,
     challengePattern: [
@@ -187,7 +193,8 @@ export const PLAYBOOKS: PlaybookData[] = [
     id: 'ai-governance',
     name: 'Enterprise AI Governance & Compliance',
     shortName: 'AI Governance',
-    displayTitle: 'Governed AI',
+    displayTitle: 'AI Governance & Compliance',
+    arqaiAcceleration: 'Automated bias detection, drift monitoring, and audit trail generation.',
     slug: 'enterprise-ai-governance',
     deployments: 14,
     challengePattern: [
@@ -216,7 +223,8 @@ export const PLAYBOOKS: PlaybookData[] = [
     id: 'healthcare-data',
     name: 'Multi-Jurisdiction Healthcare Data',
     shortName: 'Healthcare Data',
-    displayTitle: 'Multi-Jurisdiction Healthcare Data',
+    displayTitle: 'Healthcare Data Platform',
+    arqaiAcceleration: 'AI handles HL7/FHIR mapping with entity resolution and auto-generates compliance docs.',
     slug: 'healthcare-data-platform',
     deployments: 12,
     challengePattern: [
@@ -245,7 +253,8 @@ export const PLAYBOOKS: PlaybookData[] = [
     id: 'supply-chain',
     name: 'Supply Chain Visibility',
     shortName: 'Supply Chain',
-    displayTitle: 'End-to-End Supply Chain Visibility',
+    displayTitle: 'Supply Chain Visibility',
+    arqaiAcceleration: 'ML-powered demand forecasting and anomaly detection on supply signals.',
     slug: 'supply-chain-visibility',
     deployments: 28,
     challengePattern: [
@@ -274,7 +283,8 @@ export const PLAYBOOKS: PlaybookData[] = [
     id: 'cloud-migration',
     name: 'Legacy to Cloud Migration',
     shortName: 'Cloud Migration',
-    displayTitle: 'Legacy System Cloud Migration',
+    displayTitle: 'Mainframe-to-Cloud Migration',
+    arqaiAcceleration: 'AI scans legacy code, maps dependencies, and validates behavioral parity before cutover.',
     slug: 'legacy-cloud-migration',
     deployments: 52,
     challengePattern: [
@@ -304,6 +314,7 @@ export const PLAYBOOKS: PlaybookData[] = [
     name: 'Multi-Source Data Integration',
     shortName: 'Data Integration',
     displayTitle: 'Multi-Source Data Integration',
+    arqaiAcceleration: 'AI auto-classifies source schemas and generates transformation logic.',
     slug: 'multi-source-integration',
     deployments: 34,
     challengePattern: [

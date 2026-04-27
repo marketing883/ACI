@@ -73,7 +73,7 @@ export default function PlaybooksGrid() {
                 margin: 0,
               }}
             >
-              Use cases we have{' '}
+              Use cases we deliver.{' '}
               <em
                 style={{
                   fontStyle: 'italic',
@@ -81,7 +81,7 @@ export default function PlaybooksGrid() {
                   color: 'var(--v2-accent)',
                 }}
               >
-                delivered.
+                AI-accelerated.
               </em>
             </h2>
           </div>
@@ -94,7 +94,7 @@ export default function PlaybooksGrid() {
               margin: 0,
             }}
           >
-            The problems enterprises bring to us most often. Each one delivered enough times that the architecture, the risks, and the timeline are known before work&nbsp;starts.
+            Each playbook runs through ArqAI. That is why the timelines are weeks, not quarters, and the accuracy holds up to&nbsp;audit.
           </p>
         </div>
 
@@ -191,38 +191,69 @@ function PlaybookCard({ pb, index }: { pb: PlaybookData; index: number }) {
           }
         `}</style>
 
-        <h3
+        {/* ArqAI badge */}
+        <div
           style={{
-            fontFamily: 'var(--font-title)',
-            fontSize: 20,
-            fontWeight: 600,
-            lineHeight: 1.25,
-            letterSpacing: '-0.015em',
-            margin: 0,
-            color: 'var(--v2-text-primary)',
             position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 8,
+            marginBottom: 12,
           }}
         >
-          {pb.displayTitle}
-        </h3>
+          <h3
+            style={{
+              fontFamily: 'var(--font-title)',
+              fontSize: 20,
+              fontWeight: 600,
+              lineHeight: 1.25,
+              letterSpacing: '-0.015em',
+              margin: 0,
+              color: 'var(--v2-text-primary)',
+            }}
+          >
+            {pb.displayTitle}
+          </h3>
+          <span
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 9,
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: 'var(--v2-bg, #050B1F)',
+              background: 'var(--v2-accent)',
+              padding: '3px 8px',
+              borderRadius: 2,
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+          >
+            ArqAI
+          </span>
+        </div>
 
-        <p
-          className="v2-pb-desc"
-          style={{
-            fontSize: 13,
-            lineHeight: 1.55,
-            color: 'var(--v2-text-secondary)',
-            marginTop: 10,
-            marginBottom: 20,
-            position: 'relative',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}
-        >
-          {pb.challengePattern[0] ?? pb.keyLearnings[0] ?? ''}
-        </p>
+        {/* AI acceleration line */}
+        {pb.arqaiAcceleration && (
+          <p
+            className="v2-pb-desc"
+            style={{
+              fontSize: 13,
+              lineHeight: 1.55,
+              color: 'var(--v2-text-secondary)',
+              marginTop: 0,
+              marginBottom: 20,
+              position: 'relative',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
+            {pb.arqaiAcceleration}
+          </p>
+        )}
 
         {/* Outcomes the buyer can expect. Three compact metric tiles
             under a shared lime accent bar, reading as "here is what

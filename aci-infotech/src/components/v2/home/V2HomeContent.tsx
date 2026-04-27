@@ -108,8 +108,8 @@ export default async function V2HomeContent() {
         <CaseStudiesPinned caseStudies={caseStudies} />
         <MetricsStrip />
         <PlaybooksGrid />
-        <Marquee />
         <ArqAIV2 />
+        <Marquee />
         <NewsGrid items={news} />
         <InsightsGrid posts={blogs} />
         <CTABand />

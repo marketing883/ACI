@@ -15,22 +15,22 @@ import { ArrowRight, Rocket, Workflow, Zap } from 'lucide-react';
 
 const FEATURES = [
   {
-    icon: Workflow,
-    title: 'End-to-end AI delivery',
+    icon: Zap,
+    title: 'Accelerated delivery',
     description:
-      'The full build — use case definition, model selection, deployment, and ongoing ops. Not advisory. Not a pilot. A working system in production.',
+      'AI agents handle the repetitive engineering so the team focuses on architecture decisions. 40-60% faster on average across our playbooks.',
   },
   {
-    icon: Zap,
-    title: 'Products that accelerate delivery',
+    icon: Workflow,
+    title: 'Built-in accuracy',
     description:
-      'Purpose-built products shipped into every engagement so enterprises do not start from zero. Faster deployment, fewer integration risks, lower total cost.',
+      'Anomaly detection, data validation, and behavioral parity checks run continuously. The output holds up to audit without a separate QA pass.',
   },
   {
     icon: Rocket,
-    title: 'From pilot to production',
+    title: 'Past the pilot',
     description:
-      'Most enterprise AI gets stuck at proof of concept. ArqAI is built to get past that stage — into live environments, with real users and measurable outcomes.',
+      'Most enterprise AI stalls at proof of concept. ArqAI ships with evaluation harnesses and guardrails from day one so it reaches production.',
   },
 ];
 
@@ -99,7 +99,7 @@ export default function ArqAIV2({
                 marginBottom: 18,
               }}
             >
-              / Introducing ArqAI
+              / The engine behind every playbook
             </div>
 
             <div style={{ marginBottom: 22 }}>
@@ -125,7 +125,7 @@ export default function ArqAIV2({
                 marginBottom: 18,
               }}
             >
-              AI services.
+              This is ArqAI.
               <br />
               <em
                 style={{
@@ -134,7 +134,7 @@ export default function ArqAIV2({
                   color: 'var(--v2-accent)',
                 }}
               >
-                Built for production.
+                This is why we are&nbsp;faster.
               </em>
             </h2>
 
@@ -148,9 +148,10 @@ export default function ArqAIV2({
                 maxWidth: 520,
               }}
             >
-              ArqAI is ACI&apos;s AI services vertical. It takes enterprises from
-              AI strategy to working systems, with the products and the
-              engineering capability to back it up.
+              ArqAI is not a separate product. It is baked into every engagement
+              we run. Schema mapping, pipeline tuning, entity resolution, code
+              analysis, compliance generation. All AI-powered, all running inside
+              the&nbsp;delivery.
             </p>
 
             <div
