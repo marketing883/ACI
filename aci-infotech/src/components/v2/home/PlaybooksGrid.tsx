@@ -71,7 +71,7 @@ export default function PlaybooksGrid() {
                 margin: 0,
               }}
             >
-              Repeatable engagement{' '}
+              The architecture decisions,{' '}
               <em
                 style={{
                   fontStyle: 'italic',
@@ -79,7 +79,7 @@ export default function PlaybooksGrid() {
                   color: 'var(--v2-accent)',
                 }}
               >
-                models.
+                documented.
               </em>
             </h2>
           </div>
@@ -92,7 +92,7 @@ export default function PlaybooksGrid() {
               margin: 0,
             }}
           >
-            Fixed scope. Fixed outcome. A senior engineer assigned at kickoff.
+            Each playbook ships the stack, the trade-offs, and the runbook. Not the slide&nbsp;deck.
             Each playbook has been delivered enough times that the risks are
             known before work starts.
           </p>

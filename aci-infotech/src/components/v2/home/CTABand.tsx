@@ -75,7 +75,7 @@ export default function CTABand() {
             margin: '0 auto 40px',
           }}
         >
-          Tell us about the work.
+          Tell us what you need&nbsp;built.
         </p>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Link

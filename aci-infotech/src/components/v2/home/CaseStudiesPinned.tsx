@@ -291,13 +291,12 @@ function CaseHead() {
               color: 'var(--v2-accent)',
             }}
           >
-            engagements.
+            work.
           </em>
         </h2>
       </div>
       <p style={{ color: 'var(--v2-text-secondary)', fontSize: 15, lineHeight: 1.6, maxWidth: 420, margin: 0 }}>
-        Production systems delivered for enterprise clients. Each with a
-        defined outcome and a measured result.
+        Stack, timeline, outcome.
       </p>
     </div>
   );

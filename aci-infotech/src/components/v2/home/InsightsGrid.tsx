@@ -83,8 +83,8 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
     <section
       id="insights"
       style={{
-        background: 'var(--v2-light-bg)',
-        color: 'var(--v2-light-ink)',
+        background: 'var(--v2-surface-1)',
+        color: 'var(--v2-text-primary)',
         paddingTop: 'var(--v2-section-py)',
         paddingBottom: 'var(--v2-section-py)',
         paddingLeft: 'var(--v2-container-px)',
@@ -113,17 +113,15 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                 margin: 0,
               }}
             >
-              Perspectives from the{' '}
+              From the{' '}
               <em
                 style={{
                   fontStyle: 'italic',
                   fontWeight: 500,
-                  // Keep the emphasis dark so it reads on the light
-                  // section surface. Lime-accent pops on dark, not here.
-                  color: '#0A1530',
+                  color: 'var(--v2-accent)',
                 }}
               >
-                practice.
+                engineers.
               </em>
             </h2>
             <p
@@ -136,8 +134,7 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                 maxWidth: 520,
               }}
             >
-              Architecture reviews, post-mortems, and technical write-ups
-              from the teams running our client engagements.
+              Architecture reviews, post-mortems, and the occasional&nbsp;rant.
             </p>
           </div>
           <Link
@@ -172,10 +169,10 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  background: '#FFFFFF',
+                  background: 'var(--v2-surface-2, #0A1530)',
                   borderRadius: 6,
                   minHeight: 360,
-                  color: '#0A1530',
+                  color: 'var(--v2-text-primary)',
                   textDecoration: 'none',
                   overflow: 'hidden',
                   transition: 'transform 300ms var(--v2-ease), box-shadow 300ms var(--v2-ease)',

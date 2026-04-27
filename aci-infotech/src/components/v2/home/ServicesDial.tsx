@@ -86,7 +86,7 @@ export default function ServicesDial() {
                 maxWidth: 900,
               }}
             >
-              Our services.
+              Eight practices.
               <br />
               <em
                 style={{
@@ -95,7 +95,7 @@ export default function ServicesDial() {
                   color: 'var(--v2-accent)',
                 }}
               >
-                Across the enterprise stack.
+                What they&nbsp;ship.
               </em>
             </h2>
           </div>
@@ -108,8 +108,7 @@ export default function ServicesDial() {
               margin: 0,
             }}
           >
-            Delivered end to end, from architecture through operations. Measured
-            on the metric you came in with.
+            Each one staffed, scoped, and measured on the metric you walked in&nbsp;with.
           </p>
         </div>
 
