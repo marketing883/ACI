@@ -4,10 +4,14 @@ import { Suspense, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { CameraRig } from './CameraRig';
 import { Fireflies } from './creatures/Fireflies';
+import { Hummingbird } from './creatures/Hummingbird';
 import { FogLayer } from './environment/FogLayer';
 import { WaterSurface } from './environment/WaterSurface';
 import { GodRays } from './environment/GodRays';
+import { Vegetation } from './environment/Vegetation';
 import { AciLogo3D } from './structures/AciLogo3D';
+import { PipelineCluster } from './structures/PipelineCluster';
+import { QuantumComputer } from './structures/QuantumComputer';
 
 export default function World() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,10 +59,17 @@ export default function World() {
           />
 
           <Fireflies count={3000} />
+          <Hummingbird position={[3, 6, 2]} speed={0.8} range={4} />
+          <Hummingbird position={[-4, 7, -8]} speed={1.1} range={3} />
+          <Hummingbird position={[2, 5, -15]} speed={0.9} range={5} />
+          <Hummingbird position={[-3, 4, -30]} speed={1.0} range={3} />
           <FogLayer />
           <GodRays />
           <WaterSurface />
+          <Vegetation />
           <AciLogo3D />
+          <PipelineCluster />
+          <QuantumComputer />
         </Suspense>
       </Canvas>
     </div>
