@@ -47,6 +47,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function V2HomePreviewPage() {
-  return <V2HomeContent />;
+interface PageProps {
+  searchParams?: Promise<{ layout?: string | string[] }>;
+}
+
+export default async function V2HomePreviewPage({ searchParams }: PageProps = {}) {
+  const resolved = (await searchParams) ?? {};
+  return <V2HomeContent searchParams={resolved} />;
 }

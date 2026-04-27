@@ -139,6 +139,21 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        // The homepage and the v2 preview branch on User-Agent in
+        // V2HomeContent (phones get the mobile-only tree, everyone
+        // else gets the desktop tree). Any shared cache between this
+        // origin and the visitor — the staging nginx layer, a future
+        // CDN — must keep one entry per UA variant or it will serve
+        // the wrong tree to the wrong device. `Vary: User-Agent` is
+        // the standard signal for that.
+        source: '/',
+        headers: [{ key: 'Vary', value: 'User-Agent' }],
+      },
+      {
+        source: '/preview/v2-home',
+        headers: [{ key: 'Vary', value: 'User-Agent' }],
+      },
     ];
   },
 

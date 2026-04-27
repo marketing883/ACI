@@ -53,9 +53,15 @@ export const metadata: Metadata = USE_V2_HOME
       alternates: { canonical: siteUrl },
     };
 
-export default async function HomePage() {
+interface PageProps {
+  // Next 16 hands searchParams as a Promise.
+  searchParams?: Promise<{ layout?: string | string[] }>;
+}
+
+export default async function HomePage({ searchParams }: PageProps = {}) {
   if (USE_V2_HOME) {
-    return <V2HomeContent />;
+    const resolved = (await searchParams) ?? {};
+    return <V2HomeContent searchParams={resolved} />;
   }
   return <V1HomePage />;
 }

@@ -32,6 +32,8 @@ import NewsGrid from '@/components/v2/home/NewsGrid';
 import InsightsGrid from '@/components/v2/home/InsightsGrid';
 import CTABand from '@/components/v2/home/CTABand';
 import FooterV2 from '@/components/v2/home/FooterV2';
+import MobileV2Home from '@/components/v2/home/mobile/MobileV2Home';
+import { isMobileRequest } from '@/lib/v2/is-mobile-request';
 import {
   fetchFeaturedCaseStudies,
   fetchFeaturedNews,
@@ -44,7 +46,21 @@ const LAZY_SECTION: React.CSSProperties = {
   containIntrinsicSize: 'auto 600px',
 } as React.CSSProperties;
 
-export default async function V2HomeContent() {
+interface Props {
+  searchParams?: { layout?: string | string[] };
+}
+
+export default async function V2HomeContent({ searchParams }: Props = {}) {
+  const isMobile = await isMobileRequest(searchParams);
+
+  // Mobile path skips news/blogs/whitepaper fetches the desktop tree
+  // needs for the mega-menu and below-fold sections. Three saved DB
+  // round trips per phone request.
+  if (isMobile) {
+    const caseStudies = await fetchFeaturedCaseStudies(3);
+    return <MobileV2Home caseStudies={caseStudies} />;
+  }
+
   const [caseStudies, news, blogs, whitepaper] = await Promise.all([
     fetchFeaturedCaseStudies(4),
     fetchFeaturedNews(4),
