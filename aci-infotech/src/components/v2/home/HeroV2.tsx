@@ -237,7 +237,7 @@ export default function HeroV2() {
         {/* Headline */}
         <h1
           className="v2-hero-headline"
-          aria-label="We engineer the systems enterprises run on."
+          aria-label="Data and AI. Cloud. Managed Operations."
           style={{
             fontFamily: 'var(--font-title)',
             fontSize: 'clamp(44px, 6.5vw, 104px)',
@@ -255,7 +255,16 @@ export default function HeroV2() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             aria-hidden
           >
-            We engineer
+            Data &{' '}
+            <em
+              style={{
+                fontStyle: 'italic',
+                fontWeight: 500,
+                color: 'var(--v2-accent)',
+              }}
+            >
+              AI.
+            </em>
           </motion.span>
           <motion.span
             style={{ display: 'block' }}
@@ -264,16 +273,7 @@ export default function HeroV2() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
             aria-hidden
           >
-            the{' '}
-            <em
-              style={{
-                fontStyle: 'italic',
-                fontWeight: 500,
-                color: 'var(--v2-accent)',
-              }}
-            >
-              systems
-            </em>
+            Cloud.
           </motion.span>
           <motion.span
             style={{ display: 'block' }}
@@ -282,7 +282,16 @@ export default function HeroV2() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
             aria-hidden
           >
-            enterprises run on.
+            Managed{' '}
+            <em
+              style={{
+                fontStyle: 'italic',
+                fontWeight: 500,
+                color: 'var(--v2-accent)',
+              }}
+            >
+              Operations.
+            </em>
           </motion.span>
         </h1>
 
@@ -308,12 +317,11 @@ export default function HeroV2() {
               margin: 0,
             }}
           >
-            Data platforms. Cloud architectures. AI systems. Managed
-            operations.{' '}
+            280+ production systems for enterprises in financial services,
+            healthcare, retail, and manufacturing.{' '}
             <strong style={{ color: 'var(--v2-text-primary)', fontWeight: 500 }}>
-              280+ engagements
-            </strong>{' '}
-            across financial services, healthcare, retail, and manufacturing.
+              We build them, we ship them, we run&nbsp;them.
+            </strong>
           </p>
           <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
             <Link

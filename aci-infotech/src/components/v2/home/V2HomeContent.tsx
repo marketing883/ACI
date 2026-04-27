@@ -17,13 +17,15 @@
 import { MotionConfig } from 'framer-motion';
 import NavV2 from '@/components/v2/nav/NavV2';
 import HeroV2 from '@/components/v2/home/HeroV2';
-import PlaybooksGrid from '@/components/v2/home/PlaybooksGrid';
 import ServicesDial from '@/components/v2/home/ServicesDial';
 import CaseStudiesPinned from '@/components/v2/home/CaseStudiesPinned';
+import { MetricsStrip } from '@/components/v2/home/MetricsStrip';
+import { IndustriesV2 } from '@/components/v2/home/IndustriesV2';
+import PlaybooksGrid from '@/components/v2/home/PlaybooksGrid';
 import Marquee from '@/components/v2/home/Marquee';
+import ArqAIV2 from '@/components/v2/home/ArqAIV2';
 import NewsGrid from '@/components/v2/home/NewsGrid';
 import InsightsGrid from '@/components/v2/home/InsightsGrid';
-import ArqAIV2 from '@/components/v2/home/ArqAIV2';
 import CTABand from '@/components/v2/home/CTABand';
 import FooterV2 from '@/components/v2/home/FooterV2';
 import {
@@ -101,13 +103,15 @@ export default async function V2HomeContent() {
           }}
         />
         <HeroV2 />
-        <PlaybooksGrid />
         <ServicesDial />
         <CaseStudiesPinned caseStudies={caseStudies} />
+        <MetricsStrip />
+        <IndustriesV2 />
+        <PlaybooksGrid />
         <Marquee />
+        <ArqAIV2 />
         <NewsGrid items={news} />
         <InsightsGrid posts={blogs} />
-        <ArqAIV2 />
         <CTABand />
         <FooterV2 />
       </MotionConfig>
