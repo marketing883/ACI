@@ -99,7 +99,7 @@ export default function ArqAIV2({
                 marginBottom: 18,
               }}
             >
-              / The engine behind every playbook
+              / AI-powered delivery
             </div>
 
             <div style={{ marginBottom: 22 }}>
@@ -125,7 +125,7 @@ export default function ArqAIV2({
                 marginBottom: 18,
               }}
             >
-              This is ArqAI.
+              Faster delivery.
               <br />
               <em
                 style={{
@@ -134,7 +134,7 @@ export default function ArqAIV2({
                   color: 'var(--v2-accent)',
                 }}
               >
-                This is why we are&nbsp;faster.
+                Accurate&nbsp;output.
               </em>
             </h2>
 
