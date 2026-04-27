@@ -148,10 +148,12 @@ export default function ArqAIV2({
                 maxWidth: 520,
               }}
             >
-              ArqAI is not a separate product. It is baked into every engagement
-              we run. Schema mapping, pipeline tuning, entity resolution, code
-              analysis, compliance generation. All AI-powered, all running inside
-              the&nbsp;delivery.
+              ArqAI handles schema mapping, pipeline tuning, entity
+              resolution, code analysis, and compliance generation. The
+              line-by-line work that used to eat senior engineering weeks
+              now runs through agents the team supervises. Engineers stay
+              on the architecture. ArqAI ships with every engagement,
+              nothing to license, nothing to&nbsp;deploy.
             </p>
 
             <div
