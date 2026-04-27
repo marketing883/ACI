@@ -10,7 +10,7 @@ export function GodRays() {
   useFrame(({ clock }) => {
     if (!groupRef.current) return;
     const t = clock.getElapsedTime();
-    groupRef.current.children.forEach((child, i) => {
+    groupRef.current.children.forEach((child: THREE.Object3D, i: number) => {
       const mat = (child as THREE.Mesh).material as THREE.MeshBasicMaterial;
       mat.opacity = 0.02 + Math.sin(t * 0.15 + i * 1.2) * 0.015;
     });

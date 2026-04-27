@@ -1,9 +1,21 @@
 'use client';
 
 import { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Billboard } from '@react-three/drei';
+
+function AutoBillboard({ children, position }: { children: React.ReactNode; position: [number, number, number] }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const { camera } = useThree();
+
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.quaternion.copy(camera.quaternion);
+    }
+  });
+
+  return <group ref={groupRef} position={position}>{children}</group>;
+}
 
 function Fern({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
   const meshRef = useRef<THREE.Group>(null);
@@ -14,7 +26,7 @@ function Fern({ position, scale = 1 }: { position: [number, number, number]; sca
   });
 
   return (
-    <Billboard position={position}>
+    <AutoBillboard position={position}>
       <group ref={meshRef} scale={scale}>
         <mesh>
           <planeGeometry args={[1.2, 1.8]} />
@@ -29,7 +41,7 @@ function Fern({ position, scale = 1 }: { position: [number, number, number]; sca
           />
         </mesh>
       </group>
-    </Billboard>
+    </AutoBillboard>
   );
 }
 
