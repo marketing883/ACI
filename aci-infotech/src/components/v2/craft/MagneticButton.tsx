@@ -41,10 +41,17 @@ export function MagneticButton({
   }, []);
 
   const sharedStyle: React.CSSProperties = {
+    // Default to inline-block so the magnetic transform has a positioned
+    // box to operate on. Callers can override `display` (e.g. inline-flex
+    // when the button has an icon + label that need to lay out as a row)
+    // by passing it through `style` — the spread below wins.
+    display: 'inline-block',
     ...style,
+    // Transform/transition are the magnetic effect itself; keep them
+    // locked so a caller spreading their own transform can't accidentally
+    // disable the magnet.
     transform: `translate(${offset.x}px, ${offset.y}px)`,
     transition: offset.x === 0 ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'transform 0.1s ease-out',
-    display: 'inline-block',
   };
 
   if (href) {
