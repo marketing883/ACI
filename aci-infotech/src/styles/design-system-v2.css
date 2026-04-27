@@ -28,7 +28,11 @@ Aesthetic: Vercel / Linear dark, lime accent, ambient meshes.
   /* --- Text ------------------------------------------------------- */
   --v2-text-primary:   #E8ECF5;   /* on dark */
   --v2-text-secondary: #9AA7C2;   /* on dark, dim */
-  --v2-text-muted:     #6B7A99;   /* tertiary */
+  /* Lifted from #6B7A99 → #8C9BBC. The old value sat at ~4.5:1 against
+     --v2-bg, which is the AA floor for normal text and fails on most
+     real-world monitors. The new value clears 5.5:1 with no perceptible
+     change to the muted/tertiary character of the role. */
+  --v2-text-muted:     #8C9BBC;   /* tertiary */
   --v2-text-inverted:  #0A1A00;   /* on lime */
 
   /* --- Light section palette (for Insights color flip) ------------ */

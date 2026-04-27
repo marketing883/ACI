@@ -15,8 +15,7 @@
  * line-by-line rather than scramble-decrypting.
  */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
+import { useEffect, useMemo, useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Play } from 'lucide-react';
 import StackChip from './StackChip';
@@ -25,22 +24,44 @@ import { MagneticButton } from '../craft/MagneticButton';
 export default function HeroV2() {
   const reduced = useReducedMotion();
   const heroRef = useRef<HTMLElement>(null);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  // Each parallax layer keeps its own ref so the mousemove handler can
+  // mutate transform directly without a React re-render. setState() per
+  // mousemove (the previous approach) reconciled the entire hero subtree
+  // — including all 18 dust particles and 36 SVG nodes — every frame.
+  const layerGridRef = useRef<HTMLDivElement>(null);
+  const layerNodesRef = useRef<HTMLDivElement>(null);
+  const layerGlowRef = useRef<HTMLDivElement>(null);
+  const layerDustRef = useRef<HTMLDivElement>(null);
 
   // Track mouse position relative to hero center for parallax.
   useEffect(() => {
     if (reduced) return;
     const el = heroRef.current;
     if (!el) return;
-    let rafId: number;
+    const layers: { el: HTMLDivElement | null; depth: number }[] = [
+      { el: layerGridRef.current, depth: 0.5 },
+      { el: layerNodesRef.current, depth: 1 },
+      { el: layerGlowRef.current, depth: 0.75 },
+      { el: layerDustRef.current, depth: 2 },
+    ];
+    let rafId = 0;
+    let pending = false;
+    let lastX = 0;
+    let lastY = 0;
+    const apply = () => {
+      pending = false;
+      for (const { el: layerEl, depth } of layers) {
+        if (!layerEl) continue;
+        layerEl.style.transform = `translate3d(${lastX * depth * -20}px, ${lastY * depth * -20}px, 0)`;
+      }
+    };
     const onMove = (e: MouseEvent) => {
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        const rect = el.getBoundingClientRect();
-        const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
-        const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
-        setMouse({ x, y });
-      });
+      const rect = el.getBoundingClientRect();
+      lastX = (e.clientX - rect.left - rect.width / 2) / rect.width;
+      lastY = (e.clientY - rect.top - rect.height / 2) / rect.height;
+      if (pending) return;
+      pending = true;
+      rafId = requestAnimationFrame(apply);
     };
     el.addEventListener('mousemove', onMove, { passive: true });
     return () => {
@@ -66,14 +87,15 @@ export default function HeroV2() {
     return out;
   }, []);
 
-  const p = (depth: number): React.CSSProperties => ({
-    transform: reduced
-      ? 'none'
-      : `translate3d(${mouse.x * depth * -20}px, ${mouse.y * depth * -20}px, 0)`,
+  // Static style shared by every parallax layer. The actual transform
+  // is mutated on each layer's element by the mousemove handler above
+  // (or stays 'none' under prefers-reduced-motion). CSS transition
+  // smooths between successive imperative updates.
+  const parallaxBase: React.CSSProperties = {
     transition: 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1)',
     willChange: 'transform',
     backfaceVisibility: 'hidden',
-  });
+  };
 
   return (
     <header
@@ -106,6 +128,14 @@ export default function HeroV2() {
         preload="metadata"
         aria-hidden
         className="v2-hero-video"
+        // 1×1 inline SVG matching --v2-bg. Paints instantly so the
+        // hero rect doesn't sit empty (or default white in some
+        // browsers) for the few hundred ms before the video decodes
+        // its first frame. Improves LCP and removes the white flash
+        // on slow connections. Final composite is identical: the
+        // video lands on top, opacity:0.5 + grayscale + the navy
+        // gradient overlay.
+        poster="data:image/svg+xml;utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201%201'%3E%3Crect%20width='1'%20height='1'%20fill='%23050B1F'/%3E%3C/svg%3E"
         style={{
           position: 'absolute',
           inset: 0,
@@ -144,6 +174,7 @@ export default function HeroV2() {
       {/* ===== PARALLAX LAYERS ===== */}
       {/* Layer 1: grid */}
       <div
+        ref={layerGridRef}
         aria-hidden
         style={{
           position: 'absolute',
@@ -154,12 +185,12 @@ export default function HeroV2() {
           maskImage: 'radial-gradient(ellipse 70% 60% at 30% 50%, black 0%, transparent 80%)',
           pointerEvents: 'none',
           zIndex: 2,
-          ...p(0.5),
+          ...parallaxBase,
         }}
       />
 
       {/* Layer 2: node mesh */}
-      <div aria-hidden style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none', zIndex: 2, ...p(1) }}>
+      <div ref={layerNodesRef} aria-hidden style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none', zIndex: 2, ...parallaxBase }}>
         <svg
           viewBox="0 0 1600 900"
           preserveAspectRatio="xMidYMid slice"
@@ -196,6 +227,7 @@ export default function HeroV2() {
 
       {/* Layer 3: lime glow */}
       <div
+        ref={layerGlowRef}
         aria-hidden
         style={{
           position: 'absolute',
@@ -204,12 +236,12 @@ export default function HeroV2() {
             'radial-gradient(600px 400px at 25% 45%, rgba(198, 255, 61, 0.14), transparent 60%)',
           pointerEvents: 'none',
           zIndex: 2,
-          ...p(0.75),
+          ...parallaxBase,
         }}
       />
 
       {/* Layer 4: dust particles */}
-      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, ...p(2) }}>
+      <div ref={layerDustRef} aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, ...parallaxBase }}>
         {Array.from({ length: 18 }).map((_, i) => {
           const top = ((i * 37) % 100).toString() + '%';
           const left = ((i * 53) % 100).toString() + '%';

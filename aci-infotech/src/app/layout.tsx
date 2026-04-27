@@ -1,8 +1,36 @@
 import type { Metadata } from "next";
+import { Funnel_Display, Funnel_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import ClientProviders from "@/components/layout/ClientProviders";
 import GlobalStructuredData from "@/components/seo/StructuredData";
+
+// Self-hosted, automatically subset, font-display: swap. Replaces the
+// render-blocking <link> to fonts.googleapis.com that v1 was using.
+// Variables here feed the @theme inline tokens in globals.css so every
+// `var(--font-sans|title|mono)` reference keeps working unchanged.
+const funnelSans = Funnel_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-funnel-sans",
+  display: "swap",
+});
+
+const funnelDisplay = Funnel_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-funnel-display",
+  display: "swap",
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
+
+const USE_V2_HOME = process.env.NEXT_PUBLIC_USE_V2_HOME === "true";
 
 export const metadata: Metadata = {
   title: {
@@ -73,17 +101,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${funnelSans.variable} ${funnelDisplay.variable} ${jetBrainsMono.variable}`}
+    >
       <head>
-        {/* Font preconnects */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-        {/* Preload critical hero assets for lightning-fast load */}
-        <link rel="preload" href="/images/hero-poster.webp" as="image" type="image/webp" />
+        {/* Preload v1's hero poster only on v1 builds. The v2 hero uses
+            its own video + parallax stack and never references this
+            asset, so preloading it on v2 wasted ~4KB and a connection
+            slot. */}
+        {!USE_V2_HOME && (
+          <link rel="preload" href="/images/hero-poster.webp" as="image" type="image/webp" />
+        )}
       </head>
       <body className="antialiased font-sans" suppressHydrationWarning>
         <GlobalStructuredData />

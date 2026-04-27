@@ -16,9 +16,13 @@
   --color-background: #ffffff;
   --color-foreground: #0A1628;
 
-  /* Fonts - Funnel Display for headers, Funnel Sans for body */
-  --font-sans: 'Funnel Sans', system-ui, -apple-system, sans-serif;
-  --font-title: 'Funnel Display', system-ui, -apple-system, sans-serif;
+  /* Fonts - Funnel Display for headers, Funnel Sans for body.
+     Backed by next/font/google: the --font-funnel-* variables are
+     injected on <html> by layout.tsx and resolve to a self-hosted,
+     subset family. System fallbacks remain in place if the variable
+     is missing (older devtools snapshots, error pages, etc.). */
+  --font-sans: var(--font-funnel-sans), 'Funnel Sans', system-ui, -apple-system, sans-serif;
+  --font-title: var(--font-funnel-display), 'Funnel Display', system-ui, -apple-system, sans-serif;
 
   /* --- v2 palette (parallel to --color-aci-*, does not override) ---
      Exposes Tailwind utilities like bg-v2-bg, text-v2-text-primary,
@@ -34,7 +38,7 @@
   --color-v2-border-hot: #2A3F7A;
   --color-v2-text-primary: #E8ECF5;
   --color-v2-text-secondary: #9AA7C2;
-  --color-v2-text-muted: #6B7A99;
+  --color-v2-text-muted: #8C9BBC;
   --color-v2-accent: #C6FF3D;
   --color-v2-accent-dim: #9BE600;
   --color-v2-accent-ink: #0A1A00;
@@ -44,8 +48,8 @@
   --color-v2-light-bg: #F3F3EE;
   --color-v2-light-ink: #0A1530;
 
-  /* Mono font for terminal/eyebrow/ASCII */
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Mono font for terminal/eyebrow/ASCII (next/font/google self-hosted) */
+  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /* Cross-browser fix: Tailwind v4 Preflight resets padding/margin using physical
