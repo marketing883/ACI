@@ -73,7 +73,7 @@ export default function PlaybooksGrid() {
                 margin: 0,
               }}
             >
-              The architecture decisions,{' '}
+              Use cases we have{' '}
               <em
                 style={{
                   fontStyle: 'italic',
@@ -81,7 +81,7 @@ export default function PlaybooksGrid() {
                   color: 'var(--v2-accent)',
                 }}
               >
-                documented.
+                delivered.
               </em>
             </h2>
           </div>
@@ -94,9 +94,7 @@ export default function PlaybooksGrid() {
               margin: 0,
             }}
           >
-            Each playbook ships the stack, the trade-offs, and the runbook. Not the slide&nbsp;deck.
-            Each playbook has been delivered enough times that the risks are
-            known before work starts.
+            The problems enterprises bring to us most often. Each one delivered enough times that the architecture, the risks, and the timeline are known before work&nbsp;starts.
           </p>
         </div>
 

@@ -88,8 +88,7 @@ export default function ServicesDial() {
                 maxWidth: 900,
               }}
             >
-              Eight practices.
-              <br />
+              What we{' '}
               <em
                 style={{
                   fontStyle: 'italic',
@@ -97,7 +96,7 @@ export default function ServicesDial() {
                   color: 'var(--v2-accent)',
                 }}
               >
-                What they&nbsp;ship.
+                deliver.
               </em>
             </h2>
           </div>
@@ -110,7 +109,7 @@ export default function ServicesDial() {
               margin: 0,
             }}
           >
-            Each one staffed, scoped, and measured on the metric you walked in&nbsp;with.
+            Data platforms, cloud infrastructure, AI systems, enterprise applications, and 24/7 managed operations. End to end, from architecture through production, measured on the outcome that matters to&nbsp;you.
           </p>
         </div>
 

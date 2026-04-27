@@ -85,8 +85,10 @@ export default function CTABand() {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
+              flexDirection: 'row',
+              whiteSpace: 'nowrap',
               gap: 8,
-              padding: '22px 28px',
+              padding: '18px 28px',
               background: 'var(--v2-accent)',
               color: 'var(--v2-text-inverted)',
               fontFamily: 'var(--font-sans)',

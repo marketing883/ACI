@@ -5,10 +5,8 @@ import { Watermark } from '../craft/Watermark';
 
 const metrics = [
   { value: '280+', label: 'Projects delivered' },
-  { value: '$2.1B+', label: 'Portfolio value managed' },
-  { value: '68%', label: 'Avg cost reduction' },
-  { value: '99.9%', label: 'Uptime maintained' },
-  { value: '15min', label: 'P1 response SLA' },
+  { value: '$1B+', label: 'Value delivered' },
+  { value: '95%', label: 'Client retention rate' },
 ];
 
 export function MetricsStrip() {
@@ -30,7 +28,7 @@ export function MetricsStrip() {
           maxWidth: '1280px',
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '2rem',
           textAlign: 'center',
         }}

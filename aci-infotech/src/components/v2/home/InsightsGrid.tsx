@@ -128,7 +128,7 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
             </h2>
             <p
               style={{
-                color: '#627089',
+                color: 'var(--v2-text-secondary, #9AA7C2)',
                 fontSize: 15,
                 lineHeight: 1.6,
                 marginTop: 16,
@@ -142,7 +142,7 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
           <Link
             href="/blogs"
             style={{
-              color: '#627089',
+              color: 'var(--v2-text-secondary, #9AA7C2)',
               fontFamily: 'var(--font-mono)',
               fontSize: 12,
               letterSpacing: '0.14em',
@@ -268,7 +268,7 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                       fontSize: 10,
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
-                      color: '#627089',
+                      color: 'var(--v2-text-secondary, #9AA7C2)',
                       marginBottom: 10,
                     }}
                   >
@@ -278,12 +278,13 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                   <h4
                     style={{
                       fontFamily: 'var(--font-title)',
-                      fontSize: 17,
+                      fontSize: 20,
                       fontWeight: 600,
                       lineHeight: 1.3,
                       letterSpacing: '-0.01em',
                       margin: 0,
                       flex: 1,
+                      color: 'var(--v2-text-primary, #E8ECF5)',
                     }}
                   >
                     {p.title}
@@ -293,7 +294,7 @@ export default function InsightsGrid({ posts }: { posts: HomeBlogPost[] }) {
                       fontFamily: 'var(--font-mono)',
                       fontSize: 11,
                       letterSpacing: '0.12em',
-                      color: '#627089',
+                      color: 'var(--v2-text-secondary, #9AA7C2)',
                       marginTop: 16,
                     }}
                   >

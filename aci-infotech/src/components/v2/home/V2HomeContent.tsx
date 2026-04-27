@@ -21,7 +21,6 @@ import HeroV2 from '@/components/v2/home/HeroV2';
 import ServicesDial from '@/components/v2/home/ServicesDial';
 import CaseStudiesPinned from '@/components/v2/home/CaseStudiesPinned';
 import { MetricsStrip } from '@/components/v2/home/MetricsStrip';
-import { IndustriesV2 } from '@/components/v2/home/IndustriesV2';
 import PlaybooksGrid from '@/components/v2/home/PlaybooksGrid';
 import Marquee from '@/components/v2/home/Marquee';
 import ArqAIV2 from '@/components/v2/home/ArqAIV2';
@@ -108,7 +107,6 @@ export default async function V2HomeContent() {
         <ServicesDial />
         <CaseStudiesPinned caseStudies={caseStudies} />
         <MetricsStrip />
-        <IndustriesV2 />
         <PlaybooksGrid />
         <Marquee />
         <ArqAIV2 />

@@ -58,7 +58,7 @@ export const PLAYBOOKS: PlaybookData[] = [
     ],
     outcomes: [
       { metric: '$9.2M', description: 'Year-one savings' },
-      { metric: '0', description: 'Disruptions' },
+      { metric: '99.8%', description: 'Uptime through migration' },
       { metric: '78%', description: 'Effort reduced' },
     ],
     industries: ['Financial Services', 'Private Equity', 'Healthcare', 'Manufacturing'],
@@ -87,7 +87,7 @@ export const PLAYBOOKS: PlaybookData[] = [
     ],
     outcomes: [
       { metric: '64%', description: 'Latency reduced' },
-      { metric: '0', description: 'Disruptions' },
+      { metric: '47', description: 'Deployments' },
       { metric: '99.97%', description: 'Uptime' },
     ],
     industries: ['Retail', 'QSR/Fast Food', 'Convenience Stores', 'Hospitality'],
@@ -233,7 +233,7 @@ export const PLAYBOOKS: PlaybookData[] = [
     outcomes: [
       { metric: '100%', description: 'Identity unified' },
       { metric: '58%', description: 'Duplicates removed' },
-      { metric: '0', description: 'Violations' },
+      { metric: 'HIPAA', description: 'Compliant from day one' },
     ],
     industries: ['Healthcare Services', 'Healthcare Tech', 'Clinical Research', 'Pharma'],
     architecture: ['Patient MDM', 'Compliance Automation', 'Encrypted Storage', 'API Gateway', 'Clinical Integration', 'Audit Logging'],

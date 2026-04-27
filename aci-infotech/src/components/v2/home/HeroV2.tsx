@@ -238,7 +238,7 @@ export default function HeroV2() {
         {/* Headline */}
         <h1
           className="v2-hero-headline"
-          aria-label="Data and AI. Cloud. Managed Operations."
+          aria-label="Enterprise systems. In production."
           style={{
             fontFamily: 'var(--font-title)',
             fontSize: 'clamp(44px, 6.5vw, 104px)',
@@ -256,16 +256,7 @@ export default function HeroV2() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             aria-hidden
           >
-            Data &{' '}
-            <em
-              style={{
-                fontStyle: 'italic',
-                fontWeight: 500,
-                color: 'var(--v2-accent)',
-              }}
-            >
-              AI.
-            </em>
+            Enterprise systems.
           </motion.span>
           <motion.span
             style={{ display: 'block' }}
@@ -274,16 +265,6 @@ export default function HeroV2() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
             aria-hidden
           >
-            Cloud.
-          </motion.span>
-          <motion.span
-            style={{ display: 'block' }}
-            initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0)' }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-            aria-hidden
-          >
-            Managed{' '}
             <em
               style={{
                 fontStyle: 'italic',
@@ -291,7 +272,7 @@ export default function HeroV2() {
                 color: 'var(--v2-accent)',
               }}
             >
-              Operations.
+              In production.
             </em>
           </motion.span>
         </h1>
@@ -318,21 +299,32 @@ export default function HeroV2() {
               margin: 0,
             }}
           >
-            280+ production systems for enterprises in financial services,
-            healthcare, retail, and manufacturing.{' '}
-            <strong style={{ color: 'var(--v2-text-primary)', fontWeight: 500 }}>
-              We build them, we ship them, we run&nbsp;them.
-            </strong>
+            Data & AI. Cloud. Managed operations. 280+ production systems
+            for enterprises in financial services, healthcare, retail,
+            and manufacturing.
           </p>
-          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+          <p
+            style={{
+              maxWidth: 500,
+              color: 'var(--v2-text-primary)',
+              fontSize: 17,
+              lineHeight: 1.55,
+              margin: '12px 0 0 0',
+              fontWeight: 500,
+            }}
+          >
+            We build them, we ship them, we run&nbsp;them.
+          </p>
+          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center' }}>
             <MagneticButton
               href="/contact?source=v2-hero"
               className="v2-btn-primary"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
+                flexDirection: 'row',
                 gap: 8,
-                padding: '18px 26px',
+                padding: '16px 26px',
                 background: 'var(--v2-accent)',
                 color: 'var(--v2-text-inverted)',
                 fontFamily: 'var(--font-sans)',
@@ -355,8 +347,10 @@ export default function HeroV2() {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
+                flexDirection: 'row',
+                whiteSpace: 'nowrap',
                 gap: 8,
-                padding: '18px 26px',
+                padding: '16px 26px',
                 background: 'transparent',
                 color: 'var(--v2-text-primary)',
                 fontFamily: 'var(--font-sans)',
