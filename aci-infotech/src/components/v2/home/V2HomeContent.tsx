@@ -33,6 +33,7 @@ import InsightsGrid from '@/components/v2/home/InsightsGrid';
 import CTABand from '@/components/v2/home/CTABand';
 import FooterV2 from '@/components/v2/home/FooterV2';
 import MobileV2Home from '@/components/v2/home/mobile/MobileV2Home';
+import V2HomeExtras from '@/components/v2/home/V2HomeExtras';
 import { isMobileRequest } from '@/lib/v2/is-mobile-request';
 import {
   fetchFeaturedCaseStudies,
@@ -175,6 +176,7 @@ export default async function V2HomeContent({ searchParams }: Props = {}) {
         <div style={LAZY_SECTION}><CTABand /></div>
         <FooterV2 />
       </MotionConfig>
+      <V2HomeExtras />
     </main>
   );
 }

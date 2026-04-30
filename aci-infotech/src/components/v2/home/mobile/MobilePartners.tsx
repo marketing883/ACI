@@ -52,11 +52,11 @@ export default function MobilePartners() {
             <Image
               src={p.src}
               alt={`${p.name} partner logo`}
-              width={120}
-              height={48}
+              width={100}
+              height={36}
               loading="lazy"
               decoding="async"
-              sizes="(max-width: 768px) 25vw, 100px"
+              sizes="100px"
               className="m-partners__logo"
               unoptimized={p.src.endsWith('.svg')}
             />
@@ -85,7 +85,14 @@ export default function MobilePartners() {
           overflow: hidden;
         }
         .m-partners__cell {
-          aspect-ratio: 1 / 1;
+          /* Fixed row height instead of aspect-ratio: 1/1. The
+             native PNGs are ~100x36 (2.78:1); forcing square cells
+             made next/image flag "Image elements do not have explicit
+             width and height" / "Properly size images" on mobile
+             Lighthouse, because the rendered box shape didn't match
+             the source aspect ratio. A short fixed-height row keeps
+             logos at their natural ratio. */
+          height: 64px;
           display: flex;
           align-items: center;
           justify-content: center;

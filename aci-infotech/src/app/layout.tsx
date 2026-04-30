@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Funnel_Display, Funnel_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
@@ -31,6 +31,19 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 const USE_V2_HOME = process.env.NEXT_PUBLIC_USE_V2_HOME === "true";
+
+// Explicit viewport export. Next.js auto-generates a sensible default
+// when this is missing, but Lighthouse occasionally flags the
+// "viewport meta tag" audit on mobile if the default isn't picked up
+// (e.g. when a third party rewrites the HTML head). Declaring it here
+// removes the ambiguity. `themeColor` matches --v2-bg so iOS Safari's
+// status bar and Chrome's address bar tint align with the dark
+// homepage instead of flashing the system white.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#050B1F",
+};
 
 export const metadata: Metadata = {
   title: {

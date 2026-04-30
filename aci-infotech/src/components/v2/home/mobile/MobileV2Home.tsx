@@ -22,6 +22,7 @@ import MobileCaseStudies from './MobileCaseStudies';
 import MobilePartners from './MobilePartners';
 import MobileCTA from './MobileCTA';
 import MobileFooter from './MobileFooter';
+import V2HomeExtras from '@/components/v2/home/V2HomeExtras';
 
 interface Props {
   caseStudies: HomeCaseStudy[];
@@ -94,6 +95,7 @@ export default function MobileV2Home({ caseStudies }: Props) {
         <MobileCTA />
       </main>
       <MobileFooter />
+      <V2HomeExtras mobile />
 
       {/* Shared mobile primitives. Declared once at the root so each
           section file doesn't duplicate the same eyebrow / h2 / button
