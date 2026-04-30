@@ -16,7 +16,7 @@
  */
 
 import { useEffect, useMemo, useRef } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useReducedMotion } from 'framer-motion';
 import { ArrowRight, Play } from 'lucide-react';
 import StackChip from './StackChip';
 import { MagneticButton } from '../craft/MagneticButton';
@@ -125,7 +125,7 @@ export default function HeroV2() {
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="none"
         aria-hidden
         className="v2-hero-video"
         // 1×1 inline SVG matching --v2-bg. Paints instantly so the
@@ -269,6 +269,35 @@ export default function HeroV2() {
           0%, 100% { transform: translate(0, 0); opacity: 0.15; }
           50%      { transform: translate(8px, -12px); opacity: 0.5; }
         }
+        /* Hero intro choreography. Plain CSS so the H1 (LCP candidate)
+           paints on the very first frame instead of waiting for
+           framer-motion to hydrate and run an opacity:0 → 1 animation.
+           Line 1 of the headline has no animation at all — it must be
+           visible immediately for LCP to land on it. The remaining
+           lines/rows keep the staggered rise the design called for. */
+        @keyframes v2-hero-rise {
+          from { opacity: 0; transform: translate3d(0, 24px, 0); filter: blur(6px); }
+          to   { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
+        }
+        @keyframes v2-hero-fade {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        .v2-hero-rise, .v2-hero-fade {
+          animation-duration: 700ms;
+          animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+          animation-fill-mode: both;
+        }
+        .v2-hero-rise { animation-name: v2-hero-rise; }
+        .v2-hero-fade { animation-name: v2-hero-fade; }
+        @media (prefers-reduced-motion: reduce) {
+          .v2-hero-rise, .v2-hero-fade {
+            animation: none;
+            opacity: 1;
+            transform: none;
+            filter: none;
+          }
+        }
       `}</style>
 
       {/* spacer pushes hero content to the bottom half of the viewport */}
@@ -290,20 +319,15 @@ export default function HeroV2() {
             color: 'var(--v2-text-primary)',
           }}
         >
-          <motion.span
-            style={{ display: 'block' }}
-            initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0)' }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-            aria-hidden
-          >
+          {/* Line 1 is the LCP candidate — no animation, paints on the
+              very first frame so Chrome scores LCP off the SSR'd HTML
+              instead of waiting for hydration + an opacity tween. */}
+          <span style={{ display: 'block' }} aria-hidden>
             Enterprise technology.
-          </motion.span>
-          <motion.span
-            style={{ display: 'block' }}
-            initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0)' }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+          </span>
+          <span
+            style={{ display: 'block', animationDelay: '150ms' }}
+            className="v2-hero-rise"
             aria-hidden
           >
             <em
@@ -315,20 +339,19 @@ export default function HeroV2() {
             >
               Delivered.
             </em>
-          </motion.span>
+          </span>
         </h1>
 
         {/* Meta row: copy + ctas */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+        <div
+          className="v2-hero-rise"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
             gap: '32px 64px',
             alignItems: 'flex-end',
             marginTop: 8,
+            animationDelay: '500ms',
           }}
         >
           <p
@@ -409,7 +432,7 @@ export default function HeroV2() {
               <span>Explore case studies</span>
             </MagneticButton>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* ===== HERO FOOT =====
@@ -420,11 +443,8 @@ export default function HeroV2() {
           live in the certifications marquee further down the page,
           so this strip focuses purely on ecosystem depth — the
           fastest trust signal for enterprise buyers. */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.9 }}
-        className="v2-hero-foot"
+      <div
+        className="v2-hero-foot v2-hero-fade"
         style={{
           position: 'relative',
           zIndex: 4,
@@ -435,6 +455,7 @@ export default function HeroV2() {
           alignItems: 'center',
           gap: 20,
           flexWrap: 'wrap',
+          animationDelay: '800ms',
         }}
       >
         <span
@@ -499,7 +520,7 @@ export default function HeroV2() {
           />
           Scroll ↓
         </span>
-      </motion.div>
+      </div>
     </header>
   );
 }
