@@ -9,6 +9,18 @@ import GlobalStructuredData from "@/components/seo/StructuredData";
 // render-blocking <link> to fonts.googleapis.com that v1 was using.
 // Variables here feed the @theme inline tokens in globals.css so every
 // `var(--font-sans|title|mono)` reference keeps working unchanged.
+//
+// Weight set is the audited minimum:
+//   - Funnel_Sans: 400/500/600/700 — body inherits 400, buttons + nav
+//     hover states use 500/600/700.
+//   - Funnel_Display: 500/600/700 — only used at display sizes; the
+//     hero italic word ("Delivered.") sits at 500, headings at 700,
+//     menu titles at 600. Weight 400 is unused in the display font.
+//   - JetBrains_Mono: 400/500 — eyebrows/scroll cues default to 400;
+//     a handful of accent labels use 500. preload:false because the
+//     mono is only used in 10-12px decorative text and never blocks
+//     the LCP element; letting it load lazily frees a connection slot
+//     during the first paint.
 const funnelSans = Funnel_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -18,16 +30,17 @@ const funnelSans = Funnel_Sans({
 
 const funnelDisplay = Funnel_Display({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["500", "600", "700"],
   variable: "--font-funnel-display",
   display: "swap",
 });
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "500"],
   variable: "--font-jetbrains-mono",
   display: "swap",
+  preload: false,
 });
 
 const USE_V2_HOME = process.env.NEXT_PUBLIC_USE_V2_HOME === "true";
