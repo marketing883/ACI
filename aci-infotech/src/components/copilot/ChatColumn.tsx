@@ -11,7 +11,12 @@ import CitationPill from './CitationPill';
 import InlinePanelCard from './InlinePanelCard';
 import { streamAtherosReply } from '@/lib/copilot/clientStream';
 import { resolveWelcome } from '@/lib/copilot/welcome';
-import { subscribeAdminLive } from '@/lib/copilot/realtime';
+// `subscribeAdminLive` is dynamically imported below — it pulls in the
+// full @supabase/supabase-js + realtime SDK (~175 KiB). Keeping it out
+// of the static import graph means Supabase only lands in the bundle
+// when admin live takeover actually has a chance of firing (i.e., the
+// visitor has sent at least one message), not on every page that
+// post-idle hydrates the chat widget.
 import type {
   OfferActionButtonsArgs,
   RequestFieldArgs,
@@ -255,44 +260,69 @@ export default function ChatColumn({
   // admin claims the conversation and types a relay message, it lands in
   // chat_messages with role='admin'; we surface it as an amber bubble.
   //
+  // Two-stage gate before the Supabase Realtime SDK is even loaded:
+  //
+  //   1. Wait until the visitor has sent at least one user-role message.
+  //      Admin takeover only matters during an active conversation; if
+  //      the visitor never opens chat (or opens and never types) there
+  //      is nothing for an admin to relay onto. This keeps the ~175 KiB
+  //      @supabase/supabase-js bundle out of the chunk that hydrates on
+  //      every pageload after idle.
+  //
+  //   2. Dynamic import of `subscribeAdminLive`. Even with #1, we want
+  //      the static graph to stay free of Supabase so Webpack puts it
+  //      in its own async chunk and Lighthouse stops counting it as
+  //      "unused JavaScript" on the first paint.
+  //
   // Wrapped in try/catch because Supabase Realtime constructs a
   // WebSocket during subscribe(), and iOS Safari throws "operation is
   // insecure" from `new WebSocket()` under Intelligent Tracking
   // Prevention / private browsing. subscribeAdminLive already contains
   // its own guards, but the belt-and-suspenders wrapper here means
   // any future realtime-js change can't take down the whole chat.
+  const hasUserMessage = useMemo(
+    () => messages.some((m) => m.role === 'user'),
+    [messages],
+  );
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (!hasUserMessage) return;
     let off: (() => void) | undefined;
-    try {
-      off = subscribeAdminLive({
-        onMessageInsert: (row) => {
-          if ((row as { session_id?: string }).session_id !== sessionId) return;
-          const role = (row as { role?: string }).role;
-          if (role !== 'admin') return;
-          const content = (row as { content?: string }).content ?? '';
-          const messageId =
-            (row as { message_id?: string }).message_id ?? `admin_${Date.now()}`;
-          setMessages((m) => {
-            if (m.some((x) => x.id === messageId)) return m;
-            return [
-              ...m,
-              { id: messageId, role: 'assistant', content },
-            ];
-          });
-        },
-      });
-    } catch (err) {
-      log.warn('other', err, { extra: { phase: 'admin-live-subscribe' } });
-    }
+    let cancelled = false;
+    void (async () => {
+      try {
+        const { subscribeAdminLive } = await import('@/lib/copilot/realtime');
+        if (cancelled) return;
+        off = subscribeAdminLive({
+          onMessageInsert: (row) => {
+            if ((row as { session_id?: string }).session_id !== sessionId) return;
+            const role = (row as { role?: string }).role;
+            if (role !== 'admin') return;
+            const content = (row as { content?: string }).content ?? '';
+            const messageId =
+              (row as { message_id?: string }).message_id ?? `admin_${Date.now()}`;
+            setMessages((m) => {
+              if (m.some((x) => x.id === messageId)) return m;
+              return [
+                ...m,
+                { id: messageId, role: 'assistant', content },
+              ];
+            });
+          },
+        });
+      } catch (err) {
+        log.warn('other', err, { extra: { phase: 'admin-live-subscribe' } });
+      }
+    })();
     return () => {
+      cancelled = true;
       try {
         off?.();
       } catch (err) {
         log.warn('other', err, { extra: { phase: 'admin-live-unsubscribe' } });
       }
     };
-  }, [sessionId]);
+  }, [sessionId, hasUserMessage]);
   const statusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
