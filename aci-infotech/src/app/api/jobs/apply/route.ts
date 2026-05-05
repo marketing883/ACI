@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { sendJobApplicationNotificationEmail } from '@/lib/email';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 function getSupabase() {
   return createClient(supabaseUrl, supabaseServiceKey);
 }
+
+// Resume URLs are stored as the relative path inside the `resumes` storage
+// bucket. RMG India needs a clickable link in their email — so mint a signed
+// URL with a 7-day TTL. Long enough for triage, short enough that copies of
+// the email forwarded outside the org won't grant indefinite access.
+const RESUME_LINK_TTL_SECONDS = 7 * 24 * 60 * 60;
 
 // POST - Submit job application
 export async function POST(request: NextRequest) {
@@ -45,10 +53,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
     }
 
-    // Verify job exists and is published
+    // Verify job exists and is published. `location` comes along so the
+    // RMG notification email can stamp the role's geography in the
+    // header without a second lookup.
     const { data: job, error: jobError } = await supabase
       .from('jobs')
-      .select('id, title, status, closes_at')
+      .select('id, title, status, closes_at, location, slug')
       .eq('id', job_id)
       .single();
 
@@ -173,6 +183,48 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('Error creating application:', error);
       return NextResponse.json({ error: 'Failed to submit application' }, { status: 500 });
+    }
+
+    // Fire-and-forget notification to RMG India. Email failure must
+    // not bubble up to the candidate — the application is already
+    // persisted, so a Resend outage or a missing API key shouldn't
+    // surface as a failed submission. We await so any synchronous
+    // throw is caught locally; the response below still ships.
+    try {
+      let resumeDownloadUrl: string | null = null;
+      if (resume_url) {
+        const { data: signed, error: signError } = await supabase.storage
+          .from('resumes')
+          .createSignedUrl(resume_url, RESUME_LINK_TTL_SECONDS);
+        if (signError) {
+          console.warn('[Email] Could not sign resume URL:', signError.message);
+        } else {
+          resumeDownloadUrl = signed?.signedUrl ?? null;
+        }
+      }
+
+      await sendJobApplicationNotificationEmail({
+        jobTitle: job.title,
+        jobLocation: (job as { location?: string | null }).location ?? null,
+        applicationId: data.id,
+        firstName: applicationData.first_name,
+        lastName: applicationData.last_name,
+        email: applicationData.email,
+        phone: applicationData.phone,
+        linkedinUrl: applicationData.linkedin_url,
+        portfolioUrl: applicationData.portfolio_url,
+        currentCompany: applicationData.current_company,
+        currentTitle: applicationData.current_title,
+        yearsExperience: applicationData.years_experience,
+        coverLetter: applicationData.cover_letter,
+        source: applicationData.source,
+        referralName: applicationData.referral_name,
+        resumeFilename: applicationData.resume_filename,
+        resumeDownloadUrl,
+        adminViewUrl: `${siteUrl}/admin/job-applications`,
+      });
+    } catch (notifyErr) {
+      console.error('[Email] Job application notification threw:', notifyErr);
     }
 
     return NextResponse.json({

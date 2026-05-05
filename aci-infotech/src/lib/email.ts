@@ -8,6 +8,10 @@ const resend = process.env.RESEND_API_KEY
 
 const FROM_EMAIL = process.env.FROM_EMAIL || 'ACI Infotech <noreply@aci-infotech.com>';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'leads@aci-infotech.com';
+// Resource Management Group (India) — gets every new candidate application
+// for triage. Override via env if the inbox ever changes; the default keeps
+// the wiring honest if the env var is missing.
+const RMG_EMAIL = process.env.RMG_EMAIL || 'rmg.india@aciinfotech.com';
 
 interface LeadNotificationData {
   firstName: string;
@@ -412,6 +416,154 @@ export async function sendWhitepaperThankYouEmail(data: WhitepaperThankYouData):
     return true;
   } catch (error) {
     console.error('[Email] Error sending whitepaper thank you email:', error);
+    return false;
+  }
+}
+
+// Job application notification interfaces
+interface JobApplicationNotificationData {
+  jobTitle: string;
+  jobLocation?: string | null;
+  applicationId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string | null;
+  linkedinUrl?: string | null;
+  portfolioUrl?: string | null;
+  currentCompany?: string | null;
+  currentTitle?: string | null;
+  yearsExperience?: number | null;
+  coverLetter?: string | null;
+  source?: string | null;
+  referralName?: string | null;
+  resumeFilename?: string | null;
+  /** Pre-signed download URL for the resume, valid for ~7 days. */
+  resumeDownloadUrl?: string | null;
+  /** Public URL where the recruiter can review the full application. */
+  adminViewUrl?: string;
+}
+
+// Send notification email to RMG India when a candidate submits an application.
+// Mirrors the lead-notification pattern: rich plaintext block plus a styled
+// HTML version. Failure here must NEVER bubble up — the candidate's
+// application is already in the DB; emailing is a courtesy to the recruiters,
+// not a transactional requirement.
+export async function sendJobApplicationNotificationEmail(
+  data: JobApplicationNotificationData,
+): Promise<boolean> {
+  if (!resend) {
+    console.log('[Email] Resend not configured - skipping job application notification');
+    console.log('[Email] Application data:', {
+      job: data.jobTitle,
+      candidate: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+    });
+    return false;
+  }
+
+  const candidateName = `${data.firstName} ${data.lastName}`.trim();
+  const subject = `New application: ${candidateName} — ${data.jobTitle}`;
+
+  const row = (label: string, value: string | null | undefined) =>
+    value
+      ? `<tr><td style="padding: 8px 0; color: #666; width: 160px;">${label}:</td><td style="padding: 8px 0;">${value}</td></tr>`
+      : '';
+
+  const linkRow = (label: string, href: string | null | undefined) =>
+    href
+      ? `<tr><td style="padding: 8px 0; color: #666; width: 160px;">${label}:</td><td style="padding: 8px 0;"><a href="${href}" style="color: #0066FF;">${href}</a></td></tr>`
+      : '';
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto;">
+      <div style="background: #0A1628; color: white; padding: 24px 28px;">
+        <h1 style="margin: 0; font-size: 22px; font-weight: 700;">New Job Application</h1>
+        <p style="margin: 8px 0 0 0; opacity: 0.85; font-size: 14px;">${data.jobTitle}${data.jobLocation ? ` · ${data.jobLocation}` : ''}</p>
+      </div>
+
+      <div style="padding: 28px; background: #f7f8fa;">
+        <div style="background: white; padding: 22px; border-radius: 8px; margin-bottom: 18px;">
+          <h2 style="color: #0A1628; margin: 0 0 14px 0; font-size: 16px;">Candidate</h2>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            ${row('Name', candidateName)}
+            ${row('Email', `<a href="mailto:${data.email}" style="color: #0066FF;">${data.email}</a>`)}
+            ${row('Phone', data.phone ?? null)}
+            ${linkRow('LinkedIn', data.linkedinUrl ?? null)}
+            ${linkRow('Portfolio', data.portfolioUrl ?? null)}
+          </table>
+        </div>
+
+        <div style="background: white; padding: 22px; border-radius: 8px; margin-bottom: 18px;">
+          <h2 style="color: #0A1628; margin: 0 0 14px 0; font-size: 16px;">Current Role</h2>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            ${row('Company', data.currentCompany ?? null)}
+            ${row('Title', data.currentTitle ?? null)}
+            ${row('Experience', data.yearsExperience != null ? `${data.yearsExperience} year${data.yearsExperience === 1 ? '' : 's'}` : null)}
+          </table>
+        </div>
+
+        <div style="background: white; padding: 22px; border-radius: 8px; margin-bottom: 18px;">
+          <h2 style="color: #0A1628; margin: 0 0 14px 0; font-size: 16px;">Resume &amp; Cover Letter</h2>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            ${
+              data.resumeDownloadUrl
+                ? `<tr><td style="padding: 8px 0; color: #666; width: 160px;">Resume:</td><td style="padding: 8px 0;"><a href="${data.resumeDownloadUrl}" style="color: #0066FF;">${data.resumeFilename || 'Download resume'}</a> <span style="color: #999; font-size: 12px;">(link valid 7 days)</span></td></tr>`
+                : row('Resume', data.resumeFilename ?? 'No resume attached')
+            }
+          </table>
+          ${
+            data.coverLetter
+              ? `<div style="margin-top: 14px;"><div style="color: #666; font-size: 13px; margin-bottom: 6px;">Cover letter</div><div style="white-space: pre-wrap; padding: 14px; background: #f7f8fa; border-radius: 6px; color: #333; font-size: 13px; line-height: 1.55;">${data.coverLetter.replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c] || c))}</div></div>`
+              : ''
+          }
+        </div>
+
+        ${
+          data.source || data.referralName
+            ? `<div style="background: white; padding: 22px; border-radius: 8px; margin-bottom: 18px;">
+                 <h2 style="color: #0A1628; margin: 0 0 14px 0; font-size: 16px;">Source</h2>
+                 <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                   ${row('Source', data.source ?? null)}
+                   ${row('Referral', data.referralName ?? null)}
+                 </table>
+               </div>`
+            : ''
+        }
+
+        ${
+          data.adminViewUrl
+            ? `<div style="text-align: center; margin-top: 8px;">
+                 <a href="${data.adminViewUrl}" style="display: inline-block; background: #0066FF; color: white; padding: 12px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">Open in Admin</a>
+               </div>`
+            : ''
+        }
+      </div>
+
+      <div style="padding: 18px; text-align: center; color: #888; font-size: 11px; background: #f0f1f3;">
+        Application ID: ${data.applicationId}
+      </div>
+    </div>
+  `;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: RMG_EMAIL,
+      replyTo: data.email,
+      subject,
+      html,
+    });
+
+    if (error) {
+      console.error('[Email] Failed to send job application notification:', error);
+      return false;
+    }
+
+    console.log('[Email] Job application notification sent for:', data.email);
+    return true;
+  } catch (error) {
+    console.error('[Email] Error sending job application notification:', error);
     return false;
   }
 }
