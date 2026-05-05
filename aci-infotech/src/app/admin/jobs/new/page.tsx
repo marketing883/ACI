@@ -57,7 +57,9 @@ export default function NewJobPage() {
     responsibilities: [''],
     requirements: [''],
     nice_to_have: [''],
-    location: '',
+    city: '',
+    state_region: '',
+    country: '',
     location_type: 'hybrid',
     employment_type: 'full-time',
     salary_min: '',
@@ -150,7 +152,7 @@ export default function NewJobPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => handleSubmit('draft')}
-            disabled={saving || !form.title || !form.location}
+            disabled={saving || !form.title || !form.city || !form.country}
             className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
@@ -158,7 +160,7 @@ export default function NewJobPage() {
           </button>
           <button
             onClick={() => handleSubmit('published')}
-            disabled={saving || !form.title || !form.location || !form.description}
+            disabled={saving || !form.title || !form.city || !form.country || !form.description}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
             <Eye className="w-4 h-4" />
@@ -368,13 +370,40 @@ export default function NewJobPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Location *
+                City *
               </label>
               <input
                 type="text"
-                value={form.location}
-                onChange={(e) => setForm({ ...form, location: e.target.value })}
-                placeholder="e.g., Atlanta, GA or Remote (US)"
+                value={form.city}
+                onChange={(e) => setForm({ ...form, city: e.target.value })}
+                placeholder="e.g., Atlanta or Bengaluru"
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                State / Region
+              </label>
+              <input
+                type="text"
+                value={form.state_region}
+                onChange={(e) => setForm({ ...form, state_region: e.target.value })}
+                placeholder="e.g., GA or Karnataka"
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">Optional — leave blank if it doesn&apos;t apply.</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Country *
+              </label>
+              <input
+                type="text"
+                value={form.country}
+                onChange={(e) => setForm({ ...form, country: e.target.value })}
+                placeholder="e.g., USA or India"
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
               />
             </div>

@@ -45,6 +45,12 @@ export default function EditJobPage({ params }: PageProps) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
+  // Legacy free-text `location` (pre-structured) shown as a read-only
+  // hint above the new City/State/Country inputs when the structured
+  // fields are still empty for this row. Lets the admin migrate the
+  // value cleanly without re-typing what was already there.
+  const [legacyLocation, setLegacyLocation] = useState('');
+
   const [form, setForm] = useState({
     title: '',
     slug: '',
@@ -53,7 +59,9 @@ export default function EditJobPage({ params }: PageProps) {
     responsibilities: [''],
     requirements: [''],
     nice_to_have: [''],
-    location: '',
+    city: '',
+    state_region: '',
+    country: '',
     location_type: 'hybrid',
     employment_type: 'full-time',
     salary_min: '',
@@ -89,7 +97,9 @@ export default function EditJobPage({ params }: PageProps) {
         responsibilities: job.responsibilities?.length ? job.responsibilities : [''],
         requirements: job.requirements?.length ? job.requirements : [''],
         nice_to_have: job.nice_to_have?.length ? job.nice_to_have : [''],
-        location: job.location || '',
+        city: job.city || '',
+        state_region: job.state_region || '',
+        country: job.country || '',
         location_type: job.location_type || 'hybrid',
         employment_type: job.employment_type || 'full-time',
         salary_min: job.salary_min?.toString() || '',
@@ -103,6 +113,12 @@ export default function EditJobPage({ params }: PageProps) {
         status: job.status || 'draft',
         closes_at: job.closes_at ? job.closes_at.split('T')[0] : '',
       });
+      // Surface the pre-migration free-text `location` only when the
+      // structured fields are still empty for this row, so the hint
+      // disappears the moment the admin saves.
+      if (!job.city && !job.country && job.location) {
+        setLegacyLocation(job.location);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load job');
     } finally {
@@ -218,7 +234,7 @@ export default function EditJobPage({ params }: PageProps) {
           </button>
           <button
             onClick={() => handleSubmit()}
-            disabled={saving || !form.title || !form.location}
+            disabled={saving || !form.title || !form.city || !form.country}
             className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
@@ -227,7 +243,7 @@ export default function EditJobPage({ params }: PageProps) {
           {form.status !== 'published' && (
             <button
               onClick={() => handleSubmit('published')}
-              disabled={saving || !form.title || !form.location || !form.description}
+              disabled={saving || !form.title || !form.city || !form.country || !form.description}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
             >
               <Eye className="w-4 h-4" />
@@ -469,15 +485,54 @@ export default function EditJobPage({ params }: PageProps) {
           <div className="bg-white p-6 rounded-lg border space-y-4">
             <h5 className="text-sm font-semibold text-gray-900">Location</h5>
 
+            {legacyLocation && (
+              <div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <div className="font-semibold mb-1">Migrate this location</div>
+                <div>
+                  Previous value: <span className="font-mono">{legacyLocation}</span>
+                </div>
+                <div className="mt-1 text-amber-600">
+                  Split it into the fields below and save to update the public listing.
+                </div>
+              </div>
+            )}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Location *
+                City *
               </label>
               <input
                 type="text"
-                value={form.location}
-                onChange={(e) => setForm({ ...form, location: e.target.value })}
-                placeholder="e.g., Atlanta, GA or Remote (US)"
+                value={form.city}
+                onChange={(e) => setForm({ ...form, city: e.target.value })}
+                placeholder="e.g., Atlanta or Bengaluru"
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                State / Region
+              </label>
+              <input
+                type="text"
+                value={form.state_region}
+                onChange={(e) => setForm({ ...form, state_region: e.target.value })}
+                placeholder="e.g., GA or Karnataka"
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">Optional — leave blank if it doesn&apos;t apply.</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Country *
+              </label>
+              <input
+                type="text"
+                value={form.country}
+                onChange={(e) => setForm({ ...form, country: e.target.value })}
+                placeholder="e.g., USA or India"
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
               />
             </div>

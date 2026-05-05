@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { logAuditEvent, computeChanges } from '@/lib/audit-log';
+import { formatJobLocation } from '@/lib/jobs-location';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -55,7 +56,12 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       responsibilities,
       requirements,
       nice_to_have,
-      location,
+      city,
+      state_region,
+      country,
+      // `location` is intentionally not destructured — we recompute
+      // it from the structured fields below so the denormalized
+      // column always matches city/state/country.
       location_type,
       employment_type,
       salary_min,
@@ -71,6 +77,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       closes_at,
     } = body;
 
+    const location = formatJobLocation({ city, state_region, country });
+
     // Get current job to check status change
     const { data: currentJob } = await supabase
       .from('jobs')
@@ -85,6 +93,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       responsibilities: responsibilities || [],
       requirements: requirements || [],
       nice_to_have: nice_to_have || [],
+      city: city?.trim() || null,
+      state_region: state_region?.trim() || null,
+      country: country?.trim() || null,
       location,
       location_type,
       employment_type,

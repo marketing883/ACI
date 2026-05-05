@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { formatJobLocation } from '@/lib/jobs-location';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -63,7 +64,12 @@ export async function POST(request: NextRequest) {
       responsibilities,
       requirements,
       nice_to_have,
-      location,
+      city,
+      state_region,
+      country,
+      // `location` is intentionally not destructured from the body —
+      // we recompute it from the structured fields below so the
+      // denormalized column always matches city/state/country.
       location_type,
       employment_type,
       salary_min,
@@ -78,6 +84,8 @@ export async function POST(request: NextRequest) {
       status,
       closes_at,
     } = body;
+
+    const location = formatJobLocation({ city, state_region, country });
 
     // Generate slug from title
     let slug = generateSlug(title);
@@ -100,6 +108,9 @@ export async function POST(request: NextRequest) {
       responsibilities: responsibilities || [],
       requirements: requirements || [],
       nice_to_have: nice_to_have || [],
+      city: city?.trim() || null,
+      state_region: state_region?.trim() || null,
+      country: country?.trim() || null,
       location,
       location_type: location_type || 'hybrid',
       employment_type: employment_type || 'full-time',
