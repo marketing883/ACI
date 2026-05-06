@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { canAccessPath, defaultLandingFor, roleForUser } from '@/lib/auth/roles';
 
 // Helper to get the actual host from forwarded headers or request
 function getPublicUrl(request: NextRequest, pathname: string, searchParams?: URLSearchParams): string {
@@ -60,27 +61,61 @@ export async function middleware(request: NextRequest) {
   // Refresh session if expired
   const { data: { user } } = await supabase.auth.getUser();
 
-  const isAuthPage = request.nextUrl.pathname === '/admin/login';
-  const isAdminPage = request.nextUrl.pathname.startsWith('/admin');
-  const isApiRoute = request.nextUrl.pathname.startsWith('/api');
+  const pathname = request.nextUrl.pathname;
+  const isAuthPage = pathname === '/admin/login';
+  const isAdminPage = pathname.startsWith('/admin');
+  const isAdminApi = pathname.startsWith('/api/admin');
+  const isPublicApi = pathname.startsWith('/api') && !isAdminApi;
 
-  // Skip middleware for API routes and public pages
-  if (isApiRoute || !isAdminPage) {
+  // Public API routes (e.g. /api/jobs/apply, /api/contact) handle their
+  // own auth — middleware only gates the admin tree.
+  if (isPublicApi) {
+    return supabaseResponse;
+  }
+
+  // Admin API: must be authenticated AND the user's role must permit
+  // the path. Returns JSON, not a redirect — these endpoints are
+  // called by fetch() from admin pages, not navigated to.
+  if (isAdminApi) {
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (!canAccessPath(roleForUser(user), pathname)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+    return supabaseResponse;
+  }
+
+  // Non-admin pages — public site, no gate.
+  if (!isAdminPage) {
     return supabaseResponse;
   }
 
   // If user is not logged in and trying to access admin pages (except login)
-  if (!user && isAdminPage && !isAuthPage) {
+  if (!user && !isAuthPage) {
     const searchParams = new URLSearchParams();
-    searchParams.set('redirect', request.nextUrl.pathname);
+    searchParams.set('redirect', pathname);
     const redirectUrl = getPublicUrl(request, '/admin/login', searchParams);
     return NextResponse.redirect(redirectUrl);
   }
 
-  // If user is logged in and trying to access login page, redirect to admin
+  // If user is logged in and trying to access login page, redirect to
+  // their role's default landing (HR users go to /admin/jobs, full
+  // admins to /admin) instead of the unconditional /admin redirect
+  // that would just bounce HR back to the forbidden dashboard.
   if (user && isAuthPage) {
-    const adminUrl = getPublicUrl(request, '/admin');
-    return NextResponse.redirect(adminUrl);
+    const role = roleForUser(user);
+    const landing = getPublicUrl(request, defaultLandingFor(role));
+    return NextResponse.redirect(landing);
+  }
+
+  // Logged in, on a real admin page — enforce role.
+  if (user && !isAuthPage) {
+    const role = roleForUser(user);
+    if (!canAccessPath(role, pathname)) {
+      const landing = getPublicUrl(request, defaultLandingFor(role));
+      return NextResponse.redirect(landing);
+    }
   }
 
   return supabaseResponse;

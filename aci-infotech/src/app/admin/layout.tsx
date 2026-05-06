@@ -30,6 +30,12 @@ import {
 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 import HotLeadToast from '@/components/admin/HotLeadToast';
+import {
+  DEFAULT_ROLE,
+  navItemsForRole,
+  roleForUser,
+  type Role,
+} from '@/lib/auth/roles';
 
 type NavItem =
   | { href: string; label: string; icon: typeof LayoutDashboard; description?: string }
@@ -100,6 +106,7 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<string[]>(['Leads', 'Content', 'Hiring', 'Analytics', 'Atheros']);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<Role>(DEFAULT_ROLE);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -112,12 +119,20 @@ export default function AdminLayout({
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUserEmail(user.email || null);
+        setUserRole(roleForUser(user));
       }
     };
     if (!isLoginPage) {
       getUser();
     }
   }, [isLoginPage]);
+
+  // Filter the sidebar tree against the user's role. The middleware
+  // is the real gate (it returns 403/redirects on forbidden routes);
+  // hiding nav items here is just so HR users don't see links they
+  // can't follow.
+  const visibleNavItems = navItemsForRole(navItems, userRole);
+  const roleLabel = userRole === 'hr' ? 'HR' : 'Administrator';
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -216,7 +231,7 @@ export default function AdminLayout({
 
         {/* Navigation */}
         <nav className="flex-1 min-h-0 px-4 py-6 space-y-1 overflow-y-auto">
-          {navItems.map((item) => {
+          {visibleNavItems.map((item) => {
             if ('href' in item) {
               const Icon = item.icon;
               const isActive = isActiveLink(item.href);
@@ -300,7 +315,7 @@ export default function AdminLayout({
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">{userEmail}</p>
-                  <p className="text-xs text-gray-500">Administrator</p>
+                  <p className="text-xs text-gray-500">{roleLabel}</p>
                 </div>
               </div>
             </div>
