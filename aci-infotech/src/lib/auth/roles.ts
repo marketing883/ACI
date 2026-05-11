@@ -19,6 +19,30 @@
  *   3. Add a default landing in `defaultLandingFor`.
  */
 
+// Public pages historically fetch from /api/admin/* read endpoints
+// (the blogs list/detail, case-studies list, whitepapers list). The
+// clean fix is to move those reads to dedicated public routes under
+// /api/<resource>; until that refactor lands, this allowlist lets
+// unauthenticated GET requests through on the specific endpoints
+// the public site already depends on. WRITES on these paths still
+// require auth + role — the carve-out is read-only.
+//
+// When you add a public-read endpoint here, make sure the underlying
+// handler only ever returns published rows (or filters appropriately
+// on slug) — anything else risks leaking drafts.
+const PUBLIC_READ_ADMIN_PATHS = [
+  '/api/admin/blogs',
+  '/api/admin/case-studies',
+  '/api/admin/whitepapers',
+] as const;
+
+export function isPublicReadOnAdminApi(pathname: string, method: string): boolean {
+  if (method !== 'GET') return false;
+  return PUBLIC_READ_ADMIN_PATHS.some(
+    (p) => pathname === p || pathname.startsWith(p + '/'),
+  );
+}
+
 export type Role = 'admin' | 'hr';
 
 export const DEFAULT_ROLE: Role = 'admin';

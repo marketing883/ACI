@@ -1,6 +1,11 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import { canAccessPath, defaultLandingFor, roleForUser } from '@/lib/auth/roles';
+import {
+  canAccessPath,
+  defaultLandingFor,
+  isPublicReadOnAdminApi,
+  roleForUser,
+} from '@/lib/auth/roles';
 
 // Helper to get the actual host from forwarded headers or request
 function getPublicUrl(request: NextRequest, pathname: string, searchParams?: URLSearchParams): string {
@@ -77,6 +82,14 @@ export async function middleware(request: NextRequest) {
   // the path. Returns JSON, not a redirect — these endpoints are
   // called by fetch() from admin pages, not navigated to.
   if (isAdminApi) {
+    // Public site pages (/blogs, /case-studies, /whitepapers) still
+    // fetch from a handful of /api/admin/* read endpoints. Allow
+    // anonymous GETs on that allowlist so the marketing site keeps
+    // rendering for visitors; writes on these same paths fall
+    // through to the normal auth + role gate below.
+    if (isPublicReadOnAdminApi(pathname, request.method)) {
+      return supabaseResponse;
+    }
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
