@@ -131,6 +131,12 @@ export default function BlogPostPage() {
   // ../../../../com/aciinfotech/www/index.html (the imported href),
   // and the answers stay hidden forever.
   //
+  // Defeats every common collapse-hidden pattern: `display: none`,
+  // `height: 0`, `overflow: hidden`, `visibility: hidden`, the
+  // `.collapse` class itself, and any nested `style="display:none"`
+  // on descendants. Adds `.in` (bs3) and `.show` (bs4/5) on expand
+  // for downstream CSS that might key off those classes.
+  //
   // Pure DOM, scoped to the rendered content div. Re-runs whenever
   // the post's HTML changes (route change / refetch). The cleanup
   // function removes every listener it attached, so unmount and
@@ -146,14 +152,35 @@ export default function BlogPostPage() {
     };
     const wired: Wired[] = [];
 
+    const setHidden = (panel: HTMLElement) => {
+      panel.style.display = 'none';
+      panel.classList.remove('in');
+      panel.classList.remove('show');
+    };
+    const setVisible = (panel: HTMLElement) => {
+      // Strip every inline style Bootstrap might have used to hide
+      // the panel. Setting empty string removes the inline rule and
+      // lets default browser styling apply (block, visible, auto).
+      panel.style.display = '';
+      panel.style.height = '';
+      panel.style.overflow = '';
+      panel.style.visibility = '';
+      panel.classList.add('in');
+      panel.classList.add('show');
+      // Some imports nest `display: none` on the panel-body. Clear
+      // that too so the inner content actually paints.
+      panel.querySelectorAll<HTMLElement>('[style*="display"]').forEach((el) => {
+        if (el === panel) return;
+        if (el.style.display === 'none') el.style.display = '';
+      });
+    };
+
     const triggers = container.querySelectorAll<HTMLElement>(
       '[data-toggle="collapse"]',
     );
     triggers.forEach((trigger) => {
       const ariaControls = trigger.getAttribute('aria-controls');
       if (!ariaControls) return;
-      // Scope the lookup to the content container so we don't
-      // accidentally match unrelated IDs elsewhere in the page.
       let panel: HTMLElement | null = null;
       try {
         panel = container.querySelector<HTMLElement>(
@@ -164,19 +191,20 @@ export default function BlogPostPage() {
       }
       if (!panel) return;
 
-      // Start every panel collapsed regardless of inline styles
-      // shipped with the imported HTML.
-      panel.style.display = 'none';
+      setHidden(panel);
       trigger.setAttribute('aria-expanded', 'false');
 
       const handler = (e: Event) => {
         e.preventDefault();
+        // Stop the click from bubbling up to anything that might
+        // also be listening (e.g. a global anchor handler).
+        e.stopPropagation();
         const expanded = trigger.getAttribute('aria-expanded') === 'true';
         if (expanded) {
-          panel.style.display = 'none';
+          setHidden(panel);
           trigger.setAttribute('aria-expanded', 'false');
         } else {
-          panel.style.display = '';
+          setVisible(panel);
           trigger.setAttribute('aria-expanded', 'true');
         }
       };
