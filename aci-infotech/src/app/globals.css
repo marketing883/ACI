@@ -74,6 +74,25 @@
     stroke-width: 1.5 !important;
   }
 
+  /* HubSpot-imported FAQ accordions in blog body content.
+     The HTML uses Bootstrap 3 collapse markup ([data-toggle="collapse"])
+     with a "+" SVG icon that should rotate to "×" when the panel
+     is open. The polyfill in src/app/blogs/[slug]/page.tsx toggles
+     aria-expanded on the trigger; this rule reads off that state.
+     Pointer cursor + transition give the click target the right
+     affordance even though the trigger is an <a> with a stub href. */
+  .blog-html-content [data-toggle="collapse"] {
+    cursor: pointer;
+  }
+  .blog-html-content [data-toggle="collapse"] .icon,
+  .blog-html-content [data-toggle="collapse"] svg {
+    transition: transform 200ms ease;
+  }
+  .blog-html-content [data-toggle="collapse"][aria-expanded="true"] .icon,
+  .blog-html-content [data-toggle="collapse"][aria-expanded="true"] svg {
+    transform: rotate(45deg);
+  }
+
   /* Hero section CSS-only animations (no JS dependency = instant paint) */
   @keyframes heroFadeUp {
     from { opacity: 0; transform: translateY(20px); }

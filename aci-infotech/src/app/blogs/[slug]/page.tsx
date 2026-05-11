@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -45,6 +45,13 @@ export default function BlogPostPage() {
   const [error, setError] = useState<string | null>(null);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
+  // Ref on the dangerouslySetInnerHTML container so the effect below
+  // can find HubSpot-imported `[data-toggle="collapse"]` accordion
+  // triggers and polyfill the Bootstrap 3 collapse behavior they
+  // were authored against. HubSpot ships those with broken relative
+  // hrefs and no bundled JS on our side, so without this they're
+  // dead clicks and the answers stay hidden.
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Share URL helpers
   const getShareUrl = () => {
@@ -115,6 +122,74 @@ export default function BlogPostPage() {
 
     fetchPost();
   }, [slug]);
+
+  // HubSpot-imported FAQ accordions ship with Bootstrap 3 collapse
+  // markup ([data-toggle="collapse"], aria-controls pointing at the
+  // answer panel, broken relative href) but no Bootstrap JS on this
+  // site to wire up clicks. Without this polyfill the question is a
+  // dead link, clicking it would actually navigate the browser to
+  // ../../../../com/aciinfotech/www/index.html (the imported href),
+  // and the answers stay hidden forever.
+  //
+  // Pure DOM, scoped to the rendered content div. Re-runs whenever
+  // the post's HTML changes (route change / refetch). The cleanup
+  // function removes every listener it attached, so unmount and
+  // re-mount don't leak handlers.
+  useEffect(() => {
+    const container = contentRef.current;
+    if (!container) return;
+
+    type Wired = {
+      trigger: HTMLElement;
+      panel: HTMLElement;
+      handler: (e: Event) => void;
+    };
+    const wired: Wired[] = [];
+
+    const triggers = container.querySelectorAll<HTMLElement>(
+      '[data-toggle="collapse"]',
+    );
+    triggers.forEach((trigger) => {
+      const ariaControls = trigger.getAttribute('aria-controls');
+      if (!ariaControls) return;
+      // Scope the lookup to the content container so we don't
+      // accidentally match unrelated IDs elsewhere in the page.
+      let panel: HTMLElement | null = null;
+      try {
+        panel = container.querySelector<HTMLElement>(
+          `#${CSS.escape(ariaControls)}`,
+        );
+      } catch {
+        panel = null;
+      }
+      if (!panel) return;
+
+      // Start every panel collapsed regardless of inline styles
+      // shipped with the imported HTML.
+      panel.style.display = 'none';
+      trigger.setAttribute('aria-expanded', 'false');
+
+      const handler = (e: Event) => {
+        e.preventDefault();
+        const expanded = trigger.getAttribute('aria-expanded') === 'true';
+        if (expanded) {
+          panel.style.display = 'none';
+          trigger.setAttribute('aria-expanded', 'false');
+        } else {
+          panel.style.display = '';
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      };
+      trigger.addEventListener('click', handler);
+      wired.push({ trigger, panel, handler });
+    });
+
+    return () => {
+      for (const { trigger, handler } of wired) {
+        trigger.removeEventListener('click', handler);
+      }
+    };
+  }, [post?.content]);
 
   // Loading state
   if (isLoading) {
@@ -249,6 +324,7 @@ export default function BlogPostPage() {
             {/* Auto-detect HTML content: if content_format is 'html' OR content contains HTML tags */}
             {post.content_format === 'html' || /^<[a-z]|<p>|<div>|<h[1-6]>|<ul>|<ol>|<span/i.test(post.content.trim()) ? (
               <div
+                ref={contentRef}
                 dangerouslySetInnerHTML={{ __html: post.content }}
                 className="blog-html-content [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-12 [&_h1]:mb-6 [&_h1]:text-[var(--aci-secondary)] [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:text-[var(--aci-secondary)] [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:text-[var(--aci-secondary)] [&_p]:mb-4 [&_p]:text-gray-700 [&_p]:leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:space-y-2 [&_li]:text-gray-700 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--aci-primary)] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_blockquote]:my-6 [&_code]:bg-gray-100 [&_code]:px-2 [&_code]:py-1 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono [&_code]:text-[var(--aci-primary)] [&_pre]:bg-gray-900 [&_pre]:text-gray-100 [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:overflow-x-auto [&_pre]:my-6 [&_a]:text-[var(--aci-primary)] [&_a]:hover:underline [&_hr]:my-8 [&_hr]:border-gray-200"
               />
