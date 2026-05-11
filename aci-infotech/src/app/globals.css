@@ -55,14 +55,19 @@
 /* Cross-browser fix: Tailwind v4 Preflight resets padding/margin using physical
    shorthand (padding: 0) but utilities use logical properties (padding-inline).
    Some browsers (Edge) don't correctly resolve physical vs logical across @layer
-   boundaries. This ensures the reset also uses logical properties so utilities
-   can properly override them. */
+   boundaries. Mirroring the padding reset in logical properties below ensures
+   `px-4`, `px-6`, etc. take effect on Edge.
+
+   Margin is intentionally NOT mirrored here. Tailwind's `mx-auto` utility
+   (used everywhere for centered containers) sets `margin-inline: auto`, which
+   the same Edge cascade quirk would silently overwrite with the universal
+   `margin-inline: 0` reset — collapsing every centered container against the
+   left edge. The physical `margin: 0` reset from Preflight is enough; the
+   utility centering still works against it correctly across browsers. */
 @layer base {
   *, ::before, ::after, ::backdrop {
     padding-inline: 0;
     padding-block: 0;
-    margin-inline: 0;
-    margin-block: 0;
   }
 
   .lucide, [class*="lucide-"] {
