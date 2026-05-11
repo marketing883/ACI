@@ -1,42 +1,33 @@
 /**
- * Section-by-section V2 chrome migration.
+ * V2 chrome rollout policy.
  *
- * The site is rolling from the V1 Navigation/Footer to NavV2/FooterV2
- * one route group at a time so a regression on one section never
- * takes down the whole marketing site. ConditionalLayout reads this
- * list and renders V2 chrome on matching routes, V1 chrome on the
- * rest.
+ * The marketing site uses NavV2 + FooterV2 on every page by default.
+ * `V1_LEGACY_PREFIXES` is the escape hatch: any path matching one of
+ * its prefixes falls back to the v1 Navigation + Footer instead.
+ * Currently empty — every section has migrated.
  *
- * To migrate a section:
- *   1. Add its top-level prefix to V2_NAV_PREFIXES below.
- *   2. Smoke-test that section's pages (top of page, scrolled, mega
- *      menu interactions, footer links).
- *   3. Ship.
+ * If a section needs to roll back to v1 chrome (e.g. a regression
+ * surfaces on /case-studies/[slug] but the rest of the site is
+ * fine), add the prefix to V1_LEGACY_PREFIXES and redeploy. No
+ * other code changes are needed.
  *
- * To roll back a section:
- *   - Remove its prefix from the list and redeploy. No code changes
- *     needed in the section itself.
- *
- * Notes:
- *   - The homepage (`/`) and `/preview/v2-home` are excluded on
- *     purpose. They use V2 chrome but inject it themselves through
- *     V2HomeContent so the nav can sit transparent over the hero;
- *     adding `/` here would cause double-render.
- *   - Admin routes (`/admin`) and landing pages (`/lp`) are excluded
- *     by ConditionalLayout regardless of this list.
+ * Routes that bypass nav/footer entirely (admin, landing pages, v2
+ * previews, the staging v2 root) are filtered out by
+ * ConditionalLayout BEFORE this function runs, so they're not
+ * affected either way.
  */
 
-export const V2_NAV_PREFIXES: readonly string[] = [
-  '/careers',
-];
+export const V1_LEGACY_PREFIXES: readonly string[] = [];
 
 /**
  * True when the given pathname should render V2 chrome (NavV2 +
- * FooterV2) instead of the V1 Navigation + Footer.
+ * FooterV2). False only when the pathname matches the v1 legacy
+ * allowlist above.
  */
 export function isV2NavRoute(pathname: string | null | undefined): boolean {
   if (!pathname) return false;
-  return V2_NAV_PREFIXES.some(
+  const onV1 = V1_LEGACY_PREFIXES.some(
     (p) => pathname === p || pathname.startsWith(p + '/'),
   );
+  return !onV1;
 }

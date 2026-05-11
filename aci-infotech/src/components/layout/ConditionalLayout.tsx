@@ -64,10 +64,19 @@ export default function ConditionalLayout({
   // decide whether the bandwidth is worth the visual richness on
   // every inner page.
   if (isV2NavRoute(pathname)) {
+    // No top padding on the wrapper — V2 pages place a hero or
+    // top-padded section as their first child (the careers hero has
+    // its own pt-32, well above the ~70px nav). A wrapper pt-20
+    // would just paint an 80px strip in the body background between
+    // the dark nav and the page's dark hero. The dark background
+    // here is a safety net for any future migrated page whose first
+    // element doesn't fully cover the viewport top.
     return (
       <>
         <NavV2 forceSolid />
-        <main className="pt-20">{children}</main>
+        <main style={{ background: 'var(--v2-bg)', minHeight: '100vh' }}>
+          {children}
+        </main>
         <FooterV2 />
         <ChatWidgetWrapper />
         <AtherosNudge />
