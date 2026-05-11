@@ -63,3 +63,31 @@ export async function fetchFeaturedWhitepaper(): Promise<MenuWhitepaper | null> 
     return null;
   }
 }
+
+// `fetchFeaturedWhitepaper` requires `is_featured = true`, which is
+// what the homepage hero card wants. The Resources mega menu has a
+// different spec: "latest from the CMS" regardless of the editorial
+// featured flag. This fetcher drops that filter so a fresh
+// whitepaper shows up in the menu the moment it publishes, even if
+// nobody has remembered to toggle is_featured.
+export async function fetchLatestWhitepaper(): Promise<MenuWhitepaper | null> {
+  const supabase = getClient();
+  try {
+    const { data, error } = await supabase
+      .from('whitepapers')
+      .select('slug, title, excerpt, cover_image')
+      .eq('status', 'published')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error || !data) return null;
+    return {
+      slug: (data.slug as string) ?? '',
+      title: (data.title as string) ?? '',
+      excerpt: (data.excerpt as string) ?? null,
+      cover_image: (data.cover_image as string) ?? null,
+    };
+  } catch {
+    return null;
+  }
+}

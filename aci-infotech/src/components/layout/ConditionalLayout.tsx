@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Navigation from '@/components/layout/Navigation';
@@ -7,6 +8,10 @@ import Footer from '@/components/layout/Footer';
 import NavV2 from '@/components/v2/nav/NavV2';
 import FooterV2 from '@/components/v2/home/FooterV2';
 import { isV2NavRoute } from '@/components/layout/v2-routes';
+import {
+  getNavFeatured,
+  type NavFeaturedResponse,
+} from '@/lib/v2/nav-featured-client';
 
 // Lazy load ChatWidget - it's 887 lines and not critical for initial page render
 const ChatWidgetWrapper = dynamic(
@@ -34,6 +39,22 @@ export default function ConditionalLayout({
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith('/admin');
   const isLandingPage = pathname?.startsWith('/lp');
+
+  // Mega-menu spotlight data (latest case study / whitepaper / blog /
+  // news from the CMS). Lives at the layout level rather than inside
+  // NavV2 so it survives soft navigations and the data isn't re-fetched
+  // when the user moves between marketing pages. getNavFeatured()
+  // dedupes via a module-level promise.
+  const [navFeatured, setNavFeatured] = useState<NavFeaturedResponse | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    getNavFeatured().then((data) => {
+      if (!cancelled) setNavFeatured(data);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   // v2 preview routes render standalone so the new dark aesthetic can
   // be judged without v1 nav/footer chrome on top. Only affects
   // /preview/v2* routes; /preview/home and all other existing routes
@@ -73,7 +94,11 @@ export default function ConditionalLayout({
     // element doesn't fully cover the viewport top.
     return (
       <>
-        <NavV2 forceSolid />
+        <NavV2
+          forceSolid
+          resources={navFeatured?.resources}
+          company={navFeatured?.company}
+        />
         <main style={{ background: 'var(--v2-bg)', minHeight: '100vh' }}>
           {children}
         </main>

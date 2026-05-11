@@ -57,6 +57,43 @@ export interface HomeCaseStudy {
   featured_image_url: string | null;
 }
 
+// `fetchFeaturedCaseStudies` requires is_featured = true (homepage
+// hero list). The nav mega menu wants the most recent published case
+// study regardless of the editorial featured flag, so it has its own
+// helper. Same shape; different WHERE clause.
+export async function fetchLatestCaseStudy(): Promise<HomeCaseStudy | null> {
+  const supabase = getClient();
+  try {
+    const { data, error } = await supabase
+      .from('case_studies')
+      .select('*')
+      .eq('status', 'published')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error || !data) return null;
+    const r = data as Record<string, unknown>;
+    return {
+      id: (r.id as string) ?? '',
+      slug: (r.slug as string) ?? '',
+      title: (r.title as string) ?? '',
+      client_descriptor: (r.client_descriptor as string) ?? null,
+      industry: (r.industry as string) ?? null,
+      challenge: (r.challenge as string) ?? null,
+      solution: (r.solution as string) ?? null,
+      metrics: Array.isArray(r.metrics)
+        ? (r.metrics as HomeCaseStudy['metrics'])
+        : [],
+      technologies: Array.isArray(r.technologies) ? (r.technologies as string[]) : [],
+      services: Array.isArray(r.services) ? (r.services as string[]) : [],
+      testimonial_quote: (r.testimonial_quote as string) ?? null,
+      featured_image_url: (r.featured_image_url as string) ?? null,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchFeaturedCaseStudies(limit = 4): Promise<HomeCaseStudy[]> {
   const supabase = getClient();
   try {
