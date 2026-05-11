@@ -36,6 +36,13 @@ interface NavV2Props {
   resources?: ResourcesMenuData;
   /** Pre-fetched data for the Company mega-menu spotlight. */
   company?: CompanyMenuData;
+  /**
+   * Skip the transparent-on-hero state and render the solid dark
+   * blurred surface from the first paint. Set on inner pages that
+   * have light backgrounds — otherwise the secondary-grey nav text
+   * is invisible until the visitor scrolls a screen.
+   */
+  forceSolid?: boolean;
 }
 
 type MenuId = 'services' | 'platforms' | 'industries' | 'resources' | 'company';
@@ -66,10 +73,14 @@ const TOP_PLAYBOOK = [...PLAYBOOKS].sort(
   (a, b) => b.deployments - a.deployments,
 )[0];
 
-export default function NavV2({ resources, company }: NavV2Props) {
+export default function NavV2({ resources, company, forceSolid = false }: NavV2Props) {
   const menu = useMegaMenuHover();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // Inner pages bypass the hero-overlay treatment entirely — the nav
+  // sits on top of light page content, so it has to read as a solid
+  // surface from the first paint regardless of scroll position.
+  const solid = forceSolid || scrolled;
 
   const resourcesData: ResourcesMenuData = {
     ...resources,
@@ -118,16 +129,16 @@ export default function NavV2({ resources, company }: NavV2Props) {
           left: 0,
           right: 0,
           zIndex: 50,
-          padding: scrolled ? '14px 44px' : '20px 44px',
-          background: scrolled
+          padding: solid ? '14px 44px' : '20px 44px',
+          background: solid
             ? 'rgba(5, 11, 31, 0.82)'
             : active
               ? 'rgba(5, 11, 31, 0.6)'
               : 'transparent',
-          backdropFilter: scrolled || active ? 'blur(12px)' : 'none',
-          WebkitBackdropFilter: scrolled || active ? 'blur(12px)' : 'none',
+          backdropFilter: solid || active ? 'blur(12px)' : 'none',
+          WebkitBackdropFilter: solid || active ? 'blur(12px)' : 'none',
           borderBottom:
-            scrolled || active
+            solid || active
               ? '1px solid var(--v2-border-subtle)'
               : '1px solid transparent',
           transition: 'all 300ms var(--v2-ease)',

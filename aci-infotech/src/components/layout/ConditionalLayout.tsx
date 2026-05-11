@@ -4,6 +4,9 @@ import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
+import NavV2 from '@/components/v2/nav/NavV2';
+import FooterV2 from '@/components/v2/home/FooterV2';
+import { isV2NavRoute } from '@/components/layout/v2-routes';
 
 // Lazy load ChatWidget - it's 887 lines and not critical for initial page render
 const ChatWidgetWrapper = dynamic(
@@ -48,6 +51,28 @@ export default function ConditionalLayout({
   // root all bypass the v1 Navigation / Footer / chat widgets.
   if (isAdminRoute || isLandingPage || isV2Preview || isV2Root) {
     return <>{children}</>;
+  }
+
+  // V2 chrome rollout: marketing sections migrate one at a time
+  // (see src/components/layout/v2-routes.ts for the allowlist). On
+  // a matching route, render NavV2/FooterV2 instead of the v1
+  // Navigation/Footer. The mega-menu spotlight cards (featured
+  // case study / whitepaper / blog) load empty here — V2HomeContent
+  // pre-fetches them server-side because it's an async server
+  // component, while this layout is client-only. A follow-up can
+  // hydrate them via a small /api/nav/featured endpoint once we
+  // decide whether the bandwidth is worth the visual richness on
+  // every inner page.
+  if (isV2NavRoute(pathname)) {
+    return (
+      <>
+        <NavV2 forceSolid />
+        <main className="pt-20">{children}</main>
+        <FooterV2 />
+        <ChatWidgetWrapper />
+        <AtherosNudge />
+      </>
+    );
   }
 
   const isOverlayHero = OVERLAY_HERO_ROUTES.has(pathname ?? '');
