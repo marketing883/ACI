@@ -6,18 +6,16 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
-const FROM_EMAIL = process.env.FROM_EMAIL || 'ACI Infotech <noreply@aci-infotech.com>';
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'leads@aci-infotech.com';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'ACI Infotech <noreply@aciinfotech.com>';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'leads@aciinfotech.com';
 // Resource Management Group (India) — gets every new candidate application
 // for triage. Override via env if the inbox ever changes; the default keeps
 // the wiring honest if the env var is missing.
 const RMG_EMAIL = process.env.RMG_EMAIL || 'rmg.india@aciinfotech.com';
 // Dedicated sender for job-application notifications so they thread
 // separately from lead/marketing mail and recruiters can filter on it.
-// NOTE: the domain on this address (aciinfotech.com) must be verified
-// in Resend or the send will fail. The other transactional mail in
-// this file uses aci-infotech.com (hyphenated) — confirm both domains
-// are verified, or align them.
+// All senders in this file are on aciinfotech.com — that domain must
+// be verified in Resend (SPF/DKIM) or sends will fail.
 const JOB_NOTIFICATION_FROM_EMAIL =
   process.env.JOB_NOTIFICATION_FROM_EMAIL ||
   'ACI Infotech Careers <no-reply-job-notification@aciinfotech.com>';
@@ -182,8 +180,8 @@ export async function sendThankYouEmail(data: ThankYouEmailData): Promise<boolea
         </p>
 
         <div style="text-align: center; margin: 30px 0;">
-          <a href="https://aci-infotech.com/blog" style="display: inline-block; background: #0066FF; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px;">Read Our Blog</a>
-          <a href="https://aci-infotech.com/case-studies" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">View Case Studies</a>
+          <a href="https://aciinfotech.com/blog" style="display: inline-block; background: #0066FF; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px;">Read Our Blog</a>
+          <a href="https://aciinfotech.com/case-studies" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">View Case Studies</a>
         </div>
       </div>
 
@@ -191,7 +189,7 @@ export async function sendThankYouEmail(data: ThankYouEmailData): Promise<boolea
         <p style="margin: 0 0 10px 0; font-size: 14px;">ACI Infotech</p>
         <p style="margin: 0; font-size: 12px; opacity: 0.7;">Enterprise Data Engineering | AI/ML | Cloud Modernization</p>
         <div style="margin-top: 20px;">
-          <a href="https://aci-infotech.com" style="color: #7CB3FF; text-decoration: none; font-size: 12px;">aci-infotech.com</a>
+          <a href="https://aciinfotech.com" style="color: #7CB3FF; text-decoration: none; font-size: 12px;">aciinfotech.com</a>
         </div>
       </div>
     </div>
@@ -338,7 +336,7 @@ export async function sendWhitepaperThankYouEmail(data: WhitepaperThankYouData):
       caseStudies: ['Global Financial Giant: Enterprise-wide data transformation', 'Global Hospitality Leader: 400K employee platform'],
       nextSteps: ['Schedule an architecture call', 'Explore our case studies', 'Connect with our architects'],
       ctaText: 'Schedule Architecture Call',
-      ctaUrl: 'https://aci-infotech.com/contact?reason=architecture-call',
+      ctaUrl: 'https://aciinfotech.com/contact?reason=architecture-call',
     };
   }
 
@@ -392,9 +390,9 @@ export async function sendWhitepaperThankYouEmail(data: WhitepaperThankYouData):
         </p>
 
         <div style="text-align: center; margin: 30px 0;">
-          <a href="https://aci-infotech.com/whitepapers" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">More Whitepapers</a>
-          <a href="https://aci-infotech.com/case-studies" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">Case Studies</a>
-          <a href="https://aci-infotech.com/blog" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">Blog</a>
+          <a href="https://aciinfotech.com/whitepapers" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">More Whitepapers</a>
+          <a href="https://aciinfotech.com/case-studies" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">Case Studies</a>
+          <a href="https://aciinfotech.com/blog" style="display: inline-block; background: #f5f7fa; color: #0066FF; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; border: 1px solid #0066FF;">Blog</a>
         </div>
       </div>
 
@@ -402,7 +400,7 @@ export async function sendWhitepaperThankYouEmail(data: WhitepaperThankYouData):
         <p style="margin: 0 0 10px 0; font-size: 14px;">ACI Infotech</p>
         <p style="margin: 0; font-size: 12px; opacity: 0.7;">Enterprise Data Engineering | AI/ML | Cloud Modernization</p>
         <div style="margin-top: 20px;">
-          <a href="https://aci-infotech.com" style="color: #7CB3FF; text-decoration: none; font-size: 12px;">aci-infotech.com</a>
+          <a href="https://aciinfotech.com" style="color: #7CB3FF; text-decoration: none; font-size: 12px;">aciinfotech.com</a>
         </div>
       </div>
     </div>

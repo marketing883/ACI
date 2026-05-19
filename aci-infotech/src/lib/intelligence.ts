@@ -535,7 +535,7 @@ function createFallbackNurturingContent(whitepaperSlug: string): WhitepaperNurtu
       caseStudies: ['Global Financial Giant: $500K savings through SAP data consolidation', 'Fortune 500 Retailer: Real-time inventory analytics'],
       nextSteps: ['Schedule a data architecture assessment', 'Review our data engineering case studies', 'Connect with a senior data architect'],
       ctaText: 'Schedule Data Strategy Assessment',
-      ctaUrl: 'https://aci-infotech.com/contact?reason=data-strategy',
+      ctaUrl: 'https://aciinfotech.com/contact?reason=data-strategy',
     };
   }
 
@@ -546,7 +546,7 @@ function createFallbackNurturingContent(whitepaperSlug: string): WhitepaperNurtu
       caseStudies: ['AI Forecasting: $18M savings, 92% accuracy', 'Enterprise GenAI deployment with ArqAI'],
       nextSteps: ['Discuss your AI initiatives', 'Review AI governance frameworks', 'Explore MLOps maturity assessment'],
       ctaText: 'Discuss Your AI Initiatives',
-      ctaUrl: 'https://aci-infotech.com/contact?reason=ai-consultation',
+      ctaUrl: 'https://aciinfotech.com/contact?reason=ai-consultation',
     };
   }
 
@@ -557,7 +557,7 @@ function createFallbackNurturingContent(whitepaperSlug: string): WhitepaperNurtu
       caseStudies: ['Legacy Hadoop to Databricks migration', 'Multi-cloud deployment for Fortune 500'],
       nextSteps: ['Get a cloud readiness assessment', 'Review migration case studies', 'Connect with cloud architects'],
       ctaText: 'Get Cloud Assessment',
-      ctaUrl: 'https://aci-infotech.com/contact?reason=cloud-assessment',
+      ctaUrl: 'https://aciinfotech.com/contact?reason=cloud-assessment',
     };
   }
 
@@ -568,7 +568,7 @@ function createFallbackNurturingContent(whitepaperSlug: string): WhitepaperNurtu
       caseStudies: ['Fortune 500 Convenience Retailer: 25% promotion lift with MarTech', 'Retail CDP unifying 10M+ customer profiles'],
       nextSteps: ['Assess your MarTech stack', 'Review CDP implementation guides', 'Connect with MarTech specialists'],
       ctaText: 'Assess Your MarTech Stack',
-      ctaUrl: 'https://aci-infotech.com/contact?reason=martech-assessment',
+      ctaUrl: 'https://aciinfotech.com/contact?reason=martech-assessment',
     };
   }
 
@@ -579,7 +579,7 @@ function createFallbackNurturingContent(whitepaperSlug: string): WhitepaperNurtu
     caseStudies: ['Global Financial Giant: Enterprise-wide data transformation', 'Global Hospitality Leader: 400K employee platform'],
     nextSteps: ['Schedule an architecture call', 'Explore our case studies', 'Connect with our architects'],
     ctaText: 'Schedule Architecture Call',
-    ctaUrl: 'https://aci-infotech.com/contact?reason=architecture-call',
+    ctaUrl: 'https://aciinfotech.com/contact?reason=architecture-call',
   };
 }
 
