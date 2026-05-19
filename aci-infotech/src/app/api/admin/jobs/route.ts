@@ -83,6 +83,7 @@ export async function POST(request: NextRequest) {
       meta_description,
       status,
       closes_at,
+      notification_emails,
     } = body;
 
     const location = formatJobLocation({ city, state_region, country });
@@ -126,6 +127,7 @@ export async function POST(request: NextRequest) {
       status: status || 'draft',
       published_at: status === 'published' ? new Date().toISOString() : null,
       closes_at: closes_at || null,
+      notification_emails: notification_emails?.trim() || null,
     };
 
     const { data, error } = await supabase

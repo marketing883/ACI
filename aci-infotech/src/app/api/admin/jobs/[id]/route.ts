@@ -75,14 +75,18 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       meta_description,
       status,
       closes_at,
+      notification_emails,
     } = body;
 
     const location = formatJobLocation({ city, state_region, country });
 
-    // Get current job to check status change
+    // Get current job to check status change. `notification_emails`
+    // is selected too so computeChanges() below diffs it accurately;
+    // without it the key would always read as undefined -> a spurious
+    // "changed" entry on every save.
     const { data: currentJob } = await supabase
       .from('jobs')
-      .select('status, published_at')
+      .select('status, published_at, notification_emails')
       .eq('id', id)
       .single();
 
@@ -110,6 +114,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       meta_description: meta_description || description?.substring(0, 160),
       status,
       closes_at: closes_at || null,
+      notification_emails: notification_emails?.trim() || null,
     };
 
     // Set published_at if status changed to published

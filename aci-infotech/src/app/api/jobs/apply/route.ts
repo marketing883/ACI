@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     // header without a second lookup.
     const { data: job, error: jobError } = await supabase
       .from('jobs')
-      .select('id, title, status, closes_at, location, slug')
+      .select('id, title, status, closes_at, location, slug, notification_emails')
       .eq('id', job_id)
       .single();
 
@@ -222,6 +222,8 @@ export async function POST(request: NextRequest) {
         resumeFilename: applicationData.resume_filename,
         resumeDownloadUrl,
         adminViewUrl: `${siteUrl}/admin/job-applications`,
+        notificationEmailsRaw:
+          (job as { notification_emails?: string | null }).notification_emails ?? null,
       });
     } catch (notifyErr) {
       console.error('[Email] Job application notification threw:', notifyErr);

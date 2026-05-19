@@ -74,6 +74,7 @@ export default function EditJobPage({ params }: PageProps) {
     meta_description: '',
     status: 'draft',
     closes_at: '',
+    notification_emails: '',
   });
 
   useEffect(() => {
@@ -112,6 +113,7 @@ export default function EditJobPage({ params }: PageProps) {
         meta_description: job.meta_description || '',
         status: job.status || 'draft',
         closes_at: job.closes_at ? job.closes_at.split('T')[0] : '',
+        notification_emails: job.notification_emails || '',
       });
       // Surface the pre-migration free-text `location` only when the
       // structured fields are still empty for this row, so the hint
@@ -626,6 +628,22 @@ export default function EditJobPage({ params }: PageProps) {
                 onChange={(e) => setForm({ ...form, closes_at: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Notification Email(s)
+              </label>
+              <input
+                type="text"
+                value={form.notification_emails}
+                onChange={(e) => setForm({ ...form, notification_emails: e.target.value })}
+                placeholder="rmg.india@aciinfotech.com"
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Comma-separate multiple addresses. Leave blank to send to the default RMG inbox.
+              </p>
             </div>
           </div>
 

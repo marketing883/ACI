@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { generateWhitepaperNurturing, WhitepaperNurturingContent } from './intelligence';
+import { isValidEmailFormat } from './email-validation';
 
 // Initialize Resend client
 const resend = process.env.RESEND_API_KEY
@@ -449,6 +450,34 @@ interface JobApplicationNotificationData {
   resumeDownloadUrl?: string | null;
   /** Public URL where the recruiter can review the full application. */
   adminViewUrl?: string;
+  /**
+   * Raw, comma-separated recipient list configured per job in the
+   * admin. Parsed/validated/deduped here; falls back to RMG_EMAIL
+   * when blank or when no entry is a valid address. Verbatim string
+   * (not an array) so a malformed value can never break the send.
+   */
+  notificationEmailsRaw?: string | null;
+}
+
+// Resolve the recipient list for a job-application notification.
+// Per-job override wins; an empty or all-invalid value falls back to
+// the global RMG inbox. Dedupe is case-insensitive but keeps the
+// first-seen original casing (SMTP local-parts are technically
+// case-sensitive, so we don't lowercase the address we actually send
+// to — only the comparison key).
+function resolveApplicationRecipients(raw: string | null | undefined): string[] {
+  if (!raw) return [RMG_EMAIL];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const part of raw.split(',')) {
+    const addr = part.trim();
+    if (!addr || !isValidEmailFormat(addr)) continue;
+    const key = addr.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(addr);
+  }
+  return out.length > 0 ? out : [RMG_EMAIL];
 }
 
 // Send notification email to RMG India when a candidate submits an application.
@@ -553,10 +582,18 @@ export async function sendJobApplicationNotificationEmail(
     </div>
   `;
 
+  const recipients = resolveApplicationRecipients(data.notificationEmailsRaw);
+  const usedFallback =
+    recipients.length === 1 && recipients[0] === RMG_EMAIL && !!data.notificationEmailsRaw
+      ? ' (per-job value had no valid address; used default)'
+      : data.notificationEmailsRaw
+        ? ''
+        : ' (no per-job value; used default)';
+
   try {
     const { error } = await resend.emails.send({
       from: JOB_NOTIFICATION_FROM_EMAIL,
-      to: RMG_EMAIL,
+      to: recipients,
       replyTo: data.email,
       subject,
       html,
@@ -567,7 +604,10 @@ export async function sendJobApplicationNotificationEmail(
       return false;
     }
 
-    console.log('[Email] Job application notification sent for:', data.email);
+    console.log(
+      `[Email] Job application notification sent to ${recipients.length} recipient(s)${usedFallback} for:`,
+      data.email,
+    );
     return true;
   } catch (error) {
     console.error('[Email] Error sending job application notification:', error);
