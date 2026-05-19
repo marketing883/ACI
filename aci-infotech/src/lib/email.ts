@@ -12,6 +12,15 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'leads@aci-infotech.com';
 // for triage. Override via env if the inbox ever changes; the default keeps
 // the wiring honest if the env var is missing.
 const RMG_EMAIL = process.env.RMG_EMAIL || 'rmg.india@aciinfotech.com';
+// Dedicated sender for job-application notifications so they thread
+// separately from lead/marketing mail and recruiters can filter on it.
+// NOTE: the domain on this address (aciinfotech.com) must be verified
+// in Resend or the send will fail. The other transactional mail in
+// this file uses aci-infotech.com (hyphenated) — confirm both domains
+// are verified, or align them.
+const JOB_NOTIFICATION_FROM_EMAIL =
+  process.env.JOB_NOTIFICATION_FROM_EMAIL ||
+  'ACI Infotech Careers <no-reply-job-notification@aciinfotech.com>';
 
 interface LeadNotificationData {
   firstName: string;
@@ -548,7 +557,7 @@ export async function sendJobApplicationNotificationEmail(
 
   try {
     const { error } = await resend.emails.send({
-      from: FROM_EMAIL,
+      from: JOB_NOTIFICATION_FROM_EMAIL,
       to: RMG_EMAIL,
       replyTo: data.email,
       subject,
