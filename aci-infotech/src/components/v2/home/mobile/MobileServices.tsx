@@ -21,9 +21,9 @@ export default function MobileServices() {
     <section className="m-services" aria-labelledby="m-services-h">
       <p className="m-eyebrow">/ What we do</p>
       <h2 id="m-services-h" className="m-h2">
-        Ten practices.
+        One team.
         <br />
-        <em className="m-h2-em">One delivery&nbsp;team.</em>
+        <em className="m-h2-em">End to&nbsp;end.</em>
       </h2>
 
       <ul className="m-services__list">

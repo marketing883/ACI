@@ -239,7 +239,7 @@ export default function ArqAIV2({
                 transition: 'transform 200ms var(--v2-ease)',
               }}
             >
-              See ArqAI
+              How ArqAI works
               <ArrowRight size={14} />
             </a>
           </div>

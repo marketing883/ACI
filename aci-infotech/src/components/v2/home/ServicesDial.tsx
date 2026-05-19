@@ -74,6 +74,18 @@ export default function ServicesDial() {
         {/* Section head */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2rem', flexWrap: 'wrap', marginBottom: '4rem' }}>
           <div>
+            <div
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'var(--v2-text-muted)',
+                marginBottom: 18,
+              }}
+            >
+              / What we build
+            </div>
             <h2
               style={{
                 fontFamily: 'var(--font-title)',
@@ -86,7 +98,7 @@ export default function ServicesDial() {
                 maxWidth: 900,
               }}
             >
-              What we{' '}
+              Our{' '}
               <em
                 style={{
                   fontStyle: 'italic',
@@ -94,7 +106,7 @@ export default function ServicesDial() {
                   color: 'var(--v2-accent)',
                 }}
               >
-                deliver.
+                services.
               </em>
             </h2>
           </div>

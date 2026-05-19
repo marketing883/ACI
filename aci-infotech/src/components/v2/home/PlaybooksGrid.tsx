@@ -71,7 +71,7 @@ export default function PlaybooksGrid() {
                 margin: 0,
               }}
             >
-              Use cases we deliver.{' '}
+              Playbooks we run.{' '}
               <em
                 style={{
                   fontStyle: 'italic',
@@ -79,7 +79,7 @@ export default function PlaybooksGrid() {
                   color: 'var(--v2-accent)',
                 }}
               >
-                AI-accelerated.
+                Accelerated by&nbsp;AI.
               </em>
             </h2>
           </div>

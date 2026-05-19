@@ -41,9 +41,9 @@ export default function MobilePartners() {
     <section className="m-partners" aria-labelledby="m-partners-h">
       <p className="m-eyebrow">/ Certified partner across</p>
       <h2 id="m-partners-h" className="m-h2 m-h2--small">
-        The platforms our clients
+        The platforms
         <br />
-        <em className="m-h2-em">already&nbsp;run.</em>
+        <em className="m-h2-em">our clients&nbsp;run.</em>
       </h2>
 
       <ul className="m-partners__grid">

@@ -72,7 +72,7 @@ export default function NewsGrid({ items }: { items: HomeNewsItem[] }) {
       }}
     >
       <div style={{ maxWidth: 'var(--v2-container-max)', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <SectionHead headline="Press and" emphasized="announcements." />
+        <SectionHead headline="News and" emphasized="press." />
 
         <div
           style={{

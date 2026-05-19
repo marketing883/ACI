@@ -17,7 +17,7 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import StackChip from './StackChip';
 import { MagneticButton } from '../craft/MagneticButton';
 
@@ -363,9 +363,8 @@ export default function HeroV2() {
               margin: 0,
             }}
           >
-            Data & AI. Cloud. Managed operations. 280+ production systems
-            for enterprises in financial services, healthcare, retail,
-            and manufacturing.
+            Data and AI, cloud, and managed operations for Fortune 500
+            teams. 280+ systems in&nbsp;production.
           </p>
           <p
             style={{
@@ -403,33 +402,6 @@ export default function HeroV2() {
             >
               <span>Get in Touch</span>
               <ArrowRight size={14} />
-            </MagneticButton>
-            <MagneticButton
-              href="/case-studies"
-              className="v2-btn-ghost"
-              strength={0.2}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                flexDirection: 'row',
-                whiteSpace: 'nowrap',
-                gap: 8,
-                padding: '16px 26px',
-                background: 'transparent',
-                color: 'var(--v2-text-primary)',
-                fontFamily: 'var(--font-sans)',
-                fontSize: 13,
-                fontWeight: 500,
-                letterSpacing: '0.02em',
-                textTransform: 'uppercase',
-                borderRadius: 2,
-                border: '1px solid var(--v2-border-strong)',
-                textDecoration: 'none',
-                transition: 'border-color 200ms var(--v2-ease), background 200ms var(--v2-ease)',
-              }}
-            >
-              <Play size={12} fill="currentColor" />
-              <span>Explore case studies</span>
             </MagneticButton>
           </div>
         </div>
