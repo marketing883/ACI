@@ -31,9 +31,14 @@ export async function POST(request: NextRequest) {
     const phone = formData.get('phone') as string;
     const linkedin_url = formData.get('linkedin_url') as string;
     const portfolio_url = formData.get('portfolio_url') as string;
+    const location = formData.get('location') as string;
     const current_company = formData.get('current_company') as string;
     const current_title = formData.get('current_title') as string;
     const years_experience = formData.get('years_experience') as string;
+    const work_authorization = formData.get('work_authorization') as string;
+    const notice_period = formData.get('notice_period') as string;
+    const salary_expectation = formData.get('salary_expectation') as string;
+    const heard_from = formData.get('heard_from') as string;
     const cover_letter = formData.get('cover_letter') as string;
     const source = formData.get('source') as string;
     const referral_name = formData.get('referral_name') as string;
@@ -159,11 +164,16 @@ export async function POST(request: NextRequest) {
       last_name: last_name.trim(),
       email: email.toLowerCase().trim(),
       phone: phone?.trim() || null,
+      location: location?.trim() || null,
       linkedin_url: linkedin_url?.trim() || null,
       portfolio_url: portfolio_url?.trim() || null,
       current_company: current_company?.trim() || null,
       current_title: current_title?.trim() || null,
       years_experience: years_experience ? parseInt(years_experience) : null,
+      work_authorization: work_authorization?.trim() || null,
+      notice_period: notice_period?.trim() || null,
+      salary_expectation: salary_expectation?.trim() || null,
+      heard_from: heard_from?.trim() || null,
       resume_url,
       resume_filename,
       cover_letter: cover_letter?.trim() || null,
@@ -211,11 +221,16 @@ export async function POST(request: NextRequest) {
         lastName: applicationData.last_name,
         email: applicationData.email,
         phone: applicationData.phone,
+        location: applicationData.location,
         linkedinUrl: applicationData.linkedin_url,
         portfolioUrl: applicationData.portfolio_url,
         currentCompany: applicationData.current_company,
         currentTitle: applicationData.current_title,
         yearsExperience: applicationData.years_experience,
+        workAuthorization: applicationData.work_authorization,
+        noticePeriod: applicationData.notice_period,
+        salaryExpectation: applicationData.salary_expectation,
+        heardFrom: applicationData.heard_from,
         coverLetter: applicationData.cover_letter,
         source: applicationData.source,
         referralName: applicationData.referral_name,

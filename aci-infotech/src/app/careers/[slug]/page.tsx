@@ -60,11 +60,16 @@ export default function JobDetailPage({ params }: PageProps) {
     last_name: '',
     email: '',
     phone: '',
+    location: '',
     linkedin_url: '',
     portfolio_url: '',
     current_company: '',
     current_title: '',
     years_experience: '',
+    work_authorization: '',
+    notice_period: '',
+    salary_expectation: '',
+    heard_from: '',
     cover_letter: '',
     resume: null as File | null,
   });
@@ -109,11 +114,16 @@ export default function JobDetailPage({ params }: PageProps) {
       formData.append('last_name', form.last_name);
       formData.append('email', form.email);
       if (form.phone) formData.append('phone', form.phone);
+      if (form.location) formData.append('location', form.location);
       if (form.linkedin_url) formData.append('linkedin_url', form.linkedin_url);
       if (form.portfolio_url) formData.append('portfolio_url', form.portfolio_url);
       if (form.current_company) formData.append('current_company', form.current_company);
       if (form.current_title) formData.append('current_title', form.current_title);
       if (form.years_experience) formData.append('years_experience', form.years_experience);
+      if (form.work_authorization) formData.append('work_authorization', form.work_authorization);
+      if (form.notice_period) formData.append('notice_period', form.notice_period);
+      if (form.salary_expectation) formData.append('salary_expectation', form.salary_expectation);
+      if (form.heard_from) formData.append('heard_from', form.heard_from);
       if (form.cover_letter) formData.append('cover_letter', form.cover_letter);
       if (form.resume) formData.append('resume', form.resume);
       formData.append('source', 'direct');
@@ -461,6 +471,20 @@ export default function JobDetailPage({ params }: PageProps) {
                 </div>
               </div>
 
+              {/* Location */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  value={form.location}
+                  onChange={(e) => setForm({ ...form, location: e.target.value })}
+                  placeholder="City, Country (e.g., Bengaluru, India)"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
               {/* Links */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -534,6 +558,58 @@ export default function JobDetailPage({ params }: PageProps) {
                 </select>
               </div>
 
+              {/* Work authorization + notice period */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Work Authorization
+                  </label>
+                  <select
+                    value={form.work_authorization}
+                    onChange={(e) => setForm({ ...form, work_authorization: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select...</option>
+                    <option value="Citizen / National">Citizen / National</option>
+                    <option value="Permanent Resident">Permanent Resident</option>
+                    <option value="Valid Work Visa">Valid Work Visa</option>
+                    <option value="Require Sponsorship">Require Sponsorship</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Notice Period
+                  </label>
+                  <select
+                    value={form.notice_period}
+                    onChange={(e) => setForm({ ...form, notice_period: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select...</option>
+                    <option value="Immediately available">Immediately available</option>
+                    <option value="1-2 weeks">1-2 weeks</option>
+                    <option value="1 month">1 month</option>
+                    <option value="2 months">2 months</option>
+                    <option value="3+ months">3+ months</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Salary expectation */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Salary Expectation
+                </label>
+                <input
+                  type="text"
+                  value={form.salary_expectation}
+                  onChange={(e) => setForm({ ...form, salary_expectation: e.target.value })}
+                  placeholder="e.g., $120,000 or ₹25 LPA"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
               {/* Resume */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -565,6 +641,28 @@ export default function JobDetailPage({ params }: PageProps) {
                   placeholder="Tell us why you're interested in this role..."
                   className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
+              </div>
+
+              {/* How did you hear about us */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  How did you hear about us?
+                </label>
+                <select
+                  value={form.heard_from}
+                  onChange={(e) => setForm({ ...form, heard_from: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select...</option>
+                  <option value="LinkedIn">LinkedIn</option>
+                  <option value="Job Board">Job Board (Indeed, Naukri, etc.)</option>
+                  <option value="Company Website">Company Website</option>
+                  <option value="Employee Referral">Employee Referral</option>
+                  <option value="Search Engine">Search Engine</option>
+                  <option value="Social Media">Social Media</option>
+                  <option value="Event / Conference">Event / Conference</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
 
               {/* Submit */}

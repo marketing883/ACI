@@ -437,11 +437,16 @@ interface JobApplicationNotificationData {
   lastName: string;
   email: string;
   phone?: string | null;
+  location?: string | null;
   linkedinUrl?: string | null;
   portfolioUrl?: string | null;
   currentCompany?: string | null;
   currentTitle?: string | null;
   yearsExperience?: number | null;
+  workAuthorization?: string | null;
+  noticePeriod?: string | null;
+  salaryExpectation?: string | null;
+  heardFrom?: string | null;
   coverLetter?: string | null;
   source?: string | null;
   referralName?: string | null;
@@ -525,17 +530,21 @@ export async function sendJobApplicationNotificationEmail(
             ${row('Name', candidateName)}
             ${row('Email', `<a href="mailto:${data.email}" style="color: #0066FF;">${data.email}</a>`)}
             ${row('Phone', data.phone ?? null)}
+            ${row('Location', data.location ?? null)}
             ${linkRow('LinkedIn', data.linkedinUrl ?? null)}
             ${linkRow('Portfolio', data.portfolioUrl ?? null)}
           </table>
         </div>
 
         <div style="background: white; padding: 22px; border-radius: 8px; margin-bottom: 18px;">
-          <h2 style="color: #0A1628; margin: 0 0 14px 0; font-size: 16px;">Current Role</h2>
+          <h2 style="color: #0A1628; margin: 0 0 14px 0; font-size: 16px;">Current Role &amp; Availability</h2>
           <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
             ${row('Company', data.currentCompany ?? null)}
             ${row('Title', data.currentTitle ?? null)}
             ${row('Experience', data.yearsExperience != null ? `${data.yearsExperience} year${data.yearsExperience === 1 ? '' : 's'}` : null)}
+            ${row('Work authorization', data.workAuthorization ?? null)}
+            ${row('Notice period', data.noticePeriod ?? null)}
+            ${row('Salary expectation', data.salaryExpectation ?? null)}
           </table>
         </div>
 
@@ -556,12 +565,13 @@ export async function sendJobApplicationNotificationEmail(
         </div>
 
         ${
-          data.source || data.referralName
+          data.source || data.referralName || data.heardFrom
             ? `<div style="background: white; padding: 22px; border-radius: 8px; margin-bottom: 18px;">
                  <h2 style="color: #0A1628; margin: 0 0 14px 0; font-size: 16px;">Source</h2>
                  <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
                    ${row('Source', data.source ?? null)}
                    ${row('Referral', data.referralName ?? null)}
+                   ${row('Heard about us via', data.heardFrom ?? null)}
                  </table>
                </div>`
             : ''

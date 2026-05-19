@@ -35,11 +35,16 @@ interface Application {
   last_name: string;
   email: string;
   phone: string | null;
+  location: string | null;
   linkedin_url: string | null;
   portfolio_url: string | null;
   current_company: string | null;
   current_title: string | null;
   years_experience: number | null;
+  work_authorization: string | null;
+  notice_period: string | null;
+  salary_expectation: string | null;
+  heard_from: string | null;
   resume_url: string | null;
   resume_filename: string | null;
   cover_letter: string | null;
@@ -487,6 +492,49 @@ function JobApplicationsContent() {
                       {selectedApp.years_experience} years of experience
                     </p>
                   )}
+                </div>
+              )}
+
+              {/* Logistics: location, work auth, notice, salary, channel */}
+              {(selectedApp.location ||
+                selectedApp.work_authorization ||
+                selectedApp.notice_period ||
+                selectedApp.salary_expectation ||
+                selectedApp.heard_from) && (
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="text-sm font-medium text-gray-500 mb-3">Details</h4>
+                  <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                    {selectedApp.location && (
+                      <>
+                        <dt className="text-gray-500">Location</dt>
+                        <dd className="text-gray-900">{selectedApp.location}</dd>
+                      </>
+                    )}
+                    {selectedApp.work_authorization && (
+                      <>
+                        <dt className="text-gray-500">Work authorization</dt>
+                        <dd className="text-gray-900">{selectedApp.work_authorization}</dd>
+                      </>
+                    )}
+                    {selectedApp.notice_period && (
+                      <>
+                        <dt className="text-gray-500">Notice period</dt>
+                        <dd className="text-gray-900">{selectedApp.notice_period}</dd>
+                      </>
+                    )}
+                    {selectedApp.salary_expectation && (
+                      <>
+                        <dt className="text-gray-500">Salary expectation</dt>
+                        <dd className="text-gray-900">{selectedApp.salary_expectation}</dd>
+                      </>
+                    )}
+                    {selectedApp.heard_from && (
+                      <>
+                        <dt className="text-gray-500">Heard about us via</dt>
+                        <dd className="text-gray-900">{selectedApp.heard_from}</dd>
+                      </>
+                    )}
+                  </dl>
                 </div>
               )}
 
