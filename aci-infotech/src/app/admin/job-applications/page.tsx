@@ -58,12 +58,13 @@ interface Application {
 
 // Build a /api/admin/resume/<path> URL from the storage path we
 // stored at application time. The route signs + redirects on click.
-function resumeDownloadUrl(storagePath: string): string {
+function resumeDownloadUrl(storagePath: string, downloadName?: string | null): string {
   const encoded = storagePath
     .split('/')
     .map(encodeURIComponent)
     .join('/');
-  return `/api/admin/resume/${encoded}`;
+  const base = `/api/admin/resume/${encoded}`;
+  return downloadName ? `${base}?name=${encodeURIComponent(downloadName)}` : base;
 }
 
 const statusOptions = [
@@ -557,7 +558,7 @@ function JobApplicationsContent() {
                       View
                     </a>
                     <a
-                      href={resumeDownloadUrl(selectedApp.resume_url)}
+                      href={resumeDownloadUrl(selectedApp.resume_url, selectedApp.resume_filename)}
                       download={selectedApp.resume_filename ?? undefined}
                       className="px-3 py-1.5 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
                     >

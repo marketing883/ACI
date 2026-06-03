@@ -25,7 +25,7 @@ interface RouteParams {
   params: Promise<{ path: string[] }>;
 }
 
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -42,10 +42,18 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     }
     const storagePath = path.map(decodeURIComponent).join('/');
 
+    // ?name=<original filename> forces an attachment download with that
+    // filename. Without it the browser opens the PDF inline (the "View"
+    // button). The HTML `download` attribute on the client anchor is
+    // ignored once the redirect crosses to the Supabase origin, so the
+    // attachment disposition has to come from the storage URL itself.
+    const downloadName = request.nextUrl.searchParams.get('name');
+    const signOpts = downloadName ? { download: downloadName } : undefined;
+
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const { data, error } = await supabase.storage
       .from('resumes')
-      .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS);
+      .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS, signOpts);
 
     if (error || !data?.signedUrl) {
       console.error('Resume signed-url error:', error);
