@@ -70,6 +70,7 @@ const HR_ALLOWED_PREFIXES = [
   '/admin/job-applications',
   '/api/admin/jobs',
   '/api/admin/job-applications',
+  '/api/admin/resume',
 ] as const;
 
 export function canAccessPath(role: Role, pathname: string): boolean {
