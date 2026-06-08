@@ -170,7 +170,7 @@ async function generateIntelligence(lead: LeadData): Promise<IntelligenceReport>
   const prompt = `You are a B2B sales intelligence analyst for ACI Infotech, an enterprise tech consulting firm.
 
 ACI CONTEXT:
-- 80+ Fortune 500 clients, $1B+ value delivered, 95% retention
+- 250+ clients, $1B+ value delivered, 95% retention
 - Services: Data Engineering (Databricks, Snowflake, dbt), AI/ML (MLOps, GenAI, ArqAI), Cloud (AWS, Azure, K8s), MarTech/CDP (Salesforce, Braze), Digital Transformation (SAP S/4HANA, ServiceNow), Cyber Security
 - Case Studies: Global Financial Giant ($500K savings, SAP consolidation), Fortune 500 Convenience Retailer (25% promotion lift, MarTech), Global Hospitality Leader (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
 

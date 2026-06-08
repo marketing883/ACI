@@ -175,7 +175,7 @@ export default async function CareersPage() {
             </p>
 
             <p className="text-gray-400 mb-10">
-              19 years. 80+ Fortune 500 clients. Real impact at enterprise scale.
+              19 years. 250+ clients. Real impact at enterprise scale.
             </p>
 
             {/* Quick scroll to jobs */}
@@ -203,8 +203,8 @@ export default async function CareersPage() {
               <p className="text-sm text-gray-500 mt-1">Technologists Globally</p>
             </div>
             <div className="py-8 px-4 text-center">
-              <p className="text-3xl md:text-4xl font-bold text-[var(--aci-primary)]">80+</p>
-              <p className="text-sm text-gray-500 mt-1">Fortune 500 Clients</p>
+              <p className="text-3xl md:text-4xl font-bold text-[var(--aci-primary)]">250+</p>
+              <p className="text-sm text-gray-500 mt-1">Clients</p>
             </div>
             <div className="py-8 px-4 text-center">
               <p className="text-3xl md:text-4xl font-bold text-[var(--aci-primary)]">10</p>

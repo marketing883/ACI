@@ -10,7 +10,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'About ACI Infotech | The Engineers Behind Enterprise Modernization',
-  description: '280+ projects delivered building data platforms, AI systems, and cloud architectures for 25+ Fortune 500 clients. 20 years of production-grade engineering. We answer the 2am call.',
+  description: '280+ projects delivered building data platforms, AI systems, and cloud architectures for 250+ clients. 20 years of production-grade engineering. We answer the 2am call.',
   keywords: 'enterprise technology consulting, data engineering company, AI ML consulting, Fortune 500 technology partner, production-grade engineering',
   alternates: {
     canonical: `${siteUrl}/about`,
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 // About page data
 const stats = [
   { number: '20', unit: 'Years', description: 'Founded 2006' },
-  { number: '25+', unit: 'Fortune 500', description: 'Clients served' },
+  { number: '250+', unit: 'Clients', description: 'Served globally' },
   { number: '$1B+', unit: 'Value', description: 'Delivered to clients' },
   { number: '280+', unit: 'Projects', description: 'Delivered globally' },
   { number: '10', unit: 'Countries', description: 'Global delivery' },
@@ -165,7 +165,7 @@ const certifications = [
 
 const trackRecord = [
   { number: '$1B+', label: 'Total value delivered to clients', context: 'Measurable ROI, not estimated' },
-  { number: '25+', label: 'Fortune 500 clients served', context: 'Across banking, healthcare, retail, manufacturing' },
+  { number: '250+', label: 'Clients served', context: 'Across banking, healthcare, retail, manufacturing' },
   { number: '20 Years', label: 'In business since 2006', context: 'Stable, growing, here for the long term' },
   { number: '280+', label: 'Projects delivered', context: 'Engineers, architects, data scientists' },
   { number: '10 Countries', label: 'Global delivery centers', context: 'US, India, and beyond' },

@@ -781,7 +781,7 @@ CONTENT EXCELLENCE REQUIREMENTS:
    - Use clear headings and subheadings that explain the content (not just label it)
 
 3. UNIQUE VOICE & INSIGHTS:
-   - Include "In our experience working with 80+ Fortune 500 clients..." type insights
+   - Include "In our experience working with 250+ clients..." type insights
    - Share specific patterns you've observed (e.g., "The #1 mistake we see enterprises make is...")
    - Provide the "insider perspective" that only practitioners would know
    - Challenge conventional wisdom where appropriate
