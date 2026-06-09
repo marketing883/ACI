@@ -482,7 +482,7 @@ export default function AboutPage() {
                         alt={cro.name}
                         width={360}
                         height={360}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
                       />
                     </picture>
                   </div>
