@@ -110,7 +110,7 @@ const cro = {
 
 A seasoned business leader with more than 25 years of experience, Prakash has successfully scaled organizations across multiple industries and geographies, delivering transformative growth through technology, innovation, and customer-centric leadership.
 
-He is responsible for accelerating ACI's global expansion, strengthening its position as an AI-first technology company, and driving enterprise adoption of innovative solutions powered by the ArqAI platform and industry-specific AI capabilities.
+He is responsible for accelerating ACI's global expansion, strengthening its position as an AI-first technology company, and driving enterprise adoption of innovative solutions powered by ArqAI Labs and industry-specific AI capabilities.
 
 Prakash is passionate about building high-performance teams, creating lasting customer value, and helping organizations navigate the next era of AI-driven business transformation.`,
   photo_url: '/images/about-team/Prakash.jpg',
