@@ -102,6 +102,22 @@ Under Jag's leadership, ACI has grown from a small team of passionate engineers 
   linkedin_url: 'https://www.linkedin.com/in/jagannadhkanumuri/',
 };
 
+// CRO Data
+const cro = {
+  name: 'Prakash Hingorani',
+  title: 'Global Chief Revenue Officer',
+  bio: `Prakash Hingorani serves as Global Chief Revenue Officer at ACI Infotech, leading global revenue strategy, market expansion, strategic alliances, and customer growth initiatives.
+
+A seasoned business leader with more than 25 years of experience, Prakash has successfully scaled organizations across multiple industries and geographies, delivering transformative growth through technology, innovation, and customer-centric leadership.
+
+He is responsible for accelerating ACI's global expansion, strengthening its position as an AI-first technology company, and driving enterprise adoption of innovative solutions powered by the ArqAI platform and industry-specific AI capabilities.
+
+Prakash is passionate about building high-performance teams, creating lasting customer value, and helping organizations navigate the next era of AI-driven business transformation.`,
+  photo_url: '/images/about-team/Prakash.jpg',
+  photo_webp: '/images/about-team/Prakash.webp',
+  linkedin_url: 'https://www.linkedin.com/in/prakash-hingorani/',
+};
+
 // Leadership Team Data
 const leadershipTeam = [
   {
@@ -446,6 +462,57 @@ export default function AboutPage() {
                     <p key={idx} className={idx === 2 ? 'italic text-[var(--aci-secondary)] font-medium' : ''}>
                       {paragraph}
                     </p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CRO Featured Section — same layout as CEO, photo intentionally one step smaller */}
+          <div className="mb-20">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 lg:p-12 shadow-sm border border-gray-100">
+              {/* CRO Photo - Left Side */}
+              <div className="flex justify-center lg:justify-start">
+                <div className="relative">
+                  <div className="w-56 h-56 md:w-72 md:h-72 rounded-2xl overflow-hidden shadow-xl">
+                    <picture>
+                      <source srcSet={cro.photo_webp} type="image/webp" />
+                      <Image
+                        src={cro.photo_url}
+                        alt={cro.name}
+                        width={360}
+                        height={360}
+                        className="w-full h-full object-cover"
+                      />
+                    </picture>
+                  </div>
+                  {/* Decorative accent */}
+                  <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-[var(--aci-primary)]/10 rounded-xl -z-10" />
+                </div>
+              </div>
+
+              {/* CRO Info - Right Side */}
+              <div>
+                <div className="flex items-center gap-4 mb-4">
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)]">
+                      {cro.name}
+                    </h3>
+                    <p className="text-lg text-[var(--aci-primary)] font-medium">{cro.title}</p>
+                  </div>
+                  <a
+                    href={cro.linkedin_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-auto p-2 bg-[#0077B5] text-white rounded-lg hover:bg-[#006396] transition-colors"
+                    aria-label={`${cro.name}'s LinkedIn profile`}
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                </div>
+                <div className="space-y-4 text-gray-600 leading-relaxed">
+                  {cro.bio.split('\n\n').map((paragraph, idx) => (
+                    <p key={idx}>{paragraph}</p>
                   ))}
                 </div>
               </div>
