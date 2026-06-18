@@ -45,9 +45,9 @@ export async function POST(request: NextRequest) {
     const resume = formData.get('resume') as File | null;
 
     // Validate required fields
-    if (!job_id || !first_name || !last_name || !email) {
+    if (!job_id || !first_name || !last_name || !email || !phone?.trim()) {
       return NextResponse.json(
-        { error: 'Missing required fields: job_id, first_name, last_name, email' },
+        { error: 'Missing required fields: job_id, first_name, last_name, email, phone' },
         { status: 400 }
       );
     }

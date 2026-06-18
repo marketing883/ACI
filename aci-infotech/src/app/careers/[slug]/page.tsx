@@ -113,7 +113,7 @@ export default function JobDetailPage({ params }: PageProps) {
       formData.append('first_name', form.first_name);
       formData.append('last_name', form.last_name);
       formData.append('email', form.email);
-      if (form.phone) formData.append('phone', form.phone);
+      formData.append('phone', form.phone);
       if (form.location) formData.append('location', form.location);
       if (form.linkedin_url) formData.append('linkedin_url', form.linkedin_url);
       if (form.portfolio_url) formData.append('portfolio_url', form.portfolio_url);
@@ -460,10 +460,11 @@ export default function JobDetailPage({ params }: PageProps) {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone
+                    Phone *
                   </label>
                   <input
                     type="tel"
+                    required
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
                     className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
