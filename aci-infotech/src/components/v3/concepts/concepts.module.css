@@ -1,0 +1,490 @@
+/* Three distinct hero design languages for side-by-side comparison.
+   Preview-only, fully scoped. */
+
+.wrap {
+  --font-display: var(--font-funnel-display), "Funnel Display", system-ui, sans-serif;
+  --font-sans: var(--font-funnel-sans), "Funnel Sans", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+  --blue: #1b45e0;
+  --lime: #c6ff3d;
+  --ink: #0a0c12;
+  font-family: var(--font-sans);
+}
+.wrap *,
+.wrap *::before,
+.wrap *::after {
+  box-sizing: border-box;
+}
+.screen {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 20;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* =====================================================================
+   CONCEPT A — Swiss / spec-sheet editorial
+   ===================================================================== */
+.aRoot {
+  background: #fbfcfe;
+  color: var(--ink);
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
+}
+.aGrid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(10, 12, 18, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 12, 18, 0.045) 1px, transparent 1px);
+  background-size: 7.5vw 7.5vw;
+  z-index: 0;
+}
+.aNav,
+.aMain,
+.aStats {
+  position: relative;
+  z-index: 1;
+}
+.aNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: clamp(2rem, 6vw, 5rem);
+  border-bottom: 1px solid rgba(10, 12, 18, 0.12);
+}
+.aBrand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+.aNavLinks {
+  display: flex;
+  gap: 1.6rem;
+  font-size: 0.9rem;
+  color: #2c3242;
+}
+.aNavMeta {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  color: #6a7286;
+}
+.aMain {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  flex: 1;
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+.aIndex {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: #6a7286;
+  margin: 0 0 1.5rem;
+}
+.aIndex span {
+  color: var(--blue);
+}
+.aTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3rem, 8.5vw, 8.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  margin: 0;
+}
+.aMark {
+  position: relative;
+  color: var(--blue);
+}
+.aMark::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.08em;
+  height: 0.14em;
+  background: var(--lime);
+}
+.aColRight {
+  padding-bottom: 0.6rem;
+}
+.aLead {
+  font-size: clamp(1rem, 1.3vw, 1.18rem);
+  line-height: 1.55;
+  color: #3a4252;
+  max-width: 38ch;
+  margin: 0 0 2rem;
+}
+.aActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.aBtn {
+  background: var(--ink);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.95rem 1.6rem;
+  border-radius: 2px;
+}
+.aBtnText {
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-bottom: 2px solid var(--lime);
+  padding-bottom: 2px;
+}
+.aStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid rgba(10, 12, 18, 0.12);
+  padding-top: 1.5rem;
+}
+.aStat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.aStatN {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.aStatL {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6a7286;
+}
+
+/* =====================================================================
+   CONCEPT B — Black canvas / premium AI
+   ===================================================================== */
+.bRoot {
+  background: #06070b;
+  color: #fff;
+  padding: clamp(1.5rem, 3vw, 2.2rem) clamp(1.5rem, 4vw, 4rem);
+}
+.bGlow {
+  position: absolute;
+  width: 90vw;
+  height: 90vw;
+  max-width: 1100px;
+  max-height: 1100px;
+  left: 50%;
+  top: 58%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(27, 69, 224, 0.45), transparent 55%),
+    radial-gradient(circle at 65% 60%, rgba(198, 255, 61, 0.12), transparent 50%);
+  filter: blur(20px);
+  z-index: 0;
+}
+.bGrid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 75%);
+  z-index: 0;
+}
+.bNav,
+.bMain {
+  position: relative;
+  z-index: 1;
+}
+.bNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bBrand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.16rem;
+  letter-spacing: -0.02em;
+}
+.bBrandPlus {
+  color: var(--lime);
+}
+.bNavLinks {
+  display: flex;
+  gap: 1.7rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.62);
+}
+.bNavCta {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--lime);
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  text-decoration: none;
+}
+.bMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1.6rem;
+  padding-block: clamp(3rem, 8vw, 7rem);
+}
+.bEyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin: 0;
+}
+.bTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 7vw, 6.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin: 0;
+  max-width: 18ch;
+}
+.bMark {
+  color: var(--blue);
+  background: linear-gradient(120deg, #6f8cff, #c6ff3d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.bLead {
+  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.66);
+  max-width: 52ch;
+  margin: 0;
+}
+.bActions {
+  display: flex;
+  gap: 0.9rem;
+  margin-top: 0.6rem;
+}
+.bBtn {
+  background: #fff;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.98rem;
+  padding: 1rem 1.7rem;
+  border-radius: 999px;
+}
+.bBtnGhost {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.98rem;
+  padding: 1rem 1.7rem;
+  border-radius: 999px;
+}
+.bTrust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* =====================================================================
+   CONCEPT C — Color split / bold block
+   ===================================================================== */
+.cRoot {
+  flex-direction: row;
+  background: #fff;
+}
+.cLeft {
+  width: 56%;
+  background: var(--blue);
+  color: #fff;
+  padding: clamp(1.6rem, 3vw, 2.4rem) clamp(2rem, 4.5vw, 4.5rem);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.cLeft::after {
+  content: "";
+  position: absolute;
+  width: 130%;
+  height: 60%;
+  left: -15%;
+  bottom: -20%;
+  background: radial-gradient(ellipse at center, rgba(198, 255, 61, 0.18), transparent 60%);
+  pointer-events: none;
+}
+.cNav {
+  position: relative;
+  z-index: 1;
+}
+.cBrand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.12rem;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.cLeftMain {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: clamp(2rem, 5vw, 4rem);
+}
+.cEyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin: 0 0 1.5rem;
+}
+.cTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 5.2vw, 5.2rem);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  margin: 0 0 2.4rem;
+}
+.cMark {
+  color: var(--lime);
+}
+.cActions {
+  display: flex;
+  gap: 0.9rem;
+}
+.cBtn {
+  background: #fff;
+  color: var(--blue);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.96rem;
+  padding: 0.95rem 1.6rem;
+  border-radius: 999px;
+}
+.cBtnGhost {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.96rem;
+  padding: 0.95rem 1.6rem;
+  border-radius: 999px;
+}
+.cRight {
+  width: 44%;
+  background: #fbfcfe;
+  color: var(--ink);
+  padding: clamp(1.6rem, 3vw, 2.4rem) clamp(1.8rem, 3.5vw, 3.2rem);
+  display: flex;
+  flex-direction: column;
+}
+.cRightNav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.4rem;
+  font-size: 0.9rem;
+  color: #2c3242;
+}
+.cRightBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2.5rem;
+}
+.cRightLead {
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  line-height: 1.55;
+  color: #3a4252;
+  margin: 0;
+}
+.cStats {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+.cStat {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  border-top: 1px solid rgba(10, 12, 18, 0.12);
+  padding-top: 1.1rem;
+}
+.cStatN {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 3.2vw, 2.8rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--blue);
+  min-width: 4ch;
+}
+.cStatL {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6a7286;
+}
+
+@media (max-width: 900px) {
+  .aMain {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .aNavLinks,
+  .aNavMeta,
+  .bNavLinks {
+    display: none;
+  }
+  .cRoot {
+    flex-direction: column;
+  }
+  .cLeft,
+  .cRight {
+    width: 100%;
+  }
+}
