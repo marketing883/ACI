@@ -53,7 +53,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/services/cloud-modernization',
     '/services/martech-cdp',
     '/services/digital-transformation',
+    '/services/app-development',
+    '/services/quality-engineering',
     '/services/cyber-security',
+    '/services/advisory-strategy',
+    '/services/managed-operations',
+    '/services/gcc',
   ].map(path => ({
     url: `${baseUrl}${path}`,
     lastModified: new Date(),
@@ -71,6 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/platforms/salesforce',
     '/platforms/aws',
     '/platforms/azure',
+    '/platforms/gcp',
     '/platforms/sap',
     '/platforms/braze',
     '/platforms/servicenow',
@@ -122,7 +128,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let caseStudyEntries: MetadataRoute.Sitemap = [];
   let whitepaperEntries: MetadataRoute.Sitemap = [];
   let jobEntries: MetadataRoute.Sitemap = [];
-  let newsEntries: MetadataRoute.Sitemap = [];
+  const newsEntries: MetadataRoute.Sitemap = [];
 
   if (supabase) {
     // Fetch published blog posts (published_at not null = published)
@@ -189,15 +195,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
     }
 
-    // Fetch published news
-    const { data: news } = await supabase
-      .from('news')
-      .select('id, updated_at, published_at, created_at')
-      .eq('status', 'published')
-      .order('published_at', { ascending: false });
-
-    // Note: News items link externally, so we don't add individual pages
-    // But if you have individual news pages, uncomment below:
+    // Note: News items link externally, so we don't add individual
+    // pages to the sitemap. If you add individual news pages later,
+    // fetch the published rows here and map them as below:
+    // const { data: news } = await supabase
+    //   .from('news')
+    //   .select('id, updated_at, published_at, created_at')
+    //   .eq('status', 'published')
+    //   .order('published_at', { ascending: false });
     // if (news) {
     //   newsEntries = news.map(item => ({
     //     url: `${baseUrl}/news/${item.id}`,
