@@ -37,6 +37,7 @@ export default function V3Image({
       ) : (
         <div className={s.imgFallback} aria-hidden />
       )}
+      <div className={s.imgGrade} aria-hidden />
       {tint && <div className={s.imgTint} aria-hidden />}
     </div>
   );

@@ -1,26 +1,33 @@
 /* =====================================================================
-   v3 "Data and AI" homepage — clean, minimal, lots of whitespace.
-   Light theme, royal blue (#1B45E0) + lime (#C6FF3D) as paired accents,
-   dark sections used strategically for impact. Scoped to .root so none
-   of these tokens or rules leak to the live site.
+   v3 "Data and AI" homepage.
+   Bold & expressive structure (huge type, color-blocked sections, lime
+   as a rare electric pop) on a restrained, blue-led palette. Full-color
+   imagery graded toward the palette for cohesion. Scoped to .root so
+   nothing leaks to the live site.
    ===================================================================== */
 
 .root {
-  --ink: #0b0e14;
-  --paper: #ffffff;
-  --paper-2: #f6f8fc;
-  --mist: #eef2fb;
+  --ink: #0a0c12;
+  --paper: #fbfcfe;
+  --paper-2: #f1f4fb;
+  --mist: #e6ecf7;
   --blue: #1b45e0;
-  --blue-deep: #0a1d63;
-  --blue-tint: #e7ecfd;
+  --blue-600: #1437bd;
+  --blue-300: #6f8cff;
+  --blue-deep: #081a52;
+  --blue-tint: #e7ecff;
   --lime: #c6ff3d;
   --lime-deep: #aef000;
-  --muted: #5b6478;
-  --line: rgba(11, 14, 20, 0.1);
-  --line-2: rgba(11, 14, 20, 0.18);
+  --muted: #565f78;
+  --muted-2: #828aa3;
+  --line: rgba(10, 12, 18, 0.09);
+  --line-2: rgba(10, 12, 18, 0.16);
+  --on-blue: rgba(255, 255, 255, 0.82);
+  --shadow-card: 0 1px 2px rgba(10, 20, 60, 0.04), 0 14px 34px -18px rgba(10, 20, 70, 0.18);
+  --shadow-pop: 0 34px 80px -32px rgba(10, 18, 80, 0.32);
 
-  --maxw: 1300px;
-  --pad: clamp(1.25rem, 4vw, 4rem);
+  --maxw: 1320px;
+  --pad: clamp(1.25rem, 4vw, 4.25rem);
   --nav-h: 76px;
 
   --font-display: var(--font-funnel-display), "Funnel Display", system-ui, sans-serif;
@@ -46,7 +53,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--blue), var(--lime));
+  background: var(--blue);
   transform-origin: 0 50%;
   z-index: 90;
 }
@@ -59,20 +66,29 @@
 }
 .section {
   position: relative;
-  padding-block: clamp(5rem, 11vw, 11rem);
+  padding-block: clamp(5.5rem, 12vw, 12rem);
 }
+
+/* Color-blocked surfaces */
 .dark {
   background: var(--ink);
-  color: var(--paper);
+  color: #fff;
 }
-.dark .eyebrow {
+.blue {
+  background: var(--blue);
+  color: #fff;
+}
+.dark .eyebrow,
+.blue .eyebrow {
   color: var(--lime);
 }
-.dark .eyebrow::before {
+.dark .eyebrow::before,
+.blue .eyebrow::before {
   background: var(--lime);
 }
-.dark .lead {
-  color: rgba(255, 255, 255, 0.7);
+.dark .lead,
+.blue .lead {
+  color: var(--on-blue);
 }
 
 /* ---- Eyebrow -------------------------------------------------------- */
@@ -89,8 +105,8 @@
 }
 .eyebrow::before {
   content: "";
-  width: 0.55em;
-  height: 0.55em;
+  width: 0.5em;
+  height: 0.5em;
   border-radius: 50%;
   background: var(--blue);
   display: inline-block;
@@ -100,24 +116,24 @@
 .display {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 0.96;
-  letter-spacing: -0.035em;
-  font-size: clamp(2.7rem, 7vw, 6.4rem);
+  line-height: 0.93;
+  letter-spacing: -0.04em;
+  font-size: clamp(3rem, 8vw, 7.6rem);
   margin: 0;
   text-wrap: balance;
 }
 .h2 {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 0.98;
-  letter-spacing: -0.03em;
-  font-size: clamp(2rem, 4.8vw, 4rem);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  font-size: clamp(2.2rem, 5.2vw, 4.6rem);
   margin: 0;
   text-wrap: balance;
 }
 .lead {
-  font-size: clamp(1.05rem, 1.6vw, 1.32rem);
-  line-height: 1.55;
+  font-size: clamp(1.08rem, 1.55vw, 1.35rem);
+  line-height: 1.5;
   color: var(--muted);
   max-width: 46ch;
   margin: 0;
@@ -131,8 +147,8 @@
   position: absolute;
   left: -0.02em;
   right: -0.02em;
-  bottom: 0.06em;
-  height: 0.16em;
+  bottom: 0.08em;
+  height: 0.17em;
   background: var(--lime);
   z-index: -1;
 }
@@ -196,6 +212,27 @@
   color: var(--ink);
   border-color: var(--lime);
 }
+/* Buttons on a solid blue block */
+.blue .btn {
+  background: #fff;
+  color: var(--blue);
+  border-color: #fff;
+}
+.blue .btn:hover {
+  background: var(--lime);
+  color: var(--ink);
+  border-color: var(--lime);
+}
+.blue .btnGhost {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.blue .btnGhost:hover {
+  background: #fff;
+  color: var(--blue);
+  border-color: #fff;
+}
 
 /* ---- Nav ------------------------------------------------------------ */
 .nav {
@@ -205,7 +242,7 @@
   right: 0;
   height: var(--nav-h);
   z-index: 80;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(251, 252, 254, 0.74);
   backdrop-filter: saturate(1.4) blur(16px);
   border-bottom: 1px solid var(--line);
 }
@@ -222,7 +259,7 @@
 .brand {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.16rem;
+  font-size: 1.18rem;
   letter-spacing: -0.02em;
   color: var(--ink);
   text-decoration: none;
@@ -268,7 +305,7 @@
   right: 0.85rem;
   bottom: 0.4rem;
   height: 2px;
-  background: var(--lime);
+  background: var(--blue);
   transform: scaleX(0);
   transform-origin: 0 50%;
   transition: transform 0.22s ease;
@@ -304,8 +341,8 @@
   width: min(var(--maxw), 100%);
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 0 0 18px 18px;
-  box-shadow: 0 30px 60px -28px rgba(11, 14, 20, 0.25);
+  border-radius: 0 0 20px 20px;
+  box-shadow: var(--shadow-pop);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 0.95fr;
   overflow: hidden;
@@ -322,7 +359,7 @@
   font-size: 0.64rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--muted-2);
   margin: 0 0 1rem;
 }
 .megaLink {
@@ -366,7 +403,7 @@
 .megaFeatureBody {
   font-size: 0.9rem;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.62);
   margin: 0;
 }
 .megaFeatureLink {
@@ -429,7 +466,7 @@
 }
 .heroInner {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-columns: 1.08fr 0.92fr;
   gap: clamp(2rem, 5vw, 4.5rem);
   align-items: center;
   width: 100%;
@@ -437,7 +474,7 @@
 .heroCopy {
   position: relative;
   z-index: 2;
-  max-width: 640px;
+  max-width: 660px;
 }
 .heroEyebrow {
   margin-bottom: clamp(1.2rem, 2.5vw, 1.8rem);
@@ -465,9 +502,9 @@
 .heroCanvasFallback {
   position: absolute;
   inset: 0;
-  border-radius: 24px;
-  background: radial-gradient(120% 120% at 30% 25%, var(--blue-tint), transparent 55%),
-    radial-gradient(120% 120% at 75% 80%, rgba(198, 255, 61, 0.35), transparent 55%),
+  border-radius: 26px;
+  background: radial-gradient(120% 120% at 30% 22%, var(--blue-tint), transparent 55%),
+    radial-gradient(120% 120% at 78% 82%, rgba(198, 255, 61, 0.28), transparent 55%),
     var(--paper-2);
 }
 .heroCanvasHolder {
@@ -482,14 +519,14 @@
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   overflow: hidden;
-  padding-block: 1.2rem;
+  padding-block: 1.3rem;
 }
 .marqueeLabel {
   font-family: var(--font-mono);
   font-size: 0.64rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--muted-2);
   padding-bottom: 0.7rem;
   display: block;
 }
@@ -502,7 +539,7 @@
 .marqueeItem {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  font-size: clamp(1rem, 1.8vw, 1.45rem);
   letter-spacing: -0.01em;
   color: var(--ink);
   display: inline-flex;
@@ -524,12 +561,13 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 22px;
   overflow: hidden;
   background: var(--paper);
+  box-shadow: var(--shadow-card);
 }
 .proofCell {
-  padding: clamp(1.8rem, 3.5vw, 3rem) clamp(1.25rem, 2.5vw, 2rem);
+  padding: clamp(1.9rem, 3.5vw, 3.1rem) clamp(1.25rem, 2.5vw, 2.1rem);
   border-right: 1px solid var(--line);
 }
 .proofCell:last-child {
@@ -538,9 +576,9 @@
 .proofNum {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.4rem, 5vw, 4rem);
-  line-height: 0.95;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.6rem, 5.2vw, 4.4rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
   display: flex;
   align-items: baseline;
   color: var(--ink);
@@ -554,37 +592,39 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-top: 0.7rem;
+  margin-top: 0.8rem;
 }
 
 /* ---- Pillars -------------------------------------------------------- */
 .pillarsHead {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  gap: 1.3rem;
+  margin-bottom: clamp(2.8rem, 5vw, 4.5rem);
   max-width: 60ch;
 }
 .pillarsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: clamp(1rem, 2vw, 1.6rem);
+  gap: clamp(1rem, 1.8vw, 1.5rem);
 }
 .pillar {
   position: relative;
   border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: clamp(1.6rem, 2.6vw, 2.2rem);
+  border-radius: 22px;
+  padding: clamp(1.7rem, 2.6vw, 2.4rem);
   background: var(--paper);
   overflow: hidden;
-  transition: border-color 0.22s ease, transform 0.22s ease;
-  min-height: 220px;
+  transition: border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+  min-height: 230px;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--shadow-card);
 }
 .pillar:hover {
-  border-color: var(--line-2);
-  transform: translateY(-3px);
+  border-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-pop);
 }
 .pillarNo {
   font-family: var(--font-mono);
@@ -595,13 +635,13 @@
 .pillarTitle {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.4rem, 2.3vw, 1.85rem);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.45rem, 2.3vw, 2rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
   margin: auto 0 0.7rem;
 }
 .pillarBody {
-  font-size: 0.98rem;
+  font-size: 0.99rem;
   line-height: 1.5;
   color: var(--muted);
   margin: 0;
@@ -613,7 +653,7 @@
   right: -60px;
   top: -60px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(198, 255, 61, 0.5), transparent 68%);
+  background: radial-gradient(circle, rgba(27, 69, 224, 0.16), transparent 68%);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -621,26 +661,44 @@
 .pillar:hover .pillarGlow {
   opacity: 1;
 }
+
+/* Feature card = bold dark color block with a graded photo */
 .pillarFeature {
   grid-column: span 2;
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 1.05fr 1fr;
   gap: 0;
   padding: 0;
-  min-height: 280px;
+  min-height: 300px;
+  background: var(--ink);
+  color: #fff;
+}
+.pillarFeature:hover {
+  transform: none;
+  box-shadow: var(--shadow-card);
 }
 .pillarFeatureCopy {
-  padding: clamp(1.8rem, 3vw, 2.6rem);
+  padding: clamp(1.9rem, 3vw, 2.8rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
+.pillarFeature .pillarNo {
+  color: var(--lime);
+}
+.pillarFeature .pillarTitle {
+  color: #fff;
+  margin: 0.6rem 0 0.7rem;
+}
+.pillarFeature .pillarBody {
+  color: rgba(255, 255, 255, 0.66);
+}
 .pillarFeatureImg {
   position: relative;
-  min-height: 240px;
+  min-height: 250px;
 }
 
-/* ---- Image (resilient) --------------------------------------------- */
+/* ---- Image (resilient + graded) ------------------------------------ */
 .img {
   position: relative;
   width: 100%;
@@ -653,16 +711,25 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  filter: saturate(1.06) contrast(1.03);
 }
 .imgFallback {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 55%, var(--lime) 140%);
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 60%, #123 140%);
+}
+/* Grade full-color photos toward the brand blue for cohesion */
+.imgGrade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(155deg, rgba(27, 69, 224, 0.32), rgba(8, 26, 82, 0.12) 65%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
 }
 .imgTint {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(11, 14, 20, 0.32));
+  background: linear-gradient(180deg, transparent 42%, rgba(8, 10, 16, 0.34));
   pointer-events: none;
 }
 
@@ -674,7 +741,7 @@
 }
 .indGrid {
   display: grid;
-  grid-template-columns: 0.82fr 1.18fr;
+  grid-template-columns: 0.8fr 1.2fr;
   gap: clamp(2rem, 5vw, 5rem);
   align-items: start;
 }
@@ -686,16 +753,16 @@
 .indStickyTitle {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2rem, 4vw, 3.4rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.2rem, 4.4vw, 3.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
   margin: 1.2rem 0;
 }
 .indCount {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
-  color: var(--muted);
+  color: var(--muted-2);
 }
 .indCountNow {
   color: var(--blue);
@@ -707,18 +774,24 @@
 }
 .indCard {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: 0.92fr 1.08fr;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 22px;
   overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.24s ease, box-shadow 0.24s ease;
+}
+.indCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-pop);
 }
 .indCardImg {
   position: relative;
-  min-height: 220px;
+  min-height: 230px;
 }
 .indCardBody {
-  padding: clamp(1.5rem, 2.6vw, 2.2rem);
+  padding: clamp(1.6rem, 2.6vw, 2.3rem);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -733,9 +806,9 @@
 .indPromise {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.35rem, 2.3vw, 1.95rem);
-  line-height: 1.06;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.4rem, 2.3vw, 2.05rem);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
   margin: 0;
   text-wrap: balance;
   color: var(--ink);
@@ -751,9 +824,9 @@
 .indMetricNum {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-size: clamp(2.1rem, 3.5vw, 2.9rem);
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
 }
 .indMetricSuffix {
   color: var(--blue);
@@ -774,7 +847,7 @@
 .indBarFill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--blue), var(--lime));
+  background: linear-gradient(90deg, var(--blue), var(--blue-300));
   transform-origin: 0 50%;
 }
 .indProof {
@@ -783,16 +856,27 @@
   margin: 0;
 }
 
-/* ---- CTA (dark, strategic) ----------------------------------------- */
+/* ---- CTA (bold royal-blue block) ----------------------------------- */
 .cta {
   position: relative;
   overflow: hidden;
+  background: var(--blue);
+  color: #fff;
+}
+.cta .eyebrow {
+  color: var(--lime);
+}
+.cta .eyebrow::before {
+  background: var(--lime);
+}
+.cta .lead {
+  color: var(--on-blue);
 }
 .ctaGrid {
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
   background-size: clamp(48px, 8vw, 92px) clamp(48px, 8vw, 92px);
   z-index: 0;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, #000 30%, transparent 78%);
@@ -804,10 +888,10 @@
   max-width: 760px;
   max-height: 760px;
   left: 50%;
-  top: 110%;
+  top: 112%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(27, 69, 224, 0.55), transparent 62%);
+  background: radial-gradient(circle, rgba(198, 255, 61, 0.22), transparent 60%);
   z-index: 0;
   pointer-events: none;
 }
@@ -822,10 +906,11 @@
 .ctaTitle {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.6rem, 7.5vw, 6.4rem);
-  line-height: 0.95;
-  letter-spacing: -0.035em;
+  font-size: clamp(2.8rem, 8vw, 7rem);
+  line-height: 0.93;
+  letter-spacing: -0.04em;
   margin: 0;
+  color: #fff;
 }
 .ctaTitle em {
   font-style: normal;
@@ -848,9 +933,9 @@
 .footerWordmark {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.2rem, 5.5vw, 4.4rem);
-  line-height: 0.96;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.4rem, 5.5vw, 4.6rem);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
   margin: 0 0 1.2rem;
 }
 .footerWordmark em {
@@ -858,7 +943,7 @@
   color: var(--lime);
 }
 .footerBoiler {
-  color: rgba(255, 255, 255, 0.58);
+  color: rgba(255, 255, 255, 0.56);
   max-width: 52ch;
   line-height: 1.55;
   margin: 0;
@@ -878,7 +963,7 @@
 }
 .footerLink {
   display: block;
-  color: rgba(255, 255, 255, 0.76);
+  color: rgba(255, 255, 255, 0.74);
   text-decoration: none;
   padding: 0.32rem 0;
   font-size: 0.95rem;
@@ -895,7 +980,7 @@
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.42);
 }
 
 /* ---- Responsive ----------------------------------------------------- */
@@ -952,7 +1037,7 @@
     grid-template-columns: 1fr;
   }
   .indCardImg {
-    min-height: 180px;
+    min-height: 190px;
   }
 }
 
