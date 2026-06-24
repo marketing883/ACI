@@ -1,0 +1,588 @@
+/* Concept D2 — Palantir-inspired. Monochrome, neo-grotesque, editorial.
+   Preview-only, fully scoped to .root. */
+
+.root {
+  --black: #0b0b0d;
+  --ink: #16171a;
+  --cream: #f4f2ec;
+  --cream-2: #eceae1;
+  --paper: #ffffff;
+  --grey: #6b6f76;
+  --grey-2: #9a9ea6;
+  --line: rgba(0, 0, 0, 0.14);
+  --line-soft: rgba(0, 0, 0, 0.08);
+  --line-d: rgba(255, 255, 255, 0.16);
+
+  --pad: clamp(1rem, 3.2vw, 2.75rem);
+
+  --grotesk: var(--font-grotesk), "Inter", system-ui, sans-serif;
+  --mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+
+  font-family: var(--grotesk);
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  letter-spacing: -0.01em;
+}
+.root *,
+.root *::before,
+.root *::after {
+  box-sizing: border-box;
+}
+
+/* ---- Top banner ---- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  background: var(--black);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.74rem;
+  letter-spacing: 0.01em;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.topbarArrow {
+  opacity: 0.7;
+}
+
+/* ---- Nav ---- */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background: var(--black);
+  color: #fff;
+  padding: 0.85rem var(--pad);
+}
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-decoration: none;
+}
+.brandMark {
+  color: var(--grey-2);
+  margin-inline: 0.15em;
+}
+.navLinks {
+  display: flex;
+  gap: 1.6rem;
+}
+.navLink {
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+}
+.navLink:hover {
+  color: #fff;
+}
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.navSearch {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+.navBtn {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+  padding: 0.5rem 0.95rem;
+  text-decoration: none;
+}
+.navBtn:hover {
+  background: #fff;
+  color: var(--black);
+}
+
+/* ---- Hero ---- */
+.hero {
+  position: relative;
+  min-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(4rem, 12vh, 9rem) var(--pad) 3.5rem;
+  background: var(--black);
+  color: #fff;
+  overflow: hidden;
+}
+.heroMedia {
+  position: absolute;
+  inset: 0;
+  background: #0b0b0d
+    url("https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1700&q=70")
+    center / cover no-repeat;
+  opacity: 0.55;
+  z-index: 0;
+}
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 8, 10, 0.55), rgba(8, 8, 10, 0.82)),
+    radial-gradient(120% 90% at 50% 40%, transparent 30%, rgba(8, 8, 10, 0.7));
+  z-index: 0;
+}
+.heroInner {
+  position: relative;
+  z-index: 1;
+  max-width: 980px;
+  margin-inline: auto;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.heroKicker {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  margin: 0 0 1.6rem;
+}
+.heroTitle {
+  font-weight: 600;
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: #fff;
+}
+.heroSub {
+  font-size: clamp(1rem, 1.4vw, 1.22rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 50ch;
+  margin: 1.6rem 0 2.2rem;
+}
+.heroBtn {
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 2px;
+  padding: 0.85rem 1.6rem;
+  text-decoration: none;
+}
+.heroBtn:hover {
+  background: #fff;
+  color: var(--black);
+}
+.heroFoot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line-d);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ---- Feature: blueprint panel ---- */
+.feature {
+  background: var(--cream);
+  color: var(--ink);
+  padding: 0 var(--pad) clamp(2rem, 4vw, 3.5rem);
+}
+.featureTabs {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
+}
+.tab {
+  color: var(--grey);
+  cursor: pointer;
+}
+.tabActive {
+  color: var(--ink);
+  font-weight: 600;
+  position: relative;
+}
+.tabActive::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1rem;
+  height: 2px;
+  background: var(--ink);
+}
+.tabAll {
+  margin-left: auto;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 0.3rem 0.6rem;
+  color: var(--ink);
+}
+.featureBody {
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+.blueprintHead {
+  margin-bottom: 1.5rem;
+}
+.blueprintTitle {
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.blueprint {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 1.5rem 0;
+}
+.featureMeta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding: 1.6rem 0 0;
+}
+.metaK {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  color: var(--grey);
+  margin-bottom: 0.4rem;
+}
+.metaV {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.featureWordmark {
+  font-weight: 800;
+  font-size: clamp(3rem, 13vw, 11rem);
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  margin: clamp(2rem, 4vw, 3.5rem) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+}
+.featureX {
+  font-weight: 200;
+  font-size: 0.62em;
+  color: var(--grey-2);
+  margin-inline: 0.18em;
+}
+
+/* ---- Statement ---- */
+.statement {
+  background: var(--paper);
+  padding: clamp(5rem, 11vw, 10rem) var(--pad) clamp(2.5rem, 5vw, 4rem);
+  max-width: 1180px;
+  margin-inline: auto;
+}
+.statementText {
+  font-size: clamp(1.6rem, 3.1vw, 2.9rem);
+  font-weight: 500;
+  line-height: 1.24;
+  letter-spacing: -0.025em;
+  margin: 0;
+  max-width: 22ch;
+}
+.statementText {
+  max-width: none;
+}
+.muted {
+  color: var(--grey-2);
+}
+.statementLabel {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--grey);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+/* ---- Capabilities: big-type list ---- */
+.caps {
+  background: var(--paper);
+  padding: 0 var(--pad) clamp(4rem, 8vw, 7rem);
+}
+.capList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.capRow {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 1.5rem;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding: clamp(1.5rem, 3vw, 2.6rem) 0;
+}
+.capLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  max-width: 30ch;
+}
+.capDesc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--grey);
+}
+.capNo {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--grey-2);
+}
+.capName {
+  font-weight: 300;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+/* ---- Build / photo ---- */
+.build {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--cream);
+}
+.buildPhoto {
+  position: relative;
+  min-height: clamp(320px, 42vw, 560px);
+  background: #14161a
+    url("https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1300&q=70")
+    center / cover no-repeat;
+}
+.buildPhotoTag {
+  position: absolute;
+  left: 1.4rem;
+  bottom: 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.85);
+}
+.buildCopy {
+  padding: clamp(2.5rem, 5vw, 5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.4rem;
+}
+.buildTitle {
+  font-weight: 600;
+  font-size: clamp(1.7rem, 3vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 18ch;
+}
+.buildText {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--grey);
+  margin: 0;
+  max-width: 44ch;
+}
+.buildLink {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+  align-self: flex-start;
+  padding-bottom: 2px;
+}
+
+/* ---- Outcomes (editorial columns) ---- */
+.outcomes {
+  background: var(--paper);
+  padding: clamp(4rem, 8vw, 7rem) var(--pad);
+}
+.outcomesLabel {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--grey);
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--ink);
+  margin-bottom: 2.5rem;
+}
+.outcomeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+.outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.outcomeTag {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink);
+}
+.outcomeBody {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--grey);
+  margin: 0;
+}
+
+/* ---- CTA blocks ---- */
+.ctaRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.ctaBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: clamp(140px, 18vw, 200px);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  color: var(--ink);
+  transition: background 0.2s ease;
+}
+.ctaBlock:hover {
+  background: var(--cream-2);
+}
+.ctaBlockDark {
+  background: var(--black);
+  color: #fff;
+  border-color: var(--black);
+}
+.ctaBlockDark:hover {
+  background: #000;
+}
+.ctaLabel {
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.4vw, 2rem);
+  letter-spacing: -0.02em;
+}
+.ctaArrow {
+  font-size: 1.4rem;
+}
+
+/* ---- Footer ---- */
+.footer {
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(2.5rem, 5vw, 4rem) var(--pad) 2.5rem;
+  border-top: 1px solid var(--ink);
+}
+.footerTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.footerBrand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+.footerMeta {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--grey);
+}
+.footerCols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  padding-top: 2.5rem;
+}
+.footerHead {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin: 0 0 1rem;
+}
+.footerLink {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 0.32rem 0;
+}
+.footerLink:hover {
+  color: var(--grey);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .navLinks {
+    display: none;
+  }
+  .featureMeta {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .capRow {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  .build {
+    grid-template-columns: 1fr;
+  }
+  .outcomeGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ctaRow {
+    grid-template-columns: 1fr;
+  }
+  .footerCols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .outcomeGrid {
+    grid-template-columns: 1fr;
+  }
+}
