@@ -7,7 +7,7 @@ import s from './v3.module.css';
 import V3Nav from './V3Nav';
 import V3Hero from './V3Hero';
 import V3Proof from './V3Proof';
-import V3Wedge from './V3Wedge';
+import V3Pillars from './V3Pillars';
 import V3Industries from './V3Industries';
 import V3CTA from './V3CTA';
 import V3Footer from './V3Footer';
@@ -44,7 +44,7 @@ export default function V3Home() {
       <main>
         <V3Hero />
         <V3Proof />
-        <V3Wedge />
+        <V3Pillars />
         <V3Industries />
         <V3CTA />
       </main>

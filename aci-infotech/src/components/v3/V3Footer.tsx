@@ -15,7 +15,7 @@ export default function V3Footer() {
             <p className={s.footerWordmark}>
               Data + AI.
               <br />
-              Delivered.
+              <em>Delivered.</em>
             </p>
             <p className={s.footerBoiler}>{footerBoilerplate}</p>
           </div>

@@ -60,31 +60,6 @@ export const partners = [
   'Salesforce',
 ];
 
-// ---- Data + AI pairing (the wedge) ---------------------------------
-
-export const wedge = {
-  eyebrow: 'The pairing',
-  title: ['The AI works because', 'the data is ready.'],
-  body: 'Most enterprise AI fails on data that was never built for it. We engineer the foundation and build the AI on top, so it ships and runs. Few firms can honestly say they do both at production scale and prove it.',
-  steps: [
-    {
-      no: '01',
-      title: 'Data, made AI-ready',
-      body: 'We unify, model, and govern the data the AI depends on. Lakehouse, warehouse, and pipelines built for scale.',
-    },
-    {
-      no: '02',
-      title: 'AI, built on top',
-      body: 'Predictive and generative systems wired into the operation, not a demo deck. Evaluated, grounded, and shipped.',
-    },
-    {
-      no: '03',
-      title: 'Run in production',
-      body: 'Past the pilot, into the live environment, with the same security and change discipline as anything else you run.',
-    },
-  ],
-};
-
 // ---- Industry outcomes ---------------------------------------------
 
 export type Industry = {
@@ -96,7 +71,14 @@ export type Industry = {
   metricSuffix?: string;
   metricLabel: string;
   proof: string;
+  image: string;
 };
+
+// Unsplash placeholders, vibrant + relevant. V3Image falls back to a
+// blue/lime gradient if any URL fails, so a bad link never breaks the
+// layout. Swap these for curated/licensed art before go-live.
+const UNSPLASH = (id: string) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1100&q=70`;
 
 export const industries: Industry[] = [
   {
@@ -107,6 +89,7 @@ export const industries: Industry[] = [
     metricSuffix: '%',
     metricLabel: 'Faster allocation processing',
     proof: 'SAP finance modernization, zero-downtime migration.',
+    image: UNSPLASH('photo-1460925895917-afdab827c52f'),
   },
   {
     name: 'Retail & Convenience',
@@ -116,6 +99,7 @@ export const industries: Industry[] = [
     metricSuffix: '%',
     metricLabel: 'Fewer stockouts',
     proof: '$4.2M saved across 500+ locations on Databricks.',
+    image: UNSPLASH('photo-1441986300917-64674bd600d8'),
   },
   {
     name: 'CPG',
@@ -125,6 +109,7 @@ export const industries: Industry[] = [
     metricSuffix: '%',
     metricLabel: 'Adoption',
     proof: 'Campaign analysis from 3 weeks to 4 hours.',
+    image: UNSPLASH('photo-1542744173-8e7e53415bb0'),
   },
   {
     name: 'Hospitality & Facilities',
@@ -133,6 +118,7 @@ export const industries: Industry[] = [
     metricValue: 34,
     metricLabel: 'Countries unified',
     proof: '78% faster processing, $4.7M procurement savings.',
+    image: UNSPLASH('photo-1414235077428-338989a2e8c0'),
   },
   {
     name: 'Manufacturing & Supply Chain',
@@ -142,8 +128,47 @@ export const industries: Industry[] = [
     metricSuffix: '%',
     metricLabel: 'Supply chain visibility',
     proof: '25% cost reduction across the network.',
+    image: UNSPLASH('photo-1581091226825-a6a2a5aee158'),
   },
 ];
+
+// ---- Value pillars --------------------------------------------------
+
+export type Pillar = { no: string; title: string; body: string };
+
+export const pillars: Pillar[] = [
+  {
+    no: '01',
+    title: 'Data and AI, together',
+    body: 'The AI works only when the data under it is ready, and we are the ones who engineer it to be. That pairing is the whole point, not two separate menus.',
+  },
+  {
+    no: '02',
+    title: 'We start with your outcome',
+    body: 'We map the operation first, by industry, then build for the result you need. Not a generic platform you have to grow into.',
+  },
+  {
+    no: '03',
+    title: 'We ship it and run it',
+    body: 'Past the pilot, into the live environment, with the same security and change discipline as anything else you run.',
+  },
+  {
+    no: '04',
+    title: 'We have the receipts',
+    body: '250+ systems in production. $1B+ delivered. 95% client retention across 20 years of Fortune 500 work.',
+  },
+];
+
+export const pillarsHead = {
+  eyebrow: 'How we work',
+  title: ['Data and AI are the work.', 'Everything else keeps it running.'],
+  body: 'Cloud, platform engineering, integration, and managed operations are the foundation underneath. We build all of it, so what we ship stays shipped.',
+  featureImage: UNSPLASH('photo-1451187580459-43490279c0fa'),
+  featureKicker: 'In production',
+  featureTitle: 'Built to survive the 2am call',
+  featureBody:
+    'We do not hand off a slide deck. We run what we build, with SLAs and on-call, the same way you run the rest of your stack.',
+};
 
 // ---- CTA ------------------------------------------------------------
 

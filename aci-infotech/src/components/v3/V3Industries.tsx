@@ -5,6 +5,7 @@ import { useState } from 'react';
 import s from './v3.module.css';
 import { industries } from './v3-data';
 import { CountUp, BarFill, Reveal, motion } from './v3-motion';
+import V3Image from './V3Image';
 
 function pad(n: number) {
   return String(n).padStart(2, '0');
@@ -32,24 +33,22 @@ export default function V3Industries() {
           </div>
 
           <div className={s.indList}>
-            {industries.map((ind, i) => {
-              const fraction = ind.metricValue / 100;
-              return (
-                <motion.div
-                  className={s.indRow}
-                  key={ind.name}
-                  onViewportEnter={() => setActive(i)}
-                  viewport={{ margin: '-45% 0px -45% 0px' }}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                >
+            {industries.map((ind, i) => (
+              <motion.div
+                className={s.indCard}
+                key={ind.name}
+                onViewportEnter={() => setActive(i)}
+                viewport={{ margin: '-45% 0px -45% 0px' }}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className={s.indCardImg}>
+                  <V3Image src={ind.image} alt={`${ind.name} work`} />
+                </div>
+                <div className={s.indCardBody}>
                   <span className={s.indName}>{ind.name}</span>
-                  <Link
-                    href={ind.href}
-                    className={s.indPromise}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
+                  <Link href={ind.href} className={s.indPromise}>
                     {ind.promise}
                   </Link>
 
@@ -65,13 +64,13 @@ export default function V3Industries() {
                   </div>
 
                   <div className={s.indBarTrack}>
-                    <BarFill fraction={fraction} className={s.indBarFill} />
+                    <BarFill fraction={ind.metricValue / 100} className={s.indBarFill} />
                   </div>
 
                   <p className={s.indProof}>{ind.proof}</p>
-                </motion.div>
-              );
-            })}
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>

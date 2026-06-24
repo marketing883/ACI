@@ -9,6 +9,7 @@ export default function V3CTA() {
   return (
     <section className={`${s.section} ${s.cta} ${s.dark}`} aria-label="Get started">
       <div className={s.ctaGrid} aria-hidden />
+      <div className={s.ctaBlueGlow} aria-hidden />
       <div className={s.container}>
         <div className={s.ctaInner}>
           <Reveal className={s.eyebrow} as="div">
