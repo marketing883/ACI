@@ -259,11 +259,8 @@
 .partnersList {
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(1.2rem, 3vw, 2.6rem);
-  font-weight: 600;
-  font-size: 1rem;
-  letter-spacing: -0.01em;
-  color: var(--grey);
+  align-items: center;
+  gap: clamp(1.1rem, 2.6vw, 2.2rem);
 }
 
 /* ---- Feature: blueprint ---- */
@@ -847,6 +844,148 @@
   max-width: 80ch;
 }
 
+/* ---- Partner / stack logos (grayscale, monochrome) ---- */
+.logo {
+  position: relative;
+  display: inline-block;
+  width: 112px;
+  height: 28px;
+  filter: grayscale(1);
+  opacity: 0.6;
+  transition: opacity 0.18s ease;
+}
+.logo:hover {
+  opacity: 1;
+}
+
+/* ---- Playbooks ---- */
+.playbooks {
+  background: var(--paper);
+  padding: clamp(5rem, 9vw, 8rem) var(--pad);
+}
+.pbGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--line);
+}
+.pbCard {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: clamp(1.6rem, 2.4vw, 2.2rem);
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--ink);
+  transition: background 0.18s ease;
+}
+.pbCard:hover {
+  background: var(--cream);
+}
+.pbCat {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+.pbTitle {
+  font-weight: 600;
+  font-size: clamp(1.2rem, 1.7vw, 1.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  margin: 0.9rem 0 0.7rem;
+}
+.pbBody {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--grey);
+  margin: 0;
+}
+.pbFoot {
+  margin-top: auto;
+  padding-top: 1.4rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.pbMetric {
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.3vw, 2.1rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.pbMetricLabel {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+.sectionMore {
+  display: inline-block;
+  margin-top: 2.2rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+}
+
+/* ---- Services (top 4) ---- */
+.svcGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--ink);
+}
+.svc {
+  border-right: 1px solid var(--line);
+  padding: 2rem 1.5rem 2rem 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.svc:last-child {
+  border-right: none;
+}
+.svcNo {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--grey-2);
+}
+.svcName {
+  font-weight: 600;
+  font-size: clamp(1.25rem, 1.9vw, 1.6rem);
+  letter-spacing: -0.025em;
+  line-height: 1.06;
+  margin: 1rem 0 0.8rem;
+}
+.svcBody {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--grey);
+  margin: 0;
+}
+.svcLogos {
+  margin-top: auto;
+  padding-top: 1.6rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.svcLogos .logo {
+  width: 86px;
+  height: 22px;
+  opacity: 0.5;
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 900px) {
   .navLinks {
@@ -878,6 +1017,19 @@
     grid-template-columns: 1fr 1fr;
     gap: 0.8rem 1.5rem;
   }
+  .pbGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .svcGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .svc {
+    padding: 1.6rem 1.2rem 1.6rem 0;
+    min-height: 240px;
+  }
+  .svc:nth-child(2n) {
+    border-right: none;
+  }
   .receiptsInner {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -893,6 +1045,18 @@
   }
 }
 @media (max-width: 560px) {
+  .pbGrid {
+    grid-template-columns: 1fr;
+  }
+  .svcGrid {
+    grid-template-columns: 1fr;
+  }
+  .svc {
+    border-right: none;
+    min-height: 0;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
   .pillarGrid {
     grid-template-columns: 1fr;
   }

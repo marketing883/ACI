@@ -1,14 +1,15 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import s from './v3next.module.css';
 
 /**
  * v3 homepage — full build in the approved Palantir-inspired language
  * (monochrome, neo-grotesque, blueprint motifs, editorial density).
- * Content is taken straight from ACI-Homepage-Content.md (hero) and
- * ACI-Website-Messaging-Spine.md (everything else): Data and AI paired
- * core, outcome and industry led, plain direct voice, no em dashes,
- * proof over adjectives. Preview-only, static (CSS only).
+ * Hero copy is locked to ACI-Homepage-Content.md. Everything else
+ * follows the Messaging Spine, rewritten in a concrete, plain, senior-
+ * engineer voice (no em dashes, proof over adjectives). Playbooks come
+ * from the current site (PlaybookVaultSection). Preview-only, static.
  */
 
 const grotesk = Inter({
@@ -17,83 +18,131 @@ const grotesk = Inter({
   variable: '--font-grotesk',
 });
 
-const NAV = ['Data & AI', 'Capabilities', 'Industries', 'Platforms', 'Work', 'Company'];
+const NAV = ['Data & AI', 'Capabilities', 'Industries', 'Playbooks', 'Work', 'Company'];
 
-const PARTNERS = [
-  'Databricks',
-  'Snowflake',
-  'AWS',
-  'Azure',
-  'Google Cloud',
-  'SAP',
-  'ServiceNow',
-  'Salesforce',
+const LOGOS: Record<string, string> = {
+  databricks: '/images/Solution-Partners/databricks.png',
+  aws: '/images/Solution-Partners/aws.png',
+  azure: '/images/Solution-Partners/azure.png',
+  sap: '/images/Solution-Partners/sap.png',
+  servicenow: '/images/Solution-Partners/servicenow.png',
+  salesforce: '/images/Solution-Partners/salesforce.png',
+  dynatrace: '/images/Solution-Partners/dynatrace.png',
+  braze: '/images/Solution-Partners/braze.png',
+};
+
+const PARTNER_STRIP = [
+  ['Databricks', 'databricks'],
+  ['AWS', 'aws'],
+  ['Microsoft Azure', 'azure'],
+  ['SAP', 'sap'],
+  ['ServiceNow', 'servicenow'],
+  ['Salesforce', 'salesforce'],
+  ['Dynatrace', 'dynatrace'],
+  ['Braze', 'braze'],
 ];
 
-const PILLARS = [
+// Patterns we have run enough times to quote a timeline and a number.
+const PLAYBOOKS = [
   {
-    no: '01',
-    title: 'Data and AI, together',
-    body: 'The AI works only when the data under it is AI-ready, and we are the ones who engineer it to be. That pairing is the difference, not two separate menus.',
+    cat: 'Integration',
+    title: 'Post-Acquisition ERP Unification',
+    body: 'You acquired your way into forty finance systems and a close that takes a week. We make it one system and one number.',
+    metric: '$9.2M',
+    metricLabel: 'Year-one savings',
   },
   {
-    no: '02',
-    title: 'We start with your outcome',
-    body: 'We map the operation first, by industry, then build for the result you need. Not a generic platform you grow into.',
+    cat: 'Data',
+    title: 'Real-Time Inventory Platform',
+    body: 'When the data is a day old, every store decision is a guess. We move it from overnight batch to real-time.',
+    metric: '64%',
+    metricLabel: 'Lower latency',
   },
   {
-    no: '03',
-    title: 'We ship it and run it',
-    body: 'Past the pilot, into the live environment, with the same security and change discipline as anything else you run.',
+    cat: 'Data',
+    title: 'Global Data Unification',
+    body: 'One metric, three regions, three different answers. We make it one source of truth everyone trusts.',
+    metric: '50%',
+    metricLabel: 'Faster decisions',
   },
   {
-    no: '04',
-    title: 'We have the receipts',
-    body: '250+ systems in production. $1B+ delivered. 95% client retention. 20 years of Fortune 500 work.',
+    cat: 'Analytics',
+    title: 'Enterprise Self-Service Analytics',
+    body: 'Every question turns into an IT ticket and a three-week wait. We hand the data back to the people asking.',
+    metric: '88%',
+    metricLabel: 'Fewer IT tickets',
+  },
+  {
+    cat: 'AI',
+    title: 'Enterprise Agentic AI',
+    body: 'Agents that do the repetitive work, wired into your systems with a full audit trail. Not a chatbot demo.',
+    metric: '40%',
+    metricLabel: 'Faster operations',
+  },
+  {
+    cat: 'Cloud',
+    title: 'Legacy to Cloud Migration',
+    body: 'The mainframe nobody wants to touch, moved to cloud without taking the business down for a weekend.',
+    metric: '68%',
+    metricLabel: 'Cost cut',
   },
 ];
 
-const CAPS = [
-  { no: '/01', name: 'Data and Analytics', lead: true, tags: ['Databricks', 'Snowflake', 'Lakehouse'] },
-  { no: '/02', name: 'Applied AI and GenAI', lead: true, tags: ['GenAI', 'MLOps', 'RAG'] },
-  { no: '/03', name: 'Cloud and Infrastructure', lead: false, tags: ['AWS', 'Azure', 'GCP'] },
-  { no: '/04', name: 'MarTech and CDP', lead: false, tags: ['Salesforce', 'CDP'] },
-  { no: '/05', name: 'Platform Engineering', lead: false, tags: ['Kubernetes', 'Terraform'] },
-  { no: '/06', name: 'Digital and Experience', lead: false, tags: ['Commerce', 'Apps'] },
-  { no: '/07', name: 'Cyber and Trust', lead: false, tags: ['DevSecOps', 'SOC 2'] },
-  { no: '/08', name: 'Managed Services', lead: false, tags: ['24/7', 'SLAs'] },
-  { no: '/09', name: 'Advisory and Strategy', lead: false, tags: ['Roadmap', 'Architecture'] },
-  { no: '/10', name: 'GCC and Captive Ops', lead: false, tags: ['Build-Operate', 'Teams'] },
+const SERVICES = [
+  {
+    no: '/01',
+    name: 'Data and Analytics',
+    body: 'The lakehouse, the pipelines, the governance. The foundation the AI actually needs before it can work.',
+    logos: ['databricks', 'sap'],
+  },
+  {
+    no: '/02',
+    name: 'Applied AI and GenAI',
+    body: 'GenAI and forecasting wired into the operation, evaluated and shipped. We get it past the pilot.',
+    logos: ['azure', 'aws'],
+  },
+  {
+    no: '/03',
+    name: 'Cloud and Infrastructure',
+    body: 'Migrations and platform work that move the estate without taking it down on a Friday night.',
+    logos: ['aws', 'azure'],
+  },
+  {
+    no: '/04',
+    name: 'Managed Services',
+    body: 'We stay on the call after go-live. SLAs, on-call, and the change discipline to keep it running.',
+    logos: ['dynatrace', 'servicenow'],
+  },
 ];
 
 const INDUSTRIES = [
   {
     name: 'Financial Services',
-    promise: 'Real-time finance and reporting, modernized without downtime.',
+    promise: 'Real-time finance and reporting, modernized without the downtime.',
     metric: '67%',
     metricLabel: 'Faster allocation processing',
-    proof: 'SAP finance modernization, zero-downtime migration.',
+    proof: 'SAP finance rebuild, migrated with zero downtime.',
   },
   {
     name: 'Retail and Convenience',
-    promise: 'Decisions in hours, not days, across every store.',
+    promise: 'Decisions in hours, not days, across every store you run.',
     metric: '73%',
     metricLabel: 'Fewer stockouts',
     proof: '$4.2M saved across 500+ locations on Databricks.',
   },
   {
     name: 'Hospitality, Food and Facilities',
-    promise: 'One view of data across every country you operate in.',
+    promise: 'One view of your data across every country you operate in.',
     metric: '34',
     metricLabel: 'Countries unified',
-    proof: '78% faster processing, $4.7M procurement savings.',
+    proof: '78% faster processing, $4.7M off procurement.',
   },
   {
     name: 'Manufacturing and Supply Chain',
-    promise: 'End-to-end visibility and forecasting you can act on.',
+    promise: 'End-to-end visibility and forecasting you can actually act on.',
     metric: '25%',
     metricLabel: 'Cost reduction',
-    proof: '100% supply chain visibility across the network.',
+    proof: 'Full supply chain visibility across the network.',
   },
 ];
 
@@ -105,6 +154,14 @@ const RECEIPTS = [
 ];
 
 const CERTS = ['SOC 2 Type II', 'ISO 27001', 'HIPAA ready', 'CMMI Level 3', 'GDPR'];
+
+function Logo({ id, name }: { id: string; name: string }) {
+  return (
+    <span className={s.logo}>
+      <Image src={LOGOS[id]} alt={name} fill sizes="120px" style={{ objectFit: 'contain' }} />
+    </span>
+  );
+}
 
 export default function V3Next() {
   return (
@@ -137,7 +194,7 @@ export default function V3Next() {
         </div>
       </header>
 
-      {/* ---- Hero ---- */}
+      {/* ---- Hero (locked copy) ---- */}
       <section className={s.hero}>
         <div className={s.heroMedia} aria-hidden />
         <div className={s.heroScrim} aria-hidden />
@@ -164,12 +221,12 @@ export default function V3Next() {
         </div>
       </section>
 
-      {/* ---- Partner strip ---- */}
+      {/* ---- Partner strip (logos) ---- */}
       <div className={s.partners}>
         <span className={s.partnersLabel}>Certified across</span>
         <div className={s.partnersList}>
-          {PARTNERS.map((p) => (
-            <span key={p}>{p}</span>
+          {PARTNER_STRIP.map(([name, id]) => (
+            <Logo key={id} id={id} name={name} />
           ))}
         </div>
       </div>
@@ -188,8 +245,8 @@ export default function V3Next() {
         <div className={s.featureBody}>
           <div className={s.blueprintHead}>
             <span className={s.blueprintTitle}>
-              Most enterprise AI fails because the data under it was never ready.
-              We build both, so it ships and runs.
+              Most enterprise AI never leaves the demo. The data underneath was
+              never built for it. We build both, so it ships and keeps running.
             </span>
           </div>
 
@@ -232,12 +289,12 @@ export default function V3Next() {
 
           <div className={s.featureMeta}>
             <div>
-              <span className={s.metaK}>BUILT ON</span>
-              <span className={s.metaV}>Databricks · Snowflake · SAP</span>
-            </div>
-            <div>
               <span className={s.metaK}>APPLIED AI PRACTICE</span>
               <span className={s.metaV}>12 live · 94% eval pass · 90-day RAG</span>
+            </div>
+            <div>
+              <span className={s.metaK}>RUN WITH</span>
+              <span className={s.metaV}>SLAs · 99.98% uptime · on-call</span>
             </div>
             <div>
               <span className={s.metaK}>PROVEN ACROSS</span>
@@ -251,56 +308,62 @@ export default function V3Next() {
         </div>
       </section>
 
-      {/* ---- Value pillars ---- */}
-      <section className={s.pillars}>
+      {/* ---- Playbooks ---- */}
+      <section className={s.playbooks}>
         <div className={s.sectionHead}>
-          <span className={s.kicker}>/ How we work</span>
-          <h2 className={s.h2}>Four things that stay true on every build.</h2>
+          <span className={s.kicker}>/ Playbooks</span>
+          <h2 className={s.h2}>We have built this before.</h2>
+          <p className={s.sectionLead}>
+            The same problems show up across the Fortune 500. These are the ones
+            we have run enough times to hand you a plan, a timeline, and the
+            number you walk away with.
+          </p>
         </div>
-        <div className={s.pillarGrid}>
-          {PILLARS.map((p) => (
-            <div className={s.pillar} key={p.no}>
-              <span className={s.pillarNo}>{p.no}</span>
-              <h3 className={s.pillarTitle}>{p.title}</h3>
-              <p className={s.pillarBody}>{p.body}</p>
-            </div>
+        <div className={s.pbGrid}>
+          {PLAYBOOKS.map((p) => (
+            <a className={s.pbCard} key={p.title} href="#">
+              <span className={s.pbCat}>{p.cat}</span>
+              <h3 className={s.pbTitle}>{p.title}</h3>
+              <p className={s.pbBody}>{p.body}</p>
+              <div className={s.pbFoot}>
+                <span className={s.pbMetric}>{p.metric}</span>
+                <span className={s.pbMetricLabel}>{p.metricLabel}</span>
+              </div>
+            </a>
           ))}
         </div>
+        <a className={s.sectionMore} href="#">
+          See all playbooks ↗
+        </a>
       </section>
 
-      {/* ---- Capabilities ---- */}
+      {/* ---- Services (top 4) ---- */}
       <section className={s.caps}>
         <div className={s.sectionHead}>
           <span className={s.kicker}>/ What we build</span>
-          <h2 className={s.h2}>
-            Data and AI are the work. The rest is what keeps it running.
-          </h2>
+          <h2 className={s.h2}>Data and AI are the work. The rest keeps it running.</h2>
           <p className={s.sectionLead}>
-            Cloud, platform engineering, integration, and managed operations are
-            the foundation underneath. We build all of it.
+            The four we lead with are here. Platform engineering, integration,
+            security, and the rest of the stack live on the services page.
           </p>
         </div>
-        <ul className={s.capList}>
-          {CAPS.map((c) => (
-            <li className={`${s.capRow} ${c.lead ? s.capRowLead : ''}`} key={c.no}>
-              <div className={s.capLeft}>
-                <span className={s.capNo}>{c.no}</span>
-                {c.lead && <span className={s.capBadge}>HEADLINE</span>}
-              </div>
-              <span className={s.capName}>{c.name}</span>
-              <span className={s.capTags}>
-                {c.tags.map((t) => (
-                  <span className={s.capTag} key={t}>
-                    {t}
-                  </span>
+        <div className={s.svcGrid}>
+          {SERVICES.map((c) => (
+            <a className={s.svc} key={c.no} href="#">
+              <span className={s.svcNo}>{c.no}</span>
+              <h3 className={s.svcName}>{c.name}</h3>
+              <p className={s.svcBody}>{c.body}</p>
+              <div className={s.svcLogos}>
+                {c.logos.map((id) => (
+                  <Logo key={id} id={id} name={id} />
                 ))}
-              </span>
-              <span className={s.capArrow} aria-hidden>
-                →
-              </span>
-            </li>
+              </div>
+            </a>
           ))}
-        </ul>
+        </div>
+        <a className={s.sectionMore} href="#">
+          See all 10 capabilities ↗
+        </a>
       </section>
 
       {/* ---- Industries ---- */}
@@ -308,6 +371,10 @@ export default function V3Next() {
         <div className={s.sectionHead}>
           <span className={s.kicker}>/ Outcome led, by industry</span>
           <h2 className={s.h2}>We start with your outcome.</h2>
+          <p className={s.sectionLead}>
+            Pick your industry. Here is the result we build toward, and what we
+            have already shipped to back it up.
+          </p>
         </div>
         <div className={s.indList}>
           {INDUSTRIES.map((i) => (
@@ -356,12 +423,11 @@ export default function V3Next() {
           <span className={s.buildPhotoTag}>IN PRODUCTION · FORTUNE 500</span>
         </div>
         <div className={s.buildCopy}>
-          <h3 className={s.buildTitle}>The work is the thing that has to hold at 2am.</h3>
+          <h3 className={s.buildTitle}>The job is not done when it ships. It is done when it holds at 2am.</h3>
           <p className={s.buildText}>
-            ACI Infotech designs, builds, and runs production data platforms,
-            cloud infrastructure, and AI systems for Fortune 500 companies across
-            financial services, healthcare, retail, and manufacturing. We do not
-            hand off a deck. We run what we build.
+            We design, build, and run production data, cloud, and AI for Fortune
+            500 operators. We do not hand over a deck and walk. When the system
+            that runs your business needs us, we pick up.
           </p>
           <a className={s.buildLink} href="#">
             See the work ↗
@@ -374,9 +440,9 @@ export default function V3Next() {
         <span className={s.arqLabel}>Partner</span>
         <p className={s.arqText}>
           We work with <strong>ArqAI</strong>, an independent operational-AI
-          company, on production AI in regulated industries. ACI builds the full
-          stack, from data foundation to outcome. ArqAI brings the vertical
-          agents.
+          company, on production AI in regulated industries. They bring the
+          vertical agents. We bring the data foundation and everything it takes
+          to run them in production.
         </p>
       </section>
 
@@ -392,8 +458,9 @@ export default function V3Next() {
             you need built.
           </h2>
           <p className={s.ctaLead}>
-            Bring the outcome you are after. We map the operation, build the data
-            and AI to reach it, and run it in production.
+            Bring us the outcome you are chasing. We will tell you straight
+            whether we can build it, how long it takes, and what it costs. No
+            pitch, just engineers.
           </p>
           <div className={s.ctaActions}>
             <Link className={s.ctaBtn} href="/contact">
