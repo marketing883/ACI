@@ -60,6 +60,10 @@ export default function ConditionalLayout({
   // /preview/v2* routes; /preview/home and all other existing routes
   // keep their existing layout behavior.
   const isV2Preview = pathname?.startsWith('/preview/v2');
+  // v3 "Data and AI" homepage preview is fully standalone too: it
+  // ships its own nav, footer, and design system (src/components/v3),
+  // so suppress all site chrome on /preview/v3.
+  const isV3Preview = pathname?.startsWith('/preview/v3');
   // Staging builds set NEXT_PUBLIC_USE_V2_HOME=true, which flips `/`
   // to the v2 homepage. That page renders its own NavV2 / FooterV2,
   // so the v1 chrome must be suppressed here too. The env var is
@@ -70,7 +74,7 @@ export default function ConditionalLayout({
 
   // Admin routes, landing pages, v2 previews, and the staging v2
   // root all bypass the v1 Navigation / Footer / chat widgets.
-  if (isAdminRoute || isLandingPage || isV2Preview || isV2Root) {
+  if (isAdminRoute || isLandingPage || isV2Preview || isV3Preview || isV2Root) {
     return <>{children}</>;
   }
 
