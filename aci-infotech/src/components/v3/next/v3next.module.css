@@ -270,14 +270,57 @@
   color: var(--ink);
   padding: clamp(4rem, 7vw, 6.5rem) var(--pad) clamp(2rem, 4vw, 3.5rem);
 }
-.crystal {
+.iso {
   position: relative;
   width: 100%;
-  height: clamp(360px, 38vw, 560px);
-  margin: clamp(1.5rem, 3vw, 2.8rem) 0 clamp(1rem, 2vw, 1.8rem);
+  height: clamp(360px, 42vw, 600px);
+  margin: clamp(1.2rem, 2.5vw, 2.2rem) 0 clamp(0.5rem, 1.5vw, 1.4rem);
 }
-.crystal canvas {
+.iso svg {
   display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.isoFlow {
+  stroke-dasharray: 2 8;
+  animation: isoFlow 1.3s linear infinite;
+}
+@keyframes isoFlow {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+.isoPulse {
+  animation: isoPulse 3s ease-in-out infinite;
+}
+@keyframes isoPulse {
+  0%,
+  100% {
+    opacity: 0.78;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.isoLive {
+  animation: isoLive 2s ease-in-out infinite;
+}
+@keyframes isoLive {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .isoFlow,
+  .isoPulse,
+  .isoLive {
+    animation: none;
+  }
 }
 .featureTabs {
   display: flex;
