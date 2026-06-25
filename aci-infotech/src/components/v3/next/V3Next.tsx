@@ -271,9 +271,9 @@ export default async function V3Next() {
           muted
           loop
           playsInline
-          poster="/video/retail-supplychain-poster.jpg"
+          poster="/video/retail-bg-poster.jpg"
         >
-          <source src="/video/retail-supplychain.mp4" type="video/mp4" />
+          <source src="/video/retail-bg-graded.mp4" type="video/mp4" />
         </video>
         <div className={s.vidScrim} aria-hidden />
         <div className={s.vidInner}>
