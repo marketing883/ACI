@@ -43,6 +43,7 @@ const PARTNERS: [string, string][] = [
 
 const SVC_LOGOS: Record<string, string> = {
   databricks: '/images/Solution-Partners/databricks.png',
+  snowflake: '/images/Solution-Partners/snowflake.svg',
   aws: '/images/Solution-Partners/aws.png',
   azure: '/images/Solution-Partners/azure.png',
   sap: '/images/Solution-Partners/sap.png',
@@ -61,17 +62,17 @@ const CERTS: [string, string | null][] = [
 const PLAYBOOKS = [
   { cat: 'Integration', title: 'Post-Acquisition ERP Unification', body: 'You acquired your way into forty finance systems and a close that takes a week. We make it one system and one number.', metric: '$9.2M', metricLabel: 'Year-one savings' },
   { cat: 'Data', title: 'Real-Time Inventory Platform', body: 'When the data is a day old, every store decision is a guess. We move it from overnight batch to real-time.', metric: '64%', metricLabel: 'Lower latency' },
-  { cat: 'Data', title: 'Global Data Unification', body: 'One metric, three regions, three different answers. We make it one source of truth everyone trusts.', metric: '50%', metricLabel: 'Faster decisions' },
-  { cat: 'Analytics', title: 'Enterprise Self-Service Analytics', body: 'Every question turns into an IT ticket and a three-week wait. We hand the data back to the people asking.', metric: '88%', metricLabel: 'Fewer IT tickets' },
+  { cat: 'Data', title: 'Global Data Unification', body: 'One metric, three regions, three different answers. We make it one source of truth everyone trusts.', metric: '$4.7M', metricLabel: 'Procurement saved' },
+  { cat: 'Analytics', title: 'Enterprise Self-Service Analytics', body: 'Every question turns into an IT ticket and a three-week wait. We hand the data back to the people asking.', metric: '$1.8M', metricLabel: 'Productivity gained' },
   { cat: 'AI', title: 'Enterprise Agentic AI', body: 'Agents that do the repetitive work, wired into your systems with a full audit trail. Not a chatbot demo.', metric: '40%', metricLabel: 'Faster operations' },
-  { cat: 'Cloud', title: 'Legacy to Cloud Migration', body: 'The mainframe nobody wants to touch, moved to cloud without taking the business down for a weekend.', metric: '68%', metricLabel: 'Cost cut' },
+  { cat: 'Cloud', title: 'Legacy to Cloud Migration', body: 'The mainframe nobody wants to touch, moved to cloud without taking the business down for a weekend.', metric: '$20M', metricLabel: 'Saved over 3 years' },
 ];
 
 const SERVICES = [
-  { no: '/01', name: 'Data and Analytics', body: 'The lakehouse, the pipelines, the governance. The foundation the AI actually needs before it can work.', logos: ['databricks', 'sap'] },
-  { no: '/02', name: 'Applied AI and GenAI', body: 'GenAI and forecasting wired into the operation, evaluated and shipped. We get it past the pilot.', logos: ['azure', 'aws'] },
-  { no: '/03', name: 'Cloud and Infrastructure', body: 'Migrations and platform work that move the estate without taking it down on a Friday night.', logos: ['aws', 'azure'] },
-  { no: '/04', name: 'Managed Services', body: 'We stay on the call after go-live. SLAs, on-call, and the change discipline to keep it running.', logos: ['dynatrace', 'servicenow'] },
+  { no: '/01', name: 'Data and Analytics', verb: 'Move your data onto modern ground', body: 'Lakehouse migration, pipelines, and self-service intelligence. We connect the silos into one clean flow your team will actually use.', proof: 'Brand managers cut campaign analysis from 3 weeks to 4 hours, 94% adoption.', logos: ['databricks', 'snowflake'] },
+  { no: '/02', name: 'Applied AI and GenAI', verb: 'Build the AI on a foundation that holds', body: 'Copilots, agents, and RAG built on data that is finally ready for them. Evaluated, governed, and shipped past the pilot.', proof: '12 live engagements, 94% eval pass rate, 90 days from first build to production.', logos: ['azure', 'aws'] },
+  { no: '/03', name: 'Cloud and Infrastructure', verb: 'Modernize without the rip and replace', body: 'Migration and platform work that moves the estate onto modern ground, on time and on budget.', proof: 'A core system moved to cloud with zero downtime and $20M saved over three years.', logos: ['aws', 'azure'] },
+  { no: '/04', name: 'Managed Services', verb: 'Past the pilot. Into production. Run for good', body: 'We ship it into your live environment, govern every action, and operate it after launch.', proof: '250+ systems in production, 99.98% uptime, on the call at 2am.', logos: ['dynatrace', 'servicenow'] },
 ];
 
 const INDUSTRIES = [
@@ -254,27 +255,35 @@ export default async function V3Next() {
 
       {/* ---- Signature: full-bleed video impact moment ---- */}
       <section className={s.vid}>
-        <video className={s.vidMedia} autoPlay muted loop playsInline>
-          <source src="/video/Financial-giant-SAP-Modernization.mp4" type="video/mp4" />
+        <video
+          className={s.vidMedia}
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/video/retail-store-poster.jpg"
+        >
+          <source src="/video/retail-store.mp4" type="video/mp4" />
         </video>
         <div className={s.vidScrim} aria-hidden />
         <div className={s.vidInner}>
-          <span className={s.vidKicker}>For financial services</span>
+          <span className={s.vidKicker}>For retail and convenience</span>
           <h2 className={s.vidTitle}>
-            We rebuilt a Fortune 500
+            Every store, real-time.
             <br />
-            finance core. Live the whole time.
+            $4.2M back, every year.
           </h2>
           <p className={s.vidSub}>
-            SAP modernization, migrated without a maintenance window. Allocation
-            processing went from hours to minutes, and the books never closed late.
+            We moved a 500-store convenience chain off overnight batch and onto
+            Databricks. Decisions that used to wait a day now land in under four
+            hours, and stockouts dropped by 73%.
           </p>
           <a className={s.vidLink} href="#">See how we did it ↗</a>
         </div>
         <div className={s.vidFoot}>
-          <span>CASE · FINANCIAL SERVICES</span>
-          <span>ZERO DOWNTIME</span>
-          <span>SAP S/4HANA</span>
+          <span>CASE · RETAIL AND CONVENIENCE</span>
+          <span>$4.2M SAVED A YEAR</span>
+          <span>500+ STORES</span>
         </div>
       </section>
 
@@ -293,9 +302,13 @@ export default async function V3Next() {
             <li key={c.no}>
               <a className={s.svcRow} href="#">
                 <span className={s.svcNo}>{c.no}</span>
-                <span className={s.svcName}>{c.name}</span>
+                <span className={s.svcNameWrap}>
+                  <span className={s.svcVerb}>{c.verb}</span>
+                  <span className={s.svcName}>{c.name}</span>
+                </span>
                 <span className={s.svcMid}>
                   <span className={s.svcBody}>{c.body}</span>
+                  <span className={s.svcProof}>{c.proof}</span>
                   <span className={s.svcLogos}>
                     {c.logos.map((id) => (
                       <Logo key={id} src={SVC_LOGOS[id]} alt={id} className={s.svcLogo} />
