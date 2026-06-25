@@ -1002,11 +1002,14 @@
   border-bottom: 1px solid var(--line);
 }
 .svcRow {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1fr) 2rem;
+  grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1.05fr) 2rem;
   gap: 1.5rem;
-  align-items: center;
-  padding: clamp(1.5rem, 2.8vw, 2.4rem) 0.4rem;
+  align-items: start;
+  padding: clamp(1.6rem, 2.8vw, 2.6rem) 0.4rem;
   text-decoration: none;
   color: var(--ink);
   transition: background 0.18s ease, padding 0.18s ease;
@@ -1014,6 +1017,25 @@
 .svcRow:hover {
   background: var(--cream-2);
   padding-inline: 1.2rem;
+}
+.svcRow > *:not(.svcBg) {
+  position: relative;
+  z-index: 1;
+}
+.svcBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center right;
+  filter: grayscale(1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 38%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, transparent 38%, #000 100%);
+}
+.svcRow:hover .svcBg {
+  opacity: 0.16;
 }
 .svcNo {
   font-family: var(--mono);
@@ -1026,33 +1048,48 @@
 .svcNameWrap {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.55rem;
 }
-.svcVerb {
+.svcTag {
   font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--grey);
 }
 .svcName {
-  font-weight: 500;
-  font-size: clamp(1.5rem, 2.9vw, 2.5rem);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 2.7vw, 2.4rem);
   line-height: 1.04;
   letter-spacing: -0.03em;
   color: var(--ink);
+}
+.svcTagline {
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--grey);
+  font-style: italic;
 }
 .svcMid {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  padding-top: 0.4rem;
 }
-.svcBody {
-  font-size: 0.98rem;
-  line-height: 1.5;
-  color: var(--grey);
-  margin: 0;
-  max-width: 42ch;
+.svcSubs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.svcSub {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  white-space: nowrap;
 }
 .svcProof {
   font-family: var(--mono);
@@ -1065,17 +1102,17 @@
 }
 .svcLogos {
   display: flex;
-  gap: 1.4rem;
+  gap: 1.5rem;
   align-items: center;
 }
 .svcLogo {
-  height: 30px;
+  height: 38px;
   width: auto;
-  max-width: 130px;
+  max-width: 150px;
   object-fit: contain;
   display: block;
   filter: grayscale(1);
-  opacity: 0.62;
+  opacity: 0.66;
 }
 .svcArrow {
   font-size: 1.4rem;
@@ -1181,6 +1218,9 @@
   border-left: 1px solid var(--line);
 }
 .workCard {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   padding: clamp(1.6rem, 2.6vw, 2.4rem);
@@ -1189,10 +1229,51 @@
   flex-direction: column;
   text-decoration: none;
   color: var(--ink);
-  transition: background 0.18s ease;
 }
-.workCard:hover {
-  background: var(--cream);
+.workCard > * {
+  position: relative;
+  z-index: 2;
+}
+.workBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.4);
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 0.35s ease, transform 0.5s ease;
+  z-index: 0;
+}
+.workCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 11, 13, 0.35) 0%, rgba(11, 11, 13, 0.82) 100%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 1;
+}
+.workCard:hover .workBg {
+  opacity: 1;
+  transform: scale(1);
+}
+.workCard:hover::after {
+  opacity: 1;
+}
+.workCard:hover .workIndustry,
+.workCard:hover .workMetric,
+.workCard:hover .workTitle {
+  color: #fff;
+}
+.workCard:hover .workClient {
+  color: rgba(255, 255, 255, 0.72);
+}
+.workIndustry,
+.workMetric,
+.workTitle,
+.workClient {
+  transition: color 0.3s ease;
 }
 .workTop {
   display: flex;
@@ -1289,47 +1370,42 @@
   background: var(--cream);
   padding: clamp(5rem, 9vw, 8rem) var(--pad);
 }
-.quoteGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.quoteList {
   border-top: 1px solid var(--ink);
 }
 .quote {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: clamp(1.2rem, 3vw, 2.5rem);
+  align-items: start;
   margin: 0;
-  padding: 2.2rem 1.8rem 0 0;
-  border-right: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
+  padding: clamp(2rem, 3.5vw, 3rem) 0.4rem;
+  border-bottom: 1px solid var(--line);
 }
-.quote:last-child {
-  border-right: none;
-}
-.quote::before {
-  content: "\201C";
-  font-size: 3rem;
-  line-height: 0.7;
+.quoteIdx {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
   color: var(--grey-2);
-  margin-bottom: 0.8rem;
+  padding-top: 0.6rem;
 }
 .quoteText {
-  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
-  line-height: 1.42;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.25rem, 2.1vw, 1.85rem);
+  line-height: 1.32;
+  letter-spacing: -0.02em;
   color: var(--ink);
-  margin: 0 0 1.8rem;
   font-weight: 400;
+  margin: 0;
 }
 .quoteBy {
-  margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding-top: 1.2rem;
-  border-top: 1px solid var(--line);
+  gap: 0.3rem;
+  padding-top: 0.6rem;
 }
 .quoteRole {
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 1rem;
   color: var(--ink);
 }
 .quoteOrg {
@@ -1396,16 +1472,14 @@
   .insGrid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .quoteGrid {
-    grid-template-columns: 1fr;
-  }
   .quote {
-    border-right: none;
-    border-bottom: 1px solid var(--line);
-    padding: 1.8rem 0 1.8rem 0;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    padding: 1.8rem 0.4rem;
   }
-  .quote:last-child {
-    border-bottom: none;
+  .quoteIdx,
+  .quoteBy {
+    padding-top: 0;
   }
   .svcRow {
     grid-template-columns: 2.5rem 1fr;

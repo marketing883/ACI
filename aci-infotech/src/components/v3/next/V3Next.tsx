@@ -49,6 +49,7 @@ const SVC_LOGOS: Record<string, string> = {
   sap: '/images/Solution-Partners/sap.png',
   servicenow: '/images/Solution-Partners/servicenow.png',
   dynatrace: '/images/Solution-Partners/dynatrace.png',
+  kubernetes: '/images/Solution-Partners/kubernetes.svg',
 };
 
 const CERTS: [string, string | null][] = [
@@ -69,10 +70,10 @@ const PLAYBOOKS = [
 ];
 
 const SERVICES = [
-  { no: '/01', cat: 'Data · Foundation', head: 'Move your data onto modern ground.', body: 'Lakehouse migration and pipelines on Databricks, Snowflake, and Azure. We connect the silos into one clean flow, without the rip and replace.', proof: 'Brand managers cut campaign analysis from 3 weeks to 4 hours, 94% adoption.', logos: ['databricks', 'snowflake'] },
-  { no: '/02', cat: 'Applied AI · GenAI', head: 'Build the AI on a foundation that holds.', body: 'Copilots, agents, and RAG built on data that is finally ready for them. Evaluated, governed, and shipped past the pilot.', proof: '12 live engagements, 94% eval pass rate, 90 days from first build to production.', logos: ['azure', 'aws'] },
-  { no: '/03', cat: 'Integration · Trust', head: 'Make the data AI can actually trust.', body: 'Multi-source integration with governance, quality, and compliance built in, so what you build on top holds up to an audit.', proof: 'A global operation unified across 34 countries, 78% faster processing.', logos: ['sap', 'servicenow'] },
-  { no: '/04', cat: 'Run · Managed', head: 'Past the pilot. Into production. Run for good.', body: 'We ship it into your live environment, govern every action, and operate it after launch.', proof: '250+ systems in production, 99.98% uptime, on the call at 2am.', logos: ['dynatrace', 'servicenow'] },
+  { no: '/01', tag: 'Data Foundation', title: 'Data Engineering & Lakehouse', tagline: 'Move your data onto modern ground.', subs: ['Lakehouse migration', 'Real-time pipelines', 'Governance & lineage', 'Self-service BI'], proof: 'Campaign analysis cut from 3 weeks to 4 hours, 94% adoption.', logos: ['databricks', 'snowflake', 'azure'], bg: '/images/preview-bg/svc-data.jpg' },
+  { no: '/02', tag: 'Applied AI', title: 'Applied AI & GenAI', tagline: 'Build the AI on a foundation that holds.', subs: ['Copilots & agents', 'RAG systems', 'Forecasting & ML', 'MLOps & evals'], proof: '12 live engagements, 94% eval pass rate, 90 days to production.', logos: ['azure', 'aws', 'databricks'], bg: '/images/preview-bg/svc-ai.jpg' },
+  { no: '/03', tag: 'Data Trust', title: 'Integration & Governance', tagline: 'Make the data AI can actually trust.', subs: ['Multi-source integration', 'Master data (MDM)', 'Data quality', 'Compliance & audit'], proof: 'One operation unified across 34 countries, 78% faster processing.', logos: ['sap', 'servicenow', 'azure'], bg: '/images/preview-bg/svc-integration.jpg' },
+  { no: '/04', tag: 'Production', title: 'Managed Run & SRE', tagline: 'Past the pilot, into production, run for good.', subs: ['24/7 operations', 'SRE & on-call', 'Observability', 'Change management'], proof: '250+ systems in production, 99.98% uptime, on call at 2am.', logos: ['kubernetes', 'dynatrace', 'servicenow'], bg: '/images/preview-bg/svc-run.jpg' },
 ];
 
 const INDUSTRIES = [
@@ -100,9 +101,9 @@ const TESTIMONIALS = [
 
 // Anonymized fallbacks shown when the CMS has nothing to return.
 const FALLBACK_CASES: HomeCaseStudy[] = [
-  { id: 'f1', slug: '#', title: 'SAP finance core, modernized live', client_descriptor: 'A Fortune 500 financial index provider', industry: 'Financial Services', challenge: null, solution: null, metrics: [{ label: 'Faster', value: '67%' }], technologies: ['SAP', 'Azure'], services: [], testimonial_quote: null, featured_image_url: null },
-  { id: 'f2', slug: '#', title: 'Real-time across 500+ stores', client_descriptor: 'A national convenience retailer', industry: 'Retail', challenge: null, solution: null, metrics: [{ label: 'Saved', value: '$4.2M' }], technologies: ['Databricks'], services: [], testimonial_quote: null, featured_image_url: null },
-  { id: 'f3', slug: '#', title: 'One data view across 34 countries', client_descriptor: 'A global facilities and food group', industry: 'Hospitality', challenge: null, solution: null, metrics: [{ label: 'Faster', value: '78%' }], technologies: ['Informatica'], services: [], testimonial_quote: null, featured_image_url: null },
+  { id: 'f1', slug: '#', title: 'SAP finance core, modernized live', client_descriptor: 'A Fortune 500 financial index provider', industry: 'Financial Services', challenge: null, solution: null, metrics: [{ label: 'Faster', value: '67%' }], technologies: ['SAP', 'Azure'], services: [], testimonial_quote: null, featured_image_url: '/images/preview-bg/case-financial.jpg' },
+  { id: 'f2', slug: '#', title: 'Real-time across 500+ stores', client_descriptor: 'A national convenience retailer', industry: 'Retail', challenge: null, solution: null, metrics: [{ label: 'Saved', value: '$4.2M' }], technologies: ['Databricks'], services: [], testimonial_quote: null, featured_image_url: '/images/preview-bg/case-retail.jpg' },
+  { id: 'f3', slug: '#', title: 'One data view across 34 countries', client_descriptor: 'A global facilities and food group', industry: 'Hospitality', challenge: null, solution: null, metrics: [{ label: 'Faster', value: '78%' }], technologies: ['Informatica'], services: [], testimonial_quote: null, featured_image_url: '/images/preview-bg/case-global.jpg' },
 ];
 
 const FALLBACK_BLOGS: HomeBlogPost[] = [
@@ -239,7 +240,7 @@ export default async function V3Next() {
       <section className={s.playbooks}>
         <div className={s.sectionHead}>
           <span className={s.kicker}>/ Playbooks</span>
-          <h2 className={s.h2}>We have built this before.</h2>
+          <h2 className={s.h2}>Hard problems we have already solved.</h2>
           <p className={s.sectionLead}>
             The same problems show up across the Fortune 500. These are the ones
             we have run enough times to hand you a plan, a timeline, and the
@@ -270,9 +271,9 @@ export default async function V3Next() {
           muted
           loop
           playsInline
-          poster="/video/retail-store-poster.jpg"
+          poster="/video/retail-supplychain-poster.jpg"
         >
-          <source src="/video/retail-store.mp4" type="video/mp4" />
+          <source src="/video/retail-supplychain.mp4" type="video/mp4" />
         </video>
         <div className={s.vidScrim} aria-hidden />
         <div className={s.vidInner}>
@@ -300,23 +301,30 @@ export default async function V3Next() {
       <section className={s.caps}>
         <div className={s.sectionHead}>
           <span className={s.kicker}>/ What we build</span>
-          <h2 className={s.h2}>Data and AI are the work. The rest keeps it running.</h2>
+          <h2 className={s.h2}>From raw data to AI in production.</h2>
           <p className={s.sectionLead}>
-            The four we lead with are here. Platform engineering, integration,
-            security, and the rest of the stack live on the services page.
+            Four services that carry the whole build, from the foundation to the
+            run. Platform engineering, security, and the rest of the stack live
+            on the services page.
           </p>
         </div>
         <ul className={s.svcList}>
           {SERVICES.map((c) => (
             <li key={c.no}>
               <a className={s.svcRow} href="#">
+                <span className={s.svcBg} style={{ backgroundImage: `url(${c.bg})` }} aria-hidden />
                 <span className={s.svcNo}>{c.no}</span>
                 <span className={s.svcNameWrap}>
-                  <span className={s.svcVerb}>{c.cat}</span>
-                  <span className={s.svcName}>{c.head}</span>
+                  <span className={s.svcTag}>{c.tag}</span>
+                  <span className={s.svcName}>{c.title}</span>
+                  <span className={s.svcTagline}>{c.tagline}</span>
                 </span>
                 <span className={s.svcMid}>
-                  <span className={s.svcBody}>{c.body}</span>
+                  <span className={s.svcSubs}>
+                    {c.subs.map((sub) => (
+                      <span className={s.svcSub} key={sub}>{sub}</span>
+                    ))}
+                  </span>
                   <span className={s.svcProof}>{c.proof}</span>
                   <span className={s.svcLogos}>
                     {c.logos.map((id) => (
@@ -366,6 +374,13 @@ export default async function V3Next() {
         <div className={s.workGrid}>
           {cases.map((c) => (
             <a className={s.workCard} key={c.id} href={c.slug && c.slug !== '#' ? `/case-studies/${c.slug}` : '#'}>
+              {c.featured_image_url && (
+                <span
+                  className={s.workBg}
+                  style={{ backgroundImage: `url(${c.featured_image_url})` }}
+                  aria-hidden
+                />
+              )}
               <div className={s.workTop}>
                 <span className={s.workIndustry}>{c.industry ?? 'Enterprise'}</span>
                 {c.metrics?.[0] && (
@@ -384,11 +399,12 @@ export default async function V3Next() {
       <section className={s.quotes}>
         <div className={s.sectionHead}>
           <span className={s.kicker}>/ In their words</span>
-          <h2 className={s.h2}>Straight from the people who hired us.</h2>
+          <h2 className={s.h2}>From the people we built it for.</h2>
         </div>
-        <div className={s.quoteGrid}>
-          {TESTIMONIALS.map((t) => (
+        <div className={s.quoteList}>
+          {TESTIMONIALS.map((t, i) => (
             <figure className={s.quote} key={t.role}>
+              <span className={s.quoteIdx}>0{i + 1}</span>
               <blockquote className={s.quoteText}>{t.quote}</blockquote>
               <figcaption className={s.quoteBy}>
                 <span className={s.quoteRole}>{t.role}</span>
