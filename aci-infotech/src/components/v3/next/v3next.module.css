@@ -268,7 +268,16 @@
 .feature {
   background: var(--cream);
   color: var(--ink);
-  padding: 0 var(--pad) clamp(2rem, 4vw, 3.5rem);
+  padding: clamp(4rem, 7vw, 6.5rem) var(--pad) clamp(2rem, 4vw, 3.5rem);
+}
+.crystal {
+  position: relative;
+  width: 100%;
+  height: clamp(360px, 38vw, 560px);
+  margin: clamp(1.5rem, 3vw, 2.8rem) 0 clamp(1rem, 2vw, 1.8rem);
+}
+.crystal canvas {
+  display: block;
 }
 .featureTabs {
   display: flex;
@@ -305,7 +314,7 @@
   color: var(--ink);
 }
 .featureBody {
-  padding-top: clamp(2rem, 4vw, 3.5rem);
+  padding-top: 0;
 }
 .blueprintHead {
   margin-bottom: 1.5rem;

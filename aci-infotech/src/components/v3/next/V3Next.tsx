@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import s from './v3next.module.css';
 import LazyVideo from './LazyVideo';
+import DataCrystal from './DataCrystal';
 import {
   fetchFeaturedCaseStudies,
   fetchFeaturedBlogs,
@@ -174,12 +175,6 @@ export default async function V3Next() {
 
       {/* ---- The wedge ---- */}
       <section className={s.feature}>
-        <div className={s.featureTabs}>
-          {['Data', 'AI', 'Cloud', 'Platform', 'CDP', 'Managed'].map((t, i) => (
-            <span key={t} className={i === 0 ? s.tabActive : s.tab}>{t}</span>
-          ))}
-          <span className={s.tabAll}>ALL CAPABILITIES ↗</span>
-        </div>
         <div className={s.featureBody}>
           <div className={s.blueprintHead}>
             <span className={s.blueprintTitle}>
@@ -187,32 +182,7 @@ export default async function V3Next() {
               never built for it. We build both, so it ships and keeps running.
             </span>
           </div>
-          <svg className={s.blueprint} viewBox="0 0 1000 300" role="img" aria-label="Data to AI to production pipeline schematic">
-            <g stroke="#16171a" strokeWidth="1.2" fill="none">
-              <rect x="40" y="110" width="70" height="22" />
-              <rect x="40" y="140" width="70" height="22" />
-              <rect x="40" y="170" width="70" height="22" />
-              <path d="M110 151 H190" />
-              <rect x="190" y="96" width="180" height="110" />
-              <path d="M190 126 H370 M220 96 V206" strokeDasharray="2 4" />
-              <path d="M370 151 H470" />
-              <circle cx="540" cy="151" r="70" />
-              <path d="M540 81 V221 M470 151 H610" strokeDasharray="2 4" />
-              <path d="M610 151 H720" />
-              <rect x="720" y="116" width="240" height="70" />
-              <path d="M40 240 H960" strokeDasharray="1 5" opacity="0.5" />
-              <path d="M40 235 V245 M540 235 V245 M960 235 V245" opacity="0.5" />
-            </g>
-            <g fill="#16171a" fontSize="11" fontFamily="var(--font-jetbrains-mono), monospace" letterSpacing="0.08em">
-              <text x="40" y="92">01 / SOURCES</text>
-              <text x="190" y="86">02 / GOVERNED LAKEHOUSE</text>
-              <text x="478" y="70">03 / AI &amp; ML MODELS</text>
-              <text x="720" y="106">04 / PRODUCTION</text>
-              <text x="40" y="262" opacity="0.6">INGEST</text>
-              <text x="508" y="262" opacity="0.6">MODEL · EVALUATE</text>
-              <text x="880" y="262" opacity="0.6">SERVE</text>
-            </g>
-          </svg>
+          <DataCrystal className={s.crystal} />
           <div className={s.featureMeta}>
             <div><span className={s.metaK}>Foundation</span><span className={s.metaV}>A governed lakehouse</span></div>
             <div><span className={s.metaK}>On top</span><span className={s.metaV}>Evaluated, governed AI</span></div>
