@@ -215,7 +215,7 @@ export default async function V3Next() {
           <div className={s.featureMeta}>
             <div><span className={s.metaK}>Foundation</span><span className={s.metaV}>A governed lakehouse</span></div>
             <div><span className={s.metaK}>On top</span><span className={s.metaV}>Evaluated, governed AI</span></div>
-            <div><span className={s.metaK}>In production</span><span className={s.metaV}>Shipped, and then run</span></div>
+            <div><span className={s.metaK}>In production</span><span className={s.metaV}>Shipped, then run</span></div>
           </div>
           <h2 className={s.featureWordmark}>Data<span className={s.featureX}>×</span>AI</h2>
         </div>
@@ -227,9 +227,8 @@ export default async function V3Next() {
           <span className={s.kicker}>/ Playbooks</span>
           <h2 className={s.h2}>Hard problems we have already solved.</h2>
           <p className={s.sectionLead}>
-            The same problems show up across the Fortune 500. These are the ones
-            we have run enough times to hand you a plan, a timeline, and the
-            number you walk away with.
+            The same problems show up across the Fortune 500. We have run these
+            enough times to quote you a timeline and a number up front.
           </p>
         </div>
         <div className={s.pbGrid}>
@@ -287,9 +286,8 @@ export default async function V3Next() {
           <span className={s.kicker}>/ What we build</span>
           <h2 className={s.h2}>From raw data to AI in production.</h2>
           <p className={s.sectionLead}>
-            Four services that carry the whole build, from the foundation to the
-            run. Platform engineering, security, and the rest of the stack live
-            on the services page.
+            We build the data foundation, put the AI on top of it, and stay on to
+            run both once they are live.
           </p>
         </div>
         <ul className={s.svcList}>
@@ -320,7 +318,7 @@ export default async function V3Next() {
             </li>
           ))}
         </ul>
-        <a className={s.sectionMore} href="#">See all 10 capabilities ↗</a>
+        <a className={s.sectionMore} href="#">See all capabilities ↗</a>
       </section>
 
       {/* ---- Case studies (CMS, featured only) ---- */}
@@ -329,8 +327,8 @@ export default async function V3Next() {
           <span className={s.kicker}>/ Selected work</span>
           <h2 className={s.h2}>We start with your outcome.</h2>
           <p className={s.sectionLead}>
-            Four featured builds. Real Fortune 500 operations and real numbers,
-            with the client names kept off the record.
+            A few of the systems we put into production, and what changed once
+            they were live.
           </p>
         </div>
         <div className={s.csList}>
@@ -410,9 +408,9 @@ export default async function V3Next() {
             the factory floor.
           </h2>
           <p className={s.vidSub}>
-            Forecasting, supply chain visibility, and the platforms that keep the
-            line moving. Built for places where downtime is measured in real
-            money, not story points.
+            We build the forecasting and supply chain platforms that keep the line
+            moving, for the places where an hour of downtime has a real dollar
+            figure attached.
           </p>
           <a className={s.vidLink} href="#">See how we did it ↗</a>
         </div>
