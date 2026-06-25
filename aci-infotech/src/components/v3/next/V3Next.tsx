@@ -76,13 +76,6 @@ const SERVICES = [
   { no: '/04', tag: 'Production', title: 'Managed Run & SRE', tagline: 'Past the pilot, into production, run for good.', subs: ['24/7 operations', 'SRE & on-call', 'Observability', 'Change management'], proof: '250+ systems in production, 99.98% uptime, on call at 2am.', logos: ['kubernetes', 'dynatrace', 'servicenow'], bg: '/images/preview-bg/svc-run.jpg' },
 ];
 
-const RECEIPTS = [
-  ['250+', 'Systems in production'],
-  ['$1B+', 'Value delivered'],
-  ['95%', 'Client retention'],
-  ['20', 'Years, Fortune 500'],
-];
-
 // Anonymized: role and industry descriptor only, never a client name.
 const TESTIMONIALS = [
   { quote: 'They flawlessly delivered top-tier digital data on a milestone that mattered to us. Their dedication and expertise made them a genuine partner, not a vendor.', role: 'Director of Data and MarTech', org: 'A national convenience retailer' },
@@ -122,7 +115,7 @@ export default async function V3Next() {
   return (
     <div className={`${grotesk.variable} ${s.root}`}>
       <a className={s.topbar} href="#">
-        Applied AI practice: 90 days from first RAG to production
+        Production data and AI, built and run by engineers who stay
         <span className={s.topbarArrow}>↗</span>
       </a>
 
@@ -220,9 +213,9 @@ export default async function V3Next() {
             </g>
           </svg>
           <div className={s.featureMeta}>
-            <div><span className={s.metaK}>APPLIED AI PRACTICE</span><span className={s.metaV}>12 live · 94% eval pass · 90-day RAG</span></div>
-            <div><span className={s.metaK}>RUN WITH</span><span className={s.metaV}>SLAs · 99.98% uptime · on-call</span></div>
-            <div><span className={s.metaK}>PROVEN ACROSS</span><span className={s.metaV}>20 years · $1B+ delivered</span></div>
+            <div><span className={s.metaK}>Foundation</span><span className={s.metaV}>A governed lakehouse</span></div>
+            <div><span className={s.metaK}>On top</span><span className={s.metaV}>Evaluated, governed AI</span></div>
+            <div><span className={s.metaK}>In production</span><span className={s.metaV}>Shipped, and then run</span></div>
           </div>
           <h2 className={s.featureWordmark}>Data<span className={s.featureX}>×</span>AI</h2>
         </div>
@@ -276,15 +269,14 @@ export default async function V3Next() {
             $4.2M back, every year.
           </h2>
           <p className={s.vidSub}>
-            We moved a 500-store convenience chain off overnight batch and onto
-            Databricks. Decisions that used to wait a day now land in under four
-            hours, and stockouts dropped by 73%.
+            We took a 500-store convenience chain from overnight batch to
+            real-time. The decisions that used to wait a day now happen in hours.
           </p>
           <a className={s.vidLink} href="#">See how we did it ↗</a>
         </div>
         <div className={s.vidFoot}>
           <span>CASE · RETAIL AND CONVENIENCE</span>
-          <span>$4.2M SAVED A YEAR</span>
+          <span>FROM OVERNIGHT BATCH TO REAL-TIME</span>
           <span>500+ STORES</span>
         </div>
       </section>
@@ -317,7 +309,6 @@ export default async function V3Next() {
                       <span className={s.svcSub} key={sub}>{sub}</span>
                     ))}
                   </span>
-                  <span className={s.svcProof}>{c.proof}</span>
                   <span className={s.svcLogos}>
                     {c.logos.map((id) => (
                       <Logo key={id} src={SVC_LOGOS[id]} alt={id} className={s.svcLogo} />
@@ -378,47 +369,57 @@ export default async function V3Next() {
           <span className={s.kicker}>/ In their words</span>
           <h2 className={s.h2}>From the people we built it for.</h2>
         </div>
-        <div className={s.quoteList}>
-          {TESTIMONIALS.map((t, i) => (
-            <figure className={s.quote} key={t.role}>
-              <span className={s.quoteIdx}>0{i + 1}</span>
-              <blockquote className={s.quoteText}>{t.quote}</blockquote>
-              <figcaption className={s.quoteBy}>
-                <span className={s.quoteRole}>{t.role}</span>
-                <span className={s.quoteOrg}>{t.org}</span>
+        <figure className={s.qLead}>
+          <blockquote className={s.qLeadText}>{TESTIMONIALS[0].quote}</blockquote>
+          <figcaption className={s.qLeadBy}>
+            <span className={s.qLeadRole}>{TESTIMONIALS[0].role}</span>
+            <span className={s.qLeadOrg}>{TESTIMONIALS[0].org}</span>
+          </figcaption>
+        </figure>
+        <div className={s.qRest}>
+          {TESTIMONIALS.slice(1).map((t) => (
+            <figure className={s.qItem} key={t.role}>
+              <blockquote className={s.qItemText}>{t.quote}</blockquote>
+              <figcaption className={s.qItemBy}>
+                <span className={s.qItemRole}>{t.role}</span>
+                <span className={s.qItemOrg}>{t.org}</span>
               </figcaption>
             </figure>
           ))}
         </div>
       </section>
 
-      {/* ---- Receipts band ---- */}
-      <section className={s.receipts}>
-        <div className={s.receiptsGrid} aria-hidden />
-        <div className={s.receiptsInner}>
-          <div className={s.receiptsLede}>
-            <span className={s.kickerLime}>/ The receipts</span>
-            <h2 className={s.receiptsTitle}>Twenty years of shipping, not slideware.</h2>
-            <div className={s.certs}>
-              {CERTS.map(([name, src]) =>
-                src ? (
-                  <span className={s.certLogo} key={name}>
-                    <Logo src={src} alt={name} className={s.certImg} />
-                  </span>
-                ) : (
-                  <span className={s.cert} key={name}>{name}</span>
-                )
-              )}
-            </div>
-          </div>
-          <div className={s.receiptsStats}>
-            {RECEIPTS.map(([n, l]) => (
-              <div className={s.receiptStat} key={l}>
-                <span className={s.receiptN}>{n}</span>
-                <span className={s.receiptL}>{l}</span>
-              </div>
-            ))}
-          </div>
+      {/* ---- Signature: manufacturing video moment ---- */}
+      <section className={s.vid}>
+        <video
+          className={s.vidMedia}
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/video/manufacturing-poster.jpg"
+        >
+          <source src="/video/manufacturing-graded.mp4" type="video/mp4" />
+        </video>
+        <div className={s.vidScrim} aria-hidden />
+        <div className={s.vidInner}>
+          <span className={s.vidKicker}>For manufacturing and heavy industry</span>
+          <h2 className={s.vidTitle}>
+            The data layer under
+            <br />
+            the factory floor.
+          </h2>
+          <p className={s.vidSub}>
+            Forecasting, supply chain visibility, and the platforms that keep the
+            line moving. Built for places where downtime is measured in real
+            money, not story points.
+          </p>
+          <a className={s.vidLink} href="#">See how we did it ↗</a>
+        </div>
+        <div className={s.vidFoot}>
+          <span>MANUFACTURING · SUPPLY CHAIN</span>
+          <span>FORECASTING YOU CAN ACT ON</span>
+          <span>BUILT TO RUN</span>
         </div>
       </section>
 
@@ -501,9 +502,20 @@ export default async function V3Next() {
         <p className={s.footerBoiler}>
           ACI Infotech is an engineering services firm for enterprises. We design,
           build, and run production data platforms, cloud infrastructure, and AI
-          systems for Fortune 500 companies. 250+ systems in production. $1B+
-          delivered. 20 years.
+          systems for Fortune 500 companies across financial services, retail,
+          manufacturing, and healthcare.
         </p>
+        <div className={s.footerCerts}>
+          {CERTS.map(([name, src]) =>
+            src ? (
+              <span className={s.footerCertLogo} key={name}>
+                <Logo src={src} alt={name} className={s.footerCertImg} />
+              </span>
+            ) : (
+              <span className={s.footerCert} key={name}>{name}</span>
+            )
+          )}
+        </div>
       </footer>
     </div>
   );
