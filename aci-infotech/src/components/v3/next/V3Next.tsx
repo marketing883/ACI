@@ -69,10 +69,10 @@ const PLAYBOOKS = [
 ];
 
 const SERVICES = [
-  { no: '/01', name: 'Data and Analytics', verb: 'Move your data onto modern ground', body: 'Lakehouse migration, pipelines, and self-service intelligence. We connect the silos into one clean flow your team will actually use.', proof: 'Brand managers cut campaign analysis from 3 weeks to 4 hours, 94% adoption.', logos: ['databricks', 'snowflake'] },
-  { no: '/02', name: 'Applied AI and GenAI', verb: 'Build the AI on a foundation that holds', body: 'Copilots, agents, and RAG built on data that is finally ready for them. Evaluated, governed, and shipped past the pilot.', proof: '12 live engagements, 94% eval pass rate, 90 days from first build to production.', logos: ['azure', 'aws'] },
-  { no: '/03', name: 'Cloud and Infrastructure', verb: 'Modernize without the rip and replace', body: 'Migration and platform work that moves the estate onto modern ground, on time and on budget.', proof: 'A core system moved to cloud with zero downtime and $20M saved over three years.', logos: ['aws', 'azure'] },
-  { no: '/04', name: 'Managed Services', verb: 'Past the pilot. Into production. Run for good', body: 'We ship it into your live environment, govern every action, and operate it after launch.', proof: '250+ systems in production, 99.98% uptime, on the call at 2am.', logos: ['dynatrace', 'servicenow'] },
+  { no: '/01', cat: 'Data · Foundation', head: 'Move your data onto modern ground.', body: 'Lakehouse migration and pipelines on Databricks, Snowflake, and Azure. We connect the silos into one clean flow, without the rip and replace.', proof: 'Brand managers cut campaign analysis from 3 weeks to 4 hours, 94% adoption.', logos: ['databricks', 'snowflake'] },
+  { no: '/02', cat: 'Applied AI · GenAI', head: 'Build the AI on a foundation that holds.', body: 'Copilots, agents, and RAG built on data that is finally ready for them. Evaluated, governed, and shipped past the pilot.', proof: '12 live engagements, 94% eval pass rate, 90 days from first build to production.', logos: ['azure', 'aws'] },
+  { no: '/03', cat: 'Integration · Trust', head: 'Make the data AI can actually trust.', body: 'Multi-source integration with governance, quality, and compliance built in, so what you build on top holds up to an audit.', proof: 'A global operation unified across 34 countries, 78% faster processing.', logos: ['sap', 'servicenow'] },
+  { no: '/04', cat: 'Run · Managed', head: 'Past the pilot. Into production. Run for good.', body: 'We ship it into your live environment, govern every action, and operate it after launch.', proof: '250+ systems in production, 99.98% uptime, on the call at 2am.', logos: ['dynatrace', 'servicenow'] },
 ];
 
 const INDUSTRIES = [
@@ -303,8 +303,8 @@ export default async function V3Next() {
               <a className={s.svcRow} href="#">
                 <span className={s.svcNo}>{c.no}</span>
                 <span className={s.svcNameWrap}>
-                  <span className={s.svcVerb}>{c.verb}</span>
-                  <span className={s.svcName}>{c.name}</span>
+                  <span className={s.svcVerb}>{c.cat}</span>
+                  <span className={s.svcName}>{c.head}</span>
                 </span>
                 <span className={s.svcMid}>
                   <span className={s.svcBody}>{c.body}</span>

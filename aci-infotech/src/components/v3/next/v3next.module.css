@@ -1036,10 +1036,10 @@
   color: var(--grey);
 }
 .svcName {
-  font-weight: 300;
-  font-size: clamp(1.8rem, 3.8vw, 3.2rem);
-  line-height: 0.98;
-  letter-spacing: -0.035em;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 2.9vw, 2.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
   color: var(--ink);
 }
 .svcMid {
