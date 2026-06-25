@@ -78,8 +78,10 @@ const SERVICES = [
 const INDUSTRIES = [
   { name: 'Financial Services', promise: 'Real-time finance and reporting, modernized without the downtime.', metric: '67%', metricLabel: 'Faster allocation processing', proof: 'SAP finance rebuild, migrated with zero downtime.' },
   { name: 'Retail and Convenience', promise: 'Decisions in hours, not days, across every store you run.', metric: '73%', metricLabel: 'Fewer stockouts', proof: '$4.2M saved across 500+ locations on Databricks.' },
+  { name: 'Consumer Goods (CPG)', promise: 'Put self-service intelligence in the hands of your brand managers.', metric: '$1.8M', metricLabel: 'Productivity gained', proof: 'Campaign analysis from 3 weeks to 4 hours, 94% adoption.' },
   { name: 'Hospitality, Food and Facilities', promise: 'One view of your data across every country you operate in.', metric: '34', metricLabel: 'Countries unified', proof: '78% faster processing, $4.7M off procurement.' },
   { name: 'Manufacturing and Supply Chain', promise: 'End-to-end visibility and forecasting you can actually act on.', metric: '25%', metricLabel: 'Cost reduction', proof: 'Full supply chain visibility across the network.' },
+  { name: 'Healthcare', promise: 'Compliance-grade data and AI, HIPAA-ready from day one.', metric: 'HIPAA', metricLabel: 'Ready, not retrofitted', proof: 'Built to SOC 2, ISO 27001, and HIPAA-ready standards.' },
 ];
 
 const RECEIPTS = [
@@ -87,6 +89,13 @@ const RECEIPTS = [
   ['$1B+', 'Value delivered'],
   ['95%', 'Client retention'],
   ['20', 'Years, Fortune 500'],
+];
+
+// Anonymized: role and industry descriptor only, never a client name.
+const TESTIMONIALS = [
+  { quote: 'They flawlessly delivered top-tier digital data on a milestone that mattered to us. Their dedication and expertise made them a genuine partner, not a vendor.', role: 'Director of Data and MarTech', org: 'A national convenience retailer' },
+  { quote: 'Their work on our Informatica and MDM integrations was impressive. They hit every deliverable without compromising on quality, and they were a pleasure to work with.', role: 'Senior Director', org: 'A global facilities and food group' },
+  { quote: 'I was genuinely impressed by the quality of the work. The team helped us find the best ways to add value to the institution, not just ship a project and leave.', role: 'Interim CIO', org: 'A private university' },
 ];
 
 // Anonymized fallbacks shown when the CMS has nothing to return.
@@ -369,6 +378,25 @@ export default async function V3Next() {
           ))}
         </div>
         <Link className={s.sectionMore} href="/case-studies">See all case studies ↗</Link>
+      </section>
+
+      {/* ---- Testimonials ---- */}
+      <section className={s.quotes}>
+        <div className={s.sectionHead}>
+          <span className={s.kicker}>/ In their words</span>
+          <h2 className={s.h2}>Straight from the people who hired us.</h2>
+        </div>
+        <div className={s.quoteGrid}>
+          {TESTIMONIALS.map((t) => (
+            <figure className={s.quote} key={t.role}>
+              <blockquote className={s.quoteText}>{t.quote}</blockquote>
+              <figcaption className={s.quoteBy}>
+                <span className={s.quoteRole}>{t.role}</span>
+                <span className={s.quoteOrg}>{t.org}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </section>
 
       {/* ---- Receipts band ---- */}

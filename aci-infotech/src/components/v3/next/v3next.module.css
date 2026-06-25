@@ -1284,6 +1284,62 @@
   color: var(--ink);
 }
 
+/* ---- Testimonials ---- */
+.quotes {
+  background: var(--cream);
+  padding: clamp(5rem, 9vw, 8rem) var(--pad);
+}
+.quoteGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--ink);
+}
+.quote {
+  margin: 0;
+  padding: 2.2rem 1.8rem 0 0;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+}
+.quote:last-child {
+  border-right: none;
+}
+.quote::before {
+  content: "\201C";
+  font-size: 3rem;
+  line-height: 0.7;
+  color: var(--grey-2);
+  margin-bottom: 0.8rem;
+}
+.quoteText {
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  line-height: 1.42;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0 0 1.8rem;
+  font-weight: 400;
+}
+.quoteBy {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+.quoteRole {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+.quoteOrg {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
 /* ---- Cert logos on the dark receipts band ---- */
 .certLogo {
   display: inline-flex;
@@ -1339,6 +1395,17 @@
   .workGrid,
   .insGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .quoteGrid {
+    grid-template-columns: 1fr;
+  }
+  .quote {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding: 1.8rem 0 1.8rem 0;
+  }
+  .quote:last-child {
+    border-bottom: none;
   }
   .svcRow {
     grid-template-columns: 2.5rem 1fr;
