@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import s from './v3next.module.css';
+import LazyVideo from './LazyVideo';
 import {
   fetchFeaturedCaseStudies,
   fetchFeaturedBlogs,
@@ -138,7 +139,7 @@ export default async function V3Next() {
 
       {/* ---- Hero (locked copy) ---- */}
       <section className={s.hero}>
-        <div className={s.heroMedia} aria-hidden />
+        <LazyVideo className={s.heroMedia} src="/video/hero-graded.mp4" poster="/video/hero-poster.jpg" />
         <div className={s.heroScrim} aria-hidden />
         <div className={s.heroInner}>
           <p className={s.heroKicker}>Data + AI · In production</p>
@@ -249,16 +250,7 @@ export default async function V3Next() {
 
       {/* ---- Signature: full-bleed video impact moment ---- */}
       <section className={s.vid}>
-        <video
-          className={s.vidMedia}
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/video/retail-bg-poster.jpg"
-        >
-          <source src="/video/retail-bg-graded.mp4" type="video/mp4" />
-        </video>
+        <LazyVideo className={s.vidMedia} src="/video/retail-bg-graded.mp4" poster="/video/retail-bg-poster.jpg" />
         <div className={s.vidScrim} aria-hidden />
         <div className={s.vidInner}>
           <span className={s.vidKicker}>For retail and convenience</span>
@@ -389,16 +381,7 @@ export default async function V3Next() {
 
       {/* ---- Signature: manufacturing video moment ---- */}
       <section className={s.vid}>
-        <video
-          className={s.vidMedia}
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/video/manufacturing-poster.jpg"
-        >
-          <source src="/video/manufacturing-graded.mp4" type="video/mp4" />
-        </video>
+        <LazyVideo className={s.vidMedia} src="/video/factory-graded.mp4" poster="/video/factory-poster.jpg" />
         <div className={s.vidScrim} aria-hidden />
         <div className={s.vidInner}>
           <span className={s.vidKicker}>For manufacturing and heavy industry</span>
@@ -471,7 +454,6 @@ export default async function V3Next() {
           </p>
           <div className={s.ctaActions}>
             <Link className={s.ctaBtn} href="/contact">Tell us what you need built →</Link>
-            <Link className={s.ctaBtnGhost} href="/case-studies">See the work</Link>
           </div>
         </div>
       </section>
