@@ -76,15 +76,6 @@ const SERVICES = [
   { no: '/04', tag: 'Production', title: 'Managed Run & SRE', tagline: 'Past the pilot, into production, run for good.', subs: ['24/7 operations', 'SRE & on-call', 'Observability', 'Change management'], proof: '250+ systems in production, 99.98% uptime, on call at 2am.', logos: ['kubernetes', 'dynatrace', 'servicenow'], bg: '/images/preview-bg/svc-run.jpg' },
 ];
 
-const INDUSTRIES = [
-  { name: 'Financial Services', promise: 'Real-time finance and reporting, modernized without the downtime.', metric: '67%', metricLabel: 'Faster allocation processing', proof: 'SAP finance rebuild, migrated with zero downtime.' },
-  { name: 'Retail and Convenience', promise: 'Decisions in hours, not days, across every store you run.', metric: '73%', metricLabel: 'Fewer stockouts', proof: '$4.2M saved across 500+ locations on Databricks.' },
-  { name: 'Consumer Goods (CPG)', promise: 'Put self-service intelligence in the hands of your brand managers.', metric: '$1.8M', metricLabel: 'Productivity gained', proof: 'Campaign analysis from 3 weeks to 4 hours, 94% adoption.' },
-  { name: 'Hospitality, Food and Facilities', promise: 'One view of your data across every country you operate in.', metric: '34', metricLabel: 'Countries unified', proof: '78% faster processing, $4.7M off procurement.' },
-  { name: 'Manufacturing and Supply Chain', promise: 'End-to-end visibility and forecasting you can actually act on.', metric: '25%', metricLabel: 'Cost reduction', proof: 'Full supply chain visibility across the network.' },
-  { name: 'Healthcare', promise: 'Compliance-grade data and AI, HIPAA-ready from day one.', metric: 'HIPAA', metricLabel: 'Ready, not retrofitted', proof: 'Built to SOC 2, ISO 27001, and HIPAA-ready standards.' },
-];
-
 const RECEIPTS = [
   ['250+', 'Systems in production'],
   ['$1B+', 'Value delivered'],
@@ -104,6 +95,7 @@ const FALLBACK_CASES: HomeCaseStudy[] = [
   { id: 'f1', slug: '#', title: 'SAP finance core, modernized live', client_descriptor: 'A Fortune 500 financial index provider', industry: 'Financial Services', challenge: null, solution: null, metrics: [{ label: 'Faster', value: '67%' }], technologies: ['SAP', 'Azure'], services: [], testimonial_quote: null, featured_image_url: '/images/preview-bg/case-financial.jpg' },
   { id: 'f2', slug: '#', title: 'Real-time across 500+ stores', client_descriptor: 'A national convenience retailer', industry: 'Retail', challenge: null, solution: null, metrics: [{ label: 'Saved', value: '$4.2M' }], technologies: ['Databricks'], services: [], testimonial_quote: null, featured_image_url: '/images/preview-bg/case-retail.jpg' },
   { id: 'f3', slug: '#', title: 'One data view across 34 countries', client_descriptor: 'A global facilities and food group', industry: 'Hospitality', challenge: null, solution: null, metrics: [{ label: 'Faster', value: '78%' }], technologies: ['Informatica'], services: [], testimonial_quote: null, featured_image_url: '/images/preview-bg/case-global.jpg' },
+  { id: 'f4', slug: '#', title: 'Supply chain, end to end', client_descriptor: 'A global manufacturer', industry: 'Manufacturing', challenge: null, solution: null, metrics: [{ label: 'Cost down', value: '25%' }], technologies: ['Databricks'], services: [], testimonial_quote: null, featured_image_url: '/images/preview-bg/case-manufacturing.jpg' },
 ];
 
 const FALLBACK_BLOGS: HomeBlogPost[] = [
@@ -121,7 +113,7 @@ function Logo({ src, alt, className }: { src: string; alt: string; className?: s
 
 export default async function V3Next() {
   const [cmsCases, cmsBlogs] = await Promise.all([
-    fetchFeaturedCaseStudies(3).catch(() => [] as HomeCaseStudy[]),
+    fetchFeaturedCaseStudies(4).catch(() => [] as HomeCaseStudy[]),
     fetchFeaturedBlogs(3).catch(() => [] as HomeBlogPost[]),
   ]);
   const cases = cmsCases.length ? cmsCases : FALLBACK_CASES;
@@ -340,55 +332,40 @@ export default async function V3Next() {
         <a className={s.sectionMore} href="#">See all 10 capabilities ↗</a>
       </section>
 
-      {/* ---- Industries ---- */}
-      <section className={s.ind}>
-        <div className={s.sectionHead}>
-          <span className={s.kicker}>/ Outcome led, by industry</span>
-          <h2 className={s.h2}>We start with your outcome.</h2>
-          <p className={s.sectionLead}>
-            Pick your industry. Here is the result we build toward, and what we
-            have already shipped to back it up.
-          </p>
-        </div>
-        <div className={s.indList}>
-          {INDUSTRIES.map((i) => (
-            <a className={s.indRow} key={i.name} href="#">
-              <span className={s.indName}>{i.name}</span>
-              <span className={s.indPromise}>{i.promise}</span>
-              <span className={s.indMetricWrap}>
-                <span className={s.indMetric}>{i.metric}</span>
-                <span className={s.indMetricLabel}>{i.metricLabel}</span>
-              </span>
-              <span className={s.indProof}>{i.proof}</span>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      {/* ---- Case studies (CMS) ---- */}
+      {/* ---- Case studies (CMS, featured only) ---- */}
       <section className={s.work}>
         <div className={s.sectionHead}>
-          <span className={s.kicker}>/ The work</span>
-          <h2 className={s.h2}>Built it. Shipped it. Here is what it did.</h2>
+          <span className={s.kicker}>/ Selected work</span>
+          <h2 className={s.h2}>We start with your outcome.</h2>
+          <p className={s.sectionLead}>
+            Four featured builds. Real Fortune 500 operations and real numbers,
+            with the client names kept off the record.
+          </p>
         </div>
-        <div className={s.workGrid}>
+        <div className={s.csList}>
           {cases.map((c) => (
-            <a className={s.workCard} key={c.id} href={c.slug && c.slug !== '#' ? `/case-studies/${c.slug}` : '#'}>
+            <a
+              className={s.csRow}
+              key={c.id}
+              href={c.slug && c.slug !== '#' ? `/case-studies/${c.slug}` : '#'}
+            >
               {c.featured_image_url && (
                 <span
-                  className={s.workBg}
+                  className={s.csBg}
                   style={{ backgroundImage: `url(${c.featured_image_url})` }}
                   aria-hidden
                 />
               )}
-              <div className={s.workTop}>
-                <span className={s.workIndustry}>{c.industry ?? 'Enterprise'}</span>
-                {c.metrics?.[0] && (
-                  <span className={s.workMetric}>{c.metrics[0].value}</span>
+              <span className={s.csIndustry}>{c.industry ?? 'Enterprise'}</span>
+              <span className={s.csTitle}>{c.title}</span>
+              <span className={s.csMetricWrap}>
+                <span className={s.csMetric}>{c.metrics?.[0]?.value ?? ''}</span>
+                {c.metrics?.[0]?.label && (
+                  <span className={s.csMetricLabel}>{c.metrics[0].label}</span>
                 )}
-              </div>
-              <h3 className={s.workTitle}>{c.title}</h3>
-              <span className={s.workClient}>{c.client_descriptor ?? 'Fortune 500 operator'}</span>
+              </span>
+              <span className={s.csDesc}>{c.client_descriptor ?? 'Fortune 500 operator'}</span>
+              <span className={s.csArrow} aria-hidden>→</span>
             </a>
           ))}
         </div>

@@ -1434,6 +1434,117 @@
   display: block;
 }
 
+/* ---- Case studies, stacked bars (featured only) ---- */
+.csList {
+  border-top: 1px solid var(--ink);
+}
+.csRow {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.7fr) minmax(0, 0.8fr) minmax(0, 1fr) 2rem;
+  gap: 1.5rem;
+  align-items: center;
+  min-height: 128px;
+  padding: clamp(1.7rem, 2.6vw, 2.4rem) 0.6rem;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+  transition: padding 0.3s ease;
+}
+.csRow > *:not(.csBg) {
+  position: relative;
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+.csBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.35);
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 0.4s ease, transform 0.6s ease;
+  z-index: 0;
+}
+.csRow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 11, 13, 0.86) 0%, rgba(11, 11, 13, 0.6) 62%, rgba(11, 11, 13, 0.48) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+.csRow:hover {
+  padding-block: clamp(2.6rem, 4vw, 3.6rem);
+}
+.csRow:hover .csBg {
+  opacity: 1;
+  transform: scale(1);
+}
+.csRow:hover::after {
+  opacity: 1;
+}
+.csRow:hover .csIndustry,
+.csRow:hover .csMetricLabel,
+.csRow:hover .csDesc {
+  color: rgba(255, 255, 255, 0.72);
+}
+.csRow:hover .csTitle,
+.csRow:hover .csMetric,
+.csRow:hover .csArrow {
+  color: #fff;
+}
+.csIndustry {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+.csTitle {
+  font-weight: 600;
+  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+.csMetricWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.csMetric {
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.4vw, 2.3rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.csMetricLabel {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+.csDesc {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--grey-2);
+  line-height: 1.4;
+}
+.csArrow {
+  font-size: 1.3rem;
+  color: var(--ink);
+  justify-self: end;
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 900px) {
   .navLinks {
@@ -1471,6 +1582,22 @@
   .workGrid,
   .insGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .csRow {
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem 1.2rem;
+    min-height: 0;
+  }
+  .csTitle {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+  .csDesc {
+    grid-column: 1 / -1;
+    order: 4;
+  }
+  .csArrow {
+    display: none;
   }
   .quote {
     grid-template-columns: 1fr;
