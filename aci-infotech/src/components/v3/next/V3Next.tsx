@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import s from './v3next.module.css';
 import LazyVideo from './LazyVideo';
-import IsoArchitecture from './IsoArchitecture';
+import ArchDiagram from './ArchDiagram';
 import {
   fetchFeaturedCaseStudies,
   fetchFeaturedBlogs,
@@ -182,7 +182,7 @@ export default async function V3Next() {
               never built for it. We build both, so it ships and keeps running.
             </span>
           </div>
-          <IsoArchitecture className={s.iso} />
+          <ArchDiagram />
           <div className={s.featureMeta}>
             <div><span className={s.metaK}>Foundation</span><span className={s.metaV}>A governed lakehouse</span></div>
             <div><span className={s.metaK}>On top</span><span className={s.metaV}>Evaluated, governed AI</span></div>
