@@ -10,9 +10,9 @@ import s from './v3next.module.css';
 
 const COS = Math.cos(Math.PI / 6);
 const SIN = Math.sin(Math.PI / 6);
-const U = 30; // grid unit in svg px
+const U = 32;
 
-// Isometric projection. x = right-depth axis, z = left-depth axis, y = up.
+// isometric projection: x = right-depth, z = left-depth, y = up
 function pt(x: number, z: number, y = 0): [number, number] {
   return [(x - z) * COS * U, (x + z) * SIN * U - y * U];
 }
@@ -20,14 +20,15 @@ function P(pts: [number, number][]): string {
   return pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
 }
 
-const INK = '#16171a';
-const TOP = '#edebe2';
-const LEFTF = '#dcdad0';
-const RIGHTF = '#cdcabf';
+const EDGE = '#1b1c1f';
+const TOP = '#fcfbf8';
+const LEFTF = '#ebe9e0';
+const RIGHTF = '#dedcd2';
+const SUB = '#7c8088';
 
-type B = { x: number; z: number; w: number; d: number; h: number; base?: number; pulse?: boolean };
+type B = { x: number; z: number; w: number; d: number; h: number; base?: number; pulse?: boolean; div?: number };
 
-function Box({ x, z, w, d, h, base = 0, pulse }: B) {
+function Box({ x, z, w, d, h, base = 0, pulse, div = 0 }: B) {
   const y1 = base + h;
   const A = pt(x, z, y1);
   const Bp = pt(x + w, z, y1);
@@ -36,79 +37,88 @@ function Box({ x, z, w, d, h, base = 0, pulse }: B) {
   const Bg = pt(x + w, z, base);
   const Cg = pt(x + w, z + d, base);
   const Dg = pt(x, z + d, base);
+  const lines = [];
+  for (let i = 1; i <= div; i++) {
+    const yk = base + (h * i) / (div + 1);
+    lines.push(
+      <g key={i} stroke={EDGE} strokeWidth={0.6} opacity={0.22}>
+        <line x1={pt(x + w, z, yk)[0]} y1={pt(x + w, z, yk)[1]} x2={pt(x + w, z + d, yk)[0]} y2={pt(x + w, z + d, yk)[1]} />
+        <line x1={pt(x, z + d, yk)[0]} y1={pt(x, z + d, yk)[1]} x2={pt(x + w, z + d, yk)[0]} y2={pt(x + w, z + d, yk)[1]} />
+      </g>,
+    );
+  }
   return (
-    <g className={pulse ? s.isoPulse : undefined} stroke={INK} strokeWidth={1} strokeLinejoin="round">
+    <g className={pulse ? s.isoPulse : undefined} stroke={EDGE} strokeWidth={1} strokeLinejoin="round">
       <polygon points={P([D, C, Cg, Dg])} fill={LEFTF} />
       <polygon points={P([Bp, C, Cg, Bg])} fill={RIGHTF} />
       <polygon points={P([A, Bp, C, D])} fill={TOP} />
+      {lines}
     </g>
   );
 }
 
-// flat ground shadow under a footprint
-function Shadow({ x, z, w, d }: { x: number; z: number; w: number; d: number }) {
-  return (
-    <polygon
-      points={P([pt(x, z), pt(x + w, z), pt(x + w, z + d), pt(x, z + d)])}
-      fill={INK}
-      opacity={0.05}
-    />
-  );
-}
-
 const SOURCES: B[] = [
-  { x: 0.4, z: 11.6, w: 1.5, d: 1.5, h: 0.7 },
-  { x: 2.1, z: 12.5, w: 1.4, d: 1.4, h: 1.1 },
-  { x: 0.9, z: 13.7, w: 1.6, d: 1.3, h: 0.5 },
+  { x: 0.6, z: 11.8, w: 1.5, d: 1.5, h: 0.85 },
+  { x: 2.2, z: 12.0, w: 1.5, d: 1.5, h: 0.85 },
+  { x: 1.4, z: 13.4, w: 1.5, d: 1.5, h: 0.85 },
 ];
 const LAKE: B[] = [
-  { x: 5.4, z: 5.4, w: 3.4, d: 3.4, h: 0.5 },
-  { x: 5.7, z: 5.7, w: 2.8, d: 2.8, h: 0.7, base: 0.5 },
-  { x: 6.0, z: 6.0, w: 2.2, d: 2.2, h: 0.7, base: 1.2 },
-  { x: 6.3, z: 6.3, w: 1.6, d: 1.6, h: 0.7, base: 1.9, pulse: true },
+  { x: 5.3, z: 5.3, w: 3.6, d: 3.6, h: 0.45 },
+  { x: 5.65, z: 5.65, w: 2.9, d: 2.9, h: 0.62, base: 0.45 },
+  { x: 6.0, z: 6.0, w: 2.2, d: 2.2, h: 0.62, base: 1.07 },
+  { x: 6.4, z: 6.4, w: 1.4, d: 1.4, h: 0.62, base: 1.69, pulse: true },
 ];
 const AI: B[] = [
-  { x: 9.9, z: 1.9, w: 2.4, d: 2.4, h: 0.6 },
-  { x: 10.2, z: 2.2, w: 1.8, d: 1.8, h: 2.8, base: 0.6, pulse: true },
+  { x: 9.8, z: 1.8, w: 2.6, d: 2.6, h: 0.4 },
+  { x: 10.15, z: 2.15, w: 1.9, d: 1.9, h: 2.5, base: 0.4, div: 3 },
+  { x: 10.6, z: 2.6, w: 1.0, d: 1.0, h: 0.7, base: 2.9, pulse: true },
 ];
 const PROD: B[] = [
-  { x: 13.2, z: -1.1, w: 1.4, d: 1.4, h: 1.2 },
-  { x: 14.5, z: 0.2, w: 1.2, d: 1.2, h: 0.8 },
-  { x: 13.1, z: 0.5, w: 1.3, d: 1.3, h: 0.5 },
+  { x: 13.0, z: -0.9, w: 1.4, d: 1.4, h: 0.85 },
+  { x: 14.4, z: -0.4, w: 1.4, d: 1.4, h: 0.85 },
+  { x: 13.5, z: 0.6, w: 1.4, d: 1.4, h: 0.85 },
 ];
 
-// labels: lx = explicit screen-x (kept clear of neighbours); cx/cz/ty = leader target (structure top)
+// labels: lx = label centre (screen x); topY = approx top of the cluster (screen y)
 const LABELS = [
-  { lx: -281, cx: 1.6, cz: 12.4, ty: 1.1, head: '01 / SOURCES', items: ['ERP · CRM', 'IoT · streams', 'SaaS · files'] },
-  { lx: 0, cx: 7.0, cz: 7.0, ty: 2.6, head: '02 / GOVERNED LAKEHOUSE', items: ['bronze · silver · gold', 'catalog · lineage · DQ'] },
-  { lx: 206, cx: 11.1, cz: 3.1, ty: 3.4, head: '03 / AI & ML PLATFORM', items: ['feature store', 'training · eval', 'registry · RAG', 'agents'] },
-  { lx: 406, cx: 14.3, cz: -0.3, ty: 1.2, head: '04 / PRODUCTION', items: ['APIs · copilots', 'apps · decisions'] },
+  { lx: -262, topY: pt(1.8, 12.8, 0.85)[1], head: '01 / SOURCES', items: ['ERP · CRM', 'IoT · streams', 'SaaS · files'] },
+  { lx: 0, topY: pt(7.1, 7.1, 2.31)[1], head: '02 / GOVERNED LAKEHOUSE', items: ['bronze · silver · gold', 'catalog · lineage · DQ'] },
+  { lx: 214, topY: pt(11.1, 3.1, 3.6)[1], head: '03 / AI & ML PLATFORM', items: ['feature store · training', 'eval · registry · RAG · agents'] },
+  { lx: 430, topY: pt(13.9, -0.1, 0.85)[1], head: '04 / PRODUCTION', items: ['APIs · copilots', 'apps · decisions'] },
 ];
-const LABEL_Y = -118;
+
+function softShadow(cx: number, cz: number, rw: number) {
+  const [sx, sy] = pt(cx, cz, 0);
+  return <ellipse cx={sx} cy={sy} rx={rw} ry={rw * 0.42} fill="#16171a" opacity={0.07} filter="url(#isoBlur)" />;
+}
 
 export default function IsoArchitecture({ className }: { className?: string }) {
-  const conduit = `M ${pt(3, 12).join(' ')} L ${pt(5.6, 8).join(' ')} L ${pt(8.8, 5.6).join(' ')} L ${pt(11, 3.3).join(' ')} L ${pt(13.4, 0.6).join(' ')}`;
-  const riser = `M ${pt(11, 3.3, 0).join(' ')} L ${pt(11, 3.3, 3).join(' ')}`;
+  const conduit = `M ${pt(2.6, 12).join(' ')} L ${pt(5.4, 8).join(' ')} L ${pt(8.9, 5.5).join(' ')} L ${pt(11, 3.3).join(' ')} L ${pt(13.2, 0.7).join(' ')}`;
 
   return (
     <div className={className}>
       <svg
-        viewBox="-420 -150 880 470"
+        viewBox="-430 40 910 322"
         width="100%"
         height="100%"
         role="img"
         aria-label="Isometric architecture: data sources flow through ingestion into a governed lakehouse, up into the AI and ML platform, then out to production, all on a base of security, observability and MLOps."
       >
-        {/* shadows */}
-        {[...SOURCES, ...LAKE.slice(0, 1), ...AI.slice(0, 1), ...PROD].map((b, i) => (
-          <Shadow key={`sh${i}`} x={b.x} z={b.z} w={b.w} d={b.d} />
-        ))}
+        <defs>
+          <filter id="isoBlur" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="7" />
+          </filter>
+        </defs>
+
+        {/* soft grounding shadows */}
+        {softShadow(2.4, 12.8, 120)}
+        {softShadow(7.1, 7.1, 150)}
+        {softShadow(11.1, 3.1, 110)}
+        {softShadow(14.0, -0.1, 110)}
 
         {/* conduits + animated flow */}
-        <path d={conduit} fill="none" stroke={INK} strokeWidth={1.4} opacity={0.22} />
-        <path className={s.isoFlow} d={conduit} fill="none" stroke={INK} strokeWidth={1.7} />
-        <path d={riser} fill="none" stroke={INK} strokeWidth={1.4} opacity={0.22} />
-        <path className={s.isoFlow} d={riser} fill="none" stroke={INK} strokeWidth={1.7} />
+        <path d={conduit} fill="none" stroke={EDGE} strokeWidth={1.2} opacity={0.18} />
+        <path className={s.isoFlow} d={conduit} fill="none" stroke={EDGE} strokeWidth={1.5} />
 
         {/* structures */}
         {SOURCES.map((b, i) => <Box key={`s${i}`} {...b} />)}
@@ -116,50 +126,45 @@ export default function IsoArchitecture({ className }: { className?: string }) {
         {AI.map((b, i) => <Box key={`a${i}`} {...b} />)}
         {PROD.map((b, i) => <Box key={`p${i}`} {...b} />)}
 
-        {/* leader lines + labels */}
+        {/* labels, hugging each cluster (staggered to the skyline) */}
         {LABELS.map((l) => {
-          const lx = l.lx;
-          const [tx, ty] = pt(l.cx, l.cz, l.ty);
-          const labelBottom = LABEL_Y + 20 + l.items.length * 16;
+          const headY = l.topY - 22 - l.items.length * 16;
           return (
-            <g key={l.head}>
-              <line x1={lx} y1={labelBottom} x2={tx} y2={ty - 6} stroke={INK} strokeWidth={1} opacity={0.28} strokeDasharray="1 4" />
-              <circle cx={lx} cy={labelBottom} r={1.8} fill={INK} />
-              <text
-                x={lx}
-                y={LABEL_Y}
-                textAnchor="middle"
-                fontFamily="var(--font-jetbrains-mono), monospace"
-                fontSize={12}
-                letterSpacing="0.06em"
-                fill={INK}
-              >
-                <tspan x={lx} fontWeight={600}>{l.head}</tspan>
-                {l.items.map((it) => (
-                  <tspan key={it} x={lx} dy={16} fill="#6b6f76" fontSize={11.5}>{it}</tspan>
-                ))}
-              </text>
-            </g>
+            <text
+              key={l.head}
+              x={l.lx}
+              y={headY}
+              textAnchor="middle"
+              fontFamily="var(--font-jetbrains-mono), monospace"
+              fontSize={12}
+              letterSpacing="0.06em"
+              fill={EDGE}
+            >
+              <tspan x={l.lx} fontWeight={600}>{l.head}</tspan>
+              {l.items.map((it) => (
+                <tspan key={it} x={l.lx} dy={16} fill={SUB} fontSize={11.5}>{it}</tspan>
+              ))}
+            </text>
           );
         })}
 
-        {/* live tick near production */}
+        {/* live tick at production */}
         {(() => {
-          const [lx, ly] = pt(14.5, 0.2, 1.0);
+          const [lx, ly] = pt(14.4, -0.4, 0.85);
           return (
             <g>
-              <circle className={s.isoLive} cx={lx + 30} cy={ly} r={3.2} fill={INK} />
-              <text x={lx + 40} y={ly + 4} fontFamily="var(--font-jetbrains-mono), monospace" fontSize={11} letterSpacing="0.14em" fill="#6b6f76">LIVE</text>
+              <circle className={s.isoLive} cx={lx + 30} cy={ly + 2} r={3.2} fill={EDGE} />
+              <text x={lx + 40} y={ly + 6} fontFamily="var(--font-jetbrains-mono), monospace" fontSize={11} letterSpacing="0.14em" fill={SUB}>LIVE</text>
             </g>
           );
         })()}
 
-        {/* cross-cutting bands, below the structures */}
-        <g fontFamily="var(--font-jetbrains-mono), monospace" fontSize={11} letterSpacing="0.14em" fill="#9a9ea6">
-          <line x1={-400} y1={268} x2={440} y2={268} stroke={INK} strokeWidth={1} strokeDasharray="1 6" opacity={0.4} />
-          <text x={-400} y={292}>SECURITY &amp; TRUST</text>
-          <text x={20} y={292} textAnchor="middle">OBSERVABILITY &amp; SRE</text>
-          <text x={440} y={292} textAnchor="end">MLOPS &amp; GOVERNANCE</text>
+        {/* cross-cutting bands, below */}
+        <g fontFamily="var(--font-jetbrains-mono), monospace" fontSize={11} letterSpacing="0.16em" fill="#a4a8af">
+          <line x1={-410} y1={306} x2={450} y2={306} stroke={EDGE} strokeWidth={1} strokeDasharray="1 7" opacity={0.35} />
+          <text x={-410} y={330}>SECURITY &amp; TRUST</text>
+          <text x={19} y={330} textAnchor="middle">OBSERVABILITY &amp; SRE</text>
+          <text x={450} y={330} textAnchor="end">MLOPS &amp; GOVERNANCE</text>
         </g>
       </svg>
     </div>

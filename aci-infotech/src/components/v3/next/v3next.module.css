@@ -273,8 +273,8 @@
 .iso {
   position: relative;
   width: 100%;
-  height: clamp(360px, 42vw, 600px);
-  margin: clamp(1.2rem, 2.5vw, 2.2rem) 0 clamp(0.5rem, 1.5vw, 1.4rem);
+  height: clamp(300px, 31vw, 470px);
+  margin: clamp(1rem, 2vw, 1.8rem) 0 clamp(0.5rem, 1.5vw, 1.2rem);
 }
 .iso svg {
   display: block;
