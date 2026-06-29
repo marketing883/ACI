@@ -183,11 +183,6 @@ export default async function V3Next() {
             </span>
           </div>
           <ArchDiagram />
-          <div className={s.featureMeta}>
-            <div><span className={s.metaK}>Foundation</span><span className={s.metaV}>A governed lakehouse</span></div>
-            <div><span className={s.metaK}>On top</span><span className={s.metaV}>Evaluated, governed AI</span></div>
-            <div><span className={s.metaK}>In production</span><span className={s.metaV}>Shipped, then run</span></div>
-          </div>
           <h2 className={s.featureWordmark}>Data<span className={s.featureX}>×</span>AI</h2>
         </div>
       </section>

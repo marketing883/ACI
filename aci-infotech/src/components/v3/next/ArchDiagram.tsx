@@ -124,17 +124,17 @@ export default function ArchDiagram({ className }: { className?: string }) {
                   {['Bronze', 'Silver', 'Gold'].map((t, k) => {
                     const cw = (NW - 28 - 12) / 3;
                     const cxk = x + 14 + k * (cw + 6);
-                    const cyt = NY + 74;
+                    const cyt = NY + 70;
                     return (
                       <g key={t}>
-                        <rect x={cxk} y={cyt} width={cw} height={20} rx={5} fill="#faf9f5" stroke={LINE} strokeWidth={1} />
-                        <rect x={cxk} y={cyt} width={(cw * (k + 1)) / 3} height={20} rx={5} fill="#e7e4d9" />
-                        <text x={cxk + cw / 2} y={cyt + 13.5} textAnchor="middle" fontFamily={MONO} fontSize={8.5} letterSpacing="0.02em" fill={EDGE}>{t}</text>
-                        {k < 2 && <polygon points={`${cxk + cw + 4},${cyt + 10} ${cxk + cw + 0.5},${cyt + 7.5} ${cxk + cw + 0.5},${cyt + 12.5}`} fill={SUB} />}
+                        <rect x={cxk} y={cyt} width={cw} height={18} rx={5} fill="#faf9f5" stroke={LINE} strokeWidth={1} />
+                        <rect x={cxk} y={cyt} width={(cw * (k + 1)) / 3} height={18} rx={5} fill="#e7e4d9" />
+                        <text x={cxk + cw / 2} y={cyt + 12.5} textAnchor="middle" fontFamily={MONO} fontSize={8.5} letterSpacing="0.02em" fill={EDGE}>{t}</text>
+                        {k < 2 && <polygon points={`${cxk + cw + 4},${cyt + 9} ${cxk + cw + 0.5},${cyt + 6.5} ${cxk + cw + 0.5},${cyt + 11.5}`} fill={SUB} />}
                       </g>
                     );
                   })}
-                  <text x={x + 14} y={NY + 104} fontFamily={MONO} fontSize={9.5} letterSpacing="0.02em" fill={SUB}>{n.subs[0]}</text>
+                  <text x={x + 14} y={NY + 99} fontFamily={MONO} fontSize={9.5} letterSpacing="0.02em" fill={SUB}>{n.subs[0]}</text>
                 </g>
               ) : (
                 n.subs.map((sline, k) => (

@@ -350,24 +350,6 @@
   border-bottom: 1px solid var(--line);
   padding: 1.5rem 0;
 }
-.featureMeta {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  padding: 1.6rem 0 0;
-}
-.metaK {
-  display: block;
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  color: var(--grey);
-  margin-bottom: 0.4rem;
-}
-.metaV {
-  font-size: 0.95rem;
-  font-weight: 500;
-}
 .featureWordmark {
   font-weight: 800;
   font-size: clamp(3.4rem, 15vw, 13rem);
@@ -1640,10 +1622,6 @@
 @media (max-width: 900px) {
   .navLinks {
     display: none;
-  }
-  .featureMeta {
-    grid-template-columns: 1fr;
-    gap: 1rem;
   }
   .pillarGrid {
     grid-template-columns: 1fr 1fr;
