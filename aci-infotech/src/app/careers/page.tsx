@@ -11,7 +11,7 @@ export const revalidate = 60;
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
-  title: 'Careers | Join Our Team | ACI Infotech',
+  title: { absolute: 'Careers at ACI Infotech | Join Our Team' },
   description: 'Shape the future of enterprise technology. Join 1,250+ engineers working with Fortune 500 clients on transformative data, AI, and cloud projects.',
   alternates: {
     canonical: `${siteUrl}/careers`,

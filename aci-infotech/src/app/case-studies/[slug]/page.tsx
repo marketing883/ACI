@@ -130,18 +130,6 @@ const caseStudiesData: Record<string, CaseStudyDetail> = {
   },
 };
 
-// Stub slugs that show a "Coming Soon" page when no Supabase row + no
-// hardcoded fallback exists. Live CMS slugs must NOT be listed here.
-const basicCaseStudies = [
-  'fortune-100-retailer-ai',
-  'healthcare-cloud-migration',
-  'finserv-fraud-detection',
-  'manufacturing-iot',
-  'insurance-digital-platform',
-  'energy-security-overhaul',
-  'logistics-optimization',
-];
-
 interface CaseStudyDetail {
   slug: string;
   client: string;
@@ -445,25 +433,9 @@ export default async function CaseStudyPage({ params }: PageProps) {
   const study = caseStudiesData[slug];
 
   if (!study) {
-    // For basic case studies without full content, show a coming soon or redirect
-    if (basicCaseStudies.includes(slug)) {
-      return (
-        <main className="min-h-screen">
-          <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <p className="text-[var(--aci-primary-light)] font-medium mb-4">Case Study</p>
-              <h1 className="text-4xl font-bold text-white mb-6">Full Case Study Coming Soon</h1>
-              <p className="text-xl text-gray-400 mb-8">
-                We're preparing the detailed case study for this project. In the meantime, explore our other success stories.
-              </p>
-              <Button href="/case-studies" variant="secondary">
-                <ArrowLeft className="w-4 h-4 mr-2" /> Back to Case Studies
-              </Button>
-            </div>
-          </section>
-        </main>
-      );
-    }
+    // No CMS row and no hardcoded fallback: this case study does not
+    // exist or was retired. Return a real 404 rather than a 200
+    // "coming soon" placeholder, which the audit flagged as a soft 404.
     notFound();
   }
 
