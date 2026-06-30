@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/industries/hospitality' },
   title: 'Hospitality & Food Services Technology Solutions',
   description: 'Enterprise data, AI, and cloud solutions for hotels, restaurants, and food service companies. Global operations, customer engagement, and supply chain optimization.',
 };

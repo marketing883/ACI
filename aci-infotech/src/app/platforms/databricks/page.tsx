@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/platforms/databricks' },
   title: 'Databricks Implementation Services',
   description: 'ACI Infotech is an exclusive Databricks partner. Lakehouse architecture, Delta Lake, MLflow, and Spark optimization for enterprise.',
 };

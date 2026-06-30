@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/platforms/salesforce' },
   title: 'Salesforce Implementation Services',
   description: 'ACI Infotech is a Salesforce Consulting Partner. Sales Cloud, Service Cloud, Marketing Cloud, and Data Cloud implementation and integration.',
 };

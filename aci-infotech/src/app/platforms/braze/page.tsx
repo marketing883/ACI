@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/platforms/braze' },
   title: 'Braze Implementation Services',
   description: 'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
 };

@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/industries/transportation' },
   title: 'Transportation & Logistics Technology Solutions',
   description: 'Enterprise data, AI, and cloud solutions for logistics companies, freight carriers, and supply chain operators. Route optimization, real-time tracking, and predictive analytics.',
 };

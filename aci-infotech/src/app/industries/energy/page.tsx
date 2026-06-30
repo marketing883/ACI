@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/industries/energy' },
   title: 'Energy & Utilities Technology Solutions',
   description: 'Secure, compliant technology solutions for energy companies and utilities. NERC CIP compliance, grid optimization, and renewable integration.',
 };

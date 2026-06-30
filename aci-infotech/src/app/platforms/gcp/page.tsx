@@ -14,6 +14,7 @@ import Button from '@/components/ui/Button';
 import { displayClient } from '@/lib/content/anonymize';
 
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/platforms/gcp' },
   title: 'Google Cloud Platform Services',
   description:
     'ACI Infotech builds on Google Cloud Platform. BigQuery, Vertex AI, GKE, Anthos, and data-driven AI workloads delivered end to end.',

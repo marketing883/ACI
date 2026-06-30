@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/platforms/azure' },
   title: 'Microsoft Azure Cloud Services',
   description: 'ACI Infotech is a Microsoft Gold Partner. Azure migration, Synapse Analytics, Power Platform, and enterprise cloud solutions.',
 };

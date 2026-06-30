@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/platforms/snowflake' },
   title: 'Snowflake Implementation Services',
   description: 'ACI Infotech is a Snowflake Select Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
 };

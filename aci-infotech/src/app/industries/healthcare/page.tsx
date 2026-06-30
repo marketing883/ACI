@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/industries/healthcare' },
   title: 'Healthcare & Life Sciences Technology Solutions',
   description: 'HIPAA-compliant data, AI, and cloud solutions for healthcare providers, payers, and life sciences. Clinical data integration, drug discovery, and patient outcomes.',
 };

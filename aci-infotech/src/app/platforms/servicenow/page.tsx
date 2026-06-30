@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
+  alternates: { canonical: 'https://aciinfotech.com/platforms/servicenow' },
   title: 'ServiceNow Implementation Services',
   description: 'ACI Infotech is a ServiceNow Elite Partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
 };
