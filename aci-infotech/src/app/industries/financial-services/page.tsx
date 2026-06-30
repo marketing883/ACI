@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Shield, TrendingUp, Clock, Building2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { financialServicesFaqs } from '@/content/industry-faqs';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -299,6 +301,8 @@ export default function FinancialServicesPage() {
           </div>
         </div>
       </section>
+
+      <FaqBlock items={financialServicesFaqs} eyebrow="Financial services FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[var(--aci-primary)]">

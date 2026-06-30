@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Building2, ShoppingCart, Heart, Factory, Zap, Truck, Utensils } from 'lucide-react';
+import { ArrowRight, Building2, ShoppingCart, Heart, Factory, Zap, Truck, Utensils, Fuel } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
 
@@ -81,6 +81,17 @@ const industries = [
     clients: ['Regional Utilities', 'Energy Producers'],
     caseStudy: { metric: '100%', description: 'NERC CIP audit compliance' },
     href: '/industries/energy',
+  },
+  {
+    id: 'oil-gas',
+    name: 'Oil & Gas',
+    icon: Fuel,
+    tagline: 'From the Wellhead to the Regulator',
+    description: 'Decades of production data sit trapped in SCADA, historians, and ERP that were never meant to talk. We unify them into one governed platform, so production, maintenance, and emissions reporting all run off data that holds up to an audit.',
+    challenges: ['SCADA & historian integration', 'Predictive maintenance', 'HSE & emissions reporting', 'Energy transition & ESG'],
+    clients: ['Global Energy Operators', 'National Oil Companies'],
+    caseStudy: { metric: 'One', description: 'Governed source across the value chain' },
+    href: '/industries/oil-gas',
   },
   {
     id: 'transportation',

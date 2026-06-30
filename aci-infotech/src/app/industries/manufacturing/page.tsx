@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Factory, Cpu, BarChart3, Wrench } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { manufacturingFaqs } from '@/content/industry-faqs';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -298,6 +300,8 @@ export default function ManufacturingPage() {
           </div>
         </div>
       </section>
+
+      <FaqBlock items={manufacturingFaqs} eyebrow="Manufacturing FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-orange-600">
