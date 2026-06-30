@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { ArrowRight, CheckCircle, ChevronDown, Cloud, Server, RefreshCw, Lock, Gauge, Container, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { cloudModernizationFaqs } from '@/content/pillar-faqs';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
@@ -521,6 +523,8 @@ export default function CloudModernizationPage() {
           </div>
         </div>
       </section>
+
+      <FaqBlock items={cloudModernizationFaqs} eyebrow="Cloud modernization FAQ" />
 
       {/* Final CTA */}
       <section className="py-20 bg-[var(--aci-primary)]">

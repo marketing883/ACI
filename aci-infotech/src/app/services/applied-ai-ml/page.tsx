@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { ArrowRight, CheckCircle, ChevronDown, Brain, Cpu, BarChart3, Bot, Shield, Sparkles, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { appliedAiFaqs } from '@/content/pillar-faqs';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
@@ -424,6 +426,8 @@ export default function AppliedAIMLPage() {
           </div>
         </div>
       </section>
+
+      <FaqBlock items={appliedAiFaqs} eyebrow="Applied AI FAQ" />
 
       {/* Final CTA */}
       <section className="py-20 bg-[var(--aci-primary)]">

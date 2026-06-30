@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Workflow, Shield, TrendingUp, Zap } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { servicenowFaqs } from '@/content/pillar-faqs';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -240,6 +242,8 @@ export default function ServiceNowPage() {
           </div>
         </div>
       </section>
+
+      <FaqBlock items={servicenowFaqs} eyebrow="ServiceNow FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[#81B5A1]">

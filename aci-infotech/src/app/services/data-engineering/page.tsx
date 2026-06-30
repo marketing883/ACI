@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle, ChevronDown, Database, Zap, Eye, Shield, Settings, Cloud, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { dataEngineeringFaqs } from '@/content/pillar-faqs';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
@@ -577,6 +579,8 @@ export default function DataEngineeringPage() {
           </div>
         </div>
       </section>
+
+      <FaqBlock items={dataEngineeringFaqs} eyebrow="Data engineering FAQ" />
 
       {/* Final CTA */}
       <section className="py-20 bg-[var(--aci-primary)]">

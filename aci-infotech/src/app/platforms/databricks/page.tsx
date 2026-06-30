@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Zap, Shield, TrendingUp } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { databricksFaqs } from '@/content/pillar-faqs';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -217,6 +219,8 @@ export default function DatabricksPage() {
           </div>
         </div>
       </section>
+
+      <FaqBlock items={databricksFaqs} eyebrow="Databricks FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[#FF3621]">

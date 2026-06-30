@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Database, Shield, TrendingUp, Snowflake } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { snowflakeFaqs } from '@/content/pillar-faqs';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -217,6 +219,8 @@ export default function SnowflakePage() {
           </div>
         </div>
       </section>
+
+      <FaqBlock items={snowflakeFaqs} eyebrow="Snowflake FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[#29B5E8]">
