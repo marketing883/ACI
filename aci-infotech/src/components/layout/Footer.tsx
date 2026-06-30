@@ -24,6 +24,7 @@ const FOOTER_LINKS = {
   ],
   company: [
     { label: 'About Us', href: '/about' },
+    { label: 'Partners & Certifications', href: '/partners' },
     { label: 'Careers', href: '/careers' },
     { label: 'News', href: '/news' },
     { label: 'Contact', href: '/contact' },
