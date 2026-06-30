@@ -195,6 +195,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
       title: dbStudy.meta_title || `${displayClient(dbStudy)} Case Study | ${dbStudy.title} | ACI Infotech`,
       description: dbStudy.meta_description || dbStudy.excerpt || dbStudy.challenge?.substring(0, 160),
+      alternates: { canonical: `https://aciinfotech.com/case-studies/${slug}` },
     };
   }
 
@@ -210,6 +211,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${displayClient(study)} Case Study | ${study.headline} | ACI Infotech`,
     description: study.subheadline,
+    alternates: { canonical: `https://aciinfotech.com/case-studies/${slug}` },
   };
 }
 

@@ -29,6 +29,24 @@ function getPublicUrl(request: NextRequest, pathname: string, searchParams?: URL
 }
 
 export async function middleware(request: NextRequest) {
+  // ---------------------------------------------------------------
+  // Host canonicalization. www and non-www both resolve to this app,
+  // so every page was reachable at two URLs — Search Console flagged
+  // the pair as duplicate content. The whole site (sitemap, robots,
+  // metadataBase, canonical tags) canonicalizes to the apex host
+  // https://aciinfotech.com, so 301 any www.* request to the apex,
+  // preserving path and query. Read x-forwarded-host first: nginx
+  // terminates TLS and forwards the public host in that header (the
+  // raw Host header upstream may be the internal one).
+  // ---------------------------------------------------------------
+  const publicHost =
+    request.headers.get('x-forwarded-host') || request.headers.get('host') || '';
+  if (publicHost.startsWith('www.')) {
+    const apexHost = publicHost.slice(4);
+    const target = `https://${apexHost}${request.nextUrl.pathname}${request.nextUrl.search}`;
+    return NextResponse.redirect(target, 301);
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
