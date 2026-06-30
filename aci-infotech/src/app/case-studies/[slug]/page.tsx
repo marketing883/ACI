@@ -34,6 +34,52 @@ async function getCaseStudyBySlug(slug: string) {
   return data;
 }
 
+const CASE_STUDY_PUBLISHER = {
+  '@type': 'Organization',
+  name: 'ACI Infotech',
+  logo: { '@type': 'ImageObject', url: 'https://aciinfotech.com/brand/favicon-192.png' },
+};
+
+// Article + BreadcrumbList JSON-LD for a case-study detail page. Kept
+// loose on inputs so both the CMS and the hardcoded render paths can call
+// it with whatever fields they have.
+function caseStudyJsonLd(input: {
+  slug: string;
+  headline: string;
+  description?: string | null;
+  image?: string | null;
+  industry?: string | null;
+  datePublished?: string | null;
+  dateModified?: string | null;
+}) {
+  const url = `https://aciinfotech.com/case-studies/${input.slug}`;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Article',
+        headline: input.headline,
+        ...(input.description ? { description: input.description } : {}),
+        ...(input.image ? { image: [input.image] } : {}),
+        ...(input.datePublished ? { datePublished: input.datePublished } : {}),
+        ...(input.dateModified ? { dateModified: input.dateModified } : {}),
+        author: { '@type': 'Organization', name: 'ACI Infotech' },
+        publisher: CASE_STUDY_PUBLISHER,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+        ...(input.industry ? { about: input.industry } : {}),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://aciinfotech.com' },
+          { '@type': 'ListItem', position: 2, name: 'Case Studies', item: 'https://aciinfotech.com/case-studies' },
+          { '@type': 'ListItem', position: 3, name: input.headline, item: url },
+        ],
+      },
+    ],
+  };
+}
+
 // Legacy hardcoded case study data — fallback rendered only when the
 // Supabase lookup misses (network outage, draft row, etc.). The MSCI/
 // financial-giant entry was retired: the live CMS row at the same slug
@@ -228,8 +274,19 @@ export default async function CaseStudyPage({ params }: PageProps) {
     // Parse services if stored as array
     const services = Array.isArray(dbStudy.services) ? dbStudy.services : [];
 
+    const jsonLd = caseStudyJsonLd({
+      slug,
+      headline: dbStudy.meta_title || dbStudy.title,
+      description: dbStudy.meta_description || dbStudy.excerpt,
+      image: dbStudy.featured_image_url,
+      industry: dbStudy.industry,
+      datePublished: dbStudy.published_at || dbStudy.created_at,
+      dateModified: dbStudy.updated_at,
+    });
+
     return (
       <main className="min-h-screen">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         {/* Hero Section */}
         <section className="relative bg-[var(--aci-secondary)] pt-32 pb-20 overflow-hidden">
           {dbStudy.featured_image_url && (
@@ -443,8 +500,17 @@ export default async function CaseStudyPage({ params }: PageProps) {
     ?.map(slug => caseStudiesData[slug])
     .filter(Boolean) || [];
 
+  const jsonLd = caseStudyJsonLd({
+    slug,
+    headline: study.headline,
+    description: study.subheadline,
+    image: study.featured_image,
+    industry: study.industry,
+  });
+
   return (
     <main className="min-h-screen">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* Hero Section */}
       <section className="relative bg-[var(--aci-secondary)] pt-32 pb-20 overflow-hidden">
         {study.featured_image && (
