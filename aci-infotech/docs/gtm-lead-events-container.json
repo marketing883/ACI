@@ -1,0 +1,219 @@
+{
+  "exportFormatVersion": 2,
+  "containerVersion": {
+    "path": "accounts/0/containers/0/versions/0",
+    "accountId": "0",
+    "containerId": "0",
+    "containerVersionId": "0",
+    "name": "ACI lead events (form_start + generate_lead)",
+    "container": {
+      "accountId": "0",
+      "containerId": "0",
+      "name": "ACI Infotech",
+      "publicId": "GTM-NGTG3ZZ",
+      "usageContext": ["WEB"],
+      "fingerprint": "0",
+      "tagManagerUrl": ""
+    },
+    "builtInVariable": [
+      { "accountId": "0", "containerId": "0", "type": "EVENT", "name": "Event" }
+    ],
+    "variable": [
+      {
+        "accountId": "0", "containerId": "0", "variableId": "1",
+        "name": "const - GA4 Measurement ID", "type": "c",
+        "parameter": [{ "type": "TEMPLATE", "key": "value", "value": "G-XXXXXXXXXX" }],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "0", "containerId": "0", "variableId": "2",
+        "name": "dlv - form_location", "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "form_location" }
+        ],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "0", "containerId": "0", "variableId": "3",
+        "name": "dlv - inquiry_type", "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "inquiry_type" }
+        ],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "0", "containerId": "0", "variableId": "4",
+        "name": "dlv - utm_source", "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "utm_source" }
+        ],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "0", "containerId": "0", "variableId": "5",
+        "name": "dlv - utm_medium", "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "utm_medium" }
+        ],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "0", "containerId": "0", "variableId": "6",
+        "name": "dlv - utm_campaign", "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "utm_campaign" }
+        ],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "0", "containerId": "0", "variableId": "7",
+        "name": "dlv - utm_term", "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "utm_term" }
+        ],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "0", "containerId": "0", "variableId": "8",
+        "name": "dlv - utm_content", "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "utm_content" }
+        ],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "0", "containerId": "0", "variableId": "9",
+        "name": "dlv - gclid", "type": "v",
+        "parameter": [
+          { "type": "INTEGER", "key": "dataLayerVersion", "value": "2" },
+          { "type": "BOOLEAN", "key": "setDefaultValue", "value": "false" },
+          { "type": "TEMPLATE", "key": "name", "value": "gclid" }
+        ],
+        "fingerprint": "0"
+      }
+    ],
+    "trigger": [
+      {
+        "accountId": "0", "containerId": "0", "triggerId": "10",
+        "name": "CE - form_start", "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              { "type": "TEMPLATE", "key": "arg0", "value": "{{_event}}" },
+              { "type": "TEMPLATE", "key": "arg1", "value": "form_start" }
+            ]
+          }
+        ],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "0", "containerId": "0", "triggerId": "11",
+        "name": "CE - contact_form_submitted", "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              { "type": "TEMPLATE", "key": "arg0", "value": "{{_event}}" },
+              { "type": "TEMPLATE", "key": "arg1", "value": "contact_form_submitted" }
+            ]
+          }
+        ],
+        "fingerprint": "0"
+      }
+    ],
+    "tag": [
+      {
+        "accountId": "0", "containerId": "0", "tagId": "20",
+        "name": "GA4 Event - form_start", "type": "gaawe",
+        "parameter": [
+          { "type": "BOOLEAN", "key": "sendEcommerceData", "value": "false" },
+          { "type": "TEMPLATE", "key": "eventName", "value": "form_start" },
+          {
+            "type": "LIST", "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  { "type": "TEMPLATE", "key": "name", "value": "form_location" },
+                  { "type": "TEMPLATE", "key": "value", "value": "{{dlv - form_location}}" }
+                ]
+              }
+            ]
+          },
+          { "type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{const - GA4 Measurement ID}}" }
+        ],
+        "fingerprint": "0",
+        "firingTriggerId": ["10"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "consentSettings": { "consentStatus": "NOT_SET" }
+      },
+      {
+        "accountId": "0", "containerId": "0", "tagId": "21",
+        "name": "GA4 Event - generate_lead", "type": "gaawe",
+        "parameter": [
+          { "type": "BOOLEAN", "key": "sendEcommerceData", "value": "false" },
+          { "type": "TEMPLATE", "key": "eventName", "value": "generate_lead" },
+          {
+            "type": "LIST", "key": "eventParameters",
+            "list": [
+              { "type": "MAP", "map": [
+                { "type": "TEMPLATE", "key": "name", "value": "form_location" },
+                { "type": "TEMPLATE", "key": "value", "value": "{{dlv - form_location}}" }
+              ]},
+              { "type": "MAP", "map": [
+                { "type": "TEMPLATE", "key": "name", "value": "inquiry_type" },
+                { "type": "TEMPLATE", "key": "value", "value": "{{dlv - inquiry_type}}" }
+              ]},
+              { "type": "MAP", "map": [
+                { "type": "TEMPLATE", "key": "name", "value": "utm_source" },
+                { "type": "TEMPLATE", "key": "value", "value": "{{dlv - utm_source}}" }
+              ]},
+              { "type": "MAP", "map": [
+                { "type": "TEMPLATE", "key": "name", "value": "utm_medium" },
+                { "type": "TEMPLATE", "key": "value", "value": "{{dlv - utm_medium}}" }
+              ]},
+              { "type": "MAP", "map": [
+                { "type": "TEMPLATE", "key": "name", "value": "utm_campaign" },
+                { "type": "TEMPLATE", "key": "value", "value": "{{dlv - utm_campaign}}" }
+              ]},
+              { "type": "MAP", "map": [
+                { "type": "TEMPLATE", "key": "name", "value": "utm_term" },
+                { "type": "TEMPLATE", "key": "value", "value": "{{dlv - utm_term}}" }
+              ]},
+              { "type": "MAP", "map": [
+                { "type": "TEMPLATE", "key": "name", "value": "utm_content" },
+                { "type": "TEMPLATE", "key": "value", "value": "{{dlv - utm_content}}" }
+              ]},
+              { "type": "MAP", "map": [
+                { "type": "TEMPLATE", "key": "name", "value": "gclid" },
+                { "type": "TEMPLATE", "key": "value", "value": "{{dlv - gclid}}" }
+              ]}
+            ]
+          },
+          { "type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{const - GA4 Measurement ID}}" }
+        ],
+        "fingerprint": "0",
+        "firingTriggerId": ["11"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "consentSettings": { "consentStatus": "NOT_SET" }
+      }
+    ],
+    "fingerprint": "0",
+    "tagManagerUrl": ""
+  }
+}
