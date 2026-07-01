@@ -96,6 +96,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, warning: 'Database not configured' });
     }
 
+    // Collect the first-touch attribution the client attached (utm/gclid/
+    // referrer/landing). Stored as one jsonb column; null when empty.
+    const attributionKeys = [
+      'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+      'gclid', 'gbraid', 'wbraid', 'fbclid', 'li_fat_id', 'referrer', 'landing_page',
+    ] as const;
+    const attribution: Record<string, string> = {};
+    for (const k of attributionKeys) {
+      if (typeof data[k] === 'string' && data[k]) attribution[k] = data[k];
+    }
+    const attributionValue = Object.keys(attribution).length ? attribution : null;
+
     // Insert into Supabase with spam detection data
     const { data: contact, error } = await supabase
       .from('contacts')
@@ -111,6 +123,7 @@ export async function POST(request: NextRequest) {
           status: submissionStatus,
           spam_score: spamScore,
           spam_flags: spamFlags.length > 0 ? spamFlags : null,
+          attribution: attributionValue,
         },
       ])
       .select()
@@ -118,8 +131,13 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Supabase error:', error);
-      // If spam_score/spam_flags columns don't exist, try without them
-      if (error.message?.includes('spam_score') || error.message?.includes('spam_flags')) {
+      // If the spam_score/spam_flags/attribution columns don't exist yet,
+      // retry without them so the form still works before the migration runs.
+      if (
+        error.message?.includes('spam_score') ||
+        error.message?.includes('spam_flags') ||
+        error.message?.includes('attribution')
+      ) {
         const { data: contactFallback, error: fallbackError } = await supabase
           .from('contacts')
           .insert([
