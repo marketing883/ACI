@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Factory, Cpu, BarChart3, Wrench } 
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
 import { manufacturingFaqs } from '@/content/industry-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { manufacturingRelated } from '@/content/related-links';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -300,6 +302,8 @@ export default function ManufacturingPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={manufacturingRelated} />
 
       <FaqBlock items={manufacturingFaqs} eyebrow="Manufacturing FAQ" />
 

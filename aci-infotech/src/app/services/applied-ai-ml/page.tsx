@@ -3,6 +3,8 @@ import { ArrowRight, CheckCircle, ChevronDown, Brain, Cpu, BarChart3, Bot, Shiel
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
 import { appliedAiFaqs } from '@/content/pillar-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { appliedAiRelated } from '@/content/related-links';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
@@ -426,6 +428,8 @@ export default function AppliedAIMLPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={appliedAiRelated} />
 
       <FaqBlock items={appliedAiFaqs} eyebrow="Applied AI FAQ" />
 

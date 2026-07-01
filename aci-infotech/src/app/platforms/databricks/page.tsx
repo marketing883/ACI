@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Award, Zap, Shield, TrendingUp } f
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
 import { databricksFaqs } from '@/content/pillar-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { databricksRelated } from '@/content/related-links';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -219,6 +221,8 @@ export default function DatabricksPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={databricksRelated} />
 
       <FaqBlock items={databricksFaqs} eyebrow="Databricks FAQ" />
 

@@ -4,6 +4,8 @@ import { ArrowRight, CheckCircle, ChevronDown, Database, Zap, Eye, Shield, Setti
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
 import { dataEngineeringFaqs } from '@/content/pillar-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { dataEngineeringRelated } from '@/content/related-links';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
@@ -579,6 +581,8 @@ export default function DataEngineeringPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={dataEngineeringRelated} />
 
       <FaqBlock items={dataEngineeringFaqs} eyebrow="Data engineering FAQ" />
 

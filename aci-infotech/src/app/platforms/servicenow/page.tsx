@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Award, Workflow, Shield, TrendingU
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
 import { servicenowFaqs } from '@/content/pillar-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { servicenowRelated } from '@/content/related-links';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -242,6 +244,8 @@ export default function ServiceNowPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={servicenowRelated} />
 
       <FaqBlock items={servicenowFaqs} eyebrow="ServiceNow FAQ" />
 

@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight, CheckCircle2, ShoppingCart, TrendingUp, Users, B
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
 import { retailFaqs } from '@/content/industry-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { retailRelated } from '@/content/related-links';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -300,6 +302,8 @@ export default function RetailPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={retailRelated} />
 
       <FaqBlock items={retailFaqs} eyebrow="Retail FAQ" />
 

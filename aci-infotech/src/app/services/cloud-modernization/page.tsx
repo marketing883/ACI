@@ -3,6 +3,8 @@ import { ArrowRight, CheckCircle, ChevronDown, Cloud, Server, RefreshCw, Lock, G
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
 import { cloudModernizationFaqs } from '@/content/pillar-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { cloudModernizationRelated } from '@/content/related-links';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
@@ -523,6 +525,8 @@ export default function CloudModernizationPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={cloudModernizationRelated} />
 
       <FaqBlock items={cloudModernizationFaqs} eyebrow="Cloud modernization FAQ" />
 

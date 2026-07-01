@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Activity, Gauge, Shield, Database,
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
 import { oilGasFaqs } from '@/content/industry-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { oilGasRelated } from '@/content/related-links';
 
 export const metadata: Metadata = {
   title: 'Oil & Gas Technology Solutions',
@@ -168,6 +170,8 @@ export default function OilGasPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={oilGasRelated} />
 
       <FaqBlock items={oilGasFaqs} eyebrow="Oil & gas FAQ" />
 

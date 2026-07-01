@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Shield, TrendingUp, Clock, Buildin
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
 import { financialServicesFaqs } from '@/content/industry-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { financialServicesRelated } from '@/content/related-links';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -301,6 +303,8 @@ export default function FinancialServicesPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={financialServicesRelated} />
 
       <FaqBlock items={financialServicesFaqs} eyebrow="Financial services FAQ" />
 
