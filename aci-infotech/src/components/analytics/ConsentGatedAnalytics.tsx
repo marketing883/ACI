@@ -49,7 +49,13 @@ export default function ConsentGatedAnalytics() {
 
   return (
     <>
-      {analyticsAllowed && <GoogleTagManager />}
+      {/* GTM loads unconditionally now. Consent Mode v2 (defaults denied,
+          set in the document head before this) plus the container's
+          per-tag consent checks decide what actually fires, so Google
+          tags still model denied traffic instead of going dark. Loading
+          it always also fixes the next/script afterInteractive bug where
+          a conditionally-mounted GTM Script never executed. */}
+      <GoogleTagManager />
       {analyticsAllowed && <VisitorTracker />}
       {marketingAllowed && <LinkedInInsightTag />}
     </>

@@ -4,6 +4,7 @@ import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import ClientProviders from "@/components/layout/ClientProviders";
 import GlobalStructuredData from "@/components/seo/StructuredData";
+import { CONSENT_DEFAULT_SCRIPT } from "@/lib/analytics/consent";
 
 // Self-hosted, automatically subset, font-display: swap. Replaces the
 // render-blocking <link> to fonts.googleapis.com that v1 was using.
@@ -132,6 +133,10 @@ export default function RootLayout({
       className={`${funnelSans.variable} ${funnelDisplay.variable} ${jetBrainsMono.variable}`}
     >
       <head>
+        {/* Consent Mode v2: set all signals to denied by default and
+            replay a returning visitor's stored choice. Server-rendered
+            inline so it executes on parse, before GTM and any Google tag. */}
+        <script dangerouslySetInnerHTML={{ __html: CONSENT_DEFAULT_SCRIPT }} />
         {/* Preload v1's hero poster only on v1 builds. The v2 hero uses
             its own video + parallax stack and never references this
             asset, so preloading it on v2 wasted ~4KB and a connection

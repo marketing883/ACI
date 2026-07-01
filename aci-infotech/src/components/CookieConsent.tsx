@@ -13,6 +13,7 @@
 import { useState, useEffect } from 'react';
 import { X, Cookie, Shield } from 'lucide-react';
 import Link from 'next/link';
+import { updateConsent } from '@/lib/analytics/consent';
 
 const COOKIE_CONSENT_KEY = 'aci_cookie_consent';
 const CONSENT_EXPIRY_DAYS = 365;
@@ -54,6 +55,10 @@ export default function CookieConsent() {
     };
     localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consentData));
     setShowBanner(false);
+
+    // Consent Mode v2: tell Google tags the visitor's choice so they
+    // switch from cookieless/denied to granted (or stay denied).
+    updateConsent(consentData.preferences);
 
     // Dispatch event for other components to react
     window.dispatchEvent(new CustomEvent('cookie-consent-updated', {

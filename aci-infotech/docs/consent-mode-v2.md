@@ -1,8 +1,34 @@
 # Consent Mode v2 — spec and decision doc
 
-Status: **proposal, not implemented.** This documents what moving to
-Google Consent Mode v2 would involve, why, and the trade-offs, so the
-change can be approved (or declined) deliberately. No code has changed.
+Status: **IMPLEMENTED (code) — publish the container to finish.** Consent
+Mode v2 is now wired in the site code and the optimized GTM container. The
+sections below are the original rationale; the checklist at the end is
+what remains on your side.
+
+## What was implemented
+- **Consent default (denied) before GTM** — inline in the document
+  `<head>` (`src/lib/analytics/consent.ts` -> `CONSENT_DEFAULT_SCRIPT`,
+  rendered in `layout.tsx`). Sets `ad_storage`, `analytics_storage`,
+  `ad_user_data`, `ad_personalization` to `denied` with
+  `wait_for_update`, and replays a returning visitor's stored choice.
+- **GTM loads unconditionally** — `ConsentGatedAnalytics` no longer gates
+  GTM (which also fixed the afterInteractive bug where GTM never loaded).
+- **Consent `update` on the banner** — `CookieConsent` calls
+  `updateConsent()` on accept/save (analytics -> analytics_storage;
+  marketing -> ad_storage/ad_user_data/ad_personalization).
+- **Container consent checks** — in `docs/gtm-optimized-container.json`,
+  the non-Google tags (Hotjar, Clarity, PageSense, Snitcher, the Zoho
+  form script) require `analytics_storage`, so they do NOT fire before
+  consent. Google tags stay native so they model denied traffic.
+
+## What remains on your side
+1. **Import + publish** `docs/gtm-optimized-container.json` (new
+   workspace, review, publish).
+2. **Deploy** the site branch (ships the consent default + unconditional
+   GTM).
+3. **GA4:** confirm the property has "Consent Mode" showing data in
+   Admin -> Consent settings, and that behavioural/conversion modeling is
+   on. Optional but recommended for the EEA: adopt a Google-certified CMP.
 
 ---
 

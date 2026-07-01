@@ -276,7 +276,16 @@
           "100"
         ],
         "consentSettings": {
-          "consentStatus": "NOT_SET"
+          "consentStatus": "NEEDED",
+          "consentType": {
+            "type": "LIST",
+            "list": [
+              {
+                "type": "TEMPLATE",
+                "value": "analytics_storage"
+              }
+            ]
+          }
         },
         "blockingTriggerId": [
           "101"
@@ -306,7 +315,16 @@
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
-          "consentStatus": "NOT_SET"
+          "consentStatus": "NEEDED",
+          "consentType": {
+            "type": "LIST",
+            "list": [
+              {
+                "type": "TEMPLATE",
+                "value": "analytics_storage"
+              }
+            ]
+          }
         },
         "blockingTriggerId": [
           "101"
@@ -330,7 +348,16 @@
           "100"
         ],
         "consentSettings": {
-          "consentStatus": "NOT_SET"
+          "consentStatus": "NEEDED",
+          "consentType": {
+            "type": "LIST",
+            "list": [
+              {
+                "type": "TEMPLATE",
+                "value": "analytics_storage"
+              }
+            ]
+          }
         },
         "blockingTriggerId": [
           "101"
@@ -363,7 +390,16 @@
           "type": "MAP"
         },
         "consentSettings": {
-          "consentStatus": "NOT_SET"
+          "consentStatus": "NEEDED",
+          "consentType": {
+            "type": "LIST",
+            "list": [
+              {
+                "type": "TEMPLATE",
+                "value": "analytics_storage"
+              }
+            ]
+          }
         },
         "blockingTriggerId": [
           "101"
@@ -396,7 +432,16 @@
           "type": "MAP"
         },
         "consentSettings": {
-          "consentStatus": "NOT_SET"
+          "consentStatus": "NEEDED",
+          "consentType": {
+            "type": "LIST",
+            "list": [
+              {
+                "type": "TEMPLATE",
+                "value": "analytics_storage"
+              }
+            ]
+          }
         }
       },
       {
