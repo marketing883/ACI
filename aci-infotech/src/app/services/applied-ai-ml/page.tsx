@@ -5,6 +5,9 @@ import FaqBlock from '@/components/seo/FaqBlock';
 import { appliedAiFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { appliedAiRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+
+export const revalidate = 3600;
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
@@ -428,6 +431,8 @@ export default function AppliedAIMLPage() {
           </div>
         </div>
       </section>
+
+      <ClusterPosts keywords={['genai', 'machine learning', 'artificial intelligence', 'mlops', 'ai/ml', 'llm', 'rag', 'predictive']} />
 
       <RelatedLinks items={appliedAiRelated} />
 

@@ -5,6 +5,9 @@ import FaqBlock from '@/components/seo/FaqBlock';
 import { cloudModernizationFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { cloudModernizationRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+
+export const revalidate = 3600;
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
@@ -525,6 +528,8 @@ export default function CloudModernizationPage() {
           </div>
         </div>
       </section>
+
+      <ClusterPosts keywords={['cloud migration', 'cloud modernization', 'modernization', 'aws', 'azure', 'finops', 'devops']} />
 
       <RelatedLinks items={cloudModernizationRelated} />
 

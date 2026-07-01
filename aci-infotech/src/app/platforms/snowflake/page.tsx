@@ -6,6 +6,9 @@ import FaqBlock from '@/components/seo/FaqBlock';
 import { snowflakeFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { snowflakeRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+
+export const revalidate = 3600;
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -221,6 +224,8 @@ export default function SnowflakePage() {
           </div>
         </div>
       </section>
+
+      <ClusterPosts keywords={['snowflake', 'data cloud', 'data warehouse']} />
 
       <RelatedLinks items={snowflakeRelated} />
 

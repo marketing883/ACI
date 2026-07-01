@@ -6,6 +6,9 @@ import FaqBlock from '@/components/seo/FaqBlock';
 import { servicenowFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { servicenowRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+
+export const revalidate = 3600;
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -244,6 +247,8 @@ export default function ServiceNowPage() {
           </div>
         </div>
       </section>
+
+      <ClusterPosts keywords={['servicenow', 'itsm', 'itom', 'workflow']} />
 
       <RelatedLinks items={servicenowRelated} />
 

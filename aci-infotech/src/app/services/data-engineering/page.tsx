@@ -6,6 +6,9 @@ import FaqBlock from '@/components/seo/FaqBlock';
 import { dataEngineeringFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { dataEngineeringRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+
+export const revalidate = 3600;
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
@@ -581,6 +584,8 @@ export default function DataEngineeringPage() {
           </div>
         </div>
       </section>
+
+      <ClusterPosts keywords={['data engineering', 'data pipeline', 'data platform', 'lakehouse', 'etl']} />
 
       <RelatedLinks items={dataEngineeringRelated} />
 
