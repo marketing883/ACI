@@ -129,7 +129,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let blogEntries: MetadataRoute.Sitemap = [];
   let caseStudyEntries: MetadataRoute.Sitemap = [];
   let whitepaperEntries: MetadataRoute.Sitemap = [];
-  let jobEntries: MetadataRoute.Sitemap = [];
   const newsEntries: MetadataRoute.Sitemap = [];
 
   if (supabase) {
@@ -181,21 +180,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
     }
 
-    // Fetch published jobs
-    const { data: jobs } = await supabase
-      .from('jobs')
-      .select('slug, updated_at, created_at')
-      .eq('status', 'published')
-      .order('created_at', { ascending: false });
-
-    if (jobs) {
-      jobEntries = jobs.map(job => ({
-        url: `${baseUrl}/careers/${job.slug}`,
-        lastModified: new Date(job.updated_at || job.created_at),
-        changeFrequency: 'weekly' as const,
-        priority: 0.6,
-      }));
-    }
+    // Individual /careers/{slug} job pages are intentionally NOT in the
+    // sitemap. Those detail pages render `robots: noindex, follow`
+    // (job posts are transient and thin), so listing them here created a
+    // sitemap-vs-page contradiction that Google reports as "Excluded by
+    // 'noindex' tag" for every job. The indexable /careers listing page
+    // is included above via staticPages and links to the open roles.
 
     // Note: News items link externally, so we don't add individual
     // pages to the sitemap. If you add individual news pages later,
@@ -228,7 +218,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...blogEntries,
     ...caseStudyEntries,
     ...whitepaperEntries,
-    ...jobEntries,
     ...newsEntries,
   ];
 }
