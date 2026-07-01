@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Mail, Clock, Send, CheckCircle, Globe2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
@@ -8,6 +8,7 @@ import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleTa
 import { trackContactFormConversion } from '@/components/analytics/LinkedInInsightTag';
 import Image from 'next/image';
 import { isWorkEmail } from '@/lib/email-validation';
+import { captureAttribution, type Attribution } from '@/lib/analytics/attribution';
 
 const contactReasons = [
   { value: 'architecture-call', label: 'Schedule Architecture Discussion' },
@@ -33,7 +34,21 @@ function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // First-touch attribution (utm/gclid/referrer/landing), snapshotted once
+  // on mount and reused on submit. `formStarted` fires the form_start
+  // event exactly once, on the first field the visitor touches.
+  const attributionRef = useRef<Attribution>({});
+  const formStarted = useRef(false);
+
+  useEffect(() => {
+    attributionRef.current = captureAttribution();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    if (!formStarted.current) {
+      formStarted.current = true;
+      trackEvent('form_start', { form_location: 'contact_page' });
+    }
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -53,7 +68,7 @@ function ContactForm() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, ...attributionRef.current }),
       });
 
       const result = await response.json();
@@ -73,6 +88,7 @@ function ContactForm() {
         inquiry_type: formData.reason,
         has_company: formData.company ? 'yes' : 'no',
         has_phone: formData.phone ? 'yes' : 'no',
+        ...attributionRef.current,
       });
 
       // Track LinkedIn conversion for lead gen campaigns
