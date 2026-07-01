@@ -1,0 +1,1767 @@
+{
+  "exportFormatVersion": 2,
+  "exportTime": "2026-07-01 04:27:28",
+  "containerVersion": {
+    "path": "accounts/6003533213/containers/42599544/versions/0",
+    "accountId": "6003533213",
+    "containerId": "42599544",
+    "containerVersionId": "0",
+    "container": {
+      "path": "accounts/6003533213/containers/42599544",
+      "accountId": "6003533213",
+      "containerId": "42599544",
+      "name": "www.aciinfotech.com",
+      "publicId": "GTM-NGTG3ZZ",
+      "usageContext": [
+        "WEB"
+      ],
+      "fingerprint": "1616782778558",
+      "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6003533213/containers/42599544/workspaces?apiLink=container",
+      "features": {
+        "supportUserPermissions": true,
+        "supportEnvironments": true,
+        "supportWorkspaces": true,
+        "supportGtagConfigs": false,
+        "supportBuiltInVariables": true,
+        "supportClients": false,
+        "supportFolders": true,
+        "supportTags": true,
+        "supportTemplates": true,
+        "supportTriggers": true,
+        "supportVariables": true,
+        "supportVersions": true,
+        "supportZones": true,
+        "supportTransformations": false
+      },
+      "tagIds": [
+        "GTM-NGTG3ZZ"
+      ]
+    },
+    "tag": [
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "7",
+        "name": "Google Analytics GA4 Configuration",
+        "type": "googtag",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "tagId",
+            "value": "G-145NLC9TW3"
+          },
+          {
+            "type": "LIST",
+            "key": "configSettingsTable",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "send_page_view"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "server_container_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "https://server-side-tagging-p5uycbintq-uc.a.run.app"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1753108768974",
+        "firingTriggerId": [
+          "100"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        },
+        "blockingTriggerId": [
+          "101"
+        ]
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "9",
+        "name": "AdWords Conversion",
+        "type": "awct",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "enableNewCustomerReporting",
+            "value": "false"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableConversionLinker",
+            "value": "true"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableProductReporting",
+            "value": "false"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableEnhancedConversion",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "conversionCookiePrefix",
+            "value": "_gcl"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableShippingData",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "conversionId",
+            "value": "10929630630"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "conversionLabel",
+            "value": "E_znCKSE1MsDEKbb09so"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "rdp",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1669994568161",
+        "firingTriggerId": [
+          "5"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "10",
+        "name": "Conversion Linker",
+        "type": "gclidw",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "enableCrossDomain",
+            "value": "false"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableUrlPassthrough",
+            "value": "true"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableCookieOverrides",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1670003227479",
+        "firingTriggerId": [
+          "100"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        },
+        "blockingTriggerId": [
+          "101"
+        ]
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "11",
+        "name": "AdWords Remarketing",
+        "type": "sp",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "enableConversionLinker",
+            "value": "true"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableDynamicRemarketing",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "conversionCookiePrefix",
+            "value": "_gcl"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "conversionId",
+            "value": "10929630630"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "customParamsFormat",
+            "value": "NONE"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "rdp",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1670003564945",
+        "firingTriggerId": [
+          "100"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        },
+        "blockingTriggerId": [
+          "101"
+        ]
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "12",
+        "name": "AUTO Hotjar Tracking Code",
+        "type": "hjtc",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "hotjar_site_id",
+            "value": "3415142"
+          }
+        ],
+        "fingerprint": "1679327545503",
+        "firingTriggerId": [
+          "100"
+        ],
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        },
+        "blockingTriggerId": [
+          "101"
+        ]
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "13",
+        "name": "Microsoft Clarity - Official",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "html",
+            "value": "<script type=\"text/javascript\">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src=\"https://www.clarity.ms/tag/\"+i+\"?ref=gtm2\";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,\"clarity\",\"script\",\"j8cq3af2fh\");</script>"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "supportDocumentWrite",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1696936096683",
+        "firingTriggerId": [
+          "100"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        },
+        "blockingTriggerId": [
+          "101"
+        ]
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "16",
+        "name": "PageSense_Snippet",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "html",
+            "value": "<script type=\"text/javascript\">(function(w,s){var e=document.createElement(\"script\");e.type=\"text/javascript\";e.async=true;e.src=\"https://cdn-in.pagesense.io/js/aciinfotech/060b3e699b584dd2bbc69d43b9f8e9a4.js\";var x=document.getElementsByTagName(\"script\")[0];x.parentNode.insertBefore(e,x);})(window,\"script\");</script>"
+          }
+        ],
+        "fingerprint": "1746793078478",
+        "firingTriggerId": [
+          "100"
+        ],
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        },
+        "blockingTriggerId": [
+          "101"
+        ]
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "17",
+        "name": "Snitcher-Tracking",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "html",
+            "value": "<!-- Snitcher analytics code -->\n<script>\n    !function(s,n,i,t,c,h){s.SnitchObject=i;s[i]||(s[i]=function(){\n    (s[i].q=s[i].q||[]).push(arguments)});s[i].l=+new Date;c=n.createElement(t);\n    h=n.getElementsByTagName(t)[0];c.src='//snid.snitcher.com/8431931.js';\n    h.parentNode.insertBefore(c,h)}(window,document,'snid','script');\n        \n    snid('verify', '8431931');\n</script>"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "supportDocumentWrite",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1747654694558",
+        "firingTriggerId": [
+          "100"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        },
+        "blockingTriggerId": [
+          "101"
+        ]
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "23",
+        "name": "MQL - Form Fill Tracking",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "html",
+            "value": "<script>\n(function () {\n  /* =====  1. Helpers  ===== */\n  function getClientId(cb) {\n    if (typeof gtag !== 'undefined') {\n      gtag('get', 'G-145NLC9TW3', 'client_id', cb);\n    } else { cb(''); }\n  }\n  function getUTMs() {\n    var p = new URLSearchParams(window.location.search);\n    return {\n      utm_source: p.get('utm_source') || '',\n      utm_medium: p.get('utm_medium') || '',\n      utm_campaign: p.get('utm_campaign') || '',\n      utm_term: p.get('utm_term') || '',\n      utm_content: p.get('utm_content') || ''\n    };\n  }\n  /* =====  2. Rewrite iframe src  ===== */\n  function patchIframe(cid) {\n    var ifr = document.querySelector('iframe[src*=\"forms.zohopublic\"]');\n    if (!ifr) { return; }\n    var src  = ifr.getAttribute('src').split('?')[0];        // base URL\n    var utms = getUTMs();\n    utms.client_id = cid || '';\n    var qs = [];\n    for (var k in utms) { if (utms.hasOwnProperty(k)) {\n      qs.push(encodeURIComponent(k)+'='+encodeURIComponent(utms[k]));\n    }}\n    ifr.setAttribute('src', src + '?' + qs.join('&'));\n  }\n  /* =====  3. Orchestrate  ===== */\n  document.addEventListener('DOMContentLoaded', function () {\n    getClientId(function (cid) { patchIframe(cid); });\n  });\n})();\n</script>\n"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "supportDocumentWrite",
+            "value": "false"
+          }
+        ],
+        "fingerprint": "1751994711045",
+        "firingTriggerId": [
+          "18"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "24",
+        "name": "Google Tag AW-10929630630",
+        "type": "googtag",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "tagId",
+            "value": "AW-10929630630"
+          }
+        ],
+        "fingerprint": "1752597363233",
+        "firingTriggerId": [
+          "2147479573"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "36",
+        "name": "LI Google tag - Conversion - 2025 20544940",
+        "type": "googtag",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "tagId",
+            "value": "G-145NLC9TW3"
+          },
+          {
+            "type": "LIST",
+            "key": "configSettingsTable",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "server_container_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "https://server-side-tagging-p5uycbintq-uc.a.run.app"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "send_page_view"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1753108904766",
+        "firingTriggerId": [
+          "29"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "37",
+        "name": "LI GA4 Event - Conversion - 2025 20544940",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enhancedUserId",
+            "value": "false"
+          },
+          {
+            "type": "LIST",
+            "key": "eventSettingsTable",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "user_data"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{user_data - Conversion - 2025 20544940}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "event_id"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{event_id - Conversion - 2025 20544940}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "conversion_rule_id"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{conversion_rule_id - Conversion - 2025 20544940}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "value"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{value - Conversion - 2025 20544940}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "currency"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{currency - Conversion - 2025 20544940}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "conversion_happened_at"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{conversion_happened_at - Conversion - 2025 20544940}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "conversion"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-145NLC9TW3"
+          }
+        ],
+        "fingerprint": "1753108905024",
+        "firingTriggerId": [
+          "5"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "48",
+        "name": "GA4 Event - generate_lead",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          },
+          {
+            "type": "LIST",
+            "key": "eventSettingsTable",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "form_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{dlv - form_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "inquiry_type"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{dlv - inquiry_type}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "utm_source"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{dlv - utm_source}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "utm_medium"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{dlv - utm_medium}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "utm_campaign"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{dlv - utm_campaign}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "utm_term"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{dlv - utm_term}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "utm_content"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{dlv - utm_content}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "gclid"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{dlv - gclid}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "generate_lead"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "{{const - GA4 Measurement ID}}"
+          }
+        ],
+        "fingerprint": "1782879990206",
+        "firingTriggerId": [
+          "47"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "tagId": "50",
+        "name": "GA4 Event - form_start",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          },
+          {
+            "type": "LIST",
+            "key": "eventSettingsTable",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "form_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{dlv - form_location}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "form_start"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "{{const - GA4 Measurement ID}}"
+          }
+        ],
+        "fingerprint": "1782879990206",
+        "firingTriggerId": [
+          "49"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      }
+    ],
+    "trigger": [
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "triggerId": "5",
+        "name": "TY Page",
+        "type": "PAGEVIEW",
+        "filter": [
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Page URL}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "thank-you"
+              }
+            ]
+          },
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Page Hostname}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "aciinfotech.com"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1662392900193"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "triggerId": "18",
+        "name": "Form View",
+        "type": "PAGEVIEW",
+        "filter": [
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Form ID}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "zf_div_E5aG7gnd7Id3N8kjK563lGKxZRA41tOYT_DE6FaNy6k"
+              }
+            ]
+          },
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Form ID}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "zf_div_qUGOMj5FM1QDLySubWZ-CcdAu-K3jXzWCvVPK6MZfKc"
+              }
+            ]
+          },
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Form ID}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "zf_div_Ib-xAgtwLBh8IMVg217BsQ-IfHNgMeVumyXgf_PbpVY"
+              }
+            ]
+          },
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Form ID}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "zf_div_c403R69cxe6nxb-fiB87TGeV8T_XsWzEi4nlNc7U4Xo"
+              }
+            ]
+          },
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Form ID}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "zf_div_DiST0UwlYb3Yj6CwMrL0A2mk6SDkU6_BMtf0QiRPiYU"
+              }
+            ]
+          },
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Form ID}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "zf_div_JtsO4H76so_WFzThvhpSqyv9ADBtYLN_sKxOcK7OtWs"
+              }
+            ]
+          },
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Form ID}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "zf_div_xri8wVlNO9BQEHs4LvmAs11cKNiA-yeZjD7IDDM5tIY"
+              }
+            ]
+          },
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Form ID}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "zf_div_JRBZO3T6mqJRNGT0dQGIR0znWbi7n284GsHcz6kBX7E"
+              }
+            ]
+          },
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Form ID}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "zf_div_wSSjt0MwMmgrpb5NA9Vf4vswwlFRa-Rw_oOup0BgL2o"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1751995096730"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "triggerId": "29",
+        "name": "LI trigger - Conversion - 2025 20544940",
+        "type": "WINDOW_LOADED",
+        "fingerprint": "1753108902595"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "triggerId": "47",
+        "name": "CE - contact_form_submitted",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{_event}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "contact_form_submitted"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1782879990206"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "triggerId": "49",
+        "name": "CE - form_start",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{_event}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "form_start"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1782879990206"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "triggerId": "100",
+        "name": "PV - aciinfotech.com only",
+        "type": "PAGEVIEW",
+        "filter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Page Hostname}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "aciinfotech.com"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "triggerId": "101",
+        "name": "BLOCK - admin",
+        "type": "PAGEVIEW",
+        "filter": [
+          {
+            "type": "STARTS_WITH",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Page Path}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "/admin"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "0"
+      }
+    ],
+    "variable": [
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "30",
+        "name": "conversion_rule_id - Conversion - 2025 20544940",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "conversion_rule_id"
+          }
+        ],
+        "fingerprint": "1753108903021"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "31",
+        "name": "value - Conversion - 2025 20544940",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "value"
+          }
+        ],
+        "fingerprint": "1753108903424"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "32",
+        "name": "event_id - Conversion - 2025 20544940",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "event_id"
+          }
+        ],
+        "fingerprint": "1753108903704"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "33",
+        "name": "user_data - Conversion - 2025 20544940",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "user_data"
+          }
+        ],
+        "fingerprint": "1753108903981"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "34",
+        "name": "conversion_happened_at - Conversion - 2025 20544940",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "conversion_happened_at"
+          }
+        ],
+        "fingerprint": "1753108904233"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "35",
+        "name": "currency - Conversion - 2025 20544940",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "currency"
+          }
+        ],
+        "fingerprint": "1753108904510"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "38",
+        "name": "dlv - utm_medium",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "utm_medium"
+          }
+        ],
+        "fingerprint": "1782879990203"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "39",
+        "name": "dlv - inquiry_type",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "inquiry_type"
+          }
+        ],
+        "fingerprint": "1782879990204"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "40",
+        "name": "dlv - utm_term",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "utm_term"
+          }
+        ],
+        "fingerprint": "1782879990204"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "41",
+        "name": "const - GA4 Measurement ID",
+        "type": "c",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "value",
+            "value": "G-145NLC9TW3"
+          }
+        ],
+        "fingerprint": "1782879990204"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "42",
+        "name": "dlv - gclid",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "gclid"
+          }
+        ],
+        "fingerprint": "1782879990204"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "43",
+        "name": "dlv - utm_content",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "utm_content"
+          }
+        ],
+        "fingerprint": "1782879990205"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "44",
+        "name": "dlv - utm_campaign",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "utm_campaign"
+          }
+        ],
+        "fingerprint": "1782879990205"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "45",
+        "name": "dlv - utm_source",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "utm_source"
+          }
+        ],
+        "fingerprint": "1782879990205"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "variableId": "46",
+        "name": "dlv - form_location",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "form_location"
+          }
+        ],
+        "fingerprint": "1782879990205"
+      }
+    ],
+    "builtInVariable": [
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "PAGE_URL",
+        "name": "Page URL"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "PAGE_HOSTNAME",
+        "name": "Page Hostname"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "PAGE_PATH",
+        "name": "Page Path"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "REFERRER",
+        "name": "Referrer"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "EVENT",
+        "name": "Event"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "CLICK_ELEMENT",
+        "name": "Click Element"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "CLICK_CLASSES",
+        "name": "Click Classes"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "CLICK_ID",
+        "name": "Click ID"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "CLICK_TARGET",
+        "name": "Click Target"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "CLICK_URL",
+        "name": "Click URL"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "CLICK_TEXT",
+        "name": "Click Text"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "FORM_ELEMENT",
+        "name": "Form Element"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "FORM_CLASSES",
+        "name": "Form Classes"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "FORM_ID",
+        "name": "Form ID"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "FORM_TARGET",
+        "name": "Form Target"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "FORM_URL",
+        "name": "Form URL"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "FORM_TEXT",
+        "name": "Form Text"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "ERROR_MESSAGE",
+        "name": "Error Message"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "ERROR_URL",
+        "name": "Error URL"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "ERROR_LINE",
+        "name": "Error Line"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "NEW_HISTORY_FRAGMENT",
+        "name": "New History Fragment"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "OLD_HISTORY_FRAGMENT",
+        "name": "Old History Fragment"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "NEW_HISTORY_STATE",
+        "name": "New History State"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "OLD_HISTORY_STATE",
+        "name": "Old History State"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "HISTORY_SOURCE",
+        "name": "History Source"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "CONTAINER_VERSION",
+        "name": "Container Version"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "DEBUG_MODE",
+        "name": "Debug Mode"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "RANDOM_NUMBER",
+        "name": "Random Number"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "CONTAINER_ID",
+        "name": "Container ID"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "HTML_ID",
+        "name": "HTML ID"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "ENVIRONMENT_NAME",
+        "name": "Environment Name"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "VIDEO_PROVIDER",
+        "name": "Video Provider"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "VIDEO_URL",
+        "name": "Video URL"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "VIDEO_TITLE",
+        "name": "Video Title"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "VIDEO_DURATION",
+        "name": "Video Duration"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "VIDEO_PERCENT",
+        "name": "Video Percent"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "VIDEO_VISIBLE",
+        "name": "Video Visible"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "VIDEO_STATUS",
+        "name": "Video Status"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "VIDEO_CURRENT_TIME",
+        "name": "Video Current Time"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "SCROLL_DEPTH_THRESHOLD",
+        "name": "Scroll Depth Threshold"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "SCROLL_DEPTH_UNITS",
+        "name": "Scroll Depth Units"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "SCROLL_DEPTH_DIRECTION",
+        "name": "Scroll Direction"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "ELEMENT_VISIBILITY_RATIO",
+        "name": "Percent Visible"
+      },
+      {
+        "accountId": "6003533213",
+        "containerId": "42599544",
+        "type": "ELEMENT_VISIBILITY_TIME",
+        "name": "On-Screen Duration"
+      }
+    ],
+    "fingerprint": "1782880048447",
+    "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6003533213/containers/42599544/versions/0?apiLink=version"
+  }
+}
