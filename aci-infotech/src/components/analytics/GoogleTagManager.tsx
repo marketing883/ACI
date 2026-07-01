@@ -1,11 +1,7 @@
 'use client';
 
-import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
-
-// Google Tag Manager Container ID
-const GTM_ID = 'GTM-NGTG3ZZ';
 
 // Declare dataLayer on window
 declare global {
@@ -417,46 +413,14 @@ function EngagementScoreTracker() {
   return null;
 }
 
-// GTM Head Script Component
-export function GTMHead() {
-  return (
-    <Script id="gtm-head" strategy="afterInteractive">
-      {`
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','${GTM_ID}');
-      `}
-    </Script>
-  );
-}
-
-// GTM NoScript Component (for body)
-export function GTMBody() {
-  return (
-    <noscript>
-      <iframe
-        src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-        height="0"
-        width="0"
-        style={{ display: 'none', visibility: 'hidden' }}
-      />
-    </noscript>
-  );
-}
-
-// Main GoogleTagManager component
+// Enhanced tracking components. The GTM container itself is installed
+// server-side in the document <head> (see src/app/layout.tsx +
+// GTM_BOOTSTRAP_SCRIPT) so it is present in the initial HTML and Tag
+// Assistant can find it. This component only mounts the client-side
+// trackers that push events into the already-initialised dataLayer.
 export default function GoogleTagManager() {
   return (
     <>
-      {/* GTM Script */}
-      <GTMHead />
-
-      {/* GTM NoScript fallback */}
-      <GTMBody />
-
-      {/* Enhanced tracking components */}
       <Suspense fallback={null}>
         <PageViewTracker />
       </Suspense>

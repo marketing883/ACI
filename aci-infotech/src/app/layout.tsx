@@ -4,7 +4,7 @@ import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import ClientProviders from "@/components/layout/ClientProviders";
 import GlobalStructuredData from "@/components/seo/StructuredData";
-import { CONSENT_DEFAULT_SCRIPT } from "@/lib/analytics/consent";
+import { CONSENT_DEFAULT_SCRIPT, GTM_BOOTSTRAP_SCRIPT, GTM_ID } from "@/lib/analytics/consent";
 
 // Self-hosted, automatically subset, font-display: swap. Replaces the
 // render-blocking <link> to fonts.googleapis.com that v1 was using.
@@ -137,6 +137,12 @@ export default function RootLayout({
             replay a returning visitor's stored choice. Server-rendered
             inline so it executes on parse, before GTM and any Google tag. */}
         <script dangerouslySetInnerHTML={{ __html: CONSENT_DEFAULT_SCRIPT }} />
+        {/* Google Tag Manager — canonical install, server-rendered inline
+            in <head> right after the consent default so the container is
+            present in the initial HTML and executes on parse. Loading it
+            here (not via next/script in a dynamic ssr:false client
+            component) is what makes Tag Assistant actually find it. */}
+        <script dangerouslySetInnerHTML={{ __html: GTM_BOOTSTRAP_SCRIPT }} />
         {/* Preload v1's hero poster only on v1 builds. The v2 hero uses
             its own video + parallax stack and never references this
             asset, so preloading it on v2 wasted ~4KB and a connection
@@ -146,6 +152,16 @@ export default function RootLayout({
         )}
       </head>
       <body className="antialiased font-sans" suppressHydrationWarning>
+        {/* GTM noscript fallback — first thing in <body> per Google's
+            install. */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <GlobalStructuredData />
         <ConditionalLayout>{children}</ConditionalLayout>
         <ClientProviders />

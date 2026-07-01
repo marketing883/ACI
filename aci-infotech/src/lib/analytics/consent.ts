@@ -38,6 +38,25 @@ try {
 } catch (e) {}
 `;
 
+// GTM container id. One source of truth for the head-rendered bootstrap
+// and the tracker helpers.
+export const GTM_ID = 'GTM-NGTG3ZZ';
+
+// Canonical Google Tag Manager bootstrap. Rendered as a plain inline
+// <script> in the document <head> (server-rendered, executes on parse),
+// immediately after CONSENT_DEFAULT_SCRIPT. This is the install Google
+// documents and the one Tag Assistant looks for. It intentionally does
+// NOT go through next/script: an inline `afterInteractive` script inside
+// a dynamic(ssr:false) client component does not reliably inject, which
+// is why the container kept showing up as "not found".
+export const GTM_BOOTSTRAP_SCRIPT = `
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');
+`;
+
 interface ConsentWindow {
   dataLayer?: unknown[];
   gtag?: (...args: unknown[]) => void;
