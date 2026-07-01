@@ -6,6 +6,7 @@ export interface ClusterPost {
   title: string;
   excerpt: string | null;
   category: string | null;
+  featuredImage: string | null;
 }
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -25,7 +26,7 @@ export const getClusterPosts = cache(
 
     const { data, error } = await supabase
       .from('blog_posts')
-      .select('slug, title, excerpt, category, tags')
+      .select('slug, title, excerpt, category, tags, featured_image_url')
       .not('published_at', 'is', null)
       .order('published_at', { ascending: false })
       .limit(60);
@@ -38,11 +39,12 @@ export const getClusterPosts = cache(
       return kw.some((k) => hay.includes(k));
     });
 
-    return matched.slice(0, limit).map((p: { slug: string; title: string; excerpt?: string | null; category?: string | null }) => ({
+    return matched.slice(0, limit).map((p: { slug: string; title: string; excerpt?: string | null; category?: string | null; featured_image_url?: string | null }) => ({
       slug: p.slug,
       title: p.title,
       excerpt: p.excerpt ?? null,
       category: p.category ?? null,
+      featuredImage: p.featured_image_url ?? null,
     }));
   },
 );

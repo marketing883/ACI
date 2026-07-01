@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { getClusterPosts } from '@/lib/content/blog-cluster';
 
@@ -38,22 +39,37 @@ export default async function ClusterPosts({
             <Link
               key={p.slug}
               href={`/blogs/${p.slug}`}
-              className="group flex flex-col p-6 bg-white border border-gray-200 rounded-xl hover:border-[var(--aci-primary)]/40 hover:shadow-sm transition-all"
+              className="group flex flex-col bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-[var(--aci-primary)]/40 hover:shadow-sm transition-all"
             >
-              {p.category && (
-                <span className="text-xs font-medium text-[var(--aci-primary)] uppercase tracking-wide mb-2">
-                  {p.category}
+              <div className="relative aspect-[16/9] w-full bg-gray-100">
+                {p.featuredImage ? (
+                  <Image
+                    src={p.featuredImage}
+                    alt={p.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-[var(--aci-secondary)] to-[var(--aci-primary)]" />
+                )}
+              </div>
+              <div className="flex flex-col p-6">
+                {p.category && (
+                  <span className="text-xs font-medium text-[var(--aci-primary)] uppercase tracking-wide mb-2">
+                    {p.category}
+                  </span>
+                )}
+                <h3 className="text-lg font-bold text-[var(--aci-secondary)] leading-snug mb-2 line-clamp-2 group-hover:text-[var(--aci-primary)] transition-colors">
+                  {p.title}
+                </h3>
+                {p.excerpt && (
+                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">{p.excerpt}</p>
+                )}
+                <span className="inline-flex items-center gap-1 text-[var(--aci-primary)] text-sm font-medium mt-4">
+                  Read <ArrowRight className="w-4 h-4" />
                 </span>
-              )}
-              <h3 className="font-bold text-[var(--aci-secondary)] leading-snug mb-2 group-hover:text-[var(--aci-primary)] transition-colors">
-                {p.title}
-              </h3>
-              {p.excerpt && (
-                <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">{p.excerpt}</p>
-              )}
-              <span className="inline-flex items-center gap-1 text-[var(--aci-primary)] text-sm font-medium mt-4">
-                Read <ArrowRight className="w-4 h-4" />
-              </span>
+              </div>
             </Link>
           ))}
         </div>
