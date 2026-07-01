@@ -80,7 +80,13 @@ export async function GET(request: NextRequest) {
       .order('published_at', { ascending: false });
 
     if (publishedOnly) {
-      query = query.not('published_at', 'is', null);
+      // Source of truth for "public" is status='published'. Filtering on
+      // published_at alone leaked draft posts (which carry a published_at
+      // date) into the public listing, where they 404 on click because the
+      // detail page reads via the anon key and RLS only exposes
+      // status='published' rows. Match that here so the listing never links
+      // to a post that will 404.
+      query = query.eq('status', 'published');
     }
 
     if (featured) {

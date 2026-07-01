@@ -10,6 +10,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: 'News & Press',
   description: 'Latest news, press releases, and media coverage about ACI Infotech - enterprise data engineering, AI, and cloud transformation.',
+  alternates: { canonical: 'https://aciinfotech.com/news' },
 };
 
 interface NewsItem {

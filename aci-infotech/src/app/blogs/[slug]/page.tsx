@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Calendar, Clock, Tag, Linkedin } from 'lucide-react';
 import { getBlogPostBySlug } from '@/lib/content/blog';
+import { getClusterPosts, getRecentPosts } from '@/lib/content/blog-cluster';
 import ArticleBody from './ArticleBody';
 import BlogFaqs from './BlogFaqs';
 import ShareButtons from './ShareButtons';
@@ -56,6 +57,21 @@ export default async function BlogPostPage({ params }: PageProps) {
   const dateStr = post.published_at || post.created_at || new Date().toISOString();
   const url = `https://aciinfotech.com/blogs/${slug}`;
   const ogImage = post.featured_image_url || post.og_image_url || undefined;
+
+  // Related articles: keyword-match on this post's category + tags, then
+  // top up with the most recent OTHER posts so every article always links
+  // to siblings (server-rendered anchors -> no crawl dead-ends).
+  const relatedKeywords = [post.category, ...(post.tags ?? [])].filter(
+    (k): k is string => Boolean(k && k.trim()),
+  );
+  let related = relatedKeywords.length
+    ? await getClusterPosts(relatedKeywords, 6, slug)
+    : [];
+  if (related.length < 3) {
+    const seen = new Set(related.map((r) => r.slug));
+    const recent = await getRecentPosts(6, slug);
+    related = [...related, ...recent.filter((r) => !seen.has(r.slug))].slice(0, 6);
+  }
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -237,6 +253,38 @@ export default async function BlogPostPage({ params }: PageProps) {
                   </a>
                 )}
               </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Related articles — server-rendered internal links so every post
+          links to siblings (crawlable, kills the orphan problem). */}
+      {related.length > 0 && (
+        <section className="py-16 bg-white border-t">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Related articles</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {related.map((r) => (
+                <Link
+                  key={r.slug}
+                  href={`/blogs/${r.slug}`}
+                  className="group bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-all"
+                >
+                  <div className="aspect-video relative">
+                    {r.featuredImage ? (
+                      <Image src={r.featuredImage} alt={r.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" sizes="(max-width: 768px) 100vw, 33vw" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200" />
+                    )}
+                  </div>
+                  <div className="p-5">
+                    {r.category && <span className="text-xs font-medium text-[var(--aci-primary)]">{r.category}</span>}
+                    <h3 className="text-base font-bold text-[var(--aci-secondary)] mt-1 line-clamp-2 group-hover:text-[var(--aci-primary)] transition-colors">{r.title}</h3>
+                    {r.excerpt && <p className="text-sm text-gray-600 mt-2 line-clamp-2">{r.excerpt}</p>}
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
