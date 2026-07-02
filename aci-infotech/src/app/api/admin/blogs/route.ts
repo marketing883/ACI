@@ -125,16 +125,25 @@ export async function GET(request: NextRequest) {
 // Helper to transform frontend field names to database column names
 function transformFieldNames(data: Record<string, unknown>): Record<string, unknown> {
   const transformed = { ...data };
-  // Database uses 'is_featured' column directly, no transformation needed
-  // Handle is_published: if true and no published_at, set published_at to now
-  // if false, ensure published_at is null
+  // Database uses 'is_featured' column directly, no transformation needed.
+  //
+  // `status` is the source of truth for what's publicly visible (the
+  // detail page's RLS-scoped anon read and the public listing both filter
+  // on status='published'). The admin editor only ever sends
+  // `is_published`, and this function used to translate that into
+  // `published_at` alone while DROPPING `is_published` from the payload
+  // before the insert/update -- so `status` was never set and
+  // `is_published` was never actually persisted. Every post published
+  // through the CMS ended up with a published_at date but status left at
+  // its default ('draft'), so the public site 404'd it. Set both columns
+  // here so publishing from the admin UI actually publishes.
   if ('is_published' in transformed) {
     if (transformed.is_published && !transformed.published_at) {
       transformed.published_at = new Date().toISOString();
     } else if (!transformed.is_published) {
       transformed.published_at = null;
     }
-    delete transformed.is_published;
+    transformed.status = transformed.is_published ? 'published' : 'draft';
   }
   return transformed;
 }
