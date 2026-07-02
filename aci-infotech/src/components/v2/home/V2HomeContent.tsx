@@ -101,7 +101,7 @@ export default async function V2HomeContent({ searchParams }: Props = {}) {
                   contactType: 'sales',
                   url: 'https://aciinfotech.com/contact',
                 },
-                foundingDate: '2005',
+                foundingDate: '2006',
                 knowsAbout: [
                   'Data Engineering',
                   'Applied AI & ML',

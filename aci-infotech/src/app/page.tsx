@@ -28,13 +28,13 @@ export const metadata: Metadata = USE_V2_HOME
       title:
         'ACI Infotech | Enterprise Technology Services — Data & AI, Cloud, Managed Operations',
       description:
-        'ACI Infotech builds, ships, and runs production-grade enterprise systems. Data & AI, cloud infrastructure, and managed operations for Fortune 500 companies. 280+ deployments across financial services, healthcare, retail, and manufacturing.',
+        'ACI Infotech builds, ships, and runs production-grade enterprise systems. Data & AI, cloud infrastructure, and managed operations for Fortune 500 companies. 500+ large enterprise projects delivered across financial services, healthcare, retail, and manufacturing.',
       keywords:
         'enterprise technology services, data engineering, AI ML, cloud modernization, managed operations, Databricks, Snowflake, AWS, Azure, SAP, ServiceNow, Fortune 500, digital transformation',
       openGraph: {
         title: 'ACI Infotech | Enterprise Technology. Delivered.',
         description:
-          'Data & AI. Cloud. Managed operations. 280+ production systems for enterprises in financial services, healthcare, retail, and manufacturing.',
+          'Data & AI. Cloud. Managed operations. 500+ production systems for enterprises in financial services, healthcare, retail, and manufacturing.',
         url: siteUrl,
         siteName: 'ACI Infotech',
         type: 'website',
@@ -44,7 +44,7 @@ export const metadata: Metadata = USE_V2_HOME
         card: 'summary_large_image',
         title: 'ACI Infotech | Enterprise Technology. Delivered.',
         description:
-          'Data & AI. Cloud. Managed operations. 280+ production systems for Fortune 500 enterprises.',
+          'Data & AI. Cloud. Managed operations. 500+ production systems for Fortune 500 enterprises.',
       },
       alternates: { canonical: siteUrl },
       robots: { index: true, follow: true },

@@ -22,7 +22,7 @@ export default async function CaseStudiesPage() {
               Client Success Stories
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              280+ Projects Delivered.
+              500+ Projects Delivered.
               <br />
               <span className="text-[var(--aci-primary-light)]">Real Results.</span>
             </h1>
@@ -34,16 +34,20 @@ export default async function CaseStudiesPage() {
             {/* Stats */}
             <div className="flex flex-wrap justify-center gap-8 mt-12">
               <div className="text-center">
-                <div className="text-4xl font-bold text-white">25+</div>
-                <div className="text-gray-400">Enterprise Clients</div>
+                <div className="text-4xl font-bold text-white">2006</div>
+                <div className="text-gray-400">Founded</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-white">$45M+</div>
-                <div className="text-gray-400">Value Delivered</div>
+                <div className="text-4xl font-bold text-white">1,200+</div>
+                <div className="text-gray-400">Experts</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-white">15+</div>
-                <div className="text-gray-400">Industries Served</div>
+                <div className="text-4xl font-bold text-white">500+</div>
+                <div className="text-gray-400">Large Enterprise Projects</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-white">11</div>
+                <div className="text-gray-400">Global Delivery Hubs</div>
               </div>
             </div>
           </div>

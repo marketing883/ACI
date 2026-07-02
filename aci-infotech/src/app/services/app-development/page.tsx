@@ -131,7 +131,7 @@ const differentiators = [
   {
     title: 'Senior Architects, Not Agency Generalists',
     description: 'Our engineers have built applications that run Fortune 500 operations. Not freelancers stitching together Webflow and Zapier.',
-    proof: '70% senior engineers on every engagement',
+    proof: 'Senior engineers on every engagement',
   },
   {
     title: 'Production SLAs, Not Project Handoffs',

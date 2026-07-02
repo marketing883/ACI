@@ -365,7 +365,7 @@ export default function ContactPage() {
               Our Offices Around the World
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              With offices across 4 regions, we deliver enterprise solutions with global expertise and local presence.
+              With 11 global delivery hubs across the USA, India, Europe, and APAC, we deliver enterprise solutions with global expertise and local presence.
             </p>
           </div>
 

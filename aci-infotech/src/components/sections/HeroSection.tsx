@@ -173,9 +173,9 @@ export default function HeroSection() {
 
           {/* Stats Row - Static values, no animation to avoid hydration flicker */}
           <div className="flex flex-nowrap gap-6 sm:gap-8 md:gap-16 lg:gap-24 mb-[50px]">
-            <HeroStat value="$1B+" label="Value Delivered to Clients" />
-            <HeroStat value="1,250+" label="Engineers Worldwide" />
-            <HeroStat value="250+" label="Clients Served" />
+            <HeroStat value="2006" label="Founded" />
+            <HeroStat value="1,200+" label="Experts Worldwide" />
+            <HeroStat value="500+" label="Large Enterprise Projects" />
           </div>
 
           {/* Buttons - 50px gap from stats */}

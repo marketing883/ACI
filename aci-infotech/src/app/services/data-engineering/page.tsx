@@ -196,7 +196,7 @@ const differentiators = [
   {
     title: 'Cost-Effective Delivery',
     description: '18-28% less than Big 4 consultancies. Senior architects leading, not junior analysts.',
-    proof: '70% senior engineers on every project',
+    proof: 'Senior engineers on every project',
   },
 ];
 
@@ -345,7 +345,7 @@ export default function DataEngineeringPage() {
                 governed lakehouse where every dataset has lineage, quality scores, and access controls.
               </p>
               <p className="font-semibold text-[var(--aci-secondary)]">
-                We've done this 40+ times for Fortune 500 companies. When something breaks at 2am,
+                We've done this for Fortune 500 companies, again and again. When something breaks at 2am,
                 we're on the call with you.
               </p>
             </div>

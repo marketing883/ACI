@@ -364,7 +364,7 @@ export default function HeroV2() {
             }}
           >
             Data and AI, cloud, and managed operations for Fortune 500
-            teams. 280+ systems in&nbsp;production.
+            teams. 500+ systems in&nbsp;production.
           </p>
           <p
             style={{

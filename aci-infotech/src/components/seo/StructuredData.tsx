@@ -103,8 +103,8 @@ export function OrganizationSchema({
     'https://www.linkedin.com/company/aci-infotech',
     'https://x.com/ACIInfotech',
   ],
-  foundingDate = '2015',
-  numberOfEmployees = '200+',
+  foundingDate = '2006',
+  numberOfEmployees = '1200',
 }: OrganizationSchemaProps = {}) {
   const schema = {
     '@context': 'https://schema.org',

@@ -3,9 +3,10 @@
 import { CounterRoll } from '../craft/CounterRoll';
 
 const metrics = [
-  { value: '280+', label: 'Projects delivered' },
-  { value: '$1B+', label: 'Value delivered' },
-  { value: '95%', label: 'Client retention rate' },
+  { value: '2006', label: 'Founded' },
+  { value: '1,200+', label: 'Experts' },
+  { value: '500+', label: 'Large enterprise projects' },
+  { value: '11', label: 'Global delivery hubs' },
 ];
 
 export function MetricsStrip() {
@@ -26,7 +27,7 @@ export function MetricsStrip() {
           maxWidth: '1280px',
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateColumns: 'repeat(2, 1fr)',
           gap: '2rem',
           textAlign: 'center',
         }}

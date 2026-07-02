@@ -10,7 +10,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
 export const metadata: Metadata = {
   title: 'About ACI Infotech | The Engineers Behind Enterprise Modernization',
-  description: '280+ projects delivered building data platforms, AI systems, and cloud architectures for 250+ clients. 20 years of production-grade engineering. We answer the 2am call.',
+  description: 'Founded 2006. 500+ large enterprise projects delivered building data platforms, AI systems, and cloud architectures. We answer the 2am call.',
   keywords: 'enterprise technology consulting, data engineering company, AI ML consulting, Fortune 500 technology partner, production-grade engineering',
   alternates: {
     canonical: `${siteUrl}/about`,
@@ -19,11 +19,10 @@ export const metadata: Metadata = {
 
 // About page data
 const stats = [
-  { number: '20', unit: 'Years', description: 'Founded 2006' },
-  { number: '250+', unit: 'Clients', description: 'Served globally' },
-  { number: '$1B+', unit: 'Value', description: 'Delivered to clients' },
-  { number: '280+', unit: 'Projects', description: 'Delivered globally' },
-  { number: '10', unit: 'Countries', description: 'Global delivery' },
+  { number: '2006', unit: 'Founded', description: 'USA, India, Europe & APAC' },
+  { number: '1,200+', unit: 'Experts', description: 'Across global delivery' },
+  { number: '500+', unit: 'Projects', description: 'Large enterprise projects' },
+  { number: '11', unit: 'Hubs', description: 'Global delivery hubs' },
 ];
 
 const principles = [
@@ -94,7 +93,7 @@ const ceo = {
   title: 'Founder & CEO',
   vision: `At ACI Infotech, our purpose is to drive enterprise excellence through innovation and intelligence. We partner with organizations to help them reimagine their business models, modernize operations, and unlock value through technology.
 
-Under Jag's leadership, ACI has grown from a small team of passionate engineers to a global organization that has delivered 280+ projects for 25+ enterprise clients. His vision is simple yet powerful: deliver production-grade systems that create measurable business value, backed by engineers who take ownership and stay accountable.
+Under Jag's leadership, ACI has grown from a small team of passionate engineers to a global organization that has delivered 500+ large enterprise projects. His vision is simple yet powerful: deliver production-grade systems that create measurable business value, backed by engineers who take ownership and stay accountable.
 
 "We don't just deliver projects. We build partnerships. When your system goes down at 2am, we're the team that answers the phone. That's not a policy. That's who we are."`,
   photo_url: '/images/about-team/Jag.png',
@@ -180,14 +179,10 @@ const certifications = [
 ];
 
 const trackRecord = [
-  { number: '$1B+', label: 'Total value delivered to clients', context: 'Measurable ROI, not estimated' },
-  { number: '250+', label: 'Clients served', context: 'Across banking, healthcare, retail, manufacturing' },
-  { number: '20 Years', label: 'In business since 2006', context: 'Stable, growing, here for the long term' },
-  { number: '280+', label: 'Projects delivered', context: 'Engineers, architects, data scientists' },
-  { number: '10 Countries', label: 'Global delivery centers', context: 'US, India, and beyond' },
-  { number: '95%', label: 'Client retention rate', context: 'Clients come back because we deliver' },
-  { number: '70%', label: 'Senior engineers (10+ years)', context: 'Not junior analysts learning on your dime' },
-  { number: '6-12 Months', label: 'Average project timeline', context: 'Enterprise scale, realistic timelines' },
+  { number: '2006', label: 'Founded', context: 'USA, India, Europe & APAC' },
+  { number: '1,200+', label: 'Experts', context: 'Across global delivery' },
+  { number: '500+', label: 'Large enterprise projects', context: 'Engineers, architects, data scientists' },
+  { number: '11', label: 'Global delivery hubs', context: 'US, India, and beyond' },
 ];
 
 export default function AboutPage() {
@@ -216,7 +211,7 @@ export default function AboutPage() {
           </div>
 
           {/* Stats Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {stats.map((stat) => (
               <div key={stat.unit} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-[var(--aci-primary-light)]">
@@ -357,7 +352,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What We've Built Across 280+ Projects
+              What We've Built Across 500+ Projects
             </h2>
             <p className="text-lg text-gray-600">
               Four capability areas where we have deep, proven expertise

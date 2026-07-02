@@ -200,18 +200,22 @@ export default function ServicesPage() {
           </div>
 
           {/* Value Props */}
-          <div className="grid md:grid-cols-3 gap-6 mt-12">
+          <div className="grid md:grid-cols-4 gap-6 mt-12">
             <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-white mb-2">80+</div>
-              <div className="text-gray-300">Enterprise Clients</div>
+              <div className="text-4xl font-bold text-white mb-2">2006</div>
+              <div className="text-gray-300">Founded</div>
             </div>
             <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-white mb-2">$1B+</div>
-              <div className="text-gray-300">Client Value Delivered</div>
+              <div className="text-4xl font-bold text-white mb-2">1,200+</div>
+              <div className="text-gray-300">Experts</div>
             </div>
             <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-white mb-2">95%</div>
-              <div className="text-gray-300">Client Retention Rate</div>
+              <div className="text-4xl font-bold text-white mb-2">500+</div>
+              <div className="text-gray-300">Large Enterprise Projects</div>
+            </div>
+            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
+              <div className="text-4xl font-bold text-white mb-2">11</div>
+              <div className="text-gray-300">Global Delivery Hubs</div>
             </div>
           </div>
         </div>

@@ -55,7 +55,7 @@ export default function MobileV2Home({ caseStudies }: Props) {
           contactType: 'sales',
           url: 'https://aciinfotech.com/contact',
         },
-        foundingDate: '2005',
+        foundingDate: '2006',
         knowsAbout: SERVICE_NAMES,
         areaServed: ['United States', 'India', 'Canada', 'United Kingdom'],
         sameAs: [

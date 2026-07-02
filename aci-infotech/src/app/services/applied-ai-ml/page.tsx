@@ -133,8 +133,8 @@ const beyondDelivery = [
 const differentiators = [
   {
     title: 'Production, Not Pilots',
-    description: "50+ AI models in production across Fortune 500 clients. We ship models that run 24/7 with SLAs.",
-    proof: '50+ models in production',
+    description: "AI models running in production across Fortune 500 clients. We ship models that run 24/7 with SLAs.",
+    proof: 'Models running in production',
   },
   {
     title: 'ArqAI Governance Platform',
