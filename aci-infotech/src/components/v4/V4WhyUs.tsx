@@ -153,7 +153,6 @@ export default function V4WhyUs() {
                   style={{ display: 'block', width: '100%', aspectRatio: '16/9', objectFit: 'cover' }}
                   aria-label="Looping visual of a monitored production operations dashboard"
                 >
-                  <source src="/videos/v4/ops-loop.webm" type="video/webm" />
                   <source src="/videos/v4/ops-loop.mp4" type="video/mp4" />
                 </video>
                 <div style={{ padding: '24px 24px 28px', display: 'grid', gap: 18 }}>
