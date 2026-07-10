@@ -64,6 +64,9 @@ export default function ConditionalLayout({
   // ships its own nav, footer, and design system (src/components/v3),
   // so suppress all site chrome on /preview/v3.
   const isV3Preview = pathname?.startsWith('/preview/v3');
+  // v4 (Effica-based) homepage preview ships its own nav, footer, and
+  // design system (src/components/v4), so suppress all site chrome.
+  const isV4Preview = pathname?.startsWith('/preview/v4');
   // Staging builds set NEXT_PUBLIC_USE_V2_HOME=true, which flips `/`
   // to the v2 homepage. That page renders its own NavV2 / FooterV2,
   // so the v1 chrome must be suppressed here too. The env var is
@@ -74,7 +77,7 @@ export default function ConditionalLayout({
 
   // Admin routes, landing pages, v2 previews, and the staging v2
   // root all bypass the v1 Navigation / Footer / chat widgets.
-  if (isAdminRoute || isLandingPage || isV2Preview || isV3Preview || isV2Root) {
+  if (isAdminRoute || isLandingPage || isV2Preview || isV3Preview || isV4Preview || isV2Root) {
     return <>{children}</>;
   }
 
