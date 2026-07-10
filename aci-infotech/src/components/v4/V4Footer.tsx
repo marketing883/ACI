@@ -90,7 +90,7 @@ export default function V4Footer() {
           }}
         >
           <Link href="/" aria-label="ACI Infotech home">
-            <Image src="/aci-infotech-logo.webp" alt="ACI Infotech" width={110} height={28} />
+            <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={100} height={32} />
           </Link>
           <nav style={{ display: 'flex', flexWrap: 'wrap', gap: 22 }}>
             {FOOTER_LINKS.map((l) => (

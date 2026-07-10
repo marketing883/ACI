@@ -48,7 +48,7 @@ export default function V4Nav() {
         }}
       >
         <Link href="/" aria-label="ACI Infotech home" style={{ display: 'flex', alignItems: 'center' }}>
-          <Image src="/aci-infotech-logo.webp" alt="ACI Infotech" width={132} height={34} priority />
+          <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={119} height={38} priority />
         </Link>
 
         <div className="v4-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
