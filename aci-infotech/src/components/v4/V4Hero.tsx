@@ -108,7 +108,7 @@ function RotatingHeadline() {
   const isGptw = i === 3;
 
   return (
-    <div style={{ position: 'relative', minHeight: 316 }}>
+    <div style={{ position: 'relative', minHeight: 284 }}>
       <AnimatePresence mode="wait">
         <motion.div
           key={i}
@@ -224,9 +224,12 @@ export default function V4Hero() {
             </div>
           </div>
         </div>
+      </section>
 
-        {/* intricate pipeline, straddling the hero base */}
-        <Reveal tier="lg" delay={0.2} className="v4-pipeline-wrap">
+      {/* light band: the pipeline pokes its top third up into the hero,
+          then stats + ticker follow. */}
+      <section className="v4-hero-band">
+        <Reveal tier="lg" delay={0.15} className="v4-pipeline-wrap">
           <div className="v4-pipeline-panel">
             <div className="v4-pipeline-head">
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -238,11 +241,8 @@ export default function V4Hero() {
             <HeroPipeline className="v4-pipeline-svg" />
           </div>
         </Reveal>
-      </section>
 
-      {/* stats + ticker band (light) */}
-      <section className="v4-hero-band">
-        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 24px' }}>
+        <div className="v4-hero-band-inner" style={{ maxWidth: 1240, margin: '0 auto', padding: '72px 24px 0' }}>
           <div
             style={{
               display: 'grid',

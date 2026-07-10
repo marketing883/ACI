@@ -4,6 +4,9 @@
    pulses, metric highlights) so the blue stays in charge. */
 
 .v4-root {
+  /* how much of the pipeline panel overlaps up into the dark hero
+     (~one third of the panel). Scales with the panel width. */
+  --v4-overlap: calc(min(1148px, 100vw - 48px) * 0.135 + 30px);
   --v4-royal: #1e3fcc;
   --v4-royal-deep: #101f73;
   --v4-royal-wash: #eef1fa;
@@ -62,7 +65,8 @@
   text-wrap: balance;
 }
 .v4-h1 {
-  font-size: clamp(2.6rem, 6.2vw, 4.9rem);
+  /* sized so each authored line stays on one line (two lines total). */
+  font-size: clamp(2.2rem, 4.3vw, 3.6rem);
 }
 .v4-h2 {
   font-size: clamp(1.9rem, 3.6vw, 3rem);
@@ -164,7 +168,8 @@ a:hover .v4-zoom img {
 .v4-hero {
   position: relative;
   background: var(--v4-ink);
-  padding: 150px 24px 0;
+  /* bottom padding reserves the strip the panel's top third overlaps */
+  padding: 146px 24px var(--v4-overlap);
   overflow: hidden;
 }
 .v4-hero-media,
@@ -191,15 +196,17 @@ a:hover .v4-zoom img {
   margin: 0 auto;
 }
 .v4-hero-copy {
-  max-width: 760px;
+  max-width: 1000px;
 }
 
-/* pipeline panel straddling the hero base into the light band */
+/* pipeline panel: sits in the light band but pokes its top third up into
+   the dark hero via a negative top margin. */
 .v4-pipeline-wrap {
   position: relative;
   z-index: 3;
   max-width: 1240px;
-  margin: 60px auto -110px;
+  margin: calc(-1 * var(--v4-overlap)) auto 0;
+  padding: 0 24px;
 }
 .v4-pipeline-panel {
   background: rgba(9, 13, 26, 0.72);
@@ -241,7 +248,10 @@ a:hover .v4-zoom img {
 }
 .v4-hero-band {
   background: var(--v4-paper);
-  padding: 150px 0 40px;
+  padding: 0 0 40px;
+}
+.v4-hero-band-inner {
+  padding-top: 72px;
 }
 
 /* Ticker (client/platform row) */
