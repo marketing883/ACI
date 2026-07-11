@@ -1,0 +1,38 @@
+/* Staggered hero entrance for the Foldcraft section. */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.foldcraft {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fc-anim {
+  animation: fadeSlideUp 0.8s ease both;
+}
+.fc-d1 {
+  animation-delay: 0.2s;
+}
+.fc-d2 {
+  animation-delay: 0.4s;
+}
+.fc-d3 {
+  animation-delay: 0.7s;
+}
+.fc-d4 {
+  animation-delay: 0.9s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-anim {
+    animation: none;
+  }
+}

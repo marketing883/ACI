@@ -16,15 +16,15 @@ const LOGOS = [
 
 function Row() {
   return (
-    <div className="flex shrink-0 items-center gap-16 pr-16">
+    <div className="flex shrink-0 items-center gap-20 pr-20">
       {LOGOS.map((l, idx) => (
-        <div key={`${l.alt}-${idx}`} className="flex h-9 shrink-0 items-center">
+        <div key={`${l.alt}-${idx}`} className="flex h-14 shrink-0 items-center">
           <Image
             src={l.src}
             alt={l.alt}
-            width={l.w}
-            height={36}
-            className="h-7 w-auto object-contain opacity-55 transition-opacity duration-300 hover:opacity-100"
+            width={Math.round(l.w * 1.5)}
+            height={56}
+            className="h-11 w-auto object-contain opacity-70 transition-opacity duration-300 hover:opacity-100"
             style={{ filter: 'brightness(0) invert(1)' }}
           />
         </div>
@@ -37,13 +37,10 @@ export default function PartnerMarquee({ headingClass }: { headingClass: string 
   return (
     <section className="border-t border-white/10 bg-black py-14">
       <div className="mx-auto max-w-6xl px-6 md:px-10 lg:px-12">
-        <div className="mb-8 flex items-baseline justify-between">
+        <div className="mb-10">
           <h2 className={`text-2xl font-semibold text-white sm:text-3xl ${headingClass}`}>
             Our Partner Platforms
           </h2>
-          <span className="hidden text-[11px] font-semibold uppercase tracking-[0.2em] text-white/40 sm:block">
-            Platform Ecosystem
-          </span>
         </div>
       </div>
 

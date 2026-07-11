@@ -10,6 +10,7 @@ import AciNav from './AciNav';
 import './hero.css';
 
 const VIDEO_1 = '/videos/v4-slide1.mp4';
+const VIDEO_1_WEBM = '/videos/v4-slide1.webm';
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 type Mark =
@@ -170,6 +171,7 @@ export default function HeroDeck({ headingClass }: { headingClass: string }) {
           clears on the right so the footage keeps its charm. */}
       <FadingVideo
         src={VIDEO_1}
+        webmSrc={VIDEO_1_WEBM}
         className="absolute inset-0 h-full w-full object-cover"
         offsetX={9}
         scale={1.16}

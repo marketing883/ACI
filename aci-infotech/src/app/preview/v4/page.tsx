@@ -1,12 +1,15 @@
 import type { Metadata } from 'next';
-import { Funnel_Display, Funnel_Sans } from 'next/font/google';
+import { Funnel_Display, Funnel_Sans, Geist } from 'next/font/google';
 import HeroDeck from '@/components/v4/hero/HeroDeck';
 import PartnerMarquee from '@/components/v4/hero/PartnerMarquee';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
 
 // Funnel Display for headings, Funnel Sans for body. Scoped to this
-// preview, not the site's global font.
+// preview, not the site's global font. Geist is scoped to the Foldcraft
+// section below.
 const display = Funnel_Display({ subsets: ['latin'], weight: ['500', '600', '700', '800'], display: 'swap' });
 const sans = Funnel_Sans({ subsets: ['latin'], weight: ['300', '400', '500', '600'], display: 'swap' });
+const geist = Geist({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], display: 'swap' });
 
 export const metadata: Metadata = {
   title: { absolute: 'ACI Infotech' },
@@ -19,6 +22,7 @@ export default function V4PreviewPage() {
     <div className={sans.className}>
       <HeroDeck headingClass={display.className} />
       <PartnerMarquee headingClass={display.className} />
+      <FoldcraftHero geistClass={geist.className} />
     </div>
   );
 }

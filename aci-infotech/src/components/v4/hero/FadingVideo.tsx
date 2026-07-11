@@ -10,12 +10,15 @@ import { useEffect, useRef } from 'react';
  */
 export default function FadingVideo({
   src,
+  webmSrc,
   className,
   offsetX = 0,
   offsetY = 0,
   scale = 1,
 }: {
   src: string;
+  /** optional VP9 WebM, preferred by browsers that support it */
+  webmSrc?: string;
   className?: string;
   offsetX?: number;
   offsetY?: number;
@@ -76,6 +79,7 @@ export default function FadingVideo({
             : undefined,
       }}
     >
+      {webmSrc ? <source src={webmSrc} type="video/webm" /> : null}
       <source src={src} type="video/mp4" />
     </video>
   );
