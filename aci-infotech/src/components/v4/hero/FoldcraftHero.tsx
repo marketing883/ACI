@@ -15,6 +15,7 @@ const STORY = {
     'They flawlessly delivered top-tier digital data on a milestone that mattered to us. Their dedication and expertise made them a genuine partner, not a vendor.',
   role: 'Director of Data and MarTech',
   org: 'A national convenience retailer',
+  href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
 };
 
 /**
@@ -61,8 +62,9 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
         </div>
 
         {/* Middle — success story snapshot with client testimonial */}
-        <div
-          className="fc-anim group w-full max-w-md rounded-2xl border border-white/12 bg-white/[0.05] p-6 backdrop-blur-md transition-colors duration-300 hover:border-white/25"
+        <Link
+          href={STORY.href}
+          className="fc-anim group block w-full max-w-md rounded-2xl border border-white/12 bg-white/[0.05] p-6 backdrop-blur-md transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08]"
           style={{ animationDelay: '0.5s' }}
         >
           <div className="flex items-center justify-between">
@@ -90,11 +92,20 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
             &ldquo;{STORY.quote}&rdquo;
           </p>
 
-          <div className="mt-4 pl-4 text-xs">
-            <span className="font-medium text-white/70">{STORY.role}</span>
-            <span className="text-white/40"> &middot; {STORY.org}</span>
+          <div className="mt-4 flex items-end justify-between gap-3 pl-4">
+            <div className="text-xs">
+              <span className="font-medium text-white/70">{STORY.role}</span>
+              <span className="text-white/40"> &middot; {STORY.org}</span>
+            </div>
+            <span className="flex shrink-0 items-center gap-1 text-xs font-semibold text-cyan-300">
+              Read the case study
+              <ArrowUpRight
+                size={14}
+                className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </span>
           </div>
-        </div>
+        </Link>
 
         {/* Bottom */}
         <div>
