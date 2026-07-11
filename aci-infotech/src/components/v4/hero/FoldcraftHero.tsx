@@ -48,13 +48,13 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
       {/* Content */}
       <div className="relative z-10 flex h-full flex-col justify-between px-6 pb-10 pt-12 sm:pb-12 sm:pt-16 md:px-12 md:pb-16 md:pt-20 lg:px-16">
         {/* Top */}
-        <div className="max-w-2xl">
-          <div className="fc-anim fc-d1 mb-5 sm:mb-6">
+        <div className="max-w-3xl">
+          <div className="fc-anim fc-d1 mb-6 sm:mb-7">
             <span className="inline-flex items-center rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs text-white/90 backdrop-blur-sm sm:text-sm">
               Why Most AI Stalls
             </span>
           </div>
-          <h2 className="fc-anim fc-d2 text-3xl font-medium leading-[1.08] tracking-tight text-white sm:text-4xl md:text-5xl">
+          <h2 className="fc-anim fc-d2 text-4xl font-medium leading-[1.05] tracking-tight text-white sm:text-5xl md:text-[3.5rem]">
             Your best data is
             <br />
             sitting in the dark.
@@ -64,7 +64,7 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
         {/* Middle — success story snapshot with client testimonial */}
         <Link
           href={STORY.href}
-          className="fc-anim group block w-full max-w-md rounded-2xl border border-white/12 bg-white/[0.05] p-6 backdrop-blur-md transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08]"
+          className="fc-anim group block w-full max-w-2xl rounded-2xl border border-white/12 bg-white/[0.05] p-7 backdrop-blur-md transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08] sm:p-8"
           style={{ animationDelay: '0.5s' }}
         >
           <div className="flex items-center justify-between">
@@ -84,15 +84,15 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
             </div>
           </div>
 
-          <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300/70">
+          <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300/70">
             {STORY.title}
           </p>
 
-          <p className="mt-3 border-l-2 border-cyan-400/40 pl-4 text-[15px] leading-relaxed text-white/85">
+          <p className="mt-3 border-l-2 border-cyan-400/40 pl-5 text-base leading-relaxed text-white/85 sm:text-[17px]">
             &ldquo;{STORY.quote}&rdquo;
           </p>
 
-          <div className="mt-4 flex items-end justify-between gap-3 pl-4">
+          <div className="mt-5 flex items-end justify-between gap-3 pl-5">
             <div className="text-xs">
               <span className="font-medium text-white/70">{STORY.role}</span>
               <span className="text-white/40"> &middot; {STORY.org}</span>
@@ -109,7 +109,7 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
 
         {/* Bottom */}
         <div>
-          <p className="fc-anim fc-d3 mb-6 max-w-xl text-sm leading-relaxed text-white/65 sm:text-base md:text-lg">
+          <p className="fc-anim fc-d3 mb-6 max-w-2xl text-sm leading-relaxed text-white/65 sm:text-base md:text-lg">
             Most enterprise AI doesn&apos;t fail at the model. It fails in the deep, where the data is
             siloed, ungoverned, and out of reach. We go down, bring it up, and keep it running in the
             light.
