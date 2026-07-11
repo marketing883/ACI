@@ -165,10 +165,28 @@ export default function HeroDeck({ headingClass }: { headingClass: string }) {
 
   return (
     <div className="hero-deck relative min-h-[100dvh] overflow-hidden bg-black text-white">
-      {/* Background video, playing out under a heavy scrim */}
-      <FadingVideo src={VIDEO_1} className="absolute inset-0 h-full w-full object-cover" offsetY={17} />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/92 via-black/78 to-black/45" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20" />
+      {/* Background video, shifted toward the right where there is no copy,
+          under a scrim that stays dark on the left (behind the text) and
+          clears on the right so the footage keeps its charm. */}
+      <FadingVideo
+        src={VIDEO_1}
+        className="absolute inset-0 h-full w-full object-cover"
+        offsetX={9}
+        scale={1.16}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(95deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.78) 26%, rgba(0,0,0,0.5) 48%, rgba(0,0,0,0.22) 70%, rgba(0,0,0,0.05) 100%)',
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 38%)',
+        }}
+      />
 
       {/* Foreground */}
       <div className="relative z-10 flex min-h-[100dvh] flex-col">
