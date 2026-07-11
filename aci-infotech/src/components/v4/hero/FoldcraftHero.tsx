@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import ParticleRings from './ParticleRings';
 import './foldcraft.css';
@@ -74,13 +73,11 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
           style={{ animationDelay: '0.6s' }}
         >
           <div className="flex items-center justify-between gap-4">
-            <Image
-              src="/images/Solution-Partners/databricks.png"
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/databricks-color.svg"
               alt="Databricks"
-              width={200}
-              height={50}
-              className="h-8 w-auto object-contain"
-              style={{ filter: 'brightness(0) invert(1)' }}
+              className="h-[34px] w-auto object-contain"
             />
             <div className="flex items-baseline gap-2">
               <span className="text-4xl font-bold leading-none text-cyan-300 sm:text-5xl">
