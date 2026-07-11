@@ -15,6 +15,7 @@ export default function FadingVideo({
   offsetX = 0,
   offsetY = 0,
   scale = 1,
+  mirror = false,
 }: {
   src: string;
   /** optional VP9 WebM, preferred by browsers that support it */
@@ -23,6 +24,8 @@ export default function FadingVideo({
   offsetX?: number;
   offsetY?: number;
   scale?: number;
+  /** flip horizontally (e.g. to move the subject to the other side) */
+  mirror?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const rafRef = useRef<number | null>(null);
@@ -74,8 +77,8 @@ export default function FadingVideo({
       style={{
         opacity: 0,
         transform:
-          offsetX || offsetY || scale !== 1
-            ? `translate(${offsetX}%, ${offsetY}%) scale(${scale})`
+          mirror || offsetX || offsetY || scale !== 1
+            ? `${mirror ? 'scaleX(-1) ' : ''}translate(${offsetX}%, ${offsetY}%) scale(${scale})`
             : undefined,
       }}
     >
