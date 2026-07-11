@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
-import { Inter, Instrument_Serif } from 'next/font/google';
+import { Funnel_Display, Funnel_Sans } from 'next/font/google';
 import HeroDeck from '@/components/v4/hero/HeroDeck';
+import PartnerMarquee from '@/components/v4/hero/PartnerMarquee';
 
-// Inter for UI text, Instrument Serif for the slide-1 heading. Both are
-// scoped to this preview page, not the site's global font.
-const inter = Inter({ subsets: ['latin'], weight: ['300', '400', '500', '600'], display: 'swap' });
-const instrument = Instrument_Serif({ subsets: ['latin'], weight: '400', style: ['normal', 'italic'], display: 'swap' });
+// Funnel Display for headings, Funnel Sans for body. Scoped to this
+// preview, not the site's global font.
+const display = Funnel_Display({ subsets: ['latin'], weight: ['500', '600', '700', '800'], display: 'swap' });
+const sans = Funnel_Sans({ subsets: ['latin'], weight: ['300', '400', '500', '600'], display: 'swap' });
 
 export const metadata: Metadata = {
   title: { absolute: 'ACI Infotech' },
@@ -15,8 +16,9 @@ export const metadata: Metadata = {
 
 export default function V4PreviewPage() {
   return (
-    <div className={inter.className}>
-      <HeroDeck serifClass={instrument.className} />
+    <div className={sans.className}>
+      <HeroDeck headingClass={display.className} />
+      <PartnerMarquee headingClass={display.className} />
     </div>
   );
 }

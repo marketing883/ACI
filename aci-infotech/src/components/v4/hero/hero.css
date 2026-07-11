@@ -35,3 +35,69 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Headline sheen: white body with a soft blue band that drifts across
+   the letters, cooling to a muted gray at the far edge. */
+.hero-headline {
+  background: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #eef5fc 28%,
+    #7fbdf0 48%,
+    #cfe0ef 60%,
+    #8a97a6 100%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: hero-sheen 9s ease-in-out infinite;
+}
+@keyframes hero-sheen {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+/* Partner marquee: two identical tracks translate left in lockstep for a
+   seamless loop. */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 38s linear infinite;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+.marquee-viewport:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-headline {
+    animation: none;
+  }
+  .marquee-track {
+    animation: none;
+  }
+}
