@@ -5,6 +5,16 @@ import { ArrowUpRight } from 'lucide-react';
 import ParticleRings from './ParticleRings';
 import './foldcraft.css';
 
+// The data work we actually do down in the deep. Terse on purpose —
+// this is a quiet showcase, not a feature grid.
+const CAPABILITIES = [
+  'Lakehouse architecture',
+  'Streaming and batch pipelines',
+  'Governance, lineage, and quality',
+  'Model ops and evaluation',
+  'Real-time activation',
+];
+
 /**
  * "Surfacing" belief section — the point-of-view beat after the partner
  * marquee. The underwater footage carries the metaphor (value rising out
@@ -46,6 +56,27 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
             <br />
             sitting in the dark.
           </h2>
+        </div>
+
+        {/* Middle — quiet capabilities list filling the gap */}
+        <div className="max-w-sm">
+          <p className="fc-anim mb-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-300/70" style={{ animationDelay: '0.45s' }}>
+            In The Deep, We Run
+          </p>
+          <ul className="flex flex-col">
+            {CAPABILITIES.map((c, i) => (
+              <li
+                key={c}
+                className="fc-anim group flex items-center gap-3 border-b border-white/10 py-2.5"
+                style={{ animationDelay: `${0.55 + i * 0.08}s` }}
+              >
+                <span className="h-1 w-1 shrink-0 rounded-full bg-cyan-300/70 transition-all duration-300 group-hover:w-4" />
+                <span className="text-sm text-white/70 transition-colors duration-300 group-hover:text-white sm:text-[15px]">
+                  {c}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* Bottom */}
