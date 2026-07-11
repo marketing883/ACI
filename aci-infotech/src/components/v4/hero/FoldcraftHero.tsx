@@ -1,19 +1,21 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import ParticleRings from './ParticleRings';
 import './foldcraft.css';
 
-// The data work we actually do down in the deep. Terse on purpose —
-// this is a quiet showcase, not a feature grid.
-const CAPABILITIES = [
-  'Lakehouse architecture',
-  'Streaming and batch pipelines',
-  'Governance, lineage, and quality',
-  'Model ops and evaluation',
-  'Real-time activation',
-];
+// Real, already-published, anonymized success story (from V3Next). Role +
+// org descriptor only — no client name, per the site's anonymization rule.
+const STORY = {
+  metric: { value: '$4.2M', label: 'Saved annually' },
+  title: 'Real-time across 500+ stores',
+  quote:
+    'They flawlessly delivered top-tier digital data on a milestone that mattered to us. Their dedication and expertise made them a genuine partner, not a vendor.',
+  role: 'Director of Data and MarTech',
+  org: 'A national convenience retailer',
+};
 
 /**
  * "Surfacing" belief section — the point-of-view beat after the partner
@@ -58,25 +60,40 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
           </h2>
         </div>
 
-        {/* Middle — quiet capabilities list filling the gap */}
-        <div className="max-w-sm">
-          <p className="fc-anim mb-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-300/70" style={{ animationDelay: '0.45s' }}>
-            In The Deep, We Run
+        {/* Middle — success story snapshot with client testimonial */}
+        <div
+          className="fc-anim group w-full max-w-md rounded-2xl border border-white/12 bg-white/[0.05] p-6 backdrop-blur-md transition-colors duration-300 hover:border-white/25"
+          style={{ animationDelay: '0.5s' }}
+        >
+          <div className="flex items-center justify-between">
+            <Image
+              src="/images/Solution-Partners/databricks.png"
+              alt="Databricks"
+              width={120}
+              height={30}
+              className="h-5 w-auto object-contain opacity-85"
+              style={{ filter: 'brightness(0) invert(1)' }}
+            />
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-semibold text-cyan-300">{STORY.metric.value}</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-white/50">
+                {STORY.metric.label}
+              </span>
+            </div>
+          </div>
+
+          <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300/70">
+            {STORY.title}
           </p>
-          <ul className="flex flex-col">
-            {CAPABILITIES.map((c, i) => (
-              <li
-                key={c}
-                className="fc-anim group flex items-center gap-3 border-b border-white/10 py-2.5"
-                style={{ animationDelay: `${0.55 + i * 0.08}s` }}
-              >
-                <span className="h-1 w-1 shrink-0 rounded-full bg-cyan-300/70 transition-all duration-300 group-hover:w-4" />
-                <span className="text-sm text-white/70 transition-colors duration-300 group-hover:text-white sm:text-[15px]">
-                  {c}
-                </span>
-              </li>
-            ))}
-          </ul>
+
+          <p className="mt-3 border-l-2 border-cyan-400/40 pl-4 text-[15px] leading-relaxed text-white/85">
+            &ldquo;{STORY.quote}&rdquo;
+          </p>
+
+          <div className="mt-4 pl-4 text-xs">
+            <span className="font-medium text-white/70">{STORY.role}</span>
+            <span className="text-white/40"> &middot; {STORY.org}</span>
+          </div>
         </div>
 
         {/* Bottom */}
