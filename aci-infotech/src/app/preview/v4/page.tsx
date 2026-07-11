@@ -1,14 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import VexHero from '@/components/v4/VexHero';
+import { Inter, Instrument_Serif } from 'next/font/google';
+import HeroDeck from '@/components/v4/hero/HeroDeck';
 
-// Inter, scoped to this preview page (does not change the site's global
-// font). Applied to the hero root so all text inside inherits it.
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
-  display: 'swap',
-});
+// Inter for UI text, Instrument Serif for the slide-1 heading. Both are
+// scoped to this preview page, not the site's global font.
+const inter = Inter({ subsets: ['latin'], weight: ['300', '400', '500', '600'], display: 'swap' });
+const instrument = Instrument_Serif({ subsets: ['latin'], weight: '400', style: ['normal', 'italic'], display: 'swap' });
 
 export const metadata: Metadata = {
   title: { absolute: 'ACI Infotech' },
@@ -19,7 +16,7 @@ export const metadata: Metadata = {
 export default function V4PreviewPage() {
   return (
     <div className={inter.className}>
-      <VexHero />
+      <HeroDeck serifClass={instrument.className} />
     </div>
   );
 }
