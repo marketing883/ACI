@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Funnel_Display, Funnel_Sans, Geist } from 'next/font/google';
-import HeroDeck from '@/components/v4/hero/HeroDeck';
+import EditorialHero from '@/components/v4/hero/EditorialHero';
 import PartnerMarquee from '@/components/v4/hero/PartnerMarquee';
 import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
 
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function V4PreviewPage() {
   return (
     <div className={sans.className}>
-      <HeroDeck headingClass={display.className} />
+      <EditorialHero headingClass={display.className} bodyClass={sans.className} />
       <PartnerMarquee headingClass={display.className} />
       <FoldcraftHero geistClass={geist.className} />
     </div>
