@@ -26,7 +26,7 @@ const STORY = {
  */
 export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
   return (
-    <section className={`foldcraft relative h-screen w-full overflow-hidden bg-black ${geistClass}`}>
+    <section className={`foldcraft relative min-h-screen w-full overflow-hidden bg-black ${geistClass}`}>
       <video
         autoPlay
         muted
@@ -45,9 +45,9 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
         <ParticleRings className="h-full w-full" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 flex h-full flex-col justify-between px-6 pb-10 pt-12 sm:pb-12 sm:pt-16 md:px-12 md:pb-16 md:pt-20 lg:px-16">
-        {/* Top */}
+      {/* Content — centered, evenly spaced so it never crams on short
+          viewports; the section grows a touch instead of squashing. */}
+      <div className="relative z-10 flex min-h-screen flex-col justify-center gap-7 px-6 py-16 sm:gap-8 md:px-12 md:py-24 lg:px-16">
         <div className="max-w-3xl">
           <div className="fc-anim fc-d1 mb-6 sm:mb-7">
             <span className="inline-flex items-center rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs text-white/90 backdrop-blur-sm sm:text-sm">
@@ -61,11 +61,17 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
           </h2>
         </div>
 
-        {/* Middle — success story snapshot with client testimonial */}
+        <p className="fc-anim fc-d3 max-w-2xl text-sm leading-relaxed text-white/65 sm:text-base md:text-lg">
+          Most enterprise AI doesn&apos;t fail at the model. It fails in the deep, where the data is
+          siloed, ungoverned, and out of reach. We go down, bring it up, and keep it running in the
+          light.
+        </p>
+
+        {/* Success story snapshot with client testimonial */}
         <Link
           href={STORY.href}
           className="fc-anim group block w-full max-w-2xl rounded-2xl border border-white/12 bg-white/[0.05] p-7 backdrop-blur-md transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08] sm:p-8"
-          style={{ animationDelay: '0.5s' }}
+          style={{ animationDelay: '0.6s' }}
         >
           <div className="flex items-center justify-between">
             <Image
@@ -107,24 +113,17 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
           </div>
         </Link>
 
-        {/* Bottom */}
-        <div>
-          <p className="fc-anim fc-d3 mb-6 max-w-2xl text-sm leading-relaxed text-white/65 sm:text-base md:text-lg">
-            Most enterprise AI doesn&apos;t fail at the model. It fails in the deep, where the data is
-            siloed, ungoverned, and out of reach. We go down, bring it up, and keep it running in the
-            light.
-          </p>
-          <Link
-            href="/services"
-            className="fc-anim fc-d4 group inline-flex items-center gap-2 text-base font-medium text-white sm:text-lg"
-          >
-            <span className="relative">
-              See how we do it
-              <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
-            </span>
-            <ArrowUpRight size={18} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
-        </div>
+        <Link
+          href="/services"
+          className="fc-anim group inline-flex items-center gap-2 text-base font-medium text-white sm:text-lg"
+          style={{ animationDelay: '0.75s' }}
+        >
+          <span className="relative">
+            See how we do it
+            <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+          </span>
+          <ArrowUpRight size={18} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </Link>
       </div>
     </section>
   );
