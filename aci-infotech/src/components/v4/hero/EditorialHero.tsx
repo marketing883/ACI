@@ -6,17 +6,19 @@ import Image from 'next/image';
 import { motion, AnimatePresence, useReducedMotion, type Variants } from 'framer-motion';
 import { ArrowUpRight, X } from 'lucide-react';
 import FadingVideo from './FadingVideo';
+import HeroMegaNav from './HeroMegaNav';
 
 const VIDEO = '/videos/v4-editorial.mp4';
 const VIDEO_WEBM = '/videos/v4-editorial.webm';
 const ACCENT = '#5E0ED7';
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-const NAV = [
+const MOBILE_NAV = [
   { label: 'Services', href: '/services' },
-  { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Blog', href: '/blogs' },
-  { label: 'About', href: '/about' },
+  { label: 'Platforms', href: '/platforms' },
+  { label: 'Industries', href: '/industries' },
+  { label: 'Resources', href: '/playbooks' },
+  { label: 'Company', href: '/about' },
 ];
 
 type Mark =
@@ -47,7 +49,7 @@ const SLIDES: Slide[] = [
     desc: 'Lakehouse modernization, Delta pipelines, MLflow, governance, and real-time analytics.',
     tags: ['Delta Lake', 'MLflow', 'Workflows'],
     cta: { label: 'Read the case study', href: '/case-studies' },
-    mark: { kind: 'logo', src: '/images/Solution-Partners/databricks.png', alt: 'Databricks', h: 30 },
+    mark: { kind: 'logo', src: '/images/Solution-Partners/databricks.png', alt: 'Databricks', h: 40 },
     stat: { value: '87%', label: 'Reduction in data processing time' },
   },
   {
@@ -56,7 +58,7 @@ const SLIDES: Slide[] = [
     desc: 'Azure, Dynamics 365, and Power Platform, connected around measurable operations.',
     tags: ['Azure', 'Dynamics 365', 'Power Platform'],
     cta: { label: 'Explore Microsoft expertise', href: '/partners' },
-    mark: { kind: 'logo', src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 44 },
+    mark: { kind: 'logo', src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 56 },
   },
   {
     eyebrow: 'Life at ACI',
@@ -64,7 +66,7 @@ const SLIDES: Slide[] = [
     desc: 'A place where people feel valued, supported, and free to do their best work.',
     tags: ['Belonging', 'Team spirit', 'Shared success'],
     cta: { label: 'Explore careers', href: '/careers' },
-    mark: { kind: 'badge', src: '/images/certifications-awards/best-place-to-work.webp', alt: 'Great Place to Work Certified', w: 64 },
+    mark: { kind: 'badge', src: '/images/certifications-awards/best-place-to-work.webp', alt: 'Great Place to Work Certified', w: 80 },
   },
 ];
 
@@ -120,49 +122,31 @@ export default function EditorialHero({
   const s = SLIDES[i];
 
   return (
-    <section className={`relative min-h-[100dvh] overflow-hidden bg-white text-black ${bodyClass}`}>
-      {/* Full-bleed video, mirrored so the subject sits on the right */}
-      <FadingVideo src={VIDEO} webmSrc={VIDEO_WEBM} mirror className="absolute inset-0 h-full w-full object-cover" />
-      {/* keep the left legible for dark text without washing out the video */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(100deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.5) 26%, rgba(255,255,255,0.12) 48%, rgba(255,255,255,0) 66%)',
-        }}
-      />
+    <section className={`relative min-h-[100dvh] overflow-hidden bg-[#f3f3f3] text-black ${bodyClass}`}>
+      {/* Reduced, vertically-centered video sitting on the right */}
+      <div className="pointer-events-none absolute right-0 top-[15%] h-[40%] w-[82%] sm:w-[64%] md:top-1/2 md:h-[66%] md:w-[50%] md:-translate-y-1/2">
+        <FadingVideo src={VIDEO} webmSrc={VIDEO_WEBM} mirror className="absolute inset-0 h-full w-full object-contain" />
+      </div>
 
       {/* Foreground */}
       <div className="relative z-20 flex min-h-[100dvh] flex-col">
         {/* NAV (transparent) */}
-        <nav className="flex items-center justify-between px-5 pt-5 sm:px-8 md:px-12 md:pt-6">
+        <nav className="relative flex items-center justify-between px-5 pt-5 sm:px-8 md:px-12 md:pt-6">
           <motion.div custom={0} variants={fadeDown} initial="hidden" animate="show">
             <Link href="/" aria-label="ACI Infotech home" className="flex items-center">
-              <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={122} height={34} priority />
+              <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={165} height={46} priority className="h-10 w-auto md:h-11" />
             </Link>
           </motion.div>
 
-          <div className="hidden items-center gap-9 md:flex">
-            {NAV.map((l, n) => (
-              <motion.div key={l.href} custom={n + 1} variants={fadeDown} initial="hidden" animate="show">
-                <Link
-                  href={l.href}
-                  className="group relative text-[13px] font-semibold uppercase tracking-widest text-black/70 transition-colors hover:text-black"
-                >
-                  <span className="relative">
-                    {l.label}
-                    <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
-                  </span>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+          <motion.div custom={2} variants={fadeDown} initial="hidden" animate="show">
+            <HeroMegaNav headingClass={headingClass} />
+          </motion.div>
 
           <motion.div custom={5} variants={fadeDown} initial="hidden" animate="show" className="flex items-center gap-4">
             <ArrowLink
               href="/contact"
               arrowSize={16}
-              className="hidden text-[12px] font-semibold uppercase tracking-widest text-black sm:inline-flex"
+              className="hidden text-[13px] font-semibold capitalize tracking-wide text-black sm:inline-flex"
             >
               Start a project
             </ArrowLink>
@@ -191,28 +175,28 @@ export default function EditorialHero({
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } }}
-                  className="mb-6 flex items-center gap-5"
+                  className="mb-7 flex items-center gap-6"
                 >
                   {s.mark.kind === 'badge' ? (
-                    <Image src={s.mark.src} alt={s.mark.alt} width={s.mark.w} height={86} className="h-16 w-auto" />
+                    <Image src={s.mark.src} alt={s.mark.alt} width={s.mark.w} height={108} className="h-20 w-auto" />
                   ) : (
                     <Image
                       src={s.mark.src}
                       alt={s.mark.alt}
-                      width={146}
-                      height={77}
+                      width={200}
+                      height={106}
                       className="w-auto object-contain"
                       style={{ height: `${s.mark.h}px` }}
                     />
                   )}
                   {s.stat ? (
                     <>
-                      <span className="h-9 w-px bg-black/15" />
-                      <div className="flex items-baseline gap-2.5">
-                        <span className={`text-4xl font-bold leading-none ${headingClass}`} style={{ color: ACCENT }}>
+                      <span className="h-12 w-px bg-black/15" />
+                      <div className="flex items-baseline gap-3">
+                        <span className={`text-5xl font-bold leading-none ${headingClass}`} style={{ color: ACCENT }}>
                           {s.stat.value}
                         </span>
-                        <span className="max-w-[130px] text-[10px] font-semibold uppercase leading-tight tracking-wide text-black/50">
+                        <span className="max-w-[150px] text-[12px] font-semibold uppercase leading-tight tracking-wide text-black/55">
                           {s.stat.label}
                         </span>
                       </div>
@@ -224,7 +208,7 @@ export default function EditorialHero({
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0, transition: { delay: 0.05, duration: 0.5, ease: EASE } }}
-                className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] sm:text-xs"
+                className="mb-5 text-xs font-semibold capitalize tracking-[0.18em] sm:text-sm"
                 style={{ color: ACCENT }}
               >
                 <span className="text-black/35">/ </span>
@@ -232,8 +216,8 @@ export default function EditorialHero({
               </motion.p>
 
               <h1
-                className={`font-semibold uppercase text-black ${headingClass}`}
-                style={{ fontSize: 'clamp(1.9rem, 4.2vw, 3.8rem)', lineHeight: 0.98, letterSpacing: '-0.01em' }}
+                className={`font-semibold capitalize text-black ${headingClass}`}
+                style={{ fontSize: 'clamp(2rem, 4.4vw, 4rem)', lineHeight: 1.0, letterSpacing: '-0.015em' }}
               >
                 {s.headline.map((line, li) => (
                   <span key={li} className="block overflow-hidden">
@@ -253,14 +237,14 @@ export default function EditorialHero({
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0, transition: { delay: 0.5, duration: 0.6, ease: EASE } }}
-                    className="text-[11px] font-semibold uppercase leading-relaxed tracking-widest text-black/55 sm:text-xs"
+                    className="text-sm font-medium leading-relaxed tracking-wide text-black/60 sm:text-base"
                   >
                     {s.desc}
                   </motion.p>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0, transition: { delay: 0.62, duration: 0.6, ease: EASE } }}
-                    className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-semibold uppercase tracking-widest text-black/40"
+                    className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-[13px] font-semibold capitalize tracking-wide text-black/45"
                   >
                     {s.tags.map((t) => (
                       <span key={t}>
@@ -276,7 +260,7 @@ export default function EditorialHero({
                 >
                   <ArrowLink
                     href={s.cta.href}
-                    className="whitespace-nowrap text-base font-semibold uppercase tracking-widest sm:text-lg"
+                    className="whitespace-nowrap text-lg font-semibold capitalize tracking-wide sm:text-xl"
                     style={{ color: ACCENT }}
                   >
                     {s.cta.label}
@@ -315,7 +299,7 @@ export default function EditorialHero({
             className={`fixed inset-0 z-50 flex flex-col bg-white px-6 py-5 text-black ${bodyClass}`}
           >
             <div className="flex items-center justify-between">
-              <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={122} height={34} />
+              <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={150} height={42} className="h-10 w-auto" />
               <button
                 onClick={() => setMenu(false)}
                 aria-label="Close menu"
@@ -324,23 +308,34 @@ export default function EditorialHero({
                 <X size={22} className="text-black" />
               </button>
             </div>
-            <div className="mt-16 flex flex-col gap-8">
-              {NAV.map((l) => (
+            <div className="mt-14 flex flex-col gap-7">
+              {MOBILE_NAV.map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
                   onClick={() => setMenu(false)}
-                  className="text-3xl font-semibold uppercase tracking-widest text-black"
+                  className="text-3xl font-semibold capitalize tracking-wide text-black"
                 >
                   {l.label}
                 </Link>
               ))}
+              <a
+                href="https://thearq.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenu(false)}
+                className="inline-flex items-center gap-2 text-3xl font-semibold capitalize tracking-wide"
+                style={{ color: ACCENT }}
+              >
+                ArqAI Labs
+                <ArrowUpRight size={26} />
+              </a>
             </div>
             <ArrowLink
               href="/contact"
               onClick={() => setMenu(false)}
               arrowSize={22}
-              className="mt-auto text-xl font-semibold uppercase tracking-widest"
+              className="mt-auto text-xl font-semibold capitalize tracking-wide"
               style={{ color: ACCENT }}
             >
               Start a project
