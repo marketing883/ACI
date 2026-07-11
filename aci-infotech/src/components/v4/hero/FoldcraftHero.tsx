@@ -9,8 +9,8 @@ import './foldcraft.css';
 // Real, already-published, anonymized success story (from V3Next). Role +
 // org descriptor only — no client name, per the site's anonymization rule.
 const STORY = {
-  metric: { value: '$4.2M', label: 'Saved annually' },
-  title: 'Real-time across 500+ stores',
+  metric: { value: '87%', label: 'Reduction in processing time' },
+  title: 'Lakehouse modernization across 500+ stores',
   quote:
     'They flawlessly delivered top-tier digital data on a milestone that mattered to us. Their dedication and expertise made them a genuine partner, not a vendor.',
   role: 'Director of Data and MarTech',
@@ -73,26 +73,26 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
           className="fc-anim group block w-full max-w-2xl rounded-2xl border border-white/12 bg-white/[0.05] p-7 backdrop-blur-md transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08] sm:p-8"
           style={{ animationDelay: '0.6s' }}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <Image
               src="/images/Solution-Partners/databricks.png"
               alt="Databricks"
-              width={120}
-              height={30}
-              className="h-5 w-auto object-contain opacity-85"
+              width={200}
+              height={50}
+              className="h-8 w-auto object-contain"
               style={{ filter: 'brightness(0) invert(1)' }}
             />
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-semibold text-cyan-300">{STORY.metric.value}</span>
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-white/50">
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-bold leading-none text-cyan-300 sm:text-5xl">
+                {STORY.metric.value}
+              </span>
+              <span className="max-w-[110px] text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/50">
                 {STORY.metric.label}
               </span>
             </div>
           </div>
 
-          <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300/70">
-            {STORY.title}
-          </p>
+          <p className="mt-6 text-lg font-medium leading-snug text-white">{STORY.title}</p>
 
           <p className="mt-3 border-l-2 border-cyan-400/40 pl-5 text-base leading-relaxed text-white/85 sm:text-[17px]">
             &ldquo;{STORY.quote}&rdquo;
@@ -113,17 +113,6 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
           </div>
         </Link>
 
-        <Link
-          href="/services"
-          className="fc-anim group inline-flex items-center gap-2 text-base font-medium text-white sm:text-lg"
-          style={{ animationDelay: '0.75s' }}
-        >
-          <span className="relative">
-            See how we do it
-            <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
-          </span>
-          <ArrowUpRight size={18} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        </Link>
       </div>
     </section>
   );
