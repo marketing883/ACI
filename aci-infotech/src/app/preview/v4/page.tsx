@@ -4,6 +4,7 @@ import EditorialHero from '@/components/v4/hero/EditorialHero';
 import PartnerMarquee from '@/components/v4/hero/PartnerMarquee';
 import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
 import SuccessStories from '@/components/v4/hero/SuccessStories';
+import ServicesSection from '@/components/v4/hero/ServicesSection';
 
 // Funnel Display for headings, Funnel Sans for body. Scoped to this
 // preview, not the site's global font. Geist is scoped to the Foldcraft
@@ -25,6 +26,7 @@ export default function V4PreviewPage() {
       <PartnerMarquee headingClass={display.className} />
       <FoldcraftHero geistClass={geist.className} />
       <SuccessStories headingClass={display.className} />
+      <ServicesSection headingClass={display.className} />
     </div>
   );
 }
