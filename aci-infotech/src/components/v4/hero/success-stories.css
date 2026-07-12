@@ -1,0 +1,48 @@
+/* Success Stories reel — video layer crossfade + timed tab progress. */
+
+.ss-video-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.025);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ss-video-layer.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+.ss-video-layer.is-outgoing {
+  opacity: 0;
+  transform: scale(0.985);
+}
+
+.ss-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #1d4ed8;
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: ss-progress 8s cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+@keyframes ss-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ss-video-layer {
+    transition-duration: 1ms;
+  }
+  .ss-progress {
+    display: none;
+  }
+}
