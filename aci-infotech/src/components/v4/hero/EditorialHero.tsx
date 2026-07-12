@@ -134,7 +134,7 @@ export default function EditorialHero({
         <nav className="relative flex items-center justify-between px-5 pt-5 sm:px-8 md:px-12 md:pt-6">
           <motion.div custom={0} variants={fadeDown} initial="hidden" animate="show">
             <Link href="/" aria-label="ACI Infotech home" className="flex items-center">
-              <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={165} height={46} priority className="h-10 w-auto md:h-11" />
+              <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={200} height={64} priority className="h-12 w-auto md:h-14" />
             </Link>
           </motion.div>
 
@@ -146,7 +146,7 @@ export default function EditorialHero({
             <ArrowLink
               href="/contact"
               arrowSize={16}
-              className="hidden text-[13px] font-semibold capitalize tracking-wide text-black sm:inline-flex"
+              className="hidden text-sm font-semibold capitalize tracking-wide text-black sm:inline-flex"
             >
               Start a project
             </ArrowLink>
@@ -162,8 +162,8 @@ export default function EditorialHero({
           </motion.div>
         </nav>
 
-        {/* CONTENT (left) */}
-        <div className="flex flex-1 flex-col justify-end px-5 pb-10 sm:px-8 md:px-12 md:pb-14">
+        {/* CONTENT (left) — vertically centered */}
+        <div className="flex flex-1 flex-col justify-center px-5 sm:px-8 md:px-12">
           <AnimatePresence mode="wait">
             <motion.div
               key={i}
@@ -208,7 +208,7 @@ export default function EditorialHero({
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0, transition: { delay: 0.05, duration: 0.5, ease: EASE } }}
-                className="mb-5 text-xs font-semibold capitalize tracking-[0.18em] sm:text-sm"
+                className="mb-5 text-sm font-semibold capitalize tracking-[0.18em] sm:text-[15px]"
                 style={{ color: ACCENT }}
               >
                 <span className="text-black/35">/ </span>
@@ -217,7 +217,7 @@ export default function EditorialHero({
 
               <h1
                 className={`font-semibold capitalize text-black ${headingClass}`}
-                style={{ fontSize: 'clamp(2rem, 4.4vw, 4rem)', lineHeight: 1.0, letterSpacing: '-0.015em' }}
+                style={{ fontSize: 'clamp(2.2rem, 4.9vw, 4.4rem)', lineHeight: 1.0, letterSpacing: '-0.015em' }}
               >
                 {s.headline.map((line, li) => (
                   <span key={li} className="block overflow-hidden">
@@ -237,14 +237,14 @@ export default function EditorialHero({
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0, transition: { delay: 0.5, duration: 0.6, ease: EASE } }}
-                    className="text-sm font-medium leading-relaxed tracking-wide text-black/60 sm:text-base"
+                    className="text-base font-medium leading-relaxed tracking-wide text-black/60 sm:text-lg"
                   >
                     {s.desc}
                   </motion.p>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0, transition: { delay: 0.62, duration: 0.6, ease: EASE } }}
-                    className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-[13px] font-semibold capitalize tracking-wide text-black/45"
+                    className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold capitalize tracking-wide text-black/45"
                   >
                     {s.tags.map((t) => (
                       <span key={t}>
@@ -260,7 +260,7 @@ export default function EditorialHero({
                 >
                   <ArrowLink
                     href={s.cta.href}
-                    className="whitespace-nowrap text-lg font-semibold capitalize tracking-wide sm:text-xl"
+                    className="whitespace-nowrap text-xl font-semibold capitalize tracking-wide sm:text-2xl"
                     style={{ color: ACCENT }}
                   >
                     {s.cta.label}
@@ -269,9 +269,11 @@ export default function EditorialHero({
               </div>
             </motion.div>
           </AnimatePresence>
+        </div>
 
-          {/* rotation indicator */}
-          <div className="mt-10 flex gap-2">
+        {/* rotation indicator pinned to the bottom */}
+        <div className="px-5 pb-10 sm:px-8 md:px-12 md:pb-12">
+          <div className="flex gap-2">
             {SLIDES.map((_, n) => (
               <button
                 key={n}

@@ -319,7 +319,7 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
             onMouseEnter={() => requestOpen(t.id)}
             onClick={() => (open === t.id ? close() : requestOpen(t.id))}
             aria-expanded={open === t.id}
-            className="group flex items-center gap-1 px-3 py-2 text-[13px] font-semibold capitalize tracking-wide transition-colors"
+            className="group flex items-center gap-1 px-3 py-2 text-[15px] font-semibold capitalize tracking-wide transition-colors"
             style={{ color: open === t.id ? ACCENT : 'rgba(0,0,0,0.75)' }}
           >
             <span className="relative">
@@ -335,7 +335,7 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
           href="https://thearq.ai"
           target="_blank"
           rel="noopener noreferrer"
-          className="group ml-1 flex items-center gap-1.5 rounded-full border px-4 py-2 text-[13px] font-semibold capitalize tracking-wide transition-colors"
+          className="group ml-1 flex items-center gap-1.5 rounded-full border px-4 py-2 text-[15px] font-semibold capitalize tracking-wide transition-colors"
           style={{ color: ACCENT, borderColor: 'rgba(94,14,215,0.3)' }}
         >
           ArqAI Labs
