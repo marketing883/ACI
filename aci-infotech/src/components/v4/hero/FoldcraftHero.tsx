@@ -40,7 +40,7 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
       </video>
 
       {/* Dust-particle rings floating with the fish */}
-      <div className="pointer-events-none absolute right-[2%] top-1/2 h-[74%] w-[56%] -translate-y-1/2 mix-blend-screen opacity-80">
+      <div className="pointer-events-none absolute right-[2%] top-1/2 h-[74%] w-[56%] -translate-y-1/2 mix-blend-screen opacity-100">
         <ParticleRings className="h-full w-full" />
       </div>
 

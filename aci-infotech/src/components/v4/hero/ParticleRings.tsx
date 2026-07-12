@@ -27,11 +27,12 @@ export default function ParticleRings({ className }: { className?: string }) {
     const start = performance.now();
 
     // Concentric rings — nested radii, each tilted to a different plane
-    // so they cross like the atom's shells.
+    // so they cross like the atom's shells. Dense, fine-grained dust.
     const RINGS = [
-      { r: 0.60, flat: 0.30, speed: 0.11, tilt: -0.55, count: 84 },
-      { r: 0.80, flat: 0.85, speed: -0.08, tilt: 0.65, count: 118 },
-      { r: 1.0, flat: 0.42, speed: 0.06, tilt: 1.45, count: 140 },
+      { r: 0.44, flat: 0.55, speed: 0.13, tilt: -0.35, count: 130 },
+      { r: 0.62, flat: 0.30, speed: 0.11, tilt: -0.55, count: 170 },
+      { r: 0.82, flat: 0.85, speed: -0.08, tilt: 0.65, count: 230 },
+      { r: 1.0, flat: 0.42, speed: 0.06, tilt: 1.45, count: 270 },
     ];
 
     const resize = () => {
@@ -53,6 +54,8 @@ export default function ParticleRings({ className }: { className?: string }) {
       const cy = H * 0.5 + Math.sin(t * 0.3) * H * 0.03; // slow float
       const base = Math.min(W, H) * 0.42;
       ctx.globalCompositeOperation = 'lighter';
+      ctx.shadowColor = 'rgba(140,225,255,0.9)';
+      ctx.shadowBlur = 3;
 
       RINGS.forEach((ring, ri) => {
         const rot = t * ring.speed + ri * 1.7;
@@ -68,10 +71,10 @@ export default function ParticleRings({ className }: { className?: string }) {
           const x = cx + ex * cosR - ey * sinR;
           const y = cy + ex * sinR + ey * cosR;
           const sh = 0.5 + 0.5 * Math.sin(t * 2 + i * 0.7 + ri * 2);
-          const size = 0.5 + sh * 1.15;
-          const alpha = 0.1 + sh * 0.3;
+          const size = 0.35 + sh * 0.75; // finer grains
+          const alpha = 0.2 + sh * 0.45; // brighter, more present
           // mostly cool light-shaft dust, an occasional cyan spark
-          ctx.fillStyle = i % 9 === 0 ? `rgba(150,235,255,${alpha})` : `rgba(196,224,255,${alpha})`;
+          ctx.fillStyle = i % 7 === 0 ? `rgba(160,240,255,${alpha})` : `rgba(205,232,255,${alpha})`;
           ctx.beginPath();
           ctx.arc(x, y, size, 0, Math.PI * 2);
           ctx.fill();
