@@ -3,6 +3,7 @@ import { Funnel_Display, Funnel_Sans, Geist } from 'next/font/google';
 import EditorialHero from '@/components/v4/hero/EditorialHero';
 import PartnerMarquee from '@/components/v4/hero/PartnerMarquee';
 import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import PlaybooksSection from '@/components/v4/hero/PlaybooksSection';
 import SuccessStories from '@/components/v4/hero/SuccessStories';
 import ServicesSection from '@/components/v4/hero/ServicesSection';
 import InsightsSection from '@/components/v4/hero/InsightsSection';
@@ -40,6 +41,7 @@ export default function V4PreviewPage() {
       <EditorialHero headingClass={display.className} bodyClass={sans.className} />
       <PartnerMarquee headingClass={display.className} />
       <FoldcraftHero geistClass={geist.className} />
+      <PlaybooksSection headingClass={display.className} />
       <SuccessStories headingClass={display.className} />
       <ServicesSection headingClass={display.className} />
       <InsightsSection headingClass={display.className} />

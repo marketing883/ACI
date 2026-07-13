@@ -1,0 +1,94 @@
+/* Playbook Vault — dark bento section. Kept deliberately cheap on the
+   compositor: the only motion is transform-based marquees, no
+   backdrop-filter on anything that moves, no per-frame blur. */
+
+.pb-section {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Faux liquid-glass edge: a bright top/bottom hairline ring drawn with a
+   masked gradient border. No backdrop blur, so it is free while scrolling. */
+.pb-glass {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+.pb-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.2px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.12) 22%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(255, 255, 255, 0) 58%,
+    rgba(255, 255, 255, 0.12) 80%,
+    rgba(255, 255, 255, 0.4) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Static header button may afford a light blur — it never moves. */
+.pb-glass-blur {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Marquee rows — pure translate, GPU-composited. */
+@keyframes pb-marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes pb-marquee-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+.pb-marquee-left {
+  animation: pb-marquee-left 30s linear infinite;
+  will-change: transform;
+}
+.pb-marquee-right {
+  animation: pb-marquee-right 34s linear infinite;
+  will-change: transform;
+}
+
+/* Soft-light film grain — painted once on static cards, never on marquees. */
+.pb-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+}
+
+/* Entrance for the whole grid, staggered by --pb-i. */
+@keyframes pb-rise {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.pb-rise {
+  animation: pb-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--pb-i, 0) * 90ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-marquee-left,
+  .pb-marquee-right {
+    animation: none;
+  }
+  .pb-rise {
+    animation: none;
+  }
+}
