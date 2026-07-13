@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const ACCENT = '#5E0ED7';
+const ACCENT = '#84CC16';
 
 const LOGOS: Record<string, string> = {
   databricks: '/images/Solution-Partners/databricks.png',
@@ -135,7 +135,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                     className="absolute inset-0"
                     style={{
                       background:
-                        'linear-gradient(100deg, rgba(4,7,15,0.93) 0%, rgba(4,7,15,0.78) 42%, rgba(23,16,62,0.55) 74%, rgba(23,16,62,0.35) 100%)',
+                        'linear-gradient(100deg, rgba(4,7,15,0.93) 0%, rgba(4,7,15,0.78) 42%, rgba(11,23,58,0.55) 74%, rgba(29,78,216,0.35) 100%)',
                     }}
                   />
                 </span>
@@ -147,7 +147,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
 
                 {/* Message block */}
                 <span className="relative z-10 flex flex-col gap-2">
-                  <span className="text-[13px] font-semibold tracking-wide text-blue-700 transition-colors duration-300 group-hover:text-sky-300">
+                  <span className="text-[13px] font-semibold tracking-wide text-blue-700 transition-colors duration-300 group-hover:text-[#A3E635]">
                     {c.eyebrow}
                   </span>
                   <span
@@ -156,7 +156,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                   >
                     {c.name}
                   </span>
-                  <span className="mt-0.5 max-w-md border-l-2 border-blue-700 pl-3 text-[13px] leading-relaxed text-gray-600 transition-colors duration-300 group-hover:border-sky-300 group-hover:text-white/85">
+                  <span className="mt-0.5 max-w-md border-l-2 border-blue-700 pl-3 text-[13px] leading-relaxed text-gray-600 transition-colors duration-300 group-hover:border-[#A3E635] group-hover:text-white/85">
                     {c.proof}
                   </span>
                 </span>
@@ -212,7 +212,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
             prefetch={false}
             className="group relative block overflow-hidden rounded-2xl text-white no-underline"
             style={{
-              background: 'linear-gradient(115deg, #0b0618 0%, #1d0f45 45%, #3b1290 80%, #5E0ED7 100%)',
+              background: 'linear-gradient(115deg, #060b1c 0%, #0f2350 45%, #1b3aa0 80%, #1D4ED8 100%)',
             }}
           >
             {/* soft glow that follows the hover */}
@@ -228,11 +228,11 @@ export default function ServicesSection({ headingClass }: { headingClass: string
 
               <span className="flex flex-col gap-2">
                 <span className="flex items-center gap-2.5">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-sm">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#84CC16] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-black">
                     <Sparkles size={11} aria-hidden="true" />
                     Product
                   </span>
-                  <span className="text-[13px] font-semibold tracking-wide text-purple-200">
+                  <span className="text-[13px] font-semibold tracking-wide text-[#A3E635]">
                     {INTERACTIVE.eyebrow}
                   </span>
                 </span>

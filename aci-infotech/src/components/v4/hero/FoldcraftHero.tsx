@@ -48,14 +48,14 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
         playsInline
         preload="none"
         className="absolute inset-0 h-full w-full object-cover"
-        style={{ objectPosition: '70% center' }}
+        style={{ objectPosition: '70% center', transform: 'translateZ(0)' }}
       >
         <source src="/videos/foldcraft.webm" type="video/webm" />
         <source src="/videos/foldcraft.mp4" type="video/mp4" />
       </video>
 
       {/* Dust-particle rings floating with the fish */}
-      <div className="pointer-events-none absolute right-[2%] top-1/2 h-[74%] w-[56%] -translate-y-1/2 mix-blend-screen opacity-100">
+      <div className="pointer-events-none absolute right-[2%] top-1/2 h-[74%] w-[56%] -translate-y-1/2 opacity-90">
         <ParticleRings className="h-full w-full" />
       </div>
 
@@ -84,7 +84,7 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
         {/* Success story snapshot with client testimonial */}
         <Link
           href={STORY.href}
-          className="fc-anim group block w-full max-w-2xl rounded-2xl border border-white/12 bg-white/[0.05] p-7 backdrop-blur-md transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08] sm:p-8"
+          className="fc-anim group block w-full max-w-2xl rounded-2xl border border-white/12 bg-[#0b1220]/70 p-7 transition-colors duration-300 hover:border-white/25 hover:bg-[#0b1220]/80 sm:p-8"
           style={{ animationDelay: '0.6s' }}
         >
           <div className="flex items-center justify-between gap-4">
@@ -95,7 +95,7 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
               className="h-[34px] w-auto object-contain"
             />
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-bold leading-none text-cyan-300 sm:text-5xl">
+              <span className="text-4xl font-bold leading-none text-[#84CC16] sm:text-5xl">
                 {STORY.metric.value}
               </span>
               <span className="max-w-[110px] text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/50">
@@ -106,7 +106,7 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
 
           <p className="mt-6 text-lg font-medium leading-snug text-white">{STORY.title}</p>
 
-          <p className="mt-3 border-l-2 border-cyan-400/40 pl-5 text-base leading-relaxed text-white/85 sm:text-[17px]">
+          <p className="mt-3 border-l-2 border-[#84CC16]/50 pl-5 text-base leading-relaxed text-white/85 sm:text-[17px]">
             &ldquo;{STORY.quote}&rdquo;
           </p>
 
@@ -115,7 +115,7 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
               <span className="font-medium text-white/70">{STORY.role}</span>
               <span className="text-white/40"> &middot; {STORY.org}</span>
             </div>
-            <span className="flex shrink-0 items-center gap-1 text-xs font-semibold text-cyan-300">
+            <span className="flex shrink-0 items-center gap-1 text-xs font-semibold text-[#84CC16]">
               Read the case study
               <ArrowUpRight
                 size={14}

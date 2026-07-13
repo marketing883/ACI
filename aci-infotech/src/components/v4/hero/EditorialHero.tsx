@@ -10,7 +10,8 @@ import HeroMegaNav from './HeroMegaNav';
 
 const VIDEO = '/videos/v4-editorial.mp4';
 const VIDEO_WEBM = '/videos/v4-editorial.webm';
-const ACCENT = '#5E0ED7';
+const ACCENT = '#1D4ED8'; // deep royal blue (primary)
+const LIME = '#84CC16'; // lime (accent / highlight)
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const MOBILE_NAV = [
@@ -248,7 +249,7 @@ export default function EditorialHero({
                   >
                     {s.tags.map((t) => (
                       <span key={t}>
-                        <span style={{ color: ACCENT }}>/</span> {t}
+                        <span style={{ color: LIME }}>/</span> {t}
                       </span>
                     ))}
                   </motion.div>

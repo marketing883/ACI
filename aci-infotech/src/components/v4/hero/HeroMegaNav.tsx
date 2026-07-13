@@ -14,7 +14,7 @@ import {
   COMPANY,
 } from '@/components/v2/nav/menu-data';
 
-const ACCENT = '#5E0ED7';
+const ACCENT = '#1D4ED8';
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 type MenuId = 'services' | 'platforms' | 'industries' | 'resources' | 'company';
@@ -96,7 +96,7 @@ function ServicesPanel({ headingClass, onNavigate }: { headingClass: string; onN
         </video>
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
         <div className="relative flex h-full min-h-[240px] flex-col justify-end p-5">
-          <span className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: '#c4a6f5' }}>
+          <span className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: '#93c5fd' }}>
             Featured
           </span>
           <h4 className={`mt-1 text-lg font-semibold leading-snug ${headingClass}`}>
@@ -195,7 +195,7 @@ function IndustriesPanel({ headingClass, onNavigate }: { headingClass: string; o
                 {feat ? (
                   <>
                     <div className="flex items-baseline gap-3">
-                      <span className={`text-3xl font-bold ${headingClass}`} style={{ color: '#c4a6f5' }}>
+                      <span className={`text-3xl font-bold ${headingClass}`} style={{ color: '#93c5fd' }}>
                         {feat.metric.value}
                       </span>
                       <span className="text-[11px] font-semibold uppercase tracking-wide text-white/60">

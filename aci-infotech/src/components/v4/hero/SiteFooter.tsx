@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight, Linkedin, Twitter, Youtube } from 'lucide-react';
 
-const ACCENT = '#5E0ED7';
+const ACCENT = '#1D4ED8';
 
 type FooterLink = { label: string; href: string; external?: boolean; prefetch?: boolean };
 

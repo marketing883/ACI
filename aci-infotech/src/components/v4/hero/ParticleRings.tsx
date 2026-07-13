@@ -5,9 +5,10 @@ import { useEffect, useRef } from 'react';
 /**
  * Dust-particle concentric rings that echo the hero's rotating "atom".
  * Each ring is a tilted ellipse of shimmering dust; the rings rotate at
- * different speeds and the whole cluster slowly floats, so it drifts
- * with the fish in the scene. Additive blend gives it a soft glow on the
- * dark water. Renders a single static frame under reduced motion.
+ * different speeds and the whole cluster slowly floats. Glow comes from a
+ * cached radial sprite blitted additively — no per-frame shadowBlur — so
+ * it stays cheap while scrolling. Loop only runs while on screen; renders
+ * a single static frame under reduced motion.
  */
 export default function ParticleRings({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -20,19 +21,34 @@ export default function ParticleRings({ className }: { className?: string }) {
     if (!ctx) return;
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     let W = 0;
     let H = 0;
     let raf = 0;
     const start = performance.now();
 
-    // Concentric rings — nested radii, each tilted to a different plane
-    // so they cross like the atom's shells. Dense, fine-grained dust.
+    // Pre-render one soft glow sprite; blitting it is far cheaper than
+    // arc + fill + shadowBlur per particle.
+    const SPRITE = 24;
+    const sprite = document.createElement('canvas');
+    sprite.width = SPRITE;
+    sprite.height = SPRITE;
+    const sctx = sprite.getContext('2d');
+    if (sctx) {
+      const g = sctx.createRadialGradient(SPRITE / 2, SPRITE / 2, 0, SPRITE / 2, SPRITE / 2, SPRITE / 2);
+      g.addColorStop(0, 'rgba(226,240,255,1)');
+      g.addColorStop(0.35, 'rgba(190,222,255,0.55)');
+      g.addColorStop(1, 'rgba(190,222,255,0)');
+      sctx.fillStyle = g;
+      sctx.fillRect(0, 0, SPRITE, SPRITE);
+    }
+
+    // Concentric rings — nested radii, each tilted to a different plane.
     const RINGS = [
-      { r: 0.44, flat: 0.55, speed: 0.13, tilt: -0.35, count: 130 },
-      { r: 0.62, flat: 0.30, speed: 0.11, tilt: -0.55, count: 170 },
-      { r: 0.82, flat: 0.85, speed: -0.08, tilt: 0.65, count: 230 },
-      { r: 1.0, flat: 0.42, speed: 0.06, tilt: 1.45, count: 270 },
+      { r: 0.44, flat: 0.55, speed: 0.13, tilt: -0.35, count: 90 },
+      { r: 0.62, flat: 0.3, speed: 0.11, tilt: -0.55, count: 120 },
+      { r: 0.82, flat: 0.85, speed: -0.08, tilt: 0.65, count: 150 },
+      { r: 1.0, flat: 0.42, speed: 0.06, tilt: 1.45, count: 170 },
     ];
 
     const resize = () => {
@@ -54,8 +70,6 @@ export default function ParticleRings({ className }: { className?: string }) {
       const cy = H * 0.5 + Math.sin(t * 0.3) * H * 0.03; // slow float
       const base = Math.min(W, H) * 0.42;
       ctx.globalCompositeOperation = 'lighter';
-      ctx.shadowColor = 'rgba(140,225,255,0.9)';
-      ctx.shadowBlur = 3;
 
       RINGS.forEach((ring, ri) => {
         const rot = t * ring.speed + ri * 1.7;
@@ -71,16 +85,13 @@ export default function ParticleRings({ className }: { className?: string }) {
           const x = cx + ex * cosR - ey * sinR;
           const y = cy + ex * sinR + ey * cosR;
           const sh = 0.5 + 0.5 * Math.sin(t * 2 + i * 0.7 + ri * 2);
-          const size = 0.35 + sh * 0.75; // finer grains
-          const alpha = 0.2 + sh * 0.45; // brighter, more present
-          // mostly cool light-shaft dust, an occasional cyan spark
-          ctx.fillStyle = i % 7 === 0 ? `rgba(160,240,255,${alpha})` : `rgba(205,232,255,${alpha})`;
-          ctx.beginPath();
-          ctx.arc(x, y, size, 0, Math.PI * 2);
-          ctx.fill();
+          const s = 2.5 + sh * 4.5; // draw size incl. the soft halo
+          ctx.globalAlpha = 0.14 + sh * 0.34;
+          ctx.drawImage(sprite, x - s / 2, y - s / 2, s, s);
         }
       });
 
+      ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = 'source-over';
       if (!reduce && running) raf = requestAnimationFrame(frame);
     };
