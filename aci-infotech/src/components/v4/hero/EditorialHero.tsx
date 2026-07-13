@@ -39,15 +39,15 @@ type Slide = {
 const SLIDES: Slide[] = [
   {
     eyebrow: 'Service Foundation',
-    headline: ['Build the AI', 'foundation.'],
-    desc: 'We engineer the data foundation, build the AI on top, and run it in production.',
+    headline: ['Build the AI foundation.', 'Run it in production.'],
+    desc: 'We engineer the data foundation, build the AI on top, and run it in production. Most enterprise AI stalls before it gets there.',
     tags: ['Pipelines', 'Governance', 'AI-ready data'],
     cta: { label: 'Explore data engineering', href: '/services/data-engineering' },
   },
   {
     eyebrow: 'Case Study',
     headline: ['Databricks depth.', 'Production AI.'],
-    desc: 'Lakehouse modernization, Delta pipelines, MLflow, governance, and real-time analytics.',
+    desc: 'Lakehouse modernization, Delta pipelines, MLflow, governance, and real-time analytics for teams that need Databricks to run in production.',
     tags: ['Delta Lake', 'MLflow', 'Workflows'],
     cta: { label: 'Read the case study', href: '/case-studies' },
     mark: { kind: 'logo', src: '/images/Solution-Partners/databricks.png', alt: 'Databricks', h: 40 },
@@ -56,7 +56,7 @@ const SLIDES: Slide[] = [
   {
     eyebrow: 'Platform Expertise',
     headline: ['Microsoft cloud.', 'AI-led operations.'],
-    desc: 'Azure, Dynamics 365, and Power Platform, connected around measurable operations.',
+    desc: 'Azure is strongest when it connects to the business stack. We bring Azure, Dynamics 365, Power Platform, and data engineering together around measurable operations.',
     tags: ['Azure', 'Dynamics 365', 'Power Platform'],
     cta: { label: 'Explore Microsoft expertise', href: '/partners' },
     mark: { kind: 'logo', src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 56 },
@@ -64,7 +64,7 @@ const SLIDES: Slide[] = [
   {
     eyebrow: 'Life at ACI',
     headline: ['People thrive here.', 'Teams move as one.'],
-    desc: 'A place where people feel valued, supported, and free to do their best work.',
+    desc: 'ACI is a place where people feel valued, supported, and happy to do their best work. Across teams and regions, we collaborate openly, celebrate one another, and move forward together.',
     tags: ['Belonging', 'Team spirit', 'Shared success'],
     cta: { label: 'Explore careers', href: '/careers' },
     mark: { kind: 'badge', src: '/images/certifications-awards/best-place-to-work.webp', alt: 'Great Place to Work Certified', w: 80 },
