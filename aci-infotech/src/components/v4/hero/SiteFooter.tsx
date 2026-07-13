@@ -6,7 +6,7 @@ import { ArrowUpRight, Linkedin, Twitter, Youtube } from 'lucide-react';
 
 const ACCENT = '#5E0ED7';
 
-type FooterLink = { label: string; href: string; external?: boolean };
+type FooterLink = { label: string; href: string; external?: boolean; prefetch?: boolean };
 
 const COLUMNS: { title: string; links: FooterLink[] }[] = [
   {
@@ -22,7 +22,7 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
   {
     title: 'Products & Platforms',
     links: [
-      { label: 'ACI Interactive', href: '/aci-interactive' },
+      { label: 'ACI Interactive', href: '/aci-interactive', prefetch: false },
       { label: 'ArqAI Labs', href: 'https://thearq.ai', external: true },
       { label: 'Databricks', href: '/platforms/databricks' },
       { label: 'Microsoft Azure', href: '/platforms/azure' },
@@ -50,9 +50,9 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
 ];
 
 const SOCIAL = [
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/aci-infotech', Icon: Linkedin },
-  { label: 'X', href: 'https://x.com', Icon: Twitter },
-  { label: 'YouTube', href: 'https://youtube.com', Icon: Youtube },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/aciinfotech', Icon: Linkedin },
+  { label: 'X', href: 'https://x.com/ACIInfotech', Icon: Twitter },
+  { label: 'YouTube', href: 'https://www.youtube.com/@aciinfotech', Icon: Youtube },
 ];
 
 function FooterAnchor({ link, className }: { link: FooterLink; className?: string }) {
@@ -65,7 +65,7 @@ function FooterAnchor({ link, className }: { link: FooterLink; className?: strin
     );
   }
   return (
-    <Link href={link.href} className={className}>
+    <Link href={link.href} prefetch={link.prefetch} className={className}>
       {link.label}
     </Link>
   );

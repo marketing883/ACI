@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -86,6 +87,10 @@ const INTERACTIVE = {
 };
 
 export default function ServicesSection({ headingClass }: { headingClass: string }) {
+  // Only fetch a bar's hover image once the visitor points at it.
+  const [warm, setWarm] = useState<Set<number>>(new Set());
+  const warmUp = (i: number) => setWarm((w) => (w.has(i) ? w : new Set(w).add(i)));
+
   return (
     <section id="capabilities" className="border-t border-gray-200 bg-white text-black">
       <div className="mx-auto max-w-7xl px-6 pb-20 pt-16 md:pt-20">
@@ -116,13 +121,15 @@ export default function ServicesSection({ headingClass }: { headingClass: string
             >
               <Link
                 href={c.href}
+                onPointerEnter={() => warmUp(idx)}
+                onFocus={() => warmUp(idx)}
                 className="group relative isolate grid grid-cols-[2.5rem_minmax(0,1fr)_2rem] items-center gap-x-4 gap-y-4 overflow-hidden px-2 py-6 no-underline md:grid-cols-[3.5rem_minmax(0,1.15fr)_minmax(0,1fr)_2rem] md:gap-6 md:px-3 md:py-7"
               >
                 {/* Hover takeover: full-color image under a stylized dark overlay */}
                 <span aria-hidden="true" className="absolute inset-0 z-0 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-visible:opacity-100">
                   <span
                     className="absolute inset-0 scale-[1.04] bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-100"
-                    style={{ backgroundImage: `url(${c.bg})` }}
+                    style={{ backgroundImage: warm.has(idx) ? `url(${c.bg})` : undefined }}
                   />
                   <span
                     className="absolute inset-0"
@@ -202,6 +209,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
         >
           <Link
             href={INTERACTIVE.href}
+            prefetch={false}
             className="group relative block overflow-hidden rounded-2xl text-white no-underline"
             style={{
               background: 'linear-gradient(115deg, #0b0618 0%, #1d0f45 45%, #3b1290 80%, #5E0ED7 100%)',

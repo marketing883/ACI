@@ -3,10 +3,11 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Full-bleed background video that fades in once on load and then loops
- * natively and continuously — no fade-to-black, no reset between loops
- * or slide transitions. offsetX/offsetY shift the framing; scale keeps
- * the frame covered after a shift.
+ * Full-bleed background video that lazy-loads and only plays while it is
+ * near the viewport — off-screen it stays paused and unbuffered, so the
+ * page doesn't decode several videos at once. Fades in once on first
+ * play. offsetX/offsetY shift the framing; scale keeps the frame covered
+ * after a shift; mirror flips horizontally.
  */
 export default function FadingVideo({
   src,
@@ -51,17 +52,26 @@ export default function FadingVideo({
       };
       rafRef.current = requestAnimationFrame(step);
     };
-
-    const onLoaded = () => {
-      v.play().catch(() => {});
-      fadeIn();
-    };
-
+    const onLoaded = () => fadeIn();
     v.addEventListener('loadeddata', onLoaded);
-    if (v.readyState >= 2) onLoaded();
+
+    // Only load + play while near the viewport; pause otherwise.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          v.play().catch(() => {});
+          if (v.readyState >= 2) fadeIn();
+        } else {
+          v.pause();
+        }
+      },
+      { rootMargin: '300px 0px' },
+    );
+    io.observe(v);
 
     return () => {
       cancel();
+      io.disconnect();
       v.removeEventListener('loadeddata', onLoaded);
     };
   }, [src]);
@@ -73,7 +83,7 @@ export default function FadingVideo({
       muted
       loop
       playsInline
-      preload="auto"
+      preload="none"
       style={{
         opacity: 0,
         transform:

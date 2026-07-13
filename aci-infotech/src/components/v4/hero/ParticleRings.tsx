@@ -82,14 +82,30 @@ export default function ParticleRings({ className }: { className?: string }) {
       });
 
       ctx.globalCompositeOperation = 'source-over';
-      if (!reduce) raf = requestAnimationFrame(frame);
+      if (!reduce && running) raf = requestAnimationFrame(frame);
     };
 
-    raf = requestAnimationFrame(frame);
+    // Only spin the animation loop while the section is on screen.
+    let running = false;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !running) {
+          running = true;
+          if (!reduce) raf = requestAnimationFrame(frame);
+          else frame(performance.now());
+        } else if (!entry.isIntersecting) {
+          running = false;
+          cancelAnimationFrame(raf);
+        }
+      },
+      { rootMargin: '150px 0px' },
+    );
+    io.observe(parent);
 
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
+      io.disconnect();
     };
   }, []);
 

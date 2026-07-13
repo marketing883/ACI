@@ -12,14 +12,26 @@ import SiteFooter from '@/components/v4/hero/SiteFooter';
 // Funnel Display for headings, Funnel Sans for body. Scoped to this
 // preview, not the site's global font. Geist is scoped to the Foldcraft
 // section below.
-const display = Funnel_Display({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800'], display: 'swap' });
-const sans = Funnel_Sans({ subsets: ['latin'], weight: ['300', '400', '500', '600'], display: 'swap' });
-const geist = Geist({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], display: 'swap' });
+const display = Funnel_Display({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap' });
+const sans = Funnel_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap' });
+const geist = Geist({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap' });
 
 export const metadata: Metadata = {
-  title: { absolute: 'ACI Infotech' },
+  title: { absolute: 'ACI Infotech — Enterprise Data & AI, Run in Production' },
+  description:
+    'ACI Infotech builds the enterprise data foundation, puts AI on top, and stays on to run both in production. Databricks, Azure, Snowflake and more.',
+  // Preview route stays out of the index until it is promoted to the live
+  // homepage; flip these off then.
   robots: { index: false, follow: false },
   alternates: { canonical: 'https://aciinfotech.com/' },
+  openGraph: {
+    title: 'ACI Infotech — Enterprise Data & AI, Run in Production',
+    description:
+      'We build the data foundation, put the AI on top, and run both once they are live.',
+    url: 'https://aciinfotech.com/',
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
 };
 
 export default function V4PreviewPage() {

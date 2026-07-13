@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import ParticleRings from './ParticleRings';
@@ -24,14 +25,28 @@ const STORY = {
  * echoing the hero's rotating atom. Client logos come later.
  */
 export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Lazy-load + only play while on screen.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const io = new IntersectionObserver(
+      ([entry]) => (entry.isIntersecting ? v.play().catch(() => {}) : v.pause()),
+      { rootMargin: '300px 0px' },
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <section className={`foldcraft relative min-h-screen w-full overflow-hidden bg-black ${geistClass}`}>
       <video
-        autoPlay
+        ref={videoRef}
         muted
         loop
         playsInline
-        preload="auto"
+        preload="none"
         className="absolute inset-0 h-full w-full object-cover"
         style={{ objectPosition: '70% center' }}
       >

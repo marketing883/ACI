@@ -122,7 +122,7 @@ export default function SuccessStories({ headingClass }: { headingClass: string 
         setInView(entry.isIntersecting);
         if (entry.isIntersecting) setRevealed(true);
       },
-      { threshold: 0.12 },
+      { threshold: 0.12, rootMargin: '200px 0px' },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -155,23 +155,24 @@ export default function SuccessStories({ headingClass }: { headingClass: string 
     setCycle((c) => c + 1);
   }, []);
 
-  // Play/pause video layers: active (and outgoing during the crossfade)
-  // play; everything else pauses and resets.
+  // Play/pause video layers: only while the section is on screen, the
+  // active (and outgoing during the crossfade) play; the rest pause and
+  // reset. Off-screen, nothing decodes.
   useEffect(() => {
     videoRefs.current.forEach((v, i) => {
       if (!v) return;
-      if (i === active || i === outgoing) {
+      if (inView && (i === active || i === outgoing)) {
         v.play().catch(() => {});
       } else {
         v.pause();
         try {
-          v.currentTime = 0;
+          if (i !== active) v.currentTime = 0;
         } catch {
           /* not loaded yet */
         }
       }
     });
-  }, [active, outgoing]);
+  }, [active, outgoing, inView]);
 
   const s = STORIES[active];
 
@@ -288,7 +289,7 @@ export default function SuccessStories({ headingClass }: { headingClass: string 
                 muted
                 loop
                 playsInline
-                preload={n === 0 ? 'auto' : 'metadata'}
+                preload="none"
                 aria-hidden="true"
                 className="h-full w-full object-cover object-center"
               >
