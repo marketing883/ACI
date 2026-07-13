@@ -47,8 +47,8 @@ const STORIES: Story[] = [
     Icon: BrainCircuit,
     eyebrow: 'Financial services / Applied AI',
     title: 'A lakehouse that moves models into production faster.',
-    metric: '83%',
-    metricLabel: 'reduction in model-deployment time',
+    metric: '90d',
+    metricLabel: 'from prototype to production',
     summary:
       'ACI connected Azure Data Lake, Databricks, AKS, and Synapse into a governed foundation for analytics and machine learning.',
     tags: ['Azure', 'MLOps', 'Databricks'],
@@ -63,7 +63,7 @@ const STORIES: Story[] = [
     Icon: ServerCog,
     eyebrow: 'Technology / DevOps and platform',
     title: 'A complex digital estate, engineered to stay available.',
-    metric: '99.7%',
+    metric: '99.97%',
     metricLabel: 'system uptime across 72+ servers',
     summary:
       'Automated CI/CD, monitoring, load balancing, and centralized logs helped releases move faster without disrupting operations.',
@@ -197,12 +197,12 @@ export default function SuccessStories({ headingClass }: { headingClass: string 
 
         {/* Heading */}
         <h2
-          className={`mb-4 text-5xl font-normal tracking-tight sm:text-6xl lg:text-[64px] ${headingClass}`}
+          className={`mb-4 text-5xl font-bold tracking-tight text-black sm:text-6xl lg:text-[64px] ${headingClass}`}
           style={{ lineHeight: 1.04, ...revealStyle(revealed, 0.2) }}
         >
           Proof that runs
           <br />
-          <span className="text-gray-500">in production.</span>
+          <span className="text-[#1D4ED8]">in production.</span>
         </h2>
 
         {/* Subtext */}

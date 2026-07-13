@@ -68,8 +68,8 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
               Why Most AI Stalls
             </span>
           </div>
-          <h2 className="fc-anim fc-d2 text-4xl font-medium leading-[1.05] tracking-tight text-white sm:text-5xl md:text-[3.5rem]">
-            Your best data is
+          <h2 className="fc-anim fc-d2 text-5xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl lg:text-[64px]">
+            Your <span className="text-[#60A5FA]">best data</span> is
             <br />
             sitting in the dark.
           </h2>

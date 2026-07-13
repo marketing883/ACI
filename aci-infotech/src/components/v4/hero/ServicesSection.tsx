@@ -48,7 +48,7 @@ const SERVICES: Service[] = [
     no: '/02',
     name: 'Applied AI & GenAI',
     eyebrow: 'Build AI on a foundation that holds.',
-    proof: 'Model deployment time down 83% on a governed Azure lakehouse.',
+    proof: 'Prototype to production in 90 days on a governed Azure lakehouse, 94% eval pass rate.',
     subs: ['Copilots & agents', 'RAG systems', 'Forecasting & ML', 'MLOps & evals'],
     logos: ['azure', 'aws', 'databricks'],
     bg: '/images/v4/svc-ai.jpg',
@@ -68,7 +68,7 @@ const SERVICES: Service[] = [
     no: '/04',
     name: 'Managed Run & SRE',
     eyebrow: 'Past the pilot, into production, for good.',
-    proof: '99.7% uptime across a 72+ server estate, releases still moving.',
+    proof: '99.97% uptime across a 72+ server estate, releases still moving.',
     subs: ['24/7 operations', 'SRE & on-call', 'Observability', 'Change management'],
     logos: ['kubernetes', 'dynatrace', 'servicenow'],
     bg: '/images/v4/svc-ops.jpg',
@@ -99,8 +99,8 @@ export default function ServicesSection({ headingClass }: { headingClass: string
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
             / What we build
           </p>
-          <h2 className={`text-4xl font-normal tracking-tight sm:text-5xl ${headingClass}`} style={{ lineHeight: 1.05 }}>
-            From raw data to AI in production.
+          <h2 className={`text-5xl font-bold tracking-tight text-black sm:text-6xl lg:text-[64px] ${headingClass}`} style={{ lineHeight: 1.04 }}>
+            From raw data to <span className="text-[#1D4ED8]">AI&nbsp;in&nbsp;production.</span>
           </h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-gray-600 md:text-base">
             We build the data foundation, put the AI on top of it, and stay on to run both once they
