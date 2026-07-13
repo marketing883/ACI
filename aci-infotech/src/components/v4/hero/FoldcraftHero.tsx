@@ -92,7 +92,7 @@ export default function FoldcraftHero({ geistClass }: { geistClass: string }) {
             <img
               src="/brand/databricks-color.svg"
               alt="Databricks"
-              className="h-[34px] w-auto object-contain"
+              className="h-12 w-auto object-contain sm:h-14"
             />
             <div className="flex items-baseline gap-2">
               <span className="text-4xl font-bold leading-none text-[#84CC16] sm:text-5xl">
