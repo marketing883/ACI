@@ -89,12 +89,14 @@ function ServicesPanel({ headingClass, onNavigate }: { headingClass: string; onN
           muted
           loop
           playsInline
-          className="absolute inset-0 h-full w-full object-cover opacity-80 transition-opacity duration-500 group-hover/feat:opacity-100"
+          className="absolute inset-0 h-full w-full object-cover opacity-70 transition-opacity duration-500 group-hover/feat:opacity-90"
         >
           <source src="/videos/foldcraft.webm" type="video/webm" />
           <source src="/videos/foldcraft.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+        {/* Heavier scrim than a hero would use: the card is small, so the
+            copy has to win over the footage at every frame. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-black/20" />
         <div className="relative flex h-full min-h-[240px] flex-col justify-end p-5">
           <span className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: '#93c5fd' }}>
             Featured
@@ -198,12 +200,12 @@ function IndustriesPanel({ headingClass, onNavigate }: { headingClass: string; o
                       <span className={`text-3xl font-bold ${headingClass}`} style={{ color: '#93c5fd' }}>
                         {feat.metric.value}
                       </span>
-                      <span className="text-[11px] font-semibold uppercase tracking-wide text-white/60">
+                      <span className="text-[11px] font-semibold uppercase tracking-wide text-white/75">
                         {feat.metric.label}
                       </span>
                     </div>
                     <p className={`mt-2 text-base font-semibold leading-snug ${headingClass}`}>{feat.headline}</p>
-                    <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-white/80">
+                    <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-white/90">
                       See the engagement <ArrowUpRight size={15} />
                     </span>
                   </>
@@ -273,7 +275,7 @@ function CompanyPanel({ headingClass, onNavigate }: { headingClass: string; onNa
       <Link href="/careers" onClick={onNavigate} className="group/feat relative flex w-64 shrink-0 flex-col justify-between overflow-hidden rounded-2xl bg-black p-5 text-white">
         <div className="flex items-center gap-3">
           <Image src="/images/certifications-awards/best-place-to-work.webp" alt="Great Place to Work Certified" width={48} height={64} className="h-14 w-auto" />
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-white/60">Certified<br />Great Place to Work</span>
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-white/80">Certified<br />Great Place to Work</span>
         </div>
         <div className="mt-6">
           <h4 className={`text-lg font-semibold leading-snug ${headingClass}`}>Build what matters, with people who care.</h4>

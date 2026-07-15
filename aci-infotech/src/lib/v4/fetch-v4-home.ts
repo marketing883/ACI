@@ -60,6 +60,8 @@ export const getV4FeaturedNews = cache(async (): Promise<V4News | null> => {
 export interface V4Insight {
   title: string;
   href: string;
+  /** Featured image, shown as the row's hover background. */
+  image: string | null;
 }
 
 export const getV4Insights = cache(async (limit = 3): Promise<V4Insight[]> => {
@@ -68,14 +70,18 @@ export const getV4Insights = cache(async (limit = 3): Promise<V4Insight[]> => {
   try {
     const { data, error } = await sb
       .from('blog_posts')
-      .select('slug, title')
+      .select('slug, title, featured_image_url')
       .eq('status', 'published')
       .order('published_at', { ascending: false })
       .limit(limit);
     if (error || !data) return [];
     return (data as Record<string, unknown>[])
       .filter((r) => r.slug && r.title)
-      .map((r) => ({ title: r.title as string, href: `/blogs/${r.slug as string}` }));
+      .map((r) => ({
+        title: r.title as string,
+        href: `/blogs/${r.slug as string}`,
+        image: (r.featured_image_url as string) ?? null,
+      }));
   } catch {
     return [];
   }
@@ -102,9 +108,17 @@ export const getV4Whitepaper = cache(async (): Promise<V4Whitepaper | null> => {
     if (error || !data) return null;
     const r = data as Record<string, unknown>;
     if (!r.slug || !r.title) return null;
+    // CMS descriptions can run to whole paragraphs; the download card
+    // only has room for a teaser, so trim to a sentence-ish length at a
+    // word boundary (the card also line-clamps as a second guard).
+    let blurb = (r.description as string) ?? null;
+    if (blurb && blurb.length > 180) {
+      const cut = blurb.slice(0, 180);
+      blurb = `${cut.slice(0, Math.max(cut.lastIndexOf(' '), 120))}…`;
+    }
     return {
       title: r.title as string,
-      blurb: (r.description as string) ?? null,
+      blurb,
       href: `/whitepapers/${r.slug as string}`,
     };
   } catch {

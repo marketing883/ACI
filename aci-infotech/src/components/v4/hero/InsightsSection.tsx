@@ -19,9 +19,9 @@ const FEATURED = {
 };
 
 const INSIGHTS = [
-  { cat: 'Insight', title: 'Building an Enterprise Data Mesh Architecture', href: '/blogs/enterprise-data-mesh-architecture' },
-  { cat: 'Insight', title: 'AI Governance for the Enterprise: From Policy to Practice', href: '/blogs/ai-governance-enterprise' },
-  { cat: 'Insight', title: 'Databricks vs Snowflake: Choosing the Right Platform', href: '/blogs/databricks-vs-snowflake' },
+  { cat: 'Insight', title: 'Building an Enterprise Data Mesh Architecture', href: '/blogs/enterprise-data-mesh-architecture', image: '/images/v4/svc-data.jpg' },
+  { cat: 'Insight', title: 'AI Governance for the Enterprise: From Policy to Practice', href: '/blogs/ai-governance-enterprise', image: '/images/v4/svc-ai.jpg' },
+  { cat: 'Insight', title: 'Databricks vs Snowflake: Choosing the Right Platform', href: '/blogs/databricks-vs-snowflake', image: '/images/v4/why-visual.jpg' },
 ];
 
 const DOWNLOAD = {
@@ -36,7 +36,7 @@ export interface InsightsSectionProps {
   /** Latest published news item, fetched server-side from the CMS. */
   news?: { title: string; excerpt: string | null; href: string; image: string | null } | null;
   /** Latest published blog posts, fetched server-side from the CMS. */
-  insights?: { title: string; href: string }[];
+  insights?: { title: string; href: string; image: string | null }[];
   /** Latest published whitepaper, fetched server-side from the CMS. */
   download?: { title: string; blurb: string | null; href: string } | null;
 }
@@ -127,24 +127,39 @@ export default function InsightsSection({ headingClass, news, insights, download
             transition={{ duration: 0.55, delay: 0.08, ease: EASE }}
             className="flex flex-col gap-4 lg:col-span-5"
           >
-            <div className="rounded-2xl border border-gray-200">
+            <div className="overflow-hidden rounded-2xl border border-gray-200">
               {list.map((it, i) => (
                 <Link
                   key={it.href}
                   href={it.href}
-                  className={`group flex items-start justify-between gap-4 p-5 no-underline transition-colors hover:bg-gray-50 ${
+                  className={`group relative isolate flex items-start justify-between gap-4 p-5 no-underline transition-colors hover:bg-gray-50 ${
                     i > 0 ? 'border-t border-gray-200' : ''
                   }`}
                 >
+                  {/* Featured image floods the row on hover, under a dark
+                      scrim so the (now white) copy stays readable. */}
+                  {it.image ? (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    >
+                      <Image src={it.image} alt="" fill sizes="480px" className="object-cover" />
+                      <span className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/65 to-black/40" />
+                    </span>
+                  ) : null}
                   <span>
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-700">{it.cat}</span>
-                    <span className={`mt-1 block text-base font-semibold leading-snug text-black ${headingClass}`}>
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-700 transition-colors duration-300 group-hover:text-[#A3E635]">
+                      {it.cat}
+                    </span>
+                    <span
+                      className={`mt-1 block text-base font-semibold leading-snug text-black transition-colors duration-300 group-hover:text-white ${headingClass}`}
+                    >
                       {it.title}
                     </span>
                   </span>
                   <ArrowUpRight
                     size={16}
-                    className="mt-0.5 shrink-0 text-gray-400 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue-700"
+                    className="mt-0.5 shrink-0 text-gray-400 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white"
                   />
                 </Link>
               ))}
@@ -161,7 +176,8 @@ export default function InsightsSection({ headingClass, news, insights, download
               <span className="min-w-0 flex-1">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">{dl.meta}</span>
                 <span className={`mt-0.5 block truncate text-base font-semibold ${headingClass}`}>{dl.title}</span>
-                <span className="mt-0.5 block text-xs leading-snug text-white/60">{dl.blurb}</span>
+                {/* Teaser only — CMS descriptions can be long, so clamp. */}
+                <span className="mt-0.5 line-clamp-2 block text-xs leading-snug text-white/60">{dl.blurb}</span>
               </span>
               <Download size={20} className="shrink-0 text-white/70 transition-transform duration-300 group-hover:translate-y-0.5" aria-hidden="true" />
             </Link>

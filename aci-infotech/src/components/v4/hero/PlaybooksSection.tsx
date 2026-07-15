@@ -26,7 +26,6 @@ const VAULT = [
 // The flagship, featured in its own card.
 const FLAGSHIP = {
   title: 'Mainframe-to-Cloud Migration',
-  deployments: 52,
   slug: 'legacy-cloud-migration',
   blurb:
     'Aging Hadoop, Teradata, and Oracle estates re-architected for the cloud, with a parallel-run cutover so nothing goes dark.',
@@ -274,12 +273,7 @@ export default function PlaybooksSection({ headingClass }: { headingClass: strin
           >
             <div className="pb-glass absolute inset-0 rounded-2xl" aria-hidden="true" />
             <div className="relative flex h-full flex-col justify-between gap-5 p-7 md:p-8">
-              <div className="flex items-center justify-between">
-                <Label>Flagship playbook</Label>
-                <span className="rounded-full border border-[#A3E635]/30 bg-[#84CC16]/10 px-3 py-1 font-mono text-sm font-semibold text-[#A3E635]">
-                  {FLAGSHIP.deployments}× deployed
-                </span>
-              </div>
+              <Label>Flagship playbook</Label>
               <div>
                 <p className={`text-2xl font-bold leading-snug text-white ${headingClass}`}>
                   {FLAGSHIP.title}

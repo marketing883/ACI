@@ -129,9 +129,14 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
           </div>
         </div>
 
-        {/* Oversized wordmark flourish */}
-        <div aria-hidden="true" className="pointer-events-none mt-14 select-none overflow-hidden">
-          <span className={`block whitespace-nowrap text-[18vw] font-semibold leading-none tracking-tight text-white/[0.04] lg:text-[15rem] ${headingClass}`}>
+        {/* Oversized wordmark flourish. Sized against the container width
+            (12 glyphs at ~0.55em average advance) so the trailing "h"
+            never clips at any viewport. */}
+        <div aria-hidden="true" className="pointer-events-none mt-14 select-none">
+          <span
+            className={`block whitespace-nowrap font-semibold leading-none tracking-tight text-white/[0.04] ${headingClass}`}
+            style={{ fontSize: 'min(15vw, 13rem)' }}
+          >
             ACI Infotech
           </span>
         </div>
