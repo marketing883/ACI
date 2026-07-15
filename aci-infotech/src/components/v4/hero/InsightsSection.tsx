@@ -37,7 +37,7 @@ export default function InsightsSection({ headingClass }: { headingClass: string
           <div className="max-w-2xl">
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Signals</p>
             <h2 className={`text-5xl font-bold tracking-tight text-black sm:text-6xl lg:text-[64px] ${headingClass}`} style={{ lineHeight: 1.04 }}>
-              News, <span className="text-[#1D4ED8]">insights</span>, and a download or two.
+              Field notes from <span className="text-[#1D4ED8]">the work</span>.
             </h2>
           </div>
           <Link

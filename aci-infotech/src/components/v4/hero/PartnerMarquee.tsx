@@ -3,29 +3,33 @@
 import Image from 'next/image';
 import './hero.css';
 
+// Full-color marks. Azure/AWS/Salesforce aren't in any open icon set (their
+// vendors don't license redistribution), so those three are the original
+// grayscale marks recolored to each brand's documented hex, alpha channel
+// preserved for the exact shape. The rest are official Simple Icons colors.
 const LOGOS = [
-  { src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', w: 120 },
-  { src: '/images/Solution-Partners/databricks.png', alt: 'Databricks', w: 132 },
-  { src: '/images/Solution-Partners/snowflake.svg', alt: 'Snowflake', w: 138 },
-  { src: '/images/Solution-Partners/googlecloud.svg', alt: 'Google Cloud', w: 150 },
-  { src: '/images/Solution-Partners/sap.png', alt: 'SAP', w: 70 },
-  { src: '/images/Solution-Partners/salesforce.png', alt: 'Salesforce', w: 96 },
-  { src: '/images/Solution-Partners/dynatrace.png', alt: 'Dynatrace', w: 132 },
-  { src: '/images/Solution-Partners/aws.png', alt: 'Amazon Web Services', w: 74 },
+  { src: '/brand/azure-color.png', alt: 'Microsoft Azure', w: 146, h: 64 },
+  { src: '/brand/databricks-color.svg', alt: 'Databricks', w: 120, h: 50 },
+  { src: '/brand/snowflake-color.svg', alt: 'Snowflake', w: 24, h: 48 },
+  { src: '/brand/googlecloud-color.svg', alt: 'Google Cloud', w: 24, h: 48 },
+  { src: '/brand/sap-color.svg', alt: 'SAP', w: 24, h: 46 },
+  { src: '/brand/salesforce-color.png', alt: 'Salesforce', w: 146, h: 62 },
+  { src: '/brand/dynatrace-color.svg', alt: 'Dynatrace', w: 24, h: 46 },
+  { src: '/brand/aws-color.png', alt: 'Amazon Web Services', w: 146, h: 44 },
 ];
 
 function Row() {
   return (
     <div className="flex shrink-0 items-center gap-20 pr-20">
       {LOGOS.map((l, idx) => (
-        <div key={`${l.alt}-${idx}`} className="flex h-14 shrink-0 items-center">
+        <div key={`${l.alt}-${idx}`} className="flex h-16 shrink-0 items-center">
           <Image
             src={l.src}
             alt={l.alt}
             width={Math.round(l.w * 1.5)}
-            height={56}
-            className="h-11 w-auto object-contain opacity-70 transition-opacity duration-300 hover:opacity-100"
-            style={{ filter: 'brightness(0) invert(1)' }}
+            height={l.h * 2}
+            className="w-auto object-contain opacity-90 transition-opacity duration-300 hover:opacity-100"
+            style={{ height: `${l.h}px` }}
           />
         </div>
       ))}
@@ -35,10 +39,10 @@ function Row() {
 
 export default function PartnerMarquee({ headingClass }: { headingClass: string }) {
   return (
-    <section className="border-t border-white/10 bg-black py-14">
+    <section className="border-t border-gray-200 bg-white py-14">
       <div className="mx-auto max-w-6xl px-6 md:px-10 lg:px-12">
         <div className="mb-10">
-          <h2 className={`text-2xl font-semibold text-white sm:text-3xl ${headingClass}`}>
+          <h2 className={`text-2xl font-semibold text-black sm:text-3xl ${headingClass}`}>
             Our Partner Platforms
           </h2>
         </div>
