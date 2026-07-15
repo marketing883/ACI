@@ -162,7 +162,7 @@ function ThankYouContent() {
 
             {/* Playbook Info */}
             <div className="bg-gray-50 rounded-xl p-6 mb-8">
-              <p className="text-sm text-gray-500 mb-2">You're downloading:</p>
+              <p className="text-sm text-gray-500 mb-2">You&apos;re downloading:</p>
               <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-1">
                 {playbook.displayTitle}
               </h2>
@@ -203,7 +203,7 @@ function ThankYouContent() {
           {/* Next Steps */}
           <div className="mt-8 bg-white rounded-2xl shadow-lg p-8">
             <h3 className="text-lg font-bold text-[var(--aci-secondary)] mb-4">
-              What's Next?
+              What&apos;s Next?
             </h3>
             <div className="space-y-4">
               <Link

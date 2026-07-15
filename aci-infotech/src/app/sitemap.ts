@@ -1,6 +1,11 @@
 import { MetadataRoute } from 'next';
 import { createClient } from '@supabase/supabase-js';
+import { playbooksData } from './playbooks/[slug]/playbooks-data';
 
+// Note on lastModified: static-page entries deliberately omit it. The
+// previous `new Date()` stamped every entry with the build time, which
+// told crawlers the whole site changed on every deploy and erodes
+// trust in the field. Only CMS-backed entries carry real dates.
 const baseUrl = 'https://aciinfotech.com';
 
 // Create Supabase client for fetching dynamic content
@@ -21,27 +26,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticPages: MetadataRoute.Sitemap = [
     // Main pages
-    { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
-    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/careers`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/news`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+    { url: baseUrl, changeFrequency: 'weekly', priority: 1 },
+    { url: `${baseUrl}/about`, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/contact`, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/careers`, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/news`, changeFrequency: 'weekly', priority: 0.7 },
 
     // Resource listings
-    { url: `${baseUrl}/case-studies`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/blogs`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-    { url: `${baseUrl}/whitepapers`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${baseUrl}/playbooks`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${baseUrl}/case-studies`, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/blogs`, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/whitepapers`, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${baseUrl}/playbooks`, changeFrequency: 'weekly', priority: 0.7 },
 
     // Section landing pages
-    { url: `${baseUrl}/services`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${baseUrl}/platforms`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/industries`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/partners`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/services`, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/platforms`, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/industries`, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/partners`, changeFrequency: 'monthly', priority: 0.7 },
 
     // Legal pages
-    { url: `${baseUrl}/privacy-policy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
-    { url: `${baseUrl}/terms-of-service`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/privacy-policy`, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/terms-of-service`, changeFrequency: 'yearly', priority: 0.3 },
   ];
 
   // =====================
@@ -62,7 +67,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/services/gcc',
   ].map(path => ({
     url: `${baseUrl}${path}`,
-    lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.9,
   }));
@@ -84,7 +88,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/platforms/microsoft-dynamics',
   ].map(path => ({
     url: `${baseUrl}${path}`,
-    lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
@@ -104,7 +107,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/industries/transportation',
   ].map(path => ({
     url: `${baseUrl}${path}`,
-    lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
@@ -117,7 +119,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/lp/microsoft-dynamics-roadmap',
   ].map(path => ({
     url: `${baseUrl}${path}`,
-    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  // =====================
+  // PLAYBOOK DETAIL PAGES
+  // =====================
+  // Authored in code (no CMS table); slugs come from the same data
+  // module the detail route renders, so this list can never drift.
+
+  const playbookPages: MetadataRoute.Sitemap = Object.keys(playbooksData).map(slug => ({
+    url: `${baseUrl}/playbooks/${slug}`,
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }));
@@ -215,6 +228,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...platformPages,
     ...industryPages,
     ...landingPages,
+    ...playbookPages,
     ...blogEntries,
     ...caseStudyEntries,
     ...whitepaperEntries,

@@ -4,10 +4,13 @@ import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+import { getSiteUrl } from '@/lib/site-url';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'Application Development Services | ACI Infotech',
+  title: 'Application Development Services',
   description: 'Enterprise application engineering that sits on top of your data and AI infrastructure. Custom, web, and AI-powered applications built with production-grade rigor — not agency output.',
   keywords: 'enterprise application development, custom application development, AI-powered applications, web application development, legacy modernization, API development, enterprise software engineering',
   alternates: {

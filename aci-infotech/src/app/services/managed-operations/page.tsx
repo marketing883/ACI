@@ -17,11 +17,14 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { getSiteUrl } from '@/lib/site-url';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'Managed Operations: NOC and SOC Services | ACI Infotech',
+  title: 'Managed Operations: NOC and SOC Services',
   description:
     '24/7 NOC and SOC operations backed by SLAs. SolarWinds, Datadog, Dynatrace, LogRhythm, Splunk, Sentinel. Follow the sun coverage across three time zones.',
   keywords:

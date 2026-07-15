@@ -5,6 +5,8 @@
  * Implements Schema.org JSON-LD for enhanced search visibility
  */
 
+import { getSiteUrl } from '@/lib/site-url';
+
 interface OrganizationSchemaProps {
   name?: string;
   url?: string;
@@ -82,7 +84,9 @@ interface LocalBusinessSchemaProps {
   sameAs?: string[];
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// identify the organization/site as staging (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 // Organization Schema - Core company information
 export function OrganizationSchema({
@@ -91,7 +95,7 @@ export function OrganizationSchema({
   // Real, existing asset — /images/logo.png was a dead path.
   logo = `${siteUrl}/aci-infotech-logo.png`,
   description = 'ACI Infotech is an enterprise engineering firm. We build the data foundation, put AI on top of it, and run both in production: data engineering, applied AI and GenAI, cloud modernization, MarTech, and managed operations.',
-  email = 'hello@aciinfotech.com',
+  email = 'insights@aciinfotech.com',
   phone = '+1-888-225-4638',
   address = {
     streetAddress: '1100 Cornwall Road, Suite 215',
@@ -296,7 +300,7 @@ export function LocalBusinessSchema({
   logo = `${siteUrl}/images/logo.png`,
   image = `${siteUrl}/images/office.jpg`,
   telephone = '+1-888-225-4638',
-  email = 'hello@aciinfotech.com',
+  email = 'insights@aciinfotech.com',
   address = {
     streetAddress: '1100 Cornwall Road, Suite 215',
     addressLocality: 'Monmouth Junction',

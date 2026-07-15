@@ -374,10 +374,10 @@ export default function PlaybooksPage() {
       <section className="py-20 bg-[#001529]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Can't Find Your Exact Scenario?
+            Can&apos;t Find Your Exact Scenario?
           </h2>
           <p className="text-xl text-gray-400 mb-8">
-            We've documented 40+ patterns beyond these featured playbooks.
+            We&apos;ve documented 40+ patterns beyond these featured playbooks.
             Talk to an architect who can help identify the right approach for your specific challenge.
           </p>
           <Button href="/contact?reason=architecture-call" variant="lime" size="lg">

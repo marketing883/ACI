@@ -7,7 +7,7 @@ import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/platforms/azure' },
   title: 'Microsoft Azure Cloud Services',
-  description: 'ACI Infotech is a Microsoft Gold Partner. Azure migration, Synapse Analytics, Power Platform, and enterprise cloud solutions.',
+  description: 'ACI Infotech is a Microsoft Solutions Partner. Azure migration, Synapse Analytics, Power Platform, and enterprise cloud solutions.',
 };
 
 const capabilities = [
@@ -90,7 +90,7 @@ export default function AzurePage() {
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 bg-[#0078D4]/20 text-[#0078D4] text-sm font-medium rounded-full flex items-center gap-1">
                 <Award className="w-4 h-4" />
-                Gold Partner
+                Solutions Partner
               </span>
             </div>
           </div>
@@ -100,7 +100,7 @@ export default function AzurePage() {
             <span className="text-[var(--aci-primary-light)]"> Cloud Solutions</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As a Microsoft Gold Partner, we deliver enterprise Azure solutions that integrate
+            As a Microsoft Solutions Partner, we deliver enterprise Azure solutions that integrate
             seamlessly with your Microsoft ecosystem. From migration to AI, we help you
             maximize your Azure investment.
           </p>

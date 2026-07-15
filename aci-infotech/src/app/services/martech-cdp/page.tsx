@@ -4,10 +4,13 @@ import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+import { getSiteUrl } from '@/lib/site-url';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'MarTech & CDP Services | ACI Infotech',
+  title: 'MarTech & CDP Services',
   description: 'Customer 360 that actually works. Salesforce Marketing Cloud, Adobe Experience Platform, Braze implementations. Real-time personalization at scale.',
   keywords: 'CDP implementation, Salesforce Marketing Cloud, Adobe Experience Platform, Braze, customer data platform, martech consulting',
   alternates: {
@@ -103,8 +106,8 @@ const caseStudies = [
 const differentiators = [
   {
     title: 'Salesforce Agentforce Partner',
-    description: "Exclusive Agentforce partnership means we're at the cutting edge of AI-powered marketing.",
-    proof: 'Agentforce Exclusive Partner',
+    description: "Our Salesforce partnership keeps us at the front edge of AI-powered marketing with Agentforce.",
+    proof: 'Salesforce Consulting Partner',
   },
   {
     title: 'Data-First Approach',
@@ -187,7 +190,7 @@ export default function MarTechCDPPage() {
               </ul>
 
               <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                Salesforce Agentforce Exclusive Partner | Adobe Solution Partner
+                Salesforce Consulting Partner | Adobe Solution Partner
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">

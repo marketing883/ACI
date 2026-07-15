@@ -84,7 +84,27 @@ const nextConfig: NextConfig = {
 
   // Cache control and security headers
   async headers() {
+    // Off-production builds (staging) must never be indexed. robots.txt
+    // already disallows crawling there; this header is the second lock —
+    // it de-indexes anything Google already picked up before the gate
+    // existed. Duplicated from src/lib/site-url.ts because next.config
+    // cannot use the app's path aliases.
+    const deployUrl = (
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      'https://aciinfotech.com'
+    ).replace(/\/+$/, '');
+    const isProdDeployment = deployUrl === 'https://aciinfotech.com';
+
     return [
+      ...(!isProdDeployment
+        ? [
+            {
+              source: '/:path*',
+              headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+            },
+          ]
+        : []),
       {
         // Security + cache headers for all pages
         source: '/:path*',

@@ -226,8 +226,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // First try Supabase
   const dbStudy = await getCaseStudyBySlug(slug);
   if (dbStudy) {
+    // `absolute` opts out of the root "%s | ACI Infotech" template —
+    // plain strings here previously rendered a double brand suffix.
+    // Lead with the study title (the searchable part), not the
+    // anonymized client descriptor.
     return {
-      title: dbStudy.meta_title || `${displayClient(dbStudy)} Case Study | ${dbStudy.title} | ACI Infotech`,
+      title: { absolute: dbStudy.meta_title || `${dbStudy.title} | ${displayClient(dbStudy)} Case Study | ACI Infotech` },
       description: dbStudy.meta_description || dbStudy.excerpt || dbStudy.challenge?.substring(0, 160),
       alternates: { canonical: `https://aciinfotech.com/case-studies/${slug}` },
     };
@@ -238,12 +242,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!study) {
     return {
-      title: 'Case Study Not Found | ACI Infotech',
+      title: { absolute: 'Case Study Not Found | ACI Infotech' },
     };
   }
 
   return {
-    title: `${displayClient(study)} Case Study | ${study.headline} | ACI Infotech`,
+    title: { absolute: `${study.headline} | ${displayClient(study)} Case Study | ACI Infotech` },
     description: study.subheadline,
     alternates: { canonical: `https://aciinfotech.com/case-studies/${slug}` },
   };

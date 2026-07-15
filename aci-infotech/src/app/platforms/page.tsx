@@ -4,8 +4,11 @@ import Image from 'next/image';
 import { ArrowRight, CheckCircle2, Award } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { getSiteUrl } from '@/lib/site-url';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: 'Technology Platforms',
@@ -22,7 +25,7 @@ const platforms = [
     logo: '/images/Solution-Partners/databricks.png',
     tagline: 'Lakehouse Architecture Experts',
     description: 'Build unified analytics platforms with Delta Lake, MLflow, and Spark. We help enterprises implement data lakehouses that scale.',
-    partnership: 'Exclusive Partner',
+    partnership: 'Consulting Partner',
     partnershipLevel: 'gold',
     capabilities: ['Delta Lake Implementation', 'Unity Catalog Setup', 'MLflow MLOps', 'Spark Optimization', 'Cost Management'],
     caseStudy: { client: 'Fortune 100 Retailer', result: '$18M savings from AI forecasting' },
@@ -33,7 +36,7 @@ const platforms = [
     name: 'Snowflake',
     tagline: 'Data Cloud Specialists',
     description: 'Design and implement Snowflake data warehouses with optimal architecture, governance, and cost efficiency.',
-    partnership: 'Partner',
+    partnership: 'Select Partner',
     partnershipLevel: 'silver',
     capabilities: ['Data Warehouse Design', 'Data Sharing', 'Snowpark Development', 'Cost Optimization', 'Migration Services'],
     caseStudy: { client: 'Healthcare System', result: '40% infrastructure cost reduction' },
@@ -45,7 +48,7 @@ const platforms = [
     logo: '/images/Solution-Partners/salesforce.png',
     tagline: 'Agentforce & Data Cloud Experts',
     description: 'End-to-end Salesforce implementations including Data Cloud, Marketing Cloud, and the new Agentforce AI platform.',
-    partnership: 'Agentforce Exclusive Partner',
+    partnership: 'Consulting Partner',
     partnershipLevel: 'gold',
     capabilities: ['Data Cloud Implementation', 'Marketing Cloud', 'Agentforce AI', 'Integration Services', 'Custom Development'],
     caseStudy: { client: 'Fortune 500 Convenience Retailer', result: '25% improvement in promotion effectiveness' },
@@ -128,7 +131,7 @@ const platforms = [
     logo: '/images/Solution-Partners/braze.png',
     tagline: 'Customer Engagement Platform',
     description: 'Braze implementations for personalized customer engagement across email, push, in-app, and more. Drive retention and lifetime value.',
-    partnership: 'Partner',
+    partnership: 'Alloys Partner',
     partnershipLevel: 'silver',
     capabilities: ['Campaign Orchestration', 'Personalization', 'Data Integration', 'Analytics & Reporting', 'Cross-Channel Messaging'],
     caseStudy: { client: 'Retail Brand', result: '35% increase in customer engagement' },

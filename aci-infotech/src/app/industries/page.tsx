@@ -4,8 +4,11 @@ import Image from 'next/image';
 import { ArrowRight, Building2, ShoppingCart, Heart, Factory, Zap, Truck, Utensils, Fuel } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { getSiteUrl } from '@/lib/site-url';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: 'Industries We Serve',

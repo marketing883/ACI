@@ -4,11 +4,14 @@ import { createClient } from '@supabase/supabase-js';
 import { Briefcase, Heart, Building2, Globe, Zap, Award, Coffee, TrendingUp, ArrowRight } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import CareersJobGrid from '@/components/careers/CareersJobGrid';
+import { getSiteUrl } from '@/lib/site-url';
 
 // Revalidate every 60 seconds for fresh content
 export const revalidate = 60;
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: { absolute: 'Careers at ACI Infotech | Join Our Team' },

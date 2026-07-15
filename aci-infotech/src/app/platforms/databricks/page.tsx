@@ -14,7 +14,7 @@ import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/platforms/databricks' },
   title: 'Databricks Implementation Services',
-  description: 'ACI Infotech is an exclusive Databricks partner. Lakehouse architecture, Delta Lake, MLflow, and Spark optimization for enterprise.',
+  description: 'ACI Infotech is a Databricks consulting partner. Lakehouse architecture, Delta Lake, MLflow, and Spark optimization for enterprise.',
 };
 
 const capabilities = [
@@ -88,7 +88,7 @@ export default function DatabricksPage() {
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 bg-yellow-500/20 text-yellow-300 text-sm font-medium rounded-full flex items-center gap-1">
                 <Award className="w-4 h-4" />
-                Exclusive Partner
+                Consulting Partner
               </span>
             </div>
           </div>
@@ -98,7 +98,7 @@ export default function DatabricksPage() {
             <span className="text-[var(--aci-primary-light)]"> & Optimization</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As an exclusive Databricks partner, we bring deep expertise in lakehouse architecture,
+            As a Databricks consulting partner, we bring deep expertise in lakehouse architecture,
             Delta Lake, and production ML. Our certified architects have delivered enterprise
             Databricks implementations across Fortune 500 companies.
           </p>

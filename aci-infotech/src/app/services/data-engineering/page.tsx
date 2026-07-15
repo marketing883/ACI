@@ -12,10 +12,13 @@ export const revalidate = 3600;
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+import { getSiteUrl } from '@/lib/site-url';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'Data Engineering Services | ACI Infotech',
+  title: 'Data Engineering Services',
   description: 'Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. 40+ deployments, 30%+ latency reduction.',
   keywords: 'data engineering services, databricks consulting, snowflake implementation, data lakehouse, real-time data pipelines, enterprise data platform',
   alternates: {

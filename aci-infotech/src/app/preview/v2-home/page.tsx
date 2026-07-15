@@ -12,10 +12,13 @@
 
 import type { Metadata } from 'next';
 import V2HomeContent from '@/components/v2/home/V2HomeContent';
+import { getSiteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: 'ACI Infotech | Enterprise Technology Services — Data & AI, Cloud, Managed Operations',
@@ -41,9 +44,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
+  // Internal design-comparison route: never index a competing homepage.
   robots: {
-    index: true,
-    follow: true,
+    index: false,
+    follow: false,
   },
 };
 

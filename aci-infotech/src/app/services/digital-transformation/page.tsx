@@ -4,10 +4,13 @@ import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+import { getSiteUrl } from '@/lib/site-url';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'Digital Transformation Services | ACI Infotech',
+  title: 'Digital Transformation Services',
   description: 'Intelligent process automation. ServiceNow workflows, RPA, document processing. Automate what humans shouldn\'t do manually. 20% reduction in manual processes.',
   keywords: 'digital transformation, RPA, ServiceNow, process automation, intelligent automation, enterprise automation',
   alternates: {

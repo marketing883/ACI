@@ -23,11 +23,14 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { getSiteUrl } from '@/lib/site-url';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'Quality Engineering Services | ACI Infotech',
+  title: 'Quality Engineering Services',
   description:
     'Quality as an engineering discipline, not a test phase. AI-augmented, continuous, and owned by the team that ships. In-sprint automation, agentic coverage, CI/CD gates, production observability.',
   keywords:

@@ -4,10 +4,13 @@ import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+import { getSiteUrl } from '@/lib/site-url';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'Cyber Security Services | ACI Infotech',
+  title: 'Cyber Security Services',
   description: 'Security built in, not bolted on. DevSecOps, observability, compliance. SOC 2, ISO 27001 compliant architectures from day one.',
   keywords: 'cyber security, DevSecOps, SOC 2, ISO 27001, security compliance, enterprise security',
   alternates: {

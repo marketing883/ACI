@@ -18,6 +18,7 @@
 
 export const revalidate = 60;
 
+import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -28,6 +29,12 @@ import {
 } from '@/components/sections';
 
 import HeroRotator from '@/components/preview/home/HeroRotator';
+
+// Internal preview only. Without this it inherited the layout's
+// index:true and was a fully indexable duplicate homepage.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 import PlaybooksConsole from '@/components/preview/home/PlaybooksConsole';
 import CaseStudiesKineticSection from '@/components/preview/home/CaseStudiesKineticSection';
 

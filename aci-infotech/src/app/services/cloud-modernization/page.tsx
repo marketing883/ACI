@@ -11,10 +11,13 @@ export const revalidate = 3600;
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+import { getSiteUrl } from '@/lib/site-url';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'Cloud Modernization Services | ACI Infotech',
+  title: 'Cloud Modernization Services',
   description: 'AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with proven playbooks. 200+ cloud migrations, zero downtime deployments.',
   keywords: 'cloud modernization, AWS migration, Azure migration, cloud consulting, kubernetes, multi-cloud',
   alternates: {

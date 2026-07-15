@@ -20,8 +20,11 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { getSiteUrl } from '@/lib/site-url';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: 'Enterprise Technology Services',
@@ -194,7 +197,7 @@ export default function ServicesPage() {
               <span className="text-[var(--aci-primary-light)]"> Actually Deliver</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8">
-              Six practice areas. One engineering standard. Every engagement staffed with senior architects
+              Ten practice areas. One engineering standard. Every engagement staffed with senior architects
               who&rsquo;ve shipped production systems at Fortune 500 scale.
             </p>
           </div>

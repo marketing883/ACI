@@ -35,6 +35,7 @@ import {
   getV4Whitepaper,
   getV4CaseStudyFacts,
 } from '@/lib/v4/fetch-v4-home';
+import { getSiteUrl } from '@/lib/site-url';
 
 // Funnel Display for headings, Funnel Sans for body; Geist is scoped
 // to the Foldcraft section.
@@ -42,7 +43,9 @@ const display = Funnel_Display({ subsets: ['latin'], weight: ['400', '500', '600
 const sans = Funnel_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap' });
 const geist = Geist({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap' });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 // The news/insights/case-study content comes from the CMS at render
 // time; revalidate hourly so fresh publishes show up without a deploy.

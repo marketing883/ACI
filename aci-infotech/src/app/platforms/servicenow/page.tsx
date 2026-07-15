@@ -14,7 +14,7 @@ import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/platforms/servicenow' },
   title: 'ServiceNow Implementation Services',
-  description: 'ACI Infotech is a ServiceNow Elite Partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
+  description: 'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
 };
 
 const capabilities = [
@@ -97,7 +97,7 @@ export default function ServiceNowPage() {
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 bg-[#81B5A1]/20 text-[#81B5A1] text-sm font-medium rounded-full flex items-center gap-1">
                 <Award className="w-4 h-4" />
-                Elite Partner
+                Partner
               </span>
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function ServiceNowPage() {
             <span className="text-[var(--aci-primary-light)]"> & Workflow Automation</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As a ServiceNow Elite Partner, we help enterprises transform their digital workflows
+            As a ServiceNow partner, we help enterprises transform their digital workflows
             and deliver exceptional employee and customer experiences. From ITSM to custom apps,
             our certified consultants maximize your ServiceNow investment.
           </p>

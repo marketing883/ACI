@@ -5,8 +5,11 @@ import { ArrowRight, Linkedin, CheckCircle, Target, Eye } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
 import ParallaxBalloons from '@/components/about/ParallaxBalloons';
+import { getSiteUrl } from '@/lib/site-url';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: 'About ACI Infotech | The Engineers Behind Enterprise Modernization',

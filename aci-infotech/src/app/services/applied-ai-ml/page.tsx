@@ -11,10 +11,13 @@ export const revalidate = 3600;
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+import { getSiteUrl } from '@/lib/site-url';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'Applied AI & ML Services | ACI Infotech',
+  title: 'Applied AI & ML Services',
   description: 'From GenAI pilots to production ML. GenAI chatbots, forecasting engines, recommendation systems. With MLOps, governance, and SLAs. 50+ AI deployments.',
   keywords: 'AI consulting, machine learning services, GenAI implementation, MLOps, AI governance, enterprise AI',
   alternates: {

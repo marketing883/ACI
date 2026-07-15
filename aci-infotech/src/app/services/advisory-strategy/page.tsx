@@ -13,11 +13,14 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { getSiteUrl } from '@/lib/site-url';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'Advisory & Strategy | ACI Infotech',
+  title: 'Advisory & Strategy Consulting Services',
   description:
     'Technology strategy grounded in delivery. North-star maps, TCO models, capability audits, and ROI frameworks. Advisors who arrive with the engineers who will build what the plan recommends.',
   keywords:

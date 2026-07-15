@@ -14,11 +14,14 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { getSiteUrl } from '@/lib/site-url';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: 'GCC & Captive Operations | ACI Infotech',
+  title: 'GCC Setup & Captive Center Services',
   description:
     'Stand up and operate Global Capability Centers in India and LatAm. Entity setup, hiring, facilities, IT, and operating model delivered in one engagement, with a documented build-operate-transfer path.',
   keywords:
