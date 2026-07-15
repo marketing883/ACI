@@ -44,8 +44,6 @@ const jetBrainsMono = JetBrains_Mono({
   preload: false,
 });
 
-const USE_V2_HOME = process.env.NEXT_PUBLIC_USE_V2_HOME === "true";
-
 // Explicit viewport export. Next.js auto-generates a sensible default
 // when this is missing, but Lighthouse occasionally flags the
 // "viewport meta tag" audit on mobile if the default isn't picked up
@@ -53,21 +51,23 @@ const USE_V2_HOME = process.env.NEXT_PUBLIC_USE_V2_HOME === "true";
 // removes the ambiguity. `themeColor` matches --v2-bg so iOS Safari's
 // status bar and Chrome's address bar tint align with the dark
 // homepage instead of flashing the system white.
+// themeColor matches the white v4 homepage so iOS Safari's status bar
+// and Chrome's address bar don't flash a dark tint over a light page.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#050B1F",
+  themeColor: "#ffffff",
 };
 
 export const metadata: Metadata = {
   title: {
-    default: "ACI Infotech | Production-Grade Engineering at Enterprise Scale",
+    default: "ACI Infotech | Enterprise Data & AI, Engineered and Run in Production",
     template: "%s | ACI Infotech",
   },
   description:
-    "We build data platforms, AI systems, and cloud architectures for Fortune 500 operations. Senior architects. Production code with SLAs. We answer the 2am call.",
+    "ACI Infotech engineers the data foundation, builds the AI on top, and runs both in production. Data engineering, applied AI, cloud modernization, and managed operations for large enterprises.",
   keywords:
-    "enterprise data engineering, AI ML consulting, cloud modernization, Fortune 500 technology consulting, production-grade engineering",
+    "enterprise data engineering, applied AI consulting, cloud modernization, managed operations, lakehouse, Databricks, Snowflake, Azure, production-grade engineering",
   authors: [{ name: "ACI Infotech" }],
   creator: "ACI Infotech",
   publisher: "ACI Infotech",
@@ -82,23 +82,23 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://aciinfotech.com",
     siteName: "ACI Infotech",
-    title: "ACI Infotech | Production-Grade Engineering at Enterprise Scale",
+    title: "ACI Infotech | Enterprise Data & AI, Engineered and Run in Production",
     description:
-      "We build data platforms, AI systems, and cloud architectures for Fortune 500 operations. Senior architects. Production code with SLAs.",
+      "We engineer the data foundation, build the AI on top, and run both in production. 500+ enterprise deployments, documented in playbooks.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "ACI Infotech - Enterprise Technology Consulting",
+        alt: "ACI Infotech: Build the AI foundation. Run it in production.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ACI Infotech | Production-Grade Engineering at Enterprise Scale",
+    title: "ACI Infotech | Enterprise Data & AI, Engineered and Run in Production",
     description:
-      "We build data platforms, AI systems, and cloud architectures for Fortune 500 operations.",
+      "We engineer the data foundation, build the AI on top, and run both in production.",
     images: ["/og-image.png"],
   },
   robots: {
@@ -143,13 +143,6 @@ export default function RootLayout({
             here (not via next/script in a dynamic ssr:false client
             component) is what makes Tag Assistant actually find it. */}
         <script dangerouslySetInnerHTML={{ __html: GTM_BOOTSTRAP_SCRIPT }} />
-        {/* Preload v1's hero poster only on v1 builds. The v2 hero uses
-            its own video + parallax stack and never references this
-            asset, so preloading it on v2 wasted ~4KB and a connection
-            slot. */}
-        {!USE_V2_HOME && (
-          <link rel="preload" href="/images/hero-poster.webp" as="image" type="image/webp" />
-        )}
       </head>
       <body className="antialiased font-sans" suppressHydrationWarning>
         {/* GTM noscript fallback — first thing in <body> per Google's

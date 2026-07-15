@@ -54,6 +54,22 @@ const LOGO_PATH: Record<string, string> = {
 const ROW1 = ['databricks', 'snowflake', 'azure', 'aws', 'kubernetes', 'dynatrace'];
 const ROW2 = ['sap', 'salesforce', 'servicenow', 'googlecloud', 'googlebigquery', 'braze'];
 
+// Proper names for alt text — the map keys are file ids, not labels.
+const LOGO_ALT: Record<string, string> = {
+  databricks: 'Databricks',
+  snowflake: 'Snowflake',
+  azure: 'Microsoft Azure',
+  aws: 'Amazon Web Services',
+  kubernetes: 'Kubernetes',
+  dynatrace: 'Dynatrace',
+  sap: 'SAP',
+  salesforce: 'Salesforce',
+  servicenow: 'ServiceNow',
+  googlecloud: 'Google Cloud',
+  googlebigquery: 'Google BigQuery',
+  braze: 'Braze',
+};
+
 function Label({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
     <span
@@ -70,7 +86,7 @@ function LogoTile({ id }: { id: string }) {
     <span className="pb-glass flex h-16 w-16 shrink-0 items-center justify-center rounded-xl md:h-[72px] md:w-[72px]">
       <Image
         src={LOGO_PATH[id]}
-        alt={id}
+        alt={LOGO_ALT[id] ?? id}
         width={120}
         height={40}
         className="h-7 w-auto object-contain opacity-75 md:h-8"

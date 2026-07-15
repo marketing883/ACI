@@ -1,67 +1,247 @@
 /**
- * Root route — build-time switch between v1 and v2 homepage.
+ * Root route — the v4 editorial homepage, promoted from /preview/v4.
  *
- *   - `NEXT_PUBLIC_USE_V2_HOME=true` → v2 (dark-premium editorial)
- *   - Unset → v1 (original production homepage)
+ * Ships its own nav and footer (ConditionalLayout suppresses the
+ * global chrome on `/`). Older homepages stay reachable for
+ * comparison at /v1 and /preview/home.
  *
- * Inactive branch is pruned from the bundle at build time.
- *
- * All versions remain reachable for comparison:
- *   /v1             → always v1
- *   /preview/v2-home → always v2
+ * SEO/AEO/GEO notes:
+ *   - Site-wide Organization + WebSite JSON-LD comes from the root
+ *     layout (GlobalStructuredData); this page adds the page-scoped
+ *     graph: WebPage, the service OfferCatalog, and FAQPage.
+ *   - The FAQ answers render server-side (native <details>) from the
+ *     same data module the JSON-LD is built from, so the visible page
+ *     and the schema can never disagree.
+ *   - /llms.txt carries the crawlable plain-text site map for
+ *     generative engines; the sitemap lists `/` at priority 1.
  */
 
 import type { Metadata } from 'next';
-import V2HomeContent from '@/components/v2/home/V2HomeContent';
-import V1HomePage from './v1/page';
+import { Funnel_Display, Funnel_Sans, Geist } from 'next/font/google';
+import EditorialHero from '@/components/v4/hero/EditorialHero';
+import PartnerMarquee from '@/components/v4/hero/PartnerMarquee';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import PlaybooksSection from '@/components/v4/hero/PlaybooksSection';
+import SuccessStories, { SUCCESS_STORY_SLUGS } from '@/components/v4/hero/SuccessStories';
+import ServicesSection from '@/components/v4/hero/ServicesSection';
+import InsightsSection from '@/components/v4/hero/InsightsSection';
+import HomeFaq from '@/components/v4/hero/HomeFaq';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import SiteFooter from '@/components/v4/hero/SiteFooter';
+import { HOME_FAQ } from '@/components/v4/hero/home-faq-data';
+import {
+  getV4FeaturedNews,
+  getV4Insights,
+  getV4Whitepaper,
+  getV4CaseStudyFacts,
+} from '@/lib/v4/fetch-v4-home';
 
-export const revalidate = 60;
+// Funnel Display for headings, Funnel Sans for body; Geist is scoped
+// to the Foldcraft section.
+const display = Funnel_Display({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap' });
+const sans = Funnel_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap' });
+const geist = Geist({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap' });
 
-const USE_V2_HOME = process.env.NEXT_PUBLIC_USE_V2_HOME === 'true';
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 
-// Build-time-resolved metadata. On v2 builds the homepage gets the
-// editorial title/description and a canonical that points at the
-// site root. On v1 builds the layout.tsx default title applies.
-export const metadata: Metadata = USE_V2_HOME
-  ? {
-      title:
-        'ACI Infotech | Enterprise Technology Services — Data & AI, Cloud, Managed Operations',
-      description:
-        'ACI Infotech builds, ships, and runs production-grade enterprise systems. Data & AI, cloud infrastructure, and managed operations for Fortune 500 companies. 500+ large enterprise projects delivered across financial services, healthcare, retail, and manufacturing.',
-      keywords:
-        'enterprise technology services, data engineering, AI ML, cloud modernization, managed operations, Databricks, Snowflake, AWS, Azure, SAP, ServiceNow, Fortune 500, digital transformation',
-      openGraph: {
-        title: 'ACI Infotech | Enterprise Technology. Delivered.',
-        description:
-          'Data & AI. Cloud. Managed operations. 500+ production systems for enterprises in financial services, healthcare, retail, and manufacturing.',
-        url: siteUrl,
-        siteName: 'ACI Infotech',
-        type: 'website',
-        locale: 'en_US',
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: 'ACI Infotech | Enterprise Technology. Delivered.',
-        description:
-          'Data & AI. Cloud. Managed operations. 500+ production systems for Fortune 500 enterprises.',
-      },
-      alternates: { canonical: siteUrl },
-      robots: { index: true, follow: true },
-    }
-  : {
-      alternates: { canonical: siteUrl },
-    };
+// The news/insights/case-study content comes from the CMS at render
+// time; revalidate hourly so fresh publishes show up without a deploy.
+export const revalidate = 3600;
 
-interface PageProps {
-  // Next 16 hands searchParams as a Promise.
-  searchParams?: Promise<{ layout?: string | string[] }>;
+const TITLE = 'ACI Infotech | Enterprise Data & AI, Engineered and Run in Production';
+const DESCRIPTION =
+  'ACI Infotech engineers the data foundation, builds the AI on top, and runs both in production. 500+ enterprise deployments on Databricks, Azure, Snowflake, AWS, and Salesforce across financial services, healthcare, retail, and manufacturing.';
+
+export const metadata: Metadata = {
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
+  keywords: [
+    'enterprise data engineering',
+    'applied AI consulting',
+    'GenAI production systems',
+    'lakehouse modernization',
+    'cloud modernization',
+    'managed operations',
+    'Databricks partner',
+    'Azure data platform',
+    'Snowflake consulting',
+    'MarTech CDP services',
+    'enterprise AI company',
+  ],
+  alternates: { canonical: siteUrl },
+  openGraph: {
+    title: TITLE,
+    description:
+      'We engineer the data foundation, build the AI on top, and run both in production. 500+ enterprise deployments, documented in playbooks.',
+    url: siteUrl,
+    siteName: 'ACI Infotech',
+    type: 'website',
+    locale: 'en_US',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'ACI Infotech: Build the AI foundation. Run it in production.',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description:
+      'We engineer the data foundation, build the AI on top, and run both in production.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
+
+// The homepage service catalog for the OfferCatalog schema. Mirrors
+// the ServicesSection bars plus the wider practice list the site
+// actually sells (each URL is a live service page).
+const SERVICE_CATALOG = [
+  {
+    name: 'Data Engineering & Lakehouse',
+    description: 'Modern data platforms on Databricks, Snowflake, and cloud-native architectures: lakehouse migration, real-time pipelines, governance, and self-service BI.',
+    path: '/services/data-engineering',
+  },
+  {
+    name: 'Applied AI & GenAI',
+    description: 'Copilots, agents, RAG systems, forecasting, and MLOps that move from prototype to governed production.',
+    path: '/services/applied-ai-ml',
+  },
+  {
+    name: 'Cloud Modernization',
+    description: 'Landing zones, FinOps, and mainframe-to-cloud cutovers run in parallel so nothing goes dark.',
+    path: '/services/cloud-modernization',
+  },
+  {
+    name: 'Managed Operations & SRE',
+    description: '24/7 NOC and SOC coverage, observability, and site reliability engineering for production estates.',
+    path: '/services/managed-operations',
+  },
+  {
+    name: 'MarTech & CDP (ACI Interactive)',
+    description: 'Marketing, MarTech, and customer data platform services: strategy, activation, and journey orchestration.',
+    path: '/services/martech-cdp',
+  },
+  {
+    name: 'Cybersecurity',
+    description: 'Zero-trust architecture, compliance readiness, threat response, and SOC operations.',
+    path: '/services/cyber-security',
+  },
+  {
+    name: 'Advisory & Strategy',
+    description: 'Technology strategy grounded in delivery: a written plan in 48 hours, a build pod in two weeks.',
+    path: '/services/advisory-strategy',
+  },
+  {
+    name: 'GCC & Captive Operations',
+    description: 'Captive centers stood up on a documented build-operate-transfer path.',
+    path: '/services/gcc',
+  },
+];
+
+/** Page-scoped JSON-LD graph: WebPage + service OfferCatalog + FAQ. */
+function HomeStructuredData() {
+  const graph = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${siteUrl}/#webpage`,
+        url: siteUrl,
+        name: TITLE,
+        description: DESCRIPTION,
+        isPartOf: { '@id': `${siteUrl}/#website` },
+        about: { '@id': `${siteUrl}/#organization` },
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/og-image.png`,
+          width: 1200,
+          height: 630,
+        },
+        inLanguage: 'en-US',
+      },
+      {
+        '@type': 'OfferCatalog',
+        '@id': `${siteUrl}/#services`,
+        name: 'ACI Infotech Services',
+        url: `${siteUrl}/services`,
+        provider: { '@id': `${siteUrl}/#organization` },
+        itemListElement: SERVICE_CATALOG.map((s, i) => ({
+          '@type': 'Offer',
+          position: i + 1,
+          itemOffered: {
+            '@type': 'Service',
+            name: s.name,
+            description: s.description,
+            url: `${siteUrl}${s.path}`,
+            provider: { '@id': `${siteUrl}/#organization` },
+          },
+        })),
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${siteUrl}/#faq`,
+        mainEntity: HOME_FAQ.map((f) => ({
+          '@type': 'Question',
+          name: f.question,
+          acceptedAnswer: { '@type': 'Answer', text: f.answer },
+        })),
+      },
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }}
+    />
+  );
 }
 
-export default async function HomePage({ searchParams }: PageProps = {}) {
-  if (USE_V2_HOME) {
-    const resolved = (await searchParams) ?? {};
-    return <V2HomeContent searchParams={resolved} />;
-  }
-  return <V1HomePage />;
+export default async function HomePage() {
+  // One round-trip per content type, all in parallel. Each fetcher
+  // degrades to null/empty so the sections fall back to their editorial
+  // copy when the CMS is unreachable (e.g. local dev without creds).
+  const [news, insights, whitepaper, storyFacts] = await Promise.all([
+    getV4FeaturedNews(),
+    getV4Insights(3),
+    getV4Whitepaper(),
+    getV4CaseStudyFacts(SUCCESS_STORY_SLUGS),
+  ]);
+
+  return (
+    <div className={sans.className}>
+      <HomeStructuredData />
+      <main>
+        <EditorialHero headingClass={display.className} bodyClass={sans.className} />
+        <PartnerMarquee headingClass={display.className} />
+        <FoldcraftHero geistClass={geist.className} />
+        <PlaybooksSection headingClass={display.className} />
+        <SuccessStories headingClass={display.className} facts={storyFacts} />
+        <ServicesSection headingClass={display.className} />
+        <InsightsSection
+          headingClass={display.className}
+          news={news}
+          insights={insights}
+          download={whitepaper}
+        />
+        <HomeFaq headingClass={display.className} />
+        <CtaSection />
+      </main>
+      <SiteFooter headingClass={display.className} />
+    </div>
+  );
 }

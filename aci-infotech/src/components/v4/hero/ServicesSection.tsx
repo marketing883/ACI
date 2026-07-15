@@ -25,6 +25,23 @@ const LOGOS: Record<string, string> = {
   langgraph: '/brand/langgraph-wordmark.svg',
 };
 
+// Proper names for alt text — the map keys are file ids, not labels.
+const LOGO_ALT: Record<string, string> = {
+  databricks: 'Databricks',
+  snowflake: 'Snowflake',
+  azure: 'Microsoft Azure',
+  aws: 'Amazon Web Services',
+  googlecloud: 'Google Cloud',
+  servicenow: 'ServiceNow',
+  kubernetes: 'Kubernetes',
+  dynatrace: 'Dynatrace',
+  salesforce: 'Salesforce',
+  braze: 'Braze',
+  anthropic: 'Anthropic',
+  openai: 'OpenAI',
+  langgraph: 'LangGraph',
+};
+
 type Service = {
   no: string;
   name: string;
@@ -185,7 +202,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                       <Image
                         key={id}
                         src={LOGOS[id]}
-                        alt={id}
+                        alt={LOGO_ALT[id] ?? id}
                         width={200}
                         height={58}
                         className="h-9 w-auto object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-90 group-hover:brightness-0 group-hover:invert lg:h-12"
@@ -270,7 +287,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                     <Image
                       key={id}
                       src={LOGOS[id]}
-                      alt={id}
+                      alt={LOGO_ALT[id] ?? id}
                       width={200}
                       height={58}
                       className="h-9 w-auto object-contain opacity-80 lg:h-12"

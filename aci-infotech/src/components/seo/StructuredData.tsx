@@ -88,8 +88,9 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aciinfotech.com';
 export function OrganizationSchema({
   name = 'ACI Infotech',
   url = siteUrl,
-  logo = `${siteUrl}/images/logo.png`,
-  description = 'Production-Grade Engineering at Enterprise Scale. We build data platforms, AI systems, and cloud architectures for Fortune 500 operations.',
+  // Real, existing asset — /images/logo.png was a dead path.
+  logo = `${siteUrl}/aci-infotech-logo.png`,
+  description = 'ACI Infotech is an enterprise engineering firm. We build the data foundation, put AI on top of it, and run both in production: data engineering, applied AI and GenAI, cloud modernization, MarTech, and managed operations.',
   email = 'hello@aciinfotech.com',
   phone = '+1-888-225-4638',
   address = {
@@ -99,9 +100,11 @@ export function OrganizationSchema({
     postalCode: '08852',
     addressCountry: 'US',
   },
+  // Keep in sync with the social links in the site footers.
   sameAs = [
-    'https://www.linkedin.com/company/aci-infotech',
+    'https://www.linkedin.com/company/aciinfotech',
     'https://x.com/ACIInfotech',
+    'https://www.youtube.com/@aciinfotech',
   ],
   foundingDate = '2006',
   numberOfEmployees = '1200',
@@ -115,8 +118,8 @@ export function OrganizationSchema({
     logo: {
       '@type': 'ImageObject',
       url: logo,
-      width: '512',
-      height: '512',
+      width: '200',
+      height: '64',
     },
     description,
     email,
@@ -137,14 +140,22 @@ export function OrganizationSchema({
     },
     knowsAbout: [
       'Data Engineering',
+      'Lakehouse Architecture',
       'Cloud Modernization',
       'Artificial Intelligence',
+      'Generative AI',
       'Machine Learning',
       'Enterprise Integration',
       'MarTech & CDP',
       'Cybersecurity',
+      'Managed Operations',
+      'Databricks',
+      'Snowflake',
+      'Microsoft Azure',
+      'Amazon Web Services',
+      'Salesforce',
     ],
-    slogan: 'Production-Grade Engineering at Enterprise Scale',
+    slogan: 'Build the AI foundation. Run it in production.',
   };
 
   return (
@@ -155,12 +166,13 @@ export function OrganizationSchema({
   );
 }
 
-// WebSite Schema - Site-level information with search action
+// WebSite Schema - Site-level information. No SearchAction: the site
+// has no /search results page, and advertising one that 404s is worse
+// than omitting it.
 export function WebSiteSchema({
   name = 'ACI Infotech',
   url = siteUrl,
-  description = 'Production-Grade Engineering at Enterprise Scale. Data platforms, AI systems, and cloud architectures for Fortune 500 operations.',
-  searchUrl = `${siteUrl}/search?q=`,
+  description = 'ACI Infotech builds the enterprise data foundation, puts AI on top, and runs both in production. Data engineering, applied AI, cloud, MarTech, and managed operations.',
 }: WebSiteSchemaProps = {}) {
   const schema = {
     '@context': 'https://schema.org',
@@ -171,14 +183,6 @@ export function WebSiteSchema({
     description,
     publisher: {
       '@id': `${url}/#organization`,
-    },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${searchUrl}{search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
     },
     inLanguage: 'en-US',
   };
