@@ -1,11 +1,17 @@
-'use client';
+/**
+ * Whitepaper detail — server component.
+ *
+ * The old client version fetched via /api in a useEffect, so the
+ * server HTML was a spinner: no teaser content for crawlers, and
+ * unknown slugs returned HTTP 200. The teaser (summary, takeaways,
+ * table of contents) now renders on the server; the gated download
+ * stays behind the lead form in a small client island.
+ */
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 import {
-  Download,
   FileText,
   ArrowLeft,
   Clock,
@@ -17,312 +23,58 @@ import {
   Target,
   Users,
   Shield,
-  Loader2,
-  Mail,
-  Building2,
-  User,
-  X,
 } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import { trackFormSubmission, trackContentView } from '@/components/analytics/GoogleTagManager';
-import { trackWhitepaperDownloadConversion } from '@/components/analytics/LinkedInInsightTag';
+import { getSiteUrl } from '@/lib/site-url';
+import { getWhitepaperDetail } from './whitepaper-detail';
+import WhitepaperDownloadCta from './WhitepaperDownloadCta';
 
-interface Whitepaper {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  cover_image: string;
-  file_url: string;
-  category: string;
-  tags: string[];
-  read_time: string;
-  page_count: number;
-  published_at: string;
-  // Teaser content
-  key_takeaways: string[];
-  what_you_will_learn: string[];
-  who_should_read: string[];
-  executive_summary: string;
-  table_of_contents: string[];
+const siteUrl = getSiteUrl();
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
 }
 
-// Fallback whitepaper data
-const fallbackWhitepapers: Record<string, Whitepaper> = {
-  'retail-technology-benchmark-report-2026': {
-    id: '1',
-    slug: 'retail-technology-benchmark-report-2026',
-    title: 'Retail Technology Benchmark Report 2026',
-    description: 'Retail executives face unprecedented pressure to modernize technology stacks while maintaining operational efficiency and customer satisfaction.',
-    cover_image: '/images/whitepapers/retail-benchmark-cover.jpg',
-    file_url: '/whitepapers/pdfs/retail-technology-benchmark-report-2026.pdf',
-    category: 'Retail & Technology',
-    tags: ['Retail', 'Digital Transformation', 'Technology Benchmark'],
-    read_time: '15 min',
-    page_count: 25,
-    published_at: '2026-02-16',
-    executive_summary: 'Retail executives face unprecedented pressure to modernize technology stacks while maintaining operational efficiency and customer satisfaction. This benchmark report provides actionable insights from 120+ retail enterprises across multiple verticals.',
-    key_takeaways: [
-      'Identify technology gaps costing your organization revenue and efficiency',
-      'Access proven frameworks that reduce deployment risks by 40%',
-      'Benchmark data from 120+ retail enterprises across multiple verticals',
-      'Implementation strategies from leading retail digital transformations',
-      'ROI frameworks for technology investment prioritization',
+export default async function WhitepaperDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const whitepaper = await getWhitepaperDetail(slug);
+
+  // Real 404 instead of the old 200 "Whitepaper Not Found" body.
+  if (!whitepaper) {
+    notFound();
+  }
+
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Report',
+        '@id': `${siteUrl}/whitepapers/${slug}#report`,
+        headline: whitepaper.title,
+        description: whitepaper.description,
+        url: `${siteUrl}/whitepapers/${slug}`,
+        image: whitepaper.cover_image || undefined,
+        datePublished: whitepaper.published_at || undefined,
+        author: { '@id': `${siteUrl}/#organization` },
+        publisher: { '@id': `${siteUrl}/#organization` },
+        keywords: (whitepaper.tags || []).join(', '),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+          { '@type': 'ListItem', position: 2, name: 'Whitepapers', item: `${siteUrl}/whitepapers` },
+          { '@type': 'ListItem', position: 3, name: whitepaper.title, item: `${siteUrl}/whitepapers/${slug}` },
+        ],
+      },
     ],
-    what_you_will_learn: [
-      'Current state of retail technology adoption across verticals',
-      'Key technology gaps impacting revenue and efficiency',
-      'Proven deployment frameworks reducing implementation risks',
-      'Best practices from successful retail transformations',
-      'Strategic roadmap for technology modernization',
-    ],
-    who_should_read: [
-      'Retail CIOs and Technology Leaders',
-      'Digital Transformation Officers',
-      'Operations and Supply Chain Executives',
-      'Store Operations and Omnichannel Leaders',
-      'Technology Investment Decision Makers',
-    ],
-    table_of_contents: [
-      'Executive Summary',
-      'The State of Retail Technology in 2026',
-      'Benchmark Methodology and Participants',
-      'Technology Adoption Patterns',
-      'Identifying Critical Technology Gaps',
-      'Risk Reduction Frameworks',
-      'Implementation Best Practices',
-      'Case Studies: Success Stories',
-      'Strategic Recommendations',
-      'Implementation Roadmap',
-      'Appendix: Detailed Benchmarks',
-    ],
-  },
-};
-
-function DownloadModal({
-  isOpen,
-  onClose,
-  whitepaper,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  whitepaper: Whitepaper | null;
-}) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    title: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
-
-  if (!isOpen || !whitepaper) return null;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError('');
-
-    try {
-      const response = await fetch('/api/whitepaper-leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          whitepaper_slug: whitepaper.slug,
-          whitepaper_title: whitepaper.title,
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to submit');
-
-      const data = await response.json();
-
-      trackFormSubmission('whitepaper_download', 'whitepaper_detail_page', {
-        whitepaper_slug: whitepaper.slug,
-        whitepaper_title: whitepaper.title,
-        company: formData.company,
-      });
-
-      // Track LinkedIn conversion for lead gen campaigns
-      trackWhitepaperDownloadConversion();
-
-      window.location.href = `/whitepapers/thank-you?token=${data.downloadToken}&whitepaper=${whitepaper.slug}`;
-    } catch {
-      setError('Something went wrong. Please try again.');
-      setIsSubmitting(false);
-    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-xl max-w-md w-full p-8">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-[var(--aci-primary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FileText className="w-8 h-8 text-[var(--aci-primary)]" />
-          </div>
-          <h3 className="text-xl font-bold text-gray-900">Download Whitepaper</h3>
-          <p className="text-gray-600 mt-2">{whitepaper.title}</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-                placeholder="John Smith"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Work Email *</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-                placeholder="john@company.com"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Company *</label>
-            <div className="relative">
-              <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                required
-                value={formData.company}
-                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-                placeholder="Acme Corporation"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
-            <input
-              type="text"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-              placeholder="VP of Engineering"
-            />
-          </div>
-
-          {error && (
-            <p className="text-red-600 text-sm">{error}</p>
-          )}
-
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            loading={isSubmitting}
-            className="w-full"
-            leftIcon={!isSubmitting ? <Download className="w-5 h-5" /> : undefined}
-          >
-            {isSubmitting ? 'Processing...' : 'Get Free Whitepaper'}
-          </Button>
-
-          <p className="text-xs text-center text-gray-500">
-            We respect your privacy. Unsubscribe anytime.
-          </p>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-export default function WhitepaperDetailPage() {
-  const params = useParams();
-  const slug = params.slug as string;
-  const [whitepaper, setWhitepaper] = useState<Whitepaper | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [showDownloadModal, setShowDownloadModal] = useState(false);
-
-  useEffect(() => {
-    async function fetchWhitepaper() {
-      try {
-        const response = await fetch(`/api/whitepapers/${slug}`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data.whitepaper) {
-            // Merge with fallback data for teaser content
-            const fallback = fallbackWhitepapers[slug];
-            setWhitepaper({
-              ...fallback,
-              ...data.whitepaper,
-              key_takeaways: data.whitepaper.key_takeaways || fallback?.key_takeaways || [],
-              what_you_will_learn: data.whitepaper.what_you_will_learn || fallback?.what_you_will_learn || [],
-              who_should_read: data.whitepaper.who_should_read || fallback?.who_should_read || [],
-              executive_summary: data.whitepaper.executive_summary || fallback?.executive_summary || '',
-              table_of_contents: data.whitepaper.table_of_contents || fallback?.table_of_contents || [],
-            });
-
-            trackContentView('whitepaper', slug, data.whitepaper.title, data.whitepaper.category);
-          } else if (fallbackWhitepapers[slug]) {
-            setWhitepaper(fallbackWhitepapers[slug]);
-          }
-        } else if (fallbackWhitepapers[slug]) {
-          setWhitepaper(fallbackWhitepapers[slug]);
-        }
-      } catch {
-        if (fallbackWhitepapers[slug]) {
-          setWhitepaper(fallbackWhitepapers[slug]);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (slug) {
-      fetchWhitepaper();
-    }
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[var(--aci-primary)]" />
-      </div>
-    );
-  }
-
-  if (!whitepaper) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-8">
-        <FileText className="w-16 h-16 text-gray-300 mb-4" />
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Whitepaper Not Found</h1>
-        <p className="text-gray-600 mb-6">The whitepaper you&apos;re looking for doesn&apos;t exist.</p>
-        <Link href="/whitepapers" className="text-[var(--aci-primary)] hover:underline">
-          Browse all whitepapers
-        </Link>
-      </div>
-    );
-  }
-
-  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
     <main className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-[var(--aci-secondary)] to-[#0a2540] pt-32 pb-20">
@@ -380,14 +132,7 @@ export default function WhitepaperDetailPage() {
                 </div>
               </div>
 
-              <Button
-                onClick={() => setShowDownloadModal(true)}
-                size="lg"
-                className="group"
-                leftIcon={<Download className="w-5 h-5 group-hover:animate-bounce" />}
-              >
-                Download Free Whitepaper
-              </Button>
+              <WhitepaperDownloadCta whitepaper={whitepaper} variant="hero" trackView />
             </div>
 
             {/* Cover Image */}
@@ -546,28 +291,16 @@ export default function WhitepaperDetailPage() {
             <Shield className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Transform Your Data Strategy?
+            Ready to Put This to Work?
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
             Download this comprehensive guide and learn from 80+ enterprise implementations.
           </p>
-          <Button
-            onClick={() => setShowDownloadModal(true)}
-            variant="lime"
-            size="lg"
-            leftIcon={<Download className="w-5 h-5" />}
-          >
-            Get Your Free Copy
-          </Button>
+          <WhitepaperDownloadCta whitepaper={whitepaper} variant="footer" />
         </div>
       </section>
 
-      {/* Download Modal */}
-      <DownloadModal
-        isOpen={showDownloadModal}
-        onClose={() => setShowDownloadModal(false)}
-        whitepaper={whitepaper}
-      />
     </main>
+    </>
   );
 }

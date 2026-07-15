@@ -8,6 +8,21 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/platforms/braze' },
   title: 'Braze Implementation Services',
   description: 'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Braze Implementation Services | ACI Infotech',
+    description: 'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
+    url: 'https://aciinfotech.com/platforms/braze',
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Braze Implementation Services | ACI Infotech',
+    description: 'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
+  },
 };
 
 const capabilities = [

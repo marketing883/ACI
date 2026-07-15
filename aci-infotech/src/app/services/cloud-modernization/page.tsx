@@ -8,7 +8,7 @@ import { cloudModernizationRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
 
 export const revalidate = 3600;
-import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
 import { getSiteUrl } from '@/lib/site-url';
@@ -22,6 +22,21 @@ export const metadata: Metadata = {
   keywords: 'cloud modernization, AWS migration, Azure migration, cloud consulting, kubernetes, multi-cloud',
   alternates: {
     canonical: `${siteUrl}/services/cloud-modernization`,
+  },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Cloud Modernization Services | ACI Infotech',
+    description: 'AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with proven playbooks. 200+ cloud migrations, zero downtime deployments.',
+    url: `${siteUrl}/services/cloud-modernization`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cloud Modernization Services | ACI Infotech',
+    description: 'AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with proven playbooks. 200+ cloud migrations, zero downtime deployments.',
   },
 };
 
@@ -197,7 +212,7 @@ export default function CloudModernizationPage() {
         url="/services/cloud-modernization"
         serviceType="Cloud Computing Consulting"
       />
-      <FAQSchema faqs={faqs} />
+      {/* FAQPage JSON-LD comes from FaqBlock below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },

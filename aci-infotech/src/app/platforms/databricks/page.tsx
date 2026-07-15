@@ -15,6 +15,21 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/platforms/databricks' },
   title: 'Databricks Implementation Services',
   description: 'ACI Infotech is a Databricks consulting partner. Lakehouse architecture, Delta Lake, MLflow, and Spark optimization for enterprise.',
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Databricks Implementation Services | ACI Infotech',
+    description: 'ACI Infotech is a Databricks consulting partner. Lakehouse architecture, Delta Lake, MLflow, and Spark optimization for enterprise.',
+    url: 'https://aciinfotech.com/platforms/databricks',
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Databricks Implementation Services | ACI Infotech',
+    description: 'ACI Infotech is a Databricks consulting partner. Lakehouse architecture, Delta Lake, MLflow, and Spark optimization for enterprise.',
+  },
 };
 
 const capabilities = [

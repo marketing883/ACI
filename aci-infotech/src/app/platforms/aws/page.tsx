@@ -8,6 +8,21 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/platforms/aws' },
   title: 'AWS Cloud Services',
   description: 'ACI Infotech is an AWS Advanced Consulting Partner. Cloud migration, data lakes, serverless architecture, and managed AWS services.',
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'AWS Cloud Services | ACI Infotech',
+    description: 'ACI Infotech is an AWS Advanced Consulting Partner. Cloud migration, data lakes, serverless architecture, and managed AWS services.',
+    url: 'https://aciinfotech.com/platforms/aws',
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AWS Cloud Services | ACI Infotech',
+    description: 'ACI Infotech is an AWS Advanced Consulting Partner. Cloud migration, data lakes, serverless architecture, and managed AWS services.',
+  },
 };
 
 const capabilities = [

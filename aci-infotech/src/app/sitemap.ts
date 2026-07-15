@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { createClient } from '@supabase/supabase-js';
 import { playbooksData } from './playbooks/[slug]/playbooks-data';
+import { PROMOTED_LP_SLUGS } from '@/lib/lp-promoted';
 
 // Note on lastModified: static-page entries deliberately omit it. The
 // previous `new Date()` stamped every entry with the build time, which
@@ -115,8 +116,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // LANDING PAGES
   // =====================
 
+  // The Microsoft Dynamics roadmap page plus the promoted commercial
+  // LPs (one per intent; the rest of /lp stays noindexed + unlisted).
   const landingPages: MetadataRoute.Sitemap = [
     '/lp/microsoft-dynamics-roadmap',
+    ...PROMOTED_LP_SLUGS.map(slug => `/lp/${slug}`),
   ].map(path => ({
     url: `${baseUrl}${path}`,
     changeFrequency: 'monthly' as const,

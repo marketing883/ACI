@@ -32,6 +32,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteUrl}/services/managed-operations`,
   },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Managed Operations: NOC and SOC Services | ACI Infotech',
+    description: '24/7 NOC and SOC operations backed by SLAs. SolarWinds, Datadog, Dynatrace, LogRhythm, Splunk, Sentinel. Follow the sun coverage across three time zones.',
+    url: `${siteUrl}/services/managed-operations`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Managed Operations: NOC and SOC Services | ACI Infotech',
+    description: '24/7 NOC and SOC operations backed by SLAs. SolarWinds, Datadog, Dynatrace, LogRhythm, Splunk, Sentinel. Follow the sun coverage across three time zones.',
+  },
 };
 
 const heroOutcomes = [

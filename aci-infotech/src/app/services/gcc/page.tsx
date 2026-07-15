@@ -29,6 +29,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteUrl}/services/gcc`,
   },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'GCC Setup & Captive Center Services | ACI Infotech',
+    description: 'Stand up and operate Global Capability Centers in India and LatAm. Entity setup, hiring, facilities, IT, and operating model delivered in one engagement, with a documented build-operate-transfer path.',
+    url: `${siteUrl}/services/gcc`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GCC Setup & Captive Center Services | ACI Infotech',
+    description: 'Stand up and operate Global Capability Centers in India and LatAm. Entity setup, hiring, facilities, IT, and operating model delivered in one engagement, with a documented build-operate-transfer path.',
+  },
 };
 
 const keyOutcomes = [

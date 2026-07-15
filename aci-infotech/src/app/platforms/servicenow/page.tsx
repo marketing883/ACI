@@ -15,6 +15,21 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/platforms/servicenow' },
   title: 'ServiceNow Implementation Services',
   description: 'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'ServiceNow Implementation Services | ACI Infotech',
+    description: 'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
+    url: 'https://aciinfotech.com/platforms/servicenow',
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ServiceNow Implementation Services | ACI Infotech',
+    description: 'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
+  },
 };
 
 const capabilities = [

@@ -18,6 +18,21 @@ export const metadata: Metadata = {
   title: 'Google Cloud Platform Services',
   description:
     'ACI Infotech builds on Google Cloud Platform. BigQuery, Vertex AI, GKE, Anthos, and data-driven AI workloads delivered end to end.',
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Google Cloud Platform Services | ACI Infotech',
+    description: 'ACI Infotech builds on Google Cloud Platform. BigQuery, Vertex AI, GKE, Anthos, and data-driven AI workloads delivered end to end.',
+    url: 'https://aciinfotech.com/platforms/gcp',
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Google Cloud Platform Services | ACI Infotech',
+    description: 'ACI Infotech builds on Google Cloud Platform. BigQuery, Vertex AI, GKE, Anthos, and data-driven AI workloads delivered end to end.',
+  },
 };
 
 const capabilities = [

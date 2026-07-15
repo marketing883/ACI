@@ -8,7 +8,7 @@ import { appliedAiRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
 
 export const revalidate = 3600;
-import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
 import { getSiteUrl } from '@/lib/site-url';
@@ -22,6 +22,21 @@ export const metadata: Metadata = {
   keywords: 'AI consulting, machine learning services, GenAI implementation, MLOps, AI governance, enterprise AI',
   alternates: {
     canonical: `${siteUrl}/services/applied-ai-ml`,
+  },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Applied AI & ML Services | ACI Infotech',
+    description: 'From GenAI pilots to production ML. GenAI chatbots, forecasting engines, recommendation systems. With MLOps, governance, and SLAs. 50+ AI deployments.',
+    url: `${siteUrl}/services/applied-ai-ml`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Applied AI & ML Services | ACI Infotech',
+    description: 'From GenAI pilots to production ML. GenAI chatbots, forecasting engines, recommendation systems. With MLOps, governance, and SLAs. 50+ AI deployments.',
   },
 };
 
@@ -185,7 +200,7 @@ export default function AppliedAIMLPage() {
         url="/services/applied-ai-ml"
         serviceType="AI & Machine Learning Consulting"
       />
-      <FAQSchema faqs={faqs} />
+      {/* FAQPage JSON-LD comes from FaqBlock below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },

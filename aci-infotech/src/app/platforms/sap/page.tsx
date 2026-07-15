@@ -8,6 +8,21 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/platforms/sap' },
   title: 'SAP Implementation Services',
   description: 'ACI Infotech is an SAP Partner. S/4HANA implementation, migration, integration, and managed services for enterprise.',
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'SAP Implementation Services | ACI Infotech',
+    description: 'ACI Infotech is an SAP Partner. S/4HANA implementation, migration, integration, and managed services for enterprise.',
+    url: 'https://aciinfotech.com/platforms/sap',
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SAP Implementation Services | ACI Infotech',
+    description: 'ACI Infotech is an SAP Partner. S/4HANA implementation, migration, integration, and managed services for enterprise.',
+  },
 };
 
 const capabilities = [

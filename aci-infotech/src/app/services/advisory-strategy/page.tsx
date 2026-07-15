@@ -28,6 +28,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteUrl}/services/advisory-strategy`,
   },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Advisory & Strategy Consulting Services | ACI Infotech',
+    description: 'Technology strategy grounded in delivery. North-star maps, TCO models, capability audits, and ROI frameworks. Advisors who arrive with the engineers who will build what the plan recommends.',
+    url: `${siteUrl}/services/advisory-strategy`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Advisory & Strategy Consulting Services | ACI Infotech',
+    description: 'Technology strategy grounded in delivery. North-star maps, TCO models, capability audits, and ROI frameworks. Advisors who arrive with the engineers who will build what the plan recommends.',
+  },
 };
 
 const keyOutcomes = [

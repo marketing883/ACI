@@ -9,7 +9,7 @@ import { dataEngineeringRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
 
 export const revalidate = 3600;
-import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
 import { getSiteUrl } from '@/lib/site-url';
@@ -23,6 +23,21 @@ export const metadata: Metadata = {
   keywords: 'data engineering services, databricks consulting, snowflake implementation, data lakehouse, real-time data pipelines, enterprise data platform',
   alternates: {
     canonical: `${siteUrl}/services/data-engineering`,
+  },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Data Engineering Services | ACI Infotech',
+    description: 'Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. 40+ deployments, 30%+ latency reduction.',
+    url: `${siteUrl}/services/data-engineering`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Data Engineering Services | ACI Infotech',
+    description: 'Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. 40+ deployments, 30%+ latency reduction.',
   },
 };
 
@@ -232,7 +247,7 @@ export default function DataEngineeringPage() {
         url="/services/data-engineering"
         serviceType="Data Engineering Consulting"
       />
-      <FAQSchema faqs={faqs} />
+      {/* FAQPage JSON-LD comes from FaqBlock below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },

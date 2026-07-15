@@ -16,6 +16,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteUrl}/services/digital-transformation`,
   },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Digital Transformation Services | ACI Infotech',
+    description: 'Intelligent process automation. ServiceNow workflows, RPA, document processing. Automate what humans shouldn\'t do manually. 20% reduction in manual processes.',
+    url: `${siteUrl}/services/digital-transformation`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Digital Transformation Services | ACI Infotech',
+    description: 'Intelligent process automation. ServiceNow workflows, RPA, document processing. Automate what humans shouldn\'t do manually. 20% reduction in manual processes.',
+  },
 };
 
 const keyOutcomes = [

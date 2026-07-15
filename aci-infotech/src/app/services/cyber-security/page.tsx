@@ -16,6 +16,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteUrl}/services/cyber-security`,
   },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Cyber Security Services | ACI Infotech',
+    description: 'Security built in, not bolted on. DevSecOps, observability, compliance. SOC 2, ISO 27001 compliant architectures from day one.',
+    url: `${siteUrl}/services/cyber-security`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cyber Security Services | ACI Infotech',
+    description: 'Security built in, not bolted on. DevSecOps, observability, compliance. SOC 2, ISO 27001 compliant architectures from day one.',
+  },
 };
 
 const keyOutcomes = [

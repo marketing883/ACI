@@ -16,6 +16,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteUrl}/services/martech-cdp`,
   },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'MarTech & CDP Services | ACI Infotech',
+    description: 'Customer 360 that actually works. Salesforce Marketing Cloud, Adobe Experience Platform, Braze implementations. Real-time personalization at scale.',
+    url: `${siteUrl}/services/martech-cdp`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'MarTech & CDP Services | ACI Infotech',
+    description: 'Customer 360 that actually works. Salesforce Marketing Cloud, Adobe Experience Platform, Braze implementations. Real-time personalization at scale.',
+  },
 };
 
 const keyOutcomes = [

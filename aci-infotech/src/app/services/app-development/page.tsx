@@ -16,6 +16,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteUrl}/services/app-development`,
   },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Application Development Services | ACI Infotech',
+    description: 'Enterprise application engineering that sits on top of your data and AI infrastructure. Custom, web, and AI-powered applications built with production-grade rigor — not agency output.',
+    url: `${siteUrl}/services/app-development`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Application Development Services | ACI Infotech',
+    description: 'Enterprise application engineering that sits on top of your data and AI infrastructure. Custom, web, and AI-powered applications built with production-grade rigor — not agency output.',
+  },
 };
 
 // Service data

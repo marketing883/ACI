@@ -38,6 +38,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteUrl}/services/quality-engineering`,
   },
+  // Per-page social card. Without this, every share and link preview
+  // inherited the homepage's OpenGraph (title, image, and og:url all
+  // pointing at /), mis-attributing all 21 service/platform pages.
+  openGraph: {
+    title: 'Quality Engineering Services | ACI Infotech',
+    description: 'Quality as an engineering discipline, not a test phase. AI-augmented, continuous, and owned by the team that ships. In-sprint automation, agentic coverage, CI/CD gates, production observability.',
+    url: `${siteUrl}/services/quality-engineering`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Quality Engineering Services | ACI Infotech',
+    description: 'Quality as an engineering discipline, not a test phase. AI-augmented, continuous, and owned by the team that ships. In-sprint automation, agentic coverage, CI/CD gates, production observability.',
+  },
 };
 
 // Hero copy kept short so the H1 never widows and the sub-head reads
