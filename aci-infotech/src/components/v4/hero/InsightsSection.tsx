@@ -65,7 +65,7 @@ export default function InsightsSection({ headingClass, news, insights, download
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6 md:mb-12">
           <div className="max-w-2xl">
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Signals</p>
-            <h2 className={`text-5xl font-bold tracking-tight text-black sm:text-6xl lg:text-[64px] ${headingClass}`} style={{ lineHeight: 1.04 }}>
+            <h2 className={`text-4xl font-bold tracking-tight text-black sm:text-5xl md:text-6xl lg:text-[64px] ${headingClass}`} style={{ lineHeight: 1.04 }}>
               Field notes from <span className="text-[#1D4ED8]">the work</span>.
             </h2>
           </div>
@@ -81,14 +81,16 @@ export default function InsightsSection({ headingClass, news, insights, download
           </Link>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-12">
+        {/* minmax(0,1fr) keeps the single mobile column from sizing to
+            max-content (long titles were widening the whole page). */}
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-12">
           {/* Featured news */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="lg:col-span-7"
+            className="min-w-0 lg:col-span-7"
           >
             <Link
               href={featured.href}
@@ -125,7 +127,7 @@ export default function InsightsSection({ headingClass, news, insights, download
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.55, delay: 0.08, ease: EASE }}
-            className="flex flex-col gap-4 lg:col-span-5"
+            className="flex min-w-0 flex-col gap-4 lg:col-span-5"
           >
             <div className="overflow-hidden rounded-2xl border border-gray-200">
               {list.map((it, i) => (
@@ -147,7 +149,7 @@ export default function InsightsSection({ headingClass, news, insights, download
                       <span className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/65 to-black/40" />
                     </span>
                   ) : null}
-                  <span>
+                  <span className="min-w-0">
                     <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-700 transition-colors duration-300 group-hover:text-[#A3E635]">
                       {it.cat}
                     </span>

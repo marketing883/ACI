@@ -187,7 +187,7 @@ export default function EditorialHero({
           brightness/contrast lift pushes that gray to white, and a radial
           mask feathers every edge into the page so the sphere floats on a
           uniformly white field with no visible video box. */}
-      <div className="pointer-events-none absolute right-0 top-[15%] h-[40%] w-[82%] sm:w-[64%] md:top-1/2 md:h-[66%] md:w-[50%] md:-translate-y-1/2">
+      <div className="pointer-events-none absolute inset-x-0 top-[9%] h-[30%] w-full sm:left-auto sm:right-0 sm:top-[15%] sm:h-[40%] sm:w-[64%] md:top-1/2 md:h-[66%] md:w-[50%] md:-translate-y-1/2">
         <FadingVideo
           src={VIDEO}
           webmSrc={VIDEO_WEBM}
@@ -206,13 +206,13 @@ export default function EditorialHero({
       {/* NAV — fixed so the mega menu follows the visitor down the page.
           Transparent over the hero, translucent glass once scrolled. */}
       <nav
-        className={`fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 transition-all duration-300 sm:px-8 md:px-12 ${
+        className={`fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-3 px-5 transition-all duration-300 sm:px-8 md:px-6 lg:px-7 xl:px-12 ${
           scrolled
             ? 'border-b border-black/[0.06] bg-white/80 py-3 shadow-[0_12px_40px_-18px_rgba(3,12,24,0.25)] backdrop-blur-2xl'
             : 'border-b border-transparent bg-transparent py-5 md:py-6'
         }`}
       >
-        <motion.div custom={0} variants={fadeDown} initial="hidden" animate="show">
+        <motion.div custom={0} variants={fadeDown} initial="hidden" animate="show" className="shrink-0">
           <Link href="/" aria-label="ACI Infotech home" className="flex items-center">
             <Image
               src="/aci-infotech-logo.png"
@@ -229,18 +229,23 @@ export default function EditorialHero({
           <HeroMegaNav headingClass={headingClass} />
         </motion.div>
 
-        <motion.div custom={5} variants={fadeDown} initial="hidden" animate="show" className="flex items-center gap-4">
-          <ArrowLink
-            href="/contact"
-            arrowSize={16}
-            className="hidden text-[15px] font-semibold capitalize tracking-wide text-black sm:inline-flex"
-          >
-            Start a project
-          </ArrowLink>
+        <motion.div custom={5} variants={fadeDown} initial="hidden" animate="show" className="flex shrink-0 items-center gap-4">
+          {/* Wrapped rather than classed: ArrowLink sets inline-flex on
+              itself, which would fight a `hidden` utility passed in. Only
+              shows at lg — below that the nav has no room for it. */}
+          <span className="hidden lg:block">
+            <ArrowLink
+              href="/contact"
+              arrowSize={16}
+              className="whitespace-nowrap text-[15px] font-semibold capitalize tracking-wide text-black"
+            >
+              Start a project
+            </ArrowLink>
+          </span>
           <button
             onClick={() => setMenu(true)}
             aria-label="Open menu"
-            className="flex h-9 w-9 flex-col items-center justify-center gap-1 md:hidden"
+            className="flex h-9 w-9 flex-col items-center justify-center gap-1 lg:hidden"
           >
             <span className="h-0.5 w-5 bg-black" />
             <span className="h-0.5 w-5 bg-black" />
@@ -264,7 +269,7 @@ export default function EditorialHero({
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } }}
-                  className="mb-7 flex items-center gap-6"
+                  className="mb-7 flex flex-wrap items-center gap-x-6 gap-y-4"
                 >
                   {s.mark ? (
                     s.mark.kind === 'badge' ? (
@@ -276,7 +281,9 @@ export default function EditorialHero({
                         width={200}
                         height={106}
                         className="w-auto object-contain"
-                        style={{ height: `${s.mark.h}px` }}
+                        // Scale the mark down with the viewport so the
+                        // credential row fits a phone without wrapping.
+                        style={{ height: `min(${s.mark.h}px, 14vw)` }}
                       />
                     )
                   ) : null}
@@ -284,7 +291,7 @@ export default function EditorialHero({
                     <>
                       {s.mark ? <span className="h-12 w-px bg-black/15" /> : null}
                       <div className="flex items-baseline gap-3">
-                        <span className={`text-5xl font-bold leading-none ${headingClass}`} style={{ color: ACCENT }}>
+                        <span className={`text-4xl font-bold leading-none sm:text-5xl ${headingClass}`} style={{ color: ACCENT }}>
                           {s.stat.value}
                         </span>
                         <span className="max-w-[150px] text-[12px] font-semibold uppercase leading-tight tracking-wide text-black/55">
@@ -333,7 +340,9 @@ export default function EditorialHero({
                 ))}
               </h1>
 
-              <div className="mt-7 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+              {/* Stays stacked through tablet: side-by-side at md crushed
+                  the paragraph to a word a line. */}
+              <div className="mt-7 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-md">
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}

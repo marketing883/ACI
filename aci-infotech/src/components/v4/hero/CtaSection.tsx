@@ -15,7 +15,7 @@ const VIDEO_WEBM = '/videos/v4-editorial-signal.webm';
  */
 export default function CtaSection() {
   return (
-    <section id="lets-talk" className="relative h-[76vh] min-h-[520px] w-full overflow-hidden border-t border-gray-200 bg-white">
+    <section id="lets-talk" className="relative h-[52vh] min-h-[420px] w-full overflow-hidden border-t border-gray-200 bg-white md:h-[76vh] md:min-h-[520px]">
       <FadingVideo
         src={VIDEO}
         webmSrc={VIDEO_WEBM}

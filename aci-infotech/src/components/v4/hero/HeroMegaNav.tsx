@@ -313,7 +313,9 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
 
   return (
     <div className="relative" onMouseLeave={requestClose}>
-      <div className="hidden items-center gap-1 md:flex">
+      {/* Full trigger row needs ~1000px; below lg the hero nav falls back
+          to the hamburger + mobile menu instead of cramming. */}
+      <div className="hidden items-center gap-1 lg:flex">
         {TRIGGERS.map((t) => (
           <button
             key={t.id}
@@ -321,7 +323,7 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
             onMouseEnter={() => requestOpen(t.id)}
             onClick={() => (open === t.id ? close() : requestOpen(t.id))}
             aria-expanded={open === t.id}
-            className="group flex items-center gap-1 px-3 py-2 text-[16px] font-semibold capitalize tracking-wide transition-colors"
+            className="group flex items-center gap-1 whitespace-nowrap px-2 py-2 text-[15px] font-semibold capitalize tracking-wide transition-colors xl:px-3 xl:text-[16px]"
             style={{ color: open === t.id ? ACCENT : 'rgba(0,0,0,0.75)' }}
           >
             <span className="relative">
@@ -337,7 +339,7 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
           href="https://thearq.ai"
           target="_blank"
           rel="noopener noreferrer"
-          className="group ml-1 flex items-center gap-1.5 rounded-full border px-4 py-2 text-[16px] font-semibold capitalize tracking-wide transition-colors"
+          className="group ml-1 flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-2 text-[15px] font-semibold capitalize tracking-wide transition-colors xl:px-4 xl:text-[16px]"
           style={{ color: ACCENT, borderColor: 'rgba(94,14,215,0.3)' }}
         >
           ArqAI Labs

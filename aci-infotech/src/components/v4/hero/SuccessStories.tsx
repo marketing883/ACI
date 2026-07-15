@@ -215,7 +215,7 @@ export default function SuccessStories({
 
         {/* Heading */}
         <h2
-          className={`mb-4 text-5xl font-bold tracking-tight text-black sm:text-6xl lg:text-[64px] ${headingClass}`}
+          className={`mb-4 text-4xl font-bold tracking-tight text-black sm:text-5xl md:text-6xl lg:text-[64px] ${headingClass}`}
           style={{ lineHeight: 1.04, ...revealStyle(revealed, 0.2) }}
         >
           Proof that runs
@@ -260,7 +260,7 @@ export default function SuccessStories({
                   aria-selected={isActive}
                   aria-controls={`ss-panel-${story.id}`}
                   onClick={() => select(n)}
-                  className={`relative flex min-h-12 items-center justify-center gap-2 overflow-hidden rounded-md px-4 py-2.5 text-sm font-medium transition-colors md:min-w-[190px] md:px-5 ${
+                  className={`relative flex min-h-12 items-center justify-center gap-2 overflow-hidden rounded-md px-4 py-2.5 text-sm font-medium transition-colors md:min-w-[150px] md:px-4 lg:min-w-[190px] lg:px-5 ${
                     isActive ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black'
                   } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-700`}
                 >
@@ -289,7 +289,7 @@ export default function SuccessStories({
           onBlur={(e) => {
             if (!e.currentTarget.contains(e.relatedTarget as Node)) resume();
           }}
-          className="relative mx-auto h-[500px] max-w-[1120px] overflow-hidden rounded-3xl bg-gray-950 md:h-[520px] lg:aspect-[16/7] lg:h-auto"
+          className="relative mx-auto h-[560px] max-w-[1120px] overflow-hidden rounded-3xl bg-gray-950 md:h-[520px] lg:aspect-[16/7] lg:h-auto"
           style={revealStyle(revealed, 0.6)}
         >
           {/* Stacked video layers */}

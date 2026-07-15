@@ -106,7 +106,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
             / What we build
           </p>
-          <h2 className={`text-5xl font-bold tracking-tight text-black sm:text-6xl lg:text-[64px] ${headingClass}`} style={{ lineHeight: 1.04 }}>
+          <h2 className={`text-4xl font-bold tracking-tight text-black sm:text-5xl md:text-6xl lg:text-[64px] ${headingClass}`} style={{ lineHeight: 1.04 }}>
             From raw data to <span className="text-[#1D4ED8]">AI&nbsp;in&nbsp;production.</span>
           </h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-gray-600 md:text-base">
@@ -174,13 +174,13 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                     {c.subs.map((sub) => (
                       <span
                         key={sub}
-                        className="whitespace-nowrap rounded-full border border-gray-300 px-3.5 py-1.5 text-[13px] font-medium text-gray-700 transition-colors duration-300 group-hover:border-white/40 group-hover:text-white"
+                        className="whitespace-nowrap rounded-full border border-gray-300 px-3 py-1 text-[12px] font-medium text-gray-700 transition-colors duration-300 group-hover:border-white/40 group-hover:text-white lg:px-3.5 lg:py-1.5 lg:text-[13px]"
                       >
                         {sub}
                       </span>
                     ))}
                   </span>
-                  <span className="flex items-center gap-8">
+                  <span className="flex flex-wrap items-center gap-x-6 gap-y-3 lg:gap-x-8">
                     {c.logos.map((id) => (
                       <Image
                         key={id}
@@ -188,7 +188,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                         alt={id}
                         width={200}
                         height={58}
-                        className="h-12 w-auto object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-90 group-hover:brightness-0 group-hover:invert"
+                        className="h-9 w-auto object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-90 group-hover:brightness-0 group-hover:invert lg:h-12"
                       />
                     ))}
                   </span>
@@ -259,13 +259,13 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                   {INTERACTIVE.subs.map((sub) => (
                     <span
                       key={sub}
-                      className="whitespace-nowrap rounded-full border border-white/25 bg-white/5 px-3.5 py-1.5 text-[13px] font-medium text-white"
+                      className="whitespace-nowrap rounded-full border border-white/25 bg-white/5 px-3 py-1 text-[12px] font-medium text-white lg:px-3.5 lg:py-1.5 lg:text-[13px]"
                     >
                       {sub}
                     </span>
                   ))}
                 </span>
-                <span className="flex items-center gap-8">
+                <span className="flex flex-wrap items-center gap-x-6 gap-y-3 lg:gap-x-8">
                   {INTERACTIVE.logos.map((id) => (
                     <Image
                       key={id}
@@ -273,7 +273,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                       alt={id}
                       width={200}
                       height={58}
-                      className="h-12 w-auto object-contain opacity-80"
+                      className="h-9 w-auto object-contain opacity-80 lg:h-12"
                       style={{ filter: 'brightness(0) invert(1)' }}
                     />
                   ))}

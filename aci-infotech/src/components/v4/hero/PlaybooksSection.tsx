@@ -147,7 +147,7 @@ export default function PlaybooksSection({ headingClass }: { headingClass: strin
               / The playbook vault
             </p>
             <h2
-              className={`text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-[64px] ${headingClass}`}
+              className={`text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-[64px] ${headingClass}`}
               style={{ lineHeight: 1.04 }}
             >
               <span className="text-[#60A5FA]">Patterns</span> we&apos;ve run&nbsp;before.
