@@ -46,28 +46,28 @@ const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'Case Study',
-    headline: ['Databricks depth.', 'Production AI.'],
+    headline: ['From Lakehouse', 'to Live AI.'],
     desc: 'Lakehouse modernization, Delta pipelines, MLflow, governance, and real-time analytics for teams that need Databricks to run in production.',
     tags: ['Delta Lake', 'MLflow', 'Workflows'],
     cta: { label: 'Read the case study', href: '/case-studies' },
-    mark: { kind: 'logo', src: '/images/Solution-Partners/databricks.png', alt: 'Databricks', h: 40 },
+    mark: { kind: 'logo', src: '/images/Solution-Partners/databricks.png', alt: 'Databricks', h: 48 },
     stat: { value: '87%', label: 'Reduction in data processing time' },
   },
   {
     eyebrow: 'Platform Expertise',
-    headline: ['Microsoft cloud.', 'AI-led operations.'],
+    headline: ['The Whole Microsoft Stack.', 'AI-Led.'],
     desc: 'Azure is strongest when it connects to the business stack. We bring Azure, Dynamics 365, Power Platform, and data engineering together around measurable operations.',
     tags: ['Azure', 'Dynamics 365', 'Power Platform'],
     cta: { label: 'Explore Microsoft expertise', href: '/partners' },
-    mark: { kind: 'logo', src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 56 },
+    mark: { kind: 'logo', src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 68 },
   },
   {
-    eyebrow: 'Life at ACI',
-    headline: ['People thrive here.', 'Teams move as one.'],
-    desc: 'ACI is a place where people feel valued, supported, and happy to do their best work. Across teams and regions, we collaborate openly, celebrate one another, and move forward together.',
-    tags: ['Belonging', 'Team spirit', 'Shared success'],
-    cta: { label: 'Explore careers', href: '/careers' },
-    mark: { kind: 'badge', src: '/images/certifications-awards/best-place-to-work.webp', alt: 'Great Place to Work Certified', w: 80 },
+    eyebrow: 'ArqAI Labs',
+    headline: ['Forward-deployed engineers.', 'Accelerators built from the field.'],
+    desc: 'We put engineers inside the problem, not just advising from outside. Years of delivery work, turned into accelerators that move enterprise AI to production faster.',
+    tags: ['Forward-deployed', 'Accelerators', 'Production AI'],
+    cta: { label: 'Explore ArqAI Labs', href: 'https://thearq.ai' },
+    stat: { value: '40-60%', label: 'Faster delivery on flagship accelerators' },
   },
 ];
 
@@ -76,7 +76,8 @@ const fadeDown: Variants = {
   show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5, ease: EASE } }),
 };
 
-/** Text link with a growing underline + arrow nudge on hover. */
+/** Text link with a growing underline + arrow nudge on hover. External
+ *  links (http/https) open in a new tab; internal links use next/link. */
 function ArrowLink({
   href,
   children,
@@ -92,13 +93,34 @@ function ArrowLink({
   arrowSize?: number;
   onClick?: () => void;
 }) {
-  return (
-    <Link href={href} onClick={onClick} className={`group inline-flex items-center gap-1.5 ${className ?? ''}`} style={style}>
+  const inner = (
+    <>
       <span className="relative">
         {children}
         <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
       </span>
       <ArrowUpRight size={arrowSize} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+    </>
+  );
+
+  if (href.startsWith('http')) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClick}
+        className={`group inline-flex items-center gap-1.5 ${className ?? ''}`}
+        style={style}
+      >
+        {inner}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} onClick={onClick} className={`group inline-flex items-center gap-1.5 ${className ?? ''}`} style={style}>
+      {inner}
     </Link>
   );
 }
@@ -126,7 +148,22 @@ export default function EditorialHero({
     <section className={`relative min-h-[100dvh] overflow-hidden bg-[#f3f3f3] text-black ${bodyClass}`}>
       {/* Reduced, vertically-centered video sitting on the right */}
       <div className="pointer-events-none absolute right-0 top-[15%] h-[40%] w-[82%] sm:w-[64%] md:top-1/2 md:h-[66%] md:w-[50%] md:-translate-y-1/2">
-        <FadingVideo src={VIDEO} webmSrc={VIDEO_WEBM} mirror className="absolute inset-0 h-full w-full object-contain" />
+        <FadingVideo
+          src={VIDEO}
+          webmSrc={VIDEO_WEBM}
+          mirror
+          className="absolute inset-0 h-full w-full object-contain [filter:saturate(0.85)_brightness(0.97)_contrast(0.97)]"
+        />
+        {/* Soft scrim so the footage recedes behind the headline copy
+            instead of pulling focus from it. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(90deg, #f3f3f3 0%, rgba(243,243,243,0.6) 20%, rgba(243,243,243,0.22) 45%, rgba(243,243,243,0) 72%)',
+          }}
+        />
       </div>
 
       {/* Foreground */}
@@ -172,27 +209,29 @@ export default function EditorialHero({
               className="max-w-full md:max-w-[58%]"
             >
               {/* brand mark / credential */}
-              {s.mark ? (
+              {s.mark || s.stat ? (
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } }}
                   className="mb-7 flex items-center gap-6"
                 >
-                  {s.mark.kind === 'badge' ? (
-                    <Image src={s.mark.src} alt={s.mark.alt} width={s.mark.w} height={108} className="h-20 w-auto" />
-                  ) : (
-                    <Image
-                      src={s.mark.src}
-                      alt={s.mark.alt}
-                      width={200}
-                      height={106}
-                      className="w-auto object-contain"
-                      style={{ height: `${s.mark.h}px` }}
-                    />
-                  )}
+                  {s.mark ? (
+                    s.mark.kind === 'badge' ? (
+                      <Image src={s.mark.src} alt={s.mark.alt} width={s.mark.w} height={108} className="h-20 w-auto" />
+                    ) : (
+                      <Image
+                        src={s.mark.src}
+                        alt={s.mark.alt}
+                        width={200}
+                        height={106}
+                        className="w-auto object-contain"
+                        style={{ height: `${s.mark.h}px` }}
+                      />
+                    )
+                  ) : null}
                   {s.stat ? (
                     <>
-                      <span className="h-12 w-px bg-black/15" />
+                      {s.mark ? <span className="h-12 w-px bg-black/15" /> : null}
                       <div className="flex items-baseline gap-3">
                         <span className={`text-5xl font-bold leading-none ${headingClass}`} style={{ color: ACCENT }}>
                           {s.stat.value}
