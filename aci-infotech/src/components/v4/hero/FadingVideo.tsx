@@ -13,6 +13,7 @@ export default function FadingVideo({
   src,
   webmSrc,
   className,
+  style,
   offsetX = 0,
   offsetY = 0,
   scale = 1,
@@ -22,6 +23,9 @@ export default function FadingVideo({
   /** optional VP9 WebM, preferred by browsers that support it */
   webmSrc?: string;
   className?: string;
+  /** extra styles (e.g. filter / mask). The fade opacity and any
+   *  offset/mirror transform are always applied on top of these. */
+  style?: React.CSSProperties;
   offsetX?: number;
   offsetY?: number;
   scale?: number;
@@ -85,11 +89,12 @@ export default function FadingVideo({
       playsInline
       preload="none"
       style={{
+        ...style,
         opacity: 0,
         transform:
           mirror || offsetX || offsetY || scale !== 1
             ? `${mirror ? 'scaleX(-1) ' : ''}translate(${offsetX}%, ${offsetY}%) scale(${scale})`
-            : undefined,
+            : style?.transform,
       }}
     >
       {webmSrc ? <source src={webmSrc} type="video/webm" /> : null}

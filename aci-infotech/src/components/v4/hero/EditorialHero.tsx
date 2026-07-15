@@ -67,7 +67,7 @@ const SLIDES: Slide[] = [
   {
     eyebrow: 'ArqAI Labs',
     eyebrowLogo: { src: '/brand/arqai-labs-logo.png', w: 2439, h: 858 },
-    headline: ['Forward Deployed AI Engineering', 'At Scale.'],
+    headline: ['Forward Deployed AI', 'Engineering At Scale.'],
     desc: 'Engineers embedded in the problem, not advising from outside. Every accelerator comes from years of doing this work.',
     tags: ['Forward-deployed', 'Accelerators', 'Production AI'],
     cta: { label: 'Explore ArqAI Labs', href: 'https://thearq.ai' },
@@ -150,22 +150,23 @@ export default function EditorialHero({
 
   return (
     <section className={`relative min-h-[100dvh] overflow-hidden bg-white text-black ${bodyClass}`}>
-      {/* Reduced, vertically-centered video sitting on the right */}
+      {/* Reduced, vertically-centered video sitting on the right. The
+          render ships on a soft gray studio background; a mild
+          brightness/contrast lift pushes that gray to white, and a radial
+          mask feathers every edge into the page so the sphere floats on a
+          uniformly white field with no visible video box. */}
       <div className="pointer-events-none absolute right-0 top-[15%] h-[40%] w-[82%] sm:w-[64%] md:top-1/2 md:h-[66%] md:w-[50%] md:-translate-y-1/2">
         <FadingVideo
           src={VIDEO}
           webmSrc={VIDEO_WEBM}
           mirror
-          className="absolute inset-0 h-full w-full object-contain [filter:saturate(0.85)_brightness(0.97)_contrast(0.97)]"
-        />
-        {/* Soft scrim so the footage recedes behind the headline copy
-            instead of pulling focus from it. */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0"
+          className="absolute inset-0 h-full w-full object-contain"
           style={{
-            background:
-              'linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.6) 20%, rgba(255,255,255,0.22) 45%, rgba(255,255,255,0) 72%)',
+            filter: 'saturate(0.9) brightness(1.06) contrast(1.18)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse 60% 72% at 50% 50%, #000 40%, rgba(0,0,0,0.55) 66%, transparent 92%)',
+            maskImage:
+              'radial-gradient(ellipse 60% 72% at 50% 50%, #000 40%, rgba(0,0,0,0.55) 66%, transparent 92%)',
           }}
         />
       </div>
@@ -210,7 +211,7 @@ export default function EditorialHero({
             <motion.div
               key={i}
               exit={{ opacity: 0, y: -16, transition: { duration: 0.3, ease: EASE } }}
-              className="max-w-full md:max-w-[58%]"
+              className="max-w-full md:max-w-[63%]"
             >
               {/* brand mark / credential */}
               {s.mark || s.stat ? (
@@ -271,7 +272,7 @@ export default function EditorialHero({
 
               <h1
                 className={`font-semibold capitalize text-black ${headingClass}`}
-                style={{ fontSize: 'clamp(2.2rem, 4.9vw, 4.4rem)', lineHeight: 1.0, letterSpacing: '-0.015em' }}
+                style={{ fontSize: 'clamp(1.55rem, 3.7vw, 3.5rem)', lineHeight: 1.04, letterSpacing: '-0.015em' }}
               >
                 {s.headline.map((line, li) => (
                   <span key={li} className="block overflow-hidden">
