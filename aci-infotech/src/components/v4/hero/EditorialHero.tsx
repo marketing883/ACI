@@ -201,6 +201,17 @@ export default function EditorialHero({
               'radial-gradient(ellipse 60% 72% at 50% 50%, #000 40%, rgba(0,0,0,0.55) 66%, transparent 92%)',
           }}
         />
+        {/* The footage's studio vignette still ghosts through at the
+            frame's top and bottom edges where the radial mask is thin.
+            White feathers erase those bands without touching the sphere. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.92) 12%, rgba(255,255,255,0) 34%), linear-gradient(0deg, #fff 0%, rgba(255,255,255,0.85) 6%, rgba(255,255,255,0) 22%)',
+          }}
+        />
       </div>
 
       {/* NAV — fixed so the mega menu follows the visitor down the page.

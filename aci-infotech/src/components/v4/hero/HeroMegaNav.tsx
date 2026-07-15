@@ -4,14 +4,34 @@ import { useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, ChevronDown } from 'lucide-react';
+import {
+  ArrowUpRight,
+  ChevronDown,
+  BrainCircuit,
+  Cloud,
+  Database,
+  Megaphone,
+  Blocks,
+  MonitorSmartphone,
+  ShieldCheck,
+  ServerCog,
+  Compass,
+  Building2,
+  Landmark,
+  HeartPulse,
+  ShoppingBag,
+  UtensilsCrossed,
+  Factory,
+  Zap,
+  Truck,
+  type LucideIcon,
+} from 'lucide-react';
 import {
   SERVICES,
   PLATFORM_CATEGORIES,
   INDUSTRIES,
   INDUSTRY_FEATURES,
   RESOURCES,
-  COMPANY,
 } from '@/components/v2/nav/menu-data';
 
 const ACCENT = '#1D4ED8';
@@ -38,6 +58,30 @@ const PLATFORM_LOGOS: Record<string, string> = {
   Braze: '/images/Solution-Partners/braze.png',
 };
 
+// Icons keyed by href/slug so the maps survive label copy edits.
+const SERVICE_ICONS: Record<string, LucideIcon> = {
+  '/services/applied-ai-ml': BrainCircuit,
+  '/services/cloud-modernization': Cloud,
+  '/services/data-engineering': Database,
+  '/services/martech-cdp': Megaphone,
+  '/services/app-development': Blocks,
+  '/services/digital-transformation': MonitorSmartphone,
+  '/services/cyber-security': ShieldCheck,
+  '/services/managed-operations': ServerCog,
+  '/services/advisory-strategy': Compass,
+  '/services/gcc': Building2,
+};
+
+const INDUSTRY_ICONS: Record<string, LucideIcon> = {
+  'financial-services': Landmark,
+  healthcare: HeartPulse,
+  retail: ShoppingBag,
+  hospitality: UtensilsCrossed,
+  manufacturing: Factory,
+  energy: Zap,
+  transportation: Truck,
+};
+
 const INDUSTRY_IMAGES: Record<string, string> = {
   'financial-services': '/images/v4/case-finance.jpg',
   healthcare: '/images/v4/case-healthcare.jpg',
@@ -60,24 +104,34 @@ function ServicesPanel({ headingClass, onNavigate }: { headingClass: string; onN
   return (
     <div className="flex gap-8">
       <div className="grid flex-1 grid-cols-2 gap-x-6 gap-y-1">
-        {SERVICES.map((s) => (
-          <Link
-            key={s.href}
-            href={s.href}
-            onClick={onNavigate}
-            className="group/item flex flex-col rounded-xl px-4 py-3 transition-colors hover:bg-black/[0.04]"
-          >
-            <span className="flex items-center gap-1.5 text-[16px] font-semibold text-black">
-              {s.label}
-              <ArrowUpRight
-                size={14}
-                className="opacity-0 transition-all -translate-x-1 group-hover/item:translate-x-0 group-hover/item:opacity-100"
-                style={{ color: ACCENT }}
-              />
-            </span>
-            <span className="mt-0.5 text-[13.5px] text-black/55">{s.description}</span>
-          </Link>
-        ))}
+        {SERVICES.map((s) => {
+          const Icon = SERVICE_ICONS[s.href];
+          return (
+            <Link
+              key={s.href}
+              href={s.href}
+              onClick={onNavigate}
+              className="group/item flex items-start gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-black/[0.04]"
+            >
+              {Icon ? (
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700 transition-colors group-hover/item:bg-blue-700 group-hover/item:text-white">
+                  <Icon size={18} aria-hidden="true" />
+                </span>
+              ) : null}
+              <span className="min-w-0">
+                <span className="flex items-center gap-1.5 text-[16px] font-semibold text-black">
+                  {s.label}
+                  <ArrowUpRight
+                    size={14}
+                    className="opacity-0 transition-all -translate-x-1 group-hover/item:translate-x-0 group-hover/item:opacity-100"
+                    style={{ color: ACCENT }}
+                  />
+                </span>
+                <span className="mt-0.5 block text-[13.5px] text-black/55">{s.description}</span>
+              </span>
+            </Link>
+          );
+        })}
       </div>
       <Link
         href="/services"
@@ -89,19 +143,19 @@ function ServicesPanel({ headingClass, onNavigate }: { headingClass: string; onN
           muted
           loop
           playsInline
-          className="absolute inset-0 h-full w-full object-cover opacity-70 transition-opacity duration-500 group-hover/feat:opacity-90"
+          className="absolute inset-0 h-full w-full object-cover opacity-90 transition-opacity duration-500 group-hover/feat:opacity-100"
         >
           <source src="/videos/foldcraft.webm" type="video/webm" />
           <source src="/videos/foldcraft.mp4" type="video/mp4" />
         </video>
-        {/* Heavier scrim than a hero would use: the card is small, so the
-            copy has to win over the footage at every frame. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
         <div className="relative flex h-full min-h-[240px] flex-col justify-end p-5">
           <span className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: '#93c5fd' }}>
             Featured
           </span>
-          <h4 className={`mt-1 text-lg font-semibold leading-snug ${headingClass}`}>
+          {/* text-white is load-bearing: the design system paints all
+              headings near-black, which vanishes on this dark card. */}
+          <h4 className={`mt-1 text-lg font-semibold leading-snug text-white ${headingClass}`}>
             Nine practices, one delivery model.
           </h4>
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium">
@@ -129,8 +183,16 @@ function PlatformsPanel({ onNavigate }: { onNavigate: () => void }) {
                 className="group/item flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-black/[0.04]"
               >
                 {PLATFORM_LOGOS[p.label] ? (
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center">
-                    <Image src={PLATFORM_LOGOS[p.label]} alt={p.label} width={28} height={28} className="h-6 w-6 object-contain" />
+                  // Wide box: most of these files are horizontal wordmarks,
+                  // and squeezing them into a 28px square made them unreadable.
+                  <span className="flex h-10 w-16 shrink-0 items-center justify-center">
+                    <Image
+                      src={PLATFORM_LOGOS[p.label]}
+                      alt={p.label}
+                      width={128}
+                      height={80}
+                      className="max-h-9 w-auto max-w-full object-contain"
+                    />
                   </span>
                 ) : (
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: ACCENT }} />
@@ -155,23 +217,38 @@ function IndustriesPanel({ headingClass, onNavigate }: { headingClass: string; o
   return (
     <div className="flex gap-8">
       <div className="flex w-64 shrink-0 flex-col gap-0.5">
-        {INDUSTRIES.map((ind) => (
-          <Link
-            key={ind.slug}
-            href={ind.href}
-            onClick={onNavigate}
-            onMouseEnter={() => setSlug(ind.slug)}
-            className="group/item flex items-center justify-between rounded-xl px-4 py-2.5 text-[16px] font-semibold transition-colors hover:bg-black/[0.04]"
-            style={{ color: ind.slug === slug ? ACCENT : '#000' }}
-          >
-            {ind.label}
-            <ArrowUpRight
-              size={15}
-              className="transition-opacity"
-              style={{ opacity: ind.slug === slug ? 1 : 0, color: ACCENT }}
-            />
-          </Link>
-        ))}
+        {INDUSTRIES.map((ind) => {
+          const Icon = INDUSTRY_ICONS[ind.slug];
+          const isActive = ind.slug === slug;
+          return (
+            <Link
+              key={ind.slug}
+              href={ind.href}
+              onClick={onNavigate}
+              onMouseEnter={() => setSlug(ind.slug)}
+              className="group/item flex items-center gap-3 rounded-xl px-4 py-2.5 text-[16px] font-semibold transition-colors hover:bg-black/[0.04]"
+              style={{ color: isActive ? ACCENT : '#000' }}
+            >
+              {Icon ? (
+                <span
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors"
+                  style={{
+                    background: isActive ? ACCENT : 'rgba(0,0,0,0.05)',
+                    color: isActive ? '#fff' : 'rgba(0,0,0,0.65)',
+                  }}
+                >
+                  <Icon size={16} aria-hidden="true" />
+                </span>
+              ) : null}
+              <span className="flex-1">{ind.label}</span>
+              <ArrowUpRight
+                size={15}
+                className="transition-opacity"
+                style={{ opacity: isActive ? 1 : 0, color: ACCENT }}
+              />
+            </Link>
+          );
+        })}
       </div>
       <div className="flex-1">
         <AnimatePresence mode="wait">
@@ -253,37 +330,91 @@ function ResourcesPanel({ headingClass, onNavigate }: { headingClass: string; on
   );
 }
 
+/* Company panel: three destination cards over colorful abstract
+ * gradient art (brand blue + lime, with violet/amber accents echoing
+ * the chromatic CTA footage). All copy is explicitly white — the
+ * design system paints headings near-black by default, which is
+ * invisible on these dark cards. */
+const COMPANY_CARDS = [
+  {
+    label: 'About',
+    href: '/about',
+    kicker: 'The company',
+    description: 'Who we are, how we build, and why it runs in production.',
+    cta: 'Meet ACI',
+    art: 'radial-gradient(120% 90% at 15% 10%, #1D4ED8 0%, transparent 55%), radial-gradient(90% 80% at 90% 20%, #7C3AED 0%, transparent 50%), radial-gradient(100% 100% at 70% 100%, #22D3EE 0%, transparent 55%), #060B1F',
+  },
+  {
+    label: 'Careers',
+    href: '/careers',
+    kicker: 'Join the team',
+    description: 'Build what matters, with people who care.',
+    cta: 'See open roles',
+    badge: true,
+    art: 'radial-gradient(110% 90% at 88% 8%, #84CC16 0%, transparent 52%), radial-gradient(120% 90% at 8% 35%, #1D4ED8 0%, transparent 55%), radial-gradient(90% 90% at 55% 100%, #0EA5E9 0%, transparent 55%), #05130D',
+  },
+  {
+    label: 'News',
+    href: '/news',
+    kicker: 'Press & partnerships',
+    description: 'Announcements, alliances, and coverage.',
+    cta: 'Read the news',
+    art: 'radial-gradient(120% 80% at 60% 0%, #1D4ED8 0%, transparent 58%), radial-gradient(110% 100% at 85% 85%, #DB2777 0%, transparent 55%), radial-gradient(110% 90% at 12% 92%, #F59E0B 0%, transparent 50%), #140610',
+  },
+];
+
 function CompanyPanel({ headingClass, onNavigate }: { headingClass: string; onNavigate: () => void }) {
   return (
-    <div className="flex gap-8">
-      <div className="flex flex-1 flex-col gap-1">
-        {COMPANY.map((c) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            onClick={onNavigate}
-            className="group/item flex flex-col rounded-xl px-4 py-3 transition-colors hover:bg-black/[0.04]"
-          >
-            <span className="flex items-center gap-1.5 text-[16px] font-semibold text-black">
-              {c.label}
-              <ArrowUpRight size={14} className="opacity-0 transition-opacity group-hover/item:opacity-100" style={{ color: ACCENT }} />
+    <div className="grid grid-cols-3 gap-4">
+      {COMPANY_CARDS.map((c) => (
+        <Link
+          key={c.href}
+          href={c.href}
+          onClick={onNavigate}
+          className="group/item relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-2xl p-5 text-white"
+        >
+          {/* abstract art layer */}
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 transition-transform duration-700 ease-out group-hover/item:scale-[1.06]"
+            style={{ background: c.art }}
+          />
+          {/* readability scrim */}
+          <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+
+          {c.badge ? (
+            <span className="absolute right-4 top-4 flex items-center gap-2 rounded-xl bg-white/95 py-1.5 pl-1.5 pr-2.5 shadow-sm">
+              <Image
+                src="/images/certifications-awards/best-place-to-work.webp"
+                alt="Great Place to Work Certified"
+                width={30}
+                height={40}
+                className="h-9 w-auto"
+              />
+              <span className="text-[9px] font-bold uppercase leading-tight tracking-wide text-black/70">
+                Certified
+                <br />
+                Great Place
+                <br />
+                to Work
+              </span>
             </span>
-            <span className="mt-0.5 text-[13.5px] text-black/55">{c.description}</span>
-          </Link>
-        ))}
-      </div>
-      <Link href="/careers" onClick={onNavigate} className="group/feat relative flex w-64 shrink-0 flex-col justify-between overflow-hidden rounded-2xl bg-black p-5 text-white">
-        <div className="flex items-center gap-3">
-          <Image src="/images/certifications-awards/best-place-to-work.webp" alt="Great Place to Work Certified" width={48} height={64} className="h-14 w-auto" />
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-white/80">Certified<br />Great Place to Work</span>
-        </div>
-        <div className="mt-6">
-          <h4 className={`text-lg font-semibold leading-snug ${headingClass}`}>Build what matters, with people who care.</h4>
-          <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium">
-            See open roles <ArrowUpRight size={15} />
+          ) : null}
+
+          <span className="relative">
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-white/70">{c.kicker}</span>
+            <h4 className={`mt-1 text-xl font-semibold leading-snug text-white ${headingClass}`}>{c.label}</h4>
+            <span className="mt-1 block text-[13.5px] leading-snug text-white/85">{c.description}</span>
+            <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-white">
+              {c.cta}
+              <ArrowUpRight
+                size={15}
+                className="transition-transform duration-300 group-hover/item:translate-x-0.5 group-hover/item:-translate-y-0.5"
+              />
+            </span>
           </span>
-        </div>
-      </Link>
+        </Link>
+      ))}
     </div>
   );
 }
