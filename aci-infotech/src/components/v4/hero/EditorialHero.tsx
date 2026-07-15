@@ -8,8 +8,8 @@ import { ArrowUpRight, X } from 'lucide-react';
 import FadingVideo from './FadingVideo';
 import HeroMegaNav from './HeroMegaNav';
 
-const VIDEO = '/videos/v4-editorial.mp4';
-const VIDEO_WEBM = '/videos/v4-editorial.webm';
+const VIDEO = '/videos/v4-editorial-signal.mp4';
+const VIDEO_WEBM = '/videos/v4-editorial-signal.webm';
 const ACCENT = '#1D4ED8'; // deep royal blue (primary)
 const LIME = '#84CC16'; // lime (accent / highlight)
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -28,6 +28,9 @@ type Mark =
 
 type Slide = {
   eyebrow: string;
+  /** Optional logo shown in place of the eyebrow text (e.g. a partner
+   *  wordmark) — kept alongside `eyebrow` for alt text / a11y. */
+  eyebrowLogo?: { src: string; w: number; h: number };
   headline: [string, string];
   desc: string;
   tags: string[];
@@ -50,7 +53,7 @@ const SLIDES: Slide[] = [
     desc: 'Lakehouse modernization, Delta pipelines, MLflow, governance, and real-time analytics for teams that need Databricks to run in production.',
     tags: ['Delta Lake', 'MLflow', 'Workflows'],
     cta: { label: 'Read the case study', href: '/case-studies' },
-    mark: { kind: 'logo', src: '/images/Solution-Partners/databricks.png', alt: 'Databricks', h: 48 },
+    mark: { kind: 'logo', src: '/brand/databricks-color.svg', alt: 'Databricks', h: 48 },
     stat: { value: '87%', label: 'Reduction in data processing time' },
   },
   {
@@ -63,8 +66,9 @@ const SLIDES: Slide[] = [
   },
   {
     eyebrow: 'ArqAI Labs',
-    headline: ['Forward-deployed engineers.', 'Accelerators built from the field.'],
-    desc: 'We put engineers inside the problem, not just advising from outside. Years of delivery work, turned into accelerators that move enterprise AI to production faster.',
+    eyebrowLogo: { src: '/brand/arqai-labs-logo.png', w: 2439, h: 858 },
+    headline: ['Forward Deployed AI Engineering', 'At Scale.'],
+    desc: 'Engineers embedded in the problem, not advising from outside. Every accelerator comes from years of doing this work.',
     tags: ['Forward-deployed', 'Accelerators', 'Production AI'],
     cta: { label: 'Explore ArqAI Labs', href: 'https://thearq.ai' },
     stat: { value: '40-60%', label: 'Faster delivery on flagship accelerators' },
@@ -145,7 +149,7 @@ export default function EditorialHero({
   const s = SLIDES[i];
 
   return (
-    <section className={`relative min-h-[100dvh] overflow-hidden bg-[#f3f3f3] text-black ${bodyClass}`}>
+    <section className={`relative min-h-[100dvh] overflow-hidden bg-white text-black ${bodyClass}`}>
       {/* Reduced, vertically-centered video sitting on the right */}
       <div className="pointer-events-none absolute right-0 top-[15%] h-[40%] w-[82%] sm:w-[64%] md:top-1/2 md:h-[66%] md:w-[50%] md:-translate-y-1/2">
         <FadingVideo
@@ -161,7 +165,7 @@ export default function EditorialHero({
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(90deg, #f3f3f3 0%, rgba(243,243,243,0.6) 20%, rgba(243,243,243,0.22) 45%, rgba(243,243,243,0) 72%)',
+              'linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.6) 20%, rgba(255,255,255,0.22) 45%, rgba(255,255,255,0) 72%)',
           }}
         />
       </div>
@@ -248,11 +252,21 @@ export default function EditorialHero({
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0, transition: { delay: 0.05, duration: 0.5, ease: EASE } }}
-                className="mb-5 text-sm font-semibold capitalize tracking-[0.18em] sm:text-[15px]"
+                className="mb-5 flex items-center text-sm font-semibold capitalize tracking-[0.18em] sm:text-[15px]"
                 style={{ color: ACCENT }}
               >
                 <span className="text-black/35">/ </span>
-                {s.eyebrow}
+                {s.eyebrowLogo ? (
+                  <Image
+                    src={s.eyebrowLogo.src}
+                    alt={s.eyebrow}
+                    width={s.eyebrowLogo.w}
+                    height={s.eyebrowLogo.h}
+                    className="ml-1 h-[18px] w-auto object-contain"
+                  />
+                ) : (
+                  s.eyebrow
+                )}
               </motion.p>
 
               <h1

@@ -8,10 +8,10 @@ import './playbooks.css';
 
 // ---------------------------------------------------------------------------
 // Real playbook data (subset of src/components/sections/PlaybookVaultSection).
-// 10 documented patterns, 278 total enterprise deployments.
+// 10 documented patterns, 500 total enterprise deployments.
 // ---------------------------------------------------------------------------
 
-const TOTAL_DEPLOYMENTS = 278;
+const TOTAL_DEPLOYMENTS = 500;
 const PATTERN_COUNT = 10;
 
 // The vault index — breadth across categories.
