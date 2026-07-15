@@ -76,14 +76,17 @@ const SERVICES: Service[] = [
   },
 ];
 
+// ACI Interactive is a specialized division of ACI Infotech, not a
+// product: marketing, MarTech, and CDP services under one name, with
+// products planned to launch under it later.
 const INTERACTIVE = {
   no: '/05',
   name: 'ACI Interactive',
-  eyebrow: 'Our product for the marketing engine.',
-  desc: 'MarTech, CDP, and marketing strategy with automated ads management, run as one product.',
-  subs: ['Customer data platform', 'Marketing strategy', 'Automated ads management', 'Journey orchestration'],
+  eyebrow: 'Marketing, run with engineering discipline.',
+  desc: 'Our specialized division for marketing, MarTech, and CDP services. Strategy, customer data, and activation under one roof, with new products on the way.',
+  subs: ['MarTech & CDP strategy', 'Customer data platforms', 'Journey orchestration', 'Marketing analytics'],
   logos: ['salesforce', 'braze'],
-  href: '/aci-interactive',
+  href: '/services/martech-cdp',
 };
 
 export default function ServicesSection({ headingClass }: { headingClass: string }) {
@@ -167,21 +170,21 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                     {c.subs.map((sub) => (
                       <span
                         key={sub}
-                        className="whitespace-nowrap rounded-full border border-gray-300 px-2.5 py-1 text-[11px] font-medium text-gray-700 transition-colors duration-300 group-hover:border-white/40 group-hover:text-white"
+                        className="whitespace-nowrap rounded-full border border-gray-300 px-3.5 py-1.5 text-[13px] font-medium text-gray-700 transition-colors duration-300 group-hover:border-white/40 group-hover:text-white"
                       >
                         {sub}
                       </span>
                     ))}
                   </span>
-                  <span className="flex items-center gap-7">
+                  <span className="flex items-center gap-8">
                     {c.logos.map((id) => (
                       <Image
                         key={id}
                         src={LOGOS[id]}
                         alt={id}
-                        width={150}
-                        height={44}
-                        className="h-9 w-auto object-contain opacity-60 grayscale transition-all duration-300 group-hover:opacity-90 group-hover:brightness-0 group-hover:invert"
+                        width={200}
+                        height={58}
+                        className="h-12 w-auto object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-90 group-hover:brightness-0 group-hover:invert"
                       />
                     ))}
                   </span>
@@ -199,7 +202,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
           ))}
         </ul>
 
-        {/* ACI Interactive — the product bar, deliberately its own thing */}
+        {/* ACI Interactive — the division bar, deliberately its own thing */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -230,7 +233,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                 <span className="flex items-center gap-2.5">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-[#84CC16] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-black">
                     <Sparkles size={11} aria-hidden="true" />
-                    Product
+                    Specialized Division
                   </span>
                   <span className="text-[13px] font-semibold tracking-wide text-[#A3E635]">
                     {INTERACTIVE.eyebrow}
@@ -242,7 +245,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                 >
                   {INTERACTIVE.name}
                 </span>
-                <span className="max-w-md text-[13px] leading-relaxed text-white/70">
+                <span className="max-w-md text-[14px] leading-relaxed text-white/75">
                   {INTERACTIVE.desc}
                 </span>
               </span>
@@ -252,25 +255,25 @@ export default function ServicesSection({ headingClass }: { headingClass: string
                   {INTERACTIVE.subs.map((sub) => (
                     <span
                       key={sub}
-                      className="whitespace-nowrap rounded-full border border-white/25 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white"
+                      className="whitespace-nowrap rounded-full border border-white/25 bg-white/5 px-3.5 py-1.5 text-[13px] font-medium text-white"
                     >
                       {sub}
                     </span>
                   ))}
                 </span>
-                <span className="flex items-center gap-7">
+                <span className="flex items-center gap-8">
                   {INTERACTIVE.logos.map((id) => (
                     <Image
                       key={id}
                       src={LOGOS[id]}
                       alt={id}
-                      width={150}
-                      height={44}
-                      className="h-9 w-auto object-contain opacity-80"
+                      width={200}
+                      height={58}
+                      className="h-12 w-auto object-contain opacity-80"
                       style={{ filter: 'brightness(0) invert(1)' }}
                     />
                   ))}
-                  <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-white">
+                  <span className="inline-flex items-center gap-1 text-[14px] font-semibold text-white">
                     Explore ACI Interactive
                     <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </span>

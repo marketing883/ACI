@@ -7,6 +7,8 @@ import { ArrowUpRight, Download, FileText } from 'lucide-react';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+// Editorial fallbacks, used only when the CMS fetch comes back empty
+// (missing credentials in local dev, or a transient network failure).
 const FEATURED = {
   cat: 'News',
   title: 'Expanded strategic partnership with Databricks across North America',
@@ -29,7 +31,34 @@ const DOWNLOAD = {
   href: '/whitepapers/retail-technology-benchmark-report-2026',
 };
 
-export default function InsightsSection({ headingClass }: { headingClass: string }) {
+export interface InsightsSectionProps {
+  headingClass: string;
+  /** Latest published news item, fetched server-side from the CMS. */
+  news?: { title: string; excerpt: string | null; href: string; image: string | null } | null;
+  /** Latest published blog posts, fetched server-side from the CMS. */
+  insights?: { title: string; href: string }[];
+  /** Latest published whitepaper, fetched server-side from the CMS. */
+  download?: { title: string; blurb: string | null; href: string } | null;
+}
+
+export default function InsightsSection({ headingClass, news, insights, download }: InsightsSectionProps) {
+  const featured = news
+    ? {
+        cat: 'News',
+        title: news.title,
+        excerpt: news.excerpt ?? '',
+        href: news.href,
+        img: news.image ?? FEATURED.img,
+      }
+    : FEATURED;
+  const list =
+    insights && insights.length > 0
+      ? insights.map((it) => ({ cat: 'Insight', ...it }))
+      : INSIGHTS;
+  const dl = download
+    ? { title: download.title, meta: 'Whitepaper · PDF', blurb: download.blurb ?? '', href: download.href }
+    : DOWNLOAD;
+  const featuredExternal = featured.href.startsWith('http');
   return (
     <section id="insights" className="border-t border-gray-200 bg-white text-black">
       <div className="mx-auto max-w-7xl px-6 pb-20 pt-16 md:pt-20">
@@ -61,22 +90,27 @@ export default function InsightsSection({ headingClass }: { headingClass: string
             transition={{ duration: 0.55, ease: EASE }}
             className="lg:col-span-7"
           >
-            <Link href={FEATURED.href} className="group block overflow-hidden rounded-2xl border border-gray-200 no-underline transition-shadow hover:shadow-xl">
+            <Link
+              href={featured.href}
+              target={featuredExternal ? '_blank' : undefined}
+              rel={featuredExternal ? 'noopener noreferrer' : undefined}
+              className="group block overflow-hidden rounded-2xl border border-gray-200 no-underline transition-shadow hover:shadow-xl"
+            >
               <div className="relative aspect-[16/9] w-full overflow-hidden">
                 <Image
-                  src={FEATURED.img}
+                  src={featured.img}
                   alt=""
                   fill
                   sizes="(max-width: 1024px) 100vw, 640px"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-700 backdrop-blur-sm">
-                  {FEATURED.cat}
+                  {featured.cat}
                 </span>
               </div>
               <div className="p-6">
-                <h3 className={`text-2xl font-semibold leading-snug text-black ${headingClass}`}>{FEATURED.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">{FEATURED.excerpt}</p>
+                <h3 className={`text-2xl font-semibold leading-snug text-black ${headingClass}`}>{featured.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{featured.excerpt}</p>
                 <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-black transition-colors group-hover:text-blue-700">
                   Read the announcement
                   <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -94,7 +128,7 @@ export default function InsightsSection({ headingClass }: { headingClass: string
             className="flex flex-col gap-4 lg:col-span-5"
           >
             <div className="rounded-2xl border border-gray-200">
-              {INSIGHTS.map((it, i) => (
+              {list.map((it, i) => (
                 <Link
                   key={it.href}
                   href={it.href}
@@ -118,16 +152,16 @@ export default function InsightsSection({ headingClass }: { headingClass: string
 
             {/* Downloadable — distinct treatment */}
             <Link
-              href={DOWNLOAD.href}
+              href={dl.href}
               className="group flex items-center gap-4 rounded-2xl bg-black p-5 text-white no-underline transition-colors hover:bg-gray-900"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10">
                 <FileText size={22} aria-hidden="true" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">{DOWNLOAD.meta}</span>
-                <span className={`mt-0.5 block truncate text-base font-semibold ${headingClass}`}>{DOWNLOAD.title}</span>
-                <span className="mt-0.5 block text-xs leading-snug text-white/60">{DOWNLOAD.blurb}</span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">{dl.meta}</span>
+                <span className={`mt-0.5 block truncate text-base font-semibold ${headingClass}`}>{dl.title}</span>
+                <span className="mt-0.5 block text-xs leading-snug text-white/60">{dl.blurb}</span>
               </span>
               <Download size={20} className="shrink-0 text-white/70 transition-transform duration-300 group-hover:translate-y-0.5" aria-hidden="true" />
             </Link>

@@ -4,11 +4,21 @@ import EditorialHero from '@/components/v4/hero/EditorialHero';
 import PartnerMarquee from '@/components/v4/hero/PartnerMarquee';
 import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
 import PlaybooksSection from '@/components/v4/hero/PlaybooksSection';
-import SuccessStories from '@/components/v4/hero/SuccessStories';
+import SuccessStories, { SUCCESS_STORY_SLUGS } from '@/components/v4/hero/SuccessStories';
 import ServicesSection from '@/components/v4/hero/ServicesSection';
 import InsightsSection from '@/components/v4/hero/InsightsSection';
 import CtaSection from '@/components/v4/hero/CtaSection';
 import SiteFooter from '@/components/v4/hero/SiteFooter';
+import {
+  getV4FeaturedNews,
+  getV4Insights,
+  getV4Whitepaper,
+  getV4CaseStudyFacts,
+} from '@/lib/v4/fetch-v4-home';
+
+// The news/insights/case-study content comes from the CMS at render
+// time; revalidate hourly so fresh publishes show up without a deploy.
+export const revalidate = 3600;
 
 // Funnel Display for headings, Funnel Sans for body. Scoped to this
 // preview, not the site's global font. Geist is scoped to the Foldcraft
@@ -35,16 +45,31 @@ export const metadata: Metadata = {
   },
 };
 
-export default function V4PreviewPage() {
+export default async function V4PreviewPage() {
+  // One round-trip per content type, all in parallel. Each fetcher
+  // degrades to null/empty so the sections fall back to their editorial
+  // copy when the CMS is unreachable (e.g. local dev without creds).
+  const [news, insights, whitepaper, storyFacts] = await Promise.all([
+    getV4FeaturedNews(),
+    getV4Insights(3),
+    getV4Whitepaper(),
+    getV4CaseStudyFacts(SUCCESS_STORY_SLUGS),
+  ]);
+
   return (
     <div className={sans.className}>
       <EditorialHero headingClass={display.className} bodyClass={sans.className} />
       <PartnerMarquee headingClass={display.className} />
       <FoldcraftHero geistClass={geist.className} />
       <PlaybooksSection headingClass={display.className} />
-      <SuccessStories headingClass={display.className} />
+      <SuccessStories headingClass={display.className} facts={storyFacts} />
       <ServicesSection headingClass={display.className} />
-      <InsightsSection headingClass={display.className} />
+      <InsightsSection
+        headingClass={display.className}
+        news={news}
+        insights={insights}
+        download={whitepaper}
+      />
       <CtaSection />
       <SiteFooter headingClass={display.className} />
     </div>

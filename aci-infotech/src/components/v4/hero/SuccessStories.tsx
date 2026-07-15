@@ -91,6 +91,13 @@ const STORIES: Story[] = [
   },
 ];
 
+/** Case-study slugs behind the curated stories — the server page uses
+ *  these to pull each story's live headline metric from the CMS. */
+export const SUCCESS_STORY_SLUGS = STORIES.map((s) => s.href.split('/').pop() as string);
+
+/** Live CMS facts per case-study slug (headline metric). */
+export type StoryFacts = Record<string, { metricValue: string | null; metricLabel: string | null }>;
+
 /** Entrance-reveal wrapper: fade + rise once the section scrolls in. */
 function revealStyle(revealed: boolean, delay: number): React.CSSProperties {
   return {
@@ -100,7 +107,13 @@ function revealStyle(revealed: boolean, delay: number): React.CSSProperties {
   };
 }
 
-export default function SuccessStories({ headingClass }: { headingClass: string }) {
+export default function SuccessStories({
+  headingClass,
+  facts,
+}: {
+  headingClass: string;
+  facts?: StoryFacts;
+}) {
   const [active, setActive] = useState(0);
   const [outgoing, setOutgoing] = useState<number | null>(null);
   const [cycle, setCycle] = useState(0); // bump to restart timer + progress
@@ -175,6 +188,11 @@ export default function SuccessStories({ headingClass }: { headingClass: string 
   }, [active, outgoing, inView]);
 
   const s = STORIES[active];
+  // Prefer the live CMS metric for the active story; the curated copy
+  // stays as the fallback when the fetch came back empty.
+  const fact = facts?.[SUCCESS_STORY_SLUGS[active]];
+  const metricValue = fact?.metricValue ?? s.metric;
+  const metricLabel = fact?.metricLabel ?? s.metricLabel;
 
   return (
     <section
@@ -348,10 +366,10 @@ export default function SuccessStories({ headingClass }: { headingClass: string 
 
               <div className="my-4 flex items-center gap-3 border-y border-gray-200 py-3">
                 <span className={`text-[52px] font-semibold leading-none text-black ${headingClass}`}>
-                  {s.metric}
+                  {metricValue}
                 </span>
                 <span className="max-w-[170px] text-[13px] leading-tight text-gray-500">
-                  {s.metricLabel}
+                  {metricLabel}
                 </span>
               </div>
 

@@ -31,6 +31,8 @@ type Slide = {
   /** Optional logo shown in place of the eyebrow text (e.g. a partner
    *  wordmark) — kept alongside `eyebrow` for alt text / a11y. */
   eyebrowLogo?: { src: string; w: number; h: number };
+  /** Two headline lines. Wrap the key words in *asterisks* to render
+   *  them in the accent blue, matching the section headings below. */
   headline: [string, string];
   desc: string;
   tags: string[];
@@ -42,32 +44,34 @@ type Slide = {
 const SLIDES: Slide[] = [
   {
     eyebrow: 'Service Foundation',
-    headline: ['Build the AI foundation.', 'Run it in production.'],
+    headline: ['Build the AI foundation.', 'Run it *in production.*'],
     desc: 'We engineer the data foundation, build the AI on top, and run it in production. Most enterprise AI stalls before it gets there.',
     tags: ['Pipelines', 'Governance', 'AI-ready data'],
     cta: { label: 'Explore data engineering', href: '/services/data-engineering' },
   },
   {
     eyebrow: 'Case Study',
-    headline: ['From Lakehouse', 'to Live AI.'],
+    headline: ['From Lakehouse', 'to *Live AI.*'],
     desc: 'Lakehouse modernization, Delta pipelines, MLflow, governance, and real-time analytics for teams that need Databricks to run in production.',
     tags: ['Delta Lake', 'MLflow', 'Workflows'],
     cta: { label: 'Read the case study', href: '/case-studies' },
-    mark: { kind: 'logo', src: '/brand/databricks-color.svg', alt: 'Databricks', h: 48 },
+    // On-light variant: the shared databricks-color.svg carries a white
+    // wordmark for dark surfaces, which disappears on the white hero.
+    mark: { kind: 'logo', src: '/brand/databricks-color-on-light.svg', alt: 'Databricks', h: 56 },
     stat: { value: '87%', label: 'Reduction in data processing time' },
   },
   {
     eyebrow: 'Platform Expertise',
-    headline: ['The Whole Microsoft Stack.', 'AI-Led.'],
+    headline: ['The Whole Microsoft Stack.', '*AI-Led.*'],
     desc: 'Azure is strongest when it connects to the business stack. We bring Azure, Dynamics 365, Power Platform, and data engineering together around measurable operations.',
     tags: ['Azure', 'Dynamics 365', 'Power Platform'],
     cta: { label: 'Explore Microsoft expertise', href: '/partners' },
-    mark: { kind: 'logo', src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 68 },
+    mark: { kind: 'logo', src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 80 },
   },
   {
     eyebrow: 'ArqAI Labs',
     eyebrowLogo: { src: '/brand/arqai-labs-logo.png', w: 2439, h: 858 },
-    headline: ['Forward Deployed AI', 'Engineering At Scale.'],
+    headline: ['Forward Deployed AI', 'Engineering *At Scale.*'],
     desc: 'Engineers embedded in the problem, not advising from outside. Every accelerator comes from years of doing this work.',
     tags: ['Forward-deployed', 'Accelerators', 'Production AI'],
     cta: { label: 'Explore ArqAI Labs', href: 'https://thearq.ai' },
@@ -79,6 +83,24 @@ const fadeDown: Variants = {
   hidden: { opacity: 0, y: -20 },
   show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5, ease: EASE } }),
 };
+
+/** Render a headline line, painting *marked* key words in the accent
+ *  blue so the hero matches the partially-colored section headings. */
+function HeadlineLine({ line }: { line: string }) {
+  return (
+    <>
+      {line.split(/\*([^*]+)\*/g).map((part, idx) =>
+        idx % 2 === 1 ? (
+          <span key={idx} style={{ color: ACCENT }}>
+            {part}
+          </span>
+        ) : (
+          <span key={idx}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
 
 /** Text link with a growing underline + arrow nudge on hover. External
  *  links (http/https) open in a new tab; internal links use next/link. */
@@ -138,6 +160,7 @@ export default function EditorialHero({
 }) {
   const [i, setI] = useState(0);
   const [menu, setMenu] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const reduce = useReducedMotion();
 
   useEffect(() => {
@@ -145,6 +168,15 @@ export default function EditorialHero({
     const t = setInterval(() => setI((n) => (n + 1) % SLIDES.length), 7000);
     return () => clearInterval(t);
   }, [reduce]);
+
+  // The nav is fixed so the mega menu stays reachable down the page;
+  // once the visitor scrolls it picks up a translucent glass backdrop.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const s = SLIDES[i];
 
@@ -171,40 +203,54 @@ export default function EditorialHero({
         />
       </div>
 
+      {/* NAV — fixed so the mega menu follows the visitor down the page.
+          Transparent over the hero, translucent glass once scrolled. */}
+      <nav
+        className={`fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 transition-all duration-300 sm:px-8 md:px-12 ${
+          scrolled
+            ? 'border-b border-black/[0.06] bg-white/80 py-3 shadow-[0_12px_40px_-18px_rgba(3,12,24,0.25)] backdrop-blur-2xl'
+            : 'border-b border-transparent bg-transparent py-5 md:py-6'
+        }`}
+      >
+        <motion.div custom={0} variants={fadeDown} initial="hidden" animate="show">
+          <Link href="/" aria-label="ACI Infotech home" className="flex items-center">
+            <Image
+              src="/aci-infotech-logo.png"
+              alt="ACI Infotech"
+              width={200}
+              height={64}
+              priority
+              className={`w-auto transition-all duration-300 ${scrolled ? 'h-10 md:h-11' : 'h-12 md:h-14'}`}
+            />
+          </Link>
+        </motion.div>
+
+        <motion.div custom={2} variants={fadeDown} initial="hidden" animate="show">
+          <HeroMegaNav headingClass={headingClass} />
+        </motion.div>
+
+        <motion.div custom={5} variants={fadeDown} initial="hidden" animate="show" className="flex items-center gap-4">
+          <ArrowLink
+            href="/contact"
+            arrowSize={16}
+            className="hidden text-[15px] font-semibold capitalize tracking-wide text-black sm:inline-flex"
+          >
+            Start a project
+          </ArrowLink>
+          <button
+            onClick={() => setMenu(true)}
+            aria-label="Open menu"
+            className="flex h-9 w-9 flex-col items-center justify-center gap-1 md:hidden"
+          >
+            <span className="h-0.5 w-5 bg-black" />
+            <span className="h-0.5 w-5 bg-black" />
+            <span className="h-0.5 w-5 bg-black" />
+          </button>
+        </motion.div>
+      </nav>
+
       {/* Foreground */}
-      <div className="relative z-20 flex min-h-[100dvh] flex-col">
-        {/* NAV (transparent) */}
-        <nav className="relative flex items-center justify-between px-5 pt-5 sm:px-8 md:px-12 md:pt-6">
-          <motion.div custom={0} variants={fadeDown} initial="hidden" animate="show">
-            <Link href="/" aria-label="ACI Infotech home" className="flex items-center">
-              <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={200} height={64} priority className="h-12 w-auto md:h-14" />
-            </Link>
-          </motion.div>
-
-          <motion.div custom={2} variants={fadeDown} initial="hidden" animate="show">
-            <HeroMegaNav headingClass={headingClass} />
-          </motion.div>
-
-          <motion.div custom={5} variants={fadeDown} initial="hidden" animate="show" className="flex items-center gap-4">
-            <ArrowLink
-              href="/contact"
-              arrowSize={16}
-              className="hidden text-sm font-semibold capitalize tracking-wide text-black sm:inline-flex"
-            >
-              Start a project
-            </ArrowLink>
-            <button
-              onClick={() => setMenu(true)}
-              aria-label="Open menu"
-              className="flex h-9 w-9 flex-col items-center justify-center gap-1 md:hidden"
-            >
-              <span className="h-0.5 w-5 bg-black" />
-              <span className="h-0.5 w-5 bg-black" />
-              <span className="h-0.5 w-5 bg-black" />
-            </button>
-          </motion.div>
-        </nav>
-
+      <div className="relative z-20 flex min-h-[100dvh] flex-col pt-24 md:pt-28">
         {/* CONTENT (left) — vertically centered */}
         <div className="flex flex-1 flex-col justify-center px-5 sm:px-8 md:px-12">
           <AnimatePresence mode="wait">
@@ -263,7 +309,7 @@ export default function EditorialHero({
                     alt={s.eyebrow}
                     width={s.eyebrowLogo.w}
                     height={s.eyebrowLogo.h}
-                    className="ml-1 h-[18px] w-auto object-contain"
+                    className="ml-1.5 h-6 w-auto object-contain"
                   />
                 ) : (
                   s.eyebrow
@@ -281,7 +327,7 @@ export default function EditorialHero({
                       initial={{ y: '110%' }}
                       animate={{ y: 0, transition: { delay: 0.2 + li * 0.12, duration: 0.7, ease: EASE } }}
                     >
-                      {line}
+                      <HeadlineLine line={line} />
                     </motion.span>
                   </span>
                 ))}

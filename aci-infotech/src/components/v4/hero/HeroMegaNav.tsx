@@ -67,7 +67,7 @@ function ServicesPanel({ headingClass, onNavigate }: { headingClass: string; onN
             onClick={onNavigate}
             className="group/item flex flex-col rounded-xl px-4 py-3 transition-colors hover:bg-black/[0.04]"
           >
-            <span className="flex items-center gap-1.5 text-[15px] font-semibold text-black">
+            <span className="flex items-center gap-1.5 text-[16px] font-semibold text-black">
               {s.label}
               <ArrowUpRight
                 size={14}
@@ -75,7 +75,7 @@ function ServicesPanel({ headingClass, onNavigate }: { headingClass: string; onN
                 style={{ color: ACCENT }}
               />
             </span>
-            <span className="mt-0.5 text-[12.5px] text-black/50">{s.description}</span>
+            <span className="mt-0.5 text-[13.5px] text-black/55">{s.description}</span>
           </Link>
         ))}
       </div>
@@ -117,7 +117,7 @@ function PlatformsPanel({ onNavigate }: { onNavigate: () => void }) {
     <div className="grid grid-cols-4 gap-6">
       {PLATFORM_CATEGORIES.map((cat) => (
         <div key={cat.id}>
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-widest text-black/40">{cat.label}</p>
+          <p className="mb-3 text-[12px] font-semibold uppercase tracking-widest text-black/45">{cat.label}</p>
           <div className="flex flex-col gap-1">
             {cat.items.map((p) => (
               <Link
@@ -134,8 +134,8 @@ function PlatformsPanel({ onNavigate }: { onNavigate: () => void }) {
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: ACCENT }} />
                 )}
                 <span className="min-w-0">
-                  <span className="block text-[14px] font-semibold text-black">{p.label}</span>
-                  <span className="block truncate text-[12px] text-black/45">{p.capability}</span>
+                  <span className="block text-[15px] font-semibold text-black">{p.label}</span>
+                  <span className="block truncate text-[13px] text-black/50">{p.capability}</span>
                 </span>
               </Link>
             ))}
@@ -159,7 +159,7 @@ function IndustriesPanel({ headingClass, onNavigate }: { headingClass: string; o
             href={ind.href}
             onClick={onNavigate}
             onMouseEnter={() => setSlug(ind.slug)}
-            className="group/item flex items-center justify-between rounded-xl px-4 py-2.5 text-[15px] font-semibold transition-colors hover:bg-black/[0.04]"
+            className="group/item flex items-center justify-between rounded-xl px-4 py-2.5 text-[16px] font-semibold transition-colors hover:bg-black/[0.04]"
             style={{ color: ind.slug === slug ? ACCENT : '#000' }}
           >
             {ind.label}
@@ -237,11 +237,11 @@ function ResourcesPanel({ headingClass, onNavigate }: { headingClass: string; on
             <Image src={c.img} alt={c.eyebrow} fill className="object-cover transition-transform duration-500 group-hover/item:scale-105" sizes="260px" />
           </div>
           <div className="p-4">
-            <span className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: ACCENT }}>
+            <span className="text-[12px] font-semibold uppercase tracking-widest" style={{ color: ACCENT }}>
               {c.eyebrow}
             </span>
-            <p className={`mt-1 text-sm font-semibold text-black ${headingClass}`}>{c.blurb}</p>
-            <span className="mt-2 inline-flex items-center gap-1 text-[13px] font-medium text-black/60">
+            <p className={`mt-1 text-[15px] font-semibold text-black ${headingClass}`}>{c.blurb}</p>
+            <span className="mt-2 inline-flex items-center gap-1 text-[14px] font-medium text-black/60">
               {c.cta} <ArrowUpRight size={13} />
             </span>
           </div>
@@ -262,11 +262,11 @@ function CompanyPanel({ headingClass, onNavigate }: { headingClass: string; onNa
             onClick={onNavigate}
             className="group/item flex flex-col rounded-xl px-4 py-3 transition-colors hover:bg-black/[0.04]"
           >
-            <span className="flex items-center gap-1.5 text-[15px] font-semibold text-black">
+            <span className="flex items-center gap-1.5 text-[16px] font-semibold text-black">
               {c.label}
               <ArrowUpRight size={14} className="opacity-0 transition-opacity group-hover/item:opacity-100" style={{ color: ACCENT }} />
             </span>
-            <span className="mt-0.5 text-[12.5px] text-black/50">{c.description}</span>
+            <span className="mt-0.5 text-[13.5px] text-black/55">{c.description}</span>
           </Link>
         ))}
       </div>
@@ -319,7 +319,7 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
             onMouseEnter={() => requestOpen(t.id)}
             onClick={() => (open === t.id ? close() : requestOpen(t.id))}
             aria-expanded={open === t.id}
-            className="group flex items-center gap-1 px-3 py-2 text-[15px] font-semibold capitalize tracking-wide transition-colors"
+            className="group flex items-center gap-1 px-3 py-2 text-[16px] font-semibold capitalize tracking-wide transition-colors"
             style={{ color: open === t.id ? ACCENT : 'rgba(0,0,0,0.75)' }}
           >
             <span className="relative">
@@ -335,7 +335,7 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
           href="https://thearq.ai"
           target="_blank"
           rel="noopener noreferrer"
-          className="group ml-1 flex items-center gap-1.5 rounded-full border px-4 py-2 text-[15px] font-semibold capitalize tracking-wide transition-colors"
+          className="group ml-1 flex items-center gap-1.5 rounded-full border px-4 py-2 text-[16px] font-semibold capitalize tracking-wide transition-colors"
           style={{ color: ACCENT, borderColor: 'rgba(94,14,215,0.3)' }}
         >
           ArqAI Labs
@@ -353,7 +353,7 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
             transition={{ duration: 0.22, ease: EASE }}
             onMouseEnter={cancel}
             onMouseLeave={requestClose}
-            className="absolute left-1/2 top-full z-50 mt-3 w-[min(1040px,92vw)] -translate-x-1/2 rounded-3xl border border-black/[0.06] bg-white/90 p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)] backdrop-blur-2xl"
+            className="absolute left-1/2 top-full z-50 mt-3 w-[min(1040px,92vw)] -translate-x-1/2 rounded-3xl border border-black/[0.06] bg-white/95 p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)] backdrop-blur-2xl"
           >
             {open === 'services' && <ServicesPanel headingClass={headingClass} onNavigate={close} />}
             {open === 'platforms' && <PlatformsPanel onNavigate={close} />}

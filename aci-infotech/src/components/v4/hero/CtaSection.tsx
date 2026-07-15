@@ -4,22 +4,29 @@ import Link from 'next/link';
 import { Coffee } from 'lucide-react';
 import FadingVideo from './FadingVideo';
 
-const VIDEO = '/videos/v4-editorial.mp4';
-const VIDEO_WEBM = '/videos/v4-editorial.webm';
+const VIDEO = '/videos/v4-editorial-signal.mp4';
+const VIDEO_WEBM = '/videos/v4-editorial-signal.webm';
 
 /**
- * Closing CTA — the hero's chromatic footage returns, centered, with a
- * single button floating in the middle of the stage.
+ * Closing CTA — the hero's signal footage returns, centered, with a
+ * single button floating in the middle of the stage. Same treatment as
+ * the hero: a mild tone lift plus a radial feather so the sphere sits
+ * on a uniformly white field with no visible video box.
  */
 export default function CtaSection() {
   return (
-    <section id="lets-talk" className="relative h-[76vh] min-h-[520px] w-full overflow-hidden bg-[#f3f3f3]">
-      <FadingVideo src={VIDEO} webmSrc={VIDEO_WEBM} className="absolute inset-0 h-full w-full object-cover" />
-      {/* soft scrim so the button reads over the bright footage */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{ background: 'radial-gradient(circle at center, rgba(6,8,18,0.32) 0%, rgba(6,8,18,0.12) 45%, rgba(6,8,18,0) 72%)' }}
+    <section id="lets-talk" className="relative h-[76vh] min-h-[520px] w-full overflow-hidden border-t border-gray-200 bg-white">
+      <FadingVideo
+        src={VIDEO}
+        webmSrc={VIDEO_WEBM}
+        className="absolute inset-0 h-full w-full object-contain"
+        style={{
+          filter: 'saturate(0.9) brightness(1.06) contrast(1.18)',
+          WebkitMaskImage:
+            'radial-gradient(ellipse 36% 66% at 50% 50%, #000 50%, rgba(0,0,0,0.55) 75%, transparent 98%)',
+          maskImage:
+            'radial-gradient(ellipse 36% 66% at 50% 50%, #000 50%, rgba(0,0,0,0.55) 75%, transparent 98%)',
+        }}
       />
 
       <div className="relative z-10 flex h-full items-center justify-center px-6">

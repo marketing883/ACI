@@ -22,7 +22,7 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
   {
     title: 'Products & Platforms',
     links: [
-      { label: 'ACI Interactive', href: '/aci-interactive', prefetch: false },
+      { label: 'ACI Interactive', href: '/services/martech-cdp' },
       { label: 'ArqAI Labs', href: 'https://thearq.ai', external: true },
       { label: 'Databricks', href: '/platforms/databricks' },
       { label: 'Microsoft Azure', href: '/platforms/azure' },
