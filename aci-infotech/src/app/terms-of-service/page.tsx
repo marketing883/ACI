@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Terms of Service | ACI Infotech',
   description: 'Terms of Service for ACI Infotech - Terms and conditions governing use of our website and services.',
+  alternates: { canonical: 'https://aciinfotech.com/terms-of-service' },
 };
 
 export default function TermsOfServicePage() {

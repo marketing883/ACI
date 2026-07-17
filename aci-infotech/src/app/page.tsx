@@ -17,6 +17,7 @@
  */
 
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Funnel_Display, Funnel_Sans, Geist } from 'next/font/google';
 import EditorialHero from '@/components/v4/hero/EditorialHero';
 import PartnerMarquee from '@/components/v4/hero/PartnerMarquee';
@@ -51,9 +52,11 @@ const siteUrl = getSiteUrl();
 // time; revalidate hourly so fresh publishes show up without a deploy.
 export const revalidate = 3600;
 
-const TITLE = 'ACI Infotech | Enterprise Data & AI, Engineered and Run in Production';
+// Title ~54 chars and description ~150 chars: both fit their SERP
+// limits (~60 / ~158) without truncation.
+const TITLE = 'ACI Infotech | Enterprise Data & AI, Run in Production';
 const DESCRIPTION =
-  'ACI Infotech engineers the data foundation, builds the AI on top, and runs both in production. 500+ enterprise deployments on Databricks, Azure, Snowflake, AWS, and Salesforce across financial services, healthcare, retail, and manufacturing.';
+  'ACI Infotech builds the enterprise data foundation, puts AI on top, and runs both in production. 500+ projects on Databricks, Azure, Snowflake, and AWS.';
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -75,7 +78,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: TITLE,
     description:
-      'We engineer the data foundation, build the AI on top, and run both in production. 500+ enterprise deployments, documented in playbooks.',
+      'We engineer the data foundation, build the AI on top, and run both in production. 500+ enterprise projects, documented in playbooks.',
     url: siteUrl,
     siteName: 'ACI Infotech',
     type: 'website',
@@ -214,6 +217,56 @@ function HomeStructuredData() {
   );
 }
 
+/**
+ * Crawlable answer block directly under the hero: names the entity,
+ * what it does, where it sits, and the verifiable proof points. The
+ * hero itself is deliberately editorial, so this band carries the
+ * definitional copy search and answer engines lift.
+ */
+function EntityIntro({ bodyClass }: { bodyClass: string }) {
+  const PROOF = [
+    'Founded 2006',
+    '1,200+ engineers',
+    '500+ enterprise projects',
+    '11 global delivery hubs',
+    'ISO 27001:2022',
+    'CMMI Level 3',
+    'Great Place to Work Certified',
+  ];
+  return (
+    <section aria-label="About ACI Infotech" className={`border-b border-neutral-200 bg-white ${bodyClass}`}>
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        <p className="max-w-4xl text-lg leading-relaxed text-neutral-700">
+          <strong className="text-neutral-900">ACI Infotech</strong> is an enterprise data and AI
+          engineering firm headquartered in Monmouth Junction, New Jersey, with delivery hubs
+          worldwide. We build the data foundation, put AI on top of it, and run both in production
+          for enterprises in financial services, healthcare, retail, manufacturing, and energy.
+          Explore our{' '}
+          <Link href="/services" className="font-medium text-blue-700 underline underline-offset-2 hover:text-blue-900">
+            services
+          </Link>
+          ,{' '}
+          <Link href="/platforms" className="font-medium text-blue-700 underline underline-offset-2 hover:text-blue-900">
+            platforms
+          </Link>
+          , and{' '}
+          <Link href="/industries" className="font-medium text-blue-700 underline underline-offset-2 hover:text-blue-900">
+            industries
+          </Link>
+          .
+        </p>
+        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-neutral-500">
+          {PROOF.map((item) => (
+            <li key={item} className="whitespace-nowrap">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 export default async function HomePage() {
   // One round-trip per content type, all in parallel. Each fetcher
   // degrades to null/empty so the sections fall back to their editorial
@@ -230,6 +283,7 @@ export default async function HomePage() {
       <HomeStructuredData />
       <main>
         <EditorialHero headingClass={display.className} bodyClass={sans.className} />
+        <EntityIntro bodyClass={sans.className} />
         <PartnerMarquee headingClass={display.className} />
         <FoldcraftHero geistClass={geist.className} />
         <PlaybooksSection headingClass={display.className} />

@@ -27,7 +27,7 @@ export const HOME_FAQ: HomeFaqItem[] = [
   {
     question: 'What is ArqAI Labs?',
     answer:
-      'ArqAI Labs is our forward-deployed AI engineering practice. Engineers embed inside the problem and ship with accelerators built from years of delivery work, which typically cuts delivery time by 40 to 60 percent. It lives at thearq.ai.',
+      'ArqAI is our strategic AI engineering partner, and ArqAI Labs is the forward-deployed practice we run together. Engineers embed inside the problem and ship with accelerators built from years of delivery work. It lives at thearq.ai.',
   },
   {
     question: 'What is ACI Interactive?',

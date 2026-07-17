@@ -6,17 +6,38 @@ import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
 import ParallaxBalloons from '@/components/about/ParallaxBalloons';
 import { getSiteUrl } from '@/lib/site-url';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
 const siteUrl = getSiteUrl();
 
+const ABOUT_TITLE = 'About ACI Infotech | The Engineers Behind Enterprise Modernization';
+const ABOUT_DESCRIPTION =
+  'Founded 2006. 500+ large enterprise projects delivered building data platforms, AI systems, and cloud architectures. We answer the 2am call.';
+
 export const metadata: Metadata = {
-  title: 'About ACI Infotech | The Engineers Behind Enterprise Modernization',
-  description: 'Founded 2006. 500+ large enterprise projects delivered building data platforms, AI systems, and cloud architectures. We answer the 2am call.',
+  title: ABOUT_TITLE,
+  description: ABOUT_DESCRIPTION,
   keywords: 'enterprise technology consulting, data engineering company, AI ML consulting, Fortune 500 technology partner, production-grade engineering',
   alternates: {
     canonical: `${siteUrl}/about`,
+  },
+  // Per-page social card: without this the page inherited the root
+  // layout's OpenGraph and every share rendered the homepage card.
+  openGraph: {
+    title: ABOUT_TITLE,
+    description: ABOUT_DESCRIPTION,
+    url: `${siteUrl}/about`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: ABOUT_TITLE,
+    description: ABOUT_DESCRIPTION,
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -188,10 +209,47 @@ const trackRecord = [
   { number: '11', label: 'Global delivery hubs', context: 'US, India, and beyond' },
 ];
 
+// AboutPage + executive Person entities. Person schema on named
+// leadership is a primary E-E-A-T and knowledge-panel signal; both
+// people are already public on this page with LinkedIn profiles.
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'AboutPage',
+      '@id': 'https://aciinfotech.com/about#aboutpage',
+      url: 'https://aciinfotech.com/about',
+      name: 'About ACI Infotech',
+      about: { '@id': 'https://aciinfotech.com/#organization' },
+      inLanguage: 'en-US',
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://aciinfotech.com/about#jag-kanumuri',
+      name: ceo.name,
+      jobTitle: ceo.title,
+      worksFor: { '@id': 'https://aciinfotech.com/#organization' },
+      sameAs: [ceo.linkedin_url],
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://aciinfotech.com/about#prakash-hingorani',
+      name: cro.name,
+      jobTitle: cro.title,
+      worksFor: { '@id': 'https://aciinfotech.com/#organization' },
+      sameAs: [cro.linkedin_url],
+    },
+  ],
+};
+
 export default function AboutPage() {
   return (
     <>
       {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }}
+      />
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },

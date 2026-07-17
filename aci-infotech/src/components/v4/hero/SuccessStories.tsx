@@ -409,6 +409,25 @@ export default function SuccessStories({
           </div>
         </div>
       </div>
+
+      {/* Non-active stories, server-rendered so every title, summary,
+          metric, and case-study link is in the initial HTML (the
+          animated card only mounts the active story). */}
+      <div hidden>
+        {STORIES.map((s, idx) =>
+          idx === active ? null : (
+            <div key={s.id}>
+              <h3>{s.title}</h3>
+              <p>{s.eyebrow}</p>
+              <p>
+                {s.metric} {s.metricLabel}
+              </p>
+              <p>{s.summary}</p>
+              <Link href={s.href}>{s.cta}</Link>
+            </div>
+          ),
+        )}
+      </div>
     </section>
   );
 }

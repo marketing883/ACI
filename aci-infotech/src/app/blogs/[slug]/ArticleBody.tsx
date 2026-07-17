@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 /**
  * Renders the article body. This is a Client Component only so the
@@ -108,8 +109,25 @@ export default function ArticleBody({
         />
       ) : (
         <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
           components={{
-            h1: ({ children }) => <h1 className="text-3xl font-bold mt-12 mb-6 text-[var(--aci-secondary)]">{children}</h1>,
+            table: ({ children }) => (
+              <div className="my-6 overflow-x-auto">
+                <table className="w-full border-collapse text-sm">{children}</table>
+              </div>
+            ),
+            th: ({ children }) => (
+              <th className="border border-gray-200 bg-gray-50 px-3 py-2 text-left font-semibold text-[var(--aci-secondary)]">
+                {children}
+              </th>
+            ),
+            td: ({ children }) => (
+              <td className="border border-gray-200 px-3 py-2 text-gray-700">{children}</td>
+            ),
+            // Demoted to <h2>: the post title is already the page's only
+            // <h1>, so a body that opens with "# Heading" must not mint
+            // a second one.
+            h1: ({ children }) => <h2 className="text-3xl font-bold mt-12 mb-6 text-[var(--aci-secondary)]">{children}</h2>,
             h2: ({ children }) => <h2 className="text-2xl font-bold mt-10 mb-4 text-[var(--aci-secondary)]">{children}</h2>,
             h3: ({ children }) => <h3 className="text-xl font-semibold mt-8 mb-3 text-[var(--aci-secondary)]">{children}</h3>,
             p: ({ children }) => <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>,

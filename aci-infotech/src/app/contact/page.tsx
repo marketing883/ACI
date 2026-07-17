@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Mail, Clock, Send, CheckCircle, Globe2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, CheckCircle, Globe2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleTagManager';
 import { trackContactFormConversion } from '@/components/analytics/LinkedInInsightTag';
@@ -300,6 +300,32 @@ export default function ContactPage() {
                     <a href="mailto:insights@aciinfotech.com" className="text-gray-600 hover:text-[var(--aci-primary)]">
                       insights@aciinfotech.com
                     </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-[var(--aci-primary)]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-5 h-5 text-[var(--aci-primary)]" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-[var(--aci-secondary)]">Phone</div>
+                    <a href="tel:+18882254638" className="text-gray-600 hover:text-[var(--aci-primary)]">
+                      +1 (888) 225-4638
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-[var(--aci-primary)]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-5 h-5 text-[var(--aci-primary)]" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-[var(--aci-secondary)]">Headquarters</div>
+                    <p className="text-gray-600">
+                      1100 Cornwall Road, Suite 215
+                      <br />
+                      Monmouth Junction, NJ 08852
+                    </p>
                   </div>
                 </div>
 

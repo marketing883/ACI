@@ -8,6 +8,7 @@ import { createClient } from '@supabase/supabase-js';
 import ReactMarkdown from 'react-markdown';
 
 import { displayClient } from '@/lib/content/anonymize';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 // Supabase client for server-side fetching
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -230,10 +231,32 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // plain strings here previously rendered a double brand suffix.
     // Lead with the study title (the searchable part), not the
     // anonymized client descriptor.
+    const dbTitle = dbStudy.meta_title || `${dbStudy.title} | ${displayClient(dbStudy)} Case Study | ACI Infotech`;
+    const dbDescription = dbStudy.meta_description || dbStudy.excerpt || dbStudy.challenge?.substring(0, 160);
+    // Per-page social card: without this the page inherited the ROOT
+    // layout's OpenGraph, so every case-study share rendered the
+    // homepage card with og:url pointing at /.
+    const dbImages = dbStudy.featured_image_url
+      ? [{ url: dbStudy.featured_image_url, alt: dbStudy.title }]
+      : DEFAULT_OG_IMAGES;
     return {
-      title: { absolute: dbStudy.meta_title || `${dbStudy.title} | ${displayClient(dbStudy)} Case Study | ACI Infotech` },
-      description: dbStudy.meta_description || dbStudy.excerpt || dbStudy.challenge?.substring(0, 160),
+      title: { absolute: dbTitle },
+      description: dbDescription,
       alternates: { canonical: `https://aciinfotech.com/case-studies/${slug}` },
+      openGraph: {
+        title: dbTitle,
+        description: dbDescription,
+        url: `https://aciinfotech.com/case-studies/${slug}`,
+        siteName: 'ACI Infotech',
+        type: 'article',
+        images: dbImages,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: dbTitle,
+        description: dbDescription,
+        images: dbStudy.featured_image_url ? [dbStudy.featured_image_url] : DEFAULT_TWITTER_IMAGES,
+      },
     };
   }
 
@@ -246,10 +269,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const fallbackTitle = `${study.headline} | ${displayClient(study)} Case Study | ACI Infotech`;
   return {
-    title: { absolute: `${study.headline} | ${displayClient(study)} Case Study | ACI Infotech` },
+    title: { absolute: fallbackTitle },
     description: study.subheadline,
     alternates: { canonical: `https://aciinfotech.com/case-studies/${slug}` },
+    openGraph: {
+      title: fallbackTitle,
+      description: study.subheadline,
+      url: `https://aciinfotech.com/case-studies/${slug}`,
+      siteName: 'ACI Infotech',
+      type: 'article',
+      images: DEFAULT_OG_IMAGES,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: fallbackTitle,
+      description: study.subheadline,
+      images: DEFAULT_TWITTER_IMAGES,
+    },
   };
 }
 

@@ -17,6 +17,11 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
       { label: 'Cybersecurity', href: '/services/cyber-security' },
       { label: 'Cloud & Infrastructure', href: '/services/cloud-modernization' },
       { label: 'Managed Run & SRE', href: '/services/managed-operations' },
+      { label: 'App Development', href: '/services/app-development' },
+      { label: 'Quality Engineering', href: '/services/quality-engineering' },
+      { label: 'Advisory & Strategy', href: '/services/advisory-strategy' },
+      { label: 'GCC & Captive Centers', href: '/services/gcc' },
+      { label: 'All services', href: '/services' },
     ],
   },
   {
@@ -27,6 +32,25 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
       { label: 'Databricks', href: '/platforms/databricks' },
       { label: 'Microsoft Azure', href: '/platforms/azure' },
       { label: 'Snowflake', href: '/platforms/snowflake' },
+      { label: 'AWS', href: '/platforms/aws' },
+      { label: 'Salesforce', href: '/platforms/salesforce' },
+      { label: 'SAP', href: '/platforms/sap' },
+      { label: 'Microsoft Dynamics 365', href: '/platforms/microsoft-dynamics' },
+      { label: 'All platforms', href: '/platforms' },
+    ],
+  },
+  {
+    title: 'Industries',
+    links: [
+      { label: 'Financial Services', href: '/industries/financial-services' },
+      { label: 'Healthcare', href: '/industries/healthcare' },
+      { label: 'Retail & Consumer', href: '/industries/retail' },
+      { label: 'Manufacturing', href: '/industries/manufacturing' },
+      { label: 'Energy & Utilities', href: '/industries/energy' },
+      { label: 'Oil & Gas', href: '/industries/oil-gas' },
+      { label: 'Hospitality', href: '/industries/hospitality' },
+      { label: 'Transportation', href: '/industries/transportation' },
+      { label: 'All industries', href: '/industries' },
     ],
   },
   {
@@ -35,6 +59,7 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
       { label: 'About', href: '/about' },
       { label: 'Careers', href: '/careers' },
       { label: 'News', href: '/news' },
+      { label: 'Partners', href: '/partners' },
       { label: 'Contact', href: '/contact' },
     ],
   },
@@ -110,7 +135,7 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
           </div>
 
           {/* Link columns */}
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
             {COLUMNS.map((col) => (
               <div key={col.title}>
                 <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/40">{col.title}</p>

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// DataforSEO credentials
-const DATAFORSEO_USERNAME = process.env.DATAFORSEO_USERNAME || 'habib@thearq.ai';
-const DATAFORSEO_PASSWORD = process.env.DATAFORSEO_PASSWORD || 'Quantumtheory@1';
+// DataforSEO credentials. Env-only: a missing credential must fail the
+// request loudly, never fall back to a literal committed to the repo.
+const DATAFORSEO_USERNAME = process.env.DATAFORSEO_USERNAME ?? '';
+const DATAFORSEO_PASSWORD = process.env.DATAFORSEO_PASSWORD ?? '';
 const DATAFORSEO_API_URL = 'https://api.dataforseo.com/v3';
 
 // Supabase for caching

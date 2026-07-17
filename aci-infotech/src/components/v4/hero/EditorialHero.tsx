@@ -72,10 +72,9 @@ const SLIDES: Slide[] = [
     eyebrow: 'ArqAI Labs',
     eyebrowLogo: { src: '/brand/arqai-labs-logo.png', w: 2439, h: 858 },
     headline: ['Forward Deployed AI', 'Engineering *At Scale.*'],
-    desc: 'Engineers embedded in the problem, not advising from outside. Every accelerator comes from years of doing this work.',
+    desc: 'Engineers embedded in the problem, not advising from outside. Delivered with our strategic partner ArqAI, whose accelerators come from years of doing this work.',
     tags: ['Forward-deployed', 'Accelerators', 'Production AI'],
     cta: { label: 'Explore ArqAI Labs', href: 'https://thearq.ai' },
-    stat: { value: '40-60%', label: 'Faster delivery on flagship accelerators' },
   },
 ];
 
@@ -466,6 +465,26 @@ export default function EditorialHero({
           </motion.div>
         ) : null}
       </AnimatePresence>
+
+      {/* Non-active hero slides, server-rendered so every headline and
+          description is in the initial HTML (standard hidden-tab
+          pattern; AnimatePresence only mounts the active slide). */}
+      <div hidden>
+        {SLIDES.map((s, idx) =>
+          idx === i ? null : (
+            <div key={s.eyebrow}>
+              <p>{s.eyebrow}</p>
+              <p>{s.headline.join(' ').replace(/\*/g, '')}</p>
+              <p>{s.desc}</p>
+              {s.stat ? (
+                <p>
+                  {s.stat.value} {s.stat.label}
+                </p>
+              ) : null}
+            </div>
+          ),
+        )}
+      </div>
     </section>
   );
 }

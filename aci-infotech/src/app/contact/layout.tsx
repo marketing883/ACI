@@ -13,10 +13,53 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/contact' },
 };
 
+// ContactPage + ContactPoint JSON-LD. The page itself is a Client
+// Component, so the schema lives here where it server-renders. The
+// phone and address match the Organization schema in
+// src/components/seo/StructuredData.tsx; if one changes, change both.
+const contactSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  '@id': 'https://aciinfotech.com/contact#contactpage',
+  url: 'https://aciinfotech.com/contact',
+  name: 'Contact ACI Infotech',
+  about: { '@id': 'https://aciinfotech.com/#organization' },
+  mainEntity: {
+    '@type': 'Organization',
+    '@id': 'https://aciinfotech.com/#organization',
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        contactType: 'sales',
+        email: 'insights@aciinfotech.com',
+        telephone: '+1-888-225-4638',
+        areaServed: 'Worldwide',
+        availableLanguage: 'English',
+      },
+    ],
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: '1100 Cornwall Road, Suite 215',
+      addressLocality: 'Monmouth Junction',
+      addressRegion: 'NJ',
+      postalCode: '08852',
+      addressCountry: 'US',
+    },
+  },
+};
+
 export default function ContactLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }}
+      />
+      {children}
+    </>
+  );
 }

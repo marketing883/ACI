@@ -1,27 +1,36 @@
 import type { Metadata } from 'next';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 // /platforms/microsoft-dynamics is a Client Component, so this
 // pass-through layout carries its metadata and canonical (the others in
 // this folder set theirs inline in the page).
+//
+// Keyword split for the Dynamics cluster: this page owns the
+// informational "Microsoft Dynamics 365 consulting" intent;
+// /lp/dynamics-365-implementation owns the transactional
+// "Dynamics 365 implementation services" intent; the roadmap LP is
+// noindexed paid-campaign inventory.
+const TITLE = 'Microsoft Dynamics 365 Consulting | ACI Infotech';
+const DESCRIPTION =
+  'Microsoft Dynamics 365 consulting for enterprise teams: Copilot, Power Platform, and Fabric implementation, integration, migration, and managed support.';
+
 export const metadata: Metadata = {
-  title: { absolute: 'Microsoft Dynamics, Copilot & Power Platform | ACI Infotech' },
-  description:
-    'Dynamics 365, Power Platform, and Copilot implementation, integration, and optimization for enterprise teams. Migration, governance, and managed support.',
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: 'https://aciinfotech.com/platforms/microsoft-dynamics' },
-  // Per-page social card. Without this, every share and link preview
-  // inherited the homepage's OpenGraph (title, image, and og:url all
-  // pointing at /), mis-attributing all 21 service/platform pages.
   openGraph: {
-    title: 'Microsoft Dynamics, Copilot & Power Platform | ACI Infotech',
-    description: 'Dynamics 365, Power Platform, and Copilot implementation, integration, and optimization for enterprise teams. Migration, governance, and managed support.',
+    title: TITLE,
+    description: DESCRIPTION,
     url: 'https://aciinfotech.com/platforms/microsoft-dynamics',
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Microsoft Dynamics, Copilot & Power Platform | ACI Infotech',
-    description: 'Dynamics 365, Power Platform, and Copilot implementation, integration, and optimization for enterprise teams. Migration, governance, and managed support.',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 

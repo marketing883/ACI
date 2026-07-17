@@ -86,6 +86,27 @@ const playbooks: Link[] = [
   { name: 'Multi-Source Data Integration', path: '/playbooks/multi-source-integration' },
 ];
 
+// Commercial engagement pages: the indexable subset of /lp (one page
+// per bottom-funnel intent; the noindexed variants are not listed).
+// Keep in sync with PROMOTED_LP_SLUGS in src/lib/lp-promoted.ts.
+const engagements: Link[] = [
+  { name: 'Data Engineering Services', path: '/lp/data-engineering-services', note: 'Scoped builds: pipelines, lakehouse, governance.' },
+  { name: 'Snowflake Consulting', path: '/lp/snowflake-consulting', note: 'Certified Snowflake implementations and cost tuning.' },
+  { name: 'Databricks Consulting', path: '/lp/databricks-services', note: 'Lakehouse implementations with certified engineers.' },
+  { name: 'Power BI Consulting', path: '/lp/power-bi-consulting', note: 'Dashboards on a governed semantic model.' },
+  { name: 'Cloud Migration Services', path: '/lp/cloud-migration-services', note: 'Migrations with parallel-run cutovers.' },
+  { name: 'Dynamics 365 Implementation', path: '/lp/dynamics-365-implementation', note: 'CRM and ERP implementations with a 90-day plan.' },
+  { name: 'Generative AI Consulting', path: '/lp/generative-ai-consulting', note: 'GenAI systems that reach production.' },
+  { name: 'AI & ML Implementation', path: '/lp/ai-ml-implementation', note: 'Scoped model builds with MLOps included.' },
+  { name: 'Agentic AI Development', path: '/lp/agentic-ai-development', note: 'Agent systems with governance built in.' },
+  { name: 'Data Integration Services', path: '/lp/data-integration-services', note: 'Source systems unified into one platform.' },
+  { name: 'SAP S/4HANA Migration', path: '/lp/sap-s4hana-migration', note: 'ECC to S/4HANA moves, scoped and staged.' },
+  { name: 'Salesforce Implementation', path: '/lp/salesforce-implementation', note: 'CRM builds and integrations.' },
+  { name: 'ServiceNow Implementation', path: '/lp/servicenow-implementation', note: 'ITSM and workflow implementations.' },
+  { name: 'Braze Implementation', path: '/lp/braze-implementation', note: 'Customer engagement and ESP migrations.' },
+  { name: 'Data Governance Consulting', path: '/lp/data-governance-consulting', note: 'Lineage, quality, and access controls.' },
+];
+
 const company: Link[] = [
   { name: 'About', path: '/about', note: 'Who we are and how we work.' },
   { name: 'Careers', path: '/careers', note: 'Open engineering, AI, cloud, and security roles.' },
@@ -145,7 +166,7 @@ export async function GET(): Promise<Response> {
     '',
     '> Enterprise technology consulting. We build data platforms, AI systems, and cloud architectures that run in production for large enterprises.',
     '',
-    'ACI Infotech is an enterprise engineering firm based in Monmouth Junction, New Jersey, with delivery teams worldwide. We build the enterprise data foundation, put AI on top of it, and run both in production: data engineering and lakehouse platforms, applied AI and GenAI, cloud modernization, MarTech and CDP (through our specialized division ACI Interactive), security, and 24/7 managed operations. 500+ enterprise deployments, documented as reusable playbooks. Forward-deployed AI engineering runs under ArqAI Labs (https://thearq.ai). To start a conversation, visit https://aciinfotech.com/contact.',
+    'ACI Infotech is an enterprise engineering firm based in Monmouth Junction, New Jersey, with delivery teams worldwide. Founded in 2006, with 1,200+ engineers across 11 global delivery hubs. We build the enterprise data foundation, put AI on top of it, and run both in production: data engineering and lakehouse platforms, applied AI and GenAI, cloud modernization, MarTech and CDP (through our specialized division ACI Interactive), security, and 24/7 managed operations. 500+ enterprise projects, documented as reusable playbooks. Forward-deployed AI engineering is delivered with our strategic partner ArqAI through ArqAI Labs (https://thearq.ai). To start a conversation, visit https://aciinfotech.com/contact.',
     '',
   ].join('\n');
 
@@ -158,6 +179,7 @@ export async function GET(): Promise<Response> {
     renderSection('Case Studies', caseStudyLinks),
     renderSection('Whitepapers', whitepaperLinks),
     renderSection('Playbooks', playbooks),
+    renderSection('Engagement Pages', engagements),
     renderSection('Company', company),
     renderSection('Optional', optional),
   ].filter(Boolean);

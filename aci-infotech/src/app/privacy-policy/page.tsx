@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Privacy Policy | ACI Infotech',
   description: 'Privacy Policy for ACI Infotech - How we collect, use, and protect your personal information.',
+  alternates: { canonical: 'https://aciinfotech.com/privacy-policy' },
 };
 
 export default function PrivacyPolicyPage() {

@@ -116,10 +116,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // LANDING PAGES
   // =====================
 
-  // The Microsoft Dynamics roadmap page plus the promoted commercial
-  // LPs (one per intent; the rest of /lp stays noindexed + unlisted).
+  // The promoted commercial LPs (one per intent; the rest of /lp stays
+  // noindexed + unlisted). The Microsoft Dynamics roadmap page is a paid
+  // conversion asset: /lp/dynamics-365-implementation owns the organic
+  // Dynamics intent, so the roadmap page is noindexed and left out here
+  // to avoid a three-way Dynamics overlap with the platform page.
   const landingPages: MetadataRoute.Sitemap = [
-    '/lp/microsoft-dynamics-roadmap',
     ...PROMOTED_LP_SLUGS.map(slug => `/lp/${slug}`),
   ].map(path => ({
     url: `${baseUrl}${path}`,
