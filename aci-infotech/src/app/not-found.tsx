@@ -93,14 +93,22 @@ function useMouseScrub(videoRef: React.RefObject<HTMLVideoElement | null>) {
 export default function NotFound() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [pillsVisible, setPillsVisible] = useState(false);
+  const [introSharp, setIntroSharp] = useState(false);
   const [copied, setCopied] = useState(false);
   const { displayed, done } = useTypewriter(TYPEWRITER_TEXT);
   useMouseScrub(videoRef);
 
   // Pills fade in 400ms after load, independent of the typewriter.
+  // The intro line starts blurred (the reference design) and pulls
+  // into focus as the typewriter starts, so the blur reads as a
+  // deliberate focus-in rather than a rendering glitch.
   useEffect(() => {
-    const t = setTimeout(() => setPillsVisible(true), 400);
-    return () => clearTimeout(t);
+    const pills = setTimeout(() => setPillsVisible(true), 400);
+    const focus = setTimeout(() => setIntroSharp(true), 500);
+    return () => {
+      clearTimeout(pills);
+      clearTimeout(focus);
+    };
   }, []);
 
   const copyEmail = async () => {
@@ -143,14 +151,15 @@ export default function NotFound() {
             404. Page not found.
           </h1>
 
-          {/* Blurred intro from the copilot */}
+          {/* Intro from the copilot: blurred on load, pulls into focus */}
           <p
-            className="pointer-events-none mb-5 select-none text-black sm:mb-6"
+            className="pointer-events-none mb-5 select-none text-black/60 sm:mb-6"
             style={{
               fontSize: 'clamp(18px, 4vw, 26px)',
               lineHeight: 1.3,
               fontWeight: 400,
-              filter: 'blur(4px)',
+              filter: introSharp ? 'blur(0px)' : 'blur(4px)',
+              transition: 'filter 1.1s ease',
             }}
           >
             Hey there, this is Atheros,
