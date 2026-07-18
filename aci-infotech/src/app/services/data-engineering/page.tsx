@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
 import { ArrowRight, CheckCircle, ChevronDown, Database, Zap, Eye, Shield, Settings, Cloud, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
@@ -12,6 +11,7 @@ export const revalidate = 3600;
 import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -19,7 +19,7 @@ const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: 'Data Engineering Services',
-  description: 'Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. 40+ deployments, 30%+ latency reduction.',
+  description: 'Data engineering services that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability.',
   keywords: 'data engineering services, databricks consulting, snowflake implementation, data lakehouse, real-time data pipelines, enterprise data platform',
   alternates: {
     canonical: `${siteUrl}/services/data-engineering`,
@@ -29,15 +29,17 @@ export const metadata: Metadata = {
   // pointing at /), mis-attributing all 21 service/platform pages.
   openGraph: {
     title: 'Data Engineering Services | ACI Infotech',
-    description: 'Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. 40+ deployments, 30%+ latency reduction.',
+    description: 'Data engineering services that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability.',
     url: `${siteUrl}/services/data-engineering`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Data Engineering Services | ACI Infotech',
-    description: 'Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability. 40+ deployments, 30%+ latency reduction.',
+    description: 'Data engineering services that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -104,6 +106,7 @@ const caseStudies = [
   {
     slug: 'modernizes-finance-reporting-with-sap-transformation',
     client: 'Global Financial Giant',
+    client_descriptor: 'Global Financial Services Giant',
     industry: 'Financial Services',
     challenge: '40+ finance systems post-acquisitions needed consolidation into unified platform',
     results: [
@@ -116,6 +119,7 @@ const caseStudies = [
   {
     slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
     client: 'Fortune 500 Convenience Retailer',
+    client_descriptor: 'Fortune 500 Convenience Retail Chain',
     industry: 'Retail',
     challenge: 'Payment systems across 600+ locations needed real-time data with zero downtime',
     results: [
@@ -128,6 +132,7 @@ const caseStudies = [
   {
     slug: 'global-food-facilities-data-intelligence',
     client: 'Global Hospitality Leader',
+    client_descriptor: 'Global Hospitality & Food Services Leader',
     industry: 'Hospitality',
     challenge: 'Global operations with data scattered across regional silos',
     results: [
@@ -209,11 +214,11 @@ const differentiators = [
   {
     title: 'Production-Grade from Start',
     description: "We don't build pilots that die. We architect for production scale from the first sprint.",
-    proof: 'Zero production failures in last 3 years',
+    proof: 'SLA-backed operations on every platform',
   },
   {
     title: 'Cost-Effective Delivery',
-    description: '18-28% less than Big 4 consultancies. Senior architects leading, not junior analysts.',
+    description: 'Senior architects leading the work, not junior analysts learning on your budget.',
     proof: 'Senior engineers on every project',
   },
 ];
@@ -265,7 +270,7 @@ export default function DataEngineeringPage() {
                 Data Engineering
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Platforms That Feed AI and Analytics
+                Data Engineering That Feeds AI and&nbsp;Analytics
               </h1>
               <p className="text-lg text-gray-300 mb-8">
                 Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability.
@@ -354,7 +359,7 @@ export default function DataEngineeringPage() {
             <div className="space-y-4 text-gray-600">
               <p>
                 We build data platforms on Databricks, Snowflake, and AWS/Azure cloud data services.
-                This isn't abstract architecture, it's production code that handles your data volumes,
+                This isn&rsquo;t abstract architecture, it&rsquo;s production code that handles your data volumes,
                 meets your SLAs, and feeds your AI models.
               </p>
               <p>
@@ -363,8 +368,8 @@ export default function DataEngineeringPage() {
                 governed lakehouse where every dataset has lineage, quality scores, and access controls.
               </p>
               <p className="font-semibold text-[var(--aci-secondary)]">
-                We've done this for Fortune 500 companies, again and again. When something breaks at 2am,
-                we're on the call with you.
+                We&rsquo;ve done this for Fortune 500 companies since 2006. When something breaks at 2am,
+                we&rsquo;re on the call with you.
               </p>
             </div>
           </div>
@@ -431,7 +436,7 @@ export default function DataEngineeringPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Data Engineering Projects We've Built
+              Data Engineering Projects We&rsquo;ve Built
             </h2>
             <p className="text-lg text-gray-400">
               Real projects. Real Fortune 500 clients. Real outcomes.
@@ -526,7 +531,7 @@ export default function DataEngineeringPage() {
               Beyond Delivery
             </h2>
             <p className="text-lg text-gray-600">
-              We don't hand over and walk away. Post-deployment operations, SLA-backed support,
+              We don&rsquo;t hand over and walk away. Post-deployment operations, SLA-backed support,
               and continuous optimization are part of how we engage.
               <span className="block mt-2 font-semibold text-[var(--aci-secondary)]">We run what we build.</span>
             </p>
@@ -625,7 +630,7 @@ export default function DataEngineeringPage() {
             <span className="text-blue-300">|</span>
             <span className="text-blue-200 text-sm">30-minute technical discussion</span>
             <span className="text-blue-300">|</span>
-            <span className="text-blue-200 text-sm">We'll tell you if we're not the right fit</span>
+            <span className="text-blue-200 text-sm">We&rsquo;ll tell you if we&rsquo;re not the right fit</span>
           </div>
 
           <Button href="/contact?service=data-engineering" variant="lime" size="lg">

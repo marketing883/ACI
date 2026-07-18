@@ -13,6 +13,9 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { advisoryStrategyRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 
 // Canonical origin: always production, so staging builds can never
@@ -22,7 +25,7 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   title: 'Advisory & Strategy Consulting Services',
   description:
-    'Technology strategy grounded in delivery. North-star maps, TCO models, capability audits, and ROI frameworks. Advisors who arrive with the engineers who will build what the plan recommends.',
+    'Technology advisory grounded in delivery. North-star maps, TCO models, capability audits, and ROI frameworks from advisors who ship what they recommend.',
   keywords:
     'technology advisory, data strategy, AI strategy, cloud strategy, capability audit, TCO modeling, ROI framework, CTO advisory',
   alternates: {
@@ -33,15 +36,17 @@ export const metadata: Metadata = {
   // pointing at /), mis-attributing all 21 service/platform pages.
   openGraph: {
     title: 'Advisory & Strategy Consulting Services | ACI Infotech',
-    description: 'Technology strategy grounded in delivery. North-star maps, TCO models, capability audits, and ROI frameworks. Advisors who arrive with the engineers who will build what the plan recommends.',
+    description: 'Technology advisory grounded in delivery. North-star maps, TCO models, capability audits, and ROI frameworks from advisors who ship what they recommend.',
     url: `${siteUrl}/services/advisory-strategy`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Advisory & Strategy Consulting Services | ACI Infotech',
-    description: 'Technology strategy grounded in delivery. North-star maps, TCO models, capability audits, and ROI frameworks. Advisors who arrive with the engineers who will build what the plan recommends.',
+    description: 'Technology advisory grounded in delivery. North-star maps, TCO models, capability audits, and ROI frameworks from advisors who ship what they recommend.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -215,7 +220,7 @@ export default function AdvisoryStrategyPage() {
                 Advisory & Strategy
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Strategy grounded in&nbsp;delivery.
+                Technology advisory grounded in&nbsp;delivery.
               </h1>
               <p className="text-lg text-gray-300 mb-8">
                 Our advisors arrive with the engineers who will build what the strategy
@@ -416,6 +421,8 @@ export default function AdvisoryStrategyPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={advisoryStrategyRelated} />
 
       {/* Final CTA */}
       <section className="py-20 bg-[var(--aci-primary)]">

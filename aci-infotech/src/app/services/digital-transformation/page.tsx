@@ -2,8 +2,11 @@ import { Metadata } from 'next';
 import { ArrowRight, CheckCircle, ChevronDown, Zap, Bot, FileText, Workflow, Settings, BarChart } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { digitalTransformationRelated } from '@/content/related-links';
 
 import { displayClient } from '@/lib/content/anonymize';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -25,11 +28,13 @@ export const metadata: Metadata = {
     url: `${siteUrl}/services/digital-transformation`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Digital Transformation Services | ACI Infotech',
     description: 'Intelligent process automation. ServiceNow workflows, RPA, document processing. Automate what humans shouldn\'t do manually. 20% reduction in manual processes.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -95,6 +100,7 @@ const caseStudies = [
   {
     slug: 'finance-automation',
     client: 'Fortune 500 Financial',
+    client_descriptor: 'Fortune 500 Financial Services Firm',
     industry: 'Financial Services',
     challenge: 'Manual accounts payable processing taking 5 days average',
     results: [
@@ -107,6 +113,7 @@ const caseStudies = [
   {
     slug: 'hr-transformation',
     client: 'Global Manufacturer',
+    client_descriptor: 'Global Industrial Manufacturer',
     industry: 'Manufacturing',
     challenge: 'HR requests lost in email, no visibility on status',
     results: [
@@ -119,6 +126,7 @@ const caseStudies = [
   {
     slug: 'customer-service',
     client: 'Insurance Provider',
+    client_descriptor: 'National Insurance Provider',
     industry: 'Insurance',
     challenge: 'Claims processing backlog growing, customer complaints rising',
     results: [
@@ -144,7 +152,7 @@ const differentiators = [
   {
     title: 'Measurable ROI',
     description: 'Every automation project has clear metrics. We track time saved, errors reduced, and dollars returned.',
-    proof: 'Average 300% ROI in year one',
+    proof: 'Hours saved and error rates, tracked per project',
   },
   {
     title: 'Enterprise-Grade Quality',
@@ -200,11 +208,12 @@ export default function DigitalTransformationPage() {
                 Digital Transformation
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Intelligent Process Automation
+                Digital Transformation Through Intelligent&nbsp;Automation
               </h1>
               <p className="text-lg text-gray-300 mb-8">
-                ServiceNow workflows, RPA, document processing. Automate what humans shouldn't do manually.
-                We free your people for higher-value work while bots handle the routine.
+                ServiceNow workflows, RPA, document processing. Automate what humans shouldn&rsquo;t do manually.
+                We treat digital transformation as an engineering job, not a slide deck: bots handle
+                the routine while your people do the work that needs judgment.
               </p>
 
               <ul className="space-y-3 mb-8">
@@ -217,7 +226,7 @@ export default function DigitalTransformationPage() {
               </ul>
 
               <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                ServiceNow Partner | UiPath Certified | 300%+ average ROI
+                ServiceNow Partner | UiPath Certified
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -266,7 +275,9 @@ export default function DigitalTransformationPage() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">Automation Services</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
+              Digital transformation, one automated process at a&nbsp;time
+            </h2>
             <p className="text-lg text-gray-600">From process discovery to production automation</p>
           </div>
 
@@ -305,7 +316,7 @@ export default function DigitalTransformationPage() {
       <section className="py-20 bg-[var(--aci-secondary)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Automation Projects We've Built</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Automation Projects We&rsquo;ve Built</h2>
             <p className="text-lg text-gray-400">Real transformations. Measurable outcomes.</p>
           </div>
 
@@ -389,6 +400,8 @@ export default function DigitalTransformationPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={digitalTransformationRelated} />
 
       {/* Final CTA */}
       <section className="py-20 bg-[var(--aci-primary)]">

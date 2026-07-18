@@ -2,8 +2,11 @@ import { Metadata } from 'next';
 import { ArrowRight, CheckCircle, ChevronDown, Code2, Cpu, Plug, RefreshCw, Layers, Sparkles, Activity, FileCheck, TrendingUp, Users, Globe, Smartphone, Database } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { appDevelopmentRelated } from '@/content/related-links';
 
 import { displayClient } from '@/lib/content/anonymize';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -11,7 +14,7 @@ const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: 'Application Development Services',
-  description: 'Enterprise application engineering that sits on top of your data and AI infrastructure. Custom, web, and AI-powered applications built with production-grade rigor — not agency output.',
+  description: 'Enterprise application development on top of your data and AI stack. Custom, web, and AI-powered applications built with production rigor, not agency output.',
   keywords: 'enterprise application development, custom application development, AI-powered applications, web application development, legacy modernization, API development, enterprise software engineering',
   alternates: {
     canonical: `${siteUrl}/services/app-development`,
@@ -21,15 +24,17 @@ export const metadata: Metadata = {
   // pointing at /), mis-attributing all 21 service/platform pages.
   openGraph: {
     title: 'Application Development Services | ACI Infotech',
-    description: 'Enterprise application engineering that sits on top of your data and AI infrastructure. Custom, web, and AI-powered applications built with production-grade rigor — not agency output.',
+    description: 'Enterprise application development on top of your data and AI stack. Custom, web, and AI-powered applications built with production rigor, not agency output.',
     url: `${siteUrl}/services/app-development`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Application Development Services | ACI Infotech',
-    description: 'Enterprise application engineering that sits on top of your data and AI infrastructure. Custom, web, and AI-powered applications built with production-grade rigor — not agency output.',
+    description: 'Enterprise application development on top of your data and AI stack. Custom, web, and AI-powered applications built with production rigor, not agency output.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -96,6 +101,7 @@ const caseStudies = [
   {
     slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
     client: 'Fortune 500 Convenience Retailer',
+    client_descriptor: 'Fortune 500 Convenience Retail Chain',
     industry: 'Retail — Convenience',
     challenge: 'Needed a unified digital guest experience and loyalty platform across 600+ locations with real-time personalization at the point of sale.',
     results: [
@@ -159,7 +165,7 @@ const differentiators = [
   {
     title: 'Systems That Survive Scale',
     description: 'We architect for the day you 10x your users, not just launch day. Load-tested, observable, and built to last.',
-    proof: 'Zero production outages in last 3 years',
+    proof: 'Load-tested against 10x traffic before launch',
   },
 ];
 
@@ -233,7 +239,7 @@ export default function AppDevelopmentPage() {
                 Application Development
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Applications Built to Survive Production
+                Enterprise Application Development That Survives&nbsp;Production
               </h1>
               <p className="text-lg text-gray-300 mb-8">
                 Custom, web, and AI-powered applications engineered for Fortune 500 operations.
@@ -515,11 +521,11 @@ export default function AppDevelopmentPage() {
               <p>
                 The distinction matters. Most development firms build greenfield products.
                 We build the enterprise applications that run on top of the data platforms and AI systems
-                we've already deployed for Fortune 500 clients — or that integrate cleanly with yours.
+                we&rsquo;ve already deployed for Fortune 500 clients — or that integrate cleanly with yours.
               </p>
               <p className="font-semibold text-[var(--aci-secondary)]">
                 When your application needs to authenticate against your SSO, query your lakehouse,
-                invoke your ML models, and handle 10,000 concurrent users — that's the job we do.
+                invoke your ML models, and handle 10,000 concurrent users — that&rsquo;s the job we do.
               </p>
             </div>
           </div>
@@ -586,7 +592,7 @@ export default function AppDevelopmentPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Enterprise Applications We've Built
+              Enterprise Applications We&rsquo;ve Built
             </h2>
             <p className="text-lg text-gray-400">
               Real projects. Real Fortune 500 clients. Real outcomes.
@@ -684,7 +690,7 @@ export default function AppDevelopmentPage() {
               Beyond Delivery
             </h2>
             <p className="text-lg text-gray-600">
-              We don't hand over and walk away. Post-deployment operations, SLA-backed support,
+              We don&rsquo;t hand over and walk away. Post-deployment operations, SLA-backed support,
               and continuous optimization are part of how we engage.
               <span className="block mt-2 font-semibold text-[var(--aci-secondary)]">We run what we build.</span>
             </p>
@@ -761,6 +767,8 @@ export default function AppDevelopmentPage() {
         </div>
       </section>
 
+      <RelatedLinks items={appDevelopmentRelated} />
+
       {/* Final CTA */}
       <section className="py-20 bg-[var(--aci-primary)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -769,7 +777,7 @@ export default function AppDevelopmentPage() {
           </h2>
           <p className="text-lg text-blue-100 mb-8">
             Schedule a 30-minute technical call with one of our engineers.
-            No sales pitch, just an engineering conversation about what you're trying to build.
+            No sales pitch, just an engineering conversation about what you&rsquo;re trying to build.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-8">
@@ -777,7 +785,7 @@ export default function AppDevelopmentPage() {
             <span className="text-blue-300">|</span>
             <span className="text-blue-200 text-sm">30-minute technical discussion</span>
             <span className="text-blue-300">|</span>
-            <span className="text-blue-200 text-sm">We'll tell you if we're not the right fit</span>
+            <span className="text-blue-200 text-sm">We&rsquo;ll tell you if we&rsquo;re not the right fit</span>
           </div>
 
           <Button href="/contact?service=app-development" variant="lime" size="lg">

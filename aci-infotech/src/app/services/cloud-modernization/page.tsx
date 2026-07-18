@@ -11,6 +11,7 @@ export const revalidate = 3600;
 import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -18,7 +19,7 @@ const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: 'Cloud Modernization Services',
-  description: 'AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with proven playbooks. 200+ cloud migrations, zero downtime deployments.',
+  description: 'Cloud modernization and migration across AWS, Azure, and GCP. Refactor, replatform, or rearchitect with playbooks that reduce risk. 200+ cloud migrations.',
   keywords: 'cloud modernization, AWS migration, Azure migration, cloud consulting, kubernetes, multi-cloud',
   alternates: {
     canonical: `${siteUrl}/services/cloud-modernization`,
@@ -28,15 +29,17 @@ export const metadata: Metadata = {
   // pointing at /), mis-attributing all 21 service/platform pages.
   openGraph: {
     title: 'Cloud Modernization Services | ACI Infotech',
-    description: 'AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with proven playbooks. 200+ cloud migrations, zero downtime deployments.',
+    description: 'Cloud modernization and migration across AWS, Azure, and GCP. Refactor, replatform, or rearchitect with playbooks that reduce risk. 200+ cloud migrations.',
     url: `${siteUrl}/services/cloud-modernization`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Cloud Modernization Services | ACI Infotech',
-    description: 'AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with proven playbooks. 200+ cloud migrations, zero downtime deployments.',
+    description: 'Cloud modernization and migration across AWS, Azure, and GCP. Refactor, replatform, or rearchitect with playbooks that reduce risk. 200+ cloud migrations.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -102,6 +105,7 @@ const caseStudies = [
   {
     slug: 'insurance-cloud-migration',
     client: 'Fortune 500 Insurer',
+    client_descriptor: 'Fortune 500 Insurance Carrier',
     industry: 'Insurance',
     challenge: 'Legacy data center costing $20M annually with aging hardware',
     results: [
@@ -114,6 +118,7 @@ const caseStudies = [
   {
     slug: 'retail-modernization',
     client: 'National Retailer',
+    client_descriptor: 'National Retail Chain',
     industry: 'Retail',
     challenge: 'Monolithic e-commerce platform unable to handle peak traffic',
     results: [
@@ -126,6 +131,7 @@ const caseStudies = [
   {
     slug: 'manufacturing-multicloud',
     client: 'Global Manufacturer',
+    client_descriptor: 'Global Industrial Manufacturer',
     industry: 'Manufacturing',
     challenge: 'Locked into single cloud vendor with no disaster recovery',
     results: [
@@ -169,7 +175,7 @@ const differentiators = [
   {
     title: 'Zero-Downtime Migrations',
     description: '200+ migrations without production disruption. We know how to migrate while you run.',
-    proof: 'Zero failed migrations',
+    proof: 'Runbook-driven cutovers on every migration',
   },
   {
     title: 'Security-First Approach',
@@ -208,7 +214,7 @@ export default function CloudModernizationPage() {
       {/* Structured Data for SEO/AEO */}
       <ServiceSchema
         name="Cloud Modernization Services"
-        description="AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with proven playbooks."
+        description="AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with playbooks that reduce risk."
         url="/services/cloud-modernization"
         serviceType="Cloud Computing Consulting"
       />
@@ -230,10 +236,10 @@ export default function CloudModernizationPage() {
                 Cloud Modernization
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Multi-Cloud Without the Chaos
+                Cloud Modernization Without the&nbsp;Chaos
               </h1>
               <p className="text-lg text-gray-300 mb-8">
-                AWS, Azure, GCP migrations. Refactor, replatform, or rearchitect. Proven playbooks that reduce risk.
+                AWS, Azure, GCP migrations. Refactor, replatform, or rearchitect. Playbooks that reduce risk.
                 200+ cloud migrations with zero downtime. We build for your needs, not our partnership bonuses.
               </p>
 
@@ -247,7 +253,7 @@ export default function CloudModernizationPage() {
               </ul>
 
               <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                200+ cloud migrations | Zero failed deployments
+                200+ cloud migrations | Certified on AWS, Azure, and GCP
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -431,7 +437,7 @@ export default function CloudModernizationPage() {
       <section className="py-20 bg-[var(--aci-secondary)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Cloud Projects We've Built</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Cloud Projects We&rsquo;ve Built</h2>
             <p className="text-lg text-gray-400">Real migrations. Real transformations. Real outcomes.</p>
           </div>
 

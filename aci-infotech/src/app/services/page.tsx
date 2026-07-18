@@ -147,12 +147,42 @@ const services = [
     href: '/services/gcc',
     image: '/images/services-hero-bg.jpg',
   },
+  {
+    id: 'managed-operations',
+    icon: Headphones,
+    title: 'Managed Operations',
+    tagline: 'Two Centers. One Escalation Path.',
+    description:
+      '24/7 NOC and SOC operations on the platforms you already run, backed by SLAs and follow the sun coverage across three time zones. The team that keeps everything above running.',
+    capabilities: ['24/7 NOC Monitoring', 'SOC Threat Detection', 'SLA Management', 'Runbook Automation'],
+    technologies: ['SolarWinds', 'Datadog', 'Dynatrace', 'Splunk', 'ServiceNow'],
+    href: '/services/managed-operations',
+    image: '/images/services-hero-bg.jpg',
+  },
 ];
+
+// ItemList JSON-LD: enumerate all 11 service detail pages so crawlers
+// see the full practice catalog from the hub, not just anchor links.
+const servicesItemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'ACI Infotech Services',
+  itemListElement: services.map((service, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: service.title,
+    url: `${siteUrl}${service.href}`,
+  })),
+};
 
 export default function ServicesPage() {
   return (
     <main className="min-h-screen">
       {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesItemList) }}
+      />
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -197,7 +227,7 @@ export default function ServicesPage() {
               <span className="text-[var(--aci-primary-light)]"> Actually Deliver</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8">
-              Ten practice areas. One engineering standard. Every engagement staffed with senior architects
+              Eleven practice areas. One engineering standard. Every engagement staffed with senior architects
               who&rsquo;ve shipped production systems at Fortune 500 scale.
             </p>
           </div>

@@ -23,6 +23,9 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { qualityEngineeringRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 
 // Canonical origin: always production, so staging builds can never
@@ -32,7 +35,7 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   title: 'Quality Engineering Services',
   description:
-    'Quality as an engineering discipline, not a test phase. AI-augmented, continuous, and owned by the team that ships. In-sprint automation, agentic coverage, CI/CD gates, production observability.',
+    'Quality engineering as a discipline, not a test phase. In-sprint automation, agentic AI coverage, CI/CD quality gates, and observability-fed quality.',
   keywords:
     'quality engineering, QE services, AI-augmented testing, agentic test automation, continuous testing, shift-left quality, in-sprint automation, CI/CD quality gates, performance engineering, security testing',
   alternates: {
@@ -43,15 +46,17 @@ export const metadata: Metadata = {
   // pointing at /), mis-attributing all 21 service/platform pages.
   openGraph: {
     title: 'Quality Engineering Services | ACI Infotech',
-    description: 'Quality as an engineering discipline, not a test phase. AI-augmented, continuous, and owned by the team that ships. In-sprint automation, agentic coverage, CI/CD gates, production observability.',
+    description: 'Quality engineering as a discipline, not a test phase. In-sprint automation, agentic AI coverage, CI/CD quality gates, and observability-fed quality.',
     url: `${siteUrl}/services/quality-engineering`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Quality Engineering Services | ACI Infotech',
-    description: 'Quality as an engineering discipline, not a test phase. AI-augmented, continuous, and owned by the team that ships. In-sprint automation, agentic coverage, CI/CD gates, production observability.',
+    description: 'Quality engineering as a discipline, not a test phase. In-sprint automation, agentic AI coverage, CI/CD quality gates, and observability-fed quality.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -321,7 +326,7 @@ export default function QualityEngineeringPage() {
                 Quality Engineering
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mt-3 mb-6 leading-tight">
-                We engineer quality into every{'\u00a0'}release.
+                Quality engineering, built into every{'\u00a0'}release.
               </h1>
               <p className="text-lg text-gray-300 mb-8 max-w-xl">
                 Quality as an engineering discipline, not a test phase.
@@ -725,6 +730,8 @@ export default function QualityEngineeringPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={qualityEngineeringRelated} />
 
       {/* Final CTA */}
       <section className="py-20 lg:py-24 bg-[var(--aci-primary)] relative overflow-hidden">

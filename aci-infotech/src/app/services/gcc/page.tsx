@@ -14,6 +14,9 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { gccRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 
 // Canonical origin: always production, so staging builds can never
@@ -23,7 +26,7 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   title: 'GCC Setup & Captive Center Services',
   description:
-    'Stand up and operate Global Capability Centers in India and LatAm. Entity setup, hiring, facilities, IT, and operating model delivered in one engagement, with a documented build-operate-transfer path.',
+    'GCC setup in India and LatAm: entity, hiring, facilities, IT, and operating model in one engagement, with a documented build-operate-transfer path.',
   keywords:
     'GCC services, global capability center, captive center setup, build operate transfer, BOT, India GCC, LatAm GCC, offshore captive',
   alternates: {
@@ -34,15 +37,17 @@ export const metadata: Metadata = {
   // pointing at /), mis-attributing all 21 service/platform pages.
   openGraph: {
     title: 'GCC Setup & Captive Center Services | ACI Infotech',
-    description: 'Stand up and operate Global Capability Centers in India and LatAm. Entity setup, hiring, facilities, IT, and operating model delivered in one engagement, with a documented build-operate-transfer path.',
+    description: 'GCC setup in India and LatAm: entity, hiring, facilities, IT, and operating model in one engagement, with a documented build-operate-transfer path.',
     url: `${siteUrl}/services/gcc`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'GCC Setup & Captive Center Services | ACI Infotech',
-    description: 'Stand up and operate Global Capability Centers in India and LatAm. Entity setup, hiring, facilities, IT, and operating model delivered in one engagement, with a documented build-operate-transfer path.',
+    description: 'GCC setup in India and LatAm: entity, hiring, facilities, IT, and operating model in one engagement, with a documented build-operate-transfer path.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -234,7 +239,7 @@ export default function GCCPage() {
                 GCC & Captive Operations
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Your team. Your operating model.&nbsp;Offshore.
+                GCC Setup: Your Team. Your Operating Model.&nbsp;Offshore.
               </h1>
               <p className="text-lg text-gray-300 mb-8">
                 A captive delivery center stood up and run like a first-party
@@ -469,6 +474,8 @@ export default function GCCPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={gccRelated} />
 
       {/* Final CTA */}
       <section className="py-20 bg-[var(--aci-primary)]">

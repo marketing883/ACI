@@ -11,6 +11,7 @@ export const revalidate = 3600;
 import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 
 import { displayClient } from '@/lib/content/anonymize';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -32,11 +33,13 @@ export const metadata: Metadata = {
     url: `${siteUrl}/services/applied-ai-ml`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Applied AI & ML Services | ACI Infotech',
     description: 'From GenAI pilots to production ML. GenAI chatbots, forecasting engines, recommendation systems. With MLOps, governance, and SLAs. 50+ AI deployments.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -102,6 +105,7 @@ const caseStudies = [
   {
     slug: 'financial-forecasting',
     client: 'Fortune 500 Bank',
+    client_descriptor: 'Fortune 500 Retail and Commercial Bank',
     industry: 'Financial Services',
     challenge: 'Forecasting models took weeks to retrain and deploy, missing market changes',
     results: [
@@ -114,6 +118,7 @@ const caseStudies = [
   {
     slug: 'document-processing',
     client: 'Healthcare Provider',
+    client_descriptor: 'National Healthcare Provider',
     industry: 'Healthcare',
     challenge: 'Manual claims processing taking 72 hours average',
     results: [
@@ -162,7 +167,7 @@ const differentiators = [
   {
     title: 'MLOps from Day One',
     description: 'Every model ships with CI/CD, monitoring, and automated retraining. No model drift surprises.',
-    proof: 'Zero production model failures',
+    proof: 'Automated drift detection on every model',
   },
   {
     title: 'Enterprise Security',
@@ -218,7 +223,7 @@ export default function AppliedAIMLPage() {
                 Applied AI & ML
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                From GenAI Pilots to Production ML
+                Applied AI &amp; ML: From GenAI Pilots to&nbsp;Production
               </h1>
               <p className="text-lg text-gray-300 mb-8">
                 GenAI chatbots, forecasting engines, recommendation systems. With MLOps, governance, and SLAs.
@@ -334,7 +339,7 @@ export default function AppliedAIMLPage() {
       <section className="py-20 bg-[var(--aci-secondary)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">AI Projects We've Built</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">AI Projects We&rsquo;ve Built</h2>
             <p className="text-lg text-gray-400">Real AI implementations. Real business outcomes.</p>
           </div>
 
@@ -461,7 +466,7 @@ export default function AppliedAIMLPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Ship AI to Production?</h2>
           <p className="text-lg text-blue-100 mb-8">
-            Talk to an AI architect about your specific use case. No sales pitch, just an engineering conversation about what's actually possible.
+            Talk to an AI architect about your specific use case. No sales pitch, just an engineering conversation about what&rsquo;s actually possible.
           </p>
 
           <Button href="/contact?service=applied-ai-ml" variant="lime" size="lg">

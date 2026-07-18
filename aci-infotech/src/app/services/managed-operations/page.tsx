@@ -17,6 +17,9 @@ import {
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { managedOperationsRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 
 // Canonical origin: always production, so staging builds can never
@@ -41,11 +44,13 @@ export const metadata: Metadata = {
     url: `${siteUrl}/services/managed-operations`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Managed Operations: NOC and SOC Services | ACI Infotech',
     description: '24/7 NOC and SOC operations backed by SLAs. SolarWinds, Datadog, Dynatrace, LogRhythm, Splunk, Sentinel. Follow the sun coverage across three time zones.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -245,12 +250,13 @@ export default function ManagedOperationsPage() {
                 Managed Operations
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Two centers. One escalation&nbsp;path.
+                Managed IT Operations: 24/7 NOC and&nbsp;SOC
               </h1>
               <p className="text-lg text-gray-300 mb-8">
-                NOC keeps the estate up. SOC keeps it safe. Both run on the platforms
-                you already trust, staffed by engineers certified on them, covered
-                around the clock across three time zones.
+                Two centers, one escalation path. NOC keeps the estate up. SOC keeps
+                it safe. Both run on the platforms you already trust, staffed by
+                engineers certified on them, covered around the clock across three
+                time zones.
               </p>
 
               <ul className="space-y-3 mb-8">
@@ -502,6 +508,12 @@ export default function ManagedOperationsPage() {
               If you need operations on the applications we built, the infrastructure
               underneath, or the support layer for your users, we run those too.
             </p>
+            <p className="mt-4 text-lg text-gray-600">
+              Our managed IT services cover the full estate: infrastructure monitoring
+              and patching for hybrid and cloud environments, application support under
+              SLA, and the L1 to L3 helpdesk in between. One contract, one escalation
+              path, reported against the same monthly scorecard as the NOC and SOC.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -555,6 +567,8 @@ export default function ManagedOperationsPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={managedOperationsRelated} />
 
       {/* Final CTA */}
       <section className="py-20 bg-[var(--aci-primary)]">

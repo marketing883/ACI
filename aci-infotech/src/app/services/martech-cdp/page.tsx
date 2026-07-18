@@ -2,8 +2,11 @@ import { Metadata } from 'next';
 import { ArrowRight, CheckCircle, ChevronDown, Users, Target, BarChart3, Mail, Sparkles, Database } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { martechCdpRelated } from '@/content/related-links';
 
 import { displayClient } from '@/lib/content/anonymize';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -25,11 +28,13 @@ export const metadata: Metadata = {
     url: `${siteUrl}/services/martech-cdp`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MarTech & CDP Services | ACI Infotech',
     description: 'Customer 360 that actually works. Salesforce Marketing Cloud, Adobe Experience Platform, Braze implementations. Real-time personalization at scale.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -95,6 +100,7 @@ const caseStudies = [
   {
     slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
     client: 'Fortune 500 Convenience Retailer',
+    client_descriptor: 'Fortune 500 Convenience Retail Chain',
     industry: 'Retail',
     challenge: 'Fragmented customer data across 600+ locations, no unified view',
     results: [
@@ -107,6 +113,7 @@ const caseStudies = [
   {
     slug: 'hospitality-loyalty',
     client: 'Global Hospitality Brand',
+    client_descriptor: 'Global Hospitality and Resort Brand',
     industry: 'Hospitality',
     challenge: 'Loyalty program data siloed from marketing systems',
     results: [
@@ -188,7 +195,7 @@ export default function MarTechCDPPage() {
                 MarTech & CDP
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Customer 360 That Actually Works
+                MarTech &amp; CDP: Customer 360 That Actually&nbsp;Works
               </h1>
               <p className="text-lg text-gray-300 mb-8">
                 Salesforce Marketing Cloud, Adobe Experience Platform, Braze. Real-time personalization at scale.
@@ -295,7 +302,7 @@ export default function MarTechCDPPage() {
       <section className="py-20 bg-[var(--aci-secondary)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">MarTech Projects We've Built</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">MarTech Projects We&rsquo;ve Built</h2>
             <p className="text-lg text-gray-400">Real implementations. Measurable outcomes.</p>
           </div>
 
@@ -379,6 +386,8 @@ export default function MarTechCDPPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={martechCdpRelated} />
 
       {/* Final CTA */}
       <section className="py-20 bg-[var(--aci-primary)]">

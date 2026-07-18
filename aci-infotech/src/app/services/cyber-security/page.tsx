@@ -2,8 +2,11 @@ import { Metadata } from 'next';
 import { ArrowRight, CheckCircle, ChevronDown, Shield, Eye, Lock, AlertTriangle, FileCheck, Server, Activity } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { cyberSecurityRelated } from '@/content/related-links';
 
 import { displayClient } from '@/lib/content/anonymize';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -25,11 +28,13 @@ export const metadata: Metadata = {
     url: `${siteUrl}/services/cyber-security`,
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Cyber Security Services | ACI Infotech',
     description: 'Security built in, not bolted on. DevSecOps, observability, compliance. SOC 2, ISO 27001 compliant architectures from day one.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -95,6 +100,7 @@ const caseStudies = [
   {
     slug: 'healthcare-compliance',
     client: 'Healthcare Provider',
+    client_descriptor: 'National Healthcare Provider',
     industry: 'Healthcare',
     challenge: 'HIPAA compliance gaps identified in security audit',
     results: [
@@ -107,6 +113,7 @@ const caseStudies = [
   {
     slug: 'financial-devsecops',
     client: 'Financial Services',
+    client_descriptor: 'Global Financial Services Firm',
     industry: 'Financial',
     challenge: 'Security slowing down release cycles, developers bypassing controls',
     results: [
@@ -119,6 +126,7 @@ const caseStudies = [
   {
     slug: 'retail-zerotrust',
     client: 'National Retailer',
+    client_descriptor: 'National Retail Chain',
     industry: 'Retail',
     challenge: 'Breach concerns with remote workforce and third-party access',
     results: [
@@ -219,11 +227,11 @@ export default function CyberSecurityPage() {
                 Cyber Security
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Security Built In, Not Bolted On
+                Cyber Security Built In, Not Bolted&nbsp;On
               </h1>
               <p className="text-lg text-gray-300 mb-8">
                 DevSecOps, observability, compliance. SOC 2, ISO 27001 compliant architectures from day one.
-                We build security into every system, so you're audit-ready and protected.
+                We build security into every system, so you&rsquo;re audit-ready and protected.
               </p>
 
               <ul className="space-y-3 mb-8">
@@ -426,7 +434,7 @@ export default function CyberSecurityPage() {
       <section className="py-20 bg-[var(--aci-secondary)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Security Projects We've Built</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Security Projects We&rsquo;ve Built</h2>
             <p className="text-lg text-gray-400">Real security transformations. Real outcomes.</p>
           </div>
 
@@ -510,6 +518,8 @@ export default function CyberSecurityPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={cyberSecurityRelated} />
 
       {/* Final CTA */}
       <section className="py-20 bg-[var(--aci-primary)]">
