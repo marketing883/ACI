@@ -15,6 +15,8 @@ import {
   ServiceHero,
   PageFaq,
 } from '@/components/v4/page/kit';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
@@ -232,11 +234,7 @@ export default function ManagedOperationsPage() {
         ]}
         primary={{ label: 'Talk to an operations architect', href: '/contact?service=managed-operations' }}
         secondary={{ label: 'See operations case studies', href: '/case-studies?service=managed-operations' }}
-        stats={[
-          { value: '15 min', label: 'P1 response, NOC' },
-          { value: '99.95%', label: 'Uptime targets under SLA' },
-          { value: '3', label: 'Time zones, follow the sun' },
-        ]}
+        visual={<FlowScene config={FLOWS['managed-operations']} />}
       />
 
       {/* Problem band: the 3am page and the newest person on the rotation */}

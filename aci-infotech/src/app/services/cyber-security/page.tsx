@@ -17,6 +17,8 @@ import {
   FactsRow,
   PageFaq,
 } from '@/components/v4/page/kit';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
@@ -293,11 +295,7 @@ export default function CyberSecurityPage() {
         ]}
         primary={{ label: 'Talk to a security architect', href: '/contact?service=cyber-security' }}
         secondary={{ label: 'See the security case studies', href: '/case-studies?service=cyber-security' }}
-        logos={[
-          { src: '/brand/dynatrace-color.svg', alt: 'Dynatrace' },
-          { src: '/brand/microsoft-mono.svg', alt: 'Microsoft' },
-        ]}
-        logosCaption="ISO 27001 certified, operating SIEM stacks on Splunk, Microsoft Sentinel, and CrowdStrike."
+        visual={<FlowScene config={FLOWS['cyber-security']} />}
       />
 
       {/* Problem band: bolted-on security */}

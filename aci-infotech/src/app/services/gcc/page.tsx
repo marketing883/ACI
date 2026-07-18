@@ -15,6 +15,8 @@ import {
   FactsRow,
   PageFaq,
 } from '@/components/v4/page/kit';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
@@ -221,11 +223,7 @@ export default function GCCPage() {
         ]}
         primary={{ label: 'Scope a captive center', href: '/contact?service=gcc' }}
         secondary={{ label: 'See delivery outcomes', href: '/case-studies' }}
-        stats={[
-          { value: '90 days', label: 'First pod live, entity and all' },
-          { value: '80%+', label: 'Offer-to-join rate' },
-          { value: 'BOT', label: 'Documented transfer path' },
-        ]}
+        visual={<FlowScene config={FLOWS['gcc']} />}
       />
 
       {/* Problem band: outsourcing contracts that never become your team */}

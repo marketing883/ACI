@@ -19,6 +19,8 @@ import {
   FactsRow,
   PageFaq,
 } from '@/components/v4/page/kit';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
@@ -250,11 +252,7 @@ export default function AppDevelopmentPage() {
         ]}
         primary={{ label: 'Talk to an engineer', href: '/contact' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
-        logos={[
-          { src: '/brand/azure-color.png', alt: 'Microsoft Azure' },
-          { src: '/images/Solution-Partners/kubernetes.svg', alt: 'Kubernetes' },
-        ]}
-        logosCaption="Cloud-native builds on the stack you already run: Azure, AWS, and Kubernetes, integrated with your data and AI platforms."
+        visual={<FlowScene config={FLOWS['app-development']} />}
       />
 
       {/* Problem band: the integration layer is where apps die */}

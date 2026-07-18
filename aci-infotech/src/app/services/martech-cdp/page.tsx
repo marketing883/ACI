@@ -20,6 +20,8 @@ import {
   FactsRow,
   PageFaq,
 } from '@/components/v4/page/kit';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
@@ -233,11 +235,7 @@ export default function MarTechCDPPage() {
         ]}
         primary={{ label: 'Talk to a MarTech engineer', href: '/contact' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
-        logos={[
-          { src: '/brand/salesforce-color.png', alt: 'Salesforce' },
-          { src: '/images/Solution-Partners/braze.png', alt: 'Braze' },
-        ]}
-        logosCaption="Salesforce partner with an Agentforce practice, and a Braze Alloy partner. We implement what we recommend."
+        visual={<FlowScene config={FLOWS['martech-cdp']} />}
       />
 
       {/* Problem band: identity, consent, and activation as the real fight */}

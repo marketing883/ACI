@@ -15,6 +15,8 @@ import {
   FactsRow,
   PageFaq,
 } from '@/components/v4/page/kit';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
@@ -279,11 +281,7 @@ export default function QualityEngineeringPage() {
         ]}
         primary={{ label: 'Talk to a quality engineer', href: '/contact?service=quality-engineering' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
-        stats={[
-          { value: '90%+', label: 'Automation as the default' },
-          { value: '<10 min', label: 'Full test suites in CI' },
-          { value: '3x', label: 'Coverage with agentic testing' },
-        ]}
+        visual={<FlowScene config={FLOWS['quality-engineering']} />}
       />
 
       {/* Problem band: the release gate nobody trusts */}

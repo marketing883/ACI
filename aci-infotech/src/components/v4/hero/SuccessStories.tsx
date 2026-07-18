@@ -236,10 +236,13 @@ export default function SuccessStories({
         <div className="mb-9" style={revealStyle(revealed, 0.4)}>
           <Link
             href="/case-studies"
-            className="inline-flex items-center gap-1.5 rounded-full bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+            className="group inline-flex items-center gap-1.5 text-sm font-semibold text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
           >
-            Explore all success stories
-            <ArrowUpRight size={16} aria-hidden="true" />
+            <span className="relative">
+              Explore all success stories
+              <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+            </span>
+            <ArrowUpRight size={16} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>
 

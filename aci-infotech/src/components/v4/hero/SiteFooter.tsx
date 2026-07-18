@@ -120,9 +120,12 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
             </p>
             <Link
               href="/contact"
-              className="group mt-6 inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-black"
+              className="group mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-white"
             >
-              Start a project
+              <span className="relative">
+                Start a project
+                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+              </span>
               <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
 

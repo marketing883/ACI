@@ -91,13 +91,17 @@ export function ServiceHero({
             ))}
           </ul>
 
-          <div className="mt-9 flex flex-wrap items-center gap-5">
+          {/* Text links only: buttons live in CTA sections, nowhere else. */}
+          <div className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-3">
             <Link
               href={primary.href}
-              className="inline-flex items-center gap-2 rounded-full bg-[#1D4ED8] px-7 py-3.5 text-[15px] font-semibold text-white transition-colors duration-300 hover:bg-black"
+              className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-blue-700"
             >
-              {primary.label}
-              <ArrowUpRight size={16} aria-hidden="true" />
+              <span className="relative">
+                {primary.label}
+                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+              </span>
+              <ArrowUpRight size={16} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
             <Link
               href={secondary.href}

@@ -18,6 +18,8 @@ import {
   FactsRow,
   PageFaq,
 } from '@/components/v4/page/kit';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
@@ -294,12 +296,7 @@ export default function CloudModernizationPage() {
         ]}
         primary={{ label: 'Talk to a cloud architect', href: '/contact?service=cloud-modernization' }}
         secondary={{ label: 'See the cloud case studies', href: '/case-studies?service=cloud-modernization' }}
-        logos={[
-          { src: '/brand/aws-color.png', alt: 'AWS' },
-          { src: '/brand/azure-color.png', alt: 'Microsoft Azure' },
-          { src: '/brand/googlecloud-color.svg', alt: 'Google Cloud' },
-        ]}
-        logosCaption="Migrations delivered across all three clouds. 200+ and counting."
+        visual={<FlowScene config={FLOWS['cloud-modernization']} />}
       />
 
       {/* Problem band: the estate nobody can turn off */}

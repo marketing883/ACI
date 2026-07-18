@@ -16,6 +16,8 @@ import {
   FactsRow,
   PageFaq,
 } from '@/components/v4/page/kit';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
@@ -230,11 +232,7 @@ export default function AdvisoryStrategyPage() {
         ]}
         primary={{ label: 'Start an advisory engagement', href: '/contact?service=advisory-strategy' }}
         secondary={{ label: 'See delivery outcomes', href: '/case-studies' }}
-        stats={[
-          { value: '48h', label: 'Written plan on the table' },
-          { value: '5 days', label: 'Advisory pod start' },
-          { value: '~20%', label: 'How often we disagree with you' },
-        ]}
+        visual={<FlowScene config={FLOWS['advisory-strategy']} />}
       />
 
       {/* Problem band: strategy decks that outlive their authors */}

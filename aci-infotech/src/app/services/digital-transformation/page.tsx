@@ -21,6 +21,8 @@ import {
   FactsRow,
   PageFaq,
 } from '@/components/v4/page/kit';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
@@ -255,11 +257,7 @@ export default function DigitalTransformationPage() {
         ]}
         primary={{ label: 'Talk to an automation engineer', href: '/contact' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
-        logos={[
-          { src: '/images/Solution-Partners/servicenow.png', alt: 'ServiceNow' },
-          { src: '/brand/microsoft-mono.svg', alt: 'Microsoft' },
-        ]}
-        logosCaption="ServiceNow partner and UiPath certified, with Power Automate delivery across the Microsoft stack."
+        visual={<FlowScene config={FLOWS['digital-transformation']} />}
       />
 
       {/* Problem band: the manual work nobody puts on the org chart */}

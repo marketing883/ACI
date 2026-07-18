@@ -175,9 +175,12 @@ export default function PlaybooksSection({ headingClass }: { headingClass: strin
           </div>
           <Link
             href="/playbooks"
-            className="pb-glass pb-glass-blur group inline-flex shrink-0 items-center gap-2 self-start rounded-full px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-white/[0.06] sm:px-7 sm:py-3.5 md:self-auto"
+            className="group inline-flex shrink-0 items-center gap-1.5 self-start text-base font-semibold text-white md:self-auto"
           >
-            Browse all playbooks
+            <span className="relative">
+              Browse all playbooks
+              <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+            </span>
             <ArrowUpRight
               size={18}
               className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"

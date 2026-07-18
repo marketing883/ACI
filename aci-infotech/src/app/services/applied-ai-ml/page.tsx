@@ -18,6 +18,8 @@ import {
   FactsRow,
   PageFaq,
 } from '@/components/v4/page/kit';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
@@ -299,11 +301,7 @@ export default function AppliedAIMLPage() {
         ]}
         primary={{ label: 'Talk to an AI architect', href: '/contact?service=applied-ai-ml' }}
         secondary={{ label: 'See the AI case studies', href: '/case-studies?service=applied-ai-ml' }}
-        logos={[
-          { src: '/brand/anthropic-wordmark.svg', alt: 'Anthropic' },
-          { src: '/brand/openai-wordmark.svg', alt: 'OpenAI' },
-        ]}
-        logosCaption="Frontier models in production, delivered with our strategic partner ArqAI for governance."
+        visual={<FlowScene config={FLOWS['applied-ai-ml']} />}
       />
 
       {/* Problem band: where pilots go to die */}
