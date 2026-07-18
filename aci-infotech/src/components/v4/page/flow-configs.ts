@@ -320,4 +320,107 @@ export const FLOWS: Record<string, FlowSceneConfig> = {
     stat: { title: 'Braze Alloy partner', sub: 'Wired to the data platform, not bolted on.' },
     caption: 'event → journey → message',
   },
+  'industry-financial-services': {
+    seed: 20260808,
+    ariaLabel:
+      'Animated diagram: core banking, payments, trading and risk, and CRM data flow through a governed data core into risk and reporting, customer 360, and AI and fraud detection',
+    sourcesTitle: 'The estate',
+    sources: ['Core banking', 'Payments', 'Trading & risk', 'CRM', 'Market data'],
+    centerTitle: 'Governed data core',
+    centerSub: 'compliance built in',
+    outputs: ['Risk & reporting', 'Customer 360', 'AI & fraud'],
+    stat: { title: 'Financial services since 2006', sub: 'Data, AI, and operations for banks and insurers.' },
+    caption: 'transaction → governed → insight',
+  },
+
+  'industry-healthcare': {
+    seed: 20260809,
+    ariaLabel:
+      'Animated diagram: EHR, claims, labs, and device data flow through an interoperability layer into care insights, claims automation, and research analytics',
+    sourcesTitle: 'Clinical estate',
+    sources: ['EHR', 'Claims', 'Labs', 'Devices', 'Schedules'],
+    centerTitle: 'Interoperability layer',
+    centerSub: 'HIPAA · HITRUST · FHIR',
+    outputs: ['Care insights', 'Claims automation', 'Research'],
+    stat: { title: '4h claims processing', sub: 'Down from 72, with AI document automation.' },
+    caption: 'record → governed → care',
+  },
+
+  'industry-retail': {
+    seed: 20260810,
+    ariaLabel:
+      'Animated diagram: POS, e-commerce, loyalty, and supply chain signals flow through a customer and inventory core into personalization, forecasting, and store operations',
+    sourcesTitle: 'Every signal',
+    sources: ['POS', 'E-commerce', 'Loyalty', 'Supply chain', 'Ads'],
+    centerTitle: 'Customer & inventory core',
+    centerSub: 'one view of both',
+    outputs: ['Personalization', 'Forecasting', 'Store ops'],
+    stat: { title: '600+ locations, zero downtime', sub: 'Real-time retail data in production.' },
+    caption: 'signal → decision → shelf',
+  },
+
+  'industry-manufacturing': {
+    seed: 20260811,
+    ariaLabel:
+      'Animated diagram: SCADA, MES, ERP, and quality data flow through a plant data platform into OEE and quality, predictive maintenance, and supply chain visibility',
+    sourcesTitle: 'The plant floor',
+    sources: ['SCADA & PLCs', 'MES', 'ERP', 'Quality systems'],
+    centerTitle: 'Plant data platform',
+    centerSub: 'OT and IT, one place',
+    outputs: ['OEE & quality', 'Predictive maintenance', 'Supply chain'],
+    stat: { title: 'Manufacturing since 2006', sub: 'IoT, quality, and supply-chain data in production.' },
+    caption: 'sensor → insight → uptime',
+  },
+
+  'industry-energy': {
+    seed: 20260812,
+    ariaLabel:
+      'Animated diagram: grid sensors, SCADA, meters, and weather feeds flow through an operations data core into grid analytics, asset health, and load forecasting',
+    sourcesTitle: 'The field',
+    sources: ['Grid sensors', 'SCADA', 'Meters', 'Weather feeds'],
+    centerTitle: 'Operations data core',
+    centerSub: 'field to control room',
+    outputs: ['Grid analytics', 'Asset health', 'Forecasting'],
+    stat: { title: 'Energy and utilities practice', sub: 'Operational data engineered and run 24/7.' },
+    caption: 'field → governed → grid',
+  },
+
+  'industry-oil-gas': {
+    seed: 20260813,
+    ariaLabel:
+      'Animated diagram: SCADA, PI historians, drilling, and maintenance data flow through an operations data platform into production insight, asset integrity, and HSE reporting',
+    sourcesTitle: 'Decades of data',
+    sources: ['SCADA', 'PI historians', 'Drilling systems', 'Maintenance'],
+    centerTitle: 'Operations data platform',
+    centerSub: 'systems that finally talk',
+    outputs: ['Production insight', 'Asset integrity', 'HSE reporting'],
+    stat: { title: 'Oil and gas practice', sub: 'Upstream and midstream data put to work.' },
+    caption: 'well → data → decision',
+  },
+
+  'industry-hospitality': {
+    seed: 20260814,
+    ariaLabel:
+      'Animated diagram: PMS, POS, booking, and loyalty signals resolve into a guest 360, then power personalization, RevPAR analytics, and operations',
+    sourcesTitle: 'Every stay',
+    sources: ['PMS', 'POS', 'Booking engine', 'Loyalty'],
+    centerTitle: 'Guest 360',
+    centerSub: 'one profile per guest',
+    outputs: ['Personalization', 'RevPAR analytics', 'Operations'],
+    stat: { title: '53 countries on one platform', sub: 'For a global food services operator.' },
+    caption: 'stay → profile → experience',
+  },
+
+  'industry-transportation': {
+    seed: 20260815,
+    ariaLabel:
+      'Animated diagram: telematics, TMS, WMS, and order data flow through a logistics data core into on-time visibility, route optimization, and fleet health',
+    sourcesTitle: 'In motion',
+    sources: ['Telematics', 'TMS', 'WMS', 'Orders'],
+    centerTitle: 'Logistics data core',
+    centerSub: 'every shipment, one view',
+    outputs: ['OTIF visibility', 'Route optimization', 'Fleet health'],
+    stat: { title: 'Transportation and logistics practice', sub: 'Operational visibility engineered end to end.' },
+    caption: 'shipment → visibility → on time',
+  },
 };

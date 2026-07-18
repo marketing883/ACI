@@ -1,4 +1,5 @@
 import {
+  getCaseStudiesByIndustry,
   getCaseStudiesByService,
   getCaseStudiesByTechnology,
   parseCaseStudyMetrics,
@@ -41,6 +42,7 @@ function industryImage(industry: string | null): string | undefined {
 export default async function CmsProofCards({
   service,
   technology,
+  industry,
   fallback,
   fallbackVideo,
   fallbackImages,
@@ -50,6 +52,9 @@ export default async function CmsProofCards({
   /** Technology tag for platform pages, e.g. "Databricks". Used when
       `service` is not given. */
   technology?: string;
+  /** Industry name for industry pages, e.g. "Retail". Used when neither
+      `service` nor `technology` is given. */
+  industry?: string;
   /** Authored cards shown when the CMS yields fewer than two usable rows. */
   fallback: ProofCard[];
   fallbackVideo?: { mp4: string; webm?: string };
@@ -59,7 +64,9 @@ export default async function CmsProofCards({
     ? await getCaseStudiesByService(service, 6)
     : technology
       ? await getCaseStudiesByTechnology(technology, 6)
-      : [];
+      : industry
+        ? await getCaseStudiesByIndustry(industry, 6)
+        : [];
 
   const cards: ProofCard[] = [];
   for (const row of rows) {

@@ -127,3 +127,26 @@ export const getCaseStudiesByTechnology = cache(
     return data as unknown as CaseStudyListItem[];
   },
 );
+
+/**
+ * Case studies for an industry page. `industry` is a single-string
+ * column with display values ("Retail", "Financial Services"), matched
+ * loosely so "Retail & Consumer" pages still find "Retail" rows.
+ * Featured first, then newest. Returns [] on missing creds or error.
+ */
+export const getCaseStudiesByIndustry = cache(
+  async (industry: string, limit = 3): Promise<CaseStudyListItem[]> => {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return [];
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data, error } = await supabase
+      .from('case_studies')
+      .select(LIST_COLUMNS)
+      .eq('status', 'published')
+      .ilike('industry', `%${industry}%`)
+      .order('is_featured', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    if (error || !data) return [];
+    return data as unknown as CaseStudyListItem[];
+  },
+);
