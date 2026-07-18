@@ -7,7 +7,7 @@ import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
 import CtaSection from '@/components/v4/hero/CtaSection';
-import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import { v4Sans, v4Geist } from '@/components/v4/fonts';
 import {
   SectionHead,
   ServiceHero,
@@ -17,6 +17,7 @@ import {
   BridgeBand,
   FactsRow,
   PageFaq,
+  DecisionPanel,
 } from '@/components/v4/page/kit';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
@@ -88,11 +89,11 @@ const OFFERINGS = [
   },
 ];
 
-const DECISION_ROWS: { need: string; pick: 'genai' | 'ml' | 'both' }[] = [
-  { need: 'Documents, copilots, and conversational agents', pick: 'genai' },
-  { need: 'Search and summarization over your own content', pick: 'genai' },
-  { need: 'Forecasting, scoring, and optimization', pick: 'ml' },
-  { need: 'Fraud, churn, and risk models with hard accuracy targets', pick: 'ml' },
+const DECISION_ROWS: { need: string; pick: 'a' | 'b' | 'both' }[] = [
+  { need: 'Documents, copilots, and conversational agents', pick: 'a' },
+  { need: 'Search and summarization over your own content', pick: 'a' },
+  { need: 'Forecasting, scoring, and optimization', pick: 'b' },
+  { need: 'Fraud, churn, and risk models with hard accuracy targets', pick: 'b' },
   { need: 'Most enterprise estates, honestly', pick: 'both' },
 ];
 
@@ -200,70 +201,6 @@ const FAQS = [
   },
 ];
 
-/* --------------------- decision artifact (page-local) --------------------- */
-
-// One-off variation on the kit's DecisionPanel: same gray band and table
-// grammar, but the two columns are approaches (GenAI vs classic ML), not
-// partner logos, so it is built inline instead of extending the kit.
-function AiApproachPanel() {
-  const Dot = ({ on }: { on: boolean }) => (
-    <span
-      aria-hidden="true"
-      className="mx-auto block h-3 w-3 rounded-full"
-      style={{ background: on ? '#1D4ED8' : 'rgba(0,0,0,0.08)' }}
-    />
-  );
-  return (
-    <section className="border-t border-gray-200 bg-gray-50">
-      <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
-        <h2
-          className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
-          style={{ lineHeight: 1.08 }}
-        >
-          GenAI or traditional&nbsp;ML?
-        </h2>
-        <p className="mt-5 max-w-3xl text-base leading-relaxed text-gray-600 md:text-lg">
-          Usually the wrong question. GenAI earns its keep on language: documents, copilots, agents that read and write. Classic ML still wins on numbers: forecasting, scoring, optimization, anywhere you need a measurable error rate. Most estates need both, running on one MLOps spine so governance is built once instead of twice. We build either, and we will tell you which fits before writing a line of code.
-        </p>
-
-        <div className="mt-9 overflow-x-auto">
-          <table className="w-full min-w-[560px] border-collapse text-left text-sm">
-            <thead>
-              <tr>
-                <th className="w-1/2 border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  The job at hand
-                </th>
-                <th className={`border-b border-gray-200 pb-4 text-center text-sm font-semibold text-black ${v4Display}`}>
-                  GenAI
-                </th>
-                <th className={`border-b border-gray-200 pb-4 text-center text-sm font-semibold text-black ${v4Display}`}>
-                  Classic ML
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {DECISION_ROWS.map((row) => (
-                <tr key={row.need}>
-                  <td className="border-b border-gray-200 py-4 pr-6 font-medium text-gray-800">{row.need}</td>
-                  <td className="border-b border-gray-200 py-4">
-                    <Dot on={row.pick === 'genai' || row.pick === 'both'} />
-                  </td>
-                  <td className="border-b border-gray-200 py-4">
-                    <Dot on={row.pick === 'ml' || row.pick === 'both'} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-5 text-sm text-gray-500">
-          Both dots lit means both, under one MLOps spine and one governance layer.
-        </p>
-      </div>
-    </section>
-  );
-}
-
 /* --------------------------------- page ---------------------------------- */
 
 export default function AppliedAIMLPage() {
@@ -343,7 +280,14 @@ export default function AppliedAIMLPage() {
       </section>
 
       {/* Decision artifact: GenAI vs classic ML */}
-      <AiApproachPanel />
+      <DecisionPanel
+        title={<>GenAI or traditional&nbsp;ML?</>}
+        body="Usually the wrong question. GenAI earns its keep on language: documents, copilots, agents that read and write. Classic ML still wins on numbers: forecasting, scoring, optimization, anywhere you need a measurable error rate. Most estates need both, running on one MLOps spine so governance is built once instead of twice. We build either, and we will tell you which fits before writing a line of code."
+        colA={{ label: 'GenAI' }}
+        colB={{ label: 'Classic ML' }}
+        rows={DECISION_ROWS}
+        footnote="A card under both columns means both, under one MLOps spine and one governance layer."
+      />
 
       {/* Proof */}
       <section className="border-t border-gray-200 bg-white">

@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { martechCdpRelated } from '@/content/related-links';
@@ -19,6 +20,8 @@ import {
   BridgeBand,
   FactsRow,
   PageFaq,
+  cardShadow,
+  CheckBadge,
 } from '@/components/v4/page/kit';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
@@ -278,10 +281,10 @@ export default function MarTechCDPPage() {
 
       {/* Decision block: the CDP chooser, three columns (inline variant of
           the kit's DecisionPanel, which supports two logo columns) */}
-      <section className="border-t border-gray-200 bg-gray-50">
-        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
           <h2
-            className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+            className={`text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-[44px] ${v4Display}`}
             style={{ lineHeight: 1.08 }}
           >
             Which CDP? Sometimes none.
@@ -295,41 +298,41 @@ export default function MarTechCDPPage() {
             quota.
           </p>
 
-          <div className="mt-9 overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-              <thead>
-                <tr>
-                  <th className="w-2/5 border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                    The job at hand
-                  </th>
-                  {CDP_COLUMNS.map((col) => (
-                    <th
-                      key={col}
-                      className={`border-b border-gray-200 pb-4 text-center text-sm font-semibold text-black ${v4Display}`}
-                    >
-                      {col}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {CDP_ROWS.map((row) => (
-                  <tr key={row.need}>
-                    <td className="border-b border-gray-200 py-4 pr-6 font-medium text-gray-800">{row.need}</td>
-                    {row.picks.map((on, i) => (
-                      <td key={CDP_COLUMNS[i]} className="border-b border-gray-200 py-4">
-                        <span
-                          aria-hidden="true"
-                          className="mx-auto block h-3 w-3 rounded-full"
-                          style={{ background: on ? '#1D4ED8' : 'rgba(0,0,0,0.08)' }}
-                        />
-                        <span className="sr-only">{on ? `Fits ${CDP_COLUMNS[i]}` : ''}</span>
-                      </td>
-                    ))}
-                  </tr>
+          <div className="mt-12 grid gap-8 md:grid-cols-3">
+            {CDP_COLUMNS.map((col, ci) => (
+              <div key={col} className="flex flex-col gap-4">
+                <div className={`flex items-center justify-center gap-2.5 rounded-2xl bg-white px-6 py-6 ${cardShadow}`}>
+                  {col === 'Salesforce Data Cloud' ? (
+                    <>
+                      <Image
+                        src="/brand/salesforce-color.png"
+                        alt="Salesforce"
+                        width={180}
+                        height={48}
+                        className="w-auto object-contain"
+                        style={{ height: 44 }}
+                      />
+                      <span className={`text-lg font-semibold text-black ${v4Display}`}>Data&nbsp;Cloud</span>
+                    </>
+                  ) : (
+                    <span className={`text-center text-lg font-semibold text-black ${v4Display}`}>{col}</span>
+                  )}
+                </div>
+                {CDP_ROWS.filter((r) => r.picks[ci]).map((r) => (
+                  <div key={r.need} className={`flex items-start gap-3 rounded-2xl bg-white px-5 py-4 ${cardShadow}`}>
+                    <CheckBadge />
+                    <div>
+                      <p className="text-[15px] font-medium leading-snug text-gray-800">{r.need}</p>
+                      {r.picks.filter(Boolean).length > 1 ? (
+                        <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                          More than one fits
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            ))}
           </div>
         </div>
       </section>

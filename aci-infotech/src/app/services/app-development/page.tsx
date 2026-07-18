@@ -18,6 +18,9 @@ import {
   BridgeBand,
   FactsRow,
   PageFaq,
+  cardShadow,
+  CheckBadge,
+  DecisionCircle,
 } from '@/components/v4/page/kit';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
@@ -325,8 +328,8 @@ export default function AppDevelopmentPage() {
       </section>
 
       {/* Decision block: refactor or rebuild */}
-      <section className="border-t border-gray-200 bg-gray-50">
-        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
           <h2
             className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
             style={{ lineHeight: 1.08 }}
@@ -339,9 +342,15 @@ export default function AppDevelopmentPage() {
             split we use.
           </p>
 
-          <div className="mt-9 grid gap-6 md:grid-cols-2">
-            {REBUILD_COLS.map((col) => (
-              <div key={col.title} className="rounded-2xl border border-gray-200 bg-white p-7 md:p-8">
+          <div className="mt-12 flex flex-col gap-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:gap-10">
+            <div className="order-first flex justify-center lg:order-none lg:col-start-2 lg:row-start-1 lg:self-center">
+              <DecisionCircle />
+            </div>
+            {REBUILD_COLS.map((col, i) => (
+              <div
+                key={col.title}
+                className={`rounded-2xl bg-white p-7 md:p-8 ${cardShadow} ${i === 0 ? 'lg:col-start-1' : 'lg:col-start-3'} lg:row-start-1`}
+              >
                 <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>
                   {col.title}
                 </h3>
@@ -351,10 +360,7 @@ export default function AppDevelopmentPage() {
                 <ul className="mt-3 space-y-2.5">
                   {col.when.map((w) => (
                     <li key={w} className="flex gap-3 text-[15px] leading-relaxed text-gray-700">
-                      <span
-                        aria-hidden="true"
-                        className="mt-2 block h-2 w-2 shrink-0 rounded-full bg-[#1D4ED8]"
-                      />
+                      <CheckBadge />
                       {w}
                     </li>
                   ))}

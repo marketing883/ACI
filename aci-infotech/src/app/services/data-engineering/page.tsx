@@ -87,9 +87,14 @@ const OFFERINGS = [
 ];
 
 const DECISION_ROWS = [
-  { need: 'SQL analytics, BI, and governed data sharing', pick: 'a' as const },
-  { need: 'BI, streaming, and machine learning on one copy of the data', pick: 'b' as const },
+  { need: 'SQL analytics and BI on a predictable warehouse', pick: 'a' as const },
+  { need: 'Governed data sharing with partners and clean rooms', pick: 'a' as const },
+  { need: 'Warehouse costs finance can budget a year out', pick: 'a' as const },
+  { need: 'BI, streaming, and ML on one copy of the data', pick: 'b' as const },
+  { need: 'Real-time pipelines and event-driven ingestion', pick: 'b' as const },
+  { need: 'Model training, MLflow, and GenAI workloads', pick: 'b' as const },
   { need: 'Enterprise governance across every workload', pick: 'both' as const },
+  { need: 'Open table formats: Delta Lake and Iceberg', pick: 'both' as const },
 ];
 
 const PROOF = [
@@ -281,9 +286,10 @@ export default function DataEngineeringPage() {
       <DecisionPanel
         title="Snowflake or Databricks?"
         body="Both, honestly, depending on the job. Snowflake wins when the center of gravity is SQL analytics, sharing, and a predictable warehouse. Databricks wins when the same data has to serve BI, streaming, and machine learning without keeping three copies of it. Plenty of enterprises run both under one governance layer. We hold certifications on each, so the recommendation follows your workloads, not our margins."
-        colA={{ src: '/brand/snowflake-color.svg', alt: 'Snowflake' }}
-        colB={{ src: '/brand/databricks-color-on-light.svg', alt: 'Databricks' }}
+        colA={{ src: '/brand/snowflake-color.svg', alt: 'Snowflake', label: 'Snowflake', px: 40 }}
+        colB={{ src: '/brand/databricks-color-on-light.svg', alt: 'Databricks', px: 64 }}
         rows={DECISION_ROWS}
+        footnote="A card under both logos means both platforms carry it, under one governance layer."
       />
 
       {/* Proof */}

@@ -17,6 +17,7 @@ import {
   BridgeBand,
   FactsRow,
   PageFaq,
+  cardShadow,
 } from '@/components/v4/page/kit';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
@@ -229,10 +230,10 @@ const FAQS = [
 // it lives inline rather than in the shared kit.
 function SixRStrip() {
   return (
-    <section className="border-t border-gray-200 bg-gray-50">
+    <section className="border-t border-gray-200 bg-white">
       <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
         <h2
-          className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+          className={`text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-[44px] ${v4Display}`}
           style={{ lineHeight: 1.08 }}
         >
           The 6R framework, on one&nbsp;screen
@@ -241,15 +242,16 @@ function SixRStrip() {
           Every workload gets one of six calls before anything moves. This is the sorting exercise most migration plans skip, which is why most migration plans slip. A typical estate ends up using at least four of the six.
         </p>
 
-        <div className="mt-10 grid gap-x-8 gap-y-8 border-t border-gray-200 pt-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {SIX_R.map((r, i) => (
-            <div key={r.name}>
-              <div className="flex items-baseline gap-3">
-                <span className={`text-sm font-semibold text-[#1D4ED8] ${v4Display}`}>
+            <div key={r.name} className={`flex flex-col rounded-2xl bg-white p-6 ${cardShadow}`}>
+              <div className="flex items-center gap-3">
+                <span className={`text-sm font-bold text-[#1D4ED8] ${v4Display}`}>
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <h3 className={`text-lg font-semibold text-black md:text-xl ${v4Display}`}>{r.name}</h3>
+                <span aria-hidden="true" className="h-px flex-1 bg-gray-200" />
               </div>
+              <h3 className={`mt-4 text-lg font-semibold text-black md:text-xl ${v4Display}`}>{r.name}</h3>
               <p className="mt-2 text-sm leading-relaxed text-gray-600">{r.when}</p>
             </div>
           ))}

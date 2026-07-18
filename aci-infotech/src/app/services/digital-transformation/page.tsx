@@ -20,6 +20,7 @@ import {
   BridgeBand,
   FactsRow,
   PageFaq,
+  cardShadow,
 } from '@/components/v4/page/kit';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
@@ -300,10 +301,10 @@ export default function DigitalTransformationPage() {
       </section>
 
       {/* Decision block: automate, integrate, or rebuild */}
-      <section className="border-t border-gray-200 bg-gray-50">
-        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
           <h2
-            className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+            className={`text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-[44px] ${v4Display}`}
             style={{ lineHeight: 1.08 }}
           >
             Automate, integrate, or rebuild?
@@ -313,36 +314,34 @@ export default function DigitalTransformationPage() {
             the process, and picking wrong is how companies end up with a bot farm nobody trusts.
           </p>
 
-          <div className="mt-9 divide-y divide-gray-200 border-y border-gray-200">
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
             {ROUTES.map((route, i) => (
-              <div key={route.label} className="grid gap-3 py-7 md:grid-cols-12 md:gap-8">
-                <div className="md:col-span-4">
-                  <div className="flex items-baseline gap-4">
-                    <span className={`text-sm font-semibold text-gray-300 ${v4Display}`}>
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <h3 className={`text-xl font-semibold text-black ${v4Display}`}>{route.label}</h3>
-                  </div>
-                  <p className="mt-2 pl-9 text-xs font-medium uppercase tracking-wide text-gray-400 md:pl-0 md:mt-3">
-                    {route.chips}
-                  </p>
+              <div key={route.label} className={`flex flex-col rounded-2xl bg-white p-7 ${cardShadow}`}>
+                <div className="flex items-center gap-3">
+                  <span className={`text-sm font-bold text-[#1D4ED8] ${v4Display}`}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span aria-hidden="true" className="h-px flex-1 bg-gray-200" />
                 </div>
-                <div className="md:col-span-8">
-                  <p className="text-[15px] leading-relaxed text-gray-600">{route.body}</p>
-                  {route.link ? (
-                    <Link
-                      href={route.link.href}
-                      className="group mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700"
-                    >
+                <h3 className={`mt-5 text-xl font-semibold text-black ${v4Display}`}>{route.label}</h3>
+                <p className="mt-2 text-xs font-medium uppercase tracking-wide text-gray-400">{route.chips}</p>
+                <p className="mt-4 flex-1 text-[15px] leading-relaxed text-gray-600">{route.body}</p>
+                {route.link ? (
+                  <Link
+                    href={route.link.href}
+                    className="group mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700"
+                  >
+                    <span className="relative">
                       {route.link.label}
-                      <ArrowUpRight
-                        size={15}
-                        aria-hidden="true"
-                        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                      />
-                    </Link>
-                  ) : null}
-                </div>
+                      <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                    </span>
+                    <ArrowUpRight
+                      size={15}
+                      aria-hidden="true"
+                      className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    />
+                  </Link>
+                ) : null}
               </div>
             ))}
           </div>

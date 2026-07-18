@@ -16,6 +16,9 @@ import {
   BridgeBand,
   FactsRow,
   PageFaq,
+  cardShadow,
+  CheckBadge,
+  DecisionCircle,
 } from '@/components/v4/page/kit';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
@@ -220,8 +223,8 @@ const ENGAGEMENT_MODELS = [
 
 function EngagementPanel() {
   return (
-    <section className="border-t border-gray-200 bg-gray-50">
-      <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+    <section className="border-t border-gray-200 bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
         <h2
           className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
           style={{ lineHeight: 1.08 }}
@@ -232,20 +235,22 @@ function EngagementPanel() {
           Both are real engagements, and the honest answer depends on whether you want to own the console. Most clients start with the project and add the SOC after the first 2am alert.
         </p>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
-          {ENGAGEMENT_MODELS.map((m) => (
-            <div key={m.title} className="rounded-2xl border border-gray-200 bg-white p-7 md:p-8">
+        <div className="mt-12 flex flex-col gap-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:gap-10">
+          <div className="order-first flex justify-center lg:order-none lg:col-start-2 lg:row-start-1 lg:self-center">
+            <DecisionCircle />
+          </div>
+          {ENGAGEMENT_MODELS.map((m, i) => (
+            <div
+              key={m.title}
+              className={`rounded-2xl bg-white p-7 md:p-8 ${cardShadow} ${i === 0 ? 'lg:col-start-1' : 'lg:col-start-3'} lg:row-start-1`}
+            >
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ {m.kicker}</p>
               <h3 className={`mt-3 text-xl font-semibold text-black md:text-2xl ${v4Display}`}>{m.title}</h3>
               <p className="mt-3 text-[15px] leading-relaxed text-gray-600">{m.body}</p>
               <ul className="mt-5 space-y-3 border-t border-gray-200 pt-5">
                 {m.points.map((point) => (
                   <li key={point} className="flex items-start gap-3 text-sm leading-relaxed text-gray-700">
-                    <span
-                      aria-hidden="true"
-                      className="mt-1.5 block h-2 w-2 shrink-0 rounded-full"
-                      style={{ background: '#1D4ED8' }}
-                    />
+                    <CheckBadge />
                     {point}
                   </li>
                 ))}

@@ -103,7 +103,7 @@ export default function FoldcraftHero({
               {pill}
             </span>
           </div>
-          <h2 className="fc-anim fc-d2 text-4xl font-bold leading-[1.04] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-[64px]">
+          <h2 className="fc-anim fc-d2 text-4xl font-bold leading-[1.04] tracking-tight text-white sm:text-5xl md:text-[52px] lg:text-[56px]">
             {headline}
           </h2>
         </div>
