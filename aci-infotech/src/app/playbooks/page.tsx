@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Filter, BookOpen } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { ArrowUpRight } from 'lucide-react';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Display } from '@/components/v4/fonts';
 
 // Playbook data - matches PlaybookVaultSection
 const allPlaybooks = [
@@ -245,69 +246,65 @@ export default function PlaybooksPage() {
   const totalDeployments = allPlaybooks.reduce((sum, p) => sum + p.deployments, 0);
 
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[#001529] pt-32 pb-20 relative overflow-hidden">
-        {/* Blueprint grid background */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(24,144,255,0.06) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(24,144,255,0.06) 1px, transparent 1px)
-            `,
-            backgroundSize: '20px 20px',
-          }}
-        />
+    <main className={`min-h-screen bg-white text-black ${v4Sans}`}>
+      {/* Header */}
+      <section className="border-b border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 pb-14 pt-12 md:pt-16">
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            / Playbooks
+          </p>
+          <h1
+            className={`max-w-4xl text-3xl font-bold tracking-tight sm:text-4xl lg:text-[44px] ${v4Display}`}
+            style={{ lineHeight: 1.06 }}
+          >
+            Patterns we have shipped{' '}
+            <span style={{ color: '#1D4ED8' }}>again and&nbsp;again</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-gray-700 md:text-lg">
+            Each playbook condenses dozens of deployments of the same pattern:
+            what breaks, what order to do it in, and the numbers that came out
+            the other&nbsp;side.
+          </p>
+        </div>
+      </section>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <p className="text-[#1890FF] font-medium mb-4 tracking-wide uppercase">
-              Enterprise Architecture Library
-            </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Proven Playbooks.
-              <span className="text-[#C4FF61]"> Repeatable Success.</span>
-            </h1>
-            <p className="text-xl text-gray-400 mb-8">
-              Every playbook represents dozens of successful deployments. Each one refined through real-world implementation,
-              documenting challenges faced and solutions proven.
-            </p>
-
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-8 mt-12">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white">{allPlaybooks.length}</div>
-                <div className="text-gray-400">Playbooks</div>
+      {/* Facts band */}
+      <section className="border-b border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-12 md:py-14">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3">
+            {[
+              { value: `${allPlaybooks.length}`, label: 'Playbooks' },
+              { value: `${totalDeployments}+`, label: 'Total deployments' },
+              { value: '40+', label: 'Documented patterns' },
+            ].map((fact) => (
+              <div key={fact.label}>
+                <p className={`text-4xl font-bold leading-none text-[#1D4ED8] sm:text-5xl ${v4Display}`}>
+                  {fact.value}
+                </p>
+                <p className="mt-2 text-sm font-medium text-gray-500">{fact.label}</p>
               </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white">{totalDeployments}+</div>
-                <div className="text-gray-400">Total Deployments</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white">40+</div>
-                <div className="text-gray-400">Enterprise Patterns</div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Filters Section */}
-      <section className="bg-gray-50 py-6 sticky top-20 z-40 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-gray-600">Filter by:</span>
-            </div>
+      {/* Filters: hairline selects, no pills */}
+      <section className="sticky top-20 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
+        <div className="mx-auto max-w-7xl px-6 py-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            {/* Results count */}
+            <p className="text-sm text-gray-500">
+              Showing <span className="font-semibold text-black">{filteredPlaybooks.length}</span> playbooks
+              {selectedCategory !== 'All' && <span> in <span className="font-semibold text-black">{selectedCategory}</span></span>}
+              {selectedIndustry !== 'All' && <span> for <span className="font-semibold text-black">{selectedIndustry}</span></span>}
+            </p>
 
             {/* Filters */}
-            <div className="flex flex-wrap gap-4 items-center">
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
+                className="border-0 border-b border-gray-200 bg-transparent py-2 pr-6 text-sm text-gray-700 focus:border-blue-700 focus:outline-none focus:ring-0"
               >
                 {categories.map((category) => (
                   <option key={category} value={category}>
@@ -319,7 +316,7 @@ export default function PlaybooksPage() {
               <select
                 value={selectedIndustry}
                 onChange={(e) => setSelectedIndustry(e.target.value)}
-                className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
+                className="border-0 border-b border-gray-200 bg-transparent py-2 pr-6 text-sm text-gray-700 focus:border-blue-700 focus:outline-none focus:ring-0"
               >
                 {industries.map((industry) => (
                   <option key={industry} value={industry}>
@@ -332,36 +329,25 @@ export default function PlaybooksPage() {
         </div>
       </section>
 
-      {/* Results Count */}
-      <section className="py-6 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-gray-600">
-            Showing <span className="font-semibold text-[var(--aci-secondary)]">{filteredPlaybooks.length}</span> playbooks
-            {selectedCategory !== 'All' && <span> in <span className="font-semibold">{selectedCategory}</span></span>}
-            {selectedIndustry !== 'All' && <span> for <span className="font-semibold">{selectedIndustry}</span></span>}
-          </p>
-        </div>
-      </section>
-
       {/* Playbooks Grid */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-14 md:py-16">
           {filteredPlaybooks.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">No playbooks found matching your criteria.</p>
-              <Button
-                variant="secondary"
-                className="mt-4"
+            <div className="py-16 text-center">
+              <p className="text-lg text-gray-500">No playbooks found matching your criteria.</p>
+              <button
                 onClick={() => {
                   setSelectedCategory('All');
                   setSelectedIndustry('All');
                 }}
+                className="group mt-4 inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:underline"
               >
-                Clear Filters
-              </Button>
+                Clear the filters
+                <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {filteredPlaybooks.map((playbook) => (
                 <PlaybookCard key={playbook.id} playbook={playbook} />
               ))}
@@ -370,26 +356,14 @@ export default function PlaybooksPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[#001529]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Can&apos;t Find Your Exact Scenario?
-          </h2>
-          <p className="text-xl text-gray-400 mb-8">
-            We&apos;ve documented 40+ patterns beyond these featured playbooks.
-            Talk to an architect who can help identify the right approach for your specific challenge.
-          </p>
-          <Button href="/contact?reason=architecture-call" variant="lime" size="lg">
-            Schedule Architecture Call
-          </Button>
-        </div>
-      </section>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Ask about the other patterns" />
     </main>
   );
 }
 
-// Playbook Card Component
+// Playbook Card Component: dark v4 card with the deployment count and
+// outcome metrics carrying the lime accent.
 interface PlaybookCardProps {
   playbook: typeof allPlaybooks[0];
 }
@@ -398,83 +372,52 @@ function PlaybookCard({ playbook }: PlaybookCardProps) {
   return (
     <Link
       href={`/playbooks/${playbook.slug}`}
-      className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100"
+      className="group relative flex flex-col overflow-hidden rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25"
     >
-      {/* Header with gradient */}
-      <div className="p-6 bg-gradient-to-br from-[#001529] to-[#002140] relative overflow-hidden">
-        {/* Blueprint grid */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-30"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(24,144,255,0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(24,144,255,0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '15px 15px',
-          }}
-        />
-
-        <div className="relative">
-          <div className="flex items-center justify-between mb-3">
-            <span className="px-2 py-1 bg-[#1890FF]/20 text-[#1890FF] text-xs font-medium rounded">
-              {playbook.category}
-            </span>
-            <span className="text-[#C4FF61] text-sm font-mono font-bold">
-              {playbook.deployments}x deployed
-            </span>
-          </div>
-          <h3 className="text-xl font-bold text-white mb-2">
-            {playbook.displayTitle}
-          </h3>
-          <p className="text-sm text-gray-400">{playbook.fullTitle}</p>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-6">
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {playbook.description}
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
+          {playbook.category}
         </p>
-
-        {/* Outcomes */}
-        <div className="flex gap-4 mb-4">
-          {playbook.outcomes.slice(0, 3).map((outcome, index) => (
-            <div key={index} className="text-center">
-              <div className="text-lg font-bold text-[var(--aci-primary)]">
-                {outcome.metric}
-              </div>
-              <div className="text-xs text-gray-500">{outcome.description}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Technologies */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {playbook.technologies.slice(0, 3).map((tech) => (
-            <span
-              key={tech}
-              className="px-2 py-1 bg-gray-100 rounded text-xs text-gray-600"
-            >
-              {tech}
-            </span>
-          ))}
-          {playbook.technologies.length > 3 && (
-            <span className="px-2 py-1 text-xs text-gray-400">
-              +{playbook.technologies.length - 3} more
-            </span>
-          )}
-        </div>
-
-        {/* CTA */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-            <BookOpen className="w-4 h-4" /> View Playbook
-          </span>
-          <span className="text-gray-400 text-sm inline-flex items-center gap-1 group-hover:text-[var(--aci-primary)] transition-colors">
-            <ArrowRight className="w-4 h-4" />
-          </span>
-        </div>
+        <span className="shrink-0 text-xs font-semibold text-[#84CC16]">
+          {playbook.deployments}x deployed
+        </span>
       </div>
+
+      <h3 className={`mt-5 text-2xl font-bold leading-snug text-white ${v4Display}`}>
+        {playbook.displayTitle}
+      </h3>
+      <p className="mt-1 text-sm text-white/60">{playbook.fullTitle}</p>
+
+      <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-white/75">
+        {playbook.description}
+      </p>
+
+      {/* Outcomes */}
+      <div className="mt-6 grid grid-cols-3 gap-4">
+        {playbook.outcomes.slice(0, 3).map((outcome) => (
+          <div key={outcome.description}>
+            <p className={`text-xl font-bold leading-none text-[#84CC16] ${v4Display}`}>
+              {outcome.metric}
+            </p>
+            <p className="mt-1 text-[11px] uppercase leading-tight tracking-[0.12em] text-white/50">
+              {outcome.description}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex-1" />
+
+      {/* Technologies */}
+      <p className="mt-6 text-xs text-white/50">
+        {playbook.technologies.slice(0, 3).join(' · ')}
+        {playbook.technologies.length > 3 ? ` +${playbook.technologies.length - 3}` : ''}
+      </p>
+
+      <span className="mt-5 flex items-center gap-1 text-sm font-semibold text-[#84CC16]">
+        Read the playbook
+        <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+      </span>
     </Link>
   );
 }
