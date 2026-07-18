@@ -2,6 +2,10 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, MessageSquare, Zap, TrendingUp, Users } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { brazeRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -17,11 +21,13 @@ export const metadata: Metadata = {
     url: 'https://aciinfotech.com/platforms/braze',
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Braze Implementation Services | ACI Infotech',
     description: 'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -75,6 +81,29 @@ const caseStudies = [
   },
 ];
 
+const brazeFaqs = [
+  {
+    q: 'How long does a Braze implementation take?',
+    a: 'A standard implementation runs 8 to 12 weeks: SDK integration, data architecture, template setup, and the first live campaigns. Add time if identity resolution is messy or if you are migrating an ESP at the same time. We train your team as we build, so handover is not a separate phase.',
+  },
+  {
+    q: 'Can you migrate us from our current ESP to Braze?',
+    a: 'Yes. We audit the existing platform, convert templates, migrate subscriber data and preferences, and run both systems in parallel while the new IPs and domains warm up. Deliverability is the thing that breaks in rushed migrations, so we do not cut over until inbox placement holds.',
+  },
+  {
+    q: 'How does Braze get our customer data?',
+    a: 'Three routes, usually together: the SDK streams behavioral events from your apps and sites, Cloud Data Ingestion syncs profiles from your warehouse or CDP, and Currents streams engagement data back out for analytics. We design the data architecture first, because a campaign is only as good as the profile behind it.',
+  },
+  {
+    q: 'Which channels can Braze actually send?',
+    a: 'Email, mobile and web push, SMS and MMS, in-app messages, Content Cards, and webhooks into anything else. Canvas orchestrates all of them in one journey, so the channel decision happens per customer rather than per campaign.',
+  },
+  {
+    q: 'Do you run our campaigns after launch or train our team?',
+    a: 'Either. Some clients hand us campaign operations under a managed services agreement; most have us build, train their marketers, and stay on for deliverability and optimization. The goal is that your team ships campaigns without a ticket queue in the middle.',
+  },
+];
+
 const channels = [
   { name: 'Email', color: 'bg-blue-100 text-blue-700' },
   { name: 'Push Notifications', color: 'bg-green-100 text-green-700' },
@@ -111,13 +140,14 @@ export default function BrazePage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Braze Customer
-            <span className="text-[var(--aci-primary-light)]"> Engagement Platform</span>
+            Braze Implementation
+            <span className="text-[var(--aci-primary-light)]"> and Customer&nbsp;Engagement</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As a Braze Alloy Partner, we help brands build meaningful customer relationships
-            through personalized, cross-channel engagement. From implementation to optimization,
-            we unlock the full power of Braze.
+            We implement Braze end to end: SDK integration, data pipelines into your warehouse,
+            and Canvas journeys across email, push, SMS, and in-app. ESP migrations run in
+            parallel until deliverability holds, then your team takes over with playbooks
+            they will actually use.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -255,6 +285,10 @@ export default function BrazePage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={brazeRelated} />
+
+      <FaqBlock items={brazeFaqs} eyebrow="Braze FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[#ED4B4B]">

@@ -13,8 +13,35 @@ import {
   Workflow,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { microsoftDynamicsRelated } from '@/content/related-links';
 
 import { displayClient } from '@/lib/content/anonymize';
+
+const microsoftDynamicsFaqs = [
+  {
+    q: 'How long does a Dynamics 365 implementation take?',
+    a: 'A focused Sales or Business Central rollout typically lands in 3 to 4 months. Finance and Supply Chain programs replacing a legacy ERP run 6 to 12 months and go live in phases, usually by entity or region. The first phase ships something people use, not a design document.',
+  },
+  {
+    q: 'Can Dynamics 365 replace our legacy ERP?',
+    a: 'Yes. Dynamics 365 Finance and Supply Chain covers the core ERP footprint: general ledger, procurement, inventory, and order to cash. Business Central handles the same ground for mid-sized operations. We migrate the data, rebuild the integrations, and keep the old system readable until the numbers reconcile.',
+  },
+  {
+    q: 'What does Copilot actually do inside Dynamics 365?',
+    a: 'It drafts emails and case summaries from CRM context, answers questions against your own records, and automates the routine steps in sales and service workflows. With Copilot Studio we build custom agents on the same foundation. The practical wins are the boring ones: less typing, faster case wrap-up.',
+  },
+  {
+    q: 'Do we need Microsoft Fabric alongside Dynamics 365?',
+    a: 'Not on day one, but it is the natural next step. Fabric links Dataverse data into OneLake without ETL pipelines, which is how Dynamics data ends up in real dashboards instead of exported spreadsheets. We usually add it once the transactional rollout is stable.',
+  },
+  {
+    q: 'Can you extend Dynamics with Power Platform?',
+    a: 'Yes, that is where most of the customization belongs. Power Apps for the screens Dynamics does not ship, Power Automate for approvals and handoffs, Power Pages for external users, all on the same Dataverse. Keeping extensions there instead of in core code keeps upgrades painless.',
+  },
+];
+
 const capabilities = [
   {
     icon: Bot,
@@ -105,13 +132,13 @@ export default function MicrosoftDynamicsPage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Microsoft Dynamics, Copilot
-            <span className="text-[#00A4EF]"> & Power Platform</span>
+            Microsoft Dynamics 365
+            <span className="text-[#00A4EF]">&nbsp;Consulting</span>
           </h1>
           <p className="text-xl text-blue-100 max-w-3xl mb-8">
-            As a Microsoft Partner, we deliver end-to-end implementations of Dynamics 365,
-            Copilot, Power Platform, and Microsoft Fabric. Our certified architects help
-            enterprises accelerate with AI-powered business applications.
+            We implement Dynamics 365 across CRM and ERP, extend it with Power Platform, and
+            put Copilot to work inside the workflows your teams already run. Fabric ties the
+            data together, Azure sits underneath, and one certified team delivers all of it.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -220,6 +247,10 @@ export default function MicrosoftDynamicsPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={microsoftDynamicsRelated} />
+
+      <FaqBlock items={microsoftDynamicsFaqs} eyebrow="Dynamics 365 FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[#0078D4]">

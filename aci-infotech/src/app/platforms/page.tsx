@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, Award } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { getSiteUrl } from '@/lib/site-url';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -15,6 +16,20 @@ export const metadata: Metadata = {
   description: 'ACI Infotech is a certified partner for Databricks, Snowflake, Salesforce, AWS, Azure, SAP, and more. Enterprise-grade implementations by senior architects.',
   alternates: {
     canonical: `${siteUrl}/platforms`,
+  },
+  openGraph: {
+    title: 'Technology Platforms | ACI Infotech',
+    description: 'ACI Infotech is a certified partner for Databricks, Snowflake, Salesforce, AWS, Azure, SAP, and more. Enterprise-grade implementations by senior architects.',
+    url: `${siteUrl}/platforms`,
+    siteName: 'ACI Infotech',
+    type: 'website',
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Technology Platforms | ACI Infotech',
+    description: 'ACI Infotech is a certified partner for Databricks, Snowflake, Salesforce, AWS, Azure, SAP, and more. Enterprise-grade implementations by senior architects.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -30,17 +45,19 @@ const platforms = [
     capabilities: ['Delta Lake Implementation', 'Unity Catalog Setup', 'MLflow MLOps', 'Spark Optimization', 'Cost Management'],
     caseStudy: { client: 'Fortune 100 Retailer', result: '$18M savings from AI forecasting' },
     href: '/platforms/databricks',
+    linkLabel: 'Databricks consulting',
   },
   {
     id: 'snowflake',
     name: 'Snowflake',
     tagline: 'Data Cloud Specialists',
     description: 'Design and implement Snowflake data warehouses with optimal architecture, governance, and cost efficiency.',
-    partnership: 'Select Partner',
+    partnership: 'Snowflake Partner',
     partnershipLevel: 'silver',
     capabilities: ['Data Warehouse Design', 'Data Sharing', 'Snowpark Development', 'Cost Optimization', 'Migration Services'],
     caseStudy: { client: 'Healthcare System', result: '40% infrastructure cost reduction' },
     href: '/platforms/snowflake',
+    linkLabel: 'Snowflake consulting and migration',
   },
   {
     id: 'salesforce',
@@ -53,6 +70,7 @@ const platforms = [
     capabilities: ['Data Cloud Implementation', 'Marketing Cloud', 'Agentforce AI', 'Integration Services', 'Custom Development'],
     caseStudy: { client: 'Fortune 500 Convenience Retailer', result: '25% improvement in promotion effectiveness' },
     href: '/platforms/salesforce',
+    linkLabel: 'Salesforce consulting and implementation',
   },
   {
     id: 'microsoft-dynamics',
@@ -64,6 +82,7 @@ const platforms = [
     capabilities: ['Dynamics 365 CRM & ERP', 'Microsoft Copilot', 'Power Platform', 'Microsoft Fabric', 'Azure Integration'],
     caseStudy: { client: 'Global Enterprise', result: '60% faster business processes' },
     href: '/platforms/microsoft-dynamics',
+    linkLabel: 'Dynamics 365 consulting',
   },
   {
     id: 'aws',
@@ -76,6 +95,7 @@ const platforms = [
     capabilities: ['Cloud Migration', 'Well-Architected Reviews', 'Cost Optimization', 'Kubernetes (EKS)', 'Data & Analytics'],
     caseStudy: { client: 'Energy Company', result: '99.99% uptime achieved' },
     href: '/platforms/aws',
+    linkLabel: 'AWS consulting and migration',
   },
   {
     id: 'azure',
@@ -88,6 +108,7 @@ const platforms = [
     capabilities: ['Azure Synapse', 'Microsoft Fabric', 'Azure ML', 'Hybrid Cloud', 'Security & Compliance'],
     caseStudy: { client: 'Financial Institution', result: '$25M fraud loss reduction' },
     href: '/platforms/azure',
+    linkLabel: 'Azure consulting and migration',
   },
   {
     id: 'gcp',
@@ -100,6 +121,7 @@ const platforms = [
     capabilities: ['BigQuery & Dataflow', 'Vertex AI & Gemini', 'Google Kubernetes Engine', 'Anthos Hybrid', 'FinOps & Cost Governance'],
     caseStudy: { client: 'Global CPG & F&B Leader', result: 'Self-service analytics for brand managers' },
     href: '/platforms/gcp',
+    linkLabel: 'Google Cloud consulting',
   },
   {
     id: 'sap',
@@ -112,6 +134,7 @@ const platforms = [
     capabilities: ['S/4HANA Migration', 'Integration Services', 'Data Migration', 'Change Management', 'Support Services'],
     caseStudy: { client: 'Global Financial Giant', result: '$500K operational savings' },
     href: '/platforms/sap',
+    linkLabel: 'SAP consulting and S/4HANA migration',
   },
   {
     id: 'servicenow',
@@ -124,6 +147,7 @@ const platforms = [
     capabilities: ['ITSM Implementation', 'HR Service Delivery', 'Custom App Development', 'Integration Hub', 'AI-Powered Workflows'],
     caseStudy: { client: 'Fortune 500 Company', result: '45% reduction in ticket resolution time' },
     href: '/platforms/servicenow',
+    linkLabel: 'ServiceNow implementation',
   },
   {
     id: 'braze',
@@ -131,11 +155,12 @@ const platforms = [
     logo: '/images/Solution-Partners/braze.png',
     tagline: 'Customer Engagement Platform',
     description: 'Braze implementations for personalized customer engagement across email, push, in-app, and more. Drive retention and lifetime value.',
-    partnership: 'Alloys Partner',
+    partnership: 'Alloy Partner',
     partnershipLevel: 'silver',
     capabilities: ['Campaign Orchestration', 'Personalization', 'Data Integration', 'Analytics & Reporting', 'Cross-Channel Messaging'],
     caseStudy: { client: 'Retail Brand', result: '35% increase in customer engagement' },
     href: '/platforms/braze',
+    linkLabel: 'Braze implementation',
   },
 ];
 
@@ -256,7 +281,7 @@ export default function PlatformsPage() {
                 </div>
 
                 <span className="text-[var(--aci-primary)] font-medium inline-flex items-center gap-2 group-hover:gap-3 transition-all">
-                  Learn More <ArrowRight className="w-5 h-5" />
+                  {platform.linkLabel} <ArrowRight className="w-5 h-5" />
                 </span>
               </Link>
             ))}

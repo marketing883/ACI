@@ -7,6 +7,7 @@ import { databricksFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { databricksRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 export const revalidate = 3600;
 
@@ -24,11 +25,13 @@ export const metadata: Metadata = {
     url: 'https://aciinfotech.com/platforms/databricks',
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Databricks Implementation Services | ACI Infotech',
     description: 'ACI Infotech is a Databricks consulting partner. Lakehouse architecture, Delta Lake, MLflow, and Spark optimization for enterprise.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -146,9 +149,10 @@ export default function DatabricksPage() {
               <div className="w-14 h-14 bg-[#FF3621]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <TrendingUp className="w-7 h-7 text-[#FF3621]" />
               </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Proven Results</h3>
+              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Documented Results</h3>
               <p className="text-gray-600 text-sm">
-                We've delivered $100M+ in documented value through Databricks implementations.
+                Every Databricks engagement ships with measured outcomes, written up as
+                case studies and playbooks you can read before you sign.
               </p>
             </div>
             <div className="text-center">
@@ -250,7 +254,7 @@ export default function DatabricksPage() {
       <section className="py-20 bg-[#FF3621]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Unlock the Power of Databricks?
+            Ready to Put Your Lakehouse Into&nbsp;Production?
           </h2>
           <p className="text-xl text-red-100 mb-8">
             Schedule a free assessment with our Databricks experts to discuss your data challenges.

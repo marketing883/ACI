@@ -10,6 +10,10 @@ import {
   Zap,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { gcpRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 import { displayClient } from '@/lib/content/anonymize';
 
@@ -27,11 +31,13 @@ export const metadata: Metadata = {
     url: 'https://aciinfotech.com/platforms/gcp',
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Google Cloud Platform Services | ACI Infotech',
     description: 'ACI Infotech builds on Google Cloud Platform. BigQuery, Vertex AI, GKE, Anthos, and data-driven AI workloads delivered end to end.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -91,7 +97,30 @@ const caseStudies = [
       'Legacy workloads on a three-year-old VMware cluster, with no path to AI or elastic scale.',
     solution:
       'GKE landing zone with Anthos service mesh and BigQuery for clinical analytics, HIPAA posture from day one.',
-    results: ['GKE landing zone live', '100% audit pass rate', 'AI workloads unlocked'],
+    results: ['GKE landing zone live', '100% audit pass rate', 'AI workloads in production'],
+  },
+];
+
+const gcpFaqs = [
+  {
+    q: 'Why pick Google Cloud over AWS or Azure?',
+    a: 'Pick it for the data and AI stack: BigQuery needs no cluster management, Vertex AI carries models from notebook to production, and GKE is the most mature managed Kubernetes. If your workloads are mostly Windows and Microsoft-licensed, Azure usually wins on economics, and we will say so in the assessment.',
+  },
+  {
+    q: 'How long does a BigQuery migration take?',
+    a: 'A single warehouse typically moves in 3 to 6 months, including schema conversion, pipeline rebuilds in Dataflow, and parallel-run validation against the old system. The long pole is rarely BigQuery itself; it is untangling the reports and jobs that grew around the legacy warehouse.',
+  },
+  {
+    q: 'Can you migrate us from AWS or on-premise to Google Cloud?',
+    a: 'Yes. We use Migrate to Containers for lift-and-modernize moves onto GKE, Database Migration Service for the databases, and Transfer Appliance when the data is too big for the wire. Every migration lands in a proper landing zone with IAM, VPC Service Controls, and billing export set up first.',
+  },
+  {
+    q: 'How do you keep Google Cloud costs under control?',
+    a: 'Committed use discounts planned against real usage, BigQuery slot sizing and query tuning, and chargeback built on the billing export so every team sees its own line. Google Cloud Recommender flags the idle resources; the discipline is acting on it monthly rather than at renewal time.',
+  },
+  {
+    q: 'Do you support HIPAA or PCI workloads on Google Cloud?',
+    a: 'Yes. We build the compliance posture into the landing zone: VPC Service Controls around sensitive data, Security Command Center for findings, and audit logging wired to your SIEM. Our healthcare deployments have passed their audits with that architecture in place.',
   },
 ];
 
@@ -131,8 +160,8 @@ export default function GCPPage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Google Cloud Platform
-            <span className="text-[var(--aci-primary-light)]"> Cloud Solutions</span>
+            Google Cloud Consulting
+            <span className="text-[var(--aci-primary-light)]"> and Data&nbsp;Platforms</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
             Google Cloud builds for enterprises where data breadth and container-native
@@ -295,6 +324,10 @@ export default function GCPPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={gcpRelated} />
+
+      <FaqBlock items={gcpFaqs} eyebrow="Google Cloud FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[#4285F4]">

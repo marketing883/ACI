@@ -2,6 +2,10 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Users, Shield, TrendingUp, Zap } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { salesforceRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -17,11 +21,13 @@ export const metadata: Metadata = {
     url: 'https://aciinfotech.com/platforms/salesforce',
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Salesforce Implementation Services | ACI Infotech',
     description: 'ACI Infotech is a Salesforce Consulting Partner. Sales Cloud, Service Cloud, Marketing Cloud, and Data Cloud implementation and integration.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -42,9 +48,9 @@ const capabilities = [
     features: ['Journey Builder', 'Email Studio', 'Audience segmentation', 'Analytics'],
   },
   {
-    title: 'Data Cloud (CDP)',
-    description: 'Unify customer data across all touchpoints for a true single customer view.',
-    features: ['Data unification', 'Identity resolution', 'Segmentation', 'Activation'],
+    title: 'Data Cloud & Agentforce',
+    description: 'Unify customer data into a single record, then put Agentforce agents to work on top of CRM and Data Cloud.',
+    features: ['Data unification', 'Identity resolution', 'Agentforce agents', 'Segmentation & activation'],
   },
   {
     title: 'Integration Services',
@@ -72,6 +78,29 @@ const caseStudies = [
     challenge: 'Manual processes and disconnected systems slowing sales cycles',
     solution: 'Sales Cloud + CPQ implementation with ERP and data warehouse integration',
     results: ['40% faster quotes', '25% higher win rate', 'Single source of truth'],
+  },
+];
+
+const salesforceFaqs = [
+  {
+    q: 'Do you work with our existing Salesforce org or rebuild it?',
+    a: 'We work with the org you have. Most engagements start with an org audit: what is customized, what is dead, and what is blocking the roadmap. A rebuild only makes sense when years of technical debt cost more to untangle than to replace, and we will show you that math before recommending it.',
+  },
+  {
+    q: 'How long does a Salesforce implementation take?',
+    a: 'A focused Sales Cloud or Service Cloud rollout typically lands in 10 to 16 weeks. Multi-cloud programs with Data Cloud and heavy integration run longer and ship in phases, so sales teams are working in the system while later phases build. Scope discipline, not headcount, is what keeps the timeline honest.',
+  },
+  {
+    q: 'What is Agentforce and do we need Data Cloud to use it?',
+    a: 'Agentforce is Salesforce’s platform for AI agents that take actions in your CRM: qualifying leads, resolving cases, drafting follow-ups. The agents are only as good as the data they read, which is why Data Cloud matters; it gives them one resolved customer record instead of six conflicting ones. We implement both together.',
+  },
+  {
+    q: 'Can you integrate Salesforce with our ERP and data warehouse?',
+    a: 'Yes, that is most of our Salesforce work. We build integrations through MuleSoft, REST and SOAP APIs, Platform Events, and CDC, depending on latency and volume. Orders, invoices, and inventory stay in the ERP; Salesforce gets a live view instead of a stale copy.',
+  },
+  {
+    q: 'Who runs Salesforce after go-live?',
+    a: 'Your admins, if you have them; our managed services team, if you do not. We handle release management for the three Salesforce releases a year, user support, and ongoing configuration under an SLA. Either way, we train your team so knowledge does not walk out with the project.',
   },
 ];
 
@@ -111,13 +140,14 @@ export default function SalesforcePage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Salesforce Implementation
-            <span className="text-[var(--aci-primary-light)]"> & Integration</span>
+            Salesforce Consulting
+            <span className="text-[var(--aci-primary-light)]"> and&nbsp;Implementation</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As a Salesforce Consulting Partner, we help enterprises maximize their Salesforce
-            investment. From initial implementation to complex integrations, our certified
-            consultants deliver solutions that drive business value.
+            We implement and integrate Salesforce: Sales Cloud, Service Cloud, Marketing Cloud,
+            and Data Cloud working from one customer record. We start with the org you have,
+            wire it to your ERP and warehouse through MuleSoft or APIs, and put Agentforce
+            agents to work on top of CRM and Data Cloud.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -256,11 +286,15 @@ export default function SalesforcePage() {
         </div>
       </section>
 
+      <RelatedLinks items={salesforceRelated} />
+
+      <FaqBlock items={salesforceFaqs} eyebrow="Salesforce FAQ" />
+
       {/* CTA Section */}
       <section className="py-20 bg-[#00A1E0]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Maximize Your Salesforce Investment?
+            Ready to Get More Out of&nbsp;Salesforce?
           </h2>
           <p className="text-xl text-cyan-100 mb-8">
             Schedule a free assessment with our Salesforce certified consultants.

@@ -9,8 +9,8 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     id: 'databricks',
     slug: 'databricks',
     title: 'Databricks Implementation Services',
-    tagline: 'ACI Infotech is an exclusive Databricks partner',
-    description: 'ACI Infotech is an exclusive Databricks partner. Lakehouse architecture, Delta Lake, MLflow, and Spark optimization for enterprise.',
+    tagline: 'ACI Infotech is a Databricks consulting partner',
+    description: 'ACI Infotech is a Databricks consulting partner. Lakehouse architecture, Delta Lake, MLflow, and Spark optimization for enterprise.',
     capabilities: [
   {
     title: 'Lakehouse Architecture',
@@ -46,15 +46,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'ML-powered demand forecasting on Databricks with AutoML pipeline',
     results: [
       {
-        metric: '',
+        metric: '$18M annual savings',
         description: ''
       },
       {
-        metric: '',
+        metric: '92% forecast accuracy',
         description: ''
       },
       {
-        metric: '',
+        metric: '23% reduction in stockouts',
         description: ''
       }
     ],
@@ -68,15 +68,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Unified data lake on Databricks with automated lineage tracking',
     results: [
       {
-        metric: '',
+        metric: '40% faster data access',
         description: ''
       },
       {
-        metric: '',
+        metric: '100% lineage compliance',
         description: ''
       },
       {
-        metric: '',
+        metric: '3x researcher productivity',
         description: ''
       }
     ],
@@ -89,8 +89,8 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     id: 'snowflake',
     slug: 'snowflake',
     title: 'Snowflake Implementation Services',
-    tagline: 'ACI Infotech is a Snowflake Select Partner',
-    description: 'ACI Infotech is a Snowflake Select Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
+    tagline: 'ACI Infotech is a Snowflake Partner',
+    description: 'ACI Infotech is a Snowflake Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
     capabilities: [
   {
     title: 'Data Cloud Architecture',
@@ -126,15 +126,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Full migration to Snowflake with automated data pipelines and real-time dashboards',
     results: [
       {
-        metric: '',
+        metric: '25% cost reduction',
         description: ''
       },
       {
-        metric: '',
+        metric: '3-4x faster queries',
         description: ''
       },
       {
-        metric: '',
+        metric: 'Unlimited scalability',
         description: ''
       }
     ],
@@ -148,15 +148,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Snowflake data mesh with secure data sharing between business units',
     results: [
       {
-        metric: '',
+        metric: 'Single customer view',
         description: ''
       },
       {
-        metric: '',
+        metric: '22% faster insights',
         description: ''
       },
       {
-        metric: '',
+        metric: 'Self-service analytics',
         description: ''
       }
     ],
@@ -206,15 +206,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Full AWS migration with HIPAA-compliant architecture and auto-scaling',
     results: [
       {
-        metric: '',
+        metric: '99.7% uptime',
         description: ''
       },
       {
-        metric: '',
+        metric: '20% cost reduction',
         description: ''
       },
       {
-        metric: '',
+        metric: 'HIPAA compliant',
         description: ''
       }
     ],
@@ -228,15 +228,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Serverless architecture on AWS with auto-scaling and CDN optimization',
     results: [
       {
-        metric: '',
+        metric: '3-4x traffic capacity',
         description: ''
       },
       {
-        metric: '',
+        metric: '22% faster page loads',
         description: ''
       },
       {
-        metric: '',
+        metric: 'Zero downtime',
         description: ''
       }
     ],
@@ -249,16 +249,16 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     id: 'azure',
     slug: 'azure',
     title: 'Microsoft Azure Cloud Services',
-    tagline: 'ACI Infotech is a Microsoft Gold Partner',
-    description: 'ACI Infotech is a Microsoft Gold Partner. Azure migration, Synapse Analytics, Power Platform, and enterprise cloud solutions.',
+    tagline: 'ACI Infotech is a Microsoft Solutions Partner',
+    description: 'ACI Infotech is a Microsoft Solutions Partner. Azure migration, Synapse Analytics, Power Platform, and enterprise cloud solutions.',
     capabilities: [
   {
-    title: 'Azure Migration',
-    description: 'Migrate workloads to Azure using Azure Migrate and proven migration methodologies.'
+    title: 'Landing Zones & Migration',
+    description: 'Stand up Azure landing zones with identity, networking, and policy guardrails, then migrate workloads with Azure Migrate.'
   },
   {
-    title: 'Azure Synapse Analytics',
-    description: 'Build unified analytics platforms with Synapse for data warehousing and big data.'
+    title: 'Microsoft Fabric & Synapse',
+    description: 'Build unified analytics on Microsoft Fabric and Synapse, from OneLake through the warehouse to Power BI.'
   },
   {
     title: 'Azure Data Factory',
@@ -286,15 +286,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Azure-based SAP S/4HANA implementation with Azure DevOps CI/CD',
     results: [
       {
-        metric: '',
+        metric: '$500K annual savings',
         description: ''
       },
       {
-        metric: '',
+        metric: '18-month delivery',
         description: ''
       },
       {
-        metric: '',
+        metric: 'Zero disruptions',
         description: ''
       }
     ],
@@ -308,15 +308,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Azure IoT Hub and Synapse Analytics for unified manufacturing intelligence',
     results: [
       {
-        metric: '',
+        metric: 'Real-time visibility',
         description: ''
       },
       {
-        metric: '',
+        metric: '67% less downtime',
         description: ''
       },
       {
-        metric: '',
+        metric: 'Predictive maintenance',
         description: ''
       }
     ],
@@ -345,8 +345,8 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     description: 'Deliver personalized customer journeys across email, mobile, social, and advertising.'
   },
   {
-    title: 'Data Cloud (CDP)',
-    description: 'Unify customer data across all touchpoints for a true single customer view.'
+    title: 'Data Cloud & Agentforce',
+    description: 'Unify customer data into a single record, then put Agentforce agents to work on top of CRM and Data Cloud.'
   },
   {
     title: 'Integration Services',
@@ -366,15 +366,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Salesforce Marketing Cloud with custom CDP integration and journey automation',
     results: [
       {
-        metric: '',
+        metric: 'Unified customer profiles',
         description: ''
       },
       {
-        metric: '',
+        metric: '35% engagement lift',
         description: ''
       },
       {
-        metric: '',
+        metric: '$2.3M incremental revenue',
         description: ''
       }
     ],
@@ -388,15 +388,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Sales Cloud + CPQ implementation with ERP and data warehouse integration',
     results: [
       {
-        metric: '',
+        metric: '40% faster quotes',
         description: ''
       },
       {
-        metric: '',
+        metric: '25% higher win rate',
         description: ''
       },
       {
-        metric: '',
+        metric: 'Single source of truth',
         description: ''
       }
     ],
@@ -446,15 +446,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'SAP S/4HANA implementation with automated data quality gates and real-time integration',
     results: [
       {
-        metric: '',
+        metric: '$500K annual savings',
         description: ''
       },
       {
-        metric: '',
+        metric: '18-month delivery',
         description: ''
       },
       {
-        metric: '',
+        metric: 'Zero financial disruptions',
         description: ''
       }
     ],
@@ -468,15 +468,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'System conversion to S/4HANA with selective data migration and process optimization',
     results: [
       {
-        metric: '',
+        metric: '30% faster close',
         description: ''
       },
       {
-        metric: '',
+        metric: '50% reduced inventory',
         description: ''
       },
       {
-        metric: '',
+        metric: 'Real-time visibility',
         description: ''
       }
     ],
@@ -489,8 +489,8 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     id: 'servicenow',
     slug: 'servicenow',
     title: 'ServiceNow Implementation Services',
-    tagline: 'ACI Infotech is a ServiceNow Elite Partner',
-    description: 'ACI Infotech is a ServiceNow Elite Partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
+    tagline: 'ACI Infotech is a ServiceNow partner',
+    description: 'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
     capabilities: [
   {
     title: 'ITSM Implementation',
@@ -526,15 +526,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Full ITSM implementation with AI-powered virtual agent and self-service portal',
     results: [
       {
-        metric: '',
+        metric: '70% faster resolution',
         description: ''
       },
       {
-        metric: '',
+        metric: '45% ticket deflection',
         description: ''
       },
       {
-        metric: '',
+        metric: '92% employee satisfaction',
         description: ''
       }
     ],
@@ -548,15 +548,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'ServiceNow ITOM with Discovery and Service Mapping across hybrid infrastructure',
     results: [
       {
-        metric: '',
+        metric: '100% asset visibility',
         description: ''
       },
       {
-        metric: '',
+        metric: '60% faster RCA',
         description: ''
       },
       {
-        metric: '',
+        metric: '$2M avoided downtime',
         description: ''
       }
     ],
@@ -606,15 +606,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Braze implementation with real-time triggers, location-based messaging, and loyalty integration',
     results: [
       {
-        metric: '',
+        metric: '35% engagement lift',
         description: ''
       },
       {
-        metric: '',
+        metric: '$2.3M incremental revenue',
         description: ''
       },
       {
-        metric: '',
+        metric: 'Real-time personalization',
         description: ''
       }
     ],
@@ -628,15 +628,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Full Braze implementation with lifecycle campaigns and predictive send time',
     results: [
       {
-        metric: '',
+        metric: '52% higher open rates',
         description: ''
       },
       {
-        metric: '',
+        metric: '3x push opt-ins',
         description: ''
       },
       {
-        metric: '',
+        metric: '28% revenue from Braze',
         description: ''
       }
     ],
@@ -686,15 +686,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Dynamics 365 Finance & Supply Chain with Power Automate workflows',
     results: [
       {
-        metric: '',
+        metric: '60% faster order processing',
         description: ''
       },
       {
-        metric: '',
+        metric: '$4M annual savings',
         description: ''
       },
       {
-        metric: '',
+        metric: '99.5% order accuracy',
         description: ''
       }
     ],
@@ -708,15 +708,15 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     solution: 'Dynamics 365 Project Operations with Copilot integration',
     results: [
       {
-        metric: '',
+        metric: '40% improvement in utilization',
         description: ''
       },
       {
-        metric: '',
+        metric: '25% faster project delivery',
         description: ''
       },
       {
-        metric: '',
+        metric: 'Real-time profitability insights',
         description: ''
       }
     ],

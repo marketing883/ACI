@@ -2,6 +2,10 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Cloud, Shield, TrendingUp, Cpu } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { azureRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -17,24 +21,26 @@ export const metadata: Metadata = {
     url: 'https://aciinfotech.com/platforms/azure',
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Microsoft Azure Cloud Services | ACI Infotech',
     description: 'ACI Infotech is a Microsoft Solutions Partner. Azure migration, Synapse Analytics, Power Platform, and enterprise cloud solutions.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
 const capabilities = [
   {
-    title: 'Azure Migration',
-    description: 'Migrate workloads to Azure using Azure Migrate and proven migration methodologies.',
-    features: ['Assessment & planning', 'Azure Migrate tools', 'Hybrid scenarios', 'Zero-downtime migration'],
+    title: 'Landing Zones & Migration',
+    description: 'Stand up Azure landing zones with identity, networking, and policy guardrails, then migrate workloads with Azure Migrate.',
+    features: ['Azure landing zones', 'Assessment & planning', 'Azure Migrate tools', 'Hybrid scenarios'],
   },
   {
-    title: 'Azure Synapse Analytics',
-    description: 'Build unified analytics platforms with Synapse for data warehousing and big data.',
-    features: ['Dedicated SQL pools', 'Spark integration', 'Data pipelines', 'Power BI integration'],
+    title: 'Microsoft Fabric & Synapse',
+    description: 'Build unified analytics on Microsoft Fabric and Synapse, from OneLake through the warehouse to Power BI.',
+    features: ['OneLake & Fabric', 'Dedicated SQL pools', 'Data pipelines', 'Power BI integration'],
   },
   {
     title: 'Azure Data Factory',
@@ -75,6 +81,29 @@ const caseStudies = [
   },
 ];
 
+const azureFaqs = [
+  {
+    q: 'What does an Azure migration cost?',
+    a: 'The drivers are workload count, how much needs re-platforming instead of lift and shift, and data volume. We run a fixed-scope assessment with Azure Migrate first, so you get a per-workload estimate and a list of servers that should be retired rather than moved. Existing Microsoft agreements and Azure Hybrid Benefit often cover more of the run cost than teams expect.',
+  },
+  {
+    q: 'How long does an Azure migration take?',
+    a: 'A single application usually lands in weeks. A full estate move typically runs 6 to 12 months in waves, with the landing zone built first and the hairiest dependencies scheduled last. Nothing cuts over until it has passed testing in the target subscription.',
+  },
+  {
+    q: 'Do we need an Azure landing zone before migrating?',
+    a: 'Yes, and it is the first thing we build: identity through Entra ID, network topology, policy guardrails, and cost management before any workload arrives. Skipping it is how estates end up with 40 subscriptions and no owner. A solid landing zone makes every wave after it faster.',
+  },
+  {
+    q: 'Should we use Microsoft Fabric or Azure Synapse?',
+    a: 'For new analytics builds, Microsoft Fabric is where Microsoft is investing: OneLake, warehousing, and Power BI in one SaaS platform. Existing Synapse estates still run fine, and we support both. We will map a migration path to Fabric when it saves you money or effort, and tell you to stay put when it does not.',
+  },
+  {
+    q: 'Can you connect Azure to our Microsoft 365 and Dynamics estate?',
+    a: 'Yes, that is usually the point of picking Azure. We wire identity through Entra ID, land Dynamics and Dataverse data in Fabric for analytics, and use Azure OpenAI against your own data with the access controls you already manage.',
+  },
+];
+
 const certifications = [
   'Azure Solutions Architect Expert',
   'Azure Data Engineer Associate',
@@ -112,12 +141,13 @@ export default function AzurePage() {
 
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Microsoft Azure
-            <span className="text-[var(--aci-primary-light)]"> Cloud Solutions</span>
+            <span className="text-[var(--aci-primary-light)]"> Consulting and&nbsp;Migration</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As a Microsoft Solutions Partner, we deliver enterprise Azure solutions that integrate
-            seamlessly with your Microsoft ecosystem. From migration to AI, we help you
-            maximize your Azure investment.
+            We build Azure landing zones, migrate workloads with Azure Migrate, and stand up
+            analytics on Microsoft Fabric and Synapse. The same team wires Azure OpenAI and
+            Power Platform into the Microsoft 365 and Dynamics estate your business
+            already runs on.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -255,6 +285,10 @@ export default function AzurePage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={azureRelated} />
+
+      <FaqBlock items={azureFaqs} eyebrow="Azure FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[#0078D4]">

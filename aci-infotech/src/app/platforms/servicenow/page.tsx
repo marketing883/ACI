@@ -7,6 +7,7 @@ import { servicenowFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { servicenowRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 export const revalidate = 3600;
 
@@ -24,11 +25,13 @@ export const metadata: Metadata = {
     url: 'https://aciinfotech.com/platforms/servicenow',
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'ServiceNow Implementation Services | ACI Infotech',
     description: 'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -122,9 +125,9 @@ export default function ServiceNowPage() {
             <span className="text-[var(--aci-primary-light)]"> & Workflow Automation</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As a ServiceNow partner, we help enterprises transform their digital workflows
-            and deliver exceptional employee and customer experiences. From ITSM to custom apps,
-            our certified consultants maximize your ServiceNow investment.
+            We implement ServiceNow the way operations teams actually use it: ITSM with a
+            CMDB that stays accurate, ITOM wired to real monitoring, and workflows with an
+            owner and an SLA. Certified consultants build it and stay on it.
           </p>
 
           <div className="flex flex-wrap gap-4">

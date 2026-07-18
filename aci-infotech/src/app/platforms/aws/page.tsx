@@ -2,6 +2,10 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Cloud, Shield, TrendingUp, Zap } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { awsRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -17,11 +21,13 @@ export const metadata: Metadata = {
     url: 'https://aciinfotech.com/platforms/aws',
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'AWS Cloud Services | ACI Infotech',
     description: 'ACI Infotech is an AWS Advanced Consulting Partner. Cloud migration, data lakes, serverless architecture, and managed AWS services.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -75,6 +81,29 @@ const caseStudies = [
   },
 ];
 
+const awsFaqs = [
+  {
+    q: 'How long does an AWS migration take?',
+    a: 'A single workload can move in a few weeks. A full data center exit usually runs 6 to 12 months, executed in waves so the business never depends on one big cutover weekend. The assessment phase sets the sequence: easy wins first, tangled dependencies last.',
+  },
+  {
+    q: 'What does an AWS migration cost?',
+    a: 'It depends on three things: how many workloads move, how many need re-platforming instead of lift and shift, and how much data has to cross the wire. We scope a fixed-price assessment first so you get a workload-by-workload estimate before committing to the move. The assessment also flags what should be retired instead of migrated, which is often the cheapest line item.',
+  },
+  {
+    q: 'Can you handle regulated workloads like HIPAA on AWS?',
+    a: 'Yes. We have migrated healthcare systems to HIPAA-compliant AWS architectures with encryption, audit logging, and network isolation designed in from the start. Every build follows the Well-Architected Framework, and compliance controls are part of the landing zone, not a retrofit.',
+  },
+  {
+    q: 'Can you cut our AWS bill without a re-architecture?',
+    a: 'Usually, yes. Rightsizing, Savings Plans, storage tiering, and shutting down what nobody owns typically trims a meaningful share of spend within the first quarter. Deeper savings come from re-platforming to serverless or containers, which we scope separately.',
+  },
+  {
+    q: 'Do you run the environment after the migration?',
+    a: 'Yes. Our managed services team handles monitoring, security, incident response, and ongoing cost optimization 24/7. You can hand over the whole estate or just the parts your team does not want to carry.',
+  },
+];
+
 const certifications = [
   'AWS Solutions Architect Professional',
   'AWS DevOps Engineer Professional',
@@ -111,13 +140,14 @@ export default function AWSPage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Amazon Web Services
-            <span className="text-[var(--aci-primary-light)]"> Cloud Solutions</span>
+            AWS Consulting
+            <span className="text-[var(--aci-primary-light)]"> and Cloud{' '}Migration</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As an AWS Advanced Consulting Partner, we bring certified expertise to every cloud
-            initiative. From migration to modernization, we help enterprises harness the full
-            power of AWS.
+            We plan and run AWS migrations, build data lakes on S3 and Redshift, and wire
+            serverless backends that scale on their own. Every estate lands on the
+            Well-Architected Framework with cost controls set before the first big bill,
+            and our managed team runs it around the clock after cutover.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -255,6 +285,10 @@ export default function AWSPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={awsRelated} />
+
+      <FaqBlock items={awsFaqs} eyebrow="AWS FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[#FF9900]">

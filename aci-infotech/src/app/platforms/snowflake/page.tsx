@@ -7,6 +7,7 @@ import { snowflakeFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { snowflakeRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 export const revalidate = 3600;
 
@@ -14,21 +15,23 @@ import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/platforms/snowflake' },
   title: 'Snowflake Implementation Services',
-  description: 'ACI Infotech is a Snowflake Select Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
+  description: 'ACI Infotech is a Snowflake Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
   // Per-page social card. Without this, every share and link preview
   // inherited the homepage's OpenGraph (title, image, and og:url all
   // pointing at /), mis-attributing all 21 service/platform pages.
   openGraph: {
     title: 'Snowflake Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is a Snowflake Select Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
+    description: 'ACI Infotech is a Snowflake Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
     url: 'https://aciinfotech.com/platforms/snowflake',
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Snowflake Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is a Snowflake Select Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
+    description: 'ACI Infotech is a Snowflake Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -103,7 +106,7 @@ export default function SnowflakePage() {
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 bg-[#29B5E8]/20 text-[#29B5E8] text-sm font-medium rounded-full flex items-center gap-1">
                 <Award className="w-4 h-4" />
-                Select Partner
+                Snowflake Partner
               </span>
             </div>
           </div>
@@ -113,9 +116,9 @@ export default function SnowflakePage() {
             <span className="text-[var(--aci-primary-light)]"> & Data Cloud</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As a Snowflake Select Partner, we help enterprises unlock the full potential of the
-            Data Cloud. From migration to optimization, our certified architects deliver
-            scalable, cost-effective Snowflake solutions.
+            As a Snowflake Partner, we design the warehouse, migrate the data, and tune the
+            spend. Our certified architects ship Snowflake platforms that stay fast under
+            real workloads and stay on budget after the honeymoon quarter.
           </p>
 
           <div className="flex flex-wrap gap-4">

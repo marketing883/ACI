@@ -2,6 +2,10 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Award, Building2, Shield, TrendingUp, Cog } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { sapRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 import { displayClient } from '@/lib/content/anonymize';
 export const metadata: Metadata = {
@@ -17,11 +21,13 @@ export const metadata: Metadata = {
     url: 'https://aciinfotech.com/platforms/sap',
     siteName: 'ACI Infotech',
     type: 'website',
+    images: DEFAULT_OG_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'SAP Implementation Services | ACI Infotech',
     description: 'ACI Infotech is an SAP Partner. S/4HANA implementation, migration, integration, and managed services for enterprise.',
+    images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
@@ -75,6 +81,29 @@ const caseStudies = [
   },
 ];
 
+const sapFaqs = [
+  {
+    q: 'How long does an ECC to S/4HANA move take?',
+    a: 'A system conversion for a single-instance ECC typically runs 9 to 18 months, depending on how much custom code and historical data comes along. Greenfield programs that redesign processes take longer and ship in phases. The honest answer comes out of the assessment, which sizes your custom code, data volumes, and interfaces before anyone commits to a date.',
+  },
+  {
+    q: 'Greenfield or brownfield: which S/4HANA path is right for us?',
+    a: 'Brownfield conversion keeps your processes and history, so it is faster and cheaper when your ECC processes are basically sound. Greenfield is a reset: fit-to-standard processes and clean data, at the cost of a bigger change program. Selective data transition sits between the two. We recommend based on how much process debt you are actually carrying.',
+  },
+  {
+    q: 'What happens to our ECC customizations in S/4HANA?',
+    a: 'We inventory every custom object, drop the ones nobody has run in years, and remediate the rest for S/4HANA. New extensions go on SAP BTP instead of into the core, which keeps future upgrades from becoming projects of their own. Most clients find a third of their custom code can simply be retired.',
+  },
+  {
+    q: 'Can SAP run on AWS, Azure, or Google Cloud?',
+    a: 'Yes. We deploy S/4HANA on all three hyperscalers, directly or through RISE with SAP, with HA/DR architecture sized for your recovery objectives. The cloud choice usually follows where the rest of your estate already lives.',
+  },
+  {
+    q: 'Do you support the SAP estate after go-live?',
+    a: 'Yes. Our managed services team runs Basis administration, performance monitoring, security patching, and upgrade management under an SLA. Go-live is the start of the run phase, not the end of the engagement.',
+  },
+];
+
 const modules = [
   { name: 'Finance (FICO)', color: 'bg-green-100 text-green-700' },
   { name: 'Supply Chain (MM/SD)', color: 'bg-blue-100 text-blue-700' },
@@ -111,13 +140,13 @@ export default function SAPPage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            SAP S/4HANA
-            <span className="text-[var(--aci-primary-light)]"> Implementation & Services</span>
+            SAP Consulting
+            <span className="text-[var(--aci-primary-light)]"> and S/4HANA&nbsp;Migration</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As an SAP Partner, we deliver enterprise-grade SAP implementations that transform
-            business operations. From greenfield deployments to complex migrations, our certified
-            consultants ensure success.
+            We move enterprises from ECC to S/4HANA, greenfield or system conversion, using
+            SAP Activate and selective data migration. We rehearse the cutover until it is
+            boring, then run Basis and the estate under an SLA after go-live.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -255,6 +284,10 @@ export default function SAPPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={sapRelated} />
+
+      <FaqBlock items={sapFaqs} eyebrow="SAP FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[#0FAAFF]">
