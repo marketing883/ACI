@@ -45,15 +45,18 @@ function useTypewriter(text: string, speed = 38, startDelay = 600) {
   return { displayed: text.slice(0, count), done: count >= text.length };
 }
 
-/** Scrub the background video with horizontal mouse movement. */
+/**
+ * Scrub the background video from the cursor's absolute X position, the
+ * way the reference "monitor-head" effect works: cursor on the left
+ * means an early frame, cursor on the right means a late frame, so the
+ * sphere's rotation deterministically follows the mouse.
+ */
 function useMouseScrub(videoRef: React.RefObject<HTMLVideoElement | null>) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const SENSITIVITY = 0.8;
-    let prevX: number | null = null;
     let targetTime = 0;
     let seeking = false;
 
@@ -71,16 +74,9 @@ function useMouseScrub(videoRef: React.RefObject<HTMLVideoElement | null>) {
 
     const onMove = (e: MouseEvent) => {
       if (!video.duration || Number.isNaN(video.duration)) return;
-      if (prevX === null) {
-        prevX = e.clientX;
-        return;
-      }
-      const delta = e.clientX - prevX;
-      prevX = e.clientX;
-      targetTime = Math.min(
-        video.duration,
-        Math.max(0, targetTime + (delta / window.innerWidth) * SENSITIVITY * video.duration),
-      );
+      const progress = Math.min(1, Math.max(0, e.clientX / window.innerWidth));
+      // Keep a hair away from the exact end so the seek always resolves.
+      targetTime = progress * (video.duration - 0.05);
       if (!seeking) seekTo(targetTime);
     };
 
@@ -92,6 +88,7 @@ function useMouseScrub(videoRef: React.RefObject<HTMLVideoElement | null>) {
     };
   }, [videoRef]);
 }
+
 
 export default function NotFound() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -128,8 +125,15 @@ export default function NotFound() {
         className="fixed inset-0 z-0 h-full w-full object-cover"
         style={{ objectPosition: '70% center' }}
       >
-        <source src="/videos/v4-editorial-signal.webm" type="video/webm" />
-        <source src="/videos/v4-editorial-signal.mp4" type="video/mp4" />
+        {/* Self-hosted copy first (drop the file at public/videos/
+            atheros-404.mp4); browsers fall through to the CDN source
+            while the local file is absent. The CDN host is allowed in
+            the CSP media-src for exactly this asset. */}
+        <source src="/videos/atheros-404.mp4" type="video/mp4" />
+        <source
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260530_042513_df96a13b-6155-4f6e-8b93-c9dee66fba08.mp4"
+          type="video/mp4"
+        />
       </video>
 
       {/* Hero content */}
