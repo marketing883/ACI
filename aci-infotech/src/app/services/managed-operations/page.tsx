@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { managedOperationsRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
@@ -13,7 +13,11 @@ import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
 import {
   SectionHead,
   ServiceHero,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
   PageFaq,
+  cardShadow,
 } from '@/components/v4/page/kit';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
@@ -164,6 +168,25 @@ const ADJACENT_SERVICES = [
   },
 ];
 
+const FACTS = [
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Certification',
+    line: 'ISO 27001 certified and CMMI Level 3 appraised. Audit evidence comes out of normal operations, not a scramble before the review.',
+  },
+  {
+    label: 'Coverage',
+    line: '24/7 operations under published SLAs. Follow the sun shifts across India, US, and EU with documented handoffs.',
+  },
+  {
+    label: 'Response',
+    line: 'P1 response in 15 minutes. Misses reported monthly with root cause, not buried in a stoplight dashboard.',
+  },
+];
+
 const FAQS = [
   {
     question: 'Do you run NOC and SOC from the same team?',
@@ -277,7 +300,7 @@ export default function ManagedOperationsPage() {
             {CENTERS.map((center) => (
               <div
                 key={center.title}
-                className="flex flex-col rounded-3xl border border-gray-200 bg-gray-50/60 p-8 md:p-10"
+                className={`flex flex-col rounded-3xl bg-white p-8 md:p-10 ${cardShadow}`}
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
                   / {center.eyebrow}
@@ -290,16 +313,13 @@ export default function ManagedOperationsPage() {
                 <p className="mt-7 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
                   Platforms we operate
                 </p>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs font-medium uppercase tracking-wide text-gray-500">
                   {center.platforms.map((p) => (
-                    <span
-                      key={p}
-                      className="rounded-full border border-gray-200 bg-white px-3 py-1 text-sm font-medium text-gray-700"
-                    >
+                    <li key={p} className="whitespace-nowrap">
                       {p}
-                    </span>
+                    </li>
                   ))}
-                </div>
+                </ul>
 
                 <p className="mt-7 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
                   Coverage model
@@ -341,25 +361,8 @@ export default function ManagedOperationsPage() {
             sub="Our NOC and SOC share the platform and the ticketing system. An alert that starts as a latency spike and ends as an intrusion never crosses an org chart. It stays on the same bridge until it closes."
           />
 
-          <div className="mt-12 flex flex-col items-stretch gap-3 md:flex-row md:items-center">
-            {HANDOFF_STEPS.map((step, i) => (
-              <div key={step} className="flex flex-1 flex-col items-center gap-3 md:flex-row">
-                <div className="w-full rounded-xl border border-gray-200 bg-white p-4 text-center md:text-left">
-                  <span className={`block text-2xl font-bold leading-none text-gray-200 ${v4Display}`}>
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span className="mt-2 block text-sm font-medium text-gray-800">{step}</span>
-                </div>
-                {i < HANDOFF_STEPS.length - 1 && (
-                  <ArrowRight
-                    size={16}
-                    aria-hidden="true"
-                    className="shrink-0 rotate-90 text-blue-700 md:rotate-0"
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+          {/* Five steps, kept verbatim, on the kit's process cards. */}
+          <ProcessStrip steps={HANDOFF_STEPS.map((step) => ({ title: step, body: '' }))} />
         </div>
       </section>
 
@@ -455,6 +458,24 @@ export default function ManagedOperationsPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Bridge to cyber security: who builds what the SOC watches */}
+      <BridgeBand
+        title={<>The SOC responds. Security engineering&nbsp;prevents.</>}
+        body="Our SOC analysts handle what the controls catch. The controls themselves come from our security engineering practice: DevSecOps pipelines, zero trust identity, and compliance mapped to SOC 2, ISO 27001, HIPAA, and PCI-DSS. When the same firm builds the controls and watches them, console findings flow back into the architecture instead of into a vendor ticket."
+        link={{ label: 'Cyber Security', href: '/services/cyber-security' }}
+      />
+
+      {/* Why ACI */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Why ACI"
+            title={<>Why enterprises hand us the&nbsp;pager</>}
+          />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
 

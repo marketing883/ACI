@@ -12,8 +12,13 @@ import {
   SectionHead,
   ServiceHero,
   OfferingList,
+  ProcessStrip,
+  BridgeBand,
   FactsRow,
   PageFaq,
+  cardShadow,
+  CheckBadge,
+  glueWidow,
 } from '@/components/v4/page/kit';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
@@ -277,40 +282,15 @@ export default function GCCPage() {
             sub="The three phases are in the original contract, including the transfer terms."
           />
 
-          <div className="mt-12 overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-              <thead>
-                <tr>
-                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                    Phase
-                  </th>
-                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                    Window
-                  </th>
-                  <th className="border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                    What happens
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {BOT_STAGES.map((stage) => (
-                  <tr key={stage.stage}>
-                    <td className="border-b border-gray-200 py-5 pr-8 align-top">
-                      <span className={`text-lg font-semibold text-black md:text-xl ${v4Display}`}>
-                        {stage.stage}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap border-b border-gray-200 py-5 pr-8 align-top text-[13px] font-semibold uppercase tracking-wide text-blue-700">
-                      {stage.window}
-                    </td>
-                    <td className="border-b border-gray-200 py-5 align-top text-[15px] leading-relaxed text-gray-600">
-                      {stage.focus}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {/* The lifecycle is the page's process: phase, window, and what
+              happens map straight onto the kit's process cards. */}
+          <ProcessStrip
+            steps={BOT_STAGES.map((stage) => ({
+              title: stage.stage,
+              timeframe: stage.window,
+              body: stage.focus,
+            }))}
+          />
         </div>
       </section>
 
@@ -327,39 +307,31 @@ export default function GCCPage() {
             sub="Location is a function of talent depth, time-zone fit, and cost, not a preference."
           />
 
-          <div className="mt-12 overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse text-left text-sm">
-              <thead>
-                <tr>
-                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                    Location
-                  </th>
-                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                    Strengths
-                  </th>
-                  <th className="border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+          {/* Soft-card grid: one card per location, same three facts as the
+              old table (location, strengths, best suited for). */}
+          <div className="mt-12 grid gap-5 sm:grid-cols-2">
+            {GEOS.map((geo) => (
+              <div key={geo.name} className={`flex flex-col rounded-2xl bg-white p-7 md:p-8 ${cardShadow}`}>
+                <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>
+                  {geo.name}
+                </h3>
+                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                  Strengths
+                </p>
+                <p className="mt-3 flex-1 text-[15px] leading-relaxed text-gray-600">
+                  {glueWidow(geo.strengths)}
+                </p>
+                <div className="mt-5 border-t border-gray-200 pt-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
                     Best suited for
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {GEOS.map((geo) => (
-                  <tr key={geo.name}>
-                    <td className="border-b border-gray-200 py-5 pr-8 align-top">
-                      <span className={`text-base font-semibold text-black md:text-lg ${v4Display}`}>
-                        {geo.name}
-                      </span>
-                    </td>
-                    <td className="border-b border-gray-200 py-5 pr-8 align-top text-[15px] leading-relaxed text-gray-600">
-                      {geo.strengths}
-                    </td>
-                    <td className="border-b border-gray-200 py-5 align-top text-[15px] leading-relaxed text-gray-600">
-                      {geo.suited}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                  </p>
+                  <div className="mt-3 flex items-start gap-3">
+                    <CheckBadge />
+                    <p className="text-sm leading-relaxed text-gray-700">{glueWidow(geo.suited)}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
           <p className="mt-8 max-w-3xl text-sm leading-relaxed text-gray-500">
@@ -369,6 +341,13 @@ export default function GCCPage() {
           </p>
         </div>
       </section>
+
+      {/* Bridge to managed operations: the pre-captive option */}
+      <BridgeBand
+        title={<>Need the coverage before the&nbsp;captive?</>}
+        body="A captive pays off at scale, and plenty of estates need 24/7 coverage long before the headcount justifies an entity. Our managed NOC and SOC run the same follow the sun model under published SLAs, on the platforms you already operate. Some clients start there and stand the captive up once the case is obvious."
+        link={{ label: 'Managed Operations', href: '/services/managed-operations' }}
+      />
 
       {/* Why a captive, run by us */}
       <section className="border-t border-gray-200 bg-white">

@@ -13,8 +13,11 @@ import {
   ServiceHero,
   OfferingList,
   ProcessStrip,
+  BridgeBand,
   FactsRow,
   PageFaq,
+  cardShadow,
+  glueWidow,
 } from '@/components/v4/page/kit';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
@@ -286,39 +289,25 @@ export default function AdvisoryStrategyPage() {
             }
           />
 
-          <div className="mt-12 overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-              <thead>
-                <tr>
-                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                    Who
-                  </th>
-                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                    Where the engagement focuses
-                  </th>
-                  <th className="border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                    Typical length
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {AUDIENCES.map((row) => (
-                  <tr key={row.audience}>
-                    <td className="border-b border-gray-200 py-5 pr-8 align-top">
-                      <span className={`text-base font-semibold text-black md:text-lg ${v4Display}`}>
-                        {row.audience}
-                      </span>
-                    </td>
-                    <td className="border-b border-gray-200 py-5 pr-8 align-top text-[15px] leading-relaxed text-gray-600">
-                      {row.focus}
-                    </td>
-                    <td className="whitespace-nowrap border-b border-gray-200 py-5 align-top text-[13px] font-semibold uppercase tracking-wide text-blue-700">
-                      {row.typicalLength}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Soft-card grid: one card per audience, same three facts as the
+              old table (who, where the engagement focuses, typical length). */}
+          <div className="mt-12 grid gap-5 sm:grid-cols-2">
+            {AUDIENCES.map((row) => (
+              <div key={row.audience} className={`flex flex-col rounded-2xl bg-white p-7 md:p-8 ${cardShadow}`}>
+                <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>
+                  {row.audience}
+                </h3>
+                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                  Where the engagement focuses
+                </p>
+                <p className="mt-3 flex-1 text-[15px] leading-relaxed text-gray-600">
+                  {glueWidow(row.focus)}
+                </p>
+                <p className="mt-5 border-t border-gray-200 pt-4 text-[13px] font-semibold uppercase tracking-wide text-blue-700">
+                  Typical length: {row.typicalLength}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -333,6 +322,13 @@ export default function AdvisoryStrategyPage() {
           <ProcessStrip steps={PROCESS} />
         </div>
       </section>
+
+      {/* Bridge to data engineering: where most first increments land */}
+      <BridgeBand
+        title={<>The first increment is usually a data&nbsp;platform.</>}
+        body="Most of the roadmaps we write open with the same move: get the data estate onto one governed platform, because everything after it depends on that. Our data engineering team builds that increment, staffed by the same pod named in the plan. Strategy and platform stay in one conversation instead of two contracts."
+        link={{ label: 'Data Engineering', href: '/services/data-engineering' }}
+      />
 
       {/* Why advisory lives next to delivery */}
       <section className="border-t border-gray-200 bg-white">
