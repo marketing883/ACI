@@ -13,10 +13,10 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
     title: 'Services',
     links: [
       { label: 'Data Engineering', href: '/services/data-engineering' },
-      { label: 'Applied AI & GenAI', href: '/services/applied-ai-ml' },
-      { label: 'Cybersecurity', href: '/services/cyber-security' },
-      { label: 'Cloud & Infrastructure', href: '/services/cloud-modernization' },
-      { label: 'Managed Run & SRE', href: '/services/managed-operations' },
+      { label: 'Applied AI & ML', href: '/services/applied-ai-ml' },
+      { label: 'Cyber Security', href: '/services/cyber-security' },
+      { label: 'Cloud Modernization', href: '/services/cloud-modernization' },
+      { label: 'Managed Operations', href: '/services/managed-operations' },
       { label: 'App Development', href: '/services/app-development' },
       { label: 'Quality Engineering', href: '/services/quality-engineering' },
       { label: 'Advisory & Strategy', href: '/services/advisory-strategy' },
@@ -67,7 +67,7 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
     title: 'Resources',
     links: [
       { label: 'Case Studies', href: '/case-studies' },
-      { label: 'Insights', href: '/blogs' },
+      { label: 'Blog', href: '/blogs' },
       { label: 'Whitepapers', href: '/whitepapers' },
       { label: 'Playbooks', href: '/playbooks' },
     ],

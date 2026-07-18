@@ -19,7 +19,7 @@ export interface ServiceMenuItem {
 
 export const SERVICES: ServiceMenuItem[] = [
   {
-    label: 'Applied AI & GenAI',
+    label: 'Applied AI & ML',
     href: '/services/applied-ai-ml',
     description: 'Copilots and agents that ship',
     tagline: 'From first RAG to production with evaluation harnesses.',
@@ -30,7 +30,7 @@ export const SERVICES: ServiceMenuItem[] = [
     ],
   },
   {
-    label: 'Cloud & Infrastructure',
+    label: 'Cloud Modernization',
     href: '/services/cloud-modernization',
     description: 'Multi-cloud without the chaos',
     tagline: 'Landing zones, FinOps, and migrations off legacy stacks.',
@@ -41,7 +41,7 @@ export const SERVICES: ServiceMenuItem[] = [
     ],
   },
   {
-    label: 'Data & Analytics',
+    label: 'Data Engineering',
     href: '/services/data-engineering',
     description: 'Lakehouses that match the ledger',
     tagline: 'Streaming and batch on one plane, governance that passes audit.',
@@ -63,29 +63,40 @@ export const SERVICES: ServiceMenuItem[] = [
     ],
   },
   {
-    label: 'Platform Engineering',
+    label: 'App Development',
     href: '/services/app-development',
-    description: 'Golden paths engineers adopt',
-    tagline: 'Internal developer platforms without the governance theater.',
+    description: 'Applications built to survive production',
+    tagline: 'Enterprise systems on top of your data and AI infrastructure.',
     keyOutcomes: [
-      'Commit-to-prod lead time in hours',
-      'Backstage, Kubernetes, ArgoCD as the backbone',
-      'Self-service scaffolders with built-in compliance',
+      '99.5% uptime SLAs with sub-100ms APIs',
+      'Legacy modernization on the Strangler Pattern',
+      'Apps that query your lakehouse and call your models',
     ],
   },
   {
-    label: 'Digital & Experience',
+    label: 'Quality Engineering',
+    href: '/services/quality-engineering',
+    description: 'Quality built into every release',
+    tagline: 'In-sprint automation, agentic coverage, and CI/CD quality gates.',
+    keyOutcomes: [
+      '90%+ automation as the default, not the goal',
+      'Full test suites that run in under 10 minutes',
+      'AI agents scaling the coverage humans cannot',
+    ],
+  },
+  {
+    label: 'Digital Transformation',
     href: '/services/digital-transformation',
-    description: 'Composable commerce and content',
-    tagline: 'Headless storefronts and edge personalization for retailers and banks.',
+    description: 'Intelligent process automation',
+    tagline: 'ServiceNow workflows, RPA, and document AI with owners and SLAs.',
     keyOutcomes: [
-      'LCP p75 under 1.2 seconds',
-      'Edge personalization without cache headaches',
-      'Design systems that ship in 14 markets',
+      'Quick wins in accounts payable and onboarding',
+      'Document processing without the retyping',
+      'ROI tracked in hours saved and cycle time',
     ],
   },
   {
-    label: 'Cyber & Trust',
+    label: 'Cyber Security',
     href: '/services/cyber-security',
     description: 'Security built in, not bolted on',
     tagline: 'Zero-trust, compliance readiness, and threat response.',
@@ -96,7 +107,7 @@ export const SERVICES: ServiceMenuItem[] = [
     ],
   },
   {
-    label: 'Managed Services',
+    label: 'Managed Operations',
     href: '/services/managed-operations',
     description: '24/7 NOC and SOC coverage',
     tagline: 'Follow-the-sun operations on the platforms you already run.',
@@ -118,7 +129,7 @@ export const SERVICES: ServiceMenuItem[] = [
     ],
   },
   {
-    label: 'GCC & Captive Ops',
+    label: 'GCC & Captive Centers',
     href: '/services/gcc',
     description: 'Captive centers stood up, not outsourced',
     tagline: 'Your team, run from India or LatAm, on a documented BOT path.',
@@ -238,6 +249,7 @@ export const INDUSTRIES: IndustryMenuItem[] = [
   { label: 'Hospitality', href: '/industries/hospitality', slug: 'hospitality' },
   { label: 'Manufacturing', href: '/industries/manufacturing', slug: 'manufacturing' },
   { label: 'Energy & Utilities', href: '/industries/energy', slug: 'energy' },
+  { label: 'Oil & Gas', href: '/industries/oil-gas', slug: 'oil-gas' },
   { label: 'Transportation', href: '/industries/transportation', slug: 'transportation' },
 ];
 

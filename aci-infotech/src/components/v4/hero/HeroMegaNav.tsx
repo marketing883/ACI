@@ -24,6 +24,8 @@ import {
   Factory,
   Zap,
   Truck,
+  Fuel,
+  ClipboardCheck,
   type LucideIcon,
 } from 'lucide-react';
 import {
@@ -65,6 +67,7 @@ const SERVICE_ICONS: Record<string, LucideIcon> = {
   '/services/data-engineering': Database,
   '/services/martech-cdp': Megaphone,
   '/services/app-development': Blocks,
+  '/services/quality-engineering': ClipboardCheck,
   '/services/digital-transformation': MonitorSmartphone,
   '/services/cyber-security': ShieldCheck,
   '/services/managed-operations': ServerCog,
@@ -79,6 +82,7 @@ const INDUSTRY_ICONS: Record<string, LucideIcon> = {
   hospitality: UtensilsCrossed,
   manufacturing: Factory,
   energy: Zap,
+  'oil-gas': Fuel,
   transportation: Truck,
 };
 
