@@ -13,7 +13,6 @@ import {
   SectionHead,
   ServiceHero,
   OfferingList,
-  ProofCards,
   ProcessStrip,
   BridgeBand,
   FactsRow,
@@ -22,6 +21,7 @@ import {
   CheckBadge,
   DecisionCircle,
 } from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
 
@@ -131,6 +131,7 @@ const PROOF = [
     summary: 'Application and ML workloads shipped to production on AKS, with a governed Azure data foundation wired in underneath.',
     href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
     linkLabel: 'Read the Azure story',
+    image: '/images/v4/case-finance.jpg',
   },
   {
     client_descriptor: 'Enterprise Technology Company',
@@ -139,6 +140,7 @@ const PROOF = [
     summary: 'Automated CI/CD, monitoring, load balancing, and centralized logs keep releases moving without taking the estate down.',
     href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
     linkLabel: 'Read the DevOps story',
+    image: '/images/v4/svc-ops.jpg',
   },
 ];
 
@@ -385,15 +387,18 @@ export default function AppDevelopmentPage() {
               </>
             }
           />
-          <ProofCards
-            cards={PROOF.map((p) => ({
+          <CmsProofCards
+            service="App Development"
+            fallback={PROOF.map((p) => ({
               eyebrow: displayClient(p),
               metric: p.metric,
               metricLabel: p.metricLabel,
               summary: p.summary,
               href: p.href,
               linkLabel: p.linkLabel,
+              image: p.image,
             }))}
+            fallbackVideo={{ mp4: '/videos/retail-bg.mp4' }}
           />
         </div>
       </section>

@@ -12,13 +12,13 @@ import {
   SectionHead,
   ServiceHero,
   OfferingList,
-  ProofCards,
   ProcessStrip,
   BridgeBand,
   FactsRow,
   PageFaq,
   cardShadow,
 } from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
 
@@ -124,6 +124,7 @@ const PROOF = [
     summary: 'A legacy data center costing $20M a year exited in 18 months, rebuilt on AWS with Terraform and Kubernetes. Zero downtime through every cutover.',
     href: '/case-studies?service=cloud-modernization',
     linkLabel: 'Browse the cloud case studies',
+    image: '/images/v4/svc-cloud.jpg',
   },
   {
     eyebrow: 'National Retail Chain',
@@ -132,6 +133,7 @@ const PROOF = [
     summary: 'A monolithic e-commerce platform rebuilt on Azure and Kubernetes: 3 to 4x the scalability, with deployment cycles 2 to 3x faster.',
     href: '/case-studies?industry=retail',
     linkLabel: 'See the retail stories',
+    image: '/images/v4/case-retail.jpg',
   },
   {
     eyebrow: 'Global Industrial Manufacturer',
@@ -140,6 +142,7 @@ const PROOF = [
     summary: 'Single-vendor lock-in replaced with an active-active architecture across AWS and Azure, and disaster recovery that actually gets rehearsed.',
     href: '/case-studies?industry=manufacturing',
     linkLabel: 'See the manufacturing stories',
+    image: '/images/v4/case-manufacturing.jpg',
   },
 ];
 
@@ -353,7 +356,7 @@ export default function CloudModernizationPage() {
               </>
             }
           />
-          <ProofCards cards={PROOF} />
+          <CmsProofCards service="Cloud Modernization" fallback={PROOF} />
         </div>
       </section>
 

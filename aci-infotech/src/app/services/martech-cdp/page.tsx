@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowUpRight } from 'lucide-react';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { martechCdpRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
@@ -23,6 +22,7 @@ import {
   cardShadow,
   CheckBadge,
 } from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
 
@@ -121,6 +121,7 @@ const PROOF = [
     summary: 'Loyalty data unified with Marketing Cloud and Data Cloud into one guest profile, feeding real-time personalization across the booking journey.',
     href: '/industries/hospitality',
     linkLabel: 'See our hospitality work',
+    image: '/images/v4/case-retail.jpg',
   },
 ];
 
@@ -349,35 +350,19 @@ export default function MarTechCDPPage() {
               </>
             }
           />
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
-            {PROOF.map((card) => (
-              <Link
-                key={card.href}
-                href={card.href}
-                className="group flex flex-col rounded-2xl border border-white/10 bg-[#0b1220] p-7 transition-colors duration-300 hover:border-white/25 md:p-8"
-              >
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-white/50">
-                  {displayClient(card)}
-                </p>
-                <div className="mt-5 flex items-baseline gap-2">
-                  <span className={`text-5xl font-bold leading-none text-[#84CC16] ${v4Display}`}>
-                    {card.metric}
-                  </span>
-                </div>
-                <p className="mt-2 text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/50">
-                  {card.metricLabel}
-                </p>
-                <p className="mt-5 flex-1 text-sm leading-relaxed text-white/75">{card.summary}</p>
-                <span className="mt-6 flex items-center gap-1 text-xs font-semibold text-[#84CC16]">
-                  {card.linkLabel}
-                  <ArrowUpRight
-                    size={14}
-                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  />
-                </span>
-              </Link>
-            ))}
-          </div>
+          <CmsProofCards
+            service="MarTech & CDP"
+            fallback={PROOF.map((p) => ({
+              eyebrow: displayClient(p),
+              metric: p.metric,
+              metricLabel: p.metricLabel,
+              summary: p.summary,
+              href: p.href,
+              linkLabel: p.linkLabel,
+              image: p.image,
+            }))}
+            fallbackVideo={{ mp4: '/videos/retail-bg.mp4' }}
+          />
           <p className="mt-6 max-w-2xl text-sm leading-relaxed text-gray-500">
             More customer-360 work shows up across our retail and hospitality engagements, usually
             one layer down in the data platform.{' '}

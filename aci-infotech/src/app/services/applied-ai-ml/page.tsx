@@ -12,13 +12,13 @@ import {
   SectionHead,
   ServiceHero,
   OfferingList,
-  ProofCards,
   ProcessStrip,
   BridgeBand,
   FactsRow,
   PageFaq,
   DecisionPanel,
 } from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
 
@@ -105,14 +105,16 @@ const PROOF = [
     summary: 'Forecasting engines rebuilt on Databricks ML with daily automated retraining, replacing a cycle that took weeks and missed market moves. Worth $5M a year.',
     href: '/case-studies?service=applied-ai-ml',
     linkLabel: 'Browse the AI case studies',
+    image: '/images/v4/case-finance.jpg',
   },
   {
     eyebrow: 'National Healthcare Provider',
     metric: '4h',
     metricLabel: 'Claims processing, down from 72',
     summary: 'Document AI reading claims with 88% automated accuracy, cutting manual processing 35%. Humans now handle the edge cases, not the pile.',
-    href: '/case-studies?industry=healthcare',
-    linkLabel: 'See the healthcare stories',
+    href: '/case-studies/healthcare-eligibility-verification-automation-aci-yesbot',
+    linkLabel: 'Read the YesBot story',
+    image: '/images/v4/case-healthcare.jpg',
   },
   {
     eyebrow: 'Global Financial Services Firm',
@@ -121,6 +123,7 @@ const PROOF = [
     summary: 'Azure Data Lake, Databricks, AKS, and Synapse wired into one governed foundation, so models move from notebook to production in 90 days.',
     href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
     linkLabel: 'Read the Azure Lakehouse story',
+    image: '/images/v4/svc-data.jpg',
   },
 ];
 
@@ -300,7 +303,7 @@ export default function AppliedAIMLPage() {
               </>
             }
           />
-          <ProofCards cards={PROOF} />
+          <CmsProofCards service="Applied AI & ML" fallback={PROOF} />
         </div>
       </section>
 

@@ -15,12 +15,12 @@ import {
   ServiceHero,
   OfferingList,
   DecisionPanel,
-  ProofCards,
   ProcessStrip,
   BridgeBand,
   FactsRow,
   PageFaq,
 } from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
 
 export const revalidate = 3600;
 
@@ -113,6 +113,7 @@ const PROOF = [
     summary: 'Azure Data Lake, Databricks, AKS, and Synapse connected into one governed foundation for analytics and machine learning.',
     href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
     linkLabel: 'Read the Azure Lakehouse story',
+    image: '/images/v4/case-finance.jpg',
   },
   {
     eyebrow: 'Global Food Services Operator',
@@ -121,6 +122,7 @@ const PROOF = [
     summary: 'One platform for 400,000 employees replacing dozens of regional reporting stacks, with decisions landing 22% faster.',
     href: '/case-studies/global-food-facilities-data-intelligence',
     linkLabel: 'Read the story',
+    image: '/images/v4/case-retail.jpg',
   },
 ];
 
@@ -303,7 +305,11 @@ export default function DataEngineeringPage() {
               </>
             }
           />
-          <ProofCards cards={PROOF} />
+          <CmsProofCards
+            service="Data Engineering"
+            fallback={PROOF}
+            fallbackVideo={{ mp4: '/videos/retail-bg.mp4' }}
+          />
         </div>
       </section>
 

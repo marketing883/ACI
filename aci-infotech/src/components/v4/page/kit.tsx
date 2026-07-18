@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight, Check, Plus } from 'lucide-react';
 import { v4Display } from '../fonts';
+import { techLogo } from './tech-logos';
 import '../hero/hero.css';
 
 /** Soft double shadow for white cards sitting on a white field. */
@@ -180,8 +181,20 @@ export function OfferingList({
             <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>{item.title}</h3>
           </div>
           <p className="mt-3 text-[15px] leading-relaxed text-gray-600">{glueWidow(item.body)}</p>
-          <p className="mt-4 text-xs font-medium uppercase tracking-wide text-gray-400">
-            {item.chips.join(' · ')}
+          {/* Real marks wherever a chip names an actual product */}
+          <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+            {item.chips.map((chip) => {
+              const logo = techLogo(chip);
+              return (
+                <span key={chip} className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                  {logo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={logo} alt="" aria-hidden="true" className="h-3.5 w-auto max-w-10 object-contain" />
+                  ) : null}
+                  {chip}
+                </span>
+              );
+            })}
           </p>
         </div>
       ))}
@@ -344,37 +357,61 @@ export function DecisionPanel({
 
 /* ------------------------------ proof cards ------------------------------ */
 
+export type ProofCard = {
+  eyebrow: string;
+  metric: string;
+  metricLabel: string;
+  summary: string;
+  href: string;
+  linkLabel: string;
+  /** Photographic backdrop for this card (e.g. the case study's own
+      featured image from the CMS). */
+  image?: string;
+};
+
 export function ProofCards({
   cards,
-  video = { mp4: '/videos/retail-bg.mp4' },
+  video,
   images = ['/images/v4/case-finance.jpg', '/images/v4/case-energy.jpg'],
 }: {
-  cards: { eyebrow: string; metric: string; metricLabel: string; summary: string; href: string; linkLabel: string }[];
-  /** Backdrop loop inside the feature card (first card). */
+  cards: ProofCard[];
+  /** Backdrop loop inside the feature card. When omitted, the feature
+      card falls back to its own image. */
   video?: { mp4: string; webm?: string };
-  /** Photographic backdrops for the supporting cards, in order. */
+  /** Fallback backdrops for supporting cards without their own image. */
   images?: string[];
 }) {
   const [feature, ...rest] = cards;
+  const stacked = rest.length > 1;
   return (
-    <div className="mt-12 grid gap-5 lg:grid-cols-2 lg:grid-rows-2">
-      {/* Feature card: tall, with a quiet video backdrop */}
+    <div className={`mt-12 grid gap-5 lg:grid-cols-2 ${stacked ? 'lg:grid-rows-2' : ''}`}>
+      {/* Feature card: tall, with a quiet video or photo backdrop */}
       <Link
         href={feature.href}
-        className="group relative flex min-h-[420px] flex-col overflow-hidden rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25 lg:row-span-2 lg:p-10"
+        className={`group relative flex min-h-[420px] flex-col overflow-hidden rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25 lg:p-10 ${stacked ? 'lg:row-span-2' : ''}`}
       >
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover opacity-35"
-        >
-          {video.webm ? <source src={video.webm} type="video/webm" /> : null}
-          <source src={video.mp4} type="video/mp4" />
-        </video>
+        {video ? (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover opacity-35"
+          >
+            {video.webm ? <source src={video.webm} type="video/webm" /> : null}
+            <source src={video.mp4} type="video/mp4" />
+          </video>
+        ) : feature.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={feature.image}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover opacity-35"
+          />
+        ) : null}
         <div
           aria-hidden="true"
           className="absolute inset-0"
@@ -404,7 +441,7 @@ export function ProofCards({
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={images[i % images.length]}
+            src={card.image ?? images[i % images.length]}
             alt=""
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover opacity-35"

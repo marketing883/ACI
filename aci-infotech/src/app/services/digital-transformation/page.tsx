@@ -15,13 +15,13 @@ import {
   SectionHead,
   ServiceHero,
   OfferingList,
-  ProofCards,
   ProcessStrip,
   BridgeBand,
   FactsRow,
   PageFaq,
   cardShadow,
 } from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
 
@@ -126,6 +126,7 @@ const PROOF = [
     summary: 'Accounts payable rebuilt with UiPath and Azure Document AI. Processing time fell 35%, and exceptions route to a human review queue instead of a backlog.',
     href: '/case-studies',
     linkLabel: 'Explore the case studies',
+    image: '/images/v4/case-finance.jpg',
   },
   {
     client_descriptor: 'Global Technology Enterprise',
@@ -134,6 +135,7 @@ const PROOF = [
     summary: 'Contract creation, review, approval, compliance, and renewal automated end to end in a governed Conga CLM environment.',
     href: '/case-studies/accelerating-contract-performance-through-intelligent-automation',
     linkLabel: 'Read the automation story',
+    image: '/images/v4/why-visual.jpg',
   },
   {
     client_descriptor: 'Enterprise Technology Company',
@@ -142,6 +144,7 @@ const PROOF = [
     summary: 'Automated CI/CD, monitoring, load balancing, and centralized logging keep releases moving without disrupting operations.',
     href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
     linkLabel: 'Read the DevOps story',
+    image: '/images/v4/svc-ops.jpg',
   },
 ];
 
@@ -359,14 +362,16 @@ export default function DigitalTransformationPage() {
               </>
             }
           />
-          <ProofCards
-            cards={PROOF.map((p) => ({
+          <CmsProofCards
+            service="Digital Transformation"
+            fallback={PROOF.map((p) => ({
               eyebrow: displayClient(p),
               metric: p.metric,
               metricLabel: p.metricLabel,
               summary: p.summary,
               href: p.href,
               linkLabel: p.linkLabel,
+              image: p.image,
             }))}
           />
         </div>

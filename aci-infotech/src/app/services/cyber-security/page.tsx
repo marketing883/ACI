@@ -11,7 +11,6 @@ import {
   SectionHead,
   ServiceHero,
   OfferingList,
-  ProofCards,
   ProcessStrip,
   BridgeBand,
   FactsRow,
@@ -20,6 +19,7 @@ import {
   CheckBadge,
   DecisionCircle,
 } from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
 
@@ -98,6 +98,7 @@ const PROOF = [
     summary: 'Gaps flagged in a security audit closed on Azure Security, CyberArk, and Splunk. Vulnerabilities down 25%, and zero findings the next time the auditors came.',
     href: '/case-studies?service=cyber-security',
     linkLabel: 'Browse the security case studies',
+    image: '/images/v4/case-healthcare.jpg',
   },
   {
     eyebrow: 'Global Financial Services Firm',
@@ -106,6 +107,7 @@ const PROOF = [
     summary: 'Security moved into the CI/CD pipeline with Snyk, GitLab, and SonarQube: 65% of checks automated and zero bypasses, because the secure path became the fast path.',
     href: '/case-studies?industry=financial-services',
     linkLabel: 'See the financial services stories',
+    image: '/images/v4/case-finance.jpg',
   },
   {
     eyebrow: 'National Retail Chain',
@@ -114,6 +116,7 @@ const PROOF = [
     summary: 'Zero-trust architecture across a remote workforce and third-party access, built on Okta, CrowdStrike, and Zscaler, with MFA everywhere it belongs.',
     href: '/case-studies?industry=retail',
     linkLabel: 'See the retail stories',
+    image: '/images/v4/case-retail.jpg',
   },
 ];
 
@@ -355,7 +358,7 @@ export default function CyberSecurityPage() {
               </>
             }
           />
-          <ProofCards cards={PROOF} />
+          <CmsProofCards service="Cyber Security" fallback={PROOF} />
         </div>
       </section>
 

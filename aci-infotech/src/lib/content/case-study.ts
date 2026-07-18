@@ -58,3 +58,50 @@ export const getPublishedCaseStudies = cache(
     return data as unknown as CaseStudyListItem[];
   },
 );
+
+/**
+ * Case studies tagged with a given service (the display names the
+ * listing filter uses, e.g. "Data Engineering", "Applied AI & ML").
+ * Featured rows first, then newest. Returns [] on missing creds or
+ * error so callers can fall back to authored content.
+ */
+export const getCaseStudiesByService = cache(
+  async (service: string, limit = 3): Promise<CaseStudyListItem[]> => {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return [];
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data, error } = await supabase
+      .from('case_studies')
+      .select(LIST_COLUMNS)
+      .eq('status', 'published')
+      .contains('services', [service])
+      .order('is_featured', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    if (error || !data) return [];
+    return data as unknown as CaseStudyListItem[];
+  },
+);
+
+/** Normalize the metrics JSONB (array or JSON string; value/label or
+    legacy metric/description keys) into the typed array. */
+export function parseCaseStudyMetrics(
+  metrics: CaseStudyListItem['metrics'],
+): CaseStudyMetric[] {
+  let raw: unknown = metrics;
+  if (typeof raw === 'string') {
+    try {
+      raw = JSON.parse(raw);
+    } catch {
+      return [];
+    }
+  }
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((m) => {
+      const rec = m as Record<string, unknown>;
+      const value = (rec.value ?? rec.metric) as string | undefined;
+      const label = (rec.label ?? rec.description) as string | undefined;
+      return value && label ? { value, label } : null;
+    })
+    .filter((m): m is CaseStudyMetric => m !== null);
+}
