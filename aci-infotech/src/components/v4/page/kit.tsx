@@ -50,6 +50,7 @@ export function ServiceHero({
   secondary,
   logos,
   logosCaption,
+  stats,
 }: {
   kicker: string;
   title: React.ReactNode;
@@ -57,8 +58,11 @@ export function ServiceHero({
   chips: string[];
   primary: { label: string; href: string };
   secondary: { label: string; href: string };
-  logos: { src: string; alt: string }[];
-  logosCaption: string;
+  /** Partner credential panel. Omit and pass `stats` instead for
+      practices without partner logos (advisory, GCC, QE). */
+  logos?: { src: string; alt: string }[];
+  logosCaption?: string;
+  stats?: { value: string; label: string }[];
 }) {
   return (
     <section className="border-b border-gray-200 bg-white text-black">
@@ -104,11 +108,11 @@ export function ServiceHero({
           </div>
         </div>
 
-        {/* Partner credential panel: the platforms this practice is
-            certified on, given real prominence instead of a chip. */}
+        {/* Credential panel: partner logos given real prominence, or
+            hard delivery stats for practices without partner marks. */}
         <div className="lg:col-span-5">
           <div className="flex h-full flex-col justify-center gap-8 rounded-3xl border border-gray-200 bg-gray-50/60 p-8 md:p-10">
-            {logos.map((logo) => (
+            {logos?.map((logo) => (
               <Image
                 key={logo.alt}
                 src={logo.src}
@@ -118,7 +122,15 @@ export function ServiceHero({
                 className="h-12 w-auto self-start object-contain sm:h-14"
               />
             ))}
-            <p className="text-sm font-medium text-gray-500">{logosCaption}</p>
+            {stats?.map((stat) => (
+              <div key={stat.label}>
+                <p className={`text-4xl font-bold leading-none text-[#1D4ED8] sm:text-5xl ${v4Display}`}>
+                  {stat.value}
+                </p>
+                <p className="mt-2 text-sm font-medium text-gray-500">{stat.label}</p>
+              </div>
+            ))}
+            {logosCaption ? <p className="text-sm font-medium text-gray-500">{logosCaption}</p> : null}
           </div>
         </div>
       </div>
