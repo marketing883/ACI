@@ -1,11 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { Download, CheckCircle2, Loader2, X, Mail, Building2, User } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, Download, Loader2, X } from 'lucide-react';
+import { v4Display } from '@/components/v4/fonts';
 import { trackPlaybookAccessConversion } from '@/components/analytics/LinkedInInsightTag';
 
 // Gated-download island: the only interactive part of the playbook page.
 // Everything else server-renders so the content is in the initial HTML.
+
+// Hairline input, v4 grammar: gray-200 border, blue focus ring.
+const INPUT_CLASS =
+  'w-full rounded-xl border border-gray-200 px-4 py-3 text-[15px] text-black placeholder:text-gray-400 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700';
+
 // Download Modal Component
 function DownloadModal({
   isOpen,
@@ -80,115 +86,95 @@ function DownloadModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+      <div className="relative w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          aria-label="Close"
+          className="absolute right-4 top-4 rounded-full p-2 text-gray-500 hover:bg-gray-100"
         >
-          <X className="w-5 h-5 text-gray-500" />
+          <X className="h-5 w-5" />
         </button>
 
-        <div className="p-6">
-          <div className="text-center mb-6">
-            <div className="w-12 h-12 bg-[#1890FF]/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Download className="w-6 h-6 text-[#1890FF]" />
-            </div>
-            <h3 className="text-xl font-bold text-[var(--aci-secondary)]">
-              Download Playbook
-            </h3>
-            <p className="text-gray-600 text-sm mt-2">
-              {playbookTitle}
-            </p>
-          </div>
-
-          {success ? (
-            <div className="text-center py-8">
-              <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <p className="text-gray-600">Check your email for the download link!</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
-                    placeholder="John Smith"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Work Email
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
-                    placeholder="john@company.com"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Company
-                </label>
-                <div className="relative">
-                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="text"
-                    required
-                    value={formData.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
-                    placeholder="Acme Corp"
-                  />
-                </div>
-              </div>
-
-              {error && (
-                <p className="text-red-500 text-sm">{error}</p>
-              )}
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3 bg-[var(--aci-primary)] text-white font-semibold rounded-lg hover:bg-[var(--aci-primary-dark)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <Download className="w-5 h-5" />
-                    Get Playbook PDF
-                  </>
-                )}
-              </button>
-
-              <p className="text-xs text-gray-500 text-center">
-                By downloading, you agree to receive occasional updates from ACI Infotech.
-                Unsubscribe anytime.
-              </p>
-            </form>
-          )}
+        <div className="mb-6">
+          <Download className="h-7 w-7 text-blue-700" aria-hidden="true" />
+          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Playbook</p>
+          <h3 className={`mt-2 text-xl font-semibold text-black ${v4Display}`}>{playbookTitle}</h3>
         </div>
+
+        {success ? (
+          <div className="py-8 text-center">
+            <CheckCircle2 className="mx-auto mb-4 h-14 w-14 text-[#84CC16]" aria-hidden="true" />
+            <p className="text-gray-600">Check your email for the download link.</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">Full Name</label>
+              <input
+                type="text"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className={INPUT_CLASS}
+                placeholder="John Smith"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">Work Email</label>
+              <input
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className={INPUT_CLASS}
+                placeholder="john@company.com"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">Company</label>
+              <input
+                type="text"
+                required
+                value={formData.company}
+                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                className={INPUT_CLASS}
+                placeholder="Acme Corp"
+              />
+            </div>
+
+            {error && (
+              <p className="text-sm text-red-600">{error}</p>
+            )}
+
+            {/* The one allowed button: a functional form submit, styled
+                like the CtaSection button. */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1D4ED8] px-8 py-4 text-base font-semibold text-white shadow-[0_20px_60px_-15px_rgba(29,78,216,0.55)] ring-1 ring-white/20 transition-all duration-300 hover:bg-[#84CC16] hover:text-black disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                  Processing
+                </>
+              ) : (
+                <>
+                  <Download className="h-5 w-5" aria-hidden="true" />
+                  Get the Playbook PDF
+                </>
+              )}
+            </button>
+
+            <p className="text-center text-xs text-gray-500">
+              By downloading, you agree to receive occasional updates from ACI Infotech.
+              Unsubscribe anytime.
+            </p>
+          </form>
+        )}
       </div>
     </div>
   );
@@ -204,12 +190,16 @@ export default function PlaybookDownloadCta({
   const [open, setOpen] = useState(false);
   return (
     <>
+      {/* Text link, v4 grammar: underline on hover, no pill. */}
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 px-6 py-3 bg-[#C4FF61] text-[#001529] font-bold rounded-lg hover:bg-[#d4ff81] transition-colors"
+        className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-blue-700"
       >
-        <Download className="w-5 h-5" />
-        Download Playbook PDF
+        <span className="relative">
+          Download the playbook PDF
+          <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+        </span>
+        <ArrowUpRight size={16} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
       </button>
       <DownloadModal
         isOpen={open}
