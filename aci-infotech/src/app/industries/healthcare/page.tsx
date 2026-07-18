@@ -1,26 +1,44 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Heart, Shield, Clock, FileText } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
-import { healthcareFaqs } from '@/content/industry-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { healthcareRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { healthcareFaqs } from '@/content/industry-faqs';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { getSiteUrl } from '@/lib/site-url';
+import { v4Sans, v4Geist } from '@/components/v4/fonts';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+  CheckBadge,
+  cardShadow,
+} from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
-import { displayClient } from '@/lib/content/anonymize';
+export const revalidate = 3600;
+
+const siteUrl = getSiteUrl();
 
 const DESCRIPTION =
   'Healthcare technology consulting for providers, payers, and life sciences: HIPAA-compliant data platforms, EHR and FHIR integration, and claims analytics.';
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://aciinfotech.com/industries/healthcare' },
+  alternates: { canonical: `${siteUrl}/industries/healthcare` },
   title: 'Healthcare & Life Sciences Technology',
   description: DESCRIPTION,
   openGraph: {
     title: 'Healthcare & Life Sciences Technology | ACI Infotech',
     description: DESCRIPTION,
-    url: 'https://aciinfotech.com/industries/healthcare',
+    url: `${siteUrl}/industries/healthcare`,
     siteName: 'ACI Infotech',
     type: 'website',
     images: DEFAULT_OG_IMAGES,
@@ -33,73 +51,42 @@ export const metadata: Metadata = {
   },
 };
 
-const solutions = [
+/* ------------------------------- page data ------------------------------- */
+
+const OFFERINGS = [
   {
-    title: 'Clinical Data Integration',
-    description: 'Unify EHR, claims, and clinical data into a single platform for comprehensive patient insights.',
-    outcomes: ['Unified patient view', 'Real-time data access', 'FHIR compliance'],
-    services: ['Data Engineering', 'Cloud Modernization'],
+    title: 'Clinical data integration',
+    body: 'Epic, Cerner, and other EHRs integrated through FHIR APIs and HL7 feeds into one governed platform. Clinical, claims, and operational data share a single patient view instead of twelve.',
+    chips: ['FHIR', 'HL7', 'AWS', 'Snowflake'],
   },
   {
-    title: 'Population Health Analytics',
-    description: 'Identify at-risk populations and improve outcomes with predictive analytics and care management.',
-    outcomes: ['Risk stratification', 'Care gap identification', 'Outcome prediction'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Population health analytics',
+    body: 'Risk stratification, care gap identification, and outcome prediction on the unified record. The at-risk list updates from live data, not last quarter’s extract.',
+    chips: ['Databricks', 'MLflow', 'Power BI'],
   },
   {
-    title: 'Drug Discovery Acceleration',
-    description: 'Accelerate research with unified data platforms, AI-powered analysis, and collaboration tools.',
-    outcomes: ['24% faster data access', 'Automated lineage', 'Research collaboration'],
-    services: ['Data Engineering', 'Applied AI & ML'],
+    title: 'Research and life sciences data',
+    body: 'Unified research platforms with automated lineage for discovery teams. One pharmaceutical engagement cut data access time 24%, doubled researcher productivity, and held 100% lineage compliance.',
+    chips: ['Databricks', 'Delta Lake', 'Airflow', 'Python'],
   },
   {
-    title: 'Claims & Revenue Analytics',
-    description: 'Optimize revenue cycle with automated claims analysis, denial prediction, and payment optimization.',
-    outcomes: ['Reduced denials', 'Faster payments', 'Revenue optimization'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Claims and revenue cycle analytics',
+    body: 'Automated claims analysis, denial prediction, and payment optimization aimed at the numbers the revenue cycle team already argues about: denial rates and days in A/R. Document AI took one provider from 72-hour claims processing to 4.',
+    chips: ['Python', 'Kafka', 'Snowflake'],
   },
   {
-    title: 'HIPAA-Compliant Cloud',
-    description: 'Migrate healthcare workloads to the cloud with built-in HIPAA compliance and security.',
-    outcomes: ['HIPAA certified', 'BAA coverage', 'Audit ready'],
-    services: ['Cloud Modernization', 'Cyber Security'],
+    title: 'HIPAA-compliant cloud',
+    body: 'Healthcare workloads moved to cloud landing zones with encryption, least-privilege access, BAA coverage, and audit logging designed in. Audit ready is the default state, not a project.',
+    chips: ['AWS', 'Azure', 'Audit logging'],
   },
   {
-    title: 'AI for Clinical Decision Support',
-    description: 'Deploy AI models that assist clinicians with diagnosis, treatment recommendations, and alerts.',
-    outcomes: ['Clinical insights', 'Alert optimization', 'Evidence-based care'],
-    services: ['Applied AI & ML', 'Digital Transformation'],
+    title: 'Clinical decision support AI',
+    body: 'Models that assist clinicians with diagnosis support, treatment recommendations, and alert optimization, governed with a registry and documented evaluation. Anything that touches a care decision gets human review before it ships.',
+    chips: ['MLflow', 'Model registry', 'Evaluation'],
   },
 ];
 
-const caseStudies = [
-  {
-    client: 'Regional Healthcare System',
-    type: 'Healthcare Provider',
-    challenge: 'Fragmented patient data across 12 hospitals preventing coordinated care',
-    solution: 'HIPAA-compliant data platform on AWS with FHIR APIs and real-time integration',
-    results: [
-      { metric: 'Unified', label: 'Patient records across all facilities' },
-      { metric: '99.7%', label: 'Platform uptime achieved' },
-      { metric: 'HIPAA', label: 'Full compliance maintained' },
-    ],
-    technologies: ['AWS', 'Snowflake', 'FHIR', 'Kafka'],
-  },
-  {
-    client: 'Global Pharmaceutical',
-    type: 'Life Sciences',
-    challenge: 'Siloed research data slowing drug discovery timelines',
-    solution: 'Unified data lake on Databricks with automated lineage tracking and collaboration',
-    results: [
-      { metric: '24%', label: 'Faster research data access' },
-      { metric: '100%', label: 'Data lineage compliance' },
-      { metric: '2x', label: 'Researcher productivity' },
-    ],
-    technologies: ['Databricks', 'Delta Lake', 'Python', 'Airflow'],
-  },
-];
-
-const compliance = [
+const COMPLIANCE = [
   { name: 'HIPAA', description: 'Health data privacy' },
   { name: 'HITRUST', description: 'Security framework' },
   { name: 'SOC 2 Type II', description: 'Security controls' },
@@ -108,239 +95,239 @@ const compliance = [
   { name: 'GxP', description: 'Pharma quality standards' },
 ];
 
+const PROOF_FALLBACK = [
+  {
+    eyebrow: 'National Healthcare Provider',
+    metric: '4h',
+    metricLabel: 'Claims processing, down from 72',
+    summary:
+      'Document AI reading claims with 88% automated accuracy, cutting manual processing 35%. Humans now handle the edge cases, not the pile.',
+    href: '/case-studies/healthcare-eligibility-verification-automation-aci-yesbot',
+    linkLabel: 'Read the YesBot story',
+    image: '/images/v4/case-healthcare.jpg',
+  },
+  {
+    eyebrow: 'Global Food Services Operator',
+    metric: '53',
+    metricLabel: 'Countries on one data platform',
+    summary:
+      'One platform for 400,000 employees replacing dozens of regional reporting stacks, with decisions landing 22% faster.',
+    href: '/case-studies/global-food-facilities-data-intelligence',
+    linkLabel: 'Read the story',
+    image: '/images/v4/case-retail.jpg',
+  },
+  {
+    eyebrow: 'Global Technology Enterprise',
+    metric: '0.1%',
+    metricLabel: 'Contract error rate',
+    summary:
+      'Contract operations automated end to end in a governed CLM environment. The same document automation discipline behind our claims work.',
+    href: '/case-studies/accelerating-contract-performance-through-intelligent-automation',
+    linkLabel: 'Read the automation story',
+    image: '/images/v4/svc-ops.jpg',
+  },
+];
+
+const PROCESS = [
+  {
+    title: 'Assess',
+    body: 'Map the systems, the PHI flows, and the compliance obligations. Pick the first use case that moves a measure you already report.',
+  },
+  {
+    title: 'Design',
+    body: 'Platform architecture and controls mapped to HIPAA and the HITRUST CSF, with de-identification decided up front, not discovered later.',
+  },
+  {
+    title: 'Integrate',
+    body: 'EHR, claims, and operational feeds wired in through FHIR and HL7. The unified record starts building from the first sprint.',
+  },
+  {
+    title: 'Validate',
+    body: 'Reconcile against source systems and walk the controls with your compliance team. A first working use case, like denial analysis, lands inside the 10 to 14 weeks we quote.',
+  },
+  {
+    title: 'Run',
+    body: 'Around-the-clock operations under SLA, with audit evidence coming out of normal operations instead of a scramble before the assessment.',
+  },
+];
+
+const FACTS = [
+  {
+    label: 'Compliance',
+    line: 'Delivery mapped to HIPAA, the HITRUST CSF, FDA 21 CFR Part 11, and GxP. Controls are designed in from day one.',
+  },
+  {
+    label: 'Interoperability',
+    line: 'FHIR and HL7 integration across Epic, Cerner, and the systems around them. One patient view instead of twelve.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Operations',
+    line: 'ISO 27001 certified and CMMI Level 3 appraised, with 24/7 managed operations under published SLAs.',
+  },
+];
+
+const FAQS = healthcareFaqs.map((f) => ({ question: f.q, answer: f.a }));
+
+/* --------------------------------- page ---------------------------------- */
+
 export default function HealthcarePage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/industries"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Industries
-          </Link>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <ServiceSchema
+        name="Healthcare & Life Sciences Technology"
+        description={DESCRIPTION}
+        url="/industries/healthcare"
+        serviceType="Healthcare Technology Consulting"
+      />
+      {/* FAQPage JSON-LD comes from PageFaq below, one per page. */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Industries', url: '/industries' },
+          { name: 'Healthcare', url: '/industries/healthcare' },
+        ]}
+      />
 
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-[var(--aci-primary)] rounded-2xl flex items-center justify-center">
-              <Heart className="w-8 h-8 text-white" />
-            </div>
-          </div>
+      <ServiceHero
+        kicker="Healthcare & Life Sciences"
+        title={
+          <>
+            Healthcare technology with{' '}
+            <span style={{ color: '#1D4ED8' }}>compliance built&nbsp;in</span>
+          </>
+        }
+        lede="HIPAA-compliant data platforms, EHR and FHIR integration, and claims analytics for providers, payers, and life sciences. We unify clinical and claims data under controls that satisfy HITRUST assessors, and we govern the AI that reads it."
+        chips={[
+          'HIPAA and HITRUST controls',
+          '4h claims, down from 72',
+          'FHIR and HL7 integration',
+          'ISO 27001',
+        ]}
+        primary={{ label: 'Talk to a healthcare team', href: '/contact?reason=architecture-call' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        visual={<FlowScene config={FLOWS['industry-healthcare']} />}
+      />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Healthcare & Life Sciences
-            <span className="text-[var(--aci-primary-light)]"> Technology Solutions</span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            HIPAA-compliant data platforms, EHR and FHIR integration, and claims analytics for
-            providers, payers, and life sciences. We unify clinical and claims data under controls
-            that satisfy HITRUST assessors, and govern the AI that reads it.
-          </p>
+      {/* Problem band: fragmented systems, one patient */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        image="/images/v4/case-healthcare.jpg"
+        pill="Why care data stalls"
+        headline={
+          <>
+            Twelve systems.{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">One patient.</span>
+          </>
+        }
+        body="Clinical data lives in the EHR, claims in another system, labs and devices in their own silos, and every one of them holds a piece of the same patient. Coordinated care needs one governed record, under controls an assessor will actually sign off on. We build that record and keep it current."
+        story={{
+          metric: { value: '4h', label: 'Claims processing, down from 72' },
+          title:
+            'Eligibility verification automated for a national healthcare provider, with document AI reading claims at 88% automated accuracy.',
+          href: '/case-studies/healthcare-eligibility-verification-automation-aci-yesbot',
+          logoSrc: '/brand/aci-infotech-logo-white.png',
+          logoAlt: 'ACI Infotech',
+        }}
+      />
 
-          <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule Consultation
-            </Button>
-            <Button href="/case-studies" variant="secondary" size="lg">
-              View Case Studies
-            </Button>
-          </div>
+      {/* Offerings */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build for healthcare"
+            title={
+              <>
+                From the record to <span style={{ color: '#1D4ED8' }}>the&nbsp;outcome.</span>
+              </>
+            }
+            sub="Healthcare technology pointed at the measures you already report: HEDIS scores, readmission rates, denial rates, days in A/R."
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Value Props */}
-      <section className="py-16 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-7 h-7 text-red-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">HIPAA Compliant</h3>
-              <p className="text-gray-600 text-sm">
-                Built-in compliance for all healthcare regulations.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-7 h-7 text-red-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Real-Time Data</h3>
-              <p className="text-gray-600 text-sm">
-                Real-time clinical data for immediate insights.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <FileText className="w-7 h-7 text-red-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Interoperability</h3>
-              <p className="text-gray-600 text-sm">
-                FHIR-native solutions for seamless integration.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-7 h-7 text-red-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Patient-Centric</h3>
-              <p className="text-gray-600 text-sm">
-                Solutions designed to improve patient outcomes.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Solutions */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Solutions for Healthcare
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Healthcare technology consulting pointed at the measures you already report: HEDIS
-              scores, readmission rates, denial rates, days in A/R.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {solutions.map((solution) => (
-              <div key={solution.title} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-3">{solution.title}</h3>
-                <p className="text-gray-600 mb-4">{solution.description}</p>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-500 mb-2">Outcomes</h4>
-                  <ul className="space-y-1">
-                    {solution.outcomes.map((outcome) => (
-                      <li key={outcome} className="flex items-center gap-2 text-sm text-gray-700">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                        {outcome}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {solution.services.map((service) => (
-                    <span key={service} className="px-2 py-1 bg-red-50 text-red-700 text-xs rounded">
-                      {service}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Healthcare Success Stories
-            </h2>
-          </div>
-
-          <div className="space-y-8">
-            {caseStudies.map((cs, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <div className="flex flex-col lg:flex-row gap-8">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="px-3 py-1 bg-red-600 text-white text-sm font-medium rounded-full">
-                        {cs.type}
-                      </span>
-                      <span className="text-gray-500">{displayClient(cs)}</span>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-gray-700 mb-2">Challenge</h3>
-                      <p className="text-gray-600">{cs.challenge}</p>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-gray-700 mb-2">Solution</h3>
-                      <p className="text-gray-600">{cs.solution}</p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {cs.technologies.map((tech) => (
-                        <span key={tech} className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-full">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="lg:w-80">
-                    <h3 className="font-semibold text-gray-700 mb-4">Results</h3>
-                    <div className="space-y-4">
-                      {cs.results.map((result, i) => (
-                        <div key={i} className="bg-white p-4 rounded-lg">
-                          <div className="text-2xl font-bold text-red-600">{result.metric}</div>
-                          <div className="text-sm text-gray-600">{result.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Link href="/case-studies" className="inline-flex items-center gap-2 text-[var(--aci-primary)] font-semibold hover:underline">
-              View All Case Studies <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Compliance */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8 text-center">
-            Compliance & Regulatory Expertise
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {compliance.map((item) => (
-              <div key={item.name} className="bg-white p-4 rounded-lg flex items-center gap-4">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-green-600" />
-                </div>
+      {/* Compliance band: the signature regulatory content, restyled */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Compliance"
+            title={<>Built for the&nbsp;assessor.</>}
+            sub="The frameworks our healthcare work is delivered against. When an assessor asks who touched a record and when, the answer is a query, not a week of meetings."
+          />
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {COMPLIANCE.map((item) => (
+              <div key={item.name} className={`flex items-start gap-3 rounded-2xl bg-white px-5 py-4 ${cardShadow}`}>
+                <CheckBadge />
                 <div>
-                  <div className="font-semibold text-[var(--aci-secondary)]">{item.name}</div>
-                  <div className="text-sm text-gray-500">{item.description}</div>
+                  <p className="text-[15px] font-semibold leading-snug text-black">{item.name}</p>
+                  <p className="mt-0.5 text-sm text-gray-500">{item.description}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Measured in production, <span style={{ color: '#1D4ED8' }}>not&nbsp;pilots.</span>
+              </>
+            }
+          />
+          <CmsProofCards industry="Healthcare" fallback={PROOF_FALLBACK} />
+        </div>
+      </section>
+
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
+        </div>
+      </section>
+
+      {/* Bridge to the applied AI practice */}
+      <BridgeBand
+        title={<>The record is ready. Now the&nbsp;models.</>}
+        body="Once clinical and claims data share one governed platform, the AI work gets real: denial prediction, risk stratification, document automation. Our applied AI practice builds those models with the registry, evaluation, and human review that clinical data demands."
+        link={{ label: 'Applied AI & ML', href: '/services/applied-ai-ml' }}
+      />
+
+      {/* Why us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title={<>Why healthcare organizations build with&nbsp;us</>} />
+          <FactsRow facts={FACTS} />
+        </div>
+      </section>
+
+      <ClusterPosts keywords={['healthcare', 'hipaa', 'fhir', 'claims']} />
 
       <RelatedLinks items={healthcareRelated} />
 
-      <FaqBlock items={healthcareFaqs} eyebrow="Healthcare FAQ" />
+      <PageFaq
+        kicker="Healthcare FAQ"
+        title={
+          <>
+            Healthcare questions,
+            <br />
+            answered straight.
+          </>
+        }
+        faqs={FAQS}
+      />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-red-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Transform Healthcare Delivery?
-          </h2>
-          <p className="text-xl text-red-100 mb-8">
-            Schedule a consultation with our healthcare technology experts to discuss your challenges.
-          </p>
-          <Button href="/contact?industry=healthcare" variant="lime" size="lg">
-            Talk to Healthcare Expert
-          </Button>
-        </div>
-      </section>
-    </main>
+      <CtaSection label="Let's talk healthcare data" />
+    </div>
   );
 }

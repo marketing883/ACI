@@ -1,27 +1,44 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Factory, Cpu, BarChart3, Wrench } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
-import { manufacturingFaqs } from '@/content/industry-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { manufacturingRelated } from '@/content/related-links';
-
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { manufacturingFaqs } from '@/content/industry-faqs';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { getSiteUrl } from '@/lib/site-url';
+import { v4Sans, v4Geist } from '@/components/v4/fonts';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+  CheckBadge,
+  cardShadow,
+} from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
-import { displayClient } from '@/lib/content/anonymize';
+export const revalidate = 3600;
+
+const siteUrl = getSiteUrl();
 
 const DESCRIPTION =
   'Industry 4.0 solutions for manufacturers. IoT analytics, predictive maintenance, quality analytics, and smart factory implementations.';
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://aciinfotech.com/industries/manufacturing' },
+  alternates: { canonical: `${siteUrl}/industries/manufacturing` },
   title: 'Manufacturing Technology Solutions',
   description: DESCRIPTION,
   openGraph: {
     title: 'Manufacturing Technology Solutions | ACI Infotech',
     description: DESCRIPTION,
-    url: 'https://aciinfotech.com/industries/manufacturing',
+    url: `${siteUrl}/industries/manufacturing`,
     siteName: 'ACI Infotech',
     type: 'website',
     images: DEFAULT_OG_IMAGES,
@@ -34,73 +51,42 @@ export const metadata: Metadata = {
   },
 };
 
-const solutions = [
+/* ------------------------------- page data ------------------------------- */
+
+const OFFERINGS = [
   {
-    title: 'Predictive Maintenance',
-    description: 'Deploy ML models that predict equipment failures before they happen, reducing downtime and maintenance costs.',
-    outcomes: ['28% less downtime', '45% lower maintenance costs', 'Extended equipment life'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Predictive maintenance',
+    body: 'Models that read sensor and maintenance history and flag failures before they stop the line. Across 50+ production lines on one engagement: 28% less unplanned downtime, 45% lower maintenance costs, and 99.2% equipment availability.',
+    chips: ['Azure IoT Hub', 'Databricks', 'Python'],
   },
   {
-    title: 'IoT Data Platform',
-    description: 'Build scalable platforms that ingest, process, and analyze data from thousands of sensors in real-time.',
-    outcomes: ['Real-time visibility', 'Scalable architecture', 'Edge-to-cloud integration'],
-    services: ['Data Engineering', 'Cloud Modernization'],
+    title: 'IoT data platform',
+    body: 'Edge-to-cloud platforms that ingest and process data from thousands of sensors in real time. Built to scale with the plant network, not to be rebuilt when the second site comes online.',
+    chips: ['Azure IoT', 'AWS IoT', 'Kafka'],
   },
   {
-    title: 'Quality Analytics',
-    description: 'Implement ML-powered quality control that detects defects early and identifies root causes.',
-    outcomes: ['21% fewer defects', 'Automated inspection', 'Root cause analysis'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Quality analytics',
+    body: 'Computer vision and ML quality control that catches defects early and traces root causes. One deployment cut the defect rate 21%, detected defects 35% faster, and took the rework bill down with them.',
+    chips: ['AWS SageMaker', 'OpenCV', 'Snowflake'],
   },
   {
-    title: 'Supply Chain Intelligence',
-    description: 'Gain visibility into your supply chain with predictive analytics for demand, inventory, and supplier risk.',
-    outcomes: ['Demand forecasting', 'Inventory optimization', 'Risk prediction'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Supply chain intelligence',
+    body: 'Demand forecasting, inventory optimization, and supplier risk prediction on one governed view of the chain. The disruption shows up in the data before it shows up at the dock.',
+    chips: ['Databricks', 'SAP', 'Power BI'],
   },
   {
-    title: 'Digital Twin',
-    description: 'Create digital representations of physical assets for simulation, monitoring, and optimization.',
-    outcomes: ['Asset simulation', 'Process optimization', 'What-if analysis'],
-    services: ['Digital Transformation', 'Data Engineering'],
+    title: 'Digital twin',
+    body: 'Digital representations of physical assets for simulation, monitoring, and what-if analysis. Try the process change on the twin before you try it on a running line.',
+    chips: ['Azure', 'PTC', 'Simulation'],
   },
   {
-    title: 'MES Integration',
-    description: 'Connect manufacturing execution systems with enterprise platforms for end-to-end visibility.',
-    outcomes: ['Real-time production data', 'ERP integration', 'OEE optimization'],
-    services: ['Data Engineering', 'Digital Transformation'],
+    title: 'MES and ERP integration',
+    body: 'Manufacturing execution systems connected with enterprise platforms for end-to-end visibility and OEE optimization. SAP stays the system of record; the platform makes its data usable.',
+    chips: ['SAP', 'Siemens', 'Rockwell'],
   },
 ];
 
-const caseStudies = [
-  {
-    client: 'Global Manufacturer',
-    type: 'Discrete Manufacturing',
-    challenge: 'Unplanned equipment failures causing significant production losses and safety risks',
-    solution: 'IoT data platform with ML-based predictive maintenance across 50+ production lines',
-    results: [
-      { metric: '28%', label: 'Reduction in unplanned downtime' },
-      { metric: '$210K', label: 'Annual savings from avoided failures' },
-      { metric: '99.2%', label: 'Equipment availability' },
-    ],
-    technologies: ['Azure IoT Hub', 'Databricks', 'Python', 'Power BI'],
-  },
-  {
-    client: 'Industrial Equipment Company',
-    type: 'Heavy Manufacturing',
-    challenge: 'Quality issues not detected until final inspection, causing rework and delays',
-    solution: 'Computer vision quality inspection with real-time defect detection and alerting',
-    results: [
-      { metric: '21%', label: 'Reduction in defect rate' },
-      { metric: '35%', label: 'Faster defect detection' },
-      { metric: '$160K', label: 'Annual savings from reduced rework' },
-    ],
-    technologies: ['AWS SageMaker', 'OpenCV', 'Snowflake', 'Kafka'],
-  },
-];
-
-const capabilities = [
+const CAPABILITIES = [
   { name: 'SCADA/PLC Integration', description: 'Industrial control systems' },
   { name: 'MES Platforms', description: 'Siemens, Rockwell, SAP' },
   { name: 'IoT Platforms', description: 'Azure IoT, AWS IoT, PTC' },
@@ -109,238 +95,238 @@ const capabilities = [
   { name: 'Edge Computing', description: 'Real-time processing' },
 ];
 
+const PROOF_FALLBACK = [
+  {
+    eyebrow: 'Global Enterprise Estate',
+    metric: '99.97%',
+    metricLabel: 'Uptime across 72+ servers',
+    summary:
+      'IT operations automated with DevOps pipelines and monitoring, holding availability across a complex estate. The operations discipline that keeps plant systems running.',
+    href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+    linkLabel: 'Read the operations story',
+    image: '/images/v4/svc-ops.jpg',
+  },
+  {
+    eyebrow: 'Global CPG & Beverage Leader',
+    metric: '94%',
+    metricLabel: 'Brand manager adoption',
+    summary:
+      'Self-service analytics across a global consumer goods portfolio, cutting campaign analysis from three weeks to four hours.',
+    href: '/case-studies/global-cpg-self-service-analytics-brand-managers',
+    linkLabel: 'Read the CPG story',
+    image: '/images/v4/case-manufacturing.jpg',
+  },
+  {
+    eyebrow: 'Global Technology Enterprise',
+    metric: '0.1%',
+    metricLabel: 'Contract error rate',
+    summary:
+      'Contract operations automated end to end in a governed CLM environment, with cycle time down 67%.',
+    href: '/case-studies/accelerating-contract-performance-through-intelligent-automation',
+    linkLabel: 'Read the automation story',
+    image: '/images/v4/why-visual.jpg',
+  },
+];
+
+const PROCESS = [
+  {
+    title: 'Assess',
+    body: 'Walk the plant, inventory the systems, and pick the use case with a number attached: downtime, defects, or OEE. Baseline it before building anything.',
+  },
+  {
+    title: 'Connect',
+    body: 'SCADA, MES, ERP, and quality data wired into one governed platform. Real-time where it earns its keep, batch where it does not.',
+  },
+  {
+    title: 'Model',
+    body: 'Predictive maintenance, quality, or supply chain models built on the connected data and tested against your own history.',
+  },
+  {
+    title: 'Prove',
+    body: 'Results measured on one line or plant against the baseline. A first governed use case lands inside the 10 to 14 weeks we quote.',
+  },
+  {
+    title: 'Scale',
+    body: 'Roll out across lines and sites with 24/7 operations under SLA, so the platform outlives the pilot team.',
+  },
+];
+
+const FACTS = [
+  {
+    label: 'Downtime',
+    line: '28% reduction in unplanned downtime on delivered engagements, measured against client baselines rather than a brochure.',
+  },
+  {
+    label: 'OT and IT',
+    line: 'SCADA, MES, ERP, and quality systems brought into one platform. The whole line in view, not one slice of it.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Operations',
+    line: 'ISO 27001 certified and CMMI Level 3 appraised, with 24/7 managed operations under published SLAs.',
+  },
+];
+
+const FAQS = manufacturingFaqs.map((f) => ({ question: f.q, answer: f.a }));
+
+/* --------------------------------- page ---------------------------------- */
+
 export default function ManufacturingPage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/industries"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Industries
-          </Link>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <ServiceSchema
+        name="Manufacturing Technology Solutions"
+        description={DESCRIPTION}
+        url="/industries/manufacturing"
+        serviceType="Manufacturing Technology Consulting"
+      />
+      {/* FAQPage JSON-LD comes from PageFaq below, one per page. */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Industries', url: '/industries' },
+          { name: 'Manufacturing', url: '/industries/manufacturing' },
+        ]}
+      />
 
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-[var(--aci-primary)] rounded-2xl flex items-center justify-center">
-              <Factory className="w-8 h-8 text-white" />
-            </div>
-          </div>
+      <ServiceHero
+        kicker="Manufacturing"
+        title={
+          <>
+            Manufacturing data from{' '}
+            <span style={{ color: '#1D4ED8' }}>sensor to&nbsp;decision</span>
+          </>
+        }
+        lede="From discrete manufacturing to process industries, we build the Industry 4.0 stack that pays for itself: IoT platforms, predictive maintenance, and quality analytics wired into the ERP. Downtime drops, defects surface early, and the plant runs on numbers instead of hunches."
+        chips={[
+          '28% less unplanned downtime',
+          '21% lower defect rate',
+          '99.2% equipment availability',
+          'OT and IT integration',
+        ]}
+        primary={{ label: 'Talk to a manufacturing team', href: '/contact?reason=architecture-call' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        visual={<FlowScene config={FLOWS['industry-manufacturing']} />}
+      />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Manufacturing
-            <span className="text-[var(--aci-primary-light)]"> Technology Solutions</span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            From discrete manufacturing to process industries, we help manufacturers implement
-            Industry 4.0 solutions that reduce downtime, improve quality, and optimize operations.
-            Our expertise spans IoT, AI, and enterprise integration.
-          </p>
+      {/* Problem band: the plant floor already produces the data */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        image="/images/v4/case-manufacturing.jpg"
+        pill="Why plants fly blind"
+        headline={
+          <>
+            The line already talks.{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">We make it heard.</span>
+          </>
+        }
+        body="SCADA, MES, ERP, and quality systems each hold a slice of the plant, and failures announce themselves in sensor data days before they stop the line. A platform that reads every slice catches them while they are still a work order. We wire OT and IT into one place and keep it running."
+        story={{
+          metric: { value: '99.97%', label: 'Uptime across 72+ servers' },
+          title:
+            'Enterprise IT operations automated with DevOps and monitoring. The same operations discipline we bring to plant systems.',
+          href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+          logoSrc: '/brand/aci-infotech-logo-white.png',
+          logoAlt: 'ACI Infotech',
+        }}
+      />
 
-          <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule Consultation
-            </Button>
-            <Button href="/case-studies" variant="secondary" size="lg">
-              View Case Studies
-            </Button>
-          </div>
+      {/* Offerings */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build for manufacturing"
+            title={
+              <>
+                Industry 4.0, with the <span style={{ color: '#1D4ED8' }}>numbers to show&nbsp;it.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Value Props */}
-      <section className="py-16 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Cpu className="w-7 h-7 text-orange-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Industry 4.0</h3>
-              <p className="text-gray-600 text-sm">
-                Smart factory solutions with IoT and AI.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Wrench className="w-7 h-7 text-orange-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">OT Expertise</h3>
-              <p className="text-gray-600 text-sm">
-                Deep operational technology experience.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <BarChart3 className="w-7 h-7 text-orange-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Real-Time Analytics</h3>
-              <p className="text-gray-600 text-sm">
-                Millisecond-level insights from production.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Factory className="w-7 h-7 text-orange-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Proven Results</h3>
-              <p className="text-gray-600 text-sm">
-                28% reduction in unplanned downtime.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Solutions */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Solutions for Manufacturing
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Industry 4.0 solutions that deliver measurable operational improvements.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {solutions.map((solution) => (
-              <div key={solution.title} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-3">{solution.title}</h3>
-                <p className="text-gray-600 mb-4">{solution.description}</p>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-500 mb-2">Outcomes</h4>
-                  <ul className="space-y-1">
-                    {solution.outcomes.map((outcome) => (
-                      <li key={outcome} className="flex items-center gap-2 text-sm text-gray-700">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                        {outcome}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {solution.services.map((service) => (
-                    <span key={service} className="px-2 py-1 bg-orange-50 text-orange-700 text-xs rounded">
-                      {service}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Manufacturing Success Stories
-            </h2>
-          </div>
-
-          <div className="space-y-8">
-            {caseStudies.map((cs, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <div className="flex flex-col lg:flex-row gap-8">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="px-3 py-1 bg-orange-600 text-white text-sm font-medium rounded-full">
-                        {cs.type}
-                      </span>
-                      <span className="text-gray-500">{displayClient(cs)}</span>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-gray-700 mb-2">Challenge</h3>
-                      <p className="text-gray-600">{cs.challenge}</p>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-gray-700 mb-2">Solution</h3>
-                      <p className="text-gray-600">{cs.solution}</p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {cs.technologies.map((tech) => (
-                        <span key={tech} className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-full">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="lg:w-80">
-                    <h3 className="font-semibold text-gray-700 mb-4">Results</h3>
-                    <div className="space-y-4">
-                      {cs.results.map((result, i) => (
-                        <div key={i} className="bg-white p-4 rounded-lg">
-                          <div className="text-2xl font-bold text-orange-600">{result.metric}</div>
-                          <div className="text-sm text-gray-600">{result.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Link href="/case-studies" className="inline-flex items-center gap-2 text-[var(--aci-primary)] font-semibold hover:underline">
-              View All Case Studies <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Capabilities */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8 text-center">
-            Manufacturing Systems Expertise
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {capabilities.map((item) => (
-              <div key={item.name} className="bg-white p-4 rounded-lg flex items-center gap-4">
-                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                  <Factory className="w-5 h-5 text-orange-600" />
-                </div>
+      {/* Systems band: the signature OT and IT expertise, restyled */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Manufacturing systems"
+            title={<>Fluent on the plant&nbsp;floor.</>}
+            sub="The control, execution, and enterprise systems a manufacturing engagement has to integrate with. We connect what you already run."
+          />
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {CAPABILITIES.map((item) => (
+              <div key={item.name} className={`flex items-start gap-3 rounded-2xl bg-white px-5 py-4 ${cardShadow}`}>
+                <CheckBadge />
                 <div>
-                  <div className="font-semibold text-[var(--aci-secondary)]">{item.name}</div>
-                  <div className="text-sm text-gray-500">{item.description}</div>
+                  <p className="text-[15px] font-semibold leading-snug text-black">{item.name}</p>
+                  <p className="mt-0.5 text-sm text-gray-500">{item.description}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Measured on the line, <span style={{ color: '#1D4ED8' }}>not the&nbsp;slide.</span>
+              </>
+            }
+          />
+          <CmsProofCards industry="Manufacturing" fallback={PROOF_FALLBACK} />
+        </div>
+      </section>
+
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
+        </div>
+      </section>
+
+      {/* Bridge to the data engineering practice */}
+      <BridgeBand
+        title={<>The plant floor is a data&nbsp;source.</>}
+        body="Predictive maintenance and quality analytics stand on the same foundation as every other model: governed pipelines that pull sensor, MES, and ERP data into one place and keep it trustworthy. That foundation is our data engineering practice."
+        link={{ label: 'Data Engineering', href: '/services/data-engineering' }}
+      />
+
+      {/* Why us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title={<>Why manufacturers build with&nbsp;us</>} />
+          <FactsRow facts={FACTS} />
+        </div>
+      </section>
+
+      <ClusterPosts keywords={['manufacturing', 'iot', 'predictive maintenance', 'industry 4.0']} />
 
       <RelatedLinks items={manufacturingRelated} />
 
-      <FaqBlock items={manufacturingFaqs} eyebrow="Manufacturing FAQ" />
+      <PageFaq
+        kicker="Manufacturing FAQ"
+        title={
+          <>
+            Manufacturing questions,
+            <br />
+            answered straight.
+          </>
+        }
+        faqs={FAQS}
+      />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-orange-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Modernize Your Manufacturing?
-          </h2>
-          <p className="text-xl text-orange-100 mb-8">
-            Schedule a consultation with our manufacturing technology experts to discuss your challenges.
-          </p>
-          <Button href="/contact?industry=manufacturing" variant="lime" size="lg">
-            Talk to Manufacturing Expert
-          </Button>
-        </div>
-      </section>
-    </main>
+      <CtaSection label="Let's talk about the plant floor" />
+    </div>
   );
 }

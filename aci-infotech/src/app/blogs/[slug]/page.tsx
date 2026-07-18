@@ -2,10 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Calendar, Clock, Tag, Linkedin } from 'lucide-react';
+import { ArrowUpRight, Linkedin } from 'lucide-react';
 import { getBlogPostBySlug } from '@/lib/content/blog';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getClusterPosts, getRecentPosts } from '@/lib/content/blog-cluster';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Display, v4Sans } from '@/components/v4/fonts';
+import { cardShadow } from '@/components/v4/page/kit';
 import ArticleBody from './ArticleBody';
 import BlogFaqs from './BlogFaqs';
 import ShareButtons from './ShareButtons';
@@ -139,99 +142,84 @@ export default async function BlogPostPage({ params }: PageProps) {
   };
 
   return (
-    <main className="min-h-screen">
+    <main className={`min-h-screen bg-white text-black ${v4Sans}`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Article header */}
+      <header className="bg-white">
+        <div className="mx-auto max-w-[840px] px-6 pt-12 md:pt-16">
           <Link
             href="/blogs"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+            className="group inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Blog
+            <span className="relative">
+              All articles
+              <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+            </span>
+            <ArrowUpRight size={14} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
 
-          <div className="flex flex-wrap items-center gap-4 mb-6">
-            {post.category && (
-              <span className="px-3 py-1 bg-[var(--aci-primary)] text-white text-sm font-medium rounded">
-                {post.category}
-              </span>
-            )}
-            <span className="flex items-center gap-1 text-gray-400 text-sm">
-              <Calendar className="w-4 h-4" />
-              {formatDate(dateStr)}
-            </span>
-            <span className="flex items-center gap-1 text-gray-400 text-sm">
-              <Clock className="w-4 h-4" />
-              {readTime}
-            </span>
-          </div>
-
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+          <p className="mb-4 mt-10 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            / {post.category || 'Insights'}
+          </p>
+          <h1
+            className={`text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-[44px] ${v4Display}`}
+            style={{ lineHeight: 1.08 }}
+          >
             {post.title}
           </h1>
-          {post.excerpt && <p className="text-xl text-gray-400 mb-8">{post.excerpt}</p>}
+          {post.excerpt && (
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-gray-600 md:text-lg">{post.excerpt}</p>
+          )}
 
-          {/* Author */}
-          <div className="flex items-center gap-4 pt-6 border-t border-gray-700">
-            {post.author_image_url ? (
-              <Image
-                src={post.author_image_url}
-                alt={post.author_name}
-                width={56}
-                height={56}
-                className="rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center overflow-hidden">
-                <Image src="/favicon.ico" alt={post.author_name || 'ACI Team'} width={40} height={40} className="object-contain" />
-              </div>
-            )}
-            <div>
-              <div className="font-semibold text-white">{post.author_name}</div>
-              {post.author_title && <div className="text-gray-400 text-sm">{post.author_title}</div>}
-            </div>
-          </div>
+          {/* Meta line */}
+          <p className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-gray-200 pt-6 text-sm text-gray-500">
+            <span>{formatDate(dateStr)}</span>
+            <span aria-hidden="true" className="text-gray-300">/</span>
+            <span>{readTime}</span>
+            {post.author_name ? (
+              <>
+                <span aria-hidden="true" className="text-gray-300">/</span>
+                <span>
+                  By {post.author_name}
+                  {post.author_title ? `, ${post.author_title}` : ''}
+                </span>
+              </>
+            ) : null}
+          </p>
         </div>
-      </section>
+      </header>
 
-      {/* Featured Image */}
+      {/* Featured image */}
       {post.featured_image_url && (
-        <div className="relative w-full h-[400px] md:h-[500px] -mt-10">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-            <div className="relative h-full rounded-xl overflow-hidden shadow-2xl">
-              <Image src={post.featured_image_url} alt={post.title} fill className="object-cover" priority />
-            </div>
+        <div className="mx-auto max-w-[960px] px-6 pt-10">
+          <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
+            <Image src={post.featured_image_url} alt={post.title} fill className="object-cover" priority />
           </div>
         </div>
       )}
 
-      {/* Article Content */}
-      <article className="py-16 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Article body */}
+      <article className="bg-white py-12 md:py-16">
+        <div className="mx-auto max-w-[720px] px-6">
           <ArticleBody content={post.content} contentFormat={post.content_format} />
 
           {post.faqs && post.faqs.length > 0 && <BlogFaqs faqs={post.faqs} />}
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
-            <div className="mt-12 pt-8 border-t border-gray-200">
-              <div className="flex items-center gap-2 mb-4">
-                <Tag className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-600 font-medium">Tags:</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
+            <div className="mt-12 border-t border-gray-200 pt-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Tags</p>
+              <p className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
                 {post.tags.map((tag) => (
-                  <span key={tag} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                  <span key={tag} className="whitespace-nowrap">
                     {tag}
                   </span>
                 ))}
-              </div>
+              </p>
             </div>
           )}
 
@@ -239,37 +227,44 @@ export default async function BlogPostPage({ params }: PageProps) {
         </div>
       </article>
 
-      {/* Author Bio */}
+      {/* Author card (E-E-A-T) */}
       {post.author_bio && (
-        <section className="py-12 bg-gray-50 border-y">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex gap-6 items-start">
+        <section className="border-t border-gray-200 bg-white py-12 md:py-16">
+          <div className="mx-auto max-w-[720px] px-6">
+            <div className={`flex flex-col gap-6 rounded-2xl bg-white p-7 sm:flex-row sm:items-start md:p-8 ${cardShadow}`}>
               {post.author_image_url ? (
                 <Image
                   src={post.author_image_url}
                   alt={post.author_name}
-                  width={80}
-                  height={80}
-                  className="rounded-full object-cover flex-shrink-0"
+                  width={72}
+                  height={72}
+                  className="h-[72px] w-[72px] flex-shrink-0 rounded-full object-cover"
                 />
               ) : (
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-200">
-                  <Image src="/favicon.ico" alt={post.author_name || 'ACI Team'} width={56} height={56} className="object-contain" />
+                <div className="flex h-[72px] w-[72px] flex-shrink-0 items-center justify-center overflow-hidden rounded-full border border-gray-200 bg-gray-50">
+                  <Image src="/favicon.ico" alt={post.author_name || 'ACI Team'} width={44} height={44} className="object-contain" />
                 </div>
               )}
               <div>
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-1">About {post.author_name}</h3>
-                {post.author_title && <p className="text-[var(--aci-primary)] font-medium mb-3">{post.author_title}</p>}
-                <p className="text-gray-600">{post.author_bio}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ About the author</p>
+                <h3 className={`mt-3 text-xl font-semibold text-black ${v4Display}`}>{post.author_name}</h3>
+                {post.author_title && (
+                  <p className="mt-1 text-sm font-medium text-gray-500">{post.author_title}</p>
+                )}
+                <p className="mt-3 text-[15px] leading-relaxed text-gray-600">{post.author_bio}</p>
                 {post.author_linkedin && (
                   <a
                     href={post.author_linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-[var(--aci-primary)] font-medium mt-4 hover:underline"
+                    className="group mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700"
                   >
-                    <Linkedin className="w-4 h-4" />
-                    Connect on LinkedIn
+                    <Linkedin className="h-4 w-4" aria-hidden="true" />
+                    <span className="relative">
+                      Connect on LinkedIn
+                      <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                    </span>
+                    <ArrowUpRight size={14} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </a>
                 )}
               </div>
@@ -281,27 +276,39 @@ export default async function BlogPostPage({ params }: PageProps) {
       {/* Related articles — server-rendered internal links so every post
           links to siblings (crawlable, kills the orphan problem). */}
       {related.length > 0 && (
-        <section className="py-16 bg-white border-t">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Related articles</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="border-t border-gray-200 bg-white py-16 md:py-20">
+          <div className="mx-auto max-w-7xl px-6">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Keep reading</p>
+            <h2
+              className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+              style={{ lineHeight: 1.08 }}
+            >
+              Related articles
+            </h2>
+            <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {related.map((r) => (
                 <Link
                   key={r.slug}
                   href={`/blogs/${r.slug}`}
-                  className="group bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-all"
+                  className={`group flex flex-col overflow-hidden rounded-2xl bg-white transition-shadow duration-300 hover:shadow-[0_6px_18px_rgba(63,74,126,0.1),0_2px_40px_rgba(63,74,126,0.16)] ${cardShadow}`}
                 >
-                  <div className="aspect-video relative">
+                  <div className="relative aspect-video">
                     {r.featuredImage ? (
-                      <Image src={r.featuredImage} alt={r.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" sizes="(max-width: 768px) 100vw, 33vw" />
+                      <Image src={r.featuredImage} alt={r.title} fill className="object-cover transition-transform duration-300 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200" />
+                      <div className="h-full w-full bg-gradient-to-br from-gray-100 to-gray-200" />
                     )}
                   </div>
-                  <div className="p-5">
-                    {r.category && <span className="text-xs font-medium text-[var(--aci-primary)]">{r.category}</span>}
-                    <h3 className="text-base font-bold text-[var(--aci-secondary)] mt-1 line-clamp-2 group-hover:text-[var(--aci-primary)] transition-colors">{r.title}</h3>
-                    {r.excerpt && <p className="text-sm text-gray-600 mt-2 line-clamp-2">{r.excerpt}</p>}
+                  <div className="flex flex-1 flex-col p-6">
+                    {r.category && (
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-blue-700">{r.category}</p>
+                    )}
+                    <h3 className={`mt-2 line-clamp-2 text-lg font-semibold text-black ${v4Display}`}>{r.title}</h3>
+                    {r.excerpt && <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-gray-600">{r.excerpt}</p>}
+                    <span className="mt-4 flex items-center gap-1 pt-1 text-sm font-semibold text-blue-700">
+                      Read the article
+                      <ArrowUpRight size={15} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
                   </div>
                 </Link>
               ))}
@@ -310,31 +317,8 @@ export default async function BlogPostPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Put These Insights Into Practice?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Our team can help you implement these strategies at your organization.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact?reason=architecture-call"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-[var(--aci-primary)] font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
-            >
-              Schedule Architecture Call
-            </Link>
-            <Link
-              href="/blogs"
-              className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-white font-semibold rounded-lg border-2 border-white/50 hover:bg-white/10 transition-colors"
-            >
-              Read More Articles
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Put These Ideas to Work" href="/contact?reason=architecture-call" />
     </main>
   );
 }

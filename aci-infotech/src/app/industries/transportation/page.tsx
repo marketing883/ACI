@@ -1,26 +1,47 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, MapPin, Clock, TrendingDown, Leaf, Truck } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
-import { transportationFaqs } from '@/content/industry-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { transportationRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { transportationFaqs } from '@/content/industry-faqs';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { getSiteUrl } from '@/lib/site-url';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+  CheckBadge,
+  cardShadow,
+  glueWidow,
+} from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
-import { displayClient } from '@/lib/content/anonymize';
+export const revalidate = 3600;
+
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 const DESCRIPTION =
   'Transportation technology consulting for carriers and logistics operators: TMS, telematics, and EDI integration, route optimization, and OTIF improvement.';
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://aciinfotech.com/industries/transportation' },
+  alternates: { canonical: `${siteUrl}/industries/transportation` },
   title: 'Transportation & Logistics Technology',
   description: DESCRIPTION,
   openGraph: {
     title: 'Transportation & Logistics Technology | ACI Infotech',
     description: DESCRIPTION,
-    url: 'https://aciinfotech.com/industries/transportation',
+    url: `${siteUrl}/industries/transportation`,
     siteName: 'ACI Infotech',
     type: 'website',
     images: DEFAULT_OG_IMAGES,
@@ -33,315 +54,314 @@ export const metadata: Metadata = {
   },
 };
 
-const solutions = [
+/* ------------------------------- page data ------------------------------- */
+
+const OFFERINGS = [
   {
-    title: 'Route Optimization',
-    description: 'AI-powered route planning that reduces fuel costs, improves delivery times, and maximizes fleet utilization.',
-    outcomes: ['15% fuel cost reduction', '20% more deliveries/day', 'Real-time re-routing'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Route optimization',
+    body: 'AI route planning that reads orders, traffic, hours of service, and fuel data, then re-plans through the day. Engagements have cut fuel costs 15% and fit 20% more deliveries into the same day, with real-time re-routing when the road disagrees with the plan.',
+    chips: ['AI planning', 'Real-time re-routing', 'Fuel data', 'Hours of service'],
   },
   {
-    title: 'Real-Time Fleet Visibility',
-    description: 'Track every vehicle, shipment, and driver in real-time with IoT integration and live dashboards.',
-    outcomes: ['100% fleet visibility', 'ETA accuracy >95%', 'Instant exception alerts'],
-    services: ['Data Engineering', 'Cloud Modernization'],
+    title: 'Real-time fleet visibility',
+    body: 'Every vehicle, shipment, and driver tracked live through IoT integration and dashboards dispatch actually uses. 100% fleet visibility, ETA accuracy above 95%, and exception alerts that fire while there is still time to act.',
+    chips: ['IoT & telematics', 'Live dashboards', 'ETA accuracy', 'Exception alerts'],
   },
   {
-    title: 'Predictive Maintenance',
-    description: 'Prevent breakdowns before they happen with ML models that analyze vehicle sensor data and maintenance history.',
-    outcomes: ['26% fewer breakdowns', '25% maintenance cost reduction', 'Extended asset life'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Predictive maintenance',
+    body: 'ML models on telematics and maintenance history that forecast service needs before the breakdown. One regional trucking company saw 26% fewer breakdowns, $195K a year in maintenance savings, and vehicle lifespan extended 15%.',
+    chips: ['Telematics', 'ML models', 'Maintenance history', 'Asset life'],
   },
   {
-    title: 'Supply Chain Analytics',
-    description: 'End-to-end visibility across your supply chain with advanced analytics for demand planning and inventory optimization.',
-    outcomes: ['30% inventory reduction', 'Demand forecast accuracy', 'Supplier performance tracking'],
-    services: ['Data Engineering', 'Applied AI & ML'],
+    title: 'Supply chain analytics',
+    body: 'End-to-end visibility across orders, warehouses, and transit, with demand planning and supplier performance tracking on the same governed data. Inventory has come down 30% where the forecast finally met the shelf.',
+    chips: ['Demand planning', 'Inventory optimization', 'Supplier tracking', 'WMS data'],
   },
   {
-    title: 'Carbon Footprint Tracking',
-    description: 'Measure, report, and reduce emissions across your operations with real-time sustainability dashboards.',
-    outcomes: ['Scope 1-3 tracking', 'Automated ESG reporting', '18% emissions reduction'],
-    services: ['Data Engineering', 'Digital Transformation'],
+    title: 'Carbon footprint tracking',
+    body: 'Scope 1 through 3 emissions measured from operational data, with automated ESG reporting instead of an annual spreadsheet hunt. Operators have cut emissions 18% once they could see where the carbon actually was.',
+    chips: ['Scope 1-3', 'Automated ESG reporting', 'Emissions data', 'Sustainability'],
   },
   {
-    title: 'Driver Performance & Safety',
-    description: 'Improve driver behavior, reduce accidents, and lower insurance costs with AI-powered coaching.',
-    outcomes: ['32% accident reduction', 'Lower insurance premiums', 'Driver scorecards'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Driver performance & safety',
+    body: 'AI coaching on driving behavior that cut accidents 32% and lowered insurance premiums, with scorecards drivers can read without a lawyer. Safer fleet, cheaper coverage, same data.',
+    chips: ['Driver scorecards', 'AI coaching', 'Safety analytics', 'Insurance'],
   },
 ];
 
-const caseStudies = [
+// Signature: the logistics capabilities band, kept from the published page.
+const CAPABILITIES = [
+  { name: 'TMS integration', description: 'All major systems supported' },
+  { name: 'ELD compliance', description: 'Hours of service tracking' },
+  { name: 'IoT & telematics', description: 'Real-time sensor data' },
+  { name: 'EDI/API connectivity', description: 'Partner integrations' },
+  { name: 'FMCSA compliance', description: 'Regulatory requirements' },
+  { name: 'Multi-modal support', description: 'Truck, rail, air, ocean' },
+];
+
+// Fleet results from the published Fortune 500 logistics engagement.
+const FLEET_RESULTS = [
+  { value: '$250K', label: 'Annual fuel cost savings' },
+  { value: '16%', label: 'Improvement in on-time delivery' },
+  { value: '18%', label: 'Reduction in empty miles' },
+  { value: '26%', label: 'Reduction in breakdowns' },
+];
+
+const PROOF_FALLBACK = [
   {
-    client: 'Fortune 500 Logistics Company',
-    type: 'Freight & Logistics',
-    challenge: 'Rising fuel costs and inefficient routing costing millions annually, with limited visibility into fleet performance',
-    solution: 'AI-powered route optimization platform with real-time fleet tracking and predictive analytics',
-    results: [
-      { metric: '$250K', label: 'Annual fuel cost savings' },
-      { metric: '16%', label: 'Improvement in on-time delivery' },
-      { metric: '18%', label: 'Reduction in empty miles' },
-    ],
-    technologies: ['AWS', 'Databricks', 'IoT Sensors', 'Python ML'],
+    eyebrow: 'Enterprise Technology Company',
+    metric: '99.97%',
+    metricLabel: 'Uptime across 72+ servers',
+    summary:
+      'Automated DevOps and 24/7 monitoring across a complex estate. The operations discipline we bring to platforms that dispatch depends on.',
+    href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+    linkLabel: 'Read the operations story',
+    image: '/images/v4/svc-ops.jpg',
   },
   {
-    client: 'Regional Trucking Company',
-    type: 'Transportation',
-    challenge: 'High maintenance costs and unexpected breakdowns disrupting operations and customer commitments',
-    solution: 'Predictive maintenance system using telematics data and ML to forecast vehicle service needs',
-    results: [
-      { metric: '26%', label: 'Reduction in breakdowns' },
-      { metric: '$195K', label: 'Annual maintenance savings' },
-      { metric: '15%', label: 'Extended vehicle lifespan' },
-    ],
-    technologies: ['Azure IoT', 'Snowflake', 'TensorFlow', 'Power BI'],
+    eyebrow: 'Fortune 500 Convenience Retail Chain',
+    metric: '30%',
+    metricLabel: 'Reduction in data latency',
+    summary:
+      'A governed Databricks lakehouse across 600+ locations, with real-time inventory visibility and zero downtime through the cutover.',
+    href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+    linkLabel: 'Read the Databricks story',
+    image: '/images/v4/case-retail.jpg',
+  },
+  {
+    eyebrow: 'Global Food Services Operator',
+    metric: '53',
+    metricLabel: 'Countries on one data platform',
+    summary:
+      'One governed platform for 400,000 employees replacing dozens of regional reporting stacks, with decisions landing 22% faster.',
+    href: '/case-studies/global-food-facilities-data-intelligence',
+    linkLabel: 'Read the story',
+    image: '/images/v4/why-visual.jpg',
   },
 ];
 
-const capabilities = [
-  { name: 'TMS Integration', description: 'All major systems supported' },
-  { name: 'ELD Compliance', description: 'Hours of service tracking' },
-  { name: 'IoT & Telematics', description: 'Real-time sensor data' },
-  { name: 'EDI/API Connectivity', description: 'Partner integrations' },
-  { name: 'FMCSA Compliance', description: 'Regulatory requirements' },
-  { name: 'Multi-Modal Support', description: 'Truck, rail, air, ocean' },
+const PROCESS = [
+  {
+    title: 'Assess',
+    timeframe: 'Weeks 1 to 2',
+    body: 'Inventory the estate: TMS, telematics, ELD, EDI feeds, and where OTIF failures actually start. Pick the first lane or region to prove on.',
+  },
+  {
+    title: 'Architect',
+    timeframe: 'Weeks 2 to 4',
+    body: 'Logistics data core design: one governed view of orders, vehicles, and shipments, with partner feeds handled as first-class inputs.',
+  },
+  {
+    title: 'Build',
+    timeframe: 'Weeks 4 to 12',
+    body: 'Pipelines from the operational systems into the platform, with the first use case, like ETA accuracy or empty-mile reduction, shipped inside the window.',
+  },
+  {
+    title: 'Prove',
+    body: 'Measure fuel, miles, and on-time performance against your current planning, not a vendor benchmark. One lane first, then the network.',
+  },
+  {
+    title: 'Run',
+    body: 'Around-the-clock operations under SLAs, because freight does not stop moving at 6pm and neither can the platform.',
+  },
 ];
+
+const FACTS = [
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Compliance',
+    line: 'ISO 27001 certified and CMMI Level 3 appraised. ELD and FMCSA records stay audit-ready as a byproduct of normal operations.',
+  },
+  {
+    label: 'Operations',
+    line: '24/7 managed operations under published SLAs. The estate stays watched on every shift, in every time zone.',
+  },
+  {
+    label: 'Delivery',
+    line: 'The architects who scope the work are the ones who build it. No handoff between the pitch deck and the delivery pod.',
+  },
+];
+
+const FAQS = transportationFaqs.map((f) => ({ question: f.q, answer: f.a }));
+
+/* --------------------------------- page ---------------------------------- */
 
 export default function TransportationPage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/industries"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Industries
-          </Link>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <ServiceSchema
+        name="Transportation & Logistics Technology"
+        description={DESCRIPTION}
+        url="/industries/transportation"
+        serviceType="Transportation Technology Consulting"
+      />
+      {/* FAQPage JSON-LD comes from PageFaq below - one per page. */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Industries', url: '/industries' },
+          { name: 'Transportation & Logistics', url: '/industries/transportation' },
+        ]}
+      />
 
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-[var(--aci-primary)] rounded-2xl flex items-center justify-center">
-              <Truck className="w-8 h-8 text-white" />
-            </div>
-          </div>
+      <ServiceHero
+        kicker="Transportation & Logistics"
+        title={
+          <>
+            Every shipment on{' '}
+            <span style={{ color: '#1D4ED8' }}>one set of&nbsp;numbers</span>
+          </>
+        }
+        lede="Route optimization, real-time fleet visibility, and predictive maintenance for carriers and logistics operators. We wire TMS, telematics, ELD, and EDI data into one governed platform, so dispatch and maintenance run on the same numbers your customers see."
+        chips={[
+          'TMS & telematics',
+          'ELD & FMCSA',
+          'EDI partner feeds',
+          'OTIF visibility',
+        ]}
+        primary={{ label: 'Talk to a logistics data architect', href: '/contact?industry=transportation' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        visual={<FlowScene config={FLOWS['industry-transportation']} />}
+      />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Transportation & Logistics
-            <span className="text-[var(--aci-primary-light)]"> Technology Solutions</span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            Route optimization, real-time fleet visibility, and predictive maintenance for
-            carriers and logistics operators. We wire TMS, telematics, ELD, and EDI data into
-            one governed platform, so dispatch and maintenance run on the same numbers your
-            customers see.
-          </p>
+      {/* Problem band: margins leak between systems */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        image="/images/v4/case-transport.jpg"
+        pill="Why margins leak"
+        headline={
+          <>
+            Every truck, every load,{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">one version of the truth.</span>
+          </>
+        }
+        body="The TMS, the telematics, the ELD, and the EDI feeds each see part of the journey. We wire them into one governed platform, so exceptions surface while there is still time to act, empty miles show up on a dashboard, and the OTIF number moves before the shipper brings it up."
+        story={{
+          metric: { value: '99.97%', label: 'Uptime across 72+ servers' },
+          title:
+            'A complex digital estate kept available around the clock with automated DevOps and monitoring. The operations bar we hold for platforms dispatch depends on.',
+          href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+          logoSrc: '/brand/aci-infotech-logo-white.png',
+          logoAlt: 'ACI Infotech',
+        }}
+      />
 
-          <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule Consultation
-            </Button>
-            <Button href="/case-studies" variant="secondary" size="lg">
-              View Case Studies
-            </Button>
-          </div>
+      {/* Offerings */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build for logistics"
+            title={
+              <>
+                Measured the way shippers{' '}
+                <span style={{ color: '#1D4ED8' }}>grade&nbsp;you.</span>
+              </>
+            }
+            sub="OTIF, on-time delivery, cost per mile. Every build starts from the number it is supposed to move."
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Value Props */}
-      <section className="py-16 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <TrendingDown className="w-7 h-7 text-[var(--aci-primary)]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Cost Reduction</h3>
-              <p className="text-gray-600 text-sm">
-                $250K a year off one fleet&apos;s fuel bill.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <MapPin className="w-7 h-7 text-[var(--aci-primary)]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Real-Time Tracking</h3>
-              <p className="text-gray-600 text-sm">
-                100% visibility across your entire fleet.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-7 h-7 text-[var(--aci-primary)]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Predictive Power</h3>
-              <p className="text-gray-600 text-sm">
-                AI that prevents problems before they happen.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Leaf className="w-7 h-7 text-[var(--aci-primary)]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Sustainability</h3>
-              <p className="text-gray-600 text-sm">
-                Meet ESG goals with emissions tracking.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Solutions */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Solutions for Transportation & Logistics
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Transportation technology consulting measured the way shippers grade you: OTIF,
-              on-time delivery, cost per mile.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {solutions.map((solution) => (
-              <div key={solution.title} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-3">{solution.title}</h3>
-                <p className="text-gray-600 mb-4">{solution.description}</p>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-500 mb-2">Outcomes</h4>
-                  <ul className="space-y-1">
-                    {solution.outcomes.map((outcome) => (
-                      <li key={outcome} className="flex items-center gap-2 text-sm text-gray-700">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                        {outcome}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {solution.services.map((service) => (
-                    <span key={service} className="px-2 py-1 bg-blue-50 text-[var(--aci-primary)] text-xs rounded">
-                      {service}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Transportation & Logistics Success Stories
-            </h2>
-          </div>
-
-          <div className="space-y-8">
-            {caseStudies.map((cs, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <div className="flex flex-col lg:flex-row gap-8">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="px-3 py-1 bg-[var(--aci-primary)] text-white text-sm font-medium rounded-full">
-                        {cs.type}
-                      </span>
-                      <span className="text-gray-500">{displayClient(cs)}</span>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-gray-700 mb-2">Challenge</h3>
-                      <p className="text-gray-600">{cs.challenge}</p>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-gray-700 mb-2">Solution</h3>
-                      <p className="text-gray-600">{cs.solution}</p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {cs.technologies.map((tech) => (
-                        <span key={tech} className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-full">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="lg:w-80">
-                    <h3 className="font-semibold text-gray-700 mb-4">Results</h3>
-                    <div className="space-y-4">
-                      {cs.results.map((result, i) => (
-                        <div key={i} className="bg-white p-4 rounded-lg">
-                          <div className="text-2xl font-bold text-[var(--aci-primary)]">{result.metric}</div>
-                          <div className="text-sm text-gray-600">{result.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Link href="/case-studies" className="inline-flex items-center gap-2 text-[var(--aci-primary)] font-semibold hover:underline">
-              View All Case Studies <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Capabilities */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8 text-center">
-            Transportation & Logistics Capabilities
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {capabilities.map((item) => (
-              <div key={item.name} className="bg-white p-4 rounded-lg flex items-center gap-4">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 text-green-600" />
-                </div>
+      {/* Signature: capabilities band with fleet results */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Logistics capabilities"
+            title={
+              <>
+                The systems freight{' '}
+                <span style={{ color: '#1D4ED8' }}>actually runs&nbsp;on.</span>
+              </>
+            }
+            sub="We integrate what the fleet already carries rather than proposing a rip and replace. Trucks do not get maintenance windows for science projects either."
+          />
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {CAPABILITIES.map((item) => (
+              <div key={item.name} className={`flex items-start gap-3 rounded-2xl bg-white px-5 py-4 ${cardShadow}`}>
+                <CheckBadge />
                 <div>
-                  <div className="font-semibold text-[var(--aci-secondary)]">{item.name}</div>
-                  <div className="text-sm text-gray-500">{item.description}</div>
+                  <p className={`text-[15px] font-semibold leading-snug text-black ${v4Display}`}>{item.name}</p>
+                  <p className="mt-1 text-sm text-gray-500">{glueWidow(item.description)}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Fleet results from the published Fortune 500 logistics engagement */}
+          <div className="mt-14 grid grid-cols-2 gap-x-8 gap-y-10 border-t border-gray-200 pt-10 lg:grid-cols-4">
+            {FLEET_RESULTS.map((metric) => (
+              <div key={metric.label}>
+                <p className={`text-3xl font-bold leading-none text-[#1D4ED8] sm:text-4xl ${v4Display}`}>
+                  {metric.value}
+                </p>
+                <p className="mt-2 text-sm font-medium text-gray-500">{glueWidow(metric.label)}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Visibility that survives{' '}
+                <span style={{ color: '#1D4ED8' }}>the&nbsp;road.</span>
+              </>
+            }
+          />
+          <CmsProofCards industry="Transportation" fallback={PROOF_FALLBACK} />
+        </div>
+      </section>
+
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. One lane at a time." />
+          <ProcessStrip steps={PROCESS} />
+        </div>
+      </section>
+
+      {/* Bridge to the managed operations practice */}
+      <BridgeBand
+        title={<>Freight moves around the clock. So do&nbsp;we.</>}
+        body="A logistics platform is only useful while it is up, and freight does not respect business hours. Our managed operations practice runs the estate 24/7 under published SLAs, so the 3am exception gets a staffed desk instead of a voicemail."
+        link={{ label: 'Managed Operations', href: '/services/managed-operations' }}
+      />
+
+      {/* Why us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title={<>Why carriers build with&nbsp;us</>} />
+          <FactsRow facts={FACTS} />
+        </div>
+      </section>
+
+      <ClusterPosts keywords={['logistics', 'transportation', 'fleet', 'telematics', 'supply chain']} />
 
       <RelatedLinks items={transportationRelated} />
 
-      <FaqBlock items={transportationFaqs} eyebrow="Transportation & logistics FAQ" />
+      <PageFaq
+        kicker="Transportation & logistics FAQ"
+        title={
+          <>
+            Logistics questions,
+            <br />
+            answered straight.
+          </>
+        }
+        faqs={FAQS}
+      />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Optimize Your Logistics Operations?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Schedule a consultation with our transportation technology experts to discuss your challenges.
-          </p>
-          <Button href="/contact?industry=transportation" variant="lime" size="lg">
-            Talk to Logistics Expert
-          </Button>
-        </div>
-      </section>
-    </main>
+      <CtaSection label="Get every shipment on one set of numbers" href="/contact?industry=transportation" />
+    </div>
   );
 }

@@ -1,26 +1,47 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Globe, Users, TrendingUp, Clock, Utensils } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
-import { hospitalityFaqs } from '@/content/industry-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { hospitalityRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { hospitalityFaqs } from '@/content/industry-faqs';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { getSiteUrl } from '@/lib/site-url';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+  CheckBadge,
+  cardShadow,
+  glueWidow,
+} from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
-import { displayClient } from '@/lib/content/anonymize';
+export const revalidate = 3600;
+
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 const DESCRIPTION =
   'Hospitality technology consulting for hotels, restaurants, and food service: guest data unification, POS and PMS integration, and loyalty personalization.';
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://aciinfotech.com/industries/hospitality' },
+  alternates: { canonical: `${siteUrl}/industries/hospitality` },
   title: 'Hospitality Technology Solutions',
   description: DESCRIPTION,
   openGraph: {
     title: 'Hospitality Technology Solutions | ACI Infotech',
     description: DESCRIPTION,
-    url: 'https://aciinfotech.com/industries/hospitality',
+    url: `${siteUrl}/industries/hospitality`,
     siteName: 'ACI Infotech',
     type: 'website',
     images: DEFAULT_OG_IMAGES,
@@ -33,314 +54,294 @@ export const metadata: Metadata = {
   },
 };
 
-const solutions = [
+/* ------------------------------- page data ------------------------------- */
+
+const OFFERINGS = [
   {
-    title: 'Global Data Unification',
-    description: 'Consolidate data from hundreds of locations worldwide into a single source of truth for real-time visibility.',
-    outcomes: ['Single global data platform', 'Real-time operational visibility', '400K+ employees connected'],
-    services: ['Data Engineering', 'Cloud Modernization'],
+    title: 'Global data unification',
+    body: 'Data from hundreds of locations worldwide consolidated into a single source of truth with real-time operational visibility. We have run this at full scale: 400,000+ employees connected across 53 countries on one platform.',
+    chips: ['Azure', 'Databricks', 'Power BI', 'SAP integration'],
   },
   {
-    title: 'Customer Engagement Platform',
-    description: 'Build unified customer profiles that power personalized experiences across all touchpoints.',
-    outcomes: ['360° guest profiles', '18% loyalty engagement lift', 'Omnichannel personalization'],
-    services: ['MarTech & CDP', 'Data Engineering'],
+    title: 'Guest 360 & loyalty personalization',
+    body: 'Unified guest profiles across properties, brands, and franchisees, powering offers that know about last night’s stay. For one major hotel chain that meant an 18% lift in loyalty engagement, 1.8x ROI on marketing spend, and guests recognized 22% faster.',
+    chips: ['Salesforce CDP', 'Snowflake', 'Braze', 'Identity resolution'],
   },
   {
-    title: 'Supply Chain Optimization',
-    description: 'AI-powered demand forecasting and inventory optimization to reduce waste and ensure availability.',
-    outcomes: ['15% waste reduction', '22% inventory optimization', 'Predictive ordering'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Supply chain optimization',
+    body: 'Demand forecasting and inventory optimization that cut waste without emptying the shelf. AI-driven ordering has delivered 15% waste reduction and 22% inventory optimization across food service operations.',
+    chips: ['Demand forecasting', 'Predictive ordering', 'Inventory optimization', 'Waste reduction'],
   },
   {
-    title: 'Workforce Management',
-    description: 'Optimize staffing levels with AI-driven scheduling that balances cost efficiency with service quality.',
-    outcomes: ['Labor cost optimization', 'Improved scheduling accuracy', 'Employee satisfaction boost'],
-    services: ['Applied AI & ML', 'Digital Transformation'],
+    title: 'Workforce management',
+    body: 'Staffing levels optimized with AI-driven scheduling that balances labor cost against service quality. The GM sees the labor line move; the team stops getting scheduled against their own availability.',
+    chips: ['AI scheduling', 'Labor cost', 'Workforce analytics', 'Forecast accuracy'],
   },
   {
-    title: 'Revenue Management',
-    description: 'Dynamic pricing and revenue optimization powered by real-time market data and demand signals.',
-    outcomes: ['8% RevPAR increase', 'Dynamic pricing enabled', 'Competitive rate intelligence'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Revenue management',
+    body: 'Dynamic pricing and revenue optimization on real-time market data and demand signals, with competitive rate intelligence built in. One engagement moved RevPAR up 8%, which is the number the whole exercise answers to.',
+    chips: ['Dynamic pricing', 'RevPAR', 'Rate intelligence', 'Demand signals'],
   },
   {
-    title: 'Operational Analytics',
-    description: 'Real-time dashboards and KPI tracking across all locations for data-driven decision making.',
-    outcomes: ['Executive dashboards', 'Location benchmarking', 'Operational excellence'],
-    services: ['Data Engineering', 'Digital Transformation'],
+    title: 'Operational analytics',
+    body: 'Real-time dashboards and KPI tracking across every location: executive views, location benchmarking, and the franchise scorecards that keep owners and operators reading the same numbers.',
+    chips: ['Executive dashboards', 'Location benchmarking', 'Power BI', 'Franchise analytics'],
   },
 ];
 
-const caseStudies = [
+// Signature: the hospitality capabilities band, kept from the published page.
+const CAPABILITIES = [
+  { name: 'Multi-brand management', description: 'Unified systems across brands' },
+  { name: 'Global operations', description: 'Multi-region, multi-currency' },
+  { name: 'POS integration', description: 'All major systems supported' },
+  { name: 'Food safety compliance', description: 'HACCP and regulatory tracking' },
+  { name: 'Guest privacy', description: 'GDPR and CCPA compliant' },
+  { name: 'Franchise analytics', description: 'Owner and operator dashboards' },
+];
+
+const PROOF_FALLBACK = [
   {
-    client: 'Global Hospitality Leader',
-    type: 'Global Food Services',
-    challenge: 'Unify data across 400,000+ employees in 53 countries to enable real-time workforce analytics and operational visibility',
-    solution: 'Enterprise data platform on Azure with Databricks, enabling global HR analytics and operational dashboards',
-    results: [
-      { metric: '400K+', label: 'Employees on unified platform' },
-      { metric: '53', label: 'Countries connected' },
-      { metric: 'Real-time', label: 'Global visibility achieved' },
-    ],
-    technologies: ['Azure', 'Databricks', 'Power BI', 'SAP Integration'],
+    eyebrow: 'Global Food Services Operator',
+    metric: '53',
+    metricLabel: 'Countries on one data platform',
+    summary:
+      'One platform for 400,000 employees replacing dozens of regional reporting stacks, with decisions landing 22% faster.',
+    href: '/case-studies/global-food-facilities-data-intelligence',
+    linkLabel: 'Read the story',
+    image: '/images/v4/case-retail.jpg',
   },
   {
-    client: 'Major Hotel Chain',
-    type: 'Hospitality',
-    challenge: 'Fragmented guest data across properties preventing personalized experiences and loyalty optimization',
-    solution: 'Customer data platform with unified guest profiles powering personalized marketing and service delivery',
-    results: [
-      { metric: '18%', label: 'Increase in loyalty engagement' },
-      { metric: '1.8x', label: 'ROI on marketing spend' },
-      { metric: '22%', label: 'Faster guest recognition' },
-    ],
-    technologies: ['Salesforce CDP', 'AWS', 'Snowflake', 'Braze'],
+    eyebrow: 'Fortune 500 Convenience Retail Chain',
+    metric: '30%',
+    metricLabel: 'Reduction in data latency',
+    summary:
+      'A governed Databricks lakehouse across 600+ locations, with real-time inventory visibility and zero downtime through the cutover.',
+    href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+    linkLabel: 'Read the Databricks story',
+    image: '/images/v4/svc-data.jpg',
+  },
+  {
+    eyebrow: 'Global Financial Services Firm',
+    metric: '90d',
+    metricLabel: 'From prototype to production',
+    summary:
+      'Azure Data Lake, Databricks, AKS, and Synapse connected into one governed foundation for analytics and machine learning.',
+    href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
+    linkLabel: 'Read the Azure Lakehouse story',
+    image: '/images/v4/case-finance.jpg',
   },
 ];
 
-const capabilities = [
-  { name: 'Multi-Brand Management', description: 'Unified systems across brands' },
-  { name: 'Global Operations', description: 'Multi-region, multi-currency' },
-  { name: 'POS Integration', description: 'All major systems supported' },
-  { name: 'Food Safety Compliance', description: 'HACCP & regulatory tracking' },
-  { name: 'Guest Privacy', description: 'GDPR & CCPA compliant' },
-  { name: 'Franchise Analytics', description: 'Owner & operator dashboards' },
+const PROCESS = [
+  {
+    title: 'Assess',
+    timeframe: 'Weeks 1 to 2',
+    body: 'Inventory the estate: PMS, POS, booking, loyalty, and where guest identity breaks between them. Pick the first metric worth moving.',
+  },
+  {
+    title: 'Architect',
+    timeframe: 'Weeks 2 to 4',
+    body: 'Platform and identity design, with GDPR and CCPA consent handling decided up front instead of bolted on after the first audit.',
+  },
+  {
+    title: 'Build',
+    timeframe: 'Weeks 4 to 12',
+    body: 'Integrations from Opera, Toast, and the booking and loyalty channels into one governed platform, shipped in increments.',
+  },
+  {
+    title: 'Prove',
+    body: 'Measure against your current program: loyalty lift, RevPAR, waste, labor cost. Baseline first, then report against it.',
+  },
+  {
+    title: 'Run',
+    body: 'Around-the-clock operations under SLAs, or a clean handover to your team with runbooks that survive a shift change.',
+  },
 ];
+
+const FACTS = [
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Global reach',
+    line: 'We have connected 400,000+ employees across 53 countries onto one data platform for a global food services operator.',
+  },
+  {
+    label: 'Compliance',
+    line: 'ISO 27001 certified and CMMI Level 3 appraised. Guest privacy handled to GDPR and CCPA from the first design.',
+  },
+  {
+    label: 'Operations',
+    line: '24/7 managed operations under published SLAs. Hotels do not close, and neither does the platform.',
+  },
+];
+
+const FAQS = hospitalityFaqs.map((f) => ({ question: f.q, answer: f.a }));
+
+/* --------------------------------- page ---------------------------------- */
 
 export default function HospitalityPage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/industries"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Industries
-          </Link>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <ServiceSchema
+        name="Hospitality Technology Solutions"
+        description={DESCRIPTION}
+        url="/industries/hospitality"
+        serviceType="Hospitality Technology Consulting"
+      />
+      {/* FAQPage JSON-LD comes from PageFaq below - one per page. */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Industries', url: '/industries' },
+          { name: 'Hospitality & Food Services', url: '/industries/hospitality' },
+        ]}
+      />
 
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-[var(--aci-primary)] rounded-2xl flex items-center justify-center">
-              <Utensils className="w-8 h-8 text-white" />
-            </div>
-          </div>
+      <ServiceHero
+        kicker="Hospitality & Food Services"
+        title={
+          <>
+            One guest record.{' '}
+            <span style={{ color: '#1D4ED8' }}>Every&nbsp;property.</span>
+          </>
+        }
+        lede="One guest record across every property and franchise, POS and PMS data that finally reconcile, and loyalty offers that know about last night's stay. Hospitality technology consulting for hotel groups, restaurant brands, and food service operators."
+        chips={[
+          'PMS & POS integration',
+          'Guest 360',
+          'GDPR & CCPA',
+          'Global scale',
+        ]}
+        primary={{ label: 'Talk to a hospitality data architect', href: '/contact?industry=hospitality' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        visual={<FlowScene config={FLOWS['industry-hospitality']} />}
+      />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Hospitality & Food Services
-            <span className="text-[var(--aci-primary-light)]"> Technology Solutions</span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            One guest record across every property and franchise, POS and PMS data that finally
-            reconcile, and loyalty offers that know about last night&apos;s stay. Hospitality
-            technology consulting for hotel groups, restaurant brands, and food service operators.
-          </p>
+      {/* Problem band: the guest the systems forgot */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        image="/images/v4/case-retail.jpg"
+        pill="Why guest data fragments"
+        headline={
+          <>
+            Every guest, recognized{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">at every door.</span>
+          </>
+        }
+        body="The PMS knows the stay, the POS knows the dinner, and loyalty knows the points. We resolve identity across all of it, across every property and franchise, so the front desk, the app, and tomorrow's offer all greet the same person. Personalization runs on one guest record, and the welcome back means it."
+        story={{
+          metric: { value: '53', label: 'Countries on one data platform' },
+          title:
+            'One platform for 400,000 employees at a global food services operator, with decisions landing 22% faster.',
+          href: '/case-studies/global-food-facilities-data-intelligence',
+          logoSrc: '/brand/aci-infotech-logo-white.png',
+          logoAlt: 'ACI Infotech',
+        }}
+      />
 
-          <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule Consultation
-            </Button>
-            <Button href="/case-studies" variant="secondary" size="lg">
-              View Case Studies
-            </Button>
-          </div>
+      {/* Offerings */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build for hospitality"
+            title={
+              <>
+                Aimed at the numbers a{' '}
+                <span style={{ color: '#1D4ED8' }}>GM&nbsp;watches.</span>
+              </>
+            }
+            sub="From Opera to Toast, we integrate the systems you already run and point the data at RevPAR, waste, and labor cost."
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Value Props */}
-      <section className="py-16 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Globe className="w-7 h-7 text-[var(--aci-primary)]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Global Scale</h3>
-              <p className="text-gray-600 text-sm">
-                Proven across 50+ countries and 400K+ employees.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-7 h-7 text-[var(--aci-primary)]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Real-Time Ops</h3>
-              <p className="text-gray-600 text-sm">
-                Live visibility into every location and metric.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Users className="w-7 h-7 text-[var(--aci-primary)]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Guest Experience</h3>
-              <p className="text-gray-600 text-sm">
-                Personalized service that drives loyalty.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-7 h-7 text-[var(--aci-primary)]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">ROI Focused</h3>
-              <p className="text-gray-600 text-sm">
-                Measurable impact on revenue and costs.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Solutions */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Solutions for Hospitality & Food Services
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              From Opera to Toast, we integrate the systems you already run and aim the data at
-              the numbers a GM watches: RevPAR, waste, labor cost.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {solutions.map((solution) => (
-              <div key={solution.title} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-3">{solution.title}</h3>
-                <p className="text-gray-600 mb-4">{solution.description}</p>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-500 mb-2">Outcomes</h4>
-                  <ul className="space-y-1">
-                    {solution.outcomes.map((outcome) => (
-                      <li key={outcome} className="flex items-center gap-2 text-sm text-gray-700">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                        {outcome}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {solution.services.map((service) => (
-                    <span key={service} className="px-2 py-1 bg-blue-50 text-[var(--aci-primary)] text-xs rounded">
-                      {service}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Hospitality Success Stories
-            </h2>
-          </div>
-
-          <div className="space-y-8">
-            {caseStudies.map((cs, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <div className="flex flex-col lg:flex-row gap-8">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="px-3 py-1 bg-[var(--aci-primary)] text-white text-sm font-medium rounded-full">
-                        {cs.type}
-                      </span>
-                      <span className="text-gray-500">{displayClient(cs)}</span>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-gray-700 mb-2">Challenge</h3>
-                      <p className="text-gray-600">{cs.challenge}</p>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-gray-700 mb-2">Solution</h3>
-                      <p className="text-gray-600">{cs.solution}</p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {cs.technologies.map((tech) => (
-                        <span key={tech} className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-full">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="lg:w-80">
-                    <h3 className="font-semibold text-gray-700 mb-4">Results</h3>
-                    <div className="space-y-4">
-                      {cs.results.map((result, i) => (
-                        <div key={i} className="bg-white p-4 rounded-lg">
-                          <div className="text-2xl font-bold text-[var(--aci-primary)]">{result.metric}</div>
-                          <div className="text-sm text-gray-600">{result.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Link href="/case-studies" className="inline-flex items-center gap-2 text-[var(--aci-primary)] font-semibold hover:underline">
-              View All Case Studies <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Capabilities */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8 text-center">
-            Hospitality Capabilities
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {capabilities.map((item) => (
-              <div key={item.name} className="bg-white p-4 rounded-lg flex items-center gap-4">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 text-green-600" />
-                </div>
+      {/* Signature: capabilities band */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Hospitality capabilities"
+            title={
+              <>
+                Built for both sides of{' '}
+                <span style={{ color: '#1D4ED8' }}>the&nbsp;house.</span>
+              </>
+            }
+            sub="The operating realities of running many brands, regions, and franchisees on one platform, handled in the design rather than discovered in month three."
+          />
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {CAPABILITIES.map((item) => (
+              <div key={item.name} className={`flex items-start gap-3 rounded-2xl bg-white px-5 py-4 ${cardShadow}`}>
+                <CheckBadge />
                 <div>
-                  <div className="font-semibold text-[var(--aci-secondary)]">{item.name}</div>
-                  <div className="text-sm text-gray-500">{item.description}</div>
+                  <p className={`text-[15px] font-semibold leading-snug text-black ${v4Display}`}>{item.name}</p>
+                  <p className="mt-1 text-sm text-gray-500">{glueWidow(item.description)}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Global operations, one{' '}
+                <span style={{ color: '#1D4ED8' }}>set of&nbsp;numbers.</span>
+              </>
+            }
+          />
+          <CmsProofCards industry="Hospitality" fallback={PROOF_FALLBACK} />
+        </div>
+      </section>
+
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
+        </div>
+      </section>
+
+      {/* Bridge to the MarTech & CDP practice */}
+      <BridgeBand
+        title={<>The guest record is a marketing engine&nbsp;too.</>}
+        body="Once identity resolves across PMS, POS, and loyalty, the same record powers journeys, offers, and campaigns that actually know the guest. That is our MarTech and CDP practice, and hospitality is where it shows off."
+        link={{ label: 'MarTech & CDP', href: '/services/martech-cdp' }}
+      />
+
+      {/* Why us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title={<>Why hospitality groups build with&nbsp;us</>} />
+          <FactsRow facts={FACTS} />
+        </div>
+      </section>
+
+      <ClusterPosts keywords={['hospitality', 'guest', 'cdp', 'loyalty', 'personalization']} />
 
       <RelatedLinks items={hospitalityRelated} />
 
-      <FaqBlock items={hospitalityFaqs} eyebrow="Hospitality FAQ" />
+      <PageFaq
+        kicker="Hospitality FAQ"
+        title={
+          <>
+            Hospitality questions,
+            <br />
+            answered straight.
+          </>
+        }
+        faqs={FAQS}
+      />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Elevate Your Hospitality Operations?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Schedule a consultation with our hospitality technology experts to discuss your challenges.
-          </p>
-          <Button href="/contact?industry=hospitality" variant="lime" size="lg">
-            Talk to Hospitality Expert
-          </Button>
-        </div>
-      </section>
-    </main>
+      <CtaSection label="Get to one guest record" href="/contact?industry=hospitality" />
+    </div>
   );
 }

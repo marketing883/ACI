@@ -2,13 +2,15 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowRight, CheckCircle2, Quote, ExternalLink } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { ArrowUpRight } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import ReactMarkdown from 'react-markdown';
 
 import { displayClient } from '@/lib/content/anonymize';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Display, v4DisplayVar, v4Sans } from '@/components/v4/fonts';
+import { cardShadow, CheckBadge } from '@/components/v4/page/kit';
 // Supabase client for server-side fetching
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -291,6 +293,70 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+/* ------------------------------ v4 fragments ------------------------------ */
+
+// Markdown body styling: no typography plugin in this Tailwind setup, so
+// element styles are applied via descendant utilities. Headings pick up
+// Funnel Display through the font CSS variable.
+const MD_BODY = `max-w-3xl text-[17px] leading-relaxed text-gray-800 ${v4DisplayVar} [&_h1]:[font-family:var(--font-v4-display)] [&_h2]:[font-family:var(--font-v4-display)] [&_h3]:[font-family:var(--font-v4-display)] [&_h1]:mb-4 [&_h1]:mt-10 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-black [&_h2]:mb-4 [&_h2]:mt-10 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-black [&_h3]:mb-3 [&_h3]:mt-8 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-black [&_p]:mb-5 [&_ul]:mb-5 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6 [&_ol]:mb-5 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_strong]:font-semibold [&_strong]:text-black [&_a]:text-blue-700 [&_a]:underline [&_a]:underline-offset-2 [&_blockquote]:my-8 [&_blockquote]:border-l-2 [&_blockquote]:border-blue-700 [&_blockquote]:pl-5 [&_blockquote]:text-gray-600`;
+
+/** Slash-label section head for the article-width sections. */
+function StudySectionHead({ kicker, title }: { kicker: string; title: string }) {
+  return (
+    <div>
+      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ {kicker}</p>
+      <h2
+        className={`text-2xl font-bold tracking-tight text-black sm:text-3xl ${v4Display}`}
+        style={{ lineHeight: 1.1 }}
+      >
+        {title}
+      </h2>
+    </div>
+  );
+}
+
+/** Dark metrics band: lime values in Funnel Display, small-caps labels. */
+function MetricsBand({ metrics }: { metrics: { value: string; label: string }[] }) {
+  return (
+    <div className="rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 md:p-10">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">/ Results at a glance</p>
+      <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
+        {metrics.map((metric, index) => (
+          <div key={index}>
+            <p className={`text-4xl font-bold leading-none text-[#84CC16] lg:text-5xl ${v4Display}`}>
+              {metric.value}
+            </p>
+            <p className="mt-3 text-[11px] font-semibold uppercase leading-snug tracking-[0.16em] text-white/60">
+              {metric.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Large Funnel Display pull quote with a hairline left rule. */
+function PullQuote({ quote, author, title }: { quote: string; author?: string | null; title?: string | null }) {
+  return (
+    <figure className="border-l border-gray-200 pl-6 md:pl-10">
+      <blockquote
+        className={`max-w-3xl text-2xl font-medium tracking-tight text-black sm:text-3xl ${v4Display}`}
+        style={{ lineHeight: 1.25 }}
+      >
+        &ldquo;{quote}&rdquo;
+      </blockquote>
+      {(author || title) && (
+        <figcaption className="mt-6 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+          {author}
+          {author && title ? ' / ' : ''}
+          {title}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
 export default async function CaseStudyPage({ params }: PageProps) {
   const { slug } = await params;
 
@@ -326,150 +392,111 @@ export default async function CaseStudyPage({ params }: PageProps) {
       dateModified: dbStudy.updated_at,
     });
 
+    const heroChips = [...services, ...technologies];
+
     return (
-      <main className="min-h-screen">
+      <main className={`min-h-screen bg-white text-black ${v4Sans}`}>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-        {/* Hero Section */}
-        <section className="relative bg-[var(--aci-secondary)] pt-32 pb-20 overflow-hidden">
-          {dbStudy.featured_image_url && (
-            <>
-              <Image
-                src={dbStudy.featured_image_url}
-                alt=""
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover opacity-30"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--aci-secondary)] via-[var(--aci-secondary)]/85 to-[var(--aci-secondary)]/50" />
-            </>
-          )}
-          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Breadcrumb */}
+
+        {/* Hero */}
+        <section className="bg-white">
+          <div className="mx-auto max-w-[960px] px-6 pt-12 md:pt-16">
             <Link
               href="/case-studies"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+              className="group inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Case Studies
+              <span className="relative">
+                All case studies
+                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+              </span>
+              <ArrowUpRight size={14} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
 
-            <div className="flex items-center gap-4 mb-6">
-              <span className="text-2xl font-bold text-white">{displayClient(dbStudy)}</span>
-              <div className="flex gap-2">
-                {dbStudy.industry && (
-                  <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm rounded">{dbStudy.industry}</span>
-                )}
-                {services[0] && (
-                  <span className="px-3 py-1 bg-[var(--aci-primary)] text-white text-sm rounded">{services[0]}</span>
-                )}
-              </div>
-            </div>
-
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <p className="mb-4 mt-10 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+              / {dbStudy.industry || 'Case Study'}
+            </p>
+            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-gray-500">
+              {displayClient(dbStudy)}
+            </p>
+            <h1
+              className={`mt-4 text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-[44px] ${v4Display}`}
+              style={{ lineHeight: 1.08 }}
+            >
               {dbStudy.title}
             </h1>
             {dbStudy.excerpt && (
-              <div className="text-xl text-gray-400 prose prose-lg prose-invert max-w-none prose-strong:text-gray-300">
+              <div className="mt-5 max-w-2xl text-base leading-relaxed text-gray-600 md:text-lg [&_p]:mb-3 [&_strong]:font-semibold [&_strong]:text-gray-800">
                 <ReactMarkdown>{dbStudy.excerpt}</ReactMarkdown>
               </div>
             )}
 
-            {/* Quick Stats */}
-            {metrics.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 pt-8 border-t border-gray-700">
-                {metrics.slice(0, 4).map((metric: { value: string; label: string }, index: number) => (
-                  <div key={index}>
-                    <div className="text-2xl font-bold text-[var(--aci-primary-light)]">{metric.value}</div>
-                    <div className="text-sm text-gray-400">{metric.label}</div>
-                  </div>
+            {heroChips.length > 0 && (
+              <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                {heroChips.map((chip: string) => (
+                  <li key={chip} className="whitespace-nowrap">
+                    {chip}
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
         </section>
 
-        {/* Results Highlight */}
+        {/* Metrics band right after the hero */}
         {metrics.length > 0 && (
-          <section className="py-16 bg-[var(--aci-primary)]">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-center text-white text-lg font-medium mb-8">Key Results</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                {metrics.slice(0, 4).map((metric: { value: string; label: string; description?: string }, index: number) => (
-                  <div key={index} className="text-center">
-                    <div className="text-4xl md:text-5xl font-bold text-white mb-2">{metric.value}</div>
-                    <div className="text-blue-100">{metric.label}</div>
-                  </div>
-                ))}
-              </div>
+          <section className="bg-white">
+            <div className="mx-auto max-w-[960px] px-6 pt-12">
+              <MetricsBand metrics={metrics.slice(0, 4)} />
             </div>
           </section>
         )}
 
-        {/* Challenge Section */}
+        {/* Featured image */}
+        {dbStudy.featured_image_url && (
+          <div className="mx-auto max-w-[960px] px-6 pt-12">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
+              <Image
+                src={dbStudy.featured_image_url}
+                alt={dbStudy.title}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 960px"
+                className="object-cover"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Challenge */}
         {dbStudy.challenge && (
-          <section className="py-20 bg-white">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">🎯</span>
-                </div>
-                <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">The Challenge</h2>
-              </div>
-              <div className="text-lg text-gray-600 prose prose-lg max-w-none prose-headings:text-[var(--aci-secondary)] prose-headings:font-bold prose-strong:text-gray-800 prose-ul:list-disc prose-ol:list-decimal prose-li:text-gray-600">
+          <section className="bg-white pt-16 md:pt-20">
+            <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+              <StudySectionHead kicker="Challenge" title="Where the client started" />
+              <div className={`mt-6 ${MD_BODY}`}>
                 <ReactMarkdown>{dbStudy.challenge}</ReactMarkdown>
               </div>
             </div>
           </section>
         )}
 
-        {/* Solution Section */}
+        {/* Solution */}
         {dbStudy.solution && (
-          <section className="py-20 bg-gray-50">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">💡</span>
-                </div>
-                <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Our Solution</h2>
-              </div>
-              <div className="text-lg text-gray-600 prose prose-lg max-w-none prose-headings:text-[var(--aci-secondary)] prose-headings:font-bold prose-strong:text-gray-800 prose-ul:list-disc prose-ol:list-decimal prose-li:text-gray-600">
+          <section className="bg-white pt-16 md:pt-20">
+            <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+              <StudySectionHead kicker="Solution" title="What we built" />
+              <div className={`mt-6 ${MD_BODY}`}>
                 <ReactMarkdown>{dbStudy.solution}</ReactMarkdown>
               </div>
             </div>
           </section>
         )}
 
-        {/* Technologies */}
-        {technologies.length > 0 && (
-          <section className="py-16 bg-white border-y">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-6">Technologies Used</h2>
-              <div className="flex flex-wrap gap-3">
-                {technologies.map((tech: string) => (
-                  <span
-                    key={tech}
-                    className="px-4 py-2 bg-gray-100 rounded-lg text-gray-700 font-medium"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Results Section */}
+        {/* Results */}
         {dbStudy.results && (
-          <section className="py-20 bg-gray-50">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">📊</span>
-                </div>
-                <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Results & Impact</h2>
-              </div>
-              <div className="text-lg text-gray-600 prose prose-lg max-w-none prose-headings:text-[var(--aci-secondary)] prose-headings:font-bold prose-strong:text-gray-800 prose-ul:list-disc prose-ol:list-decimal prose-li:text-gray-600">
+          <section className="bg-white pt-16 md:pt-20">
+            <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+              <StudySectionHead kicker="Results" title="What changed in production" />
+              <div className={`mt-6 ${MD_BODY}`}>
                 <ReactMarkdown>{dbStudy.results}</ReactMarkdown>
               </div>
             </div>
@@ -478,52 +505,21 @@ export default async function CaseStudyPage({ params }: PageProps) {
 
         {/* Testimonial */}
         {dbStudy.testimonial_quote && (
-          <section className="py-20 bg-[var(--aci-secondary)]">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="relative">
-                <Quote className="w-16 h-16 text-[var(--aci-primary)] opacity-50 mb-6" />
-                <blockquote className="text-2xl md:text-3xl text-white font-light leading-relaxed mb-8">
-                  "{dbStudy.testimonial_quote}"
-                </blockquote>
-                {(dbStudy.testimonial_author || dbStudy.testimonial_title) && (
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-[var(--aci-primary)] rounded-full flex items-center justify-center text-white font-bold">
-                      {dbStudy.testimonial_author?.charAt(0) || 'C'}
-                    </div>
-                    <div>
-                      {dbStudy.testimonial_author && (
-                        <div className="font-semibold text-white">{dbStudy.testimonial_author}</div>
-                      )}
-                      {dbStudy.testimonial_title && (
-                        <div className="text-gray-400">{dbStudy.testimonial_title}</div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
+          <section className="bg-white pt-16 md:pt-20">
+            <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+              <PullQuote
+                quote={dbStudy.testimonial_quote}
+                author={dbStudy.testimonial_author}
+                title={dbStudy.testimonial_title}
+              />
             </div>
           </section>
         )}
 
-        {/* CTA Section */}
-        <section className="py-20 bg-[var(--aci-primary)]">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Ready to Achieve Similar Results?
-            </h2>
-            <p className="text-xl text-blue-100 mb-8">
-              Let's discuss how we can apply our expertise to your challenges.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-                Schedule Architecture Call
-              </Button>
-              <Button href="/case-studies" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-                View More Case Studies
-              </Button>
-            </div>
-          </div>
-        </section>
+        <div className="pt-16 md:pt-20" />
+
+        {/* Closing CTA: video stage, one button, nothing else */}
+        <CtaSection label="Let's Build Your Version of This" href="/contact?reason=architecture-call" />
       </main>
     );
   }
@@ -551,177 +547,124 @@ export default async function CaseStudyPage({ params }: PageProps) {
   });
 
   return (
-    <main className="min-h-screen">
+    <main className={`min-h-screen bg-white text-black ${v4Sans}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      {/* Hero Section */}
-      <section className="relative bg-[var(--aci-secondary)] pt-32 pb-20 overflow-hidden">
-        {study.featured_image && (
-          <>
-            <Image
-              src={study.featured_image}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover opacity-30"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--aci-secondary)] via-[var(--aci-secondary)]/85 to-[var(--aci-secondary)]/50" />
-          </>
-        )}
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb */}
+
+      {/* Hero */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-[960px] px-6 pt-12 md:pt-16">
           <Link
             href="/case-studies"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+            className="group inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Case Studies
+            <span className="relative">
+              All case studies
+              <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+            </span>
+            <ArrowUpRight size={14} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
 
-          <div className="flex items-center gap-4 mb-6">
-            {study.logo_url ? (
-              <Image
-                src={study.logo_url}
-                alt={`${displayClient(study)} logo - ${study.headline} case study`}
-                width={120}
-                height={48}
-                className="object-contain brightness-0 invert"
-              />
-            ) : (
-              <span className="text-2xl font-bold text-white">{displayClient(study)}</span>
-            )}
-            <div className="flex gap-2">
-              <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm rounded">{study.industry}</span>
-              <span className="px-3 py-1 bg-[var(--aci-primary)] text-white text-sm rounded">{study.service}</span>
-            </div>
-          </div>
-
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <p className="mb-4 mt-10 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            / {study.industry}
+          </p>
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-gray-500">
+            {displayClient(study)}
+          </p>
+          <h1
+            className={`mt-4 text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-[44px] ${v4Display}`}
+            style={{ lineHeight: 1.08 }}
+          >
             {study.headline}
           </h1>
-          <p className="text-xl text-gray-400">
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-gray-600 md:text-lg">
             {study.subheadline}
           </p>
 
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 pt-8 border-t border-gray-700">
-            <div>
-              <div className="text-sm text-gray-400 mb-1">Timeline</div>
-              <div className="text-xl font-semibold text-white">{study.timeline}</div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-400 mb-1">Team Size</div>
-              <div className="text-xl font-semibold text-white">{study.teamSize}</div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-400 mb-1">Industry</div>
-              <div className="text-xl font-semibold text-white">{study.industry}</div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-400 mb-1">Service</div>
-              <div className="text-xl font-semibold text-white">{study.service}</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Results Highlight */}
-      <section className="py-16 bg-[var(--aci-primary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-white text-lg font-medium mb-8">Key Results</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {study.results.slice(0, 4).map((result, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-white mb-2">{result.metric}</div>
-                <div className="text-blue-100">{result.description}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Challenge Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-              <span className="text-2xl">🎯</span>
-            </div>
-            <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">The Challenge</h2>
-          </div>
-          <p className="text-lg text-gray-600 mb-8">{study.challenge.summary}</p>
-          <ul className="space-y-4">
-            {study.challenge.points.map((point, index) => (
-              <li key={index} className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-sm font-medium">
-                  {index + 1}
-                </span>
-                <span className="text-gray-700">{point}</span>
+          <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+            {[study.service, ...study.technologies, study.timeline, study.teamSize].map((chip) => (
+              <li key={chip} className="whitespace-nowrap">
+                {chip}
               </li>
             ))}
           </ul>
         </div>
       </section>
 
-      {/* Solution Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-              <span className="text-2xl">💡</span>
-            </div>
-            <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Our Solution</h2>
+      {/* Metrics band right after the hero */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-[960px] px-6 pt-12">
+          <MetricsBand
+            metrics={study.results.slice(0, 4).map((r) => ({ value: r.metric, label: r.description }))}
+          />
+        </div>
+      </section>
+
+      {/* Featured image */}
+      {study.featured_image && (
+        <div className="mx-auto max-w-[960px] px-6 pt-12">
+          <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
+            <Image
+              src={study.featured_image}
+              alt={study.headline}
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 960px"
+              className="object-cover"
+            />
           </div>
-          <p className="text-lg text-gray-600 mb-8">{study.solution.summary}</p>
-          <ul className="space-y-4 mb-8">
+        </div>
+      )}
+
+      {/* Challenge */}
+      <section className="bg-white pt-16 md:pt-20">
+        <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+          <StudySectionHead kicker="Challenge" title="Where the client started" />
+          <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-gray-800">{study.challenge.summary}</p>
+          <ul className="mt-8 max-w-3xl space-y-4">
+            {study.challenge.points.map((point, index) => (
+              <li key={index} className="flex items-baseline gap-4 border-t border-gray-200 pt-4">
+                <span className={`text-sm font-semibold text-gray-300 ${v4Display}`}>
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="text-[15px] leading-relaxed text-gray-700">{point}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Solution */}
+      <section className="bg-white pt-16 md:pt-20">
+        <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+          <StudySectionHead kicker="Solution" title="What we built" />
+          <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-gray-800">{study.solution.summary}</p>
+          <ul className="mt-8 max-w-3xl space-y-4">
             {study.solution.points.map((point, index) => (
               <li key={index} className="flex items-start gap-3">
-                <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-700">{point}</span>
+                <CheckBadge />
+                <span className="text-[15px] leading-relaxed text-gray-700">{point}</span>
               </li>
             ))}
           </ul>
 
           {/* Approach */}
-          <div className="bg-white p-6 rounded-xl border border-gray-200">
-            <h3 className="font-semibold text-[var(--aci-secondary)] mb-3">Our Approach</h3>
-            <p className="text-gray-600">{study.solution.approach}</p>
+          <div className={`mt-10 max-w-3xl rounded-2xl bg-white p-7 ${cardShadow}`}>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ How we rolled it out</p>
+            <p className="mt-4 text-[15px] leading-relaxed text-gray-700">{study.solution.approach}</p>
           </div>
         </div>
       </section>
 
-      {/* Technologies */}
-      <section className="py-16 bg-white border-y">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-6">Technologies Used</h2>
-          <div className="flex flex-wrap gap-3">
-            {study.technologies.map((tech) => (
-              <span
-                key={tech}
-                className="px-4 py-2 bg-gray-100 rounded-lg text-gray-700 font-medium"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Detailed Results */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <span className="text-2xl">📊</span>
-            </div>
-            <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Results & Impact</h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-6">
+      {/* Detailed results */}
+      <section className="bg-white pt-16 md:pt-20">
+        <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+          <StudySectionHead kicker="Results" title="What changed in production" />
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
             {study.results.map((result, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-sm">
-                <div className="text-3xl font-bold text-[var(--aci-primary)] mb-2">{result.metric}</div>
-                <div className="font-semibold text-[var(--aci-secondary)] mb-2">{result.description}</div>
-                {result.detail && <p className="text-sm text-gray-500">{result.detail}</p>}
+              <div key={index} className={`rounded-2xl bg-white p-7 ${cardShadow}`}>
+                <p className={`text-4xl font-bold leading-none text-[#1D4ED8] ${v4Display}`}>{result.metric}</p>
+                <p className={`mt-4 text-lg font-semibold text-black ${v4Display}`}>{result.description}</p>
+                {result.detail && <p className="mt-2 text-sm leading-relaxed text-gray-600">{result.detail}</p>}
               </div>
             ))}
           </div>
@@ -730,61 +673,45 @@ export default async function CaseStudyPage({ params }: PageProps) {
 
       {/* Testimonial */}
       {study.testimonial && (
-        <section className="py-20 bg-[var(--aci-secondary)]">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative">
-              <Quote className="w-16 h-16 text-[var(--aci-primary)] opacity-50 mb-6" />
-              <blockquote className="text-2xl md:text-3xl text-white font-light leading-relaxed mb-8">
-                "{study.testimonial.quote}"
-              </blockquote>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[var(--aci-primary)] rounded-full flex items-center justify-center text-white font-bold">
-                  {study.testimonial.author.charAt(0)}
-                </div>
-                <div>
-                  <div className="font-semibold text-white">{study.testimonial.author}</div>
-                  <div className="text-gray-400">{study.testimonial.title}</div>
-                </div>
-              </div>
-            </div>
+        <section className="bg-white pt-16 md:pt-20">
+          <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+            <PullQuote
+              quote={study.testimonial.quote}
+              author={study.testimonial.author}
+              title={study.testimonial.title}
+            />
           </div>
         </section>
       )}
 
-      {/* Related Case Studies */}
+      {/* Related case studies */}
       {relatedStudies.length > 0 && (
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Related Case Studies</h2>
-            <div className="grid md:grid-cols-2 gap-8">
+        <section className="bg-white pt-16 md:pt-20">
+          <div className="mx-auto max-w-7xl border-t border-gray-200 px-6 pb-16 pt-16 md:pb-20 md:pt-20">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ More proof</p>
+            <h2
+              className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+              style={{ lineHeight: 1.08 }}
+            >
+              Related case studies
+            </h2>
+            <div className="mt-10 grid gap-5 md:grid-cols-2">
               {relatedStudies.map((related) => (
                 <Link
                   key={related.slug}
                   href={`/case-studies/${related.slug}`}
-                  className="group bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all"
+                  className="group relative flex flex-col overflow-hidden rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25"
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    {related.logo_url ? (
-                      <Image
-                        src={related.logo_url}
-                        alt={`${displayClient(related)} logo - ${related.headline} case study`}
-                        width={80}
-                        height={32}
-                        className="object-contain"
-                      />
-                    ) : (
-                      <span className="text-lg font-bold text-[var(--aci-secondary)]">{displayClient(related)}</span>
-                    )}
-                    <span className="px-2 py-1 bg-blue-100 text-[var(--aci-primary)] text-xs rounded">
-                      {related.service}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors mb-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
+                    {displayClient(related)} / {related.service}
+                  </p>
+                  <h3 className={`mt-5 text-xl font-semibold text-white md:text-2xl ${v4Display}`}>
                     {related.headline}
                   </h3>
-                  <p className="text-gray-600 text-sm mb-4">{related.subheadline}</p>
-                  <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                    Read Case Study <ArrowRight className="w-4 h-4" />
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-white/75">{related.subheadline}</p>
+                  <span className="mt-6 flex items-center gap-1 text-sm font-semibold text-[#84CC16]">
+                    Read the case study
+                    <ArrowUpRight size={15} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </span>
                 </Link>
               ))}
@@ -793,25 +720,10 @@ export default async function CaseStudyPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Achieve Similar Results?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Let's discuss how we can apply our expertise to your challenges.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/contact?reason=architecture-call" variant="secondary" size="lg">
-              Schedule Architecture Call
-            </Button>
-            <Button href="/case-studies" variant="ghost" size="lg" className="text-white border-white hover:bg-white/10">
-              View More Case Studies
-            </Button>
-          </div>
-        </div>
-      </section>
+      {relatedStudies.length === 0 && <div className="pt-16 md:pt-20" />}
+
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Let's Build Your Version of This" href="/contact?reason=architecture-call" />
     </main>
   );
 }

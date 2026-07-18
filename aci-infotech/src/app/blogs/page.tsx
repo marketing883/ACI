@@ -1,5 +1,6 @@
-import Button from '@/components/ui/Button';
+import { ArrowUpRight } from 'lucide-react';
 import { getPublishedBlogPosts } from '@/lib/content/blog';
+import { v4Sans, v4Display } from '@/components/v4/fonts';
 import BlogListingClient from './BlogListingClient';
 import BlogPagination from '@/components/blog/BlogPagination';
 
@@ -14,21 +15,25 @@ export default async function BlogPage() {
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (
-    <main className="min-h-screen">
-      {/* Hero */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <p className="text-[var(--aci-primary-light)] font-medium mb-4 tracking-wide uppercase">
-              Insights &amp; Thought Leadership
-            </p>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Enterprise Technology Blog
-            </h1>
-            <p className="text-xl text-gray-400">
-              Deep dives into data engineering, AI/ML, cloud architecture, and enterprise technology trends from our team of practitioners.
-            </p>
-          </div>
+    <main className={`min-h-screen bg-white text-black ${v4Sans}`}>
+      {/* Header */}
+      <section className="border-b border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 pb-14 pt-12 md:pt-16">
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            / Blog
+          </p>
+          <h1
+            className={`max-w-4xl text-3xl font-bold tracking-tight sm:text-4xl lg:text-[44px] ${v4Display}`}
+            style={{ lineHeight: 1.06 }}
+          >
+            Engineering notes, written{' '}
+            <span style={{ color: '#1D4ED8' }}>from&nbsp;production</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-gray-700 md:text-lg">
+            Deep dives into data engineering, AI, cloud architecture, and the
+            enterprise systems around them, from the people who run them for
+            a&nbsp;living.
+          </p>
         </div>
       </section>
 
@@ -39,26 +44,36 @@ export default async function BlogPage() {
       {/* Crawlable numbered pagination to the full archive. */}
       <BlogPagination currentPage={1} totalPages={totalPages} basePath="/blogs" />
 
-      {/* Newsletter CTA */}
-      <section className="py-20 bg-[var(--aci-secondary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Stay Ahead of Enterprise Tech Trends
-          </h2>
-          <p className="text-xl text-gray-400 mb-8">
-            Join 5,000+ technology leaders who receive our weekly insights on data, AI, and digital transformation.
+      {/* Newsletter */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            / Newsletter
           </p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+          <h2
+            className={`max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl lg:text-[44px] ${v4Display}`}
+            style={{ lineHeight: 1.06 }}
+          >
+            Stay close to <span style={{ color: '#1D4ED8' }}>the&nbsp;work</span>
+          </h2>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-gray-700">
+            One email a week on data, AI, and digital transformation. No spam.
+            Unsubscribe&nbsp;anytime.
+          </p>
+          <form className="mt-8 flex max-w-md items-center gap-6 border-b border-gray-300 pb-2 transition-colors focus-within:border-blue-700">
             <input
               type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:ring-2 focus:ring-[var(--aci-primary)]"
+              placeholder="Work email"
+              className="flex-1 border-0 bg-transparent py-2 text-sm text-black placeholder:text-gray-400 focus:outline-none focus:ring-0"
             />
-            <Button type="submit" variant="primary" size="lg">
+            <button
+              type="submit"
+              className="group inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-blue-700 hover:underline"
+            >
               Subscribe
-            </Button>
+              <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </button>
           </form>
-          <p className="text-sm text-gray-500 mt-4">No spam. Unsubscribe anytime.</p>
         </div>
       </section>
     </main>

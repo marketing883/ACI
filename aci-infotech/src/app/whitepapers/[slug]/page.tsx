@@ -11,20 +11,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import {
-  FileText,
-  ArrowLeft,
-  Clock,
-  Calendar,
-  CheckCircle2,
-  BookOpen,
-  BarChart3,
-  Lightbulb,
-  Target,
-  Users,
-  Shield,
-} from 'lucide-react';
+import { ArrowUpRight, FileText } from 'lucide-react';
 import { getSiteUrl } from '@/lib/site-url';
+import { v4Display, v4Sans } from '@/components/v4/fonts';
+import { cardShadow, CheckBadge, glueWidow } from '@/components/v4/page/kit';
 import { getWhitepaperDetail } from './whitepaper-detail';
 import WhitepaperDownloadCta from './WhitepaperDownloadCta';
 
@@ -76,248 +66,252 @@ export default async function WhitepaperDetailPage({ params }: PageProps) {
     ],
   };
 
+  const metaChips = [
+    whitepaper.category,
+    `${whitepaper.read_time} read`,
+    `${whitepaper.page_count || 25} pages`,
+    whitepaper.published_at
+      ? `Updated ${new Date(whitepaper.published_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`
+      : null,
+  ].filter((c): c is string => Boolean(c));
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-    <main className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[var(--aci-secondary)] to-[#0a2540] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/whitepapers"
-            className="inline-flex items-center gap-2 text-blue-300 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Whitepapers
-          </Link>
-
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Content */}
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="px-3 py-1 bg-[var(--aci-primary)] text-white text-sm font-medium rounded-full">
-                  {whitepaper.category}
+      <main className={`min-h-screen bg-white text-black ${v4Sans}`}>
+        {/* Header */}
+        <section className="border-b border-gray-200 bg-white">
+          <div className="mx-auto grid max-w-7xl gap-12 px-6 pb-16 pt-12 md:pt-16 lg:grid-cols-12 lg:gap-10">
+            <div className="lg:col-span-7">
+              <Link
+                href="/whitepapers"
+                className="group inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700"
+              >
+                <span className="relative">
+                  All whitepapers
+                  <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
                 </span>
-                <span className="text-blue-200 text-sm flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  {whitepaper.read_time} read
-                </span>
-              </div>
+                <ArrowUpRight size={14} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
 
-              <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+              <p className="mb-4 mt-10 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+                / Whitepaper
+              </p>
+              <h1
+                className={`text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-[44px] ${v4Display}`}
+                style={{ lineHeight: 1.08 }}
+              >
                 {whitepaper.title}
               </h1>
+              {whitepaper.description && (
+                <p className="mt-5 max-w-xl text-base leading-relaxed text-gray-600 md:text-lg">
+                  {glueWidow(whitepaper.description)}
+                </p>
+              )}
 
-              {/* Short intro line */}
-              <p className="text-xl text-blue-100 mb-6">
-                {whitepaper.description?.split('.')[0]?.trim() || 'Essential insights for enterprise leaders'}.
-              </p>
+              <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                {metaChips.map((chip) => (
+                  <li key={chip} className="whitespace-nowrap">
+                    {chip}
+                  </li>
+                ))}
+              </ul>
 
-              {/* 3 Key highlights */}
               {whitepaper.key_takeaways && whitepaper.key_takeaways.length > 0 && (
-                <ul className="space-y-2 mb-8">
+                <ul className="mt-8 max-w-xl space-y-3">
                   {whitepaper.key_takeaways.slice(0, 3).map((takeaway, index) => (
-                    <li key={index} className="flex items-start gap-2 text-blue-100">
-                      <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                      <span>{takeaway}</span>
+                    <li key={index} className="flex items-start gap-3">
+                      <CheckBadge />
+                      <span className="text-[15px] leading-relaxed text-gray-700">{takeaway}</span>
                     </li>
                   ))}
                 </ul>
               )}
 
-              <div className="flex flex-wrap gap-4 mb-8">
-                <div className="flex items-center gap-2 text-blue-200">
-                  <BookOpen className="w-5 h-5" />
-                  <span>{whitepaper.page_count || 25} pages</span>
-                </div>
-                {whitepaper.published_at ? (
-                  <div className="flex items-center gap-2 text-blue-200">
-                    <Calendar className="w-5 h-5" />
-                    <span>Updated {new Date(whitepaper.published_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
-                  </div>
-                ) : null}
-                {whitepaper.author_name ? (
-                  <div className="flex items-center gap-2 text-blue-200">
-                    <span>
-                      By {whitepaper.author_name}
-                      {whitepaper.author_title ? `, ${whitepaper.author_title}` : ''}
-                    </span>
-                  </div>
-                ) : null}
+              <div className="mt-9">
+                <WhitepaperDownloadCta whitepaper={whitepaper} variant="hero" trackView />
               </div>
-
-              <WhitepaperDownloadCta whitepaper={whitepaper} variant="hero" trackView />
             </div>
 
-            {/* Cover Image */}
-            <div className="relative">
-              <div className="bg-white rounded-2xl shadow-2xl overflow-hidden transform lg:rotate-2 hover:rotate-0 transition-transform duration-300">
+            {/* Cover as a soft card */}
+            <div className="lg:col-span-5">
+              <div className={`overflow-hidden rounded-3xl bg-white ${cardShadow}`}>
                 {whitepaper.cover_image ? (
                   <Image
                     src={whitepaper.cover_image}
                     alt={whitepaper.title}
                     width={500}
                     height={650}
-                    className="w-full h-auto"
+                    className="h-auto w-full"
                   />
                 ) : (
-                  <div className="aspect-[3/4] bg-gradient-to-br from-[var(--aci-primary)] to-blue-700 flex items-center justify-center p-8">
-                    <div className="text-center text-white">
-                      <FileText className="w-24 h-24 mx-auto mb-6 opacity-50" />
-                      <h3 className="text-2xl font-bold">{whitepaper.title}</h3>
+                  <div className="flex aspect-[3/4] items-center justify-center bg-[#0b1220] p-8 ring-1 ring-white/10">
+                    <div className="text-center">
+                      <FileText className="mx-auto mb-6 h-16 w-16 text-white/40" aria-hidden="true" />
+                      <h3 className={`text-2xl font-semibold text-white ${v4Display}`}>{whitepaper.title}</h3>
                     </div>
                   </div>
                 )}
               </div>
-              {/* Decorative elements */}
-              <div className="absolute -bottom-4 -right-4 w-full h-full bg-[var(--aci-primary)]/20 rounded-2xl -z-10" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Executive Summary */}
-      {whitepaper.executive_summary && (
-        <section className="py-16 bg-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-[var(--aci-primary)]/10 rounded-lg flex items-center justify-center">
-                <Target className="w-5 h-5 text-[var(--aci-primary)]" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">Executive Summary</h2>
-            </div>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              {whitepaper.executive_summary}
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* Key Takeaways */}
-      {whitepaper.key_takeaways && whitepaper.key_takeaways.length > 0 && (
-        <section className="py-16 bg-gray-50">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <Lightbulb className="w-5 h-5 text-green-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">Key Takeaways</h2>
-            </div>
-            <div className="space-y-4">
-              {whitepaper.key_takeaways.map((takeaway, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm"
-                >
-                  <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-gray-700">{takeaway}</p>
-                </div>
-              ))}
             </div>
           </div>
         </section>
-      )}
 
-      {/* What You'll Learn */}
-      {whitepaper.what_you_will_learn && whitepaper.what_you_will_learn.length > 0 && (
-        <section className="py-16 bg-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-blue-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">What You&apos;ll Learn</h2>
+        {/* Executive summary */}
+        {whitepaper.executive_summary && (
+          <section className="bg-white py-16 md:py-20">
+            <div className="mx-auto max-w-[960px] px-6">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Executive summary</p>
+              <h2
+                className={`text-2xl font-bold tracking-tight text-black sm:text-3xl ${v4Display}`}
+                style={{ lineHeight: 1.1 }}
+              >
+                What this paper covers
+              </h2>
+              <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-gray-800">
+                {glueWidow(whitepaper.executive_summary)}
+              </p>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              {whitepaper.what_you_will_learn.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-3 p-4 bg-blue-50 rounded-xl"
-                >
-                  <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold">
-                    {index + 1}
+          </section>
+        )}
+
+        {/* Key takeaways */}
+        {whitepaper.key_takeaways && whitepaper.key_takeaways.length > 0 && (
+          <section className="bg-white pb-16 md:pb-20">
+            <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Key takeaways</p>
+              <h2
+                className={`text-2xl font-bold tracking-tight text-black sm:text-3xl ${v4Display}`}
+                style={{ lineHeight: 1.1 }}
+              >
+                What you keep after reading
+              </h2>
+              <ul className="mt-8 max-w-3xl space-y-4">
+                {whitepaper.key_takeaways.map((takeaway, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckBadge />
+                    <span className="text-[15px] leading-relaxed text-gray-700">{takeaway}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+
+        {/* What you'll learn */}
+        {whitepaper.what_you_will_learn && whitepaper.what_you_will_learn.length > 0 && (
+          <section className="bg-white pb-16 md:pb-20">
+            <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Inside the paper</p>
+              <h2
+                className={`text-2xl font-bold tracking-tight text-black sm:text-3xl ${v4Display}`}
+                style={{ lineHeight: 1.1 }}
+              >
+                What you&apos;ll learn
+              </h2>
+              <div className="mt-8 grid gap-5 md:grid-cols-2">
+                {whitepaper.what_you_will_learn.map((item, index) => (
+                  <div key={index} className={`flex items-start gap-4 rounded-2xl bg-white px-5 py-4 ${cardShadow}`}>
+                    <span className={`text-sm font-semibold text-gray-300 ${v4Display}`}>
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <p className="text-[15px] leading-relaxed text-gray-700">{item}</p>
                   </div>
-                  <p className="text-gray-700">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Who Should Read */}
-      {whitepaper.who_should_read && whitepaper.who_should_read.length > 0 && (
-        <section className="py-16 bg-gray-50">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Users className="w-5 h-5 text-purple-600" />
+                ))}
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">Who Should Read This</h2>
             </div>
-            <div className="flex flex-wrap gap-3">
-              {whitepaper.who_should_read.map((audience, index) => (
-                <span
-                  key={index}
-                  className="px-4 py-2 bg-white border border-gray-200 rounded-full text-gray-700 shadow-sm"
-                >
-                  {audience}
-                </span>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
 
-      {/* Table of Contents */}
-      {whitepaper.table_of_contents && whitepaper.table_of_contents.length > 0 && (
-        <section className="py-16 bg-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-orange-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">Table of Contents</h2>
+        {/* Who should read */}
+        {whitepaper.who_should_read && whitepaper.who_should_read.length > 0 && (
+          <section className="bg-white pb-16 md:pb-20">
+            <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Audience</p>
+              <h2
+                className={`text-2xl font-bold tracking-tight text-black sm:text-3xl ${v4Display}`}
+                style={{ lineHeight: 1.1 }}
+              >
+                Who should read this
+              </h2>
+              <ul className="mt-7 flex max-w-3xl flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                {whitepaper.who_should_read.map((audience, index) => (
+                  <li key={index} className="whitespace-nowrap">
+                    {audience}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="bg-gray-50 rounded-2xl p-6">
-              <ol className="space-y-3">
+          </section>
+        )}
+
+        {/* Table of contents */}
+        {whitepaper.table_of_contents && whitepaper.table_of_contents.length > 0 && (
+          <section className="bg-white pb-16 md:pb-20">
+            <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Contents</p>
+              <h2
+                className={`text-2xl font-bold tracking-tight text-black sm:text-3xl ${v4Display}`}
+                style={{ lineHeight: 1.1 }}
+              >
+                Table of contents
+              </h2>
+              <ol className="mt-8 max-w-3xl">
                 {whitepaper.table_of_contents.map((chapter, index) => (
                   <li
                     key={index}
-                    className="flex items-center gap-4 text-gray-700"
+                    className="flex items-baseline gap-4 border-t border-gray-200 py-3.5 text-[15px] text-gray-700"
                   >
-                    <span className="w-8 h-8 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-sm font-medium text-gray-500">
-                      {index + 1}
+                    <span className={`text-sm font-semibold text-gray-300 ${v4Display}`}>
+                      {String(index + 1).padStart(2, '0')}
                     </span>
                     <span>{chapter}</span>
                   </li>
                 ))}
               </ol>
             </div>
+          </section>
+        )}
+
+        {/* Author (E-E-A-T) */}
+        {whitepaper.author_name && (
+          <section className="bg-white pb-16 md:pb-20">
+            <div className="mx-auto max-w-[960px] px-6">
+              <div className={`max-w-3xl rounded-2xl bg-white p-7 ${cardShadow}`}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ About the author</p>
+                <h3 className={`mt-3 text-xl font-semibold text-black ${v4Display}`}>{whitepaper.author_name}</h3>
+                {whitepaper.author_title && (
+                  <p className="mt-1 text-sm font-medium text-gray-500">{whitepaper.author_title}</p>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Closing CTA: dark stage, one gate button */}
+        <section className="border-t border-gray-200 bg-white py-16 md:py-20">
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="rounded-3xl bg-[#0b1220] px-8 py-14 text-center ring-1 ring-white/10 md:px-12 md:py-16">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">/ The full paper</p>
+              <h2
+                className={`mx-auto mt-4 max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl ${v4Display}`}
+                style={{ lineHeight: 1.08 }}
+              >
+                Ready to put this to&nbsp;work?
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-white/75">
+                Get the complete guide, written from 80+ enterprise&nbsp;implementations.
+              </p>
+              <div className="mt-8">
+                <WhitepaperDownloadCta whitepaper={whitepaper} variant="footer" />
+              </div>
+            </div>
           </div>
         </section>
-      )}
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-[var(--aci-primary)] to-blue-700">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Shield className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Put This to Work?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Download this comprehensive guide and learn from 80+ enterprise implementations.
-          </p>
-          <WhitepaperDownloadCta whitepaper={whitepaper} variant="footer" />
-        </div>
-      </section>
-
-    </main>
+      </main>
     </>
   );
 }

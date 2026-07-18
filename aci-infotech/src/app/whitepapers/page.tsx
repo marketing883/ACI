@@ -1,5 +1,6 @@
-import Button from '@/components/ui/Button';
 import { getPublishedWhitepapers } from '@/lib/content/whitepaper';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Display } from '@/components/v4/fonts';
 import WhitepapersClient from './WhitepapersClient';
 
 // Server component: fetch published whitepapers on the server and seed the
@@ -13,37 +14,43 @@ export default async function WhitepapersPage() {
   const whitepapers = await getPublishedWhitepapers();
 
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <p className="text-[var(--aci-primary-light)] font-medium mb-4 tracking-wide uppercase">
-              Resource Library
-            </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Whitepapers &amp; Guides
-            </h1>
-            <p className="text-xl text-gray-400 mb-8">
-              Deep-dive resources from architects who have deployed these solutions at scale.
-              Technical depth without the vendor fluff.
-            </p>
+    <main className={`min-h-screen bg-white text-black ${v4Sans}`}>
+      {/* Header */}
+      <section className="border-b border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 pb-14 pt-12 md:pt-16">
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            / Whitepapers
+          </p>
+          <h1
+            className={`max-w-4xl text-3xl font-bold tracking-tight sm:text-4xl lg:text-[44px] ${v4Display}`}
+            style={{ lineHeight: 1.06 }}
+          >
+            Guides written at{' '}
+            <span style={{ color: '#1D4ED8' }}>production&nbsp;depth</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-gray-700 md:text-lg">
+            Long-form resources from architects who have deployed these systems
+            at scale. Technical depth without the vendor&nbsp;fluff.
+          </p>
+        </div>
+      </section>
 
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-8 mt-12">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white">{whitepapers.length}</div>
-                <div className="text-gray-400">Whitepapers</div>
+      {/* Facts band */}
+      <section className="border-b border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-12 md:py-14">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3">
+            {[
+              { value: `${whitepapers.length}`, label: 'Whitepapers' },
+              { value: '200+', label: 'Pages of content' },
+              { value: '80+', label: 'Enterprise insights' },
+            ].map((fact) => (
+              <div key={fact.label}>
+                <p className={`text-4xl font-bold leading-none text-[#1D4ED8] sm:text-5xl ${v4Display}`}>
+                  {fact.value}
+                </p>
+                <p className="mt-2 text-sm font-medium text-gray-500">{fact.label}</p>
               </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white">200+</div>
-                <div className="text-gray-400">Pages of Content</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white">80+</div>
-                <div className="text-gray-400">Enterprise Insights</div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -52,20 +59,8 @@ export default async function WhitepapersPage() {
           every whitepaper link is in the initial HTML (crawlable). */}
       <WhitepapersClient initialItems={whitepapers} />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Need Custom Research?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Our architects can provide tailored analysis and recommendations for your specific challenges.
-          </p>
-          <Button href="/contact?reason=architecture-call" variant="lime" size="lg">
-            Schedule Architecture Call
-          </Button>
-        </div>
-      </section>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Bring us the hard question" />
     </main>
   );
 }

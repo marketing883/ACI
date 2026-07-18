@@ -1,26 +1,47 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Zap, Shield, BarChart3, Leaf } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
-import { energyFaqs } from '@/content/industry-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { energyRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { energyFaqs } from '@/content/industry-faqs';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { getSiteUrl } from '@/lib/site-url';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+  CheckBadge,
+  cardShadow,
+  glueWidow,
+} from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
-import { displayClient } from '@/lib/content/anonymize';
+export const revalidate = 3600;
+
+// Canonical origin: always production, so staging builds can never
+// self-canonicalize (see src/lib/site-url.ts).
+const siteUrl = getSiteUrl();
 
 const DESCRIPTION =
   'Energy technology consulting for utilities and energy companies: NERC CIP and FERC compliance, OT/IT convergence, grid analytics, and renewable integration.';
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://aciinfotech.com/industries/energy' },
+  alternates: { canonical: `${siteUrl}/industries/energy` },
   title: 'Energy & Utilities Technology Solutions',
   description: DESCRIPTION,
   openGraph: {
     title: 'Energy & Utilities Technology Solutions | ACI Infotech',
     description: DESCRIPTION,
-    url: 'https://aciinfotech.com/industries/energy',
+    url: `${siteUrl}/industries/energy`,
     siteName: 'ACI Infotech',
     type: 'website',
     images: DEFAULT_OG_IMAGES,
@@ -33,73 +54,43 @@ export const metadata: Metadata = {
   },
 };
 
-const solutions = [
+/* ------------------------------- page data ------------------------------- */
+
+const OFFERINGS = [
   {
-    title: 'NERC CIP Compliance',
-    description: 'Implement comprehensive cybersecurity programs that meet all NERC CIP requirements.',
-    outcomes: ['100% audit ready', 'Automated evidence', 'Continuous monitoring'],
-    services: ['Cyber Security', 'Data Engineering'],
+    title: 'NERC CIP compliance',
+    body: 'Security controls, automated evidence collection, and continuous monitoring built to what a NERC CIP audit actually checks. One utility went into its audit 100 percent ready, came out with zero critical findings, and cut compliance effort by 60 percent. FERC and state regulators read the same evidence.',
+    chips: ['NERC CIP', 'FERC', 'Splunk', 'ServiceNow'],
   },
   {
-    title: 'Grid Analytics',
-    description: 'Build real-time analytics platforms for grid monitoring, optimization, and predictive maintenance.',
-    outcomes: ['Real-time monitoring', 'Outage prediction', 'Load optimization'],
-    services: ['Data Engineering', 'Applied AI & ML'],
+    title: 'Grid analytics',
+    body: 'Real-time platforms that pull SCADA, meter, and sensor data together for grid monitoring, outage prediction, and load optimization. Operators see the grid as it is right now, not as last night’s batch left it.',
+    chips: ['SCADA', 'Outage prediction', 'Load optimization', 'Azure'],
   },
   {
-    title: 'Asset Performance Management',
-    description: 'Deploy predictive maintenance for critical assets to extend life and prevent failures.',
-    outcomes: ['24% less downtime', 'Extended asset life', 'Optimized maintenance'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Asset performance management',
+    body: 'Predictive maintenance for critical assets that extends life and prevents failures. For one regional gas and electric utility, IoT monitoring with ML cut unplanned outages by 24 percent and saved $190K a year in maintenance, at 99.5 percent grid reliability.',
+    chips: ['Azure IoT', 'Databricks', 'OSIsoft PI', 'Power BI'],
   },
   {
-    title: 'Renewable Integration',
-    description: 'Integrate renewable energy sources with forecasting and grid balancing solutions.',
-    outcomes: ['Solar/wind forecasting', 'Grid stability', 'Storage optimization'],
-    services: ['Applied AI & ML', 'Data Engineering'],
+    title: 'Renewable integration',
+    body: 'Solar and wind forecasting, storage optimization, and the balancing analytics that keep intermittent generation from destabilizing the grid. DERMS-ready data foundations, because distributed resources are a data problem before they are a turbine problem.',
+    chips: ['Solar & wind forecasting', 'DERMS', 'Storage optimization', 'Grid stability'],
   },
   {
-    title: 'OT/IT Convergence',
-    description: 'Securely connect operational and information technology for unified visibility and control.',
-    outcomes: ['Unified operations', 'Secure connectivity', 'Real-time data'],
-    services: ['Cloud Modernization', 'Cyber Security'],
+    title: 'OT/IT convergence',
+    body: 'Operational and information technology connected for unified visibility without opening a path back into control systems. Segmented networks, one-way data flows where the risk warrants them, and controls aligned to IEC 62443.',
+    chips: ['IEC 62443', 'Network segmentation', 'Real-time data', 'OT security'],
   },
   {
-    title: 'Customer Analytics',
-    description: 'Understand customer behavior, predict demand, and optimize rate structures.',
-    outcomes: ['Demand forecasting', 'Customer segmentation', 'Rate optimization'],
-    services: ['Data Engineering', 'Applied AI & ML'],
+    title: 'Customer analytics',
+    body: 'Demand forecasting, customer segmentation, and rate structure optimization on the meter and billing data you already collect. The regulator sees a defensible rate case; the planning team sees next summer coming.',
+    chips: ['Demand forecasting', 'Segmentation', 'Rate optimization', 'AMI data'],
   },
 ];
 
-const caseStudies = [
-  {
-    client: 'Major Energy Utility',
-    type: 'Electric Utility',
-    challenge: 'NERC CIP compliance gaps putting critical infrastructure at risk',
-    solution: 'Comprehensive cybersecurity program with automated evidence collection and continuous monitoring',
-    results: [
-      { metric: '100%', label: 'NERC CIP compliance achieved' },
-      { metric: 'Zero', label: 'Critical findings in audit' },
-      { metric: '60%', label: 'Reduction in compliance effort' },
-    ],
-    technologies: ['Splunk', 'Azure', 'ServiceNow', 'Custom tools'],
-  },
-  {
-    client: 'Regional Utility',
-    type: 'Gas & Electric',
-    challenge: 'Aging infrastructure causing unplanned outages and safety risks',
-    solution: 'IoT-based asset monitoring with ML predictive maintenance',
-    results: [
-      { metric: '24%', label: 'Reduction in unplanned outages' },
-      { metric: '$190K', label: 'Annual savings from optimized maintenance' },
-      { metric: '99.5%', label: 'Grid reliability achieved' },
-    ],
-    technologies: ['Azure IoT', 'Databricks', 'Power BI', 'OSIsoft PI'],
-  },
-];
-
-const compliance = [
+// Signature: the compliance frameworks band, kept exactly as published.
+const COMPLIANCE = [
   { name: 'NERC CIP', description: 'Critical infrastructure protection' },
   { name: 'SOC 2 Type II', description: 'Security controls' },
   { name: 'ISO 27001', description: 'Information security' },
@@ -108,239 +99,268 @@ const compliance = [
   { name: 'TSA Pipeline', description: 'Pipeline security' },
 ];
 
+// Field results from the two published utility engagements.
+const FIELD_RESULTS = [
+  { value: '100%', label: 'NERC CIP compliance achieved, with zero critical audit findings' },
+  { value: '60%', label: 'Reduction in compliance effort' },
+  { value: '24%', label: 'Reduction in unplanned outages' },
+  { value: '99.5%', label: 'Grid reliability achieved' },
+];
+
+const PROOF_FALLBACK = [
+  {
+    eyebrow: 'Enterprise Technology Company',
+    metric: '99.97%',
+    metricLabel: 'Uptime across 72+ servers',
+    summary:
+      'Automated DevOps and 24/7 monitoring across a complex estate. The same operations discipline we bring to OT and IT environments that cannot go down.',
+    href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+    linkLabel: 'Read the operations story',
+    image: '/images/v4/svc-ops.jpg',
+  },
+  {
+    eyebrow: 'Global Food Services Operator',
+    metric: '53',
+    metricLabel: 'Countries on one data platform',
+    summary:
+      'One governed platform for 400,000 employees replacing dozens of regional reporting stacks, with decisions landing 22% faster. Global operational data at utility scale.',
+    href: '/case-studies/global-food-facilities-data-intelligence',
+    linkLabel: 'Read the story',
+    image: '/images/v4/case-retail.jpg',
+  },
+  {
+    eyebrow: 'Global Financial Services Firm',
+    metric: '90d',
+    metricLabel: 'From prototype to production',
+    summary:
+      'Azure Data Lake, Databricks, AKS, and Synapse connected into one governed foundation for analytics and machine learning.',
+    href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
+    linkLabel: 'Read the Azure Lakehouse story',
+    image: '/images/v4/case-finance.jpg',
+  },
+];
+
+const PROCESS = [
+  {
+    title: 'Assess',
+    timeframe: 'Weeks 1 to 2',
+    body: 'Inventory the estate: SCADA, historians, meters, and the compliance obligations attached to each. The first use case is picked here, against a number you already report.',
+  },
+  {
+    title: 'Architect',
+    timeframe: 'Weeks 2 to 4',
+    body: 'Data platform design with segmentation, one-way flows, and IEC 62443 alignment decided up front, not retrofitted after the first audit question.',
+  },
+  {
+    title: 'Build',
+    timeframe: 'Weeks 4 to 12',
+    body: 'Pipelines from the operational estate into the governed platform, shipped in increments and tested against live field data.',
+  },
+  {
+    title: 'Prove',
+    body: 'Parallel run against the numbers operations already trusts. Nothing cuts over until the control room agrees the new view is right.',
+  },
+  {
+    title: 'Run',
+    body: 'Around-the-clock operations under SLAs, or a clean handover with runbooks written for the night shift.',
+  },
+];
+
+const FACTS = [
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Compliance',
+    line: 'ISO 27001 certified and CMMI Level 3 appraised. Audit evidence comes out of normal operations, not a scramble before the review.',
+  },
+  {
+    label: 'Operations',
+    line: '24/7 managed operations under published SLAs. The platform stays watched after go-live.',
+  },
+  {
+    label: 'Delivery',
+    line: 'The architects who scope the work are the ones who build it. No handoff between the pitch deck and the delivery pod.',
+  },
+];
+
+const FAQS = energyFaqs.map((f) => ({ question: f.q, answer: f.a }));
+
+/* --------------------------------- page ---------------------------------- */
+
 export default function EnergyPage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/industries"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Industries
-          </Link>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <ServiceSchema
+        name="Energy & Utilities Technology Solutions"
+        description={DESCRIPTION}
+        url="/industries/energy"
+        serviceType="Energy Technology Consulting"
+      />
+      {/* FAQPage JSON-LD comes from PageFaq below - one per page. */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Industries', url: '/industries' },
+          { name: 'Energy & Utilities', url: '/industries/energy' },
+        ]}
+      />
 
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-[var(--aci-primary)] rounded-2xl flex items-center justify-center">
-              <Zap className="w-8 h-8 text-white" />
-            </div>
-          </div>
+      <ServiceHero
+        kicker="Energy & Utilities"
+        title={
+          <>
+            Utility-grade data, from field to{' '}
+            <span style={{ color: '#1D4ED8' }}>control&nbsp;room</span>
+          </>
+        }
+        lede="NERC CIP programs that pass audit, grid and asset analytics on live operational data, and renewable integration that keeps the grid stable. Built for utilities and energy companies by engineers who respect an outage window."
+        chips={[
+          'NERC CIP programs',
+          'OT/IT convergence',
+          'Grid analytics',
+          'ISO 27001',
+        ]}
+        primary={{ label: 'Talk to an energy data architect', href: '/contact?industry=energy' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        visual={<FlowScene config={FLOWS['industry-energy']} />}
+      />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Energy & Utilities
-            <span className="text-[var(--aci-primary-light)]"> Technology Solutions</span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            NERC CIP programs that pass audit, grid and asset analytics on live operational
-            data, and renewable integration that keeps the grid stable. Built for utilities
-            and energy companies by engineers who respect an outage window.
-          </p>
+      {/* Problem band: the grid modernized, the data did not */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        image="/images/v4/case-energy.jpg"
+        pill="Why utility data stalls"
+        headline={
+          <>
+            Every signal from the field,{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">live in the control room.</span>
+          </>
+        }
+        body="Smart meters, renewables, and DERMS pilots throw off signals worth acting on. We bring SCADA, historians, and billing onto one governed platform, keep NERC CIP evidence flowing as a byproduct of normal operations, and leave the systems that keep the lights on exactly where they are. The planning team sees the grid as it is right now."
+        story={{
+          metric: { value: '99.97%', label: 'Uptime across 72+ servers' },
+          title:
+            'A complex digital estate kept available around the clock with automated DevOps and monitoring. The operations bar we hold for infrastructure that cannot go down.',
+          href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+          logoSrc: '/brand/aci-infotech-logo-white.png',
+          logoAlt: 'ACI Infotech',
+        }}
+      />
 
-          <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule Consultation
-            </Button>
-            <Button href="/case-studies" variant="secondary" size="lg">
-              View Case Studies
-            </Button>
-          </div>
+      {/* Offerings */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build for energy"
+            title={
+              <>
+                Six disciplines. One rule: <span style={{ color: '#1D4ED8' }}>the grid stays&nbsp;up.</span>
+              </>
+            }
+            sub="Energy technology consulting scoped to the rules you answer to: FERC, NERC CIP, and an OT estate that cannot go down."
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Value Props */}
-      <section className="py-16 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-7 h-7 text-yellow-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">NERC CIP Experts</h3>
-              <p className="text-gray-600 text-sm">
-                Deep expertise in critical infrastructure protection.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-7 h-7 text-yellow-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">OT Security</h3>
-              <p className="text-gray-600 text-sm">
-                Specialized operational technology security.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <BarChart3 className="w-7 h-7 text-yellow-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Grid Analytics</h3>
-              <p className="text-gray-600 text-sm">
-                Real-time grid monitoring and optimization.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Leaf className="w-7 h-7 text-yellow-600" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Renewables</h3>
-              <p className="text-gray-600 text-sm">
-                Renewable integration and forecasting.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Solutions */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Solutions for Energy
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Energy technology consulting scoped to the rules you answer to: FERC, NERC CIP,
-              and an OT estate that cannot go down.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {solutions.map((solution) => (
-              <div key={solution.title} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-3">{solution.title}</h3>
-                <p className="text-gray-600 mb-4">{solution.description}</p>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-500 mb-2">Outcomes</h4>
-                  <ul className="space-y-1">
-                    {solution.outcomes.map((outcome) => (
-                      <li key={outcome} className="flex items-center gap-2 text-sm text-gray-700">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                        {outcome}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {solution.services.map((service) => (
-                    <span key={service} className="px-2 py-1 bg-yellow-50 text-yellow-700 text-xs rounded">
-                      {service}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Energy Success Stories
-            </h2>
-          </div>
-
-          <div className="space-y-8">
-            {caseStudies.map((cs, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <div className="flex flex-col lg:flex-row gap-8">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="px-3 py-1 bg-yellow-500 text-white text-sm font-medium rounded-full">
-                        {cs.type}
-                      </span>
-                      <span className="text-gray-500">{displayClient(cs)}</span>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-gray-700 mb-2">Challenge</h3>
-                      <p className="text-gray-600">{cs.challenge}</p>
-                    </div>
-
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-gray-700 mb-2">Solution</h3>
-                      <p className="text-gray-600">{cs.solution}</p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {cs.technologies.map((tech) => (
-                        <span key={tech} className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-full">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="lg:w-80">
-                    <h3 className="font-semibold text-gray-700 mb-4">Results</h3>
-                    <div className="space-y-4">
-                      {cs.results.map((result, i) => (
-                        <div key={i} className="bg-white p-4 rounded-lg">
-                          <div className="text-2xl font-bold text-yellow-600">{result.metric}</div>
-                          <div className="text-sm text-gray-600">{result.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Link href="/case-studies" className="inline-flex items-center gap-2 text-[var(--aci-primary)] font-semibold hover:underline">
-              View All Case Studies <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Compliance */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8 text-center">
-            Compliance & Security Expertise
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {compliance.map((item) => (
-              <div key={item.name} className="bg-white p-4 rounded-lg flex items-center gap-4">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-green-600" />
-                </div>
+      {/* Signature: compliance frameworks band */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Compliance & security"
+            title={
+              <>
+                Built to the rulebooks you{' '}
+                <span style={{ color: '#1D4ED8' }}>answer&nbsp;to.</span>
+              </>
+            }
+            sub="Every platform we build for a utility is designed against these frameworks from the first architecture diagram, so the audit reads the system, not a binder assembled the week before."
+          />
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {COMPLIANCE.map((item) => (
+              <div key={item.name} className={`flex items-start gap-3 rounded-2xl bg-white px-5 py-4 ${cardShadow}`}>
+                <CheckBadge />
                 <div>
-                  <div className="font-semibold text-[var(--aci-secondary)]">{item.name}</div>
-                  <div className="text-sm text-gray-500">{item.description}</div>
+                  <p className={`text-[15px] font-semibold leading-snug text-black ${v4Display}`}>{item.name}</p>
+                  <p className="mt-1 text-sm text-gray-500">{glueWidow(item.description)}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Field results from the two published utility engagements */}
+          <div className="mt-14 grid grid-cols-2 gap-x-8 gap-y-10 border-t border-gray-200 pt-10 lg:grid-cols-4">
+            {FIELD_RESULTS.map((metric) => (
+              <div key={metric.label}>
+                <p className={`text-3xl font-bold leading-none text-[#1D4ED8] sm:text-4xl ${v4Display}`}>
+                  {metric.value}
+                </p>
+                <p className="mt-2 text-sm font-medium text-gray-500">{glueWidow(metric.label)}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Operational data, held to an{' '}
+                <span style={{ color: '#1D4ED8' }}>operational&nbsp;bar.</span>
+              </>
+            }
+          />
+          <CmsProofCards industry="Energy" fallback={PROOF_FALLBACK} />
+        </div>
+      </section>
+
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No science projects." />
+          <ProcessStrip steps={PROCESS} />
+        </div>
+      </section>
+
+      {/* Bridge to the data engineering practice */}
+      <BridgeBand
+        title={<>The compliance program is only as good as the&nbsp;data.</>}
+        body="NERC CIP evidence, outage prediction, and renewable forecasting all stand on the same foundation: grid, meter, and asset data engineered into one governed platform. That is our data engineering practice, and utilities are where it earns its keep."
+        link={{ label: 'Data Engineering', href: '/services/data-engineering' }}
+      />
+
+      {/* Why us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title={<>Why utilities build with&nbsp;us</>} />
+          <FactsRow facts={FACTS} />
+        </div>
+      </section>
+
+      <ClusterPosts keywords={['energy', 'utilities', 'grid', 'nerc cip', 'scada']} />
 
       <RelatedLinks items={energyRelated} />
 
-      <FaqBlock items={energyFaqs} eyebrow="Energy & utilities FAQ" />
+      <PageFaq
+        kicker="Energy & utilities FAQ"
+        title={
+          <>
+            Energy questions,
+            <br />
+            answered straight.
+          </>
+        }
+        faqs={FAQS}
+      />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-yellow-500">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Secure and Optimize Your Energy Operations?
-          </h2>
-          <p className="text-xl text-yellow-100 mb-8">
-            Schedule a consultation with our energy technology experts to discuss your challenges.
-          </p>
-          <Button href="/contact?industry=energy" variant="lime" size="lg">
-            Talk to Energy Expert
-          </Button>
-        </div>
-      </section>
-    </main>
+      <CtaSection label="Talk through your grid data" href="/contact?industry=energy" />
+    </div>
   );
 }

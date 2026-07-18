@@ -1,10 +1,10 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowRight, Building2, ShoppingCart, Heart, Factory, Zap, Truck, Utensils, Fuel } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { Metadata } from 'next';
+import { ArrowUpRight } from 'lucide-react';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { getSiteUrl } from '@/lib/site-url';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Display } from '@/components/v4/fonts';
 
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -18,101 +18,81 @@ export const metadata: Metadata = {
   },
 };
 
+// The full industry catalog. Order matters: it drives both the visible
+// index numbering and the ItemList positions below.
 const industries = [
   {
     id: 'financial-services',
     name: 'Financial Services',
-    icon: Building2,
-    tagline: 'Turn Data Into Competitive Advantage',
-    description: 'Your data is fragmented across legacy systems while fraud evolves faster than your defenses. We consolidate your infrastructure, deploy real-time ML detection, and build the governance frameworks regulators demand, so you can innovate without compliance risk.',
-    challenges: ['40+ legacy systems consolidated', 'Sub-second fraud scoring', 'Audit-ready data lineage', 'M&A data integration'],
-    clients: ['Global Financial Giants', 'Private-Equity Fund Administrators', 'Top 10 Investment Banks'],
-    caseStudy: { metric: '$230K', description: 'Annual fraud loss reduction' },
+    line: 'Fraud scoring in under a second, audit-ready lineage, and legacy systems taught to agree.',
     href: '/industries/financial-services',
   },
   {
     id: 'retail',
     name: 'Retail & Consumer',
-    icon: ShoppingCart,
-    tagline: 'Know Your Customer, Everywhere',
-    description: 'Customers expect personalization at every touchpoint, but your data sits in silos. We build unified customer profiles that power real-time recommendations, optimize inventory with AI, and turn every interaction into revenue.',
-    challenges: ['Single customer view', 'Real-time personalization', 'AI demand forecasting', 'Inventory optimization'],
-    clients: ['Fortune 500 Convenience Retailers', 'Fortune 100 Retailers'],
-    caseStudy: { metric: '$220K', description: 'Saved annually with AI demand forecasting' },
+    line: 'One view of customer and inventory, with forecasting that keeps the shelves honest.',
     href: '/industries/retail',
   },
   {
     id: 'healthcare',
     name: 'Healthcare & Life Sciences',
-    icon: Heart,
-    tagline: 'Accelerate Research, Protect Patients',
-    description: 'Clinical breakthroughs are buried in data you can\'t access. We build HIPAA-compliant platforms that unify patient records, accelerate drug discovery timelines, and enable the analytics that improve outcomes without compromising privacy.',
-    challenges: ['HIPAA-compliant analytics', 'Clinical data unification', 'Research acceleration', 'EHR interoperability'],
-    clients: ['Regional Health Systems', 'Global Pharma Leaders'],
-    caseStudy: { metric: '24%', description: 'Faster research data access' },
+    line: 'HIPAA-compliant platforms that unify patient records and speed research.',
     href: '/industries/healthcare',
   },
   {
     id: 'hospitality',
     name: 'Hospitality & Food Services',
-    icon: Utensils,
-    tagline: 'One Platform, Global Operations',
-    description: 'Your 400,000 employees across 50 countries generate data you can\'t see. We unify global operations onto a single platform, enabling real-time workforce analytics, personalized guest experiences, and supply chain visibility that reduces waste.',
-    challenges: ['Global data unification', 'Real-time operations', 'Guest personalization', 'Supply chain optimization'],
-    clients: ['Global Hospitality Leaders', 'Leading Hotel Chains'],
-    caseStudy: { metric: '400K+', description: 'Employees on unified platform' },
+    line: 'One guest record across every property, and global operations on a single platform.',
     href: '/industries/hospitality',
   },
   {
     id: 'manufacturing',
     name: 'Manufacturing',
-    icon: Factory,
-    tagline: 'Predict Problems Before They Cost You',
-    description: 'Unplanned downtime costs you millions while quality issues slip through. We deploy IoT analytics and predictive maintenance that catch failures before they happen, optimize production lines, and deliver the visibility Industry 4.0 promises.',
-    challenges: ['Predictive maintenance', 'Quality anomaly detection', 'Production optimization', 'IoT data at scale'],
-    clients: ['Global Manufacturers', 'Industrial OEMs'],
-    caseStudy: { metric: '28%', description: 'Reduction in unplanned downtime' },
+    line: 'IoT analytics and predictive maintenance that catch failures before the line stops.',
     href: '/industries/manufacturing',
   },
   {
     id: 'energy',
     name: 'Energy & Utilities',
-    icon: Zap,
-    tagline: 'Secure Infrastructure, Reliable Grid',
-    description: 'NERC CIP audits loom while renewables complicate your grid. We implement the secure infrastructure and compliance frameworks regulators require, plus the analytics that optimize generation, predict demand, and integrate clean energy sources.',
-    challenges: ['NERC CIP compliance', 'Grid load optimization', 'Renewable integration', 'Critical infrastructure security'],
-    clients: ['Regional Utilities', 'Energy Producers'],
-    caseStudy: { metric: '100%', description: 'NERC CIP audit compliance' },
+    line: 'NERC CIP programs that pass audit, with grid analytics on live operational data.',
     href: '/industries/energy',
   },
   {
     id: 'oil-gas',
     name: 'Oil & Gas',
-    icon: Fuel,
-    tagline: 'From the Wellhead to the Regulator',
-    description: 'Decades of production data sit trapped in SCADA, historians, and ERP that were never meant to talk. We unify them into one governed platform, so production, maintenance, and emissions reporting all run off data that holds up to an audit.',
-    challenges: ['SCADA & historian integration', 'Predictive maintenance', 'HSE & emissions reporting', 'Energy transition & ESG'],
-    clients: ['Global Energy Operators', 'National Oil Companies'],
-    caseStudy: { metric: 'One', description: 'Governed source across the value chain' },
+    line: 'SCADA, historians, and ERP unified into one governed platform, wellhead to regulator.',
     href: '/industries/oil-gas',
   },
   {
     id: 'transportation',
     name: 'Transportation & Logistics',
-    icon: Truck,
-    tagline: 'Visibility That Drives Profitability',
-    description: 'Fuel costs rise while empty miles erode margins. We deploy AI route optimization that cuts costs, real-time tracking that customers demand, and predictive maintenance that keeps your fleet moving. This turns logistics into competitive advantage.',
-    challenges: ['AI route optimization', 'Fleet visibility', 'Predictive maintenance', 'Carbon tracking & ESG'],
-    clients: ['Fortune 500 Logistics Leaders'],
-    caseStudy: { metric: '16%', description: 'On-time delivery lift, with $250K a year saved on fuel' },
+    line: 'Route optimization and fleet visibility, measured the way shippers grade you: OTIF.',
     href: '/industries/transportation',
   },
 ];
 
+// ItemList JSON-LD: enumerate all eight industry detail pages so
+// crawlers see the full catalog from the hub, not just anchor links.
+const industriesItemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Industries ACI Infotech Serves',
+  itemListElement: industries.map((industry, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: industry.name,
+    url: `${siteUrl}${industry.href}`,
+  })),
+};
+
 export default function IndustriesPage() {
   return (
-    <main className="min-h-screen">
+    <main className={`min-h-screen bg-white text-black ${v4Sans}`}>
       {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(industriesItemList) }}
+      />
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -120,163 +100,85 @@ export default function IndustriesPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden bg-[var(--aci-secondary)]">
-        <Image
-          src="/images/services-hero-bg.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          priority
-          className="object-cover object-center"
-        />
-        <div aria-hidden className="absolute inset-0 bg-[color:var(--aci-secondary)]/85" />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-[color:var(--aci-primary)]/35 via-transparent to-[color:var(--aci-secondary)]/70"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-b from-[color:var(--aci-secondary)]/30 via-transparent to-[color:var(--aci-secondary)]/85"
-        />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <p className="text-[var(--aci-primary-light)] font-medium mb-4 tracking-wide uppercase">
-              Industries We Serve
-            </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Deep Expertise Across
-              <span className="text-[var(--aci-primary-light)]"> Industries That Matter</span>
-            </h1>
-            <p className="text-xl text-gray-300 mb-8">
-              We build the data platforms, AI systems, and cloud infrastructure that regulated,
-              high-volume businesses run on: FHIR pipelines for hospital systems, SCADA integration
-              for energy operators, fraud models for banks. Different rulebooks, same
-              engineering bar.
-            </p>
-          </div>
-
-          {/* Stats */}
-          <div className="grid md:grid-cols-4 gap-6 mt-12">
-            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-white mb-2">2006</div>
-              <div className="text-gray-300">Founded</div>
-            </div>
-            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-white mb-2">1,200+</div>
-              <div className="text-gray-300">Experts</div>
-            </div>
-            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-white mb-2">500+</div>
-              <div className="text-gray-300">Large Enterprise Projects</div>
-            </div>
-            <div className="bg-gray-900/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-white mb-2">11</div>
-              <div className="text-gray-300">Global Delivery Hubs</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Industries Grid */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-8">
-            {industries.map((industry) => {
-              const Icon = industry.icon;
-
-              return (
-                <div
-                  key={industry.id}
-                  className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow"
-                >
-                  <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Content */}
-                    <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-14 h-14 bg-[var(--aci-primary)] rounded-xl flex items-center justify-center">
-                          <Icon className="w-7 h-7 text-white" />
-                        </div>
-                        <div>
-                          <h2 className="text-2xl font-bold text-[var(--aci-secondary)]">
-                            {industry.name}
-                          </h2>
-                          <p className="text-[var(--aci-primary)] font-medium">{industry.tagline}</p>
-                        </div>
-                      </div>
-
-                      <p className="text-gray-600 mb-6">{industry.description}</p>
-
-                      {/* Challenges */}
-                      <div className="mb-6">
-                        <h4 className="text-sm font-semibold text-gray-500 capitalize mb-3">
-                          Challenges We Solve
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {industry.challenges.map((challenge) => (
-                            <span
-                              key={challenge}
-                              className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full"
-                            >
-                              {challenge}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Clients */}
-                      <div className="mb-6">
-                        <h4 className="text-sm font-semibold text-gray-500 capitalize mb-2">
-                          Representative Clients
-                        </h4>
-                        <p className="text-gray-600 text-sm">{industry.clients.join(' • ')}</p>
-                      </div>
-
-                      <Link
-                        href={industry.href}
-                        className="inline-flex items-center gap-2 text-[var(--aci-primary)] font-semibold hover:gap-3 transition-all"
-                      >
-                        Learn More <ArrowRight className="w-5 h-5" />
-                      </Link>
-                    </div>
-
-                    {/* Case Study Highlight */}
-                    <div className="lg:w-72 flex-shrink-0">
-                      <div className="bg-[var(--aci-secondary)] rounded-xl p-6 text-center">
-                        <div className="text-4xl font-bold text-white mb-2">{industry.caseStudy.metric}</div>
-                        <div className="text-gray-400 text-sm">{industry.caseStudy.description}</div>
-                        <Link
-                          href="/case-studies"
-                          className="inline-flex items-center gap-1 text-[var(--aci-primary-light)] text-sm mt-4 hover:underline"
-                        >
-                          View Case Studies <ArrowRight className="w-4 h-4" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Don&apos;t See Your Industry?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            We work with enterprises across many sectors. Let&apos;s discuss how our expertise
-            can apply to your specific challenges.
+      {/* Hero */}
+      <section className="border-b border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 pb-14 pt-12 md:pt-16">
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            / Industries
           </p>
-          <Button href="/contact?reason=architecture-call" variant="lime" size="lg">
-            Schedule Architecture Call
-          </Button>
+          <h1
+            className={`max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl xl:text-[64px] ${v4Display}`}
+            style={{ lineHeight: 1.04 }}
+          >
+            The industries we{' '}
+            <span style={{ color: '#1D4ED8' }}>build&nbsp;for</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-gray-700 md:text-lg">
+            We build the data platforms, AI systems, and cloud infrastructure
+            that regulated, high-volume businesses run on: FHIR pipelines for
+            hospital systems, SCADA integration for energy operators, fraud
+            models for banks. Different rulebooks, same
+            engineering&nbsp;bar.
+          </p>
         </div>
       </section>
+
+      {/* Editorial index of all eight industries */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-14 md:py-16">
+          <div>
+            {industries.map((industry, index) => (
+              <Link
+                key={industry.id}
+                href={industry.href}
+                className="group flex items-center gap-5 border-t border-gray-200 py-7 transition-colors duration-300 hover:bg-gray-50/60 sm:gap-8 md:py-8"
+              >
+                <span className={`w-9 shrink-0 text-sm font-semibold text-gray-300 ${v4Display}`}>
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="flex min-w-0 flex-1 flex-col gap-1 md:flex-row md:items-baseline md:gap-8">
+                  <span
+                    className={`text-2xl font-bold tracking-tight text-black transition-colors duration-300 group-hover:text-[#1D4ED8] sm:text-3xl md:w-[320px] md:shrink-0 lg:w-[420px] ${v4Display}`}
+                  >
+                    {industry.name}
+                  </span>
+                  <span className="text-[15px] leading-relaxed text-gray-500">{industry.line}</span>
+                </span>
+                <ArrowUpRight
+                  size={22}
+                  aria-hidden="true"
+                  className="shrink-0 self-center text-gray-300 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#1D4ED8]"
+                />
+              </Link>
+            ))}
+            <div className="border-t border-gray-200" />
+          </div>
+        </div>
+      </section>
+
+      {/* Facts band */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-12 md:py-14">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-4">
+            {[
+              { value: '2006', label: 'Founded' },
+              { value: '1,200+', label: 'Engineers' },
+              { value: '500+', label: 'Large enterprise projects' },
+              { value: '11', label: 'Global delivery hubs' },
+            ].map((fact) => (
+              <div key={fact.label}>
+                <p className={`text-4xl font-bold leading-none text-[#1D4ED8] sm:text-5xl ${v4Display}`}>
+                  {fact.value}
+                </p>
+                <p className="mt-2 text-sm font-medium text-gray-500">{fact.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Tell us which rulebook you answer to" />
     </main>
   );
 }

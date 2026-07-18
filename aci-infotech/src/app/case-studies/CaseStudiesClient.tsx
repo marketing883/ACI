@@ -17,9 +17,9 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Filter, Search } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { ArrowUpRight, Search } from 'lucide-react';
 import { displayClient } from '@/lib/content/anonymize';
+import { v4Display } from '@/components/v4/fonts';
 import type {
   CaseStudyListItem,
   CaseStudyMetric,
@@ -47,6 +47,37 @@ interface CaseStudyCard {
 
 const industries = ['All', 'Financial Services', 'Retail', 'Healthcare', 'Hospitality', 'Manufacturing', 'Insurance', 'Energy', 'Transportation', 'Technology'];
 const services = ['All', 'Data Engineering', 'Applied AI & ML', 'Cloud Modernization', 'MarTech & CDP', 'Digital Transformation', 'Cyber Security'];
+
+/** Industry keyword -> on-brand backdrop, for rows without an image.
+    Mirrors the mapping CmsProofCards uses on the v4 service pages. */
+const INDUSTRY_IMAGES: [string, string][] = [
+  ['retail', '/images/v4/case-retail.jpg'],
+  ['consumer', '/images/v4/case-retail.jpg'],
+  ['financ', '/images/v4/case-finance.jpg'],
+  ['insur', '/images/v4/case-finance.jpg'],
+  ['bank', '/images/v4/case-finance.jpg'],
+  ['health', '/images/v4/case-healthcare.jpg'],
+  ['manufactur', '/images/v4/case-manufacturing.jpg'],
+  ['transport', '/images/v4/case-transport.jpg'],
+  ['logistic', '/images/v4/case-transport.jpg'],
+  ['energy', '/images/v4/case-energy.jpg'],
+  ['utilit', '/images/v4/case-energy.jpg'],
+  ['hospitality', '/images/v4/case-retail.jpg'],
+  ['food', '/images/v4/case-retail.jpg'],
+  ['technology', '/images/v4/svc-ops.jpg'],
+];
+
+function industryImage(industry: string): string | undefined {
+  const needle = industry.toLowerCase();
+  if (!needle) return undefined;
+  return INDUSTRY_IMAGES.find(([key]) => needle.includes(key))?.[1];
+}
+
+/** Glue the final two words with a non-breaking space so no width can
+    strand a widow. */
+function glueWidow(s: string) {
+  return s.replace(/ (\S+)$/, ' $1');
+}
 
 // Parse JSON fields that might be stored as strings (metrics JSONB).
 function parseJsonField<T>(value: T | string | null | undefined, fallback: T): T {
@@ -114,33 +145,28 @@ export default function CaseStudiesClient({ initialItems }: Props) {
 
   return (
     <>
-      {/* Filters Section */}
-      <section className="bg-gray-50 py-6 sticky top-20 z-40 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+      {/* Filters: hairline inputs, no pills */}
+      <section className="sticky top-20 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
+        <div className="mx-auto max-w-7xl px-6 py-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             {/* Search */}
             <div className="relative w-full md:w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search by client, technology..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
+                className="w-full border-0 border-b border-gray-200 bg-transparent py-2 pl-7 pr-2 text-sm text-black placeholder:text-gray-400 focus:border-blue-700 focus:outline-none focus:ring-0"
               />
             </div>
 
             {/* Filters */}
-            <div className="flex flex-wrap gap-4 items-center">
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-600">Filters:</span>
-              </div>
-
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
               <select
                 value={selectedIndustry}
                 onChange={(e) => setSelectedIndustry(e.target.value)}
-                className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
+                className="border-0 border-b border-gray-200 bg-transparent py-2 pr-6 text-sm text-gray-700 focus:border-blue-700 focus:outline-none focus:ring-0"
               >
                 {industries.map((industry) => (
                   <option key={industry} value={industry}>
@@ -152,7 +178,7 @@ export default function CaseStudiesClient({ initialItems }: Props) {
               <select
                 value={selectedService}
                 onChange={(e) => setSelectedService(e.target.value)}
-                className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
+                className="border-0 border-b border-gray-200 bg-transparent py-2 pr-6 text-sm text-gray-700 focus:border-blue-700 focus:outline-none focus:ring-0"
               >
                 {services.map((service) => (
                   <option key={service} value={service}>
@@ -166,27 +192,27 @@ export default function CaseStudiesClient({ initialItems }: Props) {
       </section>
 
       {/* All Case Studies */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-14 md:py-16">
           {filteredStudies.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">No case studies found matching your criteria.</p>
-              <Button
-                variant="secondary"
-                className="mt-4"
+            <div className="py-16 text-center">
+              <p className="text-lg text-gray-500">No case studies found matching your criteria.</p>
+              <button
                 onClick={() => {
                   setSelectedIndustry('All');
                   setSelectedService('All');
                   setSearchQuery('');
                 }}
+                className="group mt-4 inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:underline"
               >
-                Clear Filters
-              </Button>
+                Clear the filters
+                <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {filteredStudies.map((study) => (
-                <CaseStudyCard key={study.slug} study={study} featured={study.is_featured} />
+                <CaseStudyCard key={study.slug} study={study} />
               ))}
             </div>
           )}
@@ -196,108 +222,75 @@ export default function CaseStudiesClient({ initialItems }: Props) {
   );
 }
 
-// Case Study Card Component
+// Case Study Card Component: dark v4 card with the study's own featured
+// image (or an on-brand industry backdrop) dimmed under a gradient veil.
 interface CaseStudyCardProps {
   study: CaseStudyCard;
-  featured?: boolean;
 }
 
-function CaseStudyCard({ study, featured }: CaseStudyCardProps) {
+function CaseStudyCard({ study }: CaseStudyCardProps) {
+  const backdrop = study.featured_image ?? industryImage(study.industry);
+  // Skip the "Significant" placeholder the transform injects for rows
+  // without real metrics; only real numbers earn the lime treatment.
+  const metric = study.results.find((r) => r.metric !== 'Significant');
+
   return (
     <Link
       href={`/case-studies/${study.slug}`}
-      className="group relative block rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+      className="group relative flex min-h-[420px] flex-col overflow-hidden rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25"
     >
-      {/* Background Image with Gradient Overlay */}
-      <div className="absolute inset-0">
-        {study.featured_image ? (
-          <Image
-            src={study.featured_image}
-            alt={study.headline}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[var(--aci-secondary)] via-[#1a3a5c] to-[#0a2540]" />
-        )}
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--aci-secondary)] via-[var(--aci-secondary)]/80 to-transparent" />
-      </div>
+      {backdrop ? (
+        <Image
+          src={backdrop}
+          alt=""
+          aria-hidden="true"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+          className="object-cover opacity-35 transition-transform duration-500 group-hover:scale-[1.03]"
+        />
+      ) : null}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{ background: 'linear-gradient(180deg, rgba(11,18,32,0.55) 0%, rgba(11,18,32,0.88) 62%, rgba(11,18,32,0.96) 100%)' }}
+      />
 
-      {/* Glass Card Content */}
-      <div className="relative min-h-[480px] flex flex-col justify-end p-8">
-        {/* Top badges */}
-        <div className="absolute top-5 left-5 right-5 flex items-center justify-between">
-          <div className="flex gap-2">
-            <span className="px-3 py-1.5 bg-white/10 backdrop-blur-md text-white text-xs font-medium rounded-full border border-white/20">
-              {study.industry}
-            </span>
-            <span className="px-3 py-1.5 bg-[var(--aci-primary)]/80 backdrop-blur-md text-white text-xs font-medium rounded-full">
-              {study.service}
-            </span>
-          </div>
-          {featured && (
-            <span className="px-3 py-1.5 bg-amber-500/90 backdrop-blur-md text-white text-xs font-bold rounded-full flex items-center gap-1">
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              Featured
-            </span>
-          )}
-        </div>
+      <div className="relative flex flex-1 flex-col">
+        {/* Client descriptor eyebrow */}
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
+          {displayClient(study)}
+        </p>
+        <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-white/40">
+          {study.industry} &middot; {study.service}
+        </p>
 
-        {/* Client Name */}
-        <div className="mb-3">
-          <span className="text-white/80 text-sm font-semibold uppercase tracking-wider">
-            {displayClient(study)}
-          </span>
-        </div>
-
-        {/* Headline */}
-        <h3 className="text-2xl font-bold text-white mb-5 group-hover:text-[var(--aci-primary-light)] transition-colors">
-          {study.headline}
+        <h3 className={`mt-5 text-2xl font-bold leading-snug text-white ${v4Display}`}>
+          {glueWidow(study.headline)}
         </h3>
 
-        {/* Results - Glass Panel */}
-        {study.results && study.results.length > 0 && (
-          <div className="bg-white/10 backdrop-blur-md rounded-xl p-5 mb-5 border border-white/10">
-            <div className="grid grid-cols-3 gap-4">
-              {study.results.slice(0, 3).map((result, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-xl font-bold text-[var(--aci-primary-light)]">
-                    {result.metric}
-                  </div>
-                  <div className="text-xs text-white/70 leading-snug mt-1">
-                    {result.description}
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className="flex-1" />
+
+        {metric ? (
+          <div className="mt-6">
+            <span className={`text-5xl font-bold leading-none text-[#84CC16] ${v4Display}`}>
+              {metric.metric}
+            </span>
+            <p className="mt-2 line-clamp-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
+              {metric.description}
+            </p>
           </div>
+        ) : null}
+
+        {study.technologies.length > 0 && (
+          <p className="mt-5 text-xs text-white/50">
+            {study.technologies.slice(0, 4).join(' · ')}
+          </p>
         )}
 
-        {/* Technologies */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {study.technologies?.slice(0, 4).map((tech) => (
-            <span
-              key={tech}
-              className="px-2.5 py-1 bg-white/5 backdrop-blur-sm rounded-md text-xs text-white/70 border border-white/10"
-            >
-              {tech}
-            </span>
-          ))}
-          {(study.technologies?.length || 0) > 4 && (
-            <span className="px-2.5 py-1 text-xs text-white/40">
-              +{(study.technologies?.length || 0) - 4}
-            </span>
-          )}
-        </div>
-
-        {/* CTA */}
-        <div className="flex items-center gap-2 text-white font-medium group-hover:text-[var(--aci-primary-light)] transition-colors">
-          <span className="text-sm">Read Case Study</span>
-          <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-        </div>
+        <span className="mt-6 flex items-center gap-1 text-sm font-semibold text-[#84CC16]">
+          Read the case study
+          <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </span>
       </div>
     </Link>
   );
