@@ -13,9 +13,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { ArrowUpRight } from 'lucide-react';
 import { getSiteUrl } from '@/lib/site-url';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Display, v4Sans } from '@/components/v4/fonts';
+import { cardShadow, CheckBadge } from '@/components/v4/page/kit';
 import { playbooksData } from './playbooks-data';
 import PlaybookDownloadCta from './PlaybookDownloadCta';
 
@@ -53,6 +55,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: playbook.description,
     },
   };
+}
+
+/** Slash-label section head for the article-width sections. */
+function PlaybookSectionHead({ kicker, title }: { kicker: string; title: string }) {
+  return (
+    <div>
+      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ {kicker}</p>
+      <h2
+        className={`text-2xl font-bold tracking-tight text-black sm:text-3xl ${v4Display}`}
+        style={{ lineHeight: 1.1 }}
+      >
+        {title}
+      </h2>
+    </div>
+  );
 }
 
 export default async function PlaybookPage({ params }: PageProps) {
@@ -95,79 +112,59 @@ export default async function PlaybookPage({ params }: PageProps) {
     ],
   };
 
+  const heroChips = [
+    `${playbook.deployments}x deployed`,
+    playbook.category,
+    playbook.timeline,
+    playbook.teamSize,
+  ];
+
   return (
-    <main className="min-h-screen">
+    <main className={`min-h-screen bg-white text-black ${v4Sans}`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      {/* Hero Section */}
-      <section className="bg-[#001529] pt-32 pb-20 relative overflow-hidden">
-        {/* Blueprint grid background */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(24,144,255,0.06) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(24,144,255,0.06) 1px, transparent 1px)
-            `,
-            backgroundSize: '20px 20px',
-          }}
-        />
-
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb */}
+      {/* Hero */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-[960px] px-6 pt-12 md:pt-16">
           <Link
             href="/playbooks"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+            className="group inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Playbooks
+            <span className="relative">
+              All playbooks
+              <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+            </span>
+            <ArrowUpRight size={14} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
 
-          <div className="flex items-center gap-4 mb-6">
-            <span className="px-3 py-1 bg-[#1890FF]/20 text-[#1890FF] text-sm font-medium rounded">
-              {playbook.category}
-            </span>
-            <span className="text-[#C4FF61] font-mono font-bold">
-              {playbook.deployments}x deployed
-            </span>
-          </div>
-
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <p className="mb-4 mt-10 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            / {playbook.category} playbook
+          </p>
+          <h1
+            className={`text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-[44px] ${v4Display}`}
+            style={{ lineHeight: 1.08 }}
+          >
             {playbook.displayTitle}
           </h1>
-          <p className="text-xl text-gray-400 mb-6">
-            {playbook.fullTitle}
-          </p>
-          <p className="text-gray-500">
+          <p className={`mt-4 text-lg font-semibold text-gray-700 ${v4Display}`}>{playbook.fullTitle}</p>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-gray-600 md:text-lg">
             {playbook.description}
           </p>
 
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 pt-8 border-t border-gray-700">
-            <div>
-              <div className="text-sm text-gray-400 mb-1">Deployments</div>
-              <div className="text-xl font-semibold text-white">{playbook.deployments}x</div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-400 mb-1">Timeline</div>
-              <div className="text-xl font-semibold text-white">{playbook.timeline}</div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-400 mb-1">Team Size</div>
-              <div className="text-xl font-semibold text-white">{playbook.teamSize}</div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-400 mb-1">Category</div>
-              <div className="text-xl font-semibold text-white">{playbook.category}</div>
-            </div>
-          </div>
+          <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+            {heroChips.map((chip) => (
+              <li key={chip} className="whitespace-nowrap">
+                {chip}
+              </li>
+            ))}
+          </ul>
 
           {/* Download CTA (client island; only interactive piece) */}
           {playbook.downloadAvailable && (
-            <div className="mt-8">
+            <div className="mt-9">
               <PlaybookDownloadCta
                 playbookTitle={playbook.fullTitle}
                 playbookSlug={playbook.slug}
@@ -177,180 +174,167 @@ export default async function PlaybookPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* Key Outcomes */}
-      <section className="py-16 bg-[var(--aci-primary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-white text-lg font-medium mb-8">Typical Outcomes Achieved</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {playbook.outcomes.map((outcome, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-white mb-2">{outcome.metric}</div>
-                <div className="text-blue-100">{outcome.description}</div>
-              </div>
-            ))}
+      {/* Outcomes band right after the hero */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-[960px] px-6 pt-12">
+          <div className="rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 md:p-10">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">/ Typical outcomes</p>
+            <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
+              {playbook.outcomes.map((outcome, index) => (
+                <div key={index}>
+                  <p className={`text-4xl font-bold leading-none text-[#84CC16] lg:text-5xl ${v4Display}`}>
+                    {outcome.metric}
+                  </p>
+                  <p className="mt-3 text-[11px] font-semibold uppercase leading-snug tracking-[0.16em] text-white/60">
+                    {outcome.description}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Overview */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[var(--aci-secondary)] mb-6">Overview</h2>
-          <p className="text-lg text-gray-600 leading-relaxed">{playbook.overview}</p>
+      <section className="bg-white pt-16 md:pt-20">
+        <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+          <PlaybookSectionHead kicker="Overview" title="What this playbook is for" />
+          <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-gray-800">{playbook.overview}</p>
         </div>
       </section>
 
-      {/* Challenge Pattern */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-              <span className="text-2xl">🎯</span>
-            </div>
-            <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Challenge Pattern</h2>
-          </div>
-          <p className="text-lg text-gray-600 mb-8">
-            This playbook addresses organizations facing these common challenges:
+      {/* Challenge pattern */}
+      <section className="bg-white pt-16 md:pt-20">
+        <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+          <PlaybookSectionHead kicker="Challenge pattern" title="When this playbook applies" />
+          <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-gray-800">
+            This playbook fits organizations facing these common challenges:
           </p>
-          <ul className="space-y-4">
+          <ul className="mt-8 max-w-3xl space-y-4">
             {playbook.challengePattern.map((point, index) => (
-              <li key={index} className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-sm font-medium">
-                  {index + 1}
+              <li key={index} className="flex items-baseline gap-4 border-t border-gray-200 pt-4">
+                <span className={`text-sm font-semibold text-gray-300 ${v4Display}`}>
+                  {String(index + 1).padStart(2, '0')}
                 </span>
-                <span className="text-gray-700">{point}</span>
+                <span className="text-[15px] leading-relaxed text-gray-700">{point}</span>
               </li>
             ))}
           </ul>
         </div>
       </section>
 
-      {/* Solution Approach */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-              <span className="text-2xl">💡</span>
-            </div>
-            <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Solution Approach</h2>
-          </div>
-          <ul className="space-y-4 mb-8">
+      {/* Solution approach */}
+      <section className="bg-white pt-16 md:pt-20">
+        <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+          <PlaybookSectionHead kicker="Solution approach" title="How the pattern runs" />
+          <ul className="mt-8 max-w-3xl space-y-4">
             {playbook.solutionApproach.map((point, index) => (
               <li key={index} className="flex items-start gap-3">
-                <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-700">{point}</span>
+                <CheckBadge />
+                <span className="text-[15px] leading-relaxed text-gray-700">{point}</span>
               </li>
             ))}
           </ul>
         </div>
       </section>
 
-      {/* Key Learnings */}
-      <section className="py-20 bg-[#001529]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-[#1890FF]/20 rounded-xl flex items-center justify-center">
-              <span className="text-2xl">📚</span>
+      {/* Key learnings: dark proof surface */}
+      <section className="bg-white pt-16 md:pt-20">
+        <div className="mx-auto max-w-[960px] px-6">
+          <div className="rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 md:p-10">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">/ Key learnings</p>
+            <h2
+              className={`mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl ${v4Display}`}
+              style={{ lineHeight: 1.1 }}
+            >
+              Hard-won lessons from {playbook.deployments}&nbsp;deployments
+            </h2>
+            <div className="mt-8 space-y-4">
+              {playbook.keyLearnings.map((learning, index) => (
+                <div key={index} className="flex items-baseline gap-4 rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
+                  <span className={`text-sm font-semibold text-[#84CC16] ${v4Display}`}>
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <p className="text-[15px] leading-relaxed text-white/85">{learning}</p>
+                </div>
+              ))}
             </div>
-            <h2 className="text-3xl font-bold text-white">Key Learnings</h2>
-          </div>
-          <p className="text-gray-400 mb-8">
-            Hard-won insights from {playbook.deployments} deployments:
-          </p>
-          <div className="space-y-4">
-            {playbook.keyLearnings.map((learning, index) => (
-              <div
-                key={index}
-                className="p-4 bg-white/5 border border-[#1890FF]/30 rounded-lg"
-              >
-                <p className="text-white">{learning}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
 
-      {/* Technologies */}
-      <section className="py-16 bg-white border-y">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-6">Technologies Used</h2>
-          <div className="flex flex-wrap gap-3">
-            {playbook.technologies.map((tech) => (
-              <span
-                key={tech}
-                className="px-4 py-2 bg-gray-100 rounded-lg text-gray-700 font-medium"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Industries */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-6">Industries Served</h2>
-          <div className="flex flex-wrap gap-3">
-            {playbook.industries.map((industry) => (
-              <span
-                key={industry}
-                className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700"
-              >
-                {industry}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Detailed Results */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <span className="text-2xl">📊</span>
+      {/* Stack and industries */}
+      <section className="bg-white pt-16 md:pt-20">
+        <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+          <div className="grid gap-12 md:grid-cols-2">
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Stack</p>
+              <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                {playbook.technologies.map((tech) => (
+                  <li key={tech} className="whitespace-nowrap">
+                    {tech}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <h2 className="text-3xl font-bold text-[var(--aci-secondary)]">Results & Impact</h2>
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Industries served</p>
+              <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                {playbook.industries.map((industry) => (
+                  <li key={industry} className="whitespace-nowrap">
+                    {industry}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <div className="grid md:grid-cols-2 gap-6">
+        </div>
+      </section>
+
+      {/* Detailed results */}
+      <section className="bg-white pt-16 md:pt-20">
+        <div className="mx-auto max-w-[960px] border-t border-gray-200 px-6 pt-16 md:pt-20">
+          <PlaybookSectionHead kicker="Results" title="What the pattern delivers" />
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
             {playbook.outcomes.map((result, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl">
-                <div className="text-3xl font-bold text-[var(--aci-primary)] mb-2">{result.metric}</div>
-                <div className="font-semibold text-[var(--aci-secondary)] mb-2">{result.description}</div>
-                <p className="text-sm text-gray-500">{result.detail}</p>
+              <div key={index} className={`rounded-2xl bg-white p-7 ${cardShadow}`}>
+                <p className={`text-4xl font-bold leading-none text-[#1D4ED8] ${v4Display}`}>{result.metric}</p>
+                <p className={`mt-4 text-lg font-semibold text-black ${v4Display}`}>{result.description}</p>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{result.detail}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Related Playbooks */}
+      {/* Related playbooks */}
       {relatedPlaybooks.length > 0 && (
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-8">Related Playbooks</h2>
-            <div className="grid md:grid-cols-2 gap-8">
+        <section className="bg-white pt-16 md:pt-20">
+          <div className="mx-auto max-w-7xl border-t border-gray-200 px-6 pb-16 pt-16 md:pb-20 md:pt-20">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ More patterns</p>
+            <h2
+              className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+              style={{ lineHeight: 1.08 }}
+            >
+              Related playbooks
+            </h2>
+            <div className="mt-10 grid gap-5 md:grid-cols-2">
               {relatedPlaybooks.map((related) => (
                 <Link
                   key={related.slug}
                   href={`/playbooks/${related.slug}`}
-                  className="group bg-white rounded-xl p-6 hover:shadow-lg transition-all border border-gray-100"
+                  className={`group flex flex-col rounded-2xl bg-white p-7 transition-shadow duration-300 hover:shadow-[0_6px_18px_rgba(63,74,126,0.1),0_2px_40px_rgba(63,74,126,0.16)] ${cardShadow}`}
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    <span className="px-2 py-1 bg-[#1890FF]/10 text-[#1890FF] text-xs font-medium rounded">
-                      {related.category}
-                    </span>
-                    <span className="text-[#C4FF61] text-sm font-mono bg-[#001529] px-2 py-1 rounded">
-                      {related.deployments}x
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-[var(--aci-secondary)] group-hover:text-[var(--aci-primary)] transition-colors mb-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+                    {related.category} / {related.deployments}x deployed
+                  </p>
+                  <h3 className={`mt-4 text-xl font-semibold text-black md:text-2xl ${v4Display}`}>
                     {related.displayTitle}
                   </h3>
-                  <p className="text-gray-600 text-sm mb-4">{related.fullTitle}</p>
-                  <span className="text-[var(--aci-primary)] text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                    View Playbook <ArrowRight className="w-4 h-4" />
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600">{related.fullTitle}</p>
+                  <span className="mt-6 flex items-center gap-1 text-sm font-semibold text-blue-700">
+                    View the playbook
+                    <ArrowUpRight size={15} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </span>
                 </Link>
               ))}
@@ -359,20 +343,13 @@ export default async function PlaybookPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Implement This Playbook?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Talk to an architect who has deployed this pattern {playbook.deployments} times.
-          </p>
-          <Button href={`/contact?playbook=${playbook.id}`} variant="lime" size="lg">
-            Talk to the Architect
-          </Button>
-        </div>
-      </section>
+      {relatedPlaybooks.length === 0 && <div className="pt-16 md:pt-20" />}
+
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection
+        label="Let's Walk Through This Playbook"
+        href={`/contact?playbook=${playbook.id}`}
+      />
     </main>
   );
 }
