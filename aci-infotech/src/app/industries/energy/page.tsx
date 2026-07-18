@@ -2,12 +2,35 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Zap, Shield, BarChart3, Leaf } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { energyFaqs } from '@/content/industry-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { energyRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 import { displayClient } from '@/lib/content/anonymize';
+
+const DESCRIPTION =
+  'Energy technology consulting for utilities and energy companies: NERC CIP and FERC compliance, OT/IT convergence, grid analytics, and renewable integration.';
+
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/industries/energy' },
   title: 'Energy & Utilities Technology Solutions',
-  description: 'Secure, compliant technology solutions for energy companies and utilities. NERC CIP compliance, grid optimization, and renewable integration.',
+  description: DESCRIPTION,
+  openGraph: {
+    title: 'Energy & Utilities Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    url: 'https://aciinfotech.com/industries/energy',
+    siteName: 'ACI Infotech',
+    type: 'website',
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Energy & Utilities Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    images: DEFAULT_TWITTER_IMAGES,
+  },
 };
 
 const solutions = [
@@ -26,7 +49,7 @@ const solutions = [
   {
     title: 'Asset Performance Management',
     description: 'Deploy predictive maintenance for critical assets to extend life and prevent failures.',
-    outcomes: ['40% less downtime', 'Extended asset life', 'Optimized maintenance'],
+    outcomes: ['24% less downtime', 'Extended asset life', 'Optimized maintenance'],
     services: ['Applied AI & ML', 'Data Engineering'],
   },
   {
@@ -68,9 +91,9 @@ const caseStudies = [
     challenge: 'Aging infrastructure causing unplanned outages and safety risks',
     solution: 'IoT-based asset monitoring with ML predictive maintenance',
     results: [
-      { metric: '40%', label: 'Reduction in unplanned outages' },
-      { metric: '$15M', label: 'Annual savings from optimized maintenance' },
-      { metric: '99.9%', label: 'Grid reliability achieved' },
+      { metric: '24%', label: 'Reduction in unplanned outages' },
+      { metric: '$190K', label: 'Annual savings from optimized maintenance' },
+      { metric: '99.5%', label: 'Grid reliability achieved' },
     ],
     technologies: ['Azure IoT', 'Databricks', 'Power BI', 'OSIsoft PI'],
   },
@@ -110,10 +133,9 @@ export default function EnergyPage() {
             <span className="text-[var(--aci-primary-light)]"> Technology Solutions</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            From electric utilities to oil & gas companies, we help energy organizations
-            secure critical infrastructure, optimize operations, and integrate renewables.
-            Our solutions are built for the unique regulatory and operational requirements
-            of the energy sector.
+            NERC CIP programs that pass audit, grid and asset analytics on live operational
+            data, and renewable integration that keeps the grid stable. Built for utilities
+            and energy companies by engineers who respect an outage window.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -179,7 +201,8 @@ export default function EnergyPage() {
               Solutions for Energy
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Secure, compliant solutions built for the unique requirements of energy organizations.
+              Energy technology consulting scoped to the rules you answer to: FERC, NERC CIP,
+              and an OT estate that cannot go down.
             </p>
           </div>
 
@@ -299,6 +322,10 @@ export default function EnergyPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={energyRelated} />
+
+      <FaqBlock items={energyFaqs} eyebrow="Energy & utilities FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-yellow-500">

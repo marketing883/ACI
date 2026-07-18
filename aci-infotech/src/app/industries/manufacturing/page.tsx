@@ -7,18 +7,38 @@ import { manufacturingFaqs } from '@/content/industry-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { manufacturingRelated } from '@/content/related-links';
 
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+
 import { displayClient } from '@/lib/content/anonymize';
+
+const DESCRIPTION =
+  'Industry 4.0 solutions for manufacturers. IoT analytics, predictive maintenance, quality analytics, and smart factory implementations.';
+
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/industries/manufacturing' },
   title: 'Manufacturing Technology Solutions',
-  description: 'Industry 4.0 solutions for manufacturers. IoT analytics, predictive maintenance, quality analytics, and smart factory implementations.',
+  description: DESCRIPTION,
+  openGraph: {
+    title: 'Manufacturing Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    url: 'https://aciinfotech.com/industries/manufacturing',
+    siteName: 'ACI Infotech',
+    type: 'website',
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Manufacturing Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    images: DEFAULT_TWITTER_IMAGES,
+  },
 };
 
 const solutions = [
   {
     title: 'Predictive Maintenance',
     description: 'Deploy ML models that predict equipment failures before they happen, reducing downtime and maintenance costs.',
-    outcomes: ['67% less downtime', '45% lower maintenance costs', 'Extended equipment life'],
+    outcomes: ['28% less downtime', '45% lower maintenance costs', 'Extended equipment life'],
     services: ['Applied AI & ML', 'Data Engineering'],
   },
   {
@@ -30,7 +50,7 @@ const solutions = [
   {
     title: 'Quality Analytics',
     description: 'Implement ML-powered quality control that detects defects early and identifies root causes.',
-    outcomes: ['35% fewer defects', 'Automated inspection', 'Root cause analysis'],
+    outcomes: ['21% fewer defects', 'Automated inspection', 'Root cause analysis'],
     services: ['Applied AI & ML', 'Data Engineering'],
   },
   {
@@ -60,8 +80,8 @@ const caseStudies = [
     challenge: 'Unplanned equipment failures causing significant production losses and safety risks',
     solution: 'IoT data platform with ML-based predictive maintenance across 50+ production lines',
     results: [
-      { metric: '67%', label: 'Reduction in unplanned downtime' },
-      { metric: '$8M', label: 'Annual savings from avoided failures' },
+      { metric: '28%', label: 'Reduction in unplanned downtime' },
+      { metric: '$210K', label: 'Annual savings from avoided failures' },
       { metric: '99.2%', label: 'Equipment availability' },
     ],
     technologies: ['Azure IoT Hub', 'Databricks', 'Python', 'Power BI'],
@@ -72,9 +92,9 @@ const caseStudies = [
     challenge: 'Quality issues not detected until final inspection, causing rework and delays',
     solution: 'Computer vision quality inspection with real-time defect detection and alerting',
     results: [
-      { metric: '35%', label: 'Reduction in defect rate' },
-      { metric: '80%', label: 'Faster defect detection' },
-      { metric: '$2M', label: 'Annual savings from reduced rework' },
+      { metric: '21%', label: 'Reduction in defect rate' },
+      { metric: '35%', label: 'Faster defect detection' },
+      { metric: '$160K', label: 'Annual savings from reduced rework' },
     ],
     technologies: ['AWS SageMaker', 'OpenCV', 'Snowflake', 'Kafka'],
   },
@@ -167,7 +187,7 @@ export default function ManufacturingPage() {
               </div>
               <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Proven Results</h3>
               <p className="text-gray-600 text-sm">
-                67% reduction in unplanned downtime.
+                28% reduction in unplanned downtime.
               </p>
             </div>
           </div>

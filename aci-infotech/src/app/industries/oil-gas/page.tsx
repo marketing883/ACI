@@ -1,17 +1,34 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Activity, Gauge, Shield, Database, TrendingUp } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Activity, Gauge, Shield, Database, TrendingUp } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import FaqBlock from '@/components/seo/FaqBlock';
 import { oilGasFaqs } from '@/content/industry-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { oilGasRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+
+const DESCRIPTION =
+  'Data, AI, and cloud for upstream, midstream, and downstream operators. SCADA and historian integration, predictive maintenance, production analytics, and HSE and emissions reporting.';
 
 export const metadata: Metadata = {
   title: 'Oil & Gas Technology Solutions',
-  description:
-    'Data, AI, and cloud for upstream, midstream, and downstream operators. SCADA and historian integration, predictive maintenance, production analytics, and HSE and emissions reporting.',
+  description: DESCRIPTION,
   alternates: { canonical: 'https://aciinfotech.com/industries/oil-gas' },
+  openGraph: {
+    title: 'Oil & Gas Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    url: 'https://aciinfotech.com/industries/oil-gas',
+    siteName: 'ACI Infotech',
+    type: 'website',
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Oil & Gas Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    images: DEFAULT_TWITTER_IMAGES,
+  },
 };
 
 const valueChain = [

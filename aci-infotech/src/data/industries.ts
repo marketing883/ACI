@@ -76,7 +76,7 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     slug: 'healthcare',
     title: 'Healthcare & Life Sciences Technology Solutions',
     tagline: 'HIPAA-compliant data, AI, and cloud solutions for healthcare providers, payers, and life sciences',
-    description: 'HIPAA-compliant data, AI, and cloud solutions for healthcare providers, payers, and life sciences. Clinical data integration, drug discovery, and patient outcomes.',
+    description: 'Healthcare technology consulting for providers, payers, and life sciences: HIPAA-compliant data platforms, EHR and FHIR integration, and claims analytics.',
     painPoints: [],
     useCases: [],
     relevantServices: [],
@@ -326,7 +326,7 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     slug: 'hospitality',
     title: 'Hospitality & Food Services Technology Solutions',
     tagline: 'Enterprise data, AI, and cloud solutions for hotels, restaurants, and food service companies',
-    description: 'Enterprise data, AI, and cloud solutions for hotels, restaurants, and food service companies. Global operations, customer engagement, and supply chain optimization.',
+    description: 'Hospitality technology consulting for hotels, restaurants, and food service: guest data unification, POS and PMS integration, and loyalty personalization.',
     painPoints: [],
     useCases: [
   {
@@ -418,7 +418,7 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     slug: 'energy',
     title: 'Energy & Utilities Technology Solutions',
     tagline: 'Secure, compliant technology solutions for energy companies and utilities',
-    description: 'Secure, compliant technology solutions for energy companies and utilities. NERC CIP compliance, grid optimization, and renewable integration.',
+    description: 'Energy technology consulting for utilities and energy companies: NERC CIP and FERC compliance, OT/IT convergence, grid analytics, and renewable integration.',
     painPoints: [],
     useCases: [],
     relevantServices: [],
@@ -485,7 +485,7 @@ export const industries: Record<IndustryId, IndustryEntry> = {
     slug: 'transportation',
     title: 'Transportation & Logistics Technology Solutions',
     tagline: 'Enterprise data, AI, and cloud solutions for logistics companies, freight carriers, and supply chain operators',
-    description: 'Enterprise data, AI, and cloud solutions for logistics companies, freight carriers, and supply chain operators. Route optimization, real-time tracking, and predictive analytics.',
+    description: 'Transportation technology consulting for carriers and logistics operators: TMS, telematics, and EDI integration, route optimization, and OTIF improvement.',
     painPoints: [],
     useCases: [
   {

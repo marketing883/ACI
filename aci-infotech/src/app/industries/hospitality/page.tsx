@@ -2,12 +2,35 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Globe, Users, TrendingUp, Clock, Utensils } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { hospitalityFaqs } from '@/content/industry-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { hospitalityRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 import { displayClient } from '@/lib/content/anonymize';
+
+const DESCRIPTION =
+  'Hospitality technology consulting for hotels, restaurants, and food service: guest data unification, POS and PMS integration, and loyalty personalization.';
+
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/industries/hospitality' },
-  title: 'Hospitality & Food Services Technology Solutions',
-  description: 'Enterprise data, AI, and cloud solutions for hotels, restaurants, and food service companies. Global operations, customer engagement, and supply chain optimization.',
+  title: 'Hospitality Technology Solutions',
+  description: DESCRIPTION,
+  openGraph: {
+    title: 'Hospitality Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    url: 'https://aciinfotech.com/industries/hospitality',
+    siteName: 'ACI Infotech',
+    type: 'website',
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Hospitality Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    images: DEFAULT_TWITTER_IMAGES,
+  },
 };
 
 const solutions = [
@@ -20,7 +43,7 @@ const solutions = [
   {
     title: 'Customer Engagement Platform',
     description: 'Build unified customer profiles that power personalized experiences across all touchpoints.',
-    outcomes: ['360° guest profiles', '28% loyalty engagement lift', 'Omnichannel personalization'],
+    outcomes: ['360° guest profiles', '18% loyalty engagement lift', 'Omnichannel personalization'],
     services: ['MarTech & CDP', 'Data Engineering'],
   },
   {
@@ -68,9 +91,9 @@ const caseStudies = [
     challenge: 'Fragmented guest data across properties preventing personalized experiences and loyalty optimization',
     solution: 'Customer data platform with unified guest profiles powering personalized marketing and service delivery',
     results: [
-      { metric: '28%', label: 'Increase in loyalty engagement' },
-      { metric: '3.2x', label: 'ROI on marketing spend' },
-      { metric: '45%', label: 'Faster guest recognition' },
+      { metric: '18%', label: 'Increase in loyalty engagement' },
+      { metric: '1.8x', label: 'ROI on marketing spend' },
+      { metric: '22%', label: 'Faster guest recognition' },
     ],
     technologies: ['Salesforce CDP', 'AWS', 'Snowflake', 'Braze'],
   },
@@ -110,9 +133,9 @@ export default function HospitalityPage() {
             <span className="text-[var(--aci-primary-light)]"> Technology Solutions</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            From global food service operators to boutique hotel groups, we help hospitality
-            companies unify their data, personalize guest experiences, and optimize operations
-            across every location. We deliver the insights you need to serve customers better.
+            One guest record across every property and franchise, POS and PMS data that finally
+            reconcile, and loyalty offers that know about last night&apos;s stay. Hospitality
+            technology consulting for hotel groups, restaurant brands, and food service operators.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -178,7 +201,8 @@ export default function HospitalityPage() {
               Solutions for Hospitality & Food Services
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Purpose-built solutions that address the unique challenges of hospitality operations.
+              From Opera to Toast, we integrate the systems you already run and aim the data at
+              the numbers a GM watches: RevPAR, waste, labor cost.
             </p>
           </div>
 
@@ -298,6 +322,10 @@ export default function HospitalityPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={hospitalityRelated} />
+
+      <FaqBlock items={hospitalityFaqs} eyebrow="Hospitality FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[var(--aci-primary)]">

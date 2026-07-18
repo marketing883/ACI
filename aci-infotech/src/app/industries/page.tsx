@@ -27,7 +27,7 @@ const industries = [
     description: 'Your data is fragmented across legacy systems while fraud evolves faster than your defenses. We consolidate your infrastructure, deploy real-time ML detection, and build the governance frameworks regulators demand, so you can innovate without compliance risk.',
     challenges: ['40+ legacy systems consolidated', 'Sub-second fraud scoring', 'Audit-ready data lineage', 'M&A data integration'],
     clients: ['Global Financial Giants', 'Private-Equity Fund Administrators', 'Top 10 Investment Banks'],
-    caseStudy: { metric: '$25M', description: 'Fraud losses eliminated annually' },
+    caseStudy: { metric: '$230K', description: 'Annual fraud loss reduction' },
     href: '/industries/financial-services',
   },
   {
@@ -38,7 +38,7 @@ const industries = [
     description: 'Customers expect personalization at every touchpoint, but your data sits in silos. We build unified customer profiles that power real-time recommendations, optimize inventory with AI, and turn every interaction into revenue.',
     challenges: ['Single customer view', 'Real-time personalization', 'AI demand forecasting', 'Inventory optimization'],
     clients: ['Fortune 500 Convenience Retailers', 'Fortune 100 Retailers'],
-    caseStudy: { metric: '$18M', description: 'Saved with AI demand forecasting' },
+    caseStudy: { metric: '$220K', description: 'Saved annually with AI demand forecasting' },
     href: '/industries/retail',
   },
   {
@@ -49,7 +49,7 @@ const industries = [
     description: 'Clinical breakthroughs are buried in data you can\'t access. We build HIPAA-compliant platforms that unify patient records, accelerate drug discovery timelines, and enable the analytics that improve outcomes without compromising privacy.',
     challenges: ['HIPAA-compliant analytics', 'Clinical data unification', 'Research acceleration', 'EHR interoperability'],
     clients: ['Regional Health Systems', 'Global Pharma Leaders'],
-    caseStudy: { metric: '40%', description: 'Faster research data access' },
+    caseStudy: { metric: '24%', description: 'Faster research data access' },
     href: '/industries/healthcare',
   },
   {
@@ -71,7 +71,7 @@ const industries = [
     description: 'Unplanned downtime costs you millions while quality issues slip through. We deploy IoT analytics and predictive maintenance that catch failures before they happen, optimize production lines, and deliver the visibility Industry 4.0 promises.',
     challenges: ['Predictive maintenance', 'Quality anomaly detection', 'Production optimization', 'IoT data at scale'],
     clients: ['Global Manufacturers', 'Industrial OEMs'],
-    caseStudy: { metric: '67%', description: 'Reduction in unplanned downtime' },
+    caseStudy: { metric: '28%', description: 'Reduction in unplanned downtime' },
     href: '/industries/manufacturing',
   },
   {
@@ -104,7 +104,7 @@ const industries = [
     description: 'Fuel costs rise while empty miles erode margins. We deploy AI route optimization that cuts costs, real-time tracking that customers demand, and predictive maintenance that keeps your fleet moving. This turns logistics into competitive advantage.',
     challenges: ['AI route optimization', 'Fleet visibility', 'Predictive maintenance', 'Carbon tracking & ESG'],
     clients: ['Fortune 500 Logistics Leaders'],
-    caseStudy: { metric: '$30M', description: 'Annual fuel cost savings' },
+    caseStudy: { metric: '16%', description: 'On-time delivery lift, with $250K a year saved on fuel' },
     href: '/industries/transportation',
   },
 ];
@@ -150,9 +150,10 @@ export default function IndustriesPage() {
               <span className="text-[var(--aci-primary-light)]"> Industries That Matter</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8">
-              We don't just understand technology, we understand your business. Our consultants bring
-              industry-specific expertise to every engagement, speaking your language and solving
-              your unique challenges.
+              We build the data platforms, AI systems, and cloud infrastructure that regulated,
+              high-volume businesses run on: FHIR pipelines for hospital systems, SCADA integration
+              for energy operators, fraud models for banks. Different rulebooks, same
+              engineering bar.
             </p>
           </div>
 
@@ -182,9 +183,8 @@ export default function IndustriesPage() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-8">
-            {industries.map((industry, index) => {
+            {industries.map((industry) => {
               const Icon = industry.icon;
-              const isEven = index % 2 === 0;
 
               return (
                 <div
@@ -266,10 +266,10 @@ export default function IndustriesPage() {
       <section className="py-20 bg-[var(--aci-primary)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Don't See Your Industry?
+            Don&apos;t See Your Industry?
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            We work with enterprises across many sectors. Let's discuss how our expertise
+            We work with enterprises across many sectors. Let&apos;s discuss how our expertise
             can apply to your specific challenges.
           </p>
           <Button href="/contact?reason=architecture-call" variant="lime" size="lg">

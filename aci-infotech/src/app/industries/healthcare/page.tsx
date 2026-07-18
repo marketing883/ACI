@@ -2,12 +2,35 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Heart, Shield, Clock, FileText } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { healthcareFaqs } from '@/content/industry-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { healthcareRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 import { displayClient } from '@/lib/content/anonymize';
+
+const DESCRIPTION =
+  'Healthcare technology consulting for providers, payers, and life sciences: HIPAA-compliant data platforms, EHR and FHIR integration, and claims analytics.';
+
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/industries/healthcare' },
-  title: 'Healthcare & Life Sciences Technology Solutions',
-  description: 'HIPAA-compliant data, AI, and cloud solutions for healthcare providers, payers, and life sciences. Clinical data integration, drug discovery, and patient outcomes.',
+  title: 'Healthcare & Life Sciences Technology',
+  description: DESCRIPTION,
+  openGraph: {
+    title: 'Healthcare & Life Sciences Technology | ACI Infotech',
+    description: DESCRIPTION,
+    url: 'https://aciinfotech.com/industries/healthcare',
+    siteName: 'ACI Infotech',
+    type: 'website',
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Healthcare & Life Sciences Technology | ACI Infotech',
+    description: DESCRIPTION,
+    images: DEFAULT_TWITTER_IMAGES,
+  },
 };
 
 const solutions = [
@@ -26,7 +49,7 @@ const solutions = [
   {
     title: 'Drug Discovery Acceleration',
     description: 'Accelerate research with unified data platforms, AI-powered analysis, and collaboration tools.',
-    outcomes: ['40% faster data access', 'Automated lineage', 'Research collaboration'],
+    outcomes: ['24% faster data access', 'Automated lineage', 'Research collaboration'],
     services: ['Data Engineering', 'Applied AI & ML'],
   },
   {
@@ -57,7 +80,7 @@ const caseStudies = [
     solution: 'HIPAA-compliant data platform on AWS with FHIR APIs and real-time integration',
     results: [
       { metric: 'Unified', label: 'Patient records across all facilities' },
-      { metric: '99.99%', label: 'Platform uptime achieved' },
+      { metric: '99.7%', label: 'Platform uptime achieved' },
       { metric: 'HIPAA', label: 'Full compliance maintained' },
     ],
     technologies: ['AWS', 'Snowflake', 'FHIR', 'Kafka'],
@@ -68,9 +91,9 @@ const caseStudies = [
     challenge: 'Siloed research data slowing drug discovery timelines',
     solution: 'Unified data lake on Databricks with automated lineage tracking and collaboration',
     results: [
-      { metric: '40%', label: 'Faster research data access' },
+      { metric: '24%', label: 'Faster research data access' },
       { metric: '100%', label: 'Data lineage compliance' },
-      { metric: '3x', label: 'Researcher productivity' },
+      { metric: '2x', label: 'Researcher productivity' },
     ],
     technologies: ['Databricks', 'Delta Lake', 'Python', 'Airflow'],
   },
@@ -110,9 +133,9 @@ export default function HealthcarePage() {
             <span className="text-[var(--aci-primary-light)]"> Technology Solutions</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            From hospital systems to pharmaceutical companies, we help healthcare organizations
-            harness data to improve patient outcomes, accelerate research, and maintain
-            compliance, all while ensuring the highest levels of security and privacy.
+            HIPAA-compliant data platforms, EHR and FHIR integration, and claims analytics for
+            providers, payers, and life sciences. We unify clinical and claims data under controls
+            that satisfy HITRUST assessors, and govern the AI that reads it.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -178,7 +201,8 @@ export default function HealthcarePage() {
               Solutions for Healthcare
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Purpose-built solutions that address the unique challenges of healthcare organizations.
+              Healthcare technology consulting pointed at the measures you already report: HEDIS
+              scores, readmission rates, denial rates, days in A/R.
             </p>
           </div>
 
@@ -298,6 +322,10 @@ export default function HealthcarePage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={healthcareRelated} />
+
+      <FaqBlock items={healthcareFaqs} eyebrow="Healthcare FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-red-600">

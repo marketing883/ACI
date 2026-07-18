@@ -2,12 +2,35 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, MapPin, Clock, TrendingDown, Leaf, Truck } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FaqBlock from '@/components/seo/FaqBlock';
+import { transportationFaqs } from '@/content/industry-faqs';
+import RelatedLinks from '@/components/seo/RelatedLinks';
+import { transportationRelated } from '@/content/related-links';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 
 import { displayClient } from '@/lib/content/anonymize';
+
+const DESCRIPTION =
+  'Transportation technology consulting for carriers and logistics operators: TMS, telematics, and EDI integration, route optimization, and OTIF improvement.';
+
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/industries/transportation' },
-  title: 'Transportation & Logistics Technology Solutions',
-  description: 'Enterprise data, AI, and cloud solutions for logistics companies, freight carriers, and supply chain operators. Route optimization, real-time tracking, and predictive analytics.',
+  title: 'Transportation & Logistics Technology',
+  description: DESCRIPTION,
+  openGraph: {
+    title: 'Transportation & Logistics Technology | ACI Infotech',
+    description: DESCRIPTION,
+    url: 'https://aciinfotech.com/industries/transportation',
+    siteName: 'ACI Infotech',
+    type: 'website',
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Transportation & Logistics Technology | ACI Infotech',
+    description: DESCRIPTION,
+    images: DEFAULT_TWITTER_IMAGES,
+  },
 };
 
 const solutions = [
@@ -26,7 +49,7 @@ const solutions = [
   {
     title: 'Predictive Maintenance',
     description: 'Prevent breakdowns before they happen with ML models that analyze vehicle sensor data and maintenance history.',
-    outcomes: ['40% fewer breakdowns', '25% maintenance cost reduction', 'Extended asset life'],
+    outcomes: ['26% fewer breakdowns', '25% maintenance cost reduction', 'Extended asset life'],
     services: ['Applied AI & ML', 'Data Engineering'],
   },
   {
@@ -56,8 +79,8 @@ const caseStudies = [
     challenge: 'Rising fuel costs and inefficient routing costing millions annually, with limited visibility into fleet performance',
     solution: 'AI-powered route optimization platform with real-time fleet tracking and predictive analytics',
     results: [
-      { metric: '$30M', label: 'Annual fuel cost savings' },
-      { metric: '22%', label: 'Improvement in on-time delivery' },
+      { metric: '$250K', label: 'Annual fuel cost savings' },
+      { metric: '16%', label: 'Improvement in on-time delivery' },
       { metric: '18%', label: 'Reduction in empty miles' },
     ],
     technologies: ['AWS', 'Databricks', 'IoT Sensors', 'Python ML'],
@@ -68,8 +91,8 @@ const caseStudies = [
     challenge: 'High maintenance costs and unexpected breakdowns disrupting operations and customer commitments',
     solution: 'Predictive maintenance system using telematics data and ML to forecast vehicle service needs',
     results: [
-      { metric: '40%', label: 'Reduction in breakdowns' },
-      { metric: '$4.2M', label: 'Annual maintenance savings' },
+      { metric: '26%', label: 'Reduction in breakdowns' },
+      { metric: '$195K', label: 'Annual maintenance savings' },
       { metric: '15%', label: 'Extended vehicle lifespan' },
     ],
     technologies: ['Azure IoT', 'Snowflake', 'TensorFlow', 'Power BI'],
@@ -110,9 +133,10 @@ export default function TransportationPage() {
             <span className="text-[var(--aci-primary-light)]"> Technology Solutions</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            From global freight carriers to regional delivery fleets, we help transportation
-            and logistics companies optimize every mile. We reduce costs, improve visibility,
-            and deliver the insights you need to stay competitive in a demanding market.
+            Route optimization, real-time fleet visibility, and predictive maintenance for
+            carriers and logistics operators. We wire TMS, telematics, ELD, and EDI data into
+            one governed platform, so dispatch and maintenance run on the same numbers your
+            customers see.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -136,7 +160,7 @@ export default function TransportationPage() {
               </div>
               <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Cost Reduction</h3>
               <p className="text-gray-600 text-sm">
-                $30M+ fuel savings for enterprise fleets.
+                $250K a year off one fleet&apos;s fuel bill.
               </p>
             </div>
             <div className="text-center">
@@ -178,7 +202,8 @@ export default function TransportationPage() {
               Solutions for Transportation & Logistics
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Purpose-built solutions that address the unique challenges of moving goods efficiently.
+              Transportation technology consulting measured the way shippers grade you: OTIF,
+              on-time delivery, cost per mile.
             </p>
           </div>
 
@@ -298,6 +323,10 @@ export default function TransportationPage() {
           </div>
         </div>
       </section>
+
+      <RelatedLinks items={transportationRelated} />
+
+      <FaqBlock items={transportationFaqs} eyebrow="Transportation & logistics FAQ" />
 
       {/* CTA Section */}
       <section className="py-20 bg-[var(--aci-primary)]">

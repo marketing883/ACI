@@ -7,24 +7,44 @@ import { financialServicesFaqs } from '@/content/industry-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { financialServicesRelated } from '@/content/related-links';
 
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+
 import { displayClient } from '@/lib/content/anonymize';
+
+const DESCRIPTION =
+  'Enterprise data, AI, and cloud solutions for banks, insurance companies, and asset managers. Regulatory compliance, fraud detection, and digital transformation.';
+
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/industries/financial-services' },
   title: 'Financial Services Technology Solutions',
-  description: 'Enterprise data, AI, and cloud solutions for banks, insurance companies, and asset managers. Regulatory compliance, fraud detection, and digital transformation.',
+  description: DESCRIPTION,
+  openGraph: {
+    title: 'Financial Services Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    url: 'https://aciinfotech.com/industries/financial-services',
+    siteName: 'ACI Infotech',
+    type: 'website',
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Financial Services Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    images: DEFAULT_TWITTER_IMAGES,
+  },
 };
 
 const solutions = [
   {
     title: 'Data Platform Modernization',
     description: 'Consolidate legacy systems into modern, cloud-native data platforms that support real-time analytics and AI.',
-    outcomes: ['40+ systems consolidated', '$500K+ annual savings', 'Zero reporting disruptions'],
+    outcomes: ['40+ systems consolidated', '$180K+ annual savings', 'Zero reporting disruptions'],
     services: ['Data Engineering', 'Cloud Modernization'],
   },
   {
     title: 'AI-Powered Fraud Detection',
     description: 'Deploy machine learning models that detect fraud in real-time while minimizing false positives.',
-    outcomes: ['$25M fraud reduction', '85% fewer false positives', '<100ms scoring'],
+    outcomes: ['$230K fraud reduction', '52% fewer false positives', '<100ms scoring'],
     services: ['Applied AI & ML', 'Data Engineering'],
   },
   {
@@ -48,7 +68,7 @@ const solutions = [
   {
     title: 'Digital Transformation',
     description: 'Modernize core banking systems, automate processes, and enable digital-first experiences.',
-    outcomes: ['45% cost reduction', 'Digital-first UX', '99.99% uptime'],
+    outcomes: ['45% cost reduction', 'Digital-first UX', '99.7% uptime'],
     services: ['Digital Transformation', 'Cloud Modernization'],
   },
 ];
@@ -60,7 +80,7 @@ const caseStudies = [
     challenge: '40+ finance systems post-acquisitions needed consolidation with zero disruption to financial reporting',
     solution: 'SAP S/4HANA implementation with automated data quality gates and real-time integration pipelines',
     results: [
-      { metric: '$500K', label: 'Operational savings in year one' },
+      { metric: '$180K', label: 'Operational savings in year one' },
       { metric: '18 months', label: 'Delivery timeline' },
       { metric: 'Zero', label: 'Financial reporting disruptions' },
     ],
@@ -72,8 +92,8 @@ const caseStudies = [
     challenge: 'Rising fraud losses, slow manual review process, high false positive rates',
     solution: 'ML-based fraud detection with real-time scoring and explainable AI for compliance',
     results: [
-      { metric: '$25M', label: 'Annual fraud loss reduction' },
-      { metric: '85%', label: 'Reduction in false positives' },
+      { metric: '$230K', label: 'Annual fraud loss reduction' },
+      { metric: '52%', label: 'Reduction in false positives' },
       { metric: '<100ms', label: 'Transaction scoring time' },
     ],
     technologies: ['Python', 'TensorFlow', 'Kafka', 'Databricks'],

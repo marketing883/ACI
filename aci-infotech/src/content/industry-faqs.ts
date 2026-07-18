@@ -72,6 +72,98 @@ export const manufacturingFaqs: FaqItem[] = [
   },
 ];
 
+export const healthcareFaqs: FaqItem[] = [
+  {
+    q: 'How do you handle HIPAA and HITRUST compliance?',
+    a: 'Controls designed in from day one: encryption, least-privilege access, BAAs, and audit logging mapped to HIPAA and the HITRUST CSF. When an assessor asks who touched a record and when, the answer is a query, not a week of meetings.',
+  },
+  {
+    q: 'Can you integrate EHR data through FHIR?',
+    a: 'Yes. We integrate Epic, Cerner, and other EHRs through FHIR APIs and HL7 feeds into one governed platform, so clinical, claims, and operational data share a single patient view instead of twelve.',
+  },
+  {
+    q: 'How long does a claims analytics project take?',
+    a: 'A governed claims dataset and a first working use case, like denial analysis, in 10 to 14 weeks. We start with the number the revenue cycle team already argues about, then expand from there.',
+  },
+  {
+    q: 'How do you govern AI on clinical data?',
+    a: 'De-identification where it belongs, a model registry, documented evaluation, and human review for anything that touches a care decision. If a model cannot explain itself to a clinician, it does not ship.',
+  },
+  {
+    q: 'Which healthcare metrics can this actually move?',
+    a: 'The ones you already report: readmission rates, HEDIS measures, denial rates, days in A/R. We pick one per phase and measure against your baseline, not an industry brochure.',
+  },
+];
+
+export const energyFaqs: FaqItem[] = [
+  {
+    q: 'Can you help with NERC CIP compliance?',
+    a: 'Yes. We build the security controls, evidence collection, and monitoring that NERC CIP audits look for, automated where it spares your team screenshot season. FERC and state regulators read the same evidence.',
+  },
+  {
+    q: 'How do you approach OT/IT convergence securely?',
+    a: 'Segmented networks, one-way data flows where the risk warrants them, and controls aligned to IEC 62443, so grid and plant data reach analysts without opening a path back into control systems.',
+  },
+  {
+    q: 'What do you build for grid and asset analytics?',
+    a: 'Platforms that pull SCADA, meter, and asset data together for outage prediction, load forecasting, and maintenance planning. Operators see the grid as it is right now, not as last night\'s batch left it.',
+  },
+  {
+    q: 'Do you support renewable integration?',
+    a: 'Yes. Solar and wind forecasting, storage optimization, and the balancing analytics that keep intermittent generation from becoming an operations problem. It is a data problem before it is a turbine problem.',
+  },
+  {
+    q: 'Do you work with our existing historians and SCADA vendors?',
+    a: 'We integrate what you already run, historians like PI, SCADA, and your EMS, rather than proposing a rip and replace. Utilities do not get maintenance windows for science projects.',
+  },
+];
+
+export const hospitalityFaqs: FaqItem[] = [
+  {
+    q: 'Can you unify guest data across properties and franchises?',
+    a: 'Yes. We build one guest profile across properties, brands, and franchisees, with identity resolution that survives a loyalty number typed wrong at the front desk. That single record is what personalization actually runs on.',
+  },
+  {
+    q: 'Do you integrate POS and PMS systems?',
+    a: 'Both sides of the house: PMS platforms like Opera and POS systems like Toast, plus booking and loyalty channels, feeding one governed platform instead of a folder of nightly exports.',
+  },
+  {
+    q: 'How does loyalty personalization get better?',
+    a: 'Offers and journeys read the unified guest record, so a guest who checked out this morning is not greeted like a stranger by tomorrow\'s email. We measure lift against your current program before claiming anything.',
+  },
+  {
+    q: 'How do you handle GDPR and CCPA for guest data?',
+    a: 'Consent tracking, retention rules, and deletion workflows built into the platform, so a subject access request is a routine job instead of a scramble across ten systems.',
+  },
+  {
+    q: 'What results should a hotel or restaurant group expect?',
+    a: 'Movement in the numbers you already run the business on: RevPAR, direct booking share, waste, labor cost. We baseline first, pick one metric per phase, and report against it.',
+  },
+];
+
+export const transportationFaqs: FaqItem[] = [
+  {
+    q: 'Can you integrate TMS, telematics, and EDI data?',
+    a: 'Yes. We wire TMS, telematics, and EDI partner feeds into one governed platform, so dispatch, maintenance, and customer service work from the same numbers instead of three versions of the truth.',
+  },
+  {
+    q: 'What do you do with ELD and FMCSA data?',
+    a: 'More than store it for the audit. ELD hours-of-service data feeds planning, so loads are assigned to drivers who can legally run them, and the records are ready when FMCSA asks. Same data, twice the use.',
+  },
+  {
+    q: 'How does route optimization actually work?',
+    a: 'Models read orders, traffic, hours of service, and fuel data to plan and re-plan routes through the day. We measure fuel, miles, and on-time performance against your current planning, not a vendor benchmark.',
+  },
+  {
+    q: 'Can you improve our OTIF performance?',
+    a: 'Yes. OTIF failures usually trace to visibility gaps between order, warehouse, and transit systems. We connect them so exceptions surface while there is still time to act, before the chargeback letter arrives.',
+  },
+  {
+    q: 'How long until a logistics data platform shows value?',
+    a: 'A unified operational view and one working use case, like ETA accuracy or empty-mile reduction, in 10 to 14 weeks. We prove it on one lane or region before scaling to the network.',
+  },
+];
+
 export const oilGasFaqs: FaqItem[] = [
   {
     q: 'Where does ACI help across the oil and gas value chain?',

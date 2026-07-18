@@ -7,11 +7,31 @@ import { retailFaqs } from '@/content/industry-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { retailRelated } from '@/content/related-links';
 
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+
 import { displayClient } from '@/lib/content/anonymize';
+
+const DESCRIPTION =
+  'Enterprise data, AI, and cloud solutions for retailers. Customer data platforms, demand forecasting, personalization, and supply chain optimization.';
+
 export const metadata: Metadata = {
   alternates: { canonical: 'https://aciinfotech.com/industries/retail' },
   title: 'Retail & Consumer Technology Solutions',
-  description: 'Enterprise data, AI, and cloud solutions for retailers. Customer data platforms, demand forecasting, personalization, and supply chain optimization.',
+  description: DESCRIPTION,
+  openGraph: {
+    title: 'Retail & Consumer Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    url: 'https://aciinfotech.com/industries/retail',
+    siteName: 'ACI Infotech',
+    type: 'website',
+    images: DEFAULT_OG_IMAGES,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Retail & Consumer Technology Solutions | ACI Infotech',
+    description: DESCRIPTION,
+    images: DEFAULT_TWITTER_IMAGES,
+  },
 };
 
 const solutions = [
@@ -30,7 +50,7 @@ const solutions = [
   {
     title: 'Demand Forecasting',
     description: 'Implement ML-based demand forecasting to optimize inventory and reduce stockouts.',
-    outcomes: ['$18M+ annual savings', '92% forecast accuracy', '23% fewer stockouts'],
+    outcomes: ['$220K+ annual savings', '85% forecast accuracy', '23% fewer stockouts'],
     services: ['Applied AI & ML', 'Data Engineering'],
   },
   {
@@ -60,7 +80,7 @@ const caseStudies = [
     challenge: 'Fragmented customer data across 800+ locations preventing personalized engagement',
     solution: 'Salesforce Marketing Cloud with custom CDP integration and journey automation',
     results: [
-      { metric: '$2.3M', label: 'Incremental revenue from personalization' },
+      { metric: '$175K', label: 'Incremental revenue from personalization' },
       { metric: '35%', label: 'Increase in customer engagement' },
       { metric: 'Unified', label: 'Customer profiles across all locations' },
     ],
@@ -72,8 +92,8 @@ const caseStudies = [
     challenge: 'Manual forecasting causing $50M+ in inventory inefficiencies annually',
     solution: 'ML-powered demand forecasting on Databricks with AutoML pipeline',
     results: [
-      { metric: '$18M', label: 'Annual savings from forecast accuracy' },
-      { metric: '92%', label: 'Forecast accuracy achieved' },
+      { metric: '$220K', label: 'Annual savings from forecast accuracy' },
+      { metric: '85%', label: 'Forecast accuracy achieved' },
       { metric: '23%', label: 'Reduction in stockouts' },
     ],
     technologies: ['Databricks', 'Python', 'MLflow', 'Snowflake'],
@@ -147,9 +167,9 @@ export default function RetailPage() {
               <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <TrendingUp className="w-7 h-7 text-[var(--aci-primary)]" />
               </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Proven ROI</h3>
+              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Measured ROI</h3>
               <p className="text-gray-600 text-sm">
-                $50M+ in documented value for retail clients.
+                Every build measured against a revenue or cost baseline.
               </p>
             </div>
             <div className="text-center">
