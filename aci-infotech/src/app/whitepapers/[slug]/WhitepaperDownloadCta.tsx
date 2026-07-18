@@ -4,11 +4,15 @@
 // The rest of the whitepaper page is server-rendered.
 
 import { useEffect, useState } from 'react';
-import { Download, FileText, Mail, Building2, User, X } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { ArrowUpRight, Download, FileText, Loader2, X } from 'lucide-react';
+import { v4Display } from '@/components/v4/fonts';
 import { trackFormSubmission, trackContentView } from '@/components/analytics/GoogleTagManager';
 import { trackWhitepaperDownloadConversion } from '@/components/analytics/LinkedInInsightTag';
 import type { Whitepaper } from './whitepaper-detail';
+
+// Hairline input, v4 grammar: gray-200 border, blue focus ring.
+const INPUT_CLASS =
+  'w-full rounded-xl border border-gray-200 px-4 py-3 text-[15px] text-black placeholder:text-gray-400 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700';
 
 function DownloadModal({
   isOpen,
@@ -69,94 +73,94 @@ function DownloadModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-xl max-w-md w-full p-8">
+      <div className="relative w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full"
+          aria-label="Close"
+          className="absolute right-4 top-4 rounded-full p-2 text-gray-500 hover:bg-gray-100"
         >
-          <X className="w-5 h-5" />
+          <X className="h-5 w-5" />
         </button>
 
-        <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-[var(--aci-primary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FileText className="w-8 h-8 text-[var(--aci-primary)]" />
-          </div>
-          <h3 className="text-xl font-bold text-gray-900">Download Whitepaper</h3>
-          <p className="text-gray-600 mt-2">{whitepaper.title}</p>
+        <div className="mb-6">
+          <FileText className="h-7 w-7 text-blue-700" aria-hidden="true" />
+          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Whitepaper</p>
+          <h3 className={`mt-2 text-xl font-semibold text-black ${v4Display}`}>{whitepaper.title}</h3>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-                placeholder="John Smith"
-              />
-            </div>
+            <label className="mb-1.5 block text-sm font-medium text-gray-700">Full Name *</label>
+            <input
+              type="text"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className={INPUT_CLASS}
+              placeholder="John Smith"
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Work Email *</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-                placeholder="john@company.com"
-              />
-            </div>
+            <label className="mb-1.5 block text-sm font-medium text-gray-700">Work Email *</label>
+            <input
+              type="email"
+              required
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className={INPUT_CLASS}
+              placeholder="john@company.com"
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Company *</label>
-            <div className="relative">
-              <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                required
-                value={formData.company}
-                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
-                placeholder="Acme Corporation"
-              />
-            </div>
+            <label className="mb-1.5 block text-sm font-medium text-gray-700">Company *</label>
+            <input
+              type="text"
+              required
+              value={formData.company}
+              onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+              className={INPUT_CLASS}
+              placeholder="Acme Corporation"
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+            <label className="mb-1.5 block text-sm font-medium text-gray-700">Job Title</label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)]"
+              className={INPUT_CLASS}
               placeholder="VP of Engineering"
             />
           </div>
 
           {error && (
-            <p className="text-red-600 text-sm">{error}</p>
+            <p className="text-sm text-red-600">{error}</p>
           )}
 
-          <Button
+          {/* The one allowed button: a functional form submit, styled
+              like the CtaSection button. */}
+          <button
             type="submit"
             disabled={isSubmitting}
-            loading={isSubmitting}
-            className="w-full"
-            leftIcon={!isSubmitting ? <Download className="w-5 h-5" /> : undefined}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1D4ED8] px-8 py-4 text-base font-semibold text-white shadow-[0_20px_60px_-15px_rgba(29,78,216,0.55)] ring-1 ring-white/20 transition-all duration-300 hover:bg-[#84CC16] hover:text-black disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isSubmitting ? 'Processing...' : 'Get Free Whitepaper'}
-          </Button>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                Processing
+              </>
+            ) : (
+              <>
+                <Download className="h-5 w-5" aria-hidden="true" />
+                Get the Whitepaper
+              </>
+            )}
+          </button>
 
-          <p className="text-xs text-center text-gray-500">
+          <p className="text-center text-xs text-gray-500">
             We respect your privacy. Unsubscribe anytime.
           </p>
         </form>
@@ -186,23 +190,27 @@ export default function WhitepaperDownloadCta({
   return (
     <>
       {variant === 'hero' ? (
-        <Button
+        // Text link, v4 grammar: underline on hover, no pill.
+        <button
           onClick={() => setOpen(true)}
-          size="lg"
-          className="group"
-          leftIcon={<Download className="w-5 h-5 group-hover:animate-bounce" />}
+          className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-blue-700"
         >
-          Download Free Whitepaper
-        </Button>
+          <span className="relative">
+            Download the whitepaper
+            <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+          </span>
+          <ArrowUpRight size={16} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </button>
       ) : (
-        <Button
+        // Closing-CTA button: same treatment as the sitewide CtaSection
+        // button, but it opens the gate form instead of navigating.
+        <button
           onClick={() => setOpen(true)}
-          variant="lime"
-          size="lg"
-          leftIcon={<Download className="w-5 h-5" />}
+          className="group inline-flex items-center gap-3 rounded-full bg-[#1D4ED8] px-8 py-4 text-lg font-semibold text-white shadow-[0_20px_60px_-15px_rgba(29,78,216,0.55)] ring-1 ring-white/20 transition-all duration-300 hover:scale-[1.03] hover:bg-[#84CC16] hover:text-black hover:shadow-[0_20px_60px_-15px_rgba(132,204,22,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1D4ED8]"
         >
-          Get Your Free Copy
-        </Button>
+          <Download size={20} aria-hidden="true" className="transition-transform duration-300 group-hover:-rotate-6" />
+          Get Your Copy
+        </button>
       )}
       <DownloadModal isOpen={open} onClose={() => setOpen(false)} whitepaper={whitepaper} />
     </>
