@@ -110,6 +110,14 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
             <p className={`mt-5 max-w-xs text-lg leading-snug text-white/70 ${headingClass}`}>
               Enterprise data and AI, engineered and run in production.
             </p>
+            {/* Sitewide entity statement: the definitional copy search and
+                answer engines lift, worded to stand alone when quoted. */}
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/50">
+              ACI Infotech is an enterprise data and AI engineering firm headquartered in
+              Monmouth Junction, New Jersey, with delivery hubs worldwide. We build the data
+              foundation, put AI on top of it, and run both in production for enterprises in
+              financial services, healthcare, retail, manufacturing, and&nbsp;energy.
+            </p>
             <Link
               href="/contact"
               className="group mt-6 inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-black"
@@ -165,6 +173,23 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
             ACI Infotech
           </span>
         </div>
+
+        {/* Company facts strip: verifiable proof only */}
+        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/10 pt-6 text-xs font-medium text-white/40">
+          {[
+            'Founded 2006',
+            '1,200+ engineers',
+            '500+ enterprise projects',
+            '11 global delivery hubs',
+            'ISO 27001:2022',
+            'CMMI Level 3',
+            'Great Place to Work Certified',
+          ].map((item) => (
+            <li key={item} className="whitespace-nowrap">
+              {item}
+            </li>
+          ))}
+        </ul>
 
         {/* Bottom bar */}
         <div className="mt-6 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row sm:items-center">

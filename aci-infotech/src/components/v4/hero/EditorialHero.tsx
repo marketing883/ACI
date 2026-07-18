@@ -45,7 +45,7 @@ const SLIDES: Slide[] = [
   {
     eyebrow: 'Service Foundation',
     headline: ['Build the AI foundation.', 'Run it *in production.*'],
-    desc: 'We engineer the data foundation, build the AI on top, and run it in production. Most enterprise AI stalls before it gets there.',
+    desc: 'ACI Infotech engineers the data foundation, builds the AI on top, and runs it in production. Most enterprise AI stalls before it gets there.',
     tags: ['Pipelines', 'Governance', 'AI-ready data'],
     cta: { label: 'Explore data engineering', href: '/services/data-engineering' },
   },
