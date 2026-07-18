@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Calendar, Clock, Tag, Linkedin } from 'lucide-react';
 import { getBlogPostBySlug } from '@/lib/content/blog';
+import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getClusterPosts, getRecentPosts } from '@/lib/content/blog-cluster';
 import ArticleBody from './ArticleBody';
 import BlogFaqs from './BlogFaqs';
@@ -41,9 +42,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description: description ?? undefined,
       url: canonical,
-      images: image ? [{ url: image }] : undefined,
+      images: image ? [{ url: image }] : DEFAULT_OG_IMAGES,
       publishedTime: post.published_at ?? undefined,
+      modifiedTime: post.updated_at ?? undefined,
       authors: post.author_name ? [post.author_name] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: description ?? undefined,
+      images: image ? [image] : DEFAULT_TWITTER_IMAGES,
     },
   };
 }
@@ -53,7 +61,13 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = await getBlogPostBySlug(slug);
   if (!post) notFound();
 
-  const readTime = post.read_time_minutes ? `${post.read_time_minutes} min read` : '5 min read';
+  // Real reading time when the CMS field is empty: ~200 wpm over the
+  // body text (tags stripped), clamped so junk content can't show "0".
+  const estimatedMinutes = Math.max(
+    1,
+    Math.round((post.content || '').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length / 200),
+  );
+  const readTime = `${post.read_time_minutes || estimatedMinutes} min read`;
   const dateStr = post.published_at || post.created_at || new Date().toISOString();
   const url = `https://aciinfotech.com/blogs/${slug}`;
   const ogImage = post.featured_image_url || post.og_image_url || undefined;
@@ -85,7 +99,13 @@ export default async function BlogPostPage({ params }: PageProps) {
         ...(ogImage ? { image: [ogImage] } : {}),
         datePublished: dateStr,
         dateModified: post.updated_at || dateStr,
-        author: { '@type': 'Person', name: post.author_name || 'ACI Infotech' },
+        author: {
+          '@type': 'Person',
+          name: post.author_name || 'ACI Infotech',
+          ...(post.author_title ? { jobTitle: post.author_title } : {}),
+          ...(post.author_linkedin ? { sameAs: [post.author_linkedin] } : {}),
+          worksFor: { '@id': 'https://aciinfotech.com/#organization' },
+        },
         publisher: {
           '@type': 'Organization',
           name: 'ACI Infotech',

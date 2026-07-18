@@ -16,7 +16,10 @@ export interface Whitepaper {
   tags: string[];
   read_time: string;
   page_count: number;
-  published_at: string;
+  published_at: string | null;
+  // Author E-E-A-T (rendered + emitted as Person schema when present)
+  author_name?: string | null;
+  author_title?: string | null;
   // Teaser content
   key_takeaways: string[];
   what_you_will_learn: string[];
@@ -87,7 +90,7 @@ export const getWhitepaperDetail = cache(async (slug: string): Promise<Whitepape
   try {
     const { data, error } = await supabase
       .from('whitepapers')
-      .select('id, slug, title, excerpt, description, highlights, cover_image, file_url, category, tags, published_at')
+      .select('id, slug, title, excerpt, description, highlights, cover_image, file_url, category, tags, published_at, author_name, author_title')
       .eq('slug', slug)
       .eq('status', 'published')
       .single();

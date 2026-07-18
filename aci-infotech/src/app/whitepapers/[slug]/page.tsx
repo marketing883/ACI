@@ -54,7 +54,14 @@ export default async function WhitepaperDetailPage({ params }: PageProps) {
         url: `${siteUrl}/whitepapers/${slug}`,
         image: whitepaper.cover_image || undefined,
         datePublished: whitepaper.published_at || undefined,
-        author: { '@id': `${siteUrl}/#organization` },
+        author: whitepaper.author_name
+          ? {
+              '@type': 'Person',
+              name: whitepaper.author_name,
+              ...(whitepaper.author_title ? { jobTitle: whitepaper.author_title } : {}),
+              worksFor: { '@id': `${siteUrl}/#organization` },
+            }
+          : { '@id': `${siteUrl}/#organization` },
         publisher: { '@id': `${siteUrl}/#organization` },
         keywords: (whitepaper.tags || []).join(', '),
       },
@@ -126,10 +133,20 @@ export default async function WhitepaperDetailPage({ params }: PageProps) {
                   <BookOpen className="w-5 h-5" />
                   <span>{whitepaper.page_count || 25} pages</span>
                 </div>
-                <div className="flex items-center gap-2 text-blue-200">
-                  <Calendar className="w-5 h-5" />
-                  <span>Updated {new Date(whitepaper.published_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
-                </div>
+                {whitepaper.published_at ? (
+                  <div className="flex items-center gap-2 text-blue-200">
+                    <Calendar className="w-5 h-5" />
+                    <span>Updated {new Date(whitepaper.published_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                  </div>
+                ) : null}
+                {whitepaper.author_name ? (
+                  <div className="flex items-center gap-2 text-blue-200">
+                    <span>
+                      By {whitepaper.author_name}
+                      {whitepaper.author_title ? `, ${whitepaper.author_title}` : ''}
+                    </span>
+                  </div>
+                ) : null}
               </div>
 
               <WhitepaperDownloadCta whitepaper={whitepaper} variant="hero" trackView />

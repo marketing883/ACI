@@ -6,6 +6,9 @@ import type { Metadata } from 'next';
 // it with their own self-canonical (see playbooks/[slug]/layout.tsx) so
 // they do not inherit this one.
 export const metadata: Metadata = {
+  title: 'Enterprise Implementation Playbooks',
+  description:
+    'Step-by-step playbooks from real enterprise engagements: data platforms, AI deployment, cloud migration, and system consolidation.',
   alternates: { canonical: 'https://aciinfotech.com/playbooks' },
 };
 
