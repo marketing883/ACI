@@ -1,18 +1,26 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Brain, Cpu, BarChart3, Bot, Shield, Sparkles, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
-import { appliedAiFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { appliedAiRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
-
-export const revalidate = 3600;
 import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
-
-import { displayClient } from '@/lib/content/anonymize';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProofCards,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+
+export const revalidate = 3600;
+
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
 const siteUrl = getSiteUrl();
@@ -43,169 +51,229 @@ export const metadata: Metadata = {
   },
 };
 
-const keyOutcomes = [
-  'Ship models to production, not pilot purgatory',
-  'GenAI chatbots with enterprise security',
-  'MLOps pipelines with automated retraining',
-  'AI governance that satisfies regulators',
-];
+/* ------------------------------- page copy ------------------------------- */
 
-const offerings = [
+const OFFERINGS = [
   {
-    id: 'genai-solutions',
-    title: 'GenAI & LLM Solutions',
-    description: 'Enterprise chatbots, document processing, code generation powered by Azure OpenAI, AWS Bedrock, or private LLMs.',
-    icon: Sparkles,
-    technologies: ['Azure OpenAI', 'AWS Bedrock', 'Claude', 'LangChain'],
-    outcomes: ['20% reduction in support tickets', 'Automated document processing', 'Enterprise security controls'],
+    title: 'GenAI and LLM solutions',
+    body: 'Enterprise assistants, document processing, and code generation on Azure OpenAI, AWS Bedrock, Claude, or private LLMs in your own tenancy. Retrieval, guardrails, and evaluation gates come standard, because a chatbot without them is a liability with a chat window. Support assistants built this way have cut ticket volume by 20%.',
+    chips: ['Azure OpenAI', 'AWS Bedrock', 'Claude', 'LangChain'],
   },
   {
-    id: 'predictive-analytics',
-    title: 'Predictive Analytics',
-    description: 'Forecasting engines for demand, churn, and risk. ML models that run in production with continuous learning.',
-    icon: BarChart3,
-    technologies: ['Databricks ML', 'Python', 'TensorFlow', 'scikit-learn'],
-    outcomes: ['30% improvement in forecast accuracy', 'Real-time predictions', 'Automated model refresh'],
+    title: 'Predictive analytics',
+    body: 'Forecasting engines for demand, churn, and risk that retrain themselves as the data moves. Predictions get served in production, in real time, not from a notebook someone remembers to run on Fridays.',
+    chips: ['Databricks ML', 'Python', 'TensorFlow', 'scikit-learn'],
   },
   {
-    id: 'recommendation-systems',
-    title: 'Recommendation Systems',
-    description: 'Personalization engines for retail, media, and financial services. Real-time recommendations at scale.',
-    icon: Brain,
-    technologies: ['Spark MLlib', 'TensorFlow Recommenders', 'Feature Stores'],
-    outcomes: ['15% increase in conversion', 'Real-time personalization', 'A/B testing built-in'],
+    title: 'Recommendation systems',
+    body: 'Personalization engines for retail, media, and financial services, serving recommendations in real time with A/B testing built in. Clients have measured conversion lift of 15% once the engine went live.',
+    chips: ['Spark MLlib', 'TensorFlow Recommenders', 'Feature stores'],
   },
   {
-    id: 'mlops',
-    title: 'MLOps & Model Management',
-    description: 'CI/CD for ML with automated testing, deployment, and monitoring. MLflow, Kubeflow, or custom platforms.',
-    icon: Cpu,
-    technologies: ['MLflow', 'Kubeflow', 'Databricks Mosaic AI', 'SageMaker'],
-    outcomes: ['2-3x faster model deployment', 'Automated retraining', 'Version-controlled models'],
+    title: 'MLOps and model management',
+    body: 'CI/CD for models: automated testing, deployment, monitoring, and retraining on MLflow, Kubeflow, or SageMaker. Teams deploy model updates 2 to 3x faster, and drift gets caught by a pipeline instead of by an executive.',
+    chips: ['MLflow', 'Kubeflow', 'Databricks Mosaic AI', 'SageMaker'],
   },
   {
-    id: 'ai-governance',
-    title: 'AI Governance & ArqAI',
-    description: 'Policy-as-code, bias monitoring, drift detection. EU AI Act, GDPR compliant from day one.',
-    icon: Shield,
-    technologies: ['ArqAI', 'MLflow Governance', 'Great Expectations'],
-    outcomes: ['Audit-ready AI systems', 'Automated compliance checks', 'Bias monitoring'],
+    title: 'AI governance with ArqAI',
+    body: 'ArqAI is our own governance platform: policy as code, bias monitoring, drift detection, and audit trails on every model. Systems ship aligned to the EU AI Act and GDPR from day one, so the compliance review is a formality instead of a rebuild.',
+    chips: ['ArqAI', 'MLflow Governance', 'Great Expectations'],
   },
   {
-    id: 'intelligent-automation',
-    title: 'Intelligent Process Automation',
-    description: 'Document AI, intelligent OCR, and AI-powered workflows that augment human decision-making.',
-    icon: Bot,
-    technologies: ['Document AI', 'UiPath AI', 'Power Automate AI'],
-    outcomes: ['35% reduction in manual processing', 'Human-in-the-loop where needed', 'Measurable ROI'],
+    title: 'Intelligent process automation',
+    body: 'Document AI, intelligent OCR, and workflows that keep a human in the loop where judgment matters. Clients have cut manual processing work by 35% while keeping people on the decisions that need them.',
+    chips: ['Document AI', 'UiPath AI', 'Power Automate AI'],
   },
 ];
 
-const caseStudies = [
+const DECISION_ROWS: { need: string; pick: 'genai' | 'ml' | 'both' }[] = [
+  { need: 'Documents, copilots, and conversational agents', pick: 'genai' },
+  { need: 'Search and summarization over your own content', pick: 'genai' },
+  { need: 'Forecasting, scoring, and optimization', pick: 'ml' },
+  { need: 'Fraud, churn, and risk models with hard accuracy targets', pick: 'ml' },
+  { need: 'Most enterprise estates, honestly', pick: 'both' },
+];
+
+const PROOF = [
   {
-    slug: 'financial-forecasting',
-    client: 'Fortune 500 Bank',
-    client_descriptor: 'Fortune 500 Retail and Commercial Bank',
-    industry: 'Financial Services',
-    challenge: 'Forecasting models took weeks to retrain and deploy, missing market changes',
-    results: [
-      { metric: '30%', description: 'Improvement in forecast accuracy' },
-      { metric: 'Daily', description: 'Automated model retraining' },
-      { metric: '$5M', description: 'Annual cost savings' },
-    ],
-    technologies: ['Databricks ML', 'MLflow', 'Python'],
+    eyebrow: 'Fortune 500 Retail and Commercial Bank',
+    metric: '30%',
+    metricLabel: 'Improvement in forecast accuracy',
+    summary: 'Forecasting engines rebuilt on Databricks ML with daily automated retraining, replacing a cycle that took weeks and missed market moves. Worth $5M a year.',
+    href: '/case-studies?service=applied-ai-ml',
+    linkLabel: 'Browse the AI case studies',
   },
   {
-    slug: 'document-processing',
-    client: 'Healthcare Provider',
-    client_descriptor: 'National Healthcare Provider',
-    industry: 'Healthcare',
-    challenge: 'Manual claims processing taking 72 hours average',
-    results: [
-      { metric: '4 hours', description: 'Reduced processing time' },
-      { metric: '88%', description: 'Automated accuracy' },
-      { metric: '35%', description: 'Reduction in manual work' },
-    ],
-    technologies: ['Document AI', 'Azure OpenAI', 'Python'],
+    eyebrow: 'National Healthcare Provider',
+    metric: '4h',
+    metricLabel: 'Claims processing, down from 72',
+    summary: 'Document AI reading claims with 88% automated accuracy, cutting manual processing 35%. Humans now handle the edge cases, not the pile.',
+    href: '/case-studies?industry=healthcare',
+    linkLabel: 'See the healthcare stories',
+  },
+  {
+    eyebrow: 'Global Financial Services Firm',
+    metric: '90d',
+    metricLabel: 'From prototype to production',
+    summary: 'Azure Data Lake, Databricks, AKS, and Synapse wired into one governed foundation, so models move from notebook to production in 90 days.',
+    href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
+    linkLabel: 'Read the Azure Lakehouse story',
   },
 ];
 
-const beyondDelivery = [
+const PROCESS = [
   {
-    title: 'Model Operations',
-    description: '24/7 monitoring of production models, drift detection, and incident response. When a model starts misbehaving at 2am, we\'re on the call.',
-    icon: Activity,
+    title: 'Scope',
+    timeframe: 'Weeks 1 to 2',
+    body: 'One use case, chosen for value and data availability, not for the demo it would make at a board meeting.',
   },
   {
-    title: 'SLA-Backed Support',
-    description: 'Contractual response times for model failures, defined escalation paths, and accountable ownership — not a ticket into a vendor queue.',
-    icon: FileCheck,
+    title: 'Ground',
+    timeframe: 'Weeks 2 to 5',
+    body: 'Data readiness, retrieval design, and the governance model. If the data is not ready, we say so now, not in week ten.',
   },
   {
-    title: 'Continuous Retraining',
-    description: 'MLOps pipelines that retrain, validate, and redeploy models as data shifts. Models improve over time instead of decaying silently.',
-    icon: TrendingUp,
+    title: 'Build',
+    timeframe: 'Weeks 4 to 10',
+    body: 'Model, pipeline, and guardrails shipped in increments, with evaluation gates before anything faces a user.',
   },
   {
-    title: 'Evolution as Partners',
-    description: "Roadmap co-ownership, new model delivery, and AI strategy evolution. We're with you as the AI landscape shifts around you.",
-    icon: Users,
-  },
-];
-
-const differentiators = [
-  {
-    title: 'Production, Not Pilots',
-    description: "AI models running in production across Fortune 500 clients. We ship models that run 24/7 with SLAs.",
-    proof: 'Models running in production',
+    title: 'Prove',
+    timeframe: 'Weeks 8 to 14',
+    body: 'Evals against agreed thresholds, bias checks, and human sign-off. Production access is earned, not assumed.',
   },
   {
-    title: 'ArqAI Governance Platform',
-    description: 'Our own AI governance platform for enterprises scaling AI responsibly. Policy-as-code, bias monitoring, audit trails.',
-    proof: 'EU AI Act compliant out of box',
-  },
-  {
-    title: 'MLOps from Day One',
-    description: 'Every model ships with CI/CD, monitoring, and automated retraining. No model drift surprises.',
-    proof: 'Automated drift detection on every model',
-  },
-  {
-    title: 'Enterprise Security',
-    description: 'Private LLM deployments, data residency controls, and SOC 2 compliant architectures.',
-    proof: 'ISO 27001 certified',
+    title: 'Run',
+    body: 'Monitoring, drift detection, and retraining under SLA with our managed team, or handed to yours with runbooks.',
   },
 ];
 
-const faqs = [
+const FACTS = [
+  {
+    label: 'Delivery',
+    line: 'The architects who scope your model are the ones who ship it. Nobody hands your project to a bench.',
+  },
+  {
+    label: 'Governance',
+    line: 'ArqAI, our own governance platform: policy as code, bias monitoring, and audit trails aligned to the EU AI Act and GDPR.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 50+ AI models in production.',
+  },
+  {
+    label: 'Operations',
+    line: 'ISO 27001 certified, with production models monitored 24/7 under published SLAs.',
+  },
+];
+
+const FAQS = [
+  {
+    question: 'What does a production GenAI implementation require?',
+    answer: 'More than a prompt and an API key. You need governed data for retrieval, a RAG or agent design that fits the job, evaluation before launch, and guardrails and monitoring after. The model is the easy part.',
+  },
+  {
+    question: 'How long does an AI project take?',
+    answer: 'A scoped use case with data in reasonable shape reaches production in 8 to 14 weeks. Complex ML systems with custom models run 6 to 12 months. If the data is not ready, that work comes first, and we will say so plainly rather than paper over it.',
+  },
   {
     question: 'How do you handle AI governance and compliance?',
-    answer: 'We use ArqAI, our purpose-built AI governance platform, to implement policy-as-code, automated bias monitoring, and audit trails. This ensures compliance with EU AI Act, GDPR, and industry-specific regulations from day one.',
+    answer: 'Through ArqAI, our purpose-built governance platform: policy as code, automated bias monitoring, drift detection, and audit trails. Systems ship aligned to the EU AI Act, GDPR, and your industry rules from day one, not retrofitted before an audit.',
   },
   {
     question: 'Can we use private LLMs for sensitive data?',
-    answer: 'Yes. We deploy private LLMs on your infrastructure (Azure OpenAI, AWS Bedrock, or on-prem) with full data residency controls. Your data never leaves your environment.',
+    answer: 'Yes. We deploy private LLMs in your own environment, on Azure OpenAI, AWS Bedrock, or on-prem, with full data residency controls. Your data never leaves your tenancy.',
   },
   {
     question: 'What about model drift and retraining?',
-    answer: 'Every model includes automated drift detection and retraining pipelines. Most models refresh daily or weekly depending on your data velocity. You see performance metrics in real-time dashboards.',
+    answer: 'Every model ships with drift detection and a retraining pipeline. Most refresh daily or weekly depending on data velocity, and you watch performance on live dashboards instead of taking our word for it.',
   },
   {
-    question: 'How long does a typical AI project take?',
-    answer: '3-6 months for most AI implementations. GenAI chatbots can be faster (8-12 weeks). Complex ML systems with custom models take 6-12 months.',
+    question: 'How do you pick the first AI use case?',
+    answer: 'We look for a job with clear value, available data, and room to be wrong sometimes. Chasing the flashiest use case first is how pilots die. Better to ship one that pays for itself and earns the next.',
+  },
+  {
+    question: 'Who owns model risk and governance?',
+    answer: 'We build the controls in: model registry, versioning, audit trails, and policy checks, with clear ownership on your side. Regulated buyers have to show their work, and bolting that on afterward never goes well.',
   },
 ];
 
+/* --------------------- decision artifact (page-local) --------------------- */
+
+// One-off variation on the kit's DecisionPanel: same gray band and table
+// grammar, but the two columns are approaches (GenAI vs classic ML), not
+// partner logos, so it is built inline instead of extending the kit.
+function AiApproachPanel() {
+  const Dot = ({ on }: { on: boolean }) => (
+    <span
+      aria-hidden="true"
+      className="mx-auto block h-3 w-3 rounded-full"
+      style={{ background: on ? '#1D4ED8' : 'rgba(0,0,0,0.08)' }}
+    />
+  );
+  return (
+    <section className="border-t border-gray-200 bg-gray-50">
+      <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+        <h2
+          className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+          style={{ lineHeight: 1.08 }}
+        >
+          GenAI or traditional&nbsp;ML?
+        </h2>
+        <p className="mt-5 max-w-3xl text-base leading-relaxed text-gray-600 md:text-lg">
+          Usually the wrong question. GenAI earns its keep on language: documents, copilots, agents that read and write. Classic ML still wins on numbers: forecasting, scoring, optimization, anywhere you need a measurable error rate. Most estates need both, running on one MLOps spine so governance is built once instead of twice. We build either, and we will tell you which fits before writing a line of code.
+        </p>
+
+        <div className="mt-9 overflow-x-auto">
+          <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+            <thead>
+              <tr>
+                <th className="w-1/2 border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                  The job at hand
+                </th>
+                <th className={`border-b border-gray-200 pb-4 text-center text-sm font-semibold text-black ${v4Display}`}>
+                  GenAI
+                </th>
+                <th className={`border-b border-gray-200 pb-4 text-center text-sm font-semibold text-black ${v4Display}`}>
+                  Classic ML
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {DECISION_ROWS.map((row) => (
+                <tr key={row.need}>
+                  <td className="border-b border-gray-200 py-4 pr-6 font-medium text-gray-800">{row.need}</td>
+                  <td className="border-b border-gray-200 py-4">
+                    <Dot on={row.pick === 'genai' || row.pick === 'both'} />
+                  </td>
+                  <td className="border-b border-gray-200 py-4">
+                    <Dot on={row.pick === 'ml' || row.pick === 'both'} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-5 text-sm text-gray-500">
+          Both dots lit means both, under one MLOps spine and one governance layer.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* --------------------------------- page ---------------------------------- */
+
 export default function AppliedAIMLPage() {
   return (
-    <>
-      {/* Structured Data for SEO/AEO */}
+    <div className={`bg-white text-black ${v4Sans}`}>
       <ServiceSchema
         name="Applied AI & ML Services"
         description="From GenAI pilots to production ML. GenAI chatbots, forecasting engines, recommendation systems with MLOps, governance, and SLAs."
         url="/services/applied-ai-ml"
         serviceType="AI & Machine Learning Consulting"
       />
-      {/* FAQPage JSON-LD comes from FaqBlock below — one per page. */}
+      {/* FAQPage JSON-LD comes from PageFaq below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -214,266 +282,128 @@ export default function AppliedAIMLPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Applied AI & ML
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Applied AI &amp; ML: From GenAI Pilots to&nbsp;Production
-              </h1>
-              <p className="text-lg text-gray-300 mb-8">
-                GenAI chatbots, forecasting engines, recommendation systems. With MLOps, governance, and SLAs.
-                We ship models to production, not pilot purgatory. Every AI system includes monitoring, retraining pipelines, and ArqAI governance.
-              </p>
+      <ServiceHero
+        kicker="Applied AI & ML"
+        title={
+          <>
+            Applied AI &amp; ML: From GenAI Pilots{' '}
+            <span style={{ color: '#1D4ED8' }}>to&nbsp;Production</span>
+          </>
+        }
+        lede="ACI Infotech takes AI from pilot to production: GenAI assistants, forecasting engines, and recommendation systems that run around the clock with SLAs. Every model ships with MLOps pipelines, monitoring, and ArqAI governance, so it keeps working after launch and holds up when an auditor asks how it decides."
+        chips={[
+          '50+ AI models in production',
+          'ArqAI governance platform',
+          'MLOps on every model',
+          'ISO 27001',
+        ]}
+        primary={{ label: 'Talk to an AI architect', href: '/contact?service=applied-ai-ml' }}
+        secondary={{ label: 'See the AI case studies', href: '/case-studies?service=applied-ai-ml' }}
+        logos={[
+          { src: '/brand/anthropic-wordmark.svg', alt: 'Anthropic' },
+          { src: '/brand/openai-wordmark.svg', alt: 'OpenAI' },
+        ]}
+        logosCaption="Frontier models in production, delivered with our strategic partner ArqAI for governance."
+      />
 
-              <ul className="space-y-3 mb-8">
-                {keyOutcomes.map((outcome) => (
-                  <li key={outcome} className="flex items-center gap-3 text-gray-300">
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                    {outcome}
-                  </li>
-                ))}
-              </ul>
+      {/* Problem band: where pilots go to die */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        pill="Why pilots stall"
+        headline={
+          <>
+            The demo impressed everyone.{' '}
+            <br className="hidden sm:block" />
+            Then it met <span className="text-[#60A5FA]">production.</span>
+          </>
+        }
+        body="Most GenAI pilots never make it out of the sandbox. Not because the model is weak, but because nobody built the unglamorous part: evaluation gates, guardrails, drift monitoring, and an answer for the auditor who asks why the model said what it said. We build that part first, which is why our models are still running a year later."
+        story={{
+          metric: { value: '30%', label: 'Improvement in forecast accuracy' },
+          title: 'Forecasting engines retrained daily at a Fortune 500 bank',
+          role: 'Financial Services',
+          org: 'A Fortune 500 retail and commercial bank',
+          href: '/case-studies?service=applied-ai-ml',
+          logoSrc: '/brand/databricks-color.svg',
+          logoAlt: 'Databricks',
+        }}
+      />
 
-              <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                50+ AI models in production | ArqAI governance platform
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button href="/contact?service=applied-ai-ml" variant="primary" size="lg">
-                  Talk to an AI Architect
-                </Button>
-                <Button
-                  href="/case-studies?service=applied-ai-ml"
-                  variant="ghost"
-                  size="lg"
-                  className="text-white border-white hover:bg-white/10"
-                >
-                  See AI Projects
-                </Button>
-              </div>
-            </div>
-
-            {/* Visual */}
-            <div className="relative hidden lg:block">
-              <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <div className="text-sm text-gray-400 mb-4">AI/ML Architecture</div>
-                <div className="space-y-4">
-                  <div className="bg-purple-900/30 rounded-lg p-4 text-center">
-                    <div className="text-purple-300 font-medium">Data Sources</div>
-                    <div className="text-xs text-gray-400 mt-1">Structured • Unstructured • Real-time</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
-                    <div className="text-white font-bold">ML Platform</div>
-                    <div className="text-xs text-gray-300 mt-1">Feature Store • Model Training • Serving</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-green-900/30 rounded-lg p-3 text-center text-xs text-green-300">
-                      Predictions
-                    </div>
-                    <div className="bg-blue-900/30 rounded-lg p-3 text-center text-xs text-blue-300">
-                      GenAI
-                    </div>
-                  </div>
-                  <div className="bg-yellow-900/30 rounded-lg p-3 text-center">
-                    <div className="text-yellow-300 text-sm">ArqAI Governance</div>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-purple-500/10 rounded-3xl blur-3xl -z-10"></div>
-            </div>
-          </div>
+      {/* What we build */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build"
+            title={
+              <>
+                Production AI. <span style={{ color: '#1D4ED8' }}>Six ways&nbsp;in.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Service Offerings */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              AI & ML Services
-            </h2>
-            <p className="text-lg text-gray-600">
-              From GenAI to custom ML, all with production-grade governance
-            </p>
-          </div>
+      {/* Decision artifact: GenAI vs classic ML */}
+      <AiApproachPanel />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offerings.map((offering) => {
-              const Icon = offering.icon;
-              return (
-                <div key={offering.id} className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
-                  <Icon className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">{offering.title}</h3>
-                  <p className="text-gray-600 mb-6">{offering.description}</p>
-                  <div className="mb-4">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Key Outcomes</div>
-                    <ul className="space-y-1">
-                      {offering.outcomes.map((outcome) => (
-                        <li key={outcome} className="flex items-center gap-2 text-sm text-gray-600">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          {outcome}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {offering.technologies.slice(0, 4).map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-gray-100 rounded text-xs text-gray-600">{tech}</span>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Shipped, governed, <span style={{ color: '#1D4ED8' }}>still&nbsp;running.</span>
+              </>
+            }
+          />
+          <ProofCards cards={PROOF} />
         </div>
       </section>
 
-      {/* Case Studies */}
-      <section className="py-20 bg-[var(--aci-secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">AI Projects We&rsquo;ve Built</h2>
-            <p className="text-lg text-gray-400">Real AI implementations. Real business outcomes.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {caseStudies.map((study) => (
-              <div key={study.slug} className="bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-700 transition-colors">
-                <div className="p-6 border-b border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xl font-bold text-white">{displayClient(study)}</span>
-                    <span className="text-sm text-gray-400">{study.industry}</span>
-                  </div>
-                  <p className="text-gray-300 text-sm">{study.challenge}</p>
-                </div>
-                <div className="p-6">
-                  <div className="space-y-3 mb-6">
-                    {study.results.map((result, idx) => (
-                      <div key={idx} className="flex items-baseline gap-3">
-                        <span className="text-2xl font-bold text-[var(--aci-primary-light)]">{result.metric}</span>
-                        <span className="text-sm text-gray-400">{result.description}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {study.technologies.map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-gray-700 rounded text-xs text-gray-300">{tech}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Button href="/case-studies?service=applied-ai-ml" variant="secondary" size="lg">
-              See All AI Case Studies <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* Beyond Delivery — Managed Services */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Beyond Delivery
-            </h2>
-            <p className="text-lg text-gray-600">
-              AI models need continuous care. Post-deployment MLOps, drift detection, retraining,
-              and SLA-backed operations are part of how we engage.
-              <span className="block mt-2 font-semibold text-[var(--aci-secondary)]">We run what we build.</span>
-            </p>
-          </div>
+      {/* Bridge to managed operations */}
+      <BridgeBand
+        title="Launch is when the model starts aging."
+        body="Data shifts, prompts rot, and last quarter's accurate model quietly becomes this quarter's wrong one. Our managed operations team watches production models around the clock: drift detection, retraining pipelines, and P1 response in fifteen minutes when something misbehaves at 2am."
+        link={{ label: 'Managed Operations', href: '/services/managed-operations' }}
+      />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {beyondDelivery.map((pillar) => {
-              const Icon = pillar.icon;
-              return (
-                <div key={pillar.title} className="bg-white p-6 rounded-xl shadow-sm">
-                  <Icon className="w-8 h-8 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-lg font-semibold text-[var(--aci-secondary)] mb-2">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-sm text-gray-600">{pillar.description}</p>
-                </div>
-              );
-            })}
-          </div>
+      {/* Why ACI */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title="Why enterprises pick us for AI" />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
 
-      {/* Why Choose ACI */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">Why Choose ACI for AI & ML</h2>
-            <p className="text-lg text-gray-600">What makes us different</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {differentiators.map((diff) => (
-              <div key={diff.title} className="bg-white p-8 rounded-xl shadow-sm">
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">{diff.title}</h3>
-                <p className="text-gray-600 mb-4">{diff.description}</p>
-                <div className="flex items-center gap-2 text-sm text-[var(--aci-primary)]">
-                  <CheckCircle className="w-4 h-4" />
-                  {diff.proof}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">Common Questions About AI & ML</h2>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details key={faq.question} className="group bg-gray-50 rounded-xl">
-                <summary className="flex items-center justify-between cursor-pointer p-6 text-lg font-medium text-[var(--aci-secondary)]">
-                  {faq.question}
-                  <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 text-gray-600">{faq.answer}</div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PageFaq
+        kicker="Questions"
+        title={
+          <>
+            AI questions,
+            <br />
+            <span style={{ color: '#1D4ED8' }}>answered straight.</span>
+          </>
+        }
+        sub="The questions we hear most before an AI engagement. Anything else belongs in a conversation."
+        faqs={FAQS}
+      />
 
       <ClusterPosts keywords={['genai', 'machine learning', 'artificial intelligence', 'mlops', 'ai/ml', 'llm', 'rag', 'predictive']} />
 
       <RelatedLinks items={appliedAiRelated} />
 
-      <FaqBlock items={appliedAiFaqs} eyebrow="Applied AI FAQ" />
-
-      {/* Final CTA */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Ship AI to Production?</h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Talk to an AI architect about your specific use case. No sales pitch, just an engineering conversation about what&rsquo;s actually possible.
-          </p>
-
-          <Button href="/contact?service=applied-ai-ml" variant="lime" size="lg">
-            Talk to an AI Architect
-          </Button>
-        </div>
-      </section>
-    </>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Let's get your AI into production" />
+    </div>
   );
 }

@@ -1,22 +1,23 @@
 import { Metadata } from 'next';
-import {
-  ArrowRight,
-  CheckCircle,
-  ChevronDown,
-  Compass,
-  GitBranch,
-  LineChart,
-  ListChecks,
-  Map,
-  Target,
-  Wrench,
-} from 'lucide-react';
-import Button from '@/components/ui/Button';
-import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { advisoryStrategyRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProcessStrip,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+
+export const revalidate = 3600;
 
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -50,94 +51,45 @@ export const metadata: Metadata = {
   },
 };
 
-const keyOutcomes = [
-  'A written plan in forty-eight hours, not six weeks',
-  'Recommendations paired with the build team that will deliver them',
-  'TCO models that survive procurement review',
-  'Outcomes measured on the roadmap, not on a slide',
-];
+/* ------------------------------- page copy ------------------------------- */
 
-const offerings = [
+const OFFERINGS = [
   {
-    id: 'north-star',
     title: 'North-star architecture',
-    description:
-      'Target-state maps for data, AI, cloud, and application estates. Written so an engineer can read them, sized so a CFO can sign them off.',
-    icon: Compass,
-    artifacts: ['Current-state diagram', 'Target-state architecture', 'Transition roadmap'],
-    outcomes: ['Shared technical direction', 'Stakeholder alignment', 'Sequenced delivery plan'],
+    body: 'Target-state maps for data, AI, cloud, and application estates. Written so an engineer can read them, sized so a CFO can sign them off.',
+    chips: ['Current-state diagram', 'Target-state architecture', 'Transition roadmap'],
   },
   {
-    id: 'capability-audit',
     title: 'Capability audit',
-    description:
-      'Honest read on what your teams, platforms, and partners can actually do. No vendor pitch, no swag-based conclusions.',
-    icon: ListChecks,
-    artifacts: ['Capability heatmap', 'Gap analysis', 'Build-vs-buy recommendation'],
-    outcomes: ['Objective baseline', 'Sequenced investment priorities', 'Defensible build-vs-buy decisions'],
+    body: 'Honest read on what your teams, platforms, and partners can actually do. No vendor pitch, no swag-based conclusions.',
+    chips: ['Capability heatmap', 'Gap analysis', 'Build-vs-buy recommendation'],
   },
   {
-    id: 'tco-modeling',
     title: 'TCO & FinOps modeling',
-    description:
-      'Total cost of ownership models for cloud, data, and application estates. Sensitivity analysis so procurement does not find the edge case for you.',
-    icon: LineChart,
-    artifacts: ['Three-year TCO model', 'Sensitivity analysis', 'FinOps baseline'],
-    outcomes: ['Budget defensibility', 'Identified takeout targets', 'Procurement-ready estimates'],
+    body: 'Total cost of ownership models for cloud, data, and application estates. Sensitivity analysis so procurement does not find the edge case for you.',
+    chips: ['Three-year TCO model', 'Sensitivity analysis', 'FinOps baseline'],
   },
   {
-    id: 'roi-frameworks',
     title: 'ROI frameworks',
-    description:
-      'Outcome definitions tied to the work, with instrumentation baked into the platform. The metric exists before the engagement closes.',
-    icon: Target,
-    artifacts: ['Outcome tree', 'Instrumentation plan', 'Baseline + target dashboard'],
-    outcomes: ['Measurable wins', 'Tied to the roadmap', 'Reported without a deck'],
+    body: 'Outcome definitions tied to the work, with instrumentation baked into the platform. The metric exists before the engagement closes.',
+    chips: ['Outcome tree', 'Instrumentation plan', 'Baseline + target dashboard'],
   },
   {
-    id: 'transformation-roadmap',
     title: 'Transformation roadmaps',
-    description:
-      'Multi-quarter plans for data modernization, AI adoption, and platform consolidation. Sequenced so early wins fund the next quarter.',
-    icon: Map,
-    artifacts: ['Quarterly roadmap', 'Dependency map', 'Investment case'],
-    outcomes: ['Funded phase one', 'Defensible scope for phase two', 'Optionality preserved'],
+    body: 'Multi-quarter plans for data modernization, AI adoption, and platform consolidation. Sequenced so early wins fund the next quarter.',
+    chips: ['Quarterly roadmap', 'Dependency map', 'Investment case'],
   },
   {
-    id: 'delivery-pod',
     title: 'Build pod on standby',
-    description:
-      'The engineers who authored the plan stay to build the first increment. No handover meetings, no lost context, no second statement of work.',
-    icon: Wrench,
-    artifacts: ['Staffed delivery pod', 'Two-week kickoff plan', 'Shared backlog'],
-    outcomes: ['No handoff drop', 'Ships within two weeks', 'Strategy meets production'],
+    body: 'The engineers who authored the plan stay to build the first increment. No handover meetings, no lost context, no second statement of work.',
+    chips: ['Staffed delivery pod', 'Two-week kickoff plan', 'Shared backlog'],
   },
 ];
 
-const differentiators = [
-  {
-    title: 'Advisors who still ship',
-    description:
-      'Every advisor on a named engagement has shipped production code in the last year. The plan is grounded because the author knows what will break.',
-  },
-  {
-    title: 'Plans written to be built',
-    description:
-      'Our deliverables are working artifacts: architecture diagrams an engineer can execute, TCO models a CFO can defend, roadmaps a PMO can track.',
-  },
-  {
-    title: 'One engagement, not two',
-    description:
-      'Strategy and delivery live on one statement of work. The build pod is named in the plan, so "phase two" is not a sales cycle.',
-  },
-  {
-    title: 'Outcomes, not slide count',
-    description:
-      'We track the metric the plan was written to move. If the dashboard does not exist at the start, we build it as part of the engagement.',
-  },
-];
-
-const engagementTypes = [
+// Signature: the "Who we advise" audience table. Senior technology
+// leaders on the hook for the outcome, with the focus and the typical
+// engagement length for each.
+const AUDIENCES = [
   {
     audience: 'CIO / CTO',
     focus: 'Technology strategy, platform consolidation, M&A integration, vendor rationalization.',
@@ -160,7 +112,55 @@ const engagementTypes = [
   },
 ];
 
-const faqs = [
+// The engagement flow, condensed from the old hero visual.
+const PROCESS = [
+  {
+    title: 'Problem',
+    timeframe: 'Day 1',
+    body: 'You bring the decision that is stuck. We meet the people who own it and the systems it touches.',
+  },
+  {
+    title: 'Written plan',
+    timeframe: 'Hour 48',
+    body: 'A short-form strategy memo: the problem, the credible options, the recommended path, and the first increment of work.',
+  },
+  {
+    title: 'Architecture + TCO',
+    timeframe: 'Week 2 to 4',
+    body: 'The target-state maps, cost models, and roadmap that anchor the program and survive procurement review.',
+  },
+  {
+    title: 'Build pod',
+    timeframe: 'Ships in 2 weeks',
+    body: 'The engineers named in the plan start the first increment. No handover, no second sales cycle.',
+  },
+  {
+    title: 'Outcomes reported',
+    timeframe: 'Every increment',
+    body: 'The metric the plan was written to move, tracked on a dashboard, not on a slide.',
+  },
+];
+
+const DIFFERENTIATORS = [
+  {
+    label: 'Advisors who still ship',
+    line: 'Every advisor on a named engagement has shipped production code in the last year. The plan is grounded because the author knows what will break.',
+  },
+  {
+    label: 'Plans written to be built',
+    line: 'Our deliverables are working artifacts: architecture diagrams an engineer can execute, TCO models a CFO can defend, roadmaps a PMO can track.',
+  },
+  {
+    label: 'One engagement, not two',
+    line: 'Strategy and delivery live on one statement of work. The build pod is named in the plan, so "phase two" is not a sales cycle.',
+  },
+  {
+    label: 'Outcomes, not slide count',
+    line: 'We track the metric the plan was written to move. If the dashboard does not exist at the start, we build it as part of the engagement.',
+  },
+];
+
+const FAQS = [
   {
     question: 'How is this different from a traditional consulting engagement?',
     answer:
@@ -193,16 +193,18 @@ const faqs = [
   },
 ];
 
+/* --------------------------------- page ---------------------------------- */
+
 export default function AdvisoryStrategyPage() {
   return (
-    <>
+    <div className={`bg-white text-black ${v4Sans}`}>
       <ServiceSchema
         name="Advisory & Strategy"
-        description="Technology strategy grounded in delivery. North-star architecture, capability audits, TCO modeling, and ROI frameworks — with the build team that delivers the plan."
+        description="Technology strategy grounded in delivery. North-star architecture, capability audits, TCO modeling, and ROI frameworks, with the build team that delivers the plan."
         url="/services/advisory-strategy"
         serviceType="Technology Advisory"
       />
-      <FAQSchema faqs={faqs} />
+      {/* FAQPage JSON-LD comes from PageFaq below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -211,236 +213,159 @@ export default function AdvisoryStrategyPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Advisory & Strategy
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Technology advisory grounded in&nbsp;delivery.
-              </h1>
-              <p className="text-lg text-gray-300 mb-8">
-                Our advisors arrive with the engineers who will build what the strategy
-                recommends. No six-week calendar invite, no deck that outlives its author.
-                A written plan in forty-eight hours and a build pod on standby.
-              </p>
+      <ServiceHero
+        kicker="Advisory & Strategy"
+        title={
+          <>
+            Technology advisory{' '}
+            <span style={{ color: '#1D4ED8' }}>grounded in&nbsp;delivery.</span>
+          </>
+        }
+        lede="Our advisors arrive with the engineers who will build what the strategy recommends. No six-week calendar invite, no deck that outlives its author. A written plan in forty-eight hours and a build pod on standby."
+        chips={[
+          'North-star architecture',
+          'Capability audits',
+          'TCO models',
+          'ROI frameworks',
+        ]}
+        primary={{ label: 'Start an advisory engagement', href: '/contact?service=advisory-strategy' }}
+        secondary={{ label: 'See delivery outcomes', href: '/case-studies' }}
+        stats={[
+          { value: '48h', label: 'Written plan on the table' },
+          { value: '5 days', label: 'Advisory pod start' },
+          { value: '~20%', label: 'How often we disagree with you' },
+        ]}
+      />
 
-              <ul className="space-y-3 mb-8">
-                {keyOutcomes.map((outcome) => (
-                  <li key={outcome} className="flex items-start gap-3 text-gray-300">
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                    <span>{outcome}</span>
-                  </li>
+      {/* Problem band: strategy decks that outlive their authors */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        pill="Why strategy stalls"
+        headline={
+          <>
+            The deck outlived <span className="text-[#60A5FA]">its author.</span>{' '}
+            <br className="hidden sm:block" />
+            The problem stayed.
+          </>
+        }
+        body="Every enterprise has one: a strategy deck from a firm that left before slide forty shipped. The plan was directionally right and structurally unbuildable, because nobody who wrote it had to live with it. We write plans the way engineers write code: short, testable, and attached to the pod that builds the first increment."
+        story={{
+          metric: { value: '90d', label: 'From prototype to production' },
+          title: 'A plan that became a production lakehouse in one quarter',
+          href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
+          logoSrc: '/brand/aci-infotech-logo-white.png',
+          logoAlt: 'ACI Infotech',
+        }}
+      />
+
+      {/* What the engagement produces */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we deliver"
+            title={
+              <>
+                Working artifacts, <span style={{ color: '#1D4ED8' }}>not&nbsp;shelfware.</span>
+              </>
+            }
+            sub="What the engagement produces: working artifacts, not deliverables written to be archived."
+          />
+          <OfferingList items={OFFERINGS} />
+        </div>
+      </section>
+
+      {/* Signature: the "Who we advise" audience table */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Who we advise"
+            title={
+              <>
+                Senior leaders on the hook{' '}
+                <span style={{ color: '#1D4ED8' }}>for the&nbsp;outcome.</span>
+              </>
+            }
+          />
+
+          <div className="mt-12 overflow-x-auto">
+            <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+              <thead>
+                <tr>
+                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    Who
+                  </th>
+                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    Where the engagement focuses
+                  </th>
+                  <th className="border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    Typical length
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {AUDIENCES.map((row) => (
+                  <tr key={row.audience}>
+                    <td className="border-b border-gray-200 py-5 pr-8 align-top">
+                      <span className={`text-base font-semibold text-black md:text-lg ${v4Display}`}>
+                        {row.audience}
+                      </span>
+                    </td>
+                    <td className="border-b border-gray-200 py-5 pr-8 align-top text-[15px] leading-relaxed text-gray-600">
+                      {row.focus}
+                    </td>
+                    <td className="whitespace-nowrap border-b border-gray-200 py-5 align-top text-[13px] font-semibold uppercase tracking-wide text-blue-700">
+                      {row.typicalLength}
+                    </td>
+                  </tr>
                 ))}
-              </ul>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  href="/contact?service=advisory-strategy"
-                  variant="primary"
-                  size="lg"
-                >
-                  Start an advisory engagement
-                </Button>
-                <Button
-                  href="/case-studies"
-                  variant="ghost"
-                  size="lg"
-                  className="text-white border-white hover:bg-white/10"
-                >
-                  See delivery outcomes
-                </Button>
-              </div>
-            </div>
-
-            {/* Visual — compact engagement flow */}
-            <div className="relative hidden lg:block">
-              <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <div className="text-sm text-gray-400 mb-4">Advisory engagement</div>
-                <div className="space-y-3">
-                  {[
-                    { step: 'Problem', meta: 'Day 1' },
-                    { step: 'Assessment', meta: 'Day 2 to 7' },
-                    { step: 'Written plan', meta: 'Day 2, short form' },
-                    { step: 'Architecture + TCO', meta: 'Week 2 to 4' },
-                    { step: 'Build pod', meta: 'Ships in 2 weeks' },
-                    { step: 'Outcomes reported', meta: 'Every increment' },
-                  ].map((row) => (
-                    <div
-                      key={row.step}
-                      className="flex items-center justify-between bg-gray-700 rounded-lg px-4 py-3"
-                    >
-                      <span className="text-white font-medium">{row.step}</span>
-                      <span className="text-xs text-gray-400">{row.meta}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10" />
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      {/* What we deliver */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What the engagement produces
-            </h2>
-            <p className="text-lg text-gray-600">
-              Working artifacts, not deliverables written to be archived.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offerings.map((offering) => {
-              const Icon = offering.icon;
-              return (
-                <div
-                  key={offering.id}
-                  className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow"
-                >
-                  <Icon className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
-                    {offering.title}
-                  </h3>
-                  <p className="text-gray-600 mb-6">{offering.description}</p>
-
-                  <div className="mb-4">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Artifacts</div>
-                    <ul className="space-y-1">
-                      {offering.artifacts.map((artifact) => (
-                        <li
-                          key={artifact}
-                          className="flex items-center gap-2 text-sm text-gray-600"
-                        >
-                          <GitBranch className="w-3 h-3 text-[var(--aci-primary)]" />
-                          {artifact}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-gray-500 mb-2">Outcomes</div>
-                    <ul className="space-y-1">
-                      {offering.outcomes.map((outcome) => (
-                        <li
-                          key={outcome}
-                          className="flex items-center gap-2 text-sm text-gray-600"
-                        >
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          {outcome}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      {/* Engagement flow */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="How it runs"
+            title="Forty-eight hours to a plan. Two weeks to a pod."
+          />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* Engagement types */}
-      <section className="py-20 bg-[var(--aci-secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Who we advise
-            </h2>
-            <p className="text-lg text-gray-400">
-              Senior technology leaders on the hook for the outcome.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {engagementTypes.map((eng) => (
-              <div key={eng.audience} className="bg-gray-800 rounded-xl p-8">
-                <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-white">{eng.audience}</h3>
-                  <span className="text-xs text-[var(--aci-primary-light)] uppercase tracking-wider">
-                    {eng.typicalLength}
-                  </span>
-                </div>
-                <p className="text-gray-300">{eng.focus}</p>
-              </div>
-            ))}
-          </div>
+      {/* Why advisory lives next to delivery */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Why ACI"
+            title="Why advisory lives next to delivery"
+            sub="The handoff from plan to working system is where most programs fail."
+          />
+          <FactsRow facts={DIFFERENTIATORS} />
         </div>
       </section>
 
-      {/* Differentiators */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Why advisory lives next to delivery
-            </h2>
-            <p className="text-lg text-gray-600">
-              The handoff from plan to working system is where most programs fail.
-            </p>
-          </div>
+      <PageFaq
+        kicker="Questions"
+        title={
+          <>
+            Advisory questions,
+            <br />
+            <span style={{ color: '#1D4ED8' }}>answered straight.</span>
+          </>
+        }
+        sub="Including the one about what happens when we think you are wrong. Start an engagement and a short-form strategy memo lands in forty-eight hours."
+        faqs={FAQS}
+      />
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {differentiators.map((diff) => (
-              <div key={diff.title} className="bg-white p-8 rounded-xl shadow-sm">
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
-                  {diff.title}
-                </h3>
-                <p className="text-gray-600">{diff.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Common questions about advisory engagements
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details key={faq.question} className="group bg-gray-50 rounded-xl">
-                <summary className="flex items-center justify-between cursor-pointer p-6 text-lg font-medium text-[var(--aci-secondary)]">
-                  {faq.question}
-                  <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 text-gray-600">{faq.answer}</div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ClusterPosts keywords={['strategy', 'advisory', 'roadmap', 'tco', 'ai strategy']} />
 
       <RelatedLinks items={advisoryStrategyRelated} />
 
-      {/* Final CTA */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Bring us the problem. We will bring a written plan and a build pod.
-          </h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Start an advisory engagement and we will return a short-form strategy memo
-            in forty-eight hours.
-          </p>
-
-          <Button href="/contact?service=advisory-strategy" variant="lime" size="lg">
-            Start an advisory engagement
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        </div>
-      </section>
-    </>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Bring us the problem" href="/contact?service=advisory-strategy" />
+    </div>
   );
 }

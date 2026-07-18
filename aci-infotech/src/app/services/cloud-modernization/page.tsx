@@ -1,18 +1,26 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Cloud, Server, RefreshCw, Lock, Gauge, Container, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
-import { cloudModernizationFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { cloudModernizationRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
-
-export const revalidate = 3600;
 import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
-
-import { displayClient } from '@/lib/content/anonymize';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProofCards,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+
+export const revalidate = 3600;
+
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
 const siteUrl = getSiteUrl();
@@ -43,182 +51,224 @@ export const metadata: Metadata = {
   },
 };
 
-const keyOutcomes = [
-  'On-time, on-budget cloud migrations with zero downtime',
-  'Multi-cloud architectures without vendor lock-in',
-  '15-25% infrastructure cost reduction',
-  'Security and compliance built in from day one',
-];
+/* ------------------------------- page copy ------------------------------- */
 
-const offerings = [
+const OFFERINGS = [
   {
-    id: 'cloud-migration',
-    title: 'Cloud Migration',
-    description: 'Lift and shift, replatform, or refactor, we migrate your workloads to AWS, Azure, or GCP with zero downtime.',
-    icon: Cloud,
-    technologies: ['AWS', 'Azure', 'GCP', 'VMware Cloud'],
-    outcomes: ['Zero-downtime migration', '15-25% cost reduction', 'Legacy decommissioning'],
+    title: 'Cloud migration',
+    body: 'Rehost, replatform, or refactor to AWS, Azure, or GCP, moved in waves with rehearsed cutovers. 200+ migrations delivered without production downtime, and the legacy estate actually gets decommissioned instead of running just in case.',
+    chips: ['AWS', 'Azure', 'GCP', 'VMware Cloud'],
   },
   {
-    id: 'application-modernization',
-    title: 'Application Modernization',
-    description: 'Refactor monoliths to microservices, containerize legacy applications, and enable CI/CD pipelines.',
-    icon: RefreshCw,
-    technologies: ['Kubernetes', 'Docker', 'Terraform', 'GitOps'],
-    outcomes: ['3-4x faster deployments', 'Improved scalability', 'Reduced tech debt'],
+    title: 'Application modernization',
+    body: 'Monoliths refactored to microservices, legacy applications containerized, CI/CD wired in. Teams ship 3 to 4x faster once deployment stops being a ceremony.',
+    chips: ['Kubernetes', 'Docker', 'Terraform', 'GitOps'],
   },
   {
-    id: 'kubernetes-platform',
-    title: 'Kubernetes Platform Engineering',
-    description: 'Enterprise-grade Kubernetes platforms with service mesh, observability, and security.',
-    icon: Container,
-    technologies: ['EKS', 'AKS', 'GKE', 'OpenShift', 'Istio'],
-    outcomes: ['Self-service developer platform', 'Automated scaling', 'Multi-cluster management'],
+    title: 'Kubernetes platform engineering',
+    body: 'Enterprise Kubernetes with service mesh, observability, and security built into the platform, not bolted onto each cluster. Developers get self-service; the platform team gets one estate to manage instead of forty snowflakes.',
+    chips: ['EKS', 'AKS', 'GKE', 'OpenShift', 'Istio'],
   },
   {
-    id: 'infrastructure-as-code',
-    title: 'Infrastructure as Code',
-    description: 'Terraform, Pulumi, and CloudFormation for reproducible, version-controlled infrastructure.',
-    icon: Server,
-    technologies: ['Terraform', 'Pulumi', 'CloudFormation', 'Ansible'],
-    outcomes: ['Reproducible environments', 'Automated provisioning', 'Drift detection'],
+    title: 'Infrastructure as code',
+    body: 'Every environment defined in Terraform or Pulumi, version-controlled and reproducible. Drift gets caught by a pipeline, not discovered during an outage.',
+    chips: ['Terraform', 'Pulumi', 'CloudFormation', 'Ansible'],
   },
   {
-    id: 'cloud-security',
-    title: 'Cloud Security & Compliance',
-    description: 'Security posture management, compliance automation, and zero-trust architectures.',
-    icon: Lock,
-    technologies: ['AWS Security Hub', 'Azure Security Center', 'CIS Benchmarks'],
-    outcomes: ['Audit-ready compliance', 'Automated security scanning', 'Zero-trust architecture'],
+    title: 'Cloud security and compliance',
+    body: 'Landing zones with guardrails, zero-trust network design, and compliance automation from the first workload. The audit becomes a report you export, not a quarter you lose.',
+    chips: ['AWS Security Hub', 'Azure Security Center', 'CIS Benchmarks'],
   },
   {
-    id: 'cloud-cost-optimization',
-    title: 'Cloud Cost Optimization',
-    description: 'FinOps practices to reduce cloud spend without sacrificing performance.',
-    icon: Gauge,
-    technologies: ['AWS Cost Explorer', 'Azure Cost Management', 'Spot Instances'],
-    outcomes: ['15-25% cost savings', 'Right-sizing recommendations', 'Reserved instance strategy'],
+    title: 'Cloud cost optimization',
+    body: 'FinOps from day one: tagging, budgets, right-sizing, and committed-use planning. Our engagements typically cut infrastructure cost 15 to 25%, mostly by turning off what nobody was using.',
+    chips: ['AWS Cost Explorer', 'Azure Cost Management', 'Spot Instances'],
   },
 ];
 
-const caseStudies = [
+const SIX_R = [
   {
-    slug: 'insurance-cloud-migration',
-    client: 'Fortune 500 Insurer',
-    client_descriptor: 'Fortune 500 Insurance Carrier',
-    industry: 'Insurance',
-    challenge: 'Legacy data center costing $20M annually with aging hardware',
-    results: [
-      { metric: '$8M', description: 'Annual savings' },
-      { metric: 'Zero', description: 'Downtime during migration' },
-      { metric: '18 months', description: 'Data center exit' },
-    ],
-    technologies: ['AWS', 'Terraform', 'Kubernetes'],
+    name: 'Rehost',
+    when: 'Lift and shift as-is. Right when the data center lease is the deadline and the app just needs a new home.',
   },
   {
-    slug: 'retail-modernization',
-    client: 'National Retailer',
-    client_descriptor: 'National Retail Chain',
-    industry: 'Retail',
-    challenge: 'Monolithic e-commerce platform unable to handle peak traffic',
-    results: [
-      { metric: '3-4x', description: 'Improved scalability' },
-      { metric: '99.7%', description: 'Uptime achieved' },
-      { metric: '2-3x', description: 'Faster deployment cycles' },
-    ],
-    technologies: ['Azure', 'Kubernetes', 'Microservices'],
+    name: 'Replatform',
+    when: 'Small upgrades on the way over, like managed databases. Right when minor changes buy major running costs.',
   },
   {
-    slug: 'manufacturing-multicloud',
-    client: 'Global Manufacturer',
-    client_descriptor: 'Global Industrial Manufacturer',
-    industry: 'Manufacturing',
-    challenge: 'Locked into single cloud vendor with no disaster recovery',
-    results: [
-      { metric: 'Multi-cloud', description: 'Architecture deployed' },
-      { metric: 'Active-active', description: 'Disaster recovery' },
-      { metric: '20%', description: 'Cost reduction' },
-    ],
-    technologies: ['AWS', 'Azure', 'Terraform', 'Consul'],
+    name: 'Refactor',
+    when: 'Rebuild for cloud-native. Right for the applications that carry the business and need to scale or ship faster.',
+  },
+  {
+    name: 'Repurchase',
+    when: 'Swap it for SaaS. Right when a commodity application is no longer worth owning.',
+  },
+  {
+    name: 'Retire',
+    when: 'Turn it off. Right more often than anyone admits; every estate has servers nobody can name a user for.',
+  },
+  {
+    name: 'Retain',
+    when: 'Leave it where it is, for now. Right when latency, licensing, or regulation says the move costs more than it returns.',
   },
 ];
 
-const beyondDelivery = [
+const PROOF = [
   {
-    title: 'Production Operations',
-    description: '24/7 cloud operations, incident response, and platform health across AWS, Azure, and GCP. We stay on the console when something breaks.',
-    icon: Activity,
+    eyebrow: 'Fortune 500 Insurance Carrier',
+    metric: '$8M',
+    metricLabel: 'Saved per year after DC exit',
+    summary: 'A legacy data center costing $20M a year exited in 18 months, rebuilt on AWS with Terraform and Kubernetes. Zero downtime through every cutover.',
+    href: '/case-studies?service=cloud-modernization',
+    linkLabel: 'Browse the cloud case studies',
   },
   {
-    title: 'SLA-Backed Support',
-    description: 'Contractual response times, defined escalation paths, and accountable ownership — not just a ticket into a shared support queue.',
-    icon: FileCheck,
+    eyebrow: 'National Retail Chain',
+    metric: '99.7%',
+    metricLabel: 'Uptime through peak traffic',
+    summary: 'A monolithic e-commerce platform rebuilt on Azure and Kubernetes: 3 to 4x the scalability, with deployment cycles 2 to 3x faster.',
+    href: '/case-studies?industry=retail',
+    linkLabel: 'See the retail stories',
   },
   {
-    title: 'FinOps & Cost Governance',
-    description: 'Continuous cloud cost tuning, reserved capacity planning, and right-sizing so your bill trends down, not up.',
-    icon: TrendingUp,
-  },
-  {
-    title: 'Evolution as Partners',
-    description: "Roadmap co-ownership, multi-cloud strategy, and architectural evolution. We're with you beyond the migration.",
-    icon: Users,
-  },
-];
-
-const differentiators = [
-  {
-    title: 'Multi-Cloud Expertise',
-    description: "We're certified on AWS, Azure, and GCP. We design for your needs, not our partnership bonuses.",
-    proof: 'Partners with all major clouds',
-  },
-  {
-    title: 'Zero-Downtime Migrations',
-    description: '200+ migrations without production disruption. We know how to migrate while you run.',
-    proof: 'Runbook-driven cutovers on every migration',
-  },
-  {
-    title: 'Security-First Approach',
-    description: 'Every architecture includes security controls, compliance automation, and audit trails.',
-    proof: 'SOC 2 compliant architectures',
-  },
-  {
-    title: 'Cost Optimization Built In',
-    description: "FinOps practices from day one. We optimize your cloud spend, not maximize it.",
-    proof: '15-25% average cost reduction',
+    eyebrow: 'Global Industrial Manufacturer',
+    metric: '20%',
+    metricLabel: 'Cost reduction on multi-cloud',
+    summary: 'Single-vendor lock-in replaced with an active-active architecture across AWS and Azure, and disaster recovery that actually gets rehearsed.',
+    href: '/case-studies?industry=manufacturing',
+    linkLabel: 'See the manufacturing stories',
   },
 ];
 
-const faqs = [
+const PROCESS = [
+  {
+    title: 'Inventory',
+    timeframe: 'Weeks 1 to 4',
+    body: 'Map the estate, the dependencies, and the contracts. Every workload gets a 6R call and a named owner.',
+  },
+  {
+    title: 'Design',
+    timeframe: 'Weeks 3 to 6',
+    body: 'Landing zone, guardrails, network, and identity, plus a cost model finance can hold us to.',
+  },
+  {
+    title: 'Migrate',
+    timeframe: 'Weeks 6 to 12',
+    body: 'First workloads land inside 12 weeks. Waves after that, each cutover rehearsed before the real one.',
+  },
+  {
+    title: 'Prove',
+    body: 'Parallel run until the numbers and the latencies match. Nothing legacy is switched off on faith.',
+  },
+  {
+    title: 'Run',
+    body: 'FinOps, patching, and around-the-clock operations under SLA with our team, or a clean handover to yours.',
+  },
+];
+
+const FACTS = [
+  {
+    label: 'Delivery',
+    line: 'The architects who plan your migration run your cutover. No handoff between the pitch team and the delivery pod.',
+  },
+  {
+    label: 'Clouds',
+    line: 'Certified on AWS, Azure, and GCP, with 200+ migrations delivered. We design for your estate, not our partnership tiers.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Operations',
+    line: 'ISO 27001 certified, with 24/7 managed NOC coverage under published SLAs.',
+  },
+];
+
+const FAQS = [
   {
     question: 'How long does a cloud migration take?',
-    answer: '6-18 months depending on complexity. Simple lift-and-shift can be faster. Full application modernization takes longer. We can show you a detailed timeline after discovery.',
+    answer: 'A landing zone and first workloads land in 8 to 12 weeks. A full estate move runs 6 to 18 months depending on complexity, delivered in phased waves so value ships long before the last server moves.',
+  },
+  {
+    question: 'How do you decide what to migrate, and how?',
+    answer: 'The 6R framework: rehost, replatform, refactor, repurchase, retire, retain. Not everything should move, and not everything should be rewritten. We sort the estate first so spend goes where it returns something.',
   },
   {
     question: 'Which cloud should we choose?',
-    answer: "It depends on your existing investments, workload requirements, and regulatory needs. We're platform-agnostic and will recommend what's best for your specific situation.",
+    answer: 'It depends on your existing investments, workloads, and regulatory needs. We hold certifications on all three, so the recommendation follows your estate, not our margins. Plenty of enterprises run more than one.',
+  },
+  {
+    question: 'How do you migrate without downtime?',
+    answer: 'Parallel run and phased cutover. The new environment runs alongside the old until it holds up under real load, then traffic shifts. We rehearse every cutover before doing it for real, which is how 200+ migrations have shipped without production disruption.',
+  },
+  {
+    question: 'How do you keep cloud cost from spiraling?',
+    answer: 'FinOps from day one: tagging, budgets, right-sizing, and committed-use discounts where usage is steady. Most cloud overspend is not the cloud being expensive. It is workloads nobody turned off.',
   },
   {
     question: 'How do you handle security during migration?',
-    answer: 'Security is built in, not bolted on. We implement identity management, encryption, network segmentation, and compliance controls before any data moves.',
+    answer: 'Security moves first, not last. Identity, encryption, network segmentation, and compliance controls go into the landing zone before any data does.',
   },
   {
     question: 'What about vendor lock-in?',
-    answer: 'We design for portability where it matters. Container-based workloads, infrastructure as code, and open standards help you avoid lock-in while still leveraging cloud-native services.',
+    answer: 'We design for portability where it matters: containers, infrastructure as code, and open standards. Where a cloud-native service earns its keep, we use it with eyes open rather than avoiding it on principle.',
+  },
+  {
+    question: 'Do you run the estate after migration?',
+    answer: 'Both options. Our managed NOC runs it 24/7 under SLA with P1 response in fifteen minutes, or we hand over to your team with runbooks and stay on call through the transition.',
   },
 ];
 
+/* --------------------- decision artifact (page-local) --------------------- */
+
+// One-off variation on the kit's DecisionPanel grammar: the 6R framework
+// as a compact on-page strip instead of a two-logo comparison table, so
+// it lives inline rather than in the shared kit.
+function SixRStrip() {
+  return (
+    <section className="border-t border-gray-200 bg-gray-50">
+      <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+        <h2
+          className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+          style={{ lineHeight: 1.08 }}
+        >
+          The 6R framework, on one&nbsp;screen
+        </h2>
+        <p className="mt-5 max-w-3xl text-base leading-relaxed text-gray-600 md:text-lg">
+          Every workload gets one of six calls before anything moves. This is the sorting exercise most migration plans skip, which is why most migration plans slip. A typical estate ends up using at least four of the six.
+        </p>
+
+        <div className="mt-10 grid gap-x-8 gap-y-8 border-t border-gray-200 pt-8 sm:grid-cols-2 lg:grid-cols-3">
+          {SIX_R.map((r, i) => (
+            <div key={r.name}>
+              <div className="flex items-baseline gap-3">
+                <span className={`text-sm font-semibold text-[#1D4ED8] ${v4Display}`}>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className={`text-lg font-semibold text-black md:text-xl ${v4Display}`}>{r.name}</h3>
+              </div>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">{r.when}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* --------------------------------- page ---------------------------------- */
+
 export default function CloudModernizationPage() {
   return (
-    <>
-      {/* Structured Data for SEO/AEO */}
+    <div className={`bg-white text-black ${v4Sans}`}>
       <ServiceSchema
         name="Cloud Modernization Services"
         description="AWS, Azure, GCP migrations and cloud modernization. Refactor, replatform, or rearchitect with playbooks that reduce risk."
         url="/services/cloud-modernization"
         serviceType="Cloud Computing Consulting"
       />
-      {/* FAQPage JSON-LD comes from FaqBlock below — one per page. */}
+      {/* FAQPage JSON-LD comes from PageFaq below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -227,351 +277,129 @@ export default function CloudModernizationPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Cloud Modernization
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Cloud Modernization Without the&nbsp;Chaos
-              </h1>
-              <p className="text-lg text-gray-300 mb-8">
-                AWS, Azure, GCP migrations. Refactor, replatform, or rearchitect. Playbooks that reduce risk.
-                200+ cloud migrations with zero downtime. We build for your needs, not our partnership bonuses.
-              </p>
+      <ServiceHero
+        kicker="Cloud Modernization"
+        title={
+          <>
+            Cloud Modernization{' '}
+            <span style={{ color: '#1D4ED8' }}>Without the&nbsp;Chaos</span>
+          </>
+        }
+        lede="ACI Infotech migrates and modernizes enterprise estates across AWS, Azure, and GCP: 200+ migrations delivered with phased cutovers and zero downtime. We sort the estate with the 6R framework, move what earns its move, retire what does not, and leave you with infrastructure as code and a bill finance can read."
+        chips={[
+          '200+ cloud migrations',
+          'Certified on AWS, Azure, and GCP',
+          'Zero-downtime cutovers',
+          '15 to 25% cost reduction',
+        ]}
+        primary={{ label: 'Talk to a cloud architect', href: '/contact?service=cloud-modernization' }}
+        secondary={{ label: 'See the cloud case studies', href: '/case-studies?service=cloud-modernization' }}
+        logos={[
+          { src: '/brand/aws-color.png', alt: 'AWS' },
+          { src: '/brand/azure-color.png', alt: 'Microsoft Azure' },
+          { src: '/brand/googlecloud-color.svg', alt: 'Google Cloud' },
+        ]}
+        logosCaption="Migrations delivered across all three clouds. 200+ and counting."
+      />
 
-              <ul className="space-y-3 mb-8">
-                {keyOutcomes.map((outcome) => (
-                  <li key={outcome} className="flex items-center gap-3 text-gray-300">
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                    {outcome}
-                  </li>
-                ))}
-              </ul>
+      {/* Problem band: the estate nobody can turn off */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        pill="Why estates stall"
+        headline={
+          <>
+            The estate nobody{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">can turn off.</span>
+          </>
+        }
+        body="Every enterprise has one: the VMware renewal that doubled, the mainframe contract nobody will touch, the cloud accounts that grew without an owner. The migration has been next year for five years, because nobody can say what breaks if a server goes dark. The fix is not a bigger lift and shift. It is sorting the estate honestly, then moving it in waves that never bet the business on one weekend."
+        story={{
+          metric: { value: '$8M', label: 'Saved per year' },
+          title: 'Data center exit in 18 months with zero downtime',
+          role: 'Insurance',
+          org: 'A Fortune 500 insurance carrier',
+          href: '/case-studies?service=cloud-modernization',
+          logoSrc: '/brand/aws-color.png',
+          logoAlt: 'AWS',
+        }}
+      />
 
-              <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                200+ cloud migrations | Certified on AWS, Azure, and GCP
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button href="/contact?service=cloud-modernization" variant="primary" size="lg">
-                  Talk to a Cloud Architect
-                </Button>
-                <Button
-                  href="/case-studies?service=cloud-modernization"
-                  variant="ghost"
-                  size="lg"
-                  className="text-white border-white hover:bg-white/10"
-                >
-                  See Cloud Projects
-                </Button>
-              </div>
-            </div>
-
-            {/* Visual */}
-            <div className="relative hidden lg:block">
-              <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <div className="text-sm text-gray-400 mb-4">Multi-Cloud Architecture</div>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="bg-orange-900/30 rounded-lg p-3 text-center text-xs text-orange-300">AWS</div>
-                    <div className="bg-blue-900/30 rounded-lg p-3 text-center text-xs text-blue-300">Azure</div>
-                    <div className="bg-red-900/30 rounded-lg p-3 text-center text-xs text-red-300">GCP</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
-                    <div className="text-white font-bold">Kubernetes Platform</div>
-                    <div className="text-xs text-gray-300 mt-1">Container Orchestration • Service Mesh</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  <div className="bg-green-900/30 rounded-lg p-4 text-center">
-                    <div className="text-green-300 font-medium">Applications</div>
-                    <div className="text-xs text-gray-400 mt-1">Microservices • Serverless • APIs</div>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-blue-500/10 rounded-3xl blur-3xl -z-10"></div>
-            </div>
-          </div>
+      {/* What we do */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we do"
+            title={
+              <>
+                From migration to run. <span style={{ color: '#1D4ED8' }}>Six&nbsp;disciplines.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Service Offerings */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">Cloud Modernization Services</h2>
-            <p className="text-lg text-gray-600">From migration to optimization, we handle the full journey</p>
-          </div>
+      {/* Decision artifact: the 6R framework */}
+      <SixRStrip />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offerings.map((offering) => {
-              const Icon = offering.icon;
-              return (
-                <div key={offering.id} className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
-                  <Icon className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">{offering.title}</h3>
-                  <p className="text-gray-600 mb-6">{offering.description}</p>
-                  <div className="mb-4">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Key Outcomes</div>
-                    <ul className="space-y-1">
-                      {offering.outcomes.map((outcome) => (
-                        <li key={outcome} className="flex items-center gap-2 text-sm text-gray-600">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          {outcome}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {offering.technologies.slice(0, 4).map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-gray-100 rounded text-xs text-gray-600">{tech}</span>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Real estates. <span style={{ color: '#1D4ED8' }}>Real&nbsp;cutovers.</span>
+              </>
+            }
+          />
+          <ProofCards cards={PROOF} />
         </div>
       </section>
 
-      {/* Managed NOC */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Managed NOC
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mt-3 mb-4">
-                We can run the cloud we just migrated for&nbsp;you.
-              </h2>
-              <p className="text-lg text-gray-600 mb-6">
-                After migration, someone has to keep the estate up. We operate 24/7
-                Network Operations Centers for clients who want the same engineers who
-                designed the platform to stay on the pager.
-              </p>
-
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-3 text-gray-700">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span>Follow the sun coverage across India, US, and EU shifts</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span>L1 triage, L2 resolution, L3 engineering escalation with runbooks tied to your service catalog</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span>P1 response in fifteen minutes, uptime targets of 99.95 percent or higher</span>
-                </li>
-              </ul>
-
-              <div className="mb-8">
-                <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
-                  Platforms we operate
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {['SolarWinds NPM / SAM', 'Datadog', 'Dynatrace (partner)', 'Genesys (incident intake)', 'ServiceNow ITSM'].map((p) => (
-                    <span
-                      key={p}
-                      className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700 font-medium"
-                    >
-                      {p}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <Button href="/services/managed-operations" variant="primary" size="lg">
-                See the full Managed Operations practice
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
-
-            {/* Visual */}
-            <div className="relative hidden lg:block">
-              <div className="bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 rounded-2xl p-8 shadow-2xl">
-                <div className="flex items-center gap-3 mb-6">
-                  <Activity className="w-6 h-6 text-[var(--aci-primary-light)]" />
-                  <div className="text-sm text-gray-400">24/7 Network Operations</div>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex gap-2">
-                    {['Infra', 'Apps', 'Network', 'Cloud'].map((src) => (
-                      <div key={src} className="flex-1 bg-gray-800 rounded-lg p-3 text-center text-xs text-gray-300">
-                        {src}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4 text-center">
-                    <div className="text-[var(--aci-primary-light)] font-medium">Observability</div>
-                    <div className="text-xs text-gray-400 mt-1">SolarWinds • Datadog • Dynatrace</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
-                    <div className="text-white font-bold">Triage & Response</div>
-                    <div className="text-xs text-gray-300 mt-1">L1 to L3 shift coverage, SLA backed</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  <div className="flex gap-2">
-                    {['Resolved', 'Documented', 'Reported'].map((dest) => (
-                      <div key={dest} className="flex-1 bg-green-900/30 rounded-lg p-3 text-center text-xs text-green-300">
-                        {dest}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
-            </div>
-          </div>
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* Case Studies */}
-      <section className="py-20 bg-[var(--aci-secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Cloud Projects We&rsquo;ve Built</h2>
-            <p className="text-lg text-gray-400">Real migrations. Real transformations. Real outcomes.</p>
-          </div>
+      {/* Managed NOC teaser: managed-operations owns the full story */}
+      <BridgeBand
+        title="Someone still has to run it."
+        body="After the migration, the estate needs a pager that gets answered. Our managed NOC runs client clouds 24/7 with follow-the-sun coverage, L1 to L3 escalation, P1 response in fifteen minutes, and uptime targets of 99.95% or higher. The engineers who designed the platform stay on the console."
+        link={{ label: 'Managed Operations', href: '/services/managed-operations' }}
+      />
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {caseStudies.map((study) => (
-              <div key={study.slug} className="bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-700 transition-colors">
-                <div className="p-6 border-b border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xl font-bold text-white">{displayClient(study)}</span>
-                    <span className="text-sm text-gray-400">{study.industry}</span>
-                  </div>
-                  <p className="text-gray-300 text-sm">{study.challenge}</p>
-                </div>
-                <div className="p-6">
-                  <div className="space-y-3 mb-6">
-                    {study.results.map((result, idx) => (
-                      <div key={idx} className="flex items-baseline gap-3">
-                        <span className="text-2xl font-bold text-[var(--aci-primary-light)]">{result.metric}</span>
-                        <span className="text-sm text-gray-400">{result.description}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {study.technologies.map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-gray-700 rounded text-xs text-gray-300">{tech}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Button href="/case-studies?service=cloud-modernization" variant="secondary" size="lg">
-              See All Cloud Case Studies <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
+      {/* Why ACI */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title="Why enterprises pick us for cloud" />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
 
-      {/* Beyond Delivery — Managed Services */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Beyond Delivery
-            </h2>
-            <p className="text-lg text-gray-600">
-              Cloud migrations are the start, not the finish. Post-migration operations,
-              SLA-backed support, and FinOps-led cost governance are part of how we engage.
-              <span className="block mt-2 font-semibold text-[var(--aci-secondary)]">We run what we build.</span>
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {beyondDelivery.map((pillar) => {
-              const Icon = pillar.icon;
-              return (
-                <div key={pillar.title} className="bg-white p-6 rounded-xl shadow-sm">
-                  <Icon className="w-8 h-8 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-lg font-semibold text-[var(--aci-secondary)] mb-2">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-sm text-gray-600">{pillar.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose ACI */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">Why Choose ACI for Cloud</h2>
-            <p className="text-lg text-gray-600">What makes us different</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {differentiators.map((diff) => (
-              <div key={diff.title} className="bg-white p-8 rounded-xl shadow-sm">
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">{diff.title}</h3>
-                <p className="text-gray-600 mb-4">{diff.description}</p>
-                <div className="flex items-center gap-2 text-sm text-[var(--aci-primary)]">
-                  <CheckCircle className="w-4 h-4" />
-                  {diff.proof}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">Common Questions About Cloud</h2>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details key={faq.question} className="group bg-gray-50 rounded-xl">
-                <summary className="flex items-center justify-between cursor-pointer p-6 text-lg font-medium text-[var(--aci-secondary)]">
-                  {faq.question}
-                  <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 text-gray-600">{faq.answer}</div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PageFaq
+        kicker="Questions"
+        title={
+          <>
+            Cloud questions,
+            <br />
+            <span style={{ color: '#1D4ED8' }}>answered straight.</span>
+          </>
+        }
+        sub="The questions we hear most before a migration. Anything else belongs in a conversation."
+        faqs={FAQS}
+      />
 
       <ClusterPosts keywords={['cloud migration', 'cloud modernization', 'modernization', 'aws', 'azure', 'finops', 'devops']} />
 
       <RelatedLinks items={cloudModernizationRelated} />
 
-      <FaqBlock items={cloudModernizationFaqs} eyebrow="Cloud modernization FAQ" />
-
-      {/* Final CTA */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Modernize Your Cloud?</h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Talk to a cloud architect about your specific challenge. No sales pitch, just an engineering conversation.
-          </p>
-
-          <Button href="/contact?service=cloud-modernization" variant="lime" size="lg">
-            Talk to a Cloud Architect
-          </Button>
-        </div>
-      </section>
-    </>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Let's plan the migration" />
+    </div>
   );
 }

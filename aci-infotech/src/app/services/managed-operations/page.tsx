@@ -1,26 +1,22 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import {
-  ArrowRight,
-  CheckCircle,
-  ChevronDown,
-  Activity,
-  Shield,
-  Eye,
-  Clock,
-  Bell,
-  Gauge,
-  Workflow,
-  FileCheck,
-  Server,
-  Users,
-} from 'lucide-react';
-import Button from '@/components/ui/Button';
-import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { managedOperationsRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import {
+  SectionHead,
+  ServiceHero,
+  PageFaq,
+} from '@/components/v4/page/kit';
+
+export const revalidate = 3600;
 
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -54,62 +50,59 @@ export const metadata: Metadata = {
   },
 };
 
-const heroOutcomes = [
-  'Follow the sun coverage across three time zones, no weekend gap',
-  'Platforms you already run, operated by engineers certified on them',
-  'NOC and SOC in the same ticketing system, not across an org chart',
-  'SLA-backed response for P1 incidents in under fifteen minutes',
+/* ------------------------------- page copy ------------------------------- */
+
+// Signature: the NOC | SOC side-by-side. Two disciplines, shared
+// ticketing. Platform lists and SLA specifics kept exactly as published.
+const CENTERS = [
+  {
+    eyebrow: 'Network Operations',
+    title: 'Network Operations Center',
+    intro:
+      'Keeping the estate up. Infrastructure, network, application, and cloud monitoring around the clock.',
+    platforms: [
+      'SolarWinds NPM / SAM',
+      'Datadog',
+      'Dynatrace (partner)',
+      'Genesys (incident intake)',
+      'ServiceNow ITSM',
+    ],
+    coverage:
+      'Follow the sun across India, US, and EU shifts. L1 triage, L2 resolution, L3 engineering escalation, with runbooks tied to your service catalog.',
+    slas: [
+      { label: 'P1 response', value: '15 min' },
+      { label: 'P2 response', value: '1 hour' },
+      { label: 'Uptime target', value: '99.95%' },
+    ],
+    runFor:
+      'Multi-site manufacturers, hospital networks, national telcos, and cloud-first SaaS operators.',
+  },
+  {
+    eyebrow: 'Security Operations',
+    title: 'Security Operations Center',
+    intro:
+      'Keeping the estate safe. Threat detection, incident response, forensics, and audit evidence the auditor will actually accept.',
+    platforms: [
+      'LogRhythm',
+      'Splunk',
+      'Microsoft Sentinel',
+      'CrowdStrike',
+      'PagerDuty',
+    ],
+    coverage:
+      'Tier 1 through Tier 3 analysts on shift with a weekly threat hunting cadence. Incident response playbooks tied to your compliance obligations.',
+    slas: [
+      { label: 'P1 response', value: '10 min' },
+      { label: 'Threat hunts', value: 'Weekly' },
+      { label: 'Frameworks', value: 'SOC 2, ISO 27001, HIPAA' },
+    ],
+    runFor:
+      'Regulated healthcare, financial services, and retail payment environments.',
+  },
 ];
 
-const nocCapability = {
-  eyebrow: 'Network Operations',
-  title: 'Network Operations Center',
-  icon: Activity,
-  intro:
-    'Keeping the estate up. Infrastructure, network, application, and cloud monitoring around the clock.',
-  platforms: [
-    'SolarWinds NPM / SAM',
-    'Datadog',
-    'Dynatrace (partner)',
-    'Genesys (incident intake)',
-    'ServiceNow ITSM',
-  ],
-  coverage:
-    'Follow the sun across India, US, and EU shifts. L1 triage, L2 resolution, L3 engineering escalation, with runbooks tied to your service catalog.',
-  slas: [
-    { label: 'P1 response', value: '15 min' },
-    { label: 'P2 response', value: '1 hour' },
-    { label: 'Uptime target', value: '99.95%' },
-  ],
-  runFor:
-    'Multi-site manufacturers, hospital networks, national telcos, and cloud-first SaaS operators.',
-};
-
-const socCapability = {
-  eyebrow: 'Security Operations',
-  title: 'Security Operations Center',
-  icon: Shield,
-  intro:
-    'Keeping the estate safe. Threat detection, incident response, forensics, and audit evidence the auditor will actually accept.',
-  platforms: [
-    'LogRhythm',
-    'Splunk',
-    'Microsoft Sentinel',
-    'CrowdStrike',
-    'PagerDuty',
-  ],
-  coverage:
-    'Tier 1 through Tier 3 analysts on shift with a weekly threat hunting cadence. Incident response playbooks tied to your compliance obligations.',
-  slas: [
-    { label: 'P1 response', value: '10 min' },
-    { label: 'Threat hunts', value: 'Weekly' },
-    { label: 'Frameworks', value: 'SOC 2, ISO 27001, HIPAA' },
-  ],
-  runFor:
-    'Regulated healthcare, financial services, and retail payment environments.',
-};
-
-const handoffSteps = [
+// Signature: the five-step cross-discipline handoff.
+const HANDOFF_STEPS = [
   'NOC picks up the alert',
   'Shared ticket in ServiceNow',
   'SOC triages in parallel',
@@ -117,80 +110,59 @@ const handoffSteps = [
   'Contain, restore, report',
 ];
 
-const operationsMetrics = [
+const OPERATIONS_METRICS = [
   { value: '24/7/365', label: 'Follow the sun coverage across three time zones' },
   { value: '15 min', label: 'P1 response SLA, NOC and SOC' },
   { value: '10+', label: 'Observability and SIEM platforms we operate' },
   { value: 'L1 to L3', label: 'Full escalation ladder in both centers' },
 ];
 
-const whatsIncluded = [
+const WHATS_INCLUDED = [
   {
-    icon: Eye,
     title: '24/7 Monitoring',
-    description:
-      'Continuous visibility across infrastructure, applications, and security events. Dashboards tuned to your service catalog, not generic defaults.',
+    body: 'Continuous visibility across infrastructure, applications, and security events. Dashboards tuned to your service catalog, not generic defaults.',
   },
   {
-    icon: Bell,
     title: 'Incident Response',
-    description:
-      'Documented runbooks, on-call rotations, and escalation paths. Every alert has an owner and a defined next step.',
+    body: 'Documented runbooks, on-call rotations, and escalation paths. Every alert has an owner and a defined next step.',
   },
   {
-    icon: Clock,
     title: 'SLA Management',
-    description:
-      'Response and resolution targets written into the contract, reported monthly. You see the misses and the reasons, not just the wins.',
+    body: 'Response and resolution targets written into the contract, reported monthly. You see the misses and the reasons, not just the wins.',
   },
   {
-    icon: Workflow,
     title: 'Runbook Automation',
-    description:
-      'Self-healing workflows for the alerts that do not need a human. The team focuses on incidents that actually matter.',
+    body: 'Self-healing workflows for the alerts that do not need a human. The team focuses on incidents that actually matter.',
   },
   {
-    icon: FileCheck,
     title: 'Compliance Reporting',
-    description:
-      'Audit evidence ready for SOC 2, ISO 27001, HIPAA, and PCI-DSS reviews. Logs, access records, and change history on demand.',
+    body: 'Audit evidence ready for SOC 2, ISO 27001, HIPAA, and PCI-DSS reviews. Logs, access records, and change history on demand.',
   },
   {
-    icon: Gauge,
     title: 'Capacity and Performance',
-    description:
-      'Trend analysis, right-sizing recommendations, and pre-peak load reviews. Ops insight that feeds back into the platform roadmap.',
+    body: 'Trend analysis, right-sizing recommendations, and pre-peak load reviews. Ops insight that feeds back into the platform roadmap.',
   },
 ];
 
-const adjacentServices = [
+const ADJACENT_SERVICES = [
   {
-    icon: Server,
     title: 'Managed IT and Infrastructure',
-    description:
-      'End-to-end infrastructure management for hybrid and cloud environments. Monitoring, operations, and support built around what you actually run.',
+    body: 'End-to-end infrastructure management for hybrid and cloud environments. Monitoring, operations, and support built around what you actually run.',
     href: '/contact?service=managed-infrastructure&source=managed-operations',
-    cta: 'Talk to us',
   },
   {
-    icon: Users,
     title: 'IT Support Services',
-    description:
-      'Structured L1, L2, and L3 support aligned to your operations. Delivered as part of a managed engagement, not a generic helpdesk contract.',
+    body: 'Structured L1, L2, and L3 support aligned to your operations. Delivered as part of a managed engagement, not a generic helpdesk contract.',
     href: '/contact?service=it-support&source=managed-operations',
-    cta: 'Talk to us',
   },
   {
-    icon: Workflow,
     title: 'Application Managed Services',
-    description:
-      'Post-deployment operations for the applications and integrations we build. SLA-backed support, release management, continuous improvement.',
+    body: 'Post-deployment operations for the applications and integrations we build. SLA-backed support, release management, continuous improvement.',
     href: '/contact?service=application-managed-services&source=managed-operations',
-    cta: 'Talk to us',
   },
 ];
 
-const faqs = [
+const FAQS = [
   {
     question: 'Do you run NOC and SOC from the same team?',
     answer:
@@ -223,16 +195,18 @@ const faqs = [
   },
 ];
 
+/* --------------------------------- page ---------------------------------- */
+
 export default function ManagedOperationsPage() {
   return (
-    <>
+    <div className={`bg-white text-black ${v4Sans}`}>
       <ServiceSchema
         name="Managed Operations: NOC and SOC"
         description="24/7 NOC and SOC operations backed by SLAs. SolarWinds, Datadog, Dynatrace, LogRhythm, Splunk, Sentinel. Follow the sun coverage across three time zones."
         url="/services/managed-operations"
         serviceType="Managed IT Operations"
       />
-      <FAQSchema faqs={faqs} />
+      {/* FAQPage JSON-LD comes from PageFaq below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -241,351 +215,269 @@ export default function ManagedOperationsPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Managed Operations
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Managed IT Operations: 24/7 NOC and&nbsp;SOC
-              </h1>
-              <p className="text-lg text-gray-300 mb-8">
-                Two centers, one escalation path. NOC keeps the estate up. SOC keeps
-                it safe. Both run on the platforms you already trust, staffed by
-                engineers certified on them, covered around the clock across three
-                time zones.
-              </p>
+      <ServiceHero
+        kicker="Managed Operations"
+        title={
+          <>
+            Managed IT Operations:{' '}
+            <span style={{ color: '#1D4ED8' }}>24/7 NOC and&nbsp;SOC</span>
+          </>
+        }
+        lede="Two centers, one escalation path. NOC keeps the estate up. SOC keeps it safe. Both run on the platforms you already trust, staffed by engineers certified on them, covered around the clock across three time zones."
+        chips={[
+          'Dynatrace Partner',
+          'ServiceNow Certified',
+          'ISO 27001 Certified',
+          'Follow the sun',
+        ]}
+        primary={{ label: 'Talk to an operations architect', href: '/contact?service=managed-operations' }}
+        secondary={{ label: 'See operations case studies', href: '/case-studies?service=managed-operations' }}
+        stats={[
+          { value: '15 min', label: 'P1 response, NOC' },
+          { value: '99.95%', label: 'Uptime targets under SLA' },
+          { value: '3', label: 'Time zones, follow the sun' },
+        ]}
+      />
 
-              <ul className="space-y-3 mb-8">
-                {heroOutcomes.map((outcome) => (
-                  <li key={outcome} className="flex items-start gap-3 text-gray-300">
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                    <span>{outcome}</span>
-                  </li>
-                ))}
-              </ul>
+      {/* Problem band: the 3am page and the newest person on the rotation */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        pill="Why on-call breaks"
+        headline={
+          <>
+            The 3am page goes to whoever{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">joined the rotation&nbsp;last.</span>
+          </>
+        }
+        body="Every on-call rotation has a newest member, and the worst incidents have a talent for finding them. Runbooks go stale, context lives in one senior engineer's head, and the estate is only as safe as whoever answered the page. A managed NOC and SOC replaces that lottery with a staffed desk: certified engineers on shift around the clock, runbooks that travel with the ticket, and an SLA someone actually answers for."
+        story={{
+          metric: { value: '99.97%', label: 'Uptime across 72+ servers' },
+          title: 'A complex digital estate, engineered to stay available',
+          href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+          logoSrc: '/brand/aci-infotech-logo-white.png',
+          logoAlt: 'ACI Infotech',
+        }}
+      />
 
-              <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                Dynatrace Partner | ServiceNow Certified | ISO 27001 Certified
-              </p>
+      {/* Signature: NOC | SOC side by side */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Two disciplines"
+            title={
+              <>
+                We run the tools you{' '}
+                <span style={{ color: '#1D4ED8' }}>already&nbsp;trust.</span>
+              </>
+            }
+            sub="Different clients run different stacks. We keep engineers certified on the platforms enterprises actually use in production."
+          />
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button href="/contact?service=managed-operations" variant="primary" size="lg">
-                  Talk to an Operations Architect
-                </Button>
-                <Button
-                  href="/case-studies?service=managed-operations"
-                  variant="ghost"
-                  size="lg"
-                  className="text-white border-white hover:bg-white/10"
-                >
-                  See Operations Case Studies
-                </Button>
-              </div>
-            </div>
+          <div className="mt-12 grid gap-6 lg:grid-cols-2">
+            {CENTERS.map((center) => (
+              <div
+                key={center.title}
+                className="flex flex-col rounded-3xl border border-gray-200 bg-gray-50/60 p-8 md:p-10"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+                  / {center.eyebrow}
+                </p>
+                <h3 className={`mt-3 text-2xl font-bold text-black md:text-3xl ${v4Display}`}>
+                  {center.title}
+                </h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-gray-700">{center.intro}</p>
 
-            {/* Visual */}
-            <div className="relative hidden lg:block">
-              <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <div className="flex items-center gap-3 mb-6">
-                  <Activity className="w-6 h-6 text-[var(--aci-primary-light)]" />
-                  <div className="text-sm text-gray-400">24/7 Operations</div>
-                </div>
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4 text-center">
-                    <Activity className="w-6 h-6 text-[var(--aci-primary-light)] mx-auto mb-2" />
-                    <div className="text-white font-medium text-sm">NOC</div>
-                    <div className="text-xs text-gray-400 mt-1">Uptime & Performance</div>
-                  </div>
-                  <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4 text-center">
-                    <Shield className="w-6 h-6 text-[var(--aci-primary-light)] mx-auto mb-2" />
-                    <div className="text-white font-medium text-sm">SOC</div>
-                    <div className="text-xs text-gray-400 mt-1">Threats & Response</div>
-                  </div>
-                </div>
-                <div className="text-center text-gray-500 mb-4">↓</div>
-                <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center mb-4">
-                  <div className="text-white font-bold">Shared Ticketing</div>
-                  <div className="text-xs text-gray-300 mt-1">ServiceNow ITSM • PagerDuty</div>
-                </div>
-                <div className="text-center text-gray-500 mb-4">↓</div>
-                <div className="bg-green-900/30 rounded-lg p-4 text-center">
-                  <div className="text-green-300 font-medium">Contained. Restored. Reported.</div>
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Side-by-side NOC | SOC */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 max-w-3xl mx-auto">
-            <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-              Two Disciplines
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mt-3 mb-4">
-              We run the tools you already&nbsp;trust.
-            </h2>
-            <p className="text-lg text-gray-600">
-              Different clients run different stacks. We keep engineers certified
-              on the platforms enterprises actually use in production.
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            {[nocCapability, socCapability].map((center) => {
-              const Icon = center.icon;
-              return (
-                <div
-                  key={center.title}
-                  className="bg-gray-50 rounded-2xl p-8 border border-gray-200 flex flex-col"
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <Icon className="w-7 h-7 text-[var(--aci-primary)]" />
-                    <span className="text-[var(--aci-primary-light)] font-semibold text-xs uppercase tracking-wide">
-                      {center.eyebrow}
+                <p className="mt-7 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                  Platforms we operate
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {center.platforms.map((p) => (
+                    <span
+                      key={p}
+                      className="rounded-full border border-gray-200 bg-white px-3 py-1 text-sm font-medium text-gray-700"
+                    >
+                      {p}
                     </span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-[var(--aci-secondary)] mb-3">
-                    {center.title}
-                  </h3>
-                  <p className="text-gray-700 mb-6">{center.intro}</p>
-
-                  <div className="mb-6">
-                    <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
-                      Platforms we operate
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {center.platforms.map((p) => (
-                        <span
-                          key={p}
-                          className="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm text-gray-700 font-medium"
-                        >
-                          {p}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mb-6">
-                    <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
-                      Coverage model
-                    </div>
-                    <p className="text-sm text-gray-700 leading-relaxed">
-                      {center.coverage}
-                    </p>
-                  </div>
-
-                  <div className="mb-6 grid grid-cols-3 gap-3">
-                    {center.slas.map((sla) => (
-                      <div
-                        key={sla.label}
-                        className="bg-white rounded-lg p-3 border border-gray-200"
-                      >
-                        <div className="text-base font-bold text-[var(--aci-secondary)]">
-                          {sla.value}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-1">{sla.label}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-auto">
-                    <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
-                      Running this for
-                    </div>
-                    <p className="text-sm text-gray-700 leading-relaxed">
-                      {center.runFor}
-                    </p>
-                  </div>
+                  ))}
                 </div>
-              );
-            })}
+
+                <p className="mt-7 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                  Coverage model
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-gray-600">{center.coverage}</p>
+
+                <div className="mt-7 grid grid-cols-3 gap-px overflow-hidden rounded-xl border border-gray-200 bg-gray-200">
+                  {center.slas.map((sla) => (
+                    <div key={sla.label} className="bg-white p-4">
+                      <p className={`text-base font-bold leading-tight text-[#1D4ED8] md:text-lg ${v4Display}`}>
+                        {sla.value}
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">{sla.label}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="mt-7 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                  Running this for
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-gray-600">{center.runFor}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Cross-discipline handoff */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 rounded-2xl p-8 lg:p-12">
-            <div className="text-center mb-10 max-w-2xl mx-auto">
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Cross-discipline handoff
-              </span>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mt-3 mb-4">
-                When an outage turns out to be an attack, no one has to call&nbsp;anyone.
-              </h2>
-              <p className="text-gray-300">
-                Our NOC and SOC share the platform and the ticketing system. An alert
-                that starts as a latency spike and ends as an intrusion never crosses
-                an org chart. It stays on the same bridge until it closes.
-              </p>
-            </div>
+      {/* Signature: cross-discipline handoff flow */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Cross-discipline handoff"
+            title={
+              <>
+                When an outage turns out to be an attack,{' '}
+                <span style={{ color: '#1D4ED8' }}>no one has to call&nbsp;anyone.</span>
+              </>
+            }
+            sub="Our NOC and SOC share the platform and the ticketing system. An alert that starts as a latency spike and ends as an intrusion never crosses an org chart. It stays on the same bridge until it closes."
+          />
 
-            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-center gap-3">
-              {handoffSteps.map((step, idx) => (
-                <div key={step} className="flex flex-col md:flex-row items-center gap-3">
-                  <div className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-sm text-gray-200 text-center min-w-[160px]">
-                    {step}
-                  </div>
-                  {idx < handoffSteps.length - 1 && (
-                    <ArrowRight className="w-4 h-4 text-[var(--aci-primary-light)] flex-shrink-0 rotate-90 md:rotate-0" />
-                  )}
+          <div className="mt-12 flex flex-col items-stretch gap-3 md:flex-row md:items-center">
+            {HANDOFF_STEPS.map((step, i) => (
+              <div key={step} className="flex flex-1 flex-col items-center gap-3 md:flex-row">
+                <div className="w-full rounded-xl border border-gray-200 bg-white p-4 text-center md:text-left">
+                  <span className={`block text-2xl font-bold leading-none text-gray-200 ${v4Display}`}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="mt-2 block text-sm font-medium text-gray-800">{step}</span>
                 </div>
-              ))}
-            </div>
+                {i < HANDOFF_STEPS.length - 1 && (
+                  <ArrowRight
+                    size={16}
+                    aria-hidden="true"
+                    className="shrink-0 rotate-90 text-blue-700 md:rotate-0"
+                  />
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Operations metrics strip */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {operationsMetrics.map((metric) => (
-              <div key={metric.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-[var(--aci-primary)] mb-2">
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-12 md:py-14">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-4">
+            {OPERATIONS_METRICS.map((metric) => (
+              <div key={metric.label}>
+                <p className={`text-3xl font-bold leading-none text-[#1D4ED8] sm:text-4xl ${v4Display}`}>
                   {metric.value}
-                </div>
-                <div className="text-sm text-gray-600 leading-snug">{metric.label}</div>
+                </p>
+                <p className="mt-2 text-sm font-medium text-gray-500">{metric.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* What's Included */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What a Managed Operations engagement&nbsp;covers.
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              The deliverables behind the dashboard. Every engagement ships with all six,
-              scoped to your environment.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {whatsIncluded.map((item) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.title}
-                  className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow"
-                >
-                  <Icon className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
+      {/* What's included */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What's included"
+            title={
+              <>
+                What a managed operations{' '}
+                <span style={{ color: '#1D4ED8' }}>engagement&nbsp;covers.</span>
+              </>
+            }
+            sub="The deliverables behind the dashboard. Every engagement ships with all six, scoped to your environment."
+          />
+          <div className="mt-12 grid gap-x-14 md:grid-cols-2">
+            {WHATS_INCLUDED.map((item, i) => (
+              <div key={item.title} className="border-t border-gray-200 py-8">
+                <div className="flex items-baseline gap-4">
+                  <span className={`text-sm font-semibold text-gray-300 ${v4Display}`}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>
                     {item.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">{item.description}</p>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Adjacent managed services */}
-      <section className="py-20 bg-white border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 max-w-3xl">
-            <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-              Adjacent managed services
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mt-3 mb-4">
-              NOC and SOC are the centerpiece. They are not the only&nbsp;thing.
-            </h2>
-            <p className="text-lg text-gray-600">
-              If you need operations on the applications we built, the infrastructure
-              underneath, or the support layer for your users, we run those too.
-            </p>
-            <p className="mt-4 text-lg text-gray-600">
-              Our managed IT services cover the full estate: infrastructure monitoring
-              and patching for hybrid and cloud environments, application support under
-              SLA, and the L1 to L3 helpdesk in between. One contract, one escalation
-              path, reported against the same monthly scorecard as the NOC and SOC.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {adjacentServices.map((service) => {
-              const Icon = service.icon;
-              return (
-                <div
-                  key={service.title}
-                  className="bg-gray-50 p-8 rounded-xl border border-gray-200"
-                >
-                  <Icon className="w-8 h-8 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
-                    {service.title}
-                  </h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {service.description}
-                  </p>
-                  <Link
-                    href={service.href}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aci-primary)] hover:text-[var(--aci-secondary)] transition-colors"
-                  >
-                    {service.cta}
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Common questions about managed&nbsp;operations.
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details key={faq.question} className="group bg-white rounded-xl">
-                <summary className="flex items-center justify-between cursor-pointer p-6 text-lg font-medium text-[var(--aci-secondary)]">
-                  {faq.question}
-                  <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
-              </details>
+                <p className="mt-3 text-[15px] leading-relaxed text-gray-600">{item.body}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <RelatedLinks items={managedOperationsRelated} />
+      {/* Adjacent managed services */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Adjacent managed services"
+            title={
+              <>
+                NOC and SOC are the centerpiece.{' '}
+                <span style={{ color: '#1D4ED8' }}>Not the only&nbsp;thing.</span>
+              </>
+            }
+            sub="If you need operations on the applications we built, the infrastructure underneath, or the support layer for your users, we run those too."
+          />
 
-      {/* Final CTA */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to hand over the 3am&nbsp;pager?
-          </h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Talk to an operations architect about coverage, SLAs, and the stack
-            we would run for your environment.
+          {/* Crawlable summary of the managed IT services estate. */}
+          <p className="mt-6 max-w-3xl text-base leading-relaxed text-gray-600 md:text-lg">
+            Our managed IT services cover the full estate: infrastructure
+            monitoring and patching for hybrid and cloud environments,
+            application support under SLA, and the L1 to L3 helpdesk in
+            between. One contract, one escalation path, reported against the
+            same monthly scorecard as the NOC and SOC.
           </p>
 
-          <Button href="/contact?service=managed-operations" variant="lime" size="lg">
-            Talk to an Operations Architect
-          </Button>
+          <div className="mt-12 grid gap-x-14 md:grid-cols-3">
+            {ADJACENT_SERVICES.map((service) => (
+              <div key={service.title} className="border-t border-gray-200 py-8">
+                <h3 className={`text-xl font-semibold text-black ${v4Display}`}>{service.title}</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-gray-600">{service.body}</p>
+                <Link
+                  href={service.href}
+                  className="group mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700"
+                >
+                  <span className="relative">
+                    Talk to us
+                    <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                  </span>
+                  <ArrowUpRight
+                    size={14}
+                    aria-hidden="true"
+                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
-    </>
+
+      <PageFaq
+        kicker="Questions"
+        title={
+          <>
+            Operations questions,
+            <br />
+            <span style={{ color: '#1D4ED8' }}>answered straight.</span>
+          </>
+        }
+        sub="Coverage, SLAs, and what happens to your runbooks if you ever leave. Anything else belongs in a conversation."
+        faqs={FAQS}
+      />
+
+      <ClusterPosts keywords={['noc', 'soc', 'managed services', 'monitoring', 'operations']} />
+
+      <RelatedLinks items={managedOperationsRelated} />
+
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Hand over the 3am pager" href="/contact?service=managed-operations" />
+    </div>
   );
 }

@@ -1,23 +1,22 @@
 import { Metadata } from 'next';
-import {
-  ArrowRight,
-  CheckCircle,
-  ChevronDown,
-  Building2,
-  Users,
-  Shield,
-  Landmark,
-  GitBranch,
-  ClipboardList,
-  Cpu,
-  Globe,
-} from 'lucide-react';
-import Button from '@/components/ui/Button';
-import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { gccRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+
+export const revalidate = 3600;
 
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -51,71 +50,44 @@ export const metadata: Metadata = {
   },
 };
 
-const keyOutcomes = [
-  'First engineering pod live in ninety days, entity and all',
-  'Hiring, facilities, IT, and governance in one statement of work',
-  'Build-operate-transfer onto your payroll when you are ready',
-  'Run like your team, not like a vendor',
-];
+/* ------------------------------- page copy ------------------------------- */
 
-const offerings = [
+const OFFERINGS = [
   {
-    id: 'feasibility',
     title: 'Feasibility & site selection',
-    description:
-      'Honest read on whether a captive center makes sense, where to put it, and what it will cost over three years. Written so a CFO can sign it.',
-    icon: ClipboardList,
-    artifacts: ['Site comparison', 'Three-year TCO', 'Talent-pool depth report'],
-    outcomes: ['Defensible site choice', 'Board-ready business case', 'No surprises at go-live'],
+    body: 'Honest read on whether a captive center makes sense, where to put it, and what it will cost over three years. Written so a CFO can sign it.',
+    chips: ['Site comparison', 'Three-year TCO', 'Talent-pool depth report'],
   },
   {
-    id: 'entity-setup',
     title: 'Entity & compliance',
-    description:
-      'Legal entity setup, tax registrations, labour compliance, and the STPI or SEZ paperwork when the benefits are worth it. Your lawyers still sign; we do the legwork.',
-    icon: Landmark,
-    artifacts: ['Incorporated entity', 'Tax and labour registrations', 'SEZ / STPI filing'],
-    outcomes: ['Operationally compliant on day one', 'Audit trail for every filing', 'Nothing to clean up later'],
+    body: 'Legal entity setup, tax registrations, labour compliance, and the STPI or SEZ paperwork when the benefits are worth it. Your lawyers still sign; we do the legwork.',
+    chips: ['Incorporated entity', 'Tax and labour registrations', 'SEZ / STPI filing'],
   },
   {
-    id: 'talent',
     title: 'Talent pipeline',
-    description:
-      'Hiring partners vetted on your role profiles, not on generic JDs. Assessment workflow owned by your engineering leaders, calibrated against offers they have made before.',
-    icon: Users,
-    artifacts: ['Role definitions', 'Hiring funnel SLAs', 'Calibrated assessment rubrics'],
-    outcomes: ['Offer-to-join rate above 80%', 'First pod staffed in 60 days', 'Attrition under industry median'],
+    body: 'Hiring partners vetted on your role profiles, not on generic JDs. Assessment workflow owned by your engineering leaders, calibrated against offers they have made before. Offer-to-join above 80%, first pod staffed in 60 days.',
+    chips: ['Role definitions', 'Hiring funnel SLAs', 'Calibrated assessment rubrics'],
   },
   {
-    id: 'facilities',
     title: 'Facilities & ops',
-    description:
-      'Office fit-out, access control, BCP, and the mundane logistics that decide whether engineers show up the second month. Leased or coworking to match the ramp.',
-    icon: Building2,
-    artifacts: ['Fit-out plan', 'BCP + access policy', 'Vendor contracts'],
-    outcomes: ['Office ready before hiring completes', 'Documented continuity plan', 'No scramble at quarter end'],
+    body: 'Office fit-out, access control, BCP, and the mundane logistics that decide whether engineers show up the second month. Leased or coworking to match the ramp.',
+    chips: ['Fit-out plan', 'BCP + access policy', 'Vendor contracts'],
   },
   {
-    id: 'it-security',
     title: 'IT & security',
-    description:
-      'Network, endpoints, identity, and the SOC integration that lets the center operate on your trust perimeter from day one.',
-    icon: Cpu,
-    artifacts: ['Network + endpoint build', 'IAM integration', 'SOC onboarding'],
-    outcomes: ['Your identity provider, your policies', 'Audit-ready telemetry', 'No orphan environment'],
+    body: 'Network, endpoints, identity, and the SOC integration that lets the center operate on your trust perimeter from day one. Your identity provider, your policies, no orphan environment.',
+    chips: ['Network + endpoint build', 'IAM integration', 'SOC onboarding'],
   },
   {
-    id: 'operating-model',
     title: 'Operating model',
-    description:
-      'Leadership hire sequencing, reporting lines back to HQ, cadences, metrics, and the cultural work that keeps the captive feeling like one team, not a remote vendor.',
-    icon: Globe,
-    artifacts: ['Org design', 'Reporting + cadence playbook', 'Culture plan'],
-    outcomes: ['Leadership hired before scale-up', 'Metrics HQ actually trusts', 'Team feels like yours'],
+    body: 'Leadership hire sequencing, reporting lines back to HQ, cadences, metrics, and the cultural work that keeps the captive feeling like one team, not a remote vendor.',
+    chips: ['Org design', 'Reporting + cadence playbook', 'Culture plan'],
   },
 ];
 
-const botStages = [
+// Signature: the build-operate-transfer lifecycle. All three phases are
+// in the original contract, including the transfer terms.
+const BOT_STAGES = [
   {
     stage: 'Build',
     window: 'Month 0 to 6',
@@ -133,38 +105,17 @@ const botStages = [
   },
 ];
 
-const differentiators = [
-  {
-    title: 'A captive, not an outsourcing contract',
-    description:
-      'The engineers report to your leadership from week one. We run the plumbing so your people can focus on the work, not the logistics.',
-  },
-  {
-    title: 'Transfer terms written up front',
-    description:
-      'The BOT transfer price, conditions, and timeline are in the original statement of work. Not a second negotiation when you have the most to lose.',
-  },
-  {
-    title: 'Delivery pod as reference architecture',
-    description:
-      'The first pod runs on our engineering practices for data, AI, and cloud, so you see the operating model in action before scaling it.',
-  },
-  {
-    title: 'Optional, not compulsory, transfer',
-    description:
-      'If you decide to keep the operate model long term, the contract stays in place. The transfer option never expires, and we do not push it.',
-  },
-];
-
-const geos = [
+// Signature: the geographies table. Location is a function of talent
+// depth, time-zone fit, and cost, not a preference.
+const GEOS = [
   {
     name: 'Hyderabad, India',
     strengths: 'Deep engineering talent, mature GCC ecosystem, strong SEZ/STPI incentives.',
-    suited: 'Data, AI, platform engineering, 24×7 operations.',
+    suited: 'Data, AI, platform engineering, 24x7 operations.',
   },
   {
     name: 'Bengaluru, India',
-    strengths: 'Product engineering density, best-in-class leadership talent pool.',
+    strengths: 'Product engineering density, the deepest leadership talent pool in India.',
     suited: 'Application engineering, platform, senior architecture roles.',
   },
   {
@@ -179,7 +130,26 @@ const geos = [
   },
 ];
 
-const faqs = [
+const DIFFERENTIATORS = [
+  {
+    label: 'A captive, not an outsourcing contract',
+    line: 'The engineers report to your leadership from week one. We run the plumbing so your people can focus on the work, not the logistics.',
+  },
+  {
+    label: 'Transfer terms written up front',
+    line: 'The BOT transfer price, conditions, and timeline are in the original statement of work. Not a second negotiation when you have the most to lose.',
+  },
+  {
+    label: 'Delivery pod as reference architecture',
+    line: 'The first pod runs on our engineering practices for data, AI, and cloud, so you see the operating model in action before scaling it.',
+  },
+  {
+    label: 'Optional, not compulsory, transfer',
+    line: 'If you decide to keep the operate model long term, the contract stays in place. The transfer option never expires, and we do not push it.',
+  },
+];
+
+const FAQS = [
   {
     question: 'How is this different from staff augmentation or a managed-services contract?',
     answer:
@@ -212,16 +182,18 @@ const faqs = [
   },
 ];
 
+/* --------------------------------- page ---------------------------------- */
+
 export default function GCCPage() {
   return (
-    <>
+    <div className={`bg-white text-black ${v4Sans}`}>
       <ServiceSchema
         name="GCC & Captive Operations"
         description="Stand up and operate Global Capability Centers in India and LatAm. Entity, hiring, facilities, IT, and operating model in one engagement, with a documented build-operate-transfer path."
         url="/services/gcc"
         serviceType="Global Capability Center Setup"
       />
-      <FAQSchema faqs={faqs} />
+      {/* FAQPage JSON-LD comes from PageFaq below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -230,271 +202,206 @@ export default function GCCPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                GCC & Captive Operations
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                GCC Setup: Your Team. Your Operating Model.&nbsp;Offshore.
-              </h1>
-              <p className="text-lg text-gray-300 mb-8">
-                A captive delivery center stood up and run like a first-party
-                team, not an outsourcing contract. Entity, hiring, facilities,
-                and operating model in one engagement, with a build-operate-transfer
-                path onto your payroll when you are ready.
-              </p>
+      <ServiceHero
+        kicker="GCC & Captive Operations"
+        title={
+          <>
+            GCC Setup: Your Team.{' '}
+            <span style={{ color: '#1D4ED8' }}>
+              Your Operating Model.&nbsp;Offshore.
+            </span>
+          </>
+        }
+        lede="A captive delivery center stood up and run like a first-party team, not an outsourcing contract. Entity, hiring, facilities, and operating model in one engagement, with a build-operate-transfer path onto your payroll when you are ready."
+        chips={[
+          'India and LatAm',
+          'Entity to operating model',
+          'Build-operate-transfer',
+          'One statement of work',
+        ]}
+        primary={{ label: 'Scope a captive center', href: '/contact?service=gcc' }}
+        secondary={{ label: 'See delivery outcomes', href: '/case-studies' }}
+        stats={[
+          { value: '90 days', label: 'First pod live, entity and all' },
+          { value: '80%+', label: 'Offer-to-join rate' },
+          { value: 'BOT', label: 'Documented transfer path' },
+        ]}
+      />
 
-              <ul className="space-y-3 mb-8">
-                {keyOutcomes.map((outcome) => (
-                  <li key={outcome} className="flex items-start gap-3 text-gray-300">
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                    <span>{outcome}</span>
-                  </li>
+      {/* Problem band: outsourcing contracts that never become your team */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        pill="Why captives beat contracts"
+        headline={
+          <>
+            Ten years of outsourcing.{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">Still not your&nbsp;team.</span>
+          </>
+        }
+        body="Outsourcing contracts promise a partner and deliver a vendor. The engineers change every renewal, the knowledge stays on their side of the wall, and after a decade you own nothing but the invoices. A captive flips that: your entity, your employees, your leadership from week one, with us running the plumbing until you are ready to take the keys."
+        story={{
+          metric: { value: '53', label: 'Countries on one data platform' },
+          title: 'One global operating model serving 400,000 employees',
+          href: '/case-studies/global-food-facilities-data-intelligence',
+          logoSrc: '/brand/aci-infotech-logo-white.png',
+          logoAlt: 'ACI Infotech',
+        }}
+      />
+
+      {/* What the engagement covers */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we stand up"
+            title={
+              <>
+                One engagement. <span style={{ color: '#1D4ED8' }}>Six&nbsp;workstreams.</span>
+              </>
+            }
+            sub="Everything the captive needs to feel like your team on day one."
+          />
+          <OfferingList items={OFFERINGS} />
+        </div>
+      </section>
+
+      {/* Signature: BOT lifecycle table */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="The lifecycle"
+            title={
+              <>
+                Build. Operate. <span style={{ color: '#1D4ED8' }}>Transfer.</span>
+              </>
+            }
+            sub="The three phases are in the original contract, including the transfer terms."
+          />
+
+          <div className="mt-12 overflow-x-auto">
+            <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+              <thead>
+                <tr>
+                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    Phase
+                  </th>
+                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    Window
+                  </th>
+                  <th className="border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    What happens
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {BOT_STAGES.map((stage) => (
+                  <tr key={stage.stage}>
+                    <td className="border-b border-gray-200 py-5 pr-8 align-top">
+                      <span className={`text-lg font-semibold text-black md:text-xl ${v4Display}`}>
+                        {stage.stage}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap border-b border-gray-200 py-5 pr-8 align-top text-[13px] font-semibold uppercase tracking-wide text-blue-700">
+                      {stage.window}
+                    </td>
+                    <td className="border-b border-gray-200 py-5 align-top text-[15px] leading-relaxed text-gray-600">
+                      {stage.focus}
+                    </td>
+                  </tr>
                 ))}
-              </ul>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button href="/contact?service=gcc" variant="primary" size="lg">
-                  Scope a captive center
-                </Button>
-                <Button
-                  href="/case-studies"
-                  variant="ghost"
-                  size="lg"
-                  className="text-white border-white hover:bg-white/10"
-                >
-                  See delivery outcomes
-                </Button>
-              </div>
-            </div>
-
-            {/* Visual — captive stand-up flow */}
-            <div className="relative hidden lg:block">
-              <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <div className="text-sm text-gray-400 mb-4">Captive stand-up</div>
-                <div className="space-y-3">
-                  {[
-                    { step: 'Feasibility + site', meta: 'Week 1 to 4' },
-                    { step: 'Entity + compliance', meta: 'Week 2 to 10' },
-                    { step: 'Facilities + IT', meta: 'Week 4 to 12' },
-                    { step: 'Hiring first pod', meta: 'Week 6 to 12' },
-                    { step: 'Pod live on real work', meta: 'Day 90' },
-                    { step: 'Operate + scale', meta: 'Month 3 to 24' },
-                    { step: 'Transfer (optional)', meta: 'Month 24 onwards' },
-                  ].map((row) => (
-                    <div
-                      key={row.step}
-                      className="flex items-center justify-between bg-gray-700 rounded-lg px-4 py-3"
-                    >
-                      <span className="text-white font-medium">{row.step}</span>
-                      <span className="text-xs text-gray-400">{row.meta}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10" />
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      {/* What we deliver */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What the engagement covers
-            </h2>
-            <p className="text-lg text-gray-600">
-              Everything the captive needs to feel like your team on day one.
-            </p>
+      {/* Signature: geographies table */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Where"
+            title={
+              <>
+                Where we stand <span style={{ color: '#1D4ED8' }}>captives&nbsp;up.</span>
+              </>
+            }
+            sub="Location is a function of talent depth, time-zone fit, and cost, not a preference."
+          />
+
+          <div className="mt-12 overflow-x-auto">
+            <table className="w-full min-w-[720px] border-collapse text-left text-sm">
+              <thead>
+                <tr>
+                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    Location
+                  </th>
+                  <th className="border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    Strengths
+                  </th>
+                  <th className="border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    Best suited for
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {GEOS.map((geo) => (
+                  <tr key={geo.name}>
+                    <td className="border-b border-gray-200 py-5 pr-8 align-top">
+                      <span className={`text-base font-semibold text-black md:text-lg ${v4Display}`}>
+                        {geo.name}
+                      </span>
+                    </td>
+                    <td className="border-b border-gray-200 py-5 pr-8 align-top text-[15px] leading-relaxed text-gray-600">
+                      {geo.strengths}
+                    </td>
+                    <td className="border-b border-gray-200 py-5 align-top text-[15px] leading-relaxed text-gray-600">
+                      {geo.suited}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offerings.map((offering) => {
-              const Icon = offering.icon;
-              return (
-                <div
-                  key={offering.id}
-                  className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow"
-                >
-                  <Icon className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
-                    {offering.title}
-                  </h3>
-                  <p className="text-gray-600 mb-6">{offering.description}</p>
-
-                  <div className="mb-4">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Artifacts</div>
-                    <ul className="space-y-1">
-                      {offering.artifacts.map((artifact) => (
-                        <li
-                          key={artifact}
-                          className="flex items-center gap-2 text-sm text-gray-600"
-                        >
-                          <GitBranch className="w-3 h-3 text-[var(--aci-primary)]" />
-                          {artifact}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-gray-500 mb-2">Outcomes</div>
-                    <ul className="space-y-1">
-                      {offering.outcomes.map((outcome) => (
-                        <li
-                          key={outcome}
-                          className="flex items-center gap-2 text-sm text-gray-600"
-                        >
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          {outcome}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <p className="mt-8 max-w-3xl text-sm leading-relaxed text-gray-500">
+            Rough sizing heuristic: forty engineers is the floor below which an
+            entity costs more than it saves. Above two hundred, a captive is
+            almost always the right answer on a three-year horizon.
+          </p>
         </div>
       </section>
 
-      {/* BOT Lifecycle */}
-      <section className="py-20 bg-[var(--aci-secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Build. Operate. Transfer.
-            </h2>
-            <p className="text-lg text-gray-400">
-              The three phases are in the original contract, including the transfer terms.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {botStages.map((stage) => (
-              <div key={stage.stage} className="bg-gray-800 rounded-xl p-8">
-                <div className="flex items-baseline justify-between mb-4">
-                  <h3 className="text-2xl font-semibold text-white">{stage.stage}</h3>
-                  <span className="text-xs text-[var(--aci-primary-light)] uppercase tracking-wider">
-                    {stage.window}
-                  </span>
-                </div>
-                <p className="text-gray-300">{stage.focus}</p>
-              </div>
-            ))}
-          </div>
+      {/* Why a captive, run by us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Why ACI"
+            title="Why a captive, run by us"
+            sub="The plumbing stays with us so your leadership keeps product focus."
+          />
+          <FactsRow facts={DIFFERENTIATORS} />
         </div>
       </section>
 
-      {/* Geographies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Where we stand captives up
-            </h2>
-            <p className="text-lg text-gray-600">
-              Location is a function of talent depth, time-zone fit, and cost, not a preference.
-            </p>
-          </div>
+      <PageFaq
+        kicker="Questions"
+        title={
+          <>
+            Captive questions,
+            <br />
+            <span style={{ color: '#1D4ED8' }}>answered straight.</span>
+          </>
+        }
+        sub="Scope a captive center and get a three-year TCO and a ninety-day plan to first pod live."
+        faqs={FAQS}
+      />
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {geos.map((geo) => (
-              <div
-                key={geo.name}
-                className="bg-gray-50 rounded-xl p-8 border border-gray-100"
-              >
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
-                  {geo.name}
-                </h3>
-                <p className="text-gray-600 mb-3">
-                  <span className="font-medium text-gray-700">Strengths:</span> {geo.strengths}
-                </p>
-                <p className="text-gray-600">
-                  <span className="font-medium text-gray-700">Best suited for:</span> {geo.suited}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Differentiators */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Why a captive, run by us
-            </h2>
-            <p className="text-lg text-gray-600">
-              The plumbing stays with us so your leadership keeps product focus.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {differentiators.map((diff) => (
-              <div key={diff.title} className="bg-white p-8 rounded-xl shadow-sm">
-                <div className="flex items-start gap-3 mb-3">
-                  <Shield className="w-5 h-5 text-[var(--aci-primary)] mt-1 flex-shrink-0" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)]">
-                    {diff.title}
-                  </h3>
-                </div>
-                <p className="text-gray-600">{diff.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Common questions about captive centers
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details key={faq.question} className="group bg-gray-50 rounded-xl">
-                <summary className="flex items-center justify-between cursor-pointer p-6 text-lg font-medium text-[var(--aci-secondary)]">
-                  {faq.question}
-                  <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 text-gray-600">{faq.answer}</div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ClusterPosts keywords={['gcc', 'captive', 'global capability center', 'offshore', 'build operate transfer']} />
 
       <RelatedLinks items={gccRelated} />
 
-      {/* Final CTA */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Bring us the scale problem. We will bring the entity, the team,
-            and the timeline.
-          </h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Scope a captive center and get a three-year TCO and a ninety-day
-            plan to first pod live.
-          </p>
-
-          <Button href="/contact?service=gcc" variant="lime" size="lg">
-            Scope a captive center
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        </div>
-      </section>
-    </>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Let's plan the captive" href="/contact?service=gcc" />
+    </div>
   );
 }

@@ -51,6 +51,7 @@ export function ServiceHero({
   logos,
   logosCaption,
   stats,
+  visual,
 }: {
   kicker: string;
   title: React.ReactNode;
@@ -63,6 +64,9 @@ export function ServiceHero({
   logos?: { src: string; alt: string }[];
   logosCaption?: string;
   stats?: { value: string; label: string }[];
+  /** Full custom right-column visual (e.g. an animated canvas panel).
+      When provided it replaces the logos/stats credential panel. */
+  visual?: React.ReactNode;
 }) {
   return (
     <section className="border-b border-gray-200 bg-white text-black">
@@ -108,8 +112,11 @@ export function ServiceHero({
           </div>
         </div>
 
-        {/* Credential panel: partner logos given real prominence, or
-            hard delivery stats for practices without partner marks. */}
+        {/* Right column: a custom animated visual when provided,
+            otherwise the credential panel (partner logos or stats). */}
+        {visual ? (
+          <div className="lg:col-span-5">{visual}</div>
+        ) : (
         <div className="lg:col-span-5">
           <div className="flex h-full flex-col justify-center gap-8 rounded-3xl border border-gray-200 bg-gray-50/60 p-8 md:p-10">
             {logos?.map((logo) => (
@@ -133,6 +140,7 @@ export function ServiceHero({
             {logosCaption ? <p className="text-sm font-medium text-gray-500">{logosCaption}</p> : null}
           </div>
         </div>
+        )}
       </div>
     </section>
   );

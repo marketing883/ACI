@@ -1,13 +1,27 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Code2, Cpu, Plug, RefreshCw, Layers, Sparkles, Activity, FileCheck, TrendingUp, Users, Globe, Smartphone, Database } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { appDevelopmentRelated } from '@/content/related-links';
-
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { displayClient } from '@/lib/content/anonymize';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProofCards,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+
+export const revalidate = 3600;
+
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
 const siteUrl = getSiteUrl();
@@ -38,190 +52,179 @@ export const metadata: Metadata = {
   },
 };
 
-// Service data
-const keyOutcomes = [
-  'Enterprise applications that survive production scale',
-  'AI-powered features that ship, not PoC demos',
-  'Applications integrated with your data and AI stack from day one',
-  'SLA-backed delivery, not fire-and-forget project closures',
-];
+/* ------------------------------- page copy ------------------------------- */
 
-const offerings = [
+const OFFERINGS = [
   {
-    id: 'enterprise-applications',
-    title: 'Enterprise Applications',
-    description: 'Custom web and enterprise applications built for Fortune 500 operations. Production-grade from day one, not polished prototypes.',
-    icon: Layers,
-    technologies: ['Next.js', 'React', 'Node.js', 'TypeScript', 'PostgreSQL'],
-    outcomes: ['Production-ready on launch', '99.5% uptime SLAs', 'Scales to millions of users'],
+    title: 'Enterprise applications',
+    body: 'Custom web and line-of-business applications built for Fortune 500 operations. Production-grade from the first sprint: observability, security, and CI/CD go in before the feature code does.',
+    chips: ['Next.js', 'React', 'TypeScript', 'Node.js', 'PostgreSQL'],
   },
   {
-    id: 'ai-powered-applications',
-    title: 'AI-Powered Applications',
-    description: 'Applications with real AI embedded, not just an LLM chat widget bolted onto a marketing site. Copilots, agents, recommendation engines, intelligent workflows.',
-    icon: Sparkles,
-    technologies: ['OpenAI', 'Anthropic', 'LangChain', 'Pinecone', 'Azure OpenAI'],
-    outcomes: ['Measurable business impact', 'Integrated with your data', 'Governed AI responses'],
+    title: 'AI-powered applications',
+    body: 'Copilots, agents, and recommendation systems with real AI in the loop, not a chat widget bolted onto the corner of the screen. Responses stay grounded in your data and governed, which keeps legal calm.',
+    chips: ['Azure OpenAI', 'Anthropic', 'LangChain', 'Vector search'],
   },
   {
-    id: 'custom-business-apps',
-    title: 'Custom Business Applications',
-    description: 'Internal tools, workflow automation, and line-of-business applications that replace spreadsheets, legacy systems, and manual processes.',
-    icon: Code2,
-    technologies: ['React', 'Python', 'FastAPI', '.NET', 'GraphQL'],
-    outcomes: ['Replaces 5+ manual tools', 'Reduces process time 22%+', 'Full audit trail'],
+    title: 'Custom business applications',
+    body: 'Internal tools and workflow systems that retire the spreadsheet empire. Every action audited, every state visible, nothing important living in someone’s inbox.',
+    chips: ['React', 'Python', 'FastAPI', '.NET', 'GraphQL'],
   },
   {
-    id: 'api-development',
-    title: 'API & Integration Platforms',
-    description: 'Enterprise-grade APIs, GraphQL gateways, and integration layers that connect your applications, data, and partner systems.',
-    icon: Plug,
-    technologies: ['GraphQL', 'REST', 'gRPC', 'Kafka', 'MuleSoft'],
-    outcomes: ['<100ms API latency', 'Full OpenAPI documentation', 'Automated contract testing'],
+    title: 'APIs and integration platforms',
+    body: 'REST, GraphQL, and event streams that connect applications, data, and partner systems. Contract-tested and documented, so integrating with you stops being anyone’s least favorite job.',
+    chips: ['GraphQL', 'REST', 'gRPC', 'Kafka', 'MuleSoft'],
   },
   {
-    id: 'legacy-modernization',
-    title: 'Legacy Application Modernization',
-    description: 'Modernize aging Java, .NET, and mainframe applications into cloud-native, microservices-based systems — without big-bang rewrites.',
-    icon: RefreshCw,
-    technologies: ['Kubernetes', 'Docker', 'Spring Boot', 'Strangler Pattern'],
-    outcomes: ['Zero-downtime migration', 'Phased modernization', '18-28% cost reduction'],
+    title: 'Legacy modernization',
+    body: 'Java, .NET, and mainframe estates modernized in strangler-pattern increments. No big-bang rewrite, no weekend cutover heroics. The old system shrinks until turning it off is boring.',
+    chips: ['Kubernetes', 'Docker', 'Spring Boot', 'Strangler Pattern'],
   },
   {
-    id: 'platform-engineering',
-    title: 'Platform Engineering',
-    description: 'Internal developer platforms, DX tooling, and engineering productivity systems that help your teams ship faster with fewer bugs.',
-    icon: Cpu,
-    technologies: ['Backstage', 'GitHub Actions', 'Terraform', 'ArgoCD'],
-    outcomes: ['2x faster deployment', 'Self-service tooling', 'Standardized delivery'],
+    title: 'Platform engineering',
+    body: 'Internal developer platforms and delivery tooling so your teams ship faster with fewer 2am surprises. Golden paths and self-service, not a gatekeeping committee.',
+    chips: ['Backstage', 'GitHub Actions', 'Terraform', 'ArgoCD'],
   },
 ];
 
-const caseStudies = [
+// Refactor-or-rebuild: two text columns with when-each lists, so this is
+// an inline variant of the kit's two-logo DecisionPanel.
+const REBUILD_COLS = [
   {
-    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
-    client: 'Fortune 500 Convenience Retailer',
-    client_descriptor: 'Fortune 500 Convenience Retail Chain',
-    industry: 'Retail — Convenience',
-    challenge: 'Needed a unified digital guest experience and loyalty platform across 600+ locations with real-time personalization at the point of sale.',
-    results: [
-      { metric: '600+', description: 'Locations with zero downtime' },
-      { metric: '15%', description: 'Improvement in promotion effectiveness' },
-      { metric: '2.5x', description: 'Email engagement lift' },
+    title: 'Refactor with the Strangler Pattern',
+    when: [
+      'The system still earns its keep and downtime is expensive',
+      'The domain logic is sound; the platform under it is not',
+      'You have to keep shipping features during the migration',
     ],
-    technologies: ['Salesforce', 'Braze', 'Databricks', 'AWS', 'Kafka'],
+    line: 'New services take over one seam at a time while the legacy estate shrinks in production. Value lands every quarter, not at the end.',
+  },
+  {
+    title: 'Rebuild greenfield',
+    when: [
+      'The data model no longer matches the business',
+      'The framework is out of support and blocking security and hiring',
+      'The cost of changing the old code now exceeds replacing it',
+    ],
+    line: 'Built alongside the old system and parallel-run until the numbers match. Nothing gets switched off on faith.',
   },
 ];
 
-const processPhases = [
+const PROOF = [
   {
-    number: 1,
-    title: 'Discovery & Design',
-    duration: 'Weeks 1-3',
-    description: 'Understand the business problem, user journeys, and existing data/AI infrastructure. Design for production from day one.',
+    client_descriptor: 'Fortune 500 Convenience Retail Chain',
+    metric: '600+',
+    metricLabel: 'Locations with zero downtime',
+    summary: 'A digital guest experience and loyalty platform with real-time personalization at the point of sale, built on Salesforce, Braze, and Kafka.',
+    href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+    linkLabel: 'Read the platform story',
   },
   {
-    number: 2,
-    title: 'Architecture & Foundation',
-    duration: 'Weeks 4-6',
-    description: 'Technical architecture, CI/CD, observability, security, and data integration foundations before any feature code.',
+    client_descriptor: 'Global Financial Services Firm',
+    metric: '90d',
+    metricLabel: 'From prototype to production',
+    summary: 'Application and ML workloads shipped to production on AKS, with a governed Azure data foundation wired in underneath.',
+    href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
+    linkLabel: 'Read the Azure story',
   },
   {
-    number: 3,
-    title: 'Iterative Build',
-    duration: 'Months 2-6',
-    description: 'Two-week sprints with working software at the end of each. Real users testing, not mockups in Figma.',
-  },
-  {
-    number: 4,
-    title: 'Launch & Stabilize',
-    duration: 'Weeks before go-live',
-    description: 'Production hardening, load testing, runbooks, and SLA baseline. We stay on the release, not offshore while you cut over.',
-  },
-  {
-    number: 5,
-    title: 'Operate & Evolve',
-    duration: 'Ongoing',
-    description: 'Post-launch operations, feature evolution, and continuous optimization. We run what we build.',
+    client_descriptor: 'Enterprise Technology Company',
+    metric: '99.97%',
+    metricLabel: 'Uptime across 72+ servers',
+    summary: 'Automated CI/CD, monitoring, load balancing, and centralized logs keep releases moving without taking the estate down.',
+    href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+    linkLabel: 'Read the DevOps story',
   },
 ];
 
-const differentiators = [
+const PROCESS = [
   {
-    title: 'Sits On Top of Your Data & AI',
-    description: 'We build applications that are integrated with your data platform and AI systems from day one — not isolated frontends that need ETL jobs to find the data.',
-    proof: 'Native integration with your lakehouse, CDP, and AI stack',
+    title: 'Discover and design',
+    timeframe: 'Weeks 1 to 3',
+    body: 'The business problem, the user journeys, and the infrastructure the application has to live with. Designed for production from day one.',
   },
   {
-    title: 'Senior Architects, Not Agency Generalists',
-    description: 'Our engineers have built applications that run Fortune 500 operations. Not freelancers stitching together Webflow and Zapier.',
-    proof: 'Senior engineers on every engagement',
+    title: 'Architect the foundation',
+    timeframe: 'Weeks 4 to 6',
+    body: 'CI/CD, observability, security, and data integration before any feature code. Boring on purpose.',
   },
   {
-    title: 'Production SLAs, Not Project Handoffs',
-    description: "We don't build it and disappear. SLA-backed operations, monitoring, and continuous evolution are part of how we engage.",
-    proof: '24/7 incident response included',
+    title: 'Build in increments',
+    timeframe: 'Months 2 to 6',
+    body: 'Two-week sprints with working software at the end of each. Real users testing, not mockups in Figma.',
   },
   {
-    title: 'Systems That Survive Scale',
-    description: 'We architect for the day you 10x your users, not just launch day. Load-tested, observable, and built to last.',
-    proof: 'Load-tested against 10x traffic before launch',
-  },
-];
-
-const beyondDelivery = [
-  {
-    title: 'Production Operations',
-    description: '24/7 monitoring, incident response, and platform health management — with defined SLAs and named engineering ownership.',
-    icon: Activity,
+    title: 'Launch and stabilize',
+    body: 'Production hardening, load testing, runbooks, and an SLA baseline. We stay on the release while you cut over.',
   },
   {
-    title: 'SLA-Backed Support',
-    description: 'Contractual response times, defined escalation paths, and accountable ownership. Not helpdesk tickets that disappear into a queue.',
-    icon: FileCheck,
-  },
-  {
-    title: 'Continuous Optimization',
-    description: 'Cost tuning, performance improvements, and capacity planning as part of ongoing engagement — not a separate line item.',
-    icon: TrendingUp,
-  },
-  {
-    title: 'Evolution as Partners',
-    description: "Roadmap co-ownership, feature delivery, and architectural evolution. We're in it with you for the long arc, not just the launch sprint.",
-    icon: Users,
+    title: 'Operate and evolve',
+    body: 'Post-launch operations, feature evolution, and continuous tuning. We run what we build.',
   },
 ];
 
-const faqs = [
+const FACTS = [
   {
-    question: "What makes ACI different from a development agency?",
-    answer: "We're not an agency. We're an engineering firm that builds applications for enterprises that already have complex data and AI infrastructure. Our applications sit on top of that infrastructure and integrate with it natively — we don't do greenfield startup products or marketing sites.",
+    label: 'Delivery',
+    line: 'Senior engineers on every engagement, and the architects who scope the build write the code. No switch to a junior bench after the kickoff.',
   },
   {
-    question: 'Do you build mobile applications or e-commerce platforms?',
-    answer: 'Mobile-first consumer apps and e-commerce platforms are not our focus. We build enterprise applications, AI-powered systems, and internal platforms for Fortune 500 operations. If you need a mobile-first consumer app, we can refer you to a better-fit partner.',
+    label: 'Integration',
+    line: 'Applications wired into your SSO, lakehouse, and models from day one, because we build those layers too.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Operations',
+    line: 'ISO 27001 certified, with 24/7 managed operations and SLA-backed incident response after go-live.',
+  },
+];
+
+const FAQS = [
+  {
+    question: 'What makes ACI different from a development agency?',
+    answer: 'We are an engineering firm, not an agency. We build applications for enterprises that already have complex data and AI infrastructure, and our builds integrate with that infrastructure natively. No greenfield startup products, no marketing sites, no handoff-and-vanish.',
+  },
+  {
+    question: 'Do you build mobile apps or e-commerce platforms?',
+    answer: 'Mobile-first consumer apps and e-commerce platforms are not our focus. We build enterprise applications, AI-powered systems, and internal platforms for Fortune 500 operations. If you need a consumer app, we will say so and point you to a better-fit partner.',
   },
   {
     question: 'What technology stack do you prefer?',
-    answer: 'We work primarily in Next.js/React/TypeScript for frontend, Node.js/Python/.NET for backend, and whatever cloud and data platform you already use. We meet you where you are — we don\'t impose a stack just because we like it.',
+    answer: 'Next.js, React, and TypeScript up front; Node.js, Python, and .NET behind; and whatever cloud and data platform you already run. We meet your stack where it is instead of imposing ours because we happen to like it.',
+  },
+  {
+    question: 'Should we refactor or rebuild our legacy application?',
+    answer: 'Refactor with the strangler pattern when the system still earns money and the domain logic is sound. Rebuild when the data model no longer matches the business or the platform is blocking security and hiring. We decide with evidence, and we parallel-run either way before anything old gets switched off.',
+  },
+  {
+    question: 'How long does an enterprise application take to build?',
+    answer: 'Foundations take the first six weeks. A first production release typically lands within four to six months, shipped in two-week increments so working software shows up long before the end date.',
   },
   {
     question: 'What happens after the application launches?',
-    answer: 'This is where most firms disappear. We don\'t. Post-launch operations, SLA-backed support, and continuous optimization are part of how we engage. See "Beyond Delivery" above — we run what we build.',
+    answer: 'This is where most firms disappear. We do not. Post-launch operations, SLA-backed support, and continuous optimization are part of the engagement. We run what we build.',
+  },
+  {
+    question: 'Can you work inside our existing engineering organization?',
+    answer: 'Yes. We slot pods into your rituals, your repos, and your standards, or run the build end to end and hand over with runbooks. Either way, your team owns the system at the end.',
   },
 ];
 
+/* --------------------------------- page ---------------------------------- */
+
 export default function AppDevelopmentPage() {
   return (
-    <>
-      {/* Structured Data for SEO/AEO */}
+    <div className={`bg-white text-black ${v4Sans}`}>
       <ServiceSchema
         name="Application Development Services"
         description="Enterprise application engineering that sits on top of your data and AI infrastructure. Custom, web, and AI-powered applications built with production-grade rigor."
         url="/services/app-development"
         serviceType="Application Development Consulting"
       />
-      <FAQSchema faqs={faqs} />
+      {/* FAQPage JSON-LD comes from PageFaq below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -230,569 +233,209 @@ export default function AppDevelopmentPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Application Development
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Enterprise Application Development That Survives&nbsp;Production
-              </h1>
-              <p className="text-lg text-gray-300 mb-8">
-                Custom, web, and AI-powered applications engineered for Fortune 500 operations.
-                We build on top of your existing data and AI infrastructure — not separate from it —
-                with the same production rigor we bring to everything else we ship.
-              </p>
+      <ServiceHero
+        kicker="Application Development"
+        title={
+          <>
+            Enterprise Application Development That{' '}
+            <span style={{ color: '#1D4ED8' }}>Survives&nbsp;Production</span>
+          </>
+        }
+        lede="ACI Infotech builds enterprise applications that hold up after launch: cloud-native systems on Azure and Kubernetes, wired into your SSO, your lakehouse, and your models from day one. We design for the integration layer first, because that is where enterprise apps actually fail, then run what we build under SLA."
+        chips={[
+          'Senior engineers on every build',
+          'Production SLAs',
+          'Cloud native on your stack',
+          'We run what we build',
+        ]}
+        primary={{ label: 'Talk to an engineer', href: '/contact' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        logos={[
+          { src: '/brand/azure-color.png', alt: 'Microsoft Azure' },
+          { src: '/images/Solution-Partners/kubernetes.svg', alt: 'Kubernetes' },
+        ]}
+        logosCaption="Cloud-native builds on the stack you already run: Azure, AWS, and Kubernetes, integrated with your data and AI platforms."
+      />
 
-              {/* Key Outcomes */}
-              <ul className="space-y-3 mb-8">
-                {keyOutcomes.map((outcome) => (
-                  <li key={outcome} className="flex items-center gap-3 text-gray-300">
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                    {outcome}
-                  </li>
-                ))}
-              </ul>
+      {/* Problem band: the integration layer is where apps die */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        pill="Where enterprise apps fail"
+        headline={
+          <>
+            Apps do not fail at the UI. They fail at{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">the integration&nbsp;layer.</span>
+          </>
+        }
+        body="Authenticating against your SSO. Querying the lakehouse without melting it. Calling your models with governance attached. Holding steady when 10,000 concurrent users show up at once. The demo always works; production is where the wiring gets tested. So we engineer the wiring first and the polish second."
+        story={{
+          metric: { value: '2.5x', label: 'Email engagement lift' },
+          title: 'Guest experience and loyalty platform across 600+ locations',
+          quote:
+            'They flawlessly delivered top-tier digital data on a milestone that mattered to us. Their dedication and expertise made them a genuine partner, not a vendor.',
+          role: 'Director of Data and MarTech',
+          org: 'A national convenience retailer',
+          href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+        }}
+      />
 
-              <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                Enterprise-scale engineering | Production SLAs | Integrated with your data & AI
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button href="/contact?service=app-development" variant="primary" size="lg">
-                  Talk to an Engineer
-                </Button>
-                <Button
-                  href="/case-studies?service=app-development"
-                  variant="ghost"
-                  size="lg"
-                  className="text-white border-white hover:bg-white/10"
-                >
-                  See Application Projects
-                </Button>
-              </div>
-            </div>
-
-            {/* Visual - Enterprise Application Stack
-                Four-layer architecture diagram. Reads top-to-bottom
-                from entry points -> application -> integration/AI ->
-                data & infrastructure. Each layer has its own accent
-                color, a numbered header, an icon, and the full list
-                of technologies as proper chips. Flow lines connect
-                the layers so the stack reads as a system, not four
-                loose rectangles. */}
-            <div className="relative hidden lg:block">
-              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 via-[#0A1628] to-slate-950 shadow-2xl">
-                {/* Subtle dot-grid pattern behind everything */}
-                <div
-                  aria-hidden
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    backgroundImage:
-                      'radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)',
-                    backgroundSize: '18px 18px',
-                    opacity: 0.5,
-                  }}
-                />
-                {/* Accent glow blobs at corners */}
-                <div
-                  aria-hidden
-                  className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[var(--aci-primary)]/15 blur-3xl pointer-events-none"
-                />
-                <div
-                  aria-hidden
-                  className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-teal-500/10 blur-3xl pointer-events-none"
-                />
-
-                <div className="relative p-5">
-                  {/* Title strip */}
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="flex items-center gap-2">
-                      <span className="relative inline-flex h-2 w-2">
-                        <span className="absolute inset-0 rounded-full bg-[#C4FF61] opacity-60 animate-ping" />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-[#C4FF61]" />
-                      </span>
-                      <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-300">
-                        Enterprise Application Stack
-                      </div>
-                    </div>
-                    <div className="font-mono text-[10px] text-slate-500 tracking-wider">
-                      4 LAYERS
-                    </div>
-                  </div>
-
-                  {/* Entry points row - three icon cards */}
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { label: 'Web', Icon: Globe },
-                      { label: 'Mobile', Icon: Smartphone },
-                      { label: 'API', Icon: Plug },
-                    ].map(({ label, Icon }) => (
-                      <div
-                        key={label}
-                        className="group relative flex flex-col items-center justify-center gap-1 py-3 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 transition-colors"
-                      >
-                        <Icon
-                          className="w-4 h-4 text-slate-300 group-hover:text-white transition-colors"
-                          strokeWidth={1.5}
-                        />
-                        <span className="text-[11px] font-medium text-slate-200">
-                          {label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Layers: each with flow connector above */}
-                  {[
-                    {
-                      num: '01',
-                      title: 'Application Layer',
-                      Icon: Code2,
-                      accent: 'blue',
-                      techs: [
-                        'Next.js',
-                        'React',
-                        'TypeScript',
-                        'Node.js',
-                        '.NET Core',
-                        'Angular',
-                        'Blazor',
-                        'Python',
-                        'Django',
-                      ],
-                    },
-                    {
-                      num: '02',
-                      title: 'Integration & AI Layer',
-                      Icon: Sparkles,
-                      accent: 'violet',
-                      techs: [
-                        'GraphQL',
-                        'LangChain',
-                        'Azure OpenAI',
-                        'AWS Bedrock',
-                        'Kafka',
-                        'Event Bus',
-                        'Vector DBs',
-                      ],
-                    },
-                    {
-                      num: '03',
-                      title: 'Data & Infrastructure Layer',
-                      Icon: Database,
-                      accent: 'teal',
-                      techs: [
-                        'PostgreSQL',
-                        'SQL Server',
-                        'Snowflake',
-                        'Docker',
-                        'Kubernetes',
-                        'AWS',
-                        'Azure',
-                        'GCP',
-                      ],
-                    },
-                  ].map(({ num, title, Icon, accent, techs }) => {
-                    // Per-accent palette. Building strings explicitly so
-                    // Tailwind's JIT can see them at build time.
-                    const palettes: Record<
-                      string,
-                      {
-                        ring: string;
-                        bg: string;
-                        iconWrap: string;
-                        iconColor: string;
-                        chip: string;
-                        chipBorder: string;
-                        title: string;
-                        line: string;
-                      }
-                    > = {
-                      blue: {
-                        ring: 'ring-blue-500/25',
-                        bg: 'bg-blue-500/[0.04]',
-                        iconWrap: 'bg-blue-500/20 ring-blue-400/30',
-                        iconColor: 'text-blue-300',
-                        chip: 'bg-blue-500/10 hover:bg-blue-500/20',
-                        chipBorder: 'border-blue-400/20',
-                        title: 'text-blue-100',
-                        line: 'from-transparent via-blue-400/40 to-transparent',
-                      },
-                      violet: {
-                        ring: 'ring-violet-500/25',
-                        bg: 'bg-violet-500/[0.05]',
-                        iconWrap: 'bg-violet-500/20 ring-violet-400/30',
-                        iconColor: 'text-violet-300',
-                        chip: 'bg-violet-500/10 hover:bg-violet-500/20',
-                        chipBorder: 'border-violet-400/20',
-                        title: 'text-violet-100',
-                        line: 'from-transparent via-violet-400/40 to-transparent',
-                      },
-                      teal: {
-                        ring: 'ring-teal-500/25',
-                        bg: 'bg-teal-500/[0.05]',
-                        iconWrap: 'bg-teal-500/20 ring-teal-400/30',
-                        iconColor: 'text-teal-300',
-                        chip: 'bg-teal-500/10 hover:bg-teal-500/20',
-                        chipBorder: 'border-teal-400/20',
-                        title: 'text-teal-100',
-                        line: 'from-transparent via-teal-400/40 to-transparent',
-                      },
-                    };
-                    const p = palettes[accent];
-                    return (
-                      <div key={num}>
-                        {/* Flow connector: hairline vertical line with a
-                            gradient fade so the layers feel continuous
-                            instead of stacked as independent boxes. */}
-                        <div className="flex flex-col items-center my-1.5">
-                          <div
-                            className={`w-px h-6 bg-gradient-to-b ${p.line}`}
-                          />
-                          <div
-                            className={`w-1 h-1 rounded-full ${p.iconColor.replace('text-', 'bg-')}`}
-                            style={{ opacity: 0.6 }}
-                          />
-                        </div>
-                        {/* Layer panel */}
-                        <div
-                          className={`relative rounded-xl ${p.bg} border border-white/[0.06] ring-1 ${p.ring} p-3.5`}
-                        >
-                          <div className="flex items-center gap-2.5 mb-3">
-                            <div
-                              className={`flex-shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-md ring-1 ${p.iconWrap}`}
-                            >
-                              <Icon
-                                className={`w-3.5 h-3.5 ${p.iconColor}`}
-                                strokeWidth={1.75}
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-slate-500">
-                                {num}
-                              </div>
-                              <div
-                                className={`text-[13px] font-semibold ${p.title} leading-tight`}
-                              >
-                                {title}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5">
-                            {techs.map((t) => (
-                              <span
-                                key={t}
-                                className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10.5px] font-medium text-slate-100 border ${p.chipBorder} ${p.chip} transition-colors`}
-                              >
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* What We Build */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-6">
-              What We Actually Build
-            </h2>
-            <div className="space-y-4 text-gray-600">
-              <p>
-                Enterprise applications. AI-powered systems. Custom business tools.
-                Not marketing sites, not mobile-first consumer products, not MVPs destined for rewrites.
-                We build applications that sit on top of complex enterprise infrastructure and
-                integrate with your data and AI stack from day one.
-              </p>
-              <p>
-                The distinction matters. Most development firms build greenfield products.
-                We build the enterprise applications that run on top of the data platforms and AI systems
-                we&rsquo;ve already deployed for Fortune 500 clients — or that integrate cleanly with yours.
-              </p>
-              <p className="font-semibold text-[var(--aci-secondary)]">
-                When your application needs to authenticate against your SSO, query your lakehouse,
-                invoke your ML models, and handle 10,000 concurrent users — that&rsquo;s the job we do.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Service Offerings */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Application Development Services
-            </h2>
-            <p className="text-lg text-gray-600">
-              Six core offerings, each delivered with production-grade quality
+      {/* Scope: what we build, and what we politely do not */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Scope"
+            title={
+              <>
+                What we <span style={{ color: '#1D4ED8' }}>actually&nbsp;build</span>
+              </>
+            }
+          />
+          <div className="mt-8 max-w-3xl space-y-5 text-base leading-relaxed text-gray-600 md:text-lg">
+            <p>
+              Enterprise applications. AI-powered systems. Custom business tools. Not marketing
+              sites, not mobile-first consumer products, not MVPs destined for rewrites. We build
+              applications that sit on top of complex enterprise infrastructure and integrate with
+              your data and AI stack from day one.
+            </p>
+            <p>
+              The distinction matters. Most development firms build greenfield products. We build
+              the enterprise applications that run on top of the data platforms and AI systems we
+              have already deployed for Fortune 500 clients, or that integrate cleanly with yours.
+            </p>
+            <p className="font-semibold text-black">
+              When your application needs to authenticate against your SSO, query your lakehouse,
+              invoke your ML models, and handle 10,000 concurrent users: that is the job we do.
             </p>
           </div>
+        </div>
+      </section>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offerings.map((offering) => {
-              const Icon = offering.icon;
-              return (
-                <div
-                  key={offering.id}
-                  className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow"
-                >
-                  <Icon className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
-                    {offering.title}
-                  </h3>
-                  <p className="text-gray-600 mb-6">{offering.description}</p>
+      {/* What we build */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build"
+            title={
+              <>
+                Production software. <span style={{ color: '#1D4ED8' }}>Six ways&nbsp;in.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
+        </div>
+      </section>
 
-                  <div className="mb-4">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Key Outcomes</div>
-                    <ul className="space-y-1">
-                      {offering.outcomes.map((outcome) => (
-                        <li key={outcome} className="flex items-center gap-2 text-sm text-gray-600">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          {outcome}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+      {/* Decision block: refactor or rebuild */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+          <h2
+            className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+            style={{ lineHeight: 1.08 }}
+          >
+            Refactor or rebuild?
+          </h2>
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-gray-600 md:text-lg">
+            The most expensive sentence in enterprise software is &ldquo;we should just rewrite
+            it.&rdquo; Sometimes it is even true. We decide with evidence, and this is the honest
+            split we use.
+          </p>
 
-                  <div className="flex flex-wrap gap-2">
-                    {offering.technologies.slice(0, 4).map((tech) => (
+          <div className="mt-9 grid gap-6 md:grid-cols-2">
+            {REBUILD_COLS.map((col) => (
+              <div key={col.title} className="rounded-2xl border border-gray-200 bg-white p-7 md:p-8">
+                <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>
+                  {col.title}
+                </h3>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                  Pick this when
+                </p>
+                <ul className="mt-3 space-y-2.5">
+                  {col.when.map((w) => (
+                    <li key={w} className="flex gap-3 text-[15px] leading-relaxed text-gray-700">
                       <span
-                        key={tech}
-                        className="px-2 py-1 bg-gray-100 rounded text-xs text-gray-600"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Study - Convenience Retailer */}
-      <section className="py-20 bg-[var(--aci-secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Enterprise Applications We&rsquo;ve Built
-            </h2>
-            <p className="text-lg text-gray-400">
-              Real projects. Real Fortune 500 clients. Real outcomes.
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            {caseStudies.map((study) => (
-              <div
-                key={study.slug}
-                className="bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-700 transition-colors"
-              >
-                <div className="p-8 border-b border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold text-white">{displayClient(study)}</span>
-                    <span className="text-sm text-gray-400">{study.industry}</span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-[var(--aci-primary-light)] mb-3">
-                    Digital Guest Experience & Loyalty Platform
-                  </h3>
-                  <p className="text-gray-300">{study.challenge}</p>
-                </div>
-                <div className="p-8">
-                  <div className="grid sm:grid-cols-3 gap-6 mb-6">
-                    {study.results.map((result, idx) => (
-                      <div key={idx}>
-                        <div className="text-3xl font-bold text-[var(--aci-primary-light)] mb-1">
-                          {result.metric}
-                        </div>
-                        <div className="text-sm text-gray-400">{result.description}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {study.technologies.map((tech) => (
-                      <span key={tech} className="px-3 py-1 bg-gray-700 rounded text-xs text-gray-300">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                        aria-hidden="true"
+                        className="mt-2 block h-2 w-2 shrink-0 rounded-full bg-[#1D4ED8]"
+                      />
+                      {w}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-5 border-t border-gray-200 pt-4 text-sm leading-relaxed text-gray-500">
+                  {col.line}
+                </p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-12">
-            <Button href="/case-studies?service=app-development" variant="secondary" size="lg">
-              See More Application Projects <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Built for enterprises. <span style={{ color: '#1D4ED8' }}>Tested by&nbsp;production.</span>
+              </>
+            }
+          />
+          <ProofCards
+            cards={PROOF.map((p) => ({
+              eyebrow: displayClient(p),
+              metric: p.metric,
+              metricLabel: p.metricLabel,
+              summary: p.summary,
+              href: p.href,
+              linkLabel: p.linkLabel,
+            }))}
+          />
         </div>
       </section>
 
       {/* Process */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Our Application Development Process
-            </h2>
-            <p className="text-lg text-gray-600">
-              From engagement to production: how we work
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-5 gap-6">
-            {processPhases.map((phase, index) => (
-              <div key={phase.number} className="relative">
-                <div className="bg-gray-50 rounded-xl p-6 h-full">
-                  <div className="text-4xl font-bold text-[var(--aci-primary)]/20 mb-2">
-                    0{phase.number}
-                  </div>
-                  <h3 className="font-semibold text-[var(--aci-secondary)] mb-1">
-                    {phase.title}
-                  </h3>
-                  <div className="text-sm text-[var(--aci-primary)] mb-3">{phase.duration}</div>
-                  <p className="text-sm text-gray-600">{phase.description}</p>
-                </div>
-                {index < processPhases.length - 1 && (
-                  <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-gray-300">
-                    →
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* Beyond Delivery — Managed Services */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Beyond Delivery
-            </h2>
-            <p className="text-lg text-gray-600">
-              We don&rsquo;t hand over and walk away. Post-deployment operations, SLA-backed support,
-              and continuous optimization are part of how we engage.
-              <span className="block mt-2 font-semibold text-[var(--aci-secondary)]">We run what we build.</span>
-            </p>
-          </div>
+      {/* Bridge to managed operations */}
+      <BridgeBand
+        title="Launch day is the starting line."
+        body="Most firms hand over a repo and disappear. Our applications go into managed operations: 24/7 monitoring, SLA-backed incident response, and continuous tuning by the team that wrote the code. The 3am page goes to us."
+        link={{ label: 'Managed Operations', href: '/services/managed-operations' }}
+      />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {beyondDelivery.map((pillar) => {
-              const Icon = pillar.icon;
-              return (
-                <div key={pillar.title} className="bg-white p-6 rounded-xl shadow-sm">
-                  <Icon className="w-8 h-8 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-lg font-semibold text-[var(--aci-secondary)] mb-2">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-sm text-gray-600">{pillar.description}</p>
-                </div>
-              );
-            })}
-          </div>
+      {/* Why ACI */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title="Why enterprises pick us for applications" />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
 
-      {/* Why Choose ACI */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Why Choose ACI for Application Development
-            </h2>
-            <p className="text-lg text-gray-600">
-              What makes us different from dev agencies
-            </p>
-          </div>
+      <PageFaq
+        kicker="Questions"
+        title={
+          <>
+            Build questions,
+            <br />
+            <span style={{ color: '#1D4ED8' }}>answered straight.</span>
+          </>
+        }
+        sub="The questions we hear most before an application engagement. Anything else belongs in a conversation."
+        faqs={FAQS}
+      />
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {differentiators.map((diff) => (
-              <div key={diff.title} className="bg-white p-8 rounded-xl shadow-sm">
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
-                  {diff.title}
-                </h3>
-                <p className="text-gray-600 mb-4">{diff.description}</p>
-                <div className="flex items-center gap-2 text-sm text-[var(--aci-primary)]">
-                  <CheckCircle className="w-4 h-4" />
-                  {diff.proof}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Common Questions About Application Development
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details key={faq.question} className="group bg-gray-50 rounded-xl">
-                <summary className="flex items-center justify-between cursor-pointer p-6 text-lg font-medium text-[var(--aci-secondary)]">
-                  {faq.question}
-                  <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 text-gray-600">
-                  {faq.answer}
-                </div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ClusterPosts keywords={['application development', 'app development', 'software engineering', 'modernization', 'api']} />
 
       <RelatedLinks items={appDevelopmentRelated} />
 
-      {/* Final CTA */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Build an Application That Survives Production?
-          </h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Schedule a 30-minute technical call with one of our engineers.
-            No sales pitch, just an engineering conversation about what you&rsquo;re trying to build.
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <span className="text-blue-200 text-sm">Talk to senior engineers, not sales reps</span>
-            <span className="text-blue-300">|</span>
-            <span className="text-blue-200 text-sm">30-minute technical discussion</span>
-            <span className="text-blue-300">|</span>
-            <span className="text-blue-200 text-sm">We&rsquo;ll tell you if we&rsquo;re not the right fit</span>
-          </div>
-
-          <Button href="/contact?service=app-development" variant="lime" size="lg">
-            Talk to an Engineer
-          </Button>
-        </div>
-      </section>
-    </>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Let's scope the build" />
+    </div>
   );
 }

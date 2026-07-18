@@ -1,13 +1,29 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Zap, Bot, FileText, Workflow, Settings, BarChart } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { digitalTransformationRelated } from '@/content/related-links';
-
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { displayClient } from '@/lib/content/anonymize';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProofCards,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+
+export const revalidate = 3600;
+
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
 const siteUrl = getSiteUrl();
@@ -38,159 +54,182 @@ export const metadata: Metadata = {
   },
 };
 
-const keyOutcomes = [
-  '20% reduction in manual processes',
-  'Straight-through processing for routine tasks',
-  'Human-in-the-loop where judgment matters',
-  'Measurable ROI on automation investments',
-];
+/* ------------------------------- page copy ------------------------------- */
 
-const offerings = [
+const OFFERINGS = [
   {
-    id: 'servicenow',
-    title: 'ServiceNow Implementation',
-    description: 'ITSM, HRSD, Customer Service Management, workflows that actually get used.',
-    icon: Workflow,
-    technologies: ['ServiceNow', 'ITSM', 'HRSD', 'CSM'],
-    outcomes: ['22% faster ticket resolution', 'Self-service adoption', 'Unified service experience'],
+    title: 'Process discovery and mining',
+    body: 'Celonis and UiPath Process Mining on your event logs, plus time spent with the people who actually do the work. We find where the hours go before anyone writes a bot. Automating a bad process just makes the mess faster.',
+    chips: ['Celonis', 'UiPath Process Mining', 'Power BI'],
   },
   {
-    id: 'rpa',
-    title: 'Robotic Process Automation',
-    description: 'UiPath, Power Automate, Automation Anywhere, bots that free humans for higher-value work.',
-    icon: Bot,
-    technologies: ['UiPath', 'Power Automate', 'Automation Anywhere'],
-    outcomes: ['35% reduction in manual work', '24/7 processing', 'Zero-error execution'],
+    title: 'ServiceNow workflows',
+    body: 'ITSM, HRSD, and Customer Service Management built so requests stop dying in shared inboxes. Every ticket gets an owner, a visible status, and an SLA someone answers for.',
+    chips: ['ServiceNow', 'ITSM', 'HRSD', 'CSM'],
   },
   {
-    id: 'document-ai',
-    title: 'Intelligent Document Processing',
-    description: 'OCR, document classification, and data extraction at scale.',
-    icon: FileText,
-    technologies: ['Azure Document AI', 'AWS Textract', 'Google Document AI'],
-    outcomes: ['88% extraction accuracy', 'Hours to seconds', 'Human review for exceptions'],
+    title: 'Robotic process automation',
+    body: 'UiPath, Power Automate, and Automation Anywhere bots for the systems that will never get an API. Attended or unattended, monitored in production, and rebuilt fast when a screen changes. Screens change.',
+    chips: ['UiPath', 'Power Automate', 'Automation Anywhere'],
   },
   {
-    id: 'workflow-automation',
-    title: 'Workflow Automation',
-    description: 'End-to-end process automation connecting systems, people, and decisions.',
-    icon: Settings,
-    technologies: ['Power Platform', 'Camunda', 'Nintex'],
-    outcomes: ['Automated approvals', 'Process visibility', 'Compliance tracking'],
+    title: 'Document AI',
+    body: 'Classification and extraction for invoices, claims, and contracts, with a human review queue for the exceptions. Straight-through processing for the clean documents, eyeballs on the rest.',
+    chips: ['Azure Document AI', 'AWS Textract', 'Google Document AI'],
   },
   {
-    id: 'process-mining',
-    title: 'Process Mining & Discovery',
-    description: 'Understand your actual processes before automating. Data-driven improvement.',
-    icon: BarChart,
-    technologies: ['Celonis', 'UiPath Process Mining', 'Power BI'],
-    outcomes: ['Process visibility', 'Bottleneck identification', 'ROI prioritization'],
+    title: 'Workflow automation',
+    body: 'Approvals, escalations, and compliance steps orchestrated end to end in Power Platform or Camunda. The process gets a visible state, which means no more status meetings held just to find a request.',
+    chips: ['Power Platform', 'Camunda', 'Nintex'],
   },
   {
-    id: 'integration',
-    title: 'Integration & APIs',
-    description: 'MuleSoft, Workato, and custom APIs that connect your systems.',
-    icon: Zap,
-    technologies: ['MuleSoft', 'Workato', 'Azure Logic Apps'],
-    outcomes: ['Connected systems', 'Real-time data flow', 'API governance'],
+    title: 'Integration and APIs',
+    body: 'MuleSoft, Workato, and Azure Logic Apps connecting the systems that should have been talking all along. When systems integrate properly, half the bots become unnecessary. We count that as a win.',
+    chips: ['MuleSoft', 'Workato', 'Azure Logic Apps'],
   },
 ];
 
-const caseStudies = [
+// Decision artifact: three routes instead of the kit's two-logo table,
+// so this is an inline variant of DecisionPanel.
+const ROUTES: {
+  label: string;
+  body: string;
+  chips: string;
+  link?: { label: string; href: string };
+}[] = [
   {
-    slug: 'finance-automation',
-    client: 'Fortune 500 Financial',
+    label: 'Automate with RPA',
+    body: 'For stable UIs and legacy systems that will never get an API. Bots ship in weeks and take the keying work off people, with the honest caveat that a changed screen means a changed bot.',
+    chips: 'UiPath · Power Automate · Automation Anywhere',
+  },
+  {
+    label: 'Integrate the workflow',
+    body: 'When the systems can talk, let them. APIs, events, and ServiceNow workflows give you straight-through processing that does not care what the UI looks like this quarter.',
+    chips: 'ServiceNow · MuleSoft · Azure Logic Apps',
+  },
+  {
+    label: 'Rebuild the application',
+    body: 'When the process is the product, automation is a patch. The spreadsheet-and-email system deserves to be an actual system. That is an application development job, and we do those too.',
+    chips: 'Custom builds · APIs · Modern platforms',
+    link: { label: 'App Development', href: '/services/app-development' },
+  },
+];
+
+const PROOF = [
+  {
     client_descriptor: 'Fortune 500 Financial Services Firm',
-    industry: 'Financial Services',
-    challenge: 'Manual accounts payable processing taking 5 days average',
-    results: [
-      { metric: '35%', description: 'Reduction in processing time' },
-      { metric: '$2M', description: 'Annual savings' },
-      { metric: '0.1%', description: 'Error rate' },
-    ],
-    technologies: ['UiPath', 'Azure Document AI', 'SAP'],
+    metric: '0.1%',
+    metricLabel: 'Error rate after automation',
+    summary: 'Accounts payable rebuilt with UiPath and Azure Document AI. Processing time fell 35%, and exceptions route to a human review queue instead of a backlog.',
+    href: '/case-studies',
+    linkLabel: 'Explore the case studies',
   },
   {
-    slug: 'hr-transformation',
-    client: 'Global Manufacturer',
-    client_descriptor: 'Global Industrial Manufacturer',
-    industry: 'Manufacturing',
-    challenge: 'HR requests lost in email, no visibility on status',
-    results: [
-      { metric: '25%', description: 'Faster request resolution' },
-      { metric: 'Self-service', description: 'Employee portal' },
-      { metric: '65%', description: 'Employee satisfaction' },
-    ],
-    technologies: ['ServiceNow', 'HRSD', 'Integration Hub'],
+    client_descriptor: 'Global Technology Enterprise',
+    metric: '67%',
+    metricLabel: 'Reduction in contract cycle time',
+    summary: 'Contract creation, review, approval, compliance, and renewal automated end to end in a governed Conga CLM environment.',
+    href: '/case-studies/accelerating-contract-performance-through-intelligent-automation',
+    linkLabel: 'Read the automation story',
   },
   {
-    slug: 'customer-service',
-    client: 'Insurance Provider',
-    client_descriptor: 'National Insurance Provider',
-    industry: 'Insurance',
-    challenge: 'Claims processing backlog growing, customer complaints rising',
-    results: [
-      { metric: '22%', description: 'Faster claims processing' },
-      { metric: '20%', description: 'Reduction in backlog' },
-      { metric: '15%', description: 'Improvement in NPS' },
-    ],
-    technologies: ['ServiceNow CSM', 'Document AI', 'RPA'],
+    client_descriptor: 'Enterprise Technology Company',
+    metric: '99.97%',
+    metricLabel: 'Uptime across 72+ servers',
+    summary: 'Automated CI/CD, monitoring, load balancing, and centralized logging keep releases moving without disrupting operations.',
+    href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+    linkLabel: 'Read the DevOps story',
   },
 ];
 
-const differentiators = [
+const PROCESS = [
   {
-    title: 'Process-First Approach',
-    description: "We understand your processes before automating. Process mining and discovery first, then targeted automation.",
-    proof: 'Data-driven automation decisions',
+    title: 'Discover',
+    timeframe: 'Weeks 1 to 3',
+    body: 'Process mining on the event logs, plus time with the people doing the work. The map shows where the hours actually go.',
   },
   {
-    title: 'Human-in-the-Loop',
-    description: "We automate routine tasks and keep humans where judgment matters. Not automation for automation's sake.",
-    proof: 'Balanced automation approach',
+    title: 'Prioritize',
+    timeframe: 'Weeks 3 to 4',
+    body: 'Value against effort, process by process. Each automation gets a business case and a baseline to beat.',
   },
   {
-    title: 'Measurable ROI',
-    description: 'Every automation project has clear metrics. We track time saved, errors reduced, and dollars returned.',
-    proof: 'Hours saved and error rates, tracked per project',
+    title: 'Build',
+    timeframe: 'Weeks 4 to 8',
+    body: 'First bots and workflows into production. A first automation ships in 4 to 8 weeks, not next fiscal year.',
   },
   {
-    title: 'Enterprise-Grade Quality',
-    description: 'Same engineering rigor we apply to data platforms. Automated testing, monitoring, and support.',
-    proof: 'Production-grade automation',
+    title: 'Prove',
+    body: 'Hours saved, error rates, and cycle times measured against the baseline. Adoption gets tracked, not assumed.',
+  },
+  {
+    title: 'Scale',
+    body: 'Governance, a pipeline of candidates, and change management. Enterprise-wide programs run 6 to 12 months.',
   },
 ];
 
-const faqs = [
+const FACTS = [
+  {
+    label: 'Delivery',
+    line: 'The engineers who map your processes build the automations. Discovery is not a separate sales exercise.',
+  },
+  {
+    label: 'Partnerships',
+    line: 'ServiceNow partner and UiPath certified, with delivery across Power Automate and Automation Anywhere.',
+  },
+  {
+    label: 'Measurement',
+    line: 'Hours saved, error rates, and cycle times tracked per project, before and after. If a number did not move, we say so.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+];
+
+const FAQS = [
+  {
+    question: 'What does digital transformation actually involve?',
+    answer: 'Less than the conference talks suggest. We find the manual work, decide whether to automate it, integrate around it, or rebuild the system underneath it, then ship the fix with monitoring and a measured baseline. Digital transformation is a sequence of engineered process fixes, not a culture program.',
+  },
   {
     question: 'Where should we start with automation?',
-    answer: 'Start with process discovery. We help you identify high-volume, repetitive processes with clear ROI. Typical quick wins: accounts payable, employee onboarding, report generation.',
+    answer: 'Process discovery. We identify high-volume, repetitive processes with a clear payback before anything gets built. Typical quick wins: accounts payable, employee onboarding, report generation.',
   },
   {
     question: 'How long does an RPA implementation take?',
-    answer: '4-8 weeks for initial bot deployment. Enterprise-wide programs take 6-12 months. We recommend starting small, proving value, then scaling.',
+    answer: '4 to 8 weeks for a first bot in production. Enterprise-wide programs run 6 to 12 months. We recommend starting small, proving the numbers, then scaling.',
+  },
+  {
+    question: 'Will the bots break when a system updates?',
+    answer: 'Sometimes, yes. RPA reads screens, and screens change. We monitor every bot in production, catch failures fast, and push API-based integration wherever one exists, so there are fewer bots around to break.',
   },
   {
     question: 'What about change management?',
-    answer: "Automation changes how people work. We include change management in every project, communication, training, and support to ensure adoption.",
+    answer: 'Automation changes how people work, so every project includes communication, training, and support. A bot nobody trusts gets worked around, which is worse than no bot at all.',
   },
   {
     question: 'How do you measure automation ROI?',
-    answer: 'We track hours saved, error rates reduced, and cycle times improved. Every project has a business case with measurable outcomes that we track post-implementation.',
+    answer: 'Hours saved, error rates reduced, and cycle times improved, all measured against a baseline we capture before building. Every project carries a business case we keep tracking after go-live, not just in the proposal.',
+  },
+  {
+    question: 'Do you run the automations after go-live?',
+    answer: 'Both options. Our managed operations team monitors and maintains bots and workflows 24/7 under SLA, or we hand over to your team with runbooks and stay on call through the transition.',
   },
 ];
 
+/* --------------------------------- page ---------------------------------- */
+
 export default function DigitalTransformationPage() {
   return (
-    <>
-      {/* Structured Data for SEO/AEO */}
+    <div className={`bg-white text-black ${v4Sans}`}>
       <ServiceSchema
         name="Digital Transformation Services"
         description="Intelligent process automation. ServiceNow workflows, RPA, document processing. Automate what humans shouldn't do manually."
         url="/services/digital-transformation"
         serviceType="Digital Transformation Consulting"
       />
-      <FAQSchema faqs={faqs} />
+      {/* FAQPage JSON-LD comes from PageFaq below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -199,180 +238,112 @@ export default function DigitalTransformationPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Digital Transformation
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Digital Transformation Through Intelligent&nbsp;Automation
-              </h1>
-              <p className="text-lg text-gray-300 mb-8">
-                ServiceNow workflows, RPA, document processing. Automate what humans shouldn&rsquo;t do manually.
-                We treat digital transformation as an engineering job, not a slide deck: bots handle
-                the routine while your people do the work that needs judgment.
-              </p>
+      <ServiceHero
+        kicker="Digital Transformation"
+        title={
+          <>
+            Digital Transformation Through{' '}
+            <span style={{ color: '#1D4ED8' }}>Intelligent&nbsp;Automation</span>
+          </>
+        }
+        lede="ACI Infotech delivers digital transformation as an engineering job: ServiceNow workflows, UiPath bots, and document AI that take the swivel-chair work off your teams. We map the process first, automate what repeats, keep people on the judgment calls, and report hours saved, error rates, and cycle times every month."
+        chips={[
+          'ServiceNow partner',
+          'UiPath certified',
+          'Process discovery first',
+          'Human in the loop',
+        ]}
+        primary={{ label: 'Talk to an automation engineer', href: '/contact' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        logos={[
+          { src: '/images/Solution-Partners/servicenow.png', alt: 'ServiceNow' },
+          { src: '/brand/microsoft-mono.svg', alt: 'Microsoft' },
+        ]}
+        logosCaption="ServiceNow partner and UiPath certified, with Power Automate delivery across the Microsoft stack."
+      />
 
-              <ul className="space-y-3 mb-8">
-                {keyOutcomes.map((outcome) => (
-                  <li key={outcome} className="flex items-center gap-3 text-gray-300">
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                    {outcome}
-                  </li>
-                ))}
-              </ul>
+      {/* Problem band: the manual work nobody puts on the org chart */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        pill="Why processes stay manual"
+        headline={
+          <>
+            Your processes run on <span className="text-[#60A5FA]">swivel-chair work</span>{' '}
+            <br className="hidden sm:block" />
+            and quiet spreadsheets.
+          </>
+        }
+        body="Somebody copies numbers from one system into another all day. Somebody else keeps the real process in a spreadsheet the auditors have never seen. Every handoff adds a day and a chance to fat-finger an account number. Transformation is not a slide deck about culture. It is finding that work, measuring it, and engineering it away."
+        story={{
+          metric: { value: '67%', label: 'Reduction in contract cycle time' },
+          title: 'Contract operations automated end to end',
+          org: 'A global technology enterprise',
+          href: '/case-studies/accelerating-contract-performance-through-intelligent-automation',
+          logoSrc: '/brand/aci-infotech-logo-white.png',
+          logoAlt: 'ACI Infotech',
+        }}
+      />
 
-              <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                ServiceNow Partner | UiPath Certified
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button href="/contact?service=digital-transformation" variant="primary" size="lg">
-                  Talk to an Automation Architect
-                </Button>
-                <Button
-                  href="/case-studies?service=digital-transformation"
-                  variant="ghost"
-                  size="lg"
-                  className="text-white border-white hover:bg-white/10"
-                >
-                  See Automation Projects
-                </Button>
-              </div>
-            </div>
-
-            {/* Visual */}
-            <div className="relative hidden lg:block">
-              <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <div className="text-sm text-gray-400 mb-4">Automation Architecture</div>
-                <div className="space-y-4">
-                  <div className="bg-gray-700 rounded-lg p-4 text-center">
-                    <div className="text-gray-300 font-medium">Manual Processes</div>
-                    <div className="text-xs text-gray-400 mt-1">Emails • Spreadsheets • Paper</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓ Discovery & Analysis</div>
-                  <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
-                    <div className="text-white font-bold">Automation Platform</div>
-                    <div className="text-xs text-gray-300 mt-1">RPA • Workflows • Document AI</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-green-900/30 rounded-lg p-3 text-center text-xs text-green-300">Automated</div>
-                    <div className="bg-blue-900/30 rounded-lg p-3 text-center text-xs text-blue-300">Human Review</div>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-yellow-500/10 rounded-3xl blur-3xl -z-10"></div>
-            </div>
-          </div>
+      {/* What we build. This H2 keeps "digital transformation" on the page
+          in a heading, per the SEO cluster work. */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build"
+            title={
+              <>
+                Digital transformation, one automated{' '}
+                <span style={{ color: '#1D4ED8' }}>process at a&nbsp;time.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Service Offerings */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Digital transformation, one automated process at a&nbsp;time
-            </h2>
-            <p className="text-lg text-gray-600">From process discovery to production automation</p>
-          </div>
+      {/* Decision block: automate, integrate, or rebuild */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+          <h2
+            className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+            style={{ lineHeight: 1.08 }}
+          >
+            Automate, integrate, or rebuild?
+          </h2>
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-gray-600 md:text-lg">
+            Not every manual process deserves a bot. The right fix depends on what sits underneath
+            the process, and picking wrong is how companies end up with a bot farm nobody trusts.
+          </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offerings.map((offering) => {
-              const Icon = offering.icon;
-              return (
-                <div key={offering.id} className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
-                  <Icon className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">{offering.title}</h3>
-                  <p className="text-gray-600 mb-6">{offering.description}</p>
-                  <div className="mb-4">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Key Outcomes</div>
-                    <ul className="space-y-1">
-                      {offering.outcomes.map((outcome) => (
-                        <li key={outcome} className="flex items-center gap-2 text-sm text-gray-600">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          {outcome}
-                        </li>
-                      ))}
-                    </ul>
+          <div className="mt-9 divide-y divide-gray-200 border-y border-gray-200">
+            {ROUTES.map((route, i) => (
+              <div key={route.label} className="grid gap-3 py-7 md:grid-cols-12 md:gap-8">
+                <div className="md:col-span-4">
+                  <div className="flex items-baseline gap-4">
+                    <span className={`text-sm font-semibold text-gray-300 ${v4Display}`}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h3 className={`text-xl font-semibold text-black ${v4Display}`}>{route.label}</h3>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {offering.technologies.map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-gray-100 rounded text-xs text-gray-600">{tech}</span>
-                    ))}
-                  </div>
+                  <p className="mt-2 pl-9 text-xs font-medium uppercase tracking-wide text-gray-400 md:pl-0 md:mt-3">
+                    {route.chips}
+                  </p>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies */}
-      <section className="py-20 bg-[var(--aci-secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Automation Projects We&rsquo;ve Built</h2>
-            <p className="text-lg text-gray-400">Real transformations. Measurable outcomes.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {caseStudies.map((study) => (
-              <div key={study.slug} className="bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-700 transition-colors">
-                <div className="p-6 border-b border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xl font-bold text-white">{displayClient(study)}</span>
-                    <span className="text-sm text-gray-400">{study.industry}</span>
-                  </div>
-                  <p className="text-gray-300 text-sm">{study.challenge}</p>
-                </div>
-                <div className="p-6">
-                  <div className="space-y-3 mb-6">
-                    {study.results.map((result, idx) => (
-                      <div key={idx} className="flex items-baseline gap-3">
-                        <span className="text-2xl font-bold text-[var(--aci-primary-light)]">{result.metric}</span>
-                        <span className="text-sm text-gray-400">{result.description}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {study.technologies.map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-gray-700 rounded text-xs text-gray-300">{tech}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Button href="/case-studies?service=digital-transformation" variant="secondary" size="lg">
-              See All Automation Case Studies <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose ACI */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">Why Choose ACI for Automation</h2>
-            <p className="text-lg text-gray-600">What makes us different</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {differentiators.map((diff) => (
-              <div key={diff.title} className="bg-white p-8 rounded-xl shadow-sm">
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">{diff.title}</h3>
-                <p className="text-gray-600 mb-4">{diff.description}</p>
-                <div className="flex items-center gap-2 text-sm text-[var(--aci-primary)]">
-                  <CheckCircle className="w-4 h-4" />
-                  {diff.proof}
+                <div className="md:col-span-8">
+                  <p className="text-[15px] leading-relaxed text-gray-600">{route.body}</p>
+                  {route.link ? (
+                    <Link
+                      href={route.link.href}
+                      className="group mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700"
+                    >
+                      {route.link.label}
+                      <ArrowUpRight
+                        size={15}
+                        aria-hidden="true"
+                        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      />
+                    </Link>
+                  ) : null}
                 </div>
               </div>
             ))}
@@ -380,42 +351,72 @@ export default function DigitalTransformationPage() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">Common Questions About Automation</h2>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details key={faq.question} className="group bg-gray-50 rounded-xl">
-                <summary className="flex items-center justify-between cursor-pointer p-6 text-lg font-medium text-[var(--aci-secondary)]">
-                  {faq.question}
-                  <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 text-gray-600">{faq.answer}</div>
-              </details>
-            ))}
-          </div>
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Measured in hours, errors, <span style={{ color: '#1D4ED8' }}>and cycle&nbsp;time.</span>
+              </>
+            }
+          />
+          <ProofCards
+            cards={PROOF.map((p) => ({
+              eyebrow: displayClient(p),
+              metric: p.metric,
+              metricLabel: p.metricLabel,
+              summary: p.summary,
+              href: p.href,
+              linkLabel: p.linkLabel,
+            }))}
+          />
         </div>
       </section>
+
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Discovery first. Always." />
+          <ProcessStrip steps={PROCESS} />
+        </div>
+      </section>
+
+      {/* Bridge to managed operations */}
+      <BridgeBand
+        title="Bots need running too."
+        body="An automation program earns its keep when the bots still run in year two: monitored, patched, and rebuilt when the screens change. Our managed operations team runs automations around the clock under SLA, with the same discipline we bring to data platforms."
+        link={{ label: 'Managed Operations', href: '/services/managed-operations' }}
+      />
+
+      {/* Why ACI */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title="Why enterprises pick us for automation" />
+          <FactsRow facts={FACTS} />
+        </div>
+      </section>
+
+      <PageFaq
+        kicker="Questions"
+        title={
+          <>
+            Automation questions,
+            <br />
+            <span style={{ color: '#1D4ED8' }}>answered straight.</span>
+          </>
+        }
+        sub="The questions we hear most before an automation engagement. Anything else belongs in a conversation."
+        faqs={FAQS}
+      />
+
+      <ClusterPosts keywords={['digital transformation', 'automation', 'rpa', 'servicenow', 'process']} />
 
       <RelatedLinks items={digitalTransformationRelated} />
 
-      {/* Final CTA */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Automate Your Processes?</h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Talk to an automation architect about your process challenges.
-          </p>
-
-          <Button href="/contact?service=digital-transformation" variant="lime" size="lg">
-            Talk to an Automation Architect
-          </Button>
-        </div>
-      </section>
-    </>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Let's automate the busywork" />
+    </div>
   );
 }

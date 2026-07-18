@@ -1,13 +1,28 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Users, Target, BarChart3, Mail, Sparkles, Database } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import { ServiceSchema, FAQSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { martechCdpRelated } from '@/content/related-links';
-
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { displayClient } from '@/lib/content/anonymize';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+
+export const revalidate = 3600;
+
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
 const siteUrl = getSiteUrl();
@@ -38,146 +53,161 @@ export const metadata: Metadata = {
   },
 };
 
-const keyOutcomes = [
-  '1:1 personalization at scale',
-  'Unified customer view across all touchpoints',
-  'Real-time journey orchestration',
-  'Measurable lift in conversion and retention',
-];
+/* ------------------------------- page copy ------------------------------- */
 
-const offerings = [
+const OFFERINGS = [
   {
-    id: 'cdp-implementation',
-    title: 'CDP Implementation',
-    description: 'Salesforce Data Cloud, Adobe Real-Time CDP, or Segment implementations with unified customer profiles.',
-    icon: Database,
-    technologies: ['Salesforce Data Cloud', 'Adobe RT-CDP', 'Segment', 'mParticle'],
-    outcomes: ['360° customer view', 'Real-time profile updates', 'Privacy-compliant activation'],
+    title: 'CDP implementation',
+    body: 'Salesforce Data Cloud, Adobe Real-Time CDP, or Segment, implemented end to end: sources connected, identities resolved, duplicates merged into one record per human. Consent rides along with every profile, so activation stays legal in every region you sell in.',
+    chips: ['Salesforce Data Cloud', 'Adobe RT-CDP', 'Segment', 'mParticle'],
   },
   {
-    id: 'journey-orchestration',
-    title: 'Journey Orchestration',
-    description: 'Multi-channel customer journeys that respond in real-time to behavior signals.',
-    icon: Target,
-    technologies: ['Salesforce Journey Builder', 'Adobe Journey Optimizer', 'Braze Canvas'],
-    outcomes: ['20% lift in engagement', 'Automated lifecycle marketing', 'Cross-channel consistency'],
+    title: 'Journey orchestration',
+    body: 'Multi-channel journeys in Journey Builder, Adobe Journey Optimizer, or Braze Canvas that react to what the customer just did, not what last month’s batch said. Entry and exit rules get tested against holdout groups, so lift is measured, not assumed.',
+    chips: ['Journey Builder', 'Adobe Journey Optimizer', 'Braze Canvas'],
   },
   {
-    id: 'personalization-engine',
-    title: 'Personalization Engine',
-    description: 'AI-driven personalization for web, email, mobile, and paid media.',
-    icon: Sparkles,
-    technologies: ['Einstein AI', 'Adobe Sensei', 'Dynamic Yield'],
-    outcomes: ['15% increase in conversion', 'Product recommendations', 'Next-best-action'],
+    title: 'Personalization engines',
+    body: 'Einstein, Adobe Sensei, and Braze tuned for web, email, and app. Recommendations and next best action run off the unified profile, which is why the identity work comes first. Personalizing on bad identity just gets the wrong name in the greeting faster.',
+    chips: ['Einstein AI', 'Adobe Sensei', 'Braze', 'Dynamic Yield'],
   },
   {
-    id: 'email-marketing',
-    title: 'Email & Messaging',
-    description: 'High-deliverability email programs with dynamic content and A/B testing.',
-    icon: Mail,
-    technologies: ['Salesforce Marketing Cloud', 'Braze', 'Klaviyo', 'SendGrid'],
-    outcomes: ['Improved deliverability', 'Higher open rates', 'Reduced unsubscribes'],
+    title: 'Email and messaging',
+    body: 'Marketing Cloud and Braze programs with deliverability treated as engineering: authentication, warm-up, list hygiene, and suppression logic. Dynamic content and A/B testing come standard, not as a phase two.',
+    chips: ['Salesforce Marketing Cloud', 'Braze', 'Klaviyo', 'SendGrid'],
   },
   {
-    id: 'loyalty-crm',
-    title: 'Loyalty & CRM',
-    description: 'Loyalty program design and CRM integrations that drive repeat purchase.',
-    icon: Users,
-    technologies: ['Salesforce CRM', 'Loyalty Management', 'Service Cloud'],
-    outcomes: ['Increased LTV', 'Higher retention', 'Unified service experience'],
+    title: 'Loyalty and CRM',
+    body: 'Loyalty programs wired into the CRM and the CDP, so points, tiers, and offers read from the same profile the campaigns use. Service sees what marketing promised. That alone ends a lot of internal arguments.',
+    chips: ['Salesforce CRM', 'Loyalty Management', 'Service Cloud'],
   },
   {
-    id: 'analytics-attribution',
-    title: 'Analytics & Attribution',
-    description: 'Marketing mix modeling, multi-touch attribution, and campaign analytics.',
-    icon: BarChart3,
-    technologies: ['Adobe Analytics', 'Google Analytics 4', 'Tableau', 'Looker'],
-    outcomes: ['Clear ROI measurement', 'Channel optimization', 'Budget allocation'],
+    title: 'Analytics and attribution',
+    body: 'Multi-touch attribution and campaign analytics your finance team can interrogate. We would rather show a smaller number that holds up than a big one that dies in the quarterly review.',
+    chips: ['Adobe Analytics', 'Google Analytics 4', 'Tableau', 'Looker'],
   },
 ];
 
-const caseStudies = [
+// CDP chooser: three columns instead of the kit's two, and text headers
+// instead of logos, so this stays an inline variant of DecisionPanel.
+const CDP_COLUMNS = ['Salesforce Data Cloud', 'Adobe RT-CDP', 'Lakehouse build'];
+
+const CDP_ROWS: { need: string; picks: [boolean, boolean, boolean] }[] = [
+  { need: 'Your CRM, service desk, and commerce already live in Salesforce', picks: [true, false, false] },
+  { need: 'Adobe carries your content, journeys, and analytics', picks: [false, true, false] },
+  { need: 'A governed lakehouse already holds the customer data', picks: [false, false, true] },
+  { need: 'Activation this quarter matters more than owning the stack', picks: [true, true, false] },
+  { need: 'Marketing and data science must share one identity graph', picks: [false, false, true] },
+];
+
+const PROOF = [
   {
-    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
-    client: 'Fortune 500 Convenience Retailer',
     client_descriptor: 'Fortune 500 Convenience Retail Chain',
-    industry: 'Retail',
-    challenge: 'Fragmented customer data across 600+ locations, no unified view',
-    results: [
-      { metric: '30%', description: 'Reduction in data latency' },
-      { metric: '15%', description: 'Improvement in promotions' },
-      { metric: '600+', description: 'Locations integrated' },
-    ],
-    technologies: ['Salesforce', 'Braze', 'AWS', 'Databricks'],
+    metric: '15%',
+    metricLabel: 'Improvement in promotion effectiveness',
+    summary: 'Salesforce and Braze activated on a Databricks identity spine across 600+ locations. Email engagement lifted 2.5x, and data latency dropped 30%.',
+    href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+    linkLabel: 'Read the retail story',
   },
   {
-    slug: 'hospitality-loyalty',
-    client: 'Global Hospitality Brand',
     client_descriptor: 'Global Hospitality and Resort Brand',
-    industry: 'Hospitality',
-    challenge: 'Loyalty program data siloed from marketing systems',
-    results: [
-      { metric: 'Unified', description: 'Customer profile' },
-      { metric: '20%', description: 'Increase in bookings' },
-      { metric: 'Real-time', description: 'Personalization' },
-    ],
-    technologies: ['Salesforce', 'Marketing Cloud', 'Data Cloud'],
+    metric: '20%',
+    metricLabel: 'Increase in bookings',
+    summary: 'Loyalty data unified with Marketing Cloud and Data Cloud into one guest profile, feeding real-time personalization across the booking journey.',
+    href: '/industries/hospitality',
+    linkLabel: 'See our hospitality work',
   },
 ];
 
-const differentiators = [
+const PROCESS = [
   {
-    title: 'Salesforce Agentforce Partner',
-    description: "Our Salesforce partnership keeps us at the front edge of AI-powered marketing with Agentforce.",
-    proof: 'Salesforce Consulting Partner',
+    title: 'Map',
+    timeframe: 'Weeks 1 to 4',
+    body: 'Inventory the sources, audit the identity keys and consent state, and pick the first activation use case worth real money.',
   },
   {
-    title: 'Data-First Approach',
-    description: 'CDP implementations built on solid data foundations, not marketing-first chaos.',
-    proof: 'Data engineering heritage',
+    title: 'Design',
+    timeframe: 'Weeks 3 to 8',
+    body: 'CDP choice, identity model, consent architecture, and an integration plan your data team signs off on.',
   },
   {
-    title: 'Measurable Outcomes',
-    description: 'Every campaign, every journey measured. We optimize based on data, not opinions.',
-    proof: 'Clear attribution models',
+    title: 'Connect',
+    timeframe: 'Months 2 to 5',
+    body: 'Sources flow in, match rules run, and unified profiles start building. Match rates are reported from the first week.',
   },
   {
-    title: 'Production-Grade Quality',
-    description: 'Same engineering rigor we apply to data platforms, applied to your marketing stack.',
-    proof: '24/7 SLA support available',
+    title: 'Activate',
+    timeframe: 'Months 4 to 7',
+    body: 'First journeys and segments go live, measured against holdout groups so the lift is real.',
+  },
+  {
+    title: 'Scale',
+    body: 'More channels, more use cases. Enterprise implementations land in 6 to 9 months; simpler stacks come in well under that.',
   },
 ];
 
-const faqs = [
+const FACTS = [
+  {
+    label: 'Delivery',
+    line: 'The architects who design your identity model build the integrations. No switch between the pitch team and the delivery pod.',
+  },
+  {
+    label: 'Partnerships',
+    line: 'Salesforce partner with an Agentforce practice, Braze Alloy partner, and Adobe Solution Partner.',
+  },
+  {
+    label: 'Foundations',
+    line: 'We are data engineers first. Your CDP sits on identity and pipeline work we do for a living, not on hope.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+];
+
+const FAQS = [
+  {
+    question: 'What is a customer data platform?',
+    answer: 'Software that pulls customer records from every system you run, resolves them to one profile per human, and serves that profile to marketing, service, and analytics in real time. The hard part is not the software. It is the identity and consent work underneath it.',
+  },
   {
     question: 'Which CDP should we choose?',
-    answer: 'It depends on your existing stack. Salesforce Data Cloud for Salesforce-heavy orgs, Adobe RT-CDP for Adobe shops, Segment for flexibility. We help you evaluate based on your specific requirements.',
+    answer: 'It follows your stack. Salesforce Data Cloud for Salesforce-heavy orgs, Adobe Real-Time CDP for Adobe shops, Segment when you want flexibility, and a composable build on the lakehouse when you already govern your data and do not want a second copy of it. We implement all of them, so the recommendation follows your architecture.',
   },
   {
     question: 'How long does a CDP implementation take?',
-    answer: '6-9 months for enterprise implementations. Simpler deployments can be faster. The timeline depends on data sources, use cases, and integration complexity.',
+    answer: 'Enterprise implementations run 6 to 9 months end to end. Simpler deployments come in faster. The first activation use case usually goes live around month four; we do not save all the value for the final reveal.',
   },
   {
-    question: 'What about data privacy and compliance?',
-    answer: 'Privacy is built in. We implement consent management, data residency controls, and ensure GDPR/CCPA compliance from day one.',
+    question: 'Do we need a CDP if we already have a lakehouse?',
+    answer: 'Maybe not a packaged one. If your lakehouse is governed and the identity graph lives there, a composable CDP can activate straight from it. If marketing needs tooling and speed more than architecture, a packaged CDP still earns its place.',
+  },
+  {
+    question: 'How do you handle privacy and consent?',
+    answer: 'Consent management, data residency controls, and GDPR and CCPA compliance are designed in from day one, not patched on before an audit. Every activation reads the consent record before it fires.',
   },
   {
     question: 'Can you work with our existing marketing tools?',
-    answer: 'Yes. We integrate with your existing stack and add capabilities incrementally. No need to rip and replace.',
+    answer: 'Yes. We integrate with the stack you run and add capability incrementally. Rip and replace is a last resort, not a sales motion.',
+  },
+  {
+    question: 'How do you measure whether it worked?',
+    answer: 'Match rates, profile coverage, and activation lift against holdout groups. If a journey cannot beat its holdout, we say so and fix the journey instead of the reporting.',
   },
 ];
 
+/* --------------------------------- page ---------------------------------- */
+
 export default function MarTechCDPPage() {
   return (
-    <>
-      {/* Structured Data for SEO/AEO */}
+    <div className={`bg-white text-black ${v4Sans}`}>
       <ServiceSchema
         name="MarTech & CDP Services"
         description="Customer 360 that actually works. Salesforce Marketing Cloud, Adobe Experience Platform, Braze implementations."
         url="/services/martech-cdp"
         serviceType="Marketing Technology Consulting"
       />
-      <FAQSchema faqs={faqs} />
+      {/* FAQPage JSON-LD comes from PageFaq below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -186,222 +216,220 @@ export default function MarTechCDPPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                MarTech & CDP
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                MarTech &amp; CDP: Customer 360 That Actually&nbsp;Works
-              </h1>
-              <p className="text-lg text-gray-300 mb-8">
-                Salesforce Marketing Cloud, Adobe Experience Platform, Braze. Real-time personalization at scale.
-                We build CDPs and marketing stacks that unify your customer data and drive measurable lift.
-              </p>
+      <ServiceHero
+        kicker="MarTech & CDP"
+        title={
+          <>
+            MarTech &amp; CDP: Customer 360 That{' '}
+            <span style={{ color: '#1D4ED8' }}>Actually&nbsp;Works</span>
+          </>
+        }
+        lede="ACI Infotech builds customer data platforms that give marketing one identity-resolved profile per customer: Salesforce Data Cloud, Adobe Real-Time CDP, or a composable build on your lakehouse. We connect the sources, resolve the identities, carry consent through every hop, and hand your team segments that update in real time, not monthly list pulls."
+        chips={[
+          'Salesforce Agentforce partner',
+          'Braze Alloy partner',
+          'Adobe Solution Partner',
+          'GDPR and CCPA built in',
+        ]}
+        primary={{ label: 'Talk to a MarTech engineer', href: '/contact' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        logos={[
+          { src: '/brand/salesforce-color.png', alt: 'Salesforce' },
+          { src: '/images/Solution-Partners/braze.png', alt: 'Braze' },
+        ]}
+        logosCaption="Salesforce partner with an Agentforce practice, and a Braze Alloy partner. We implement what we recommend."
+      />
 
-              <ul className="space-y-3 mb-8">
-                {keyOutcomes.map((outcome) => (
-                  <li key={outcome} className="flex items-center gap-3 text-gray-300">
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                    {outcome}
-                  </li>
+      {/* Problem band: identity, consent, and activation as the real fight */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        pill="Why customer 360 fails"
+        headline={
+          <>
+            Your customer exists in <span className="text-[#60A5FA]">12 systems.</span>{' '}
+            <br className="hidden sm:block" />
+            None of them agree.
+          </>
+        }
+        body="Web, app, email, store, loyalty, service desk: every channel keeps its own version of the same person. Identity never resolves, consent lives in a spreadsheet, and activation means exporting a CSV at 5pm. A CDP only fixes this when the identity resolution and the governance under it are engineered properly. That part is the job."
+        story={{
+          metric: { value: '2.5x', label: 'Email engagement lift' },
+          title: 'One customer profile across 600+ retail locations',
+          quote:
+            'They flawlessly delivered top-tier digital data on a milestone that mattered to us. Their dedication and expertise made them a genuine partner, not a vendor.',
+          role: 'Director of Data and MarTech',
+          org: 'A national convenience retailer',
+          href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+        }}
+      />
+
+      {/* What we build */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build"
+            title={
+              <>
+                One customer profile. <span style={{ color: '#1D4ED8' }}>Six ways to&nbsp;use it.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
+        </div>
+      </section>
+
+      {/* Decision block: the CDP chooser, three columns (inline variant of
+          the kit's DecisionPanel, which supports two logo columns) */}
+      <section className="border-t border-gray-200 bg-gray-50">
+        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+          <h2
+            className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+            style={{ lineHeight: 1.08 }}
+          >
+            Which CDP? Sometimes none.
+          </h2>
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-gray-600 md:text-lg">
+            The honest answer starts with the stack you already run. Salesforce Data Cloud earns
+            its keep when the customer record already lives in Salesforce. Adobe Real-Time CDP fits
+            Adobe-first experience teams. And if you already run a governed lakehouse, a composable
+            build can activate straight from it and skip the second copy of your data entirely. We
+            implement all three, so the recommendation follows your architecture, not a reseller
+            quota.
+          </p>
+
+          <div className="mt-9 overflow-x-auto">
+            <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+              <thead>
+                <tr>
+                  <th className="w-2/5 border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    The job at hand
+                  </th>
+                  {CDP_COLUMNS.map((col) => (
+                    <th
+                      key={col}
+                      className={`border-b border-gray-200 pb-4 text-center text-sm font-semibold text-black ${v4Display}`}
+                    >
+                      {col}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {CDP_ROWS.map((row) => (
+                  <tr key={row.need}>
+                    <td className="border-b border-gray-200 py-4 pr-6 font-medium text-gray-800">{row.need}</td>
+                    {row.picks.map((on, i) => (
+                      <td key={CDP_COLUMNS[i]} className="border-b border-gray-200 py-4">
+                        <span
+                          aria-hidden="true"
+                          className="mx-auto block h-3 w-3 rounded-full"
+                          style={{ background: on ? '#1D4ED8' : 'rgba(0,0,0,0.08)' }}
+                        />
+                        <span className="sr-only">{on ? `Fits ${CDP_COLUMNS[i]}` : ''}</span>
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </ul>
-
-              <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                Salesforce Consulting Partner | Adobe Solution Partner
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button href="/contact?service=martech-cdp" variant="primary" size="lg">
-                  Talk to a MarTech Architect
-                </Button>
-                <Button
-                  href="/case-studies?service=martech-cdp"
-                  variant="ghost"
-                  size="lg"
-                  className="text-white border-white hover:bg-white/10"
-                >
-                  See MarTech Projects
-                </Button>
-              </div>
-            </div>
-
-            {/* Visual */}
-            <div className="relative hidden lg:block">
-              <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <div className="text-sm text-gray-400 mb-4">Customer Data Platform</div>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-4 gap-2">
-                    {['Web', 'Mobile', 'Email', 'Store'].map((src) => (
-                      <div key={src} className="bg-gray-700 rounded-lg p-2 text-center text-xs text-gray-300">{src}</div>
-                    ))}
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
-                    <div className="text-white font-bold">Customer Data Platform</div>
-                    <div className="text-xs text-gray-300 mt-1">Unified Profiles • Real-time Segments</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="bg-green-900/30 rounded-lg p-3 text-center text-xs text-green-300">Email</div>
-                    <div className="bg-blue-900/30 rounded-lg p-3 text-center text-xs text-blue-300">Ads</div>
-                    <div className="bg-purple-900/30 rounded-lg p-3 text-center text-xs text-purple-300">App</div>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-pink-500/10 rounded-3xl blur-3xl -z-10"></div>
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      {/* Service Offerings */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">MarTech & CDP Services</h2>
-            <p className="text-lg text-gray-600">From data unification to activation</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offerings.map((offering) => {
-              const Icon = offering.icon;
-              return (
-                <div key={offering.id} className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
-                  <Icon className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">{offering.title}</h3>
-                  <p className="text-gray-600 mb-6">{offering.description}</p>
-                  <div className="mb-4">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Key Outcomes</div>
-                    <ul className="space-y-1">
-                      {offering.outcomes.map((outcome) => (
-                        <li key={outcome} className="flex items-center gap-2 text-sm text-gray-600">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          {outcome}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {offering.technologies.slice(0, 4).map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-gray-100 rounded text-xs text-gray-600">{tech}</span>
-                    ))}
-                  </div>
+      {/* Proof: two case studies, so a two-wide inline variant of
+          ProofCards plus a pointer card instead of a lopsided 3-grid */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Measured in production, <span style={{ color: '#1D4ED8' }}>not in the&nbsp;deck.</span>
+              </>
+            }
+          />
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            {PROOF.map((card) => (
+              <Link
+                key={card.href}
+                href={card.href}
+                className="group flex flex-col rounded-2xl border border-white/10 bg-[#0b1220] p-7 transition-colors duration-300 hover:border-white/25 md:p-8"
+              >
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-white/50">
+                  {displayClient(card)}
+                </p>
+                <div className="mt-5 flex items-baseline gap-2">
+                  <span className={`text-5xl font-bold leading-none text-[#84CC16] ${v4Display}`}>
+                    {card.metric}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies */}
-      <section className="py-20 bg-[var(--aci-secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">MarTech Projects We&rsquo;ve Built</h2>
-            <p className="text-lg text-gray-400">Real implementations. Measurable outcomes.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {caseStudies.map((study) => (
-              <div key={study.slug} className="bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-700 transition-colors">
-                <div className="p-6 border-b border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xl font-bold text-white">{displayClient(study)}</span>
-                    <span className="text-sm text-gray-400">{study.industry}</span>
-                  </div>
-                  <p className="text-gray-300 text-sm">{study.challenge}</p>
-                </div>
-                <div className="p-6">
-                  <div className="space-y-3 mb-6">
-                    {study.results.map((result, idx) => (
-                      <div key={idx} className="flex items-baseline gap-3">
-                        <span className="text-2xl font-bold text-[var(--aci-primary-light)]">{result.metric}</span>
-                        <span className="text-sm text-gray-400">{result.description}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {study.technologies.map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-gray-700 rounded text-xs text-gray-300">{tech}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                <p className="mt-2 text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/50">
+                  {card.metricLabel}
+                </p>
+                <p className="mt-5 flex-1 text-sm leading-relaxed text-white/75">{card.summary}</p>
+                <span className="mt-6 flex items-center gap-1 text-xs font-semibold text-[#84CC16]">
+                  {card.linkLabel}
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </span>
+              </Link>
             ))}
           </div>
-
-          <div className="text-center mt-12">
-            <Button href="/case-studies?service=martech-cdp" variant="secondary" size="lg">
-              See All MarTech Case Studies <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
+          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-gray-500">
+            More customer-360 work shows up across our retail and hospitality engagements, usually
+            one layer down in the data platform.{' '}
+            <Link href="/case-studies" className="font-semibold text-blue-700">
+              Browse all case studies
+            </Link>
+            .
+          </p>
         </div>
       </section>
 
-      {/* Why Choose ACI */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">Why Choose ACI for MarTech</h2>
-            <p className="text-lg text-gray-600">What makes us different</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {differentiators.map((diff) => (
-              <div key={diff.title} className="bg-white p-8 rounded-xl shadow-sm">
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">{diff.title}</h3>
-                <p className="text-gray-600 mb-4">{diff.description}</p>
-                <div className="flex items-center gap-2 text-sm text-[var(--aci-primary)]">
-                  <CheckCircle className="w-4 h-4" />
-                  {diff.proof}
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. Honest ranges." />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">Common Questions About MarTech</h2>
-          </div>
+      {/* Bridge to data engineering */}
+      <BridgeBand
+        title="A CDP is only as good as the pipes under it."
+        body="Identity resolution fails quietly when the source data is late, duplicated, or wrong. Our data engineering practice builds the lakehouse, pipelines, and quality gates that make a customer 360 trustworthy, which is why most of our MarTech work starts one layer down."
+        link={{ label: 'Data Engineering', href: '/services/data-engineering' }}
+      />
 
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details key={faq.question} className="group bg-gray-50 rounded-xl">
-                <summary className="flex items-center justify-between cursor-pointer p-6 text-lg font-medium text-[var(--aci-secondary)]">
-                  {faq.question}
-                  <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 text-gray-600">{faq.answer}</div>
-              </details>
-            ))}
-          </div>
+      {/* Why ACI */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title="Why enterprises pick us for MarTech" />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
+
+      <PageFaq
+        kicker="Questions"
+        title={
+          <>
+            MarTech questions,
+            <br />
+            <span style={{ color: '#1D4ED8' }}>answered straight.</span>
+          </>
+        }
+        sub="The questions we hear most before a CDP engagement. Anything else belongs in a conversation."
+        faqs={FAQS}
+      />
+
+      <ClusterPosts keywords={['martech', 'cdp', 'customer data platform', 'personalization', 'customer 360']} />
 
       <RelatedLinks items={martechCdpRelated} />
 
-      {/* Final CTA */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Unify Your Customer Data?</h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Talk to a MarTech architect about your customer data challenges.
-          </p>
-
-          <Button href="/contact?service=martech-cdp" variant="lime" size="lg">
-            Talk to a MarTech Architect
-          </Button>
-        </div>
-      </section>
-    </>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Let's unify your customer data" />
+    </div>
   );
 }

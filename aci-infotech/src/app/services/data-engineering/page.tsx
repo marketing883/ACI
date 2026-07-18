@@ -7,6 +7,7 @@ import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
 import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
 import CtaSection from '@/components/v4/hero/CtaSection';
+import DataFlowPanel from '@/components/v4/page/DataFlowPanel';
 import { v4Sans, v4Geist } from '@/components/v4/fonts';
 import {
   SectionHead,
@@ -234,11 +235,7 @@ export default function DataEngineeringPage() {
         ]}
         primary={{ label: 'Talk to a data architect', href: '/contact' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
-        logos={[
-          { src: '/brand/databricks-color-on-light.svg', alt: 'Databricks' },
-          { src: '/brand/snowflake-color.svg', alt: 'Snowflake' },
-        ]}
-        logosCaption="Certified on both, with 40+ lakehouse implementations delivered."
+        visual={<DataFlowPanel />}
       />
 
       {/* Problem band: the underwater beat, retargeted at data platforms */}
