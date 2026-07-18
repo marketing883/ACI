@@ -3,19 +3,9 @@
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import {
-  ArrowLeft,
-  MapPin,
-  Clock,
-  Briefcase,
-  DollarSign,
-  CheckCircle2,
-  Send,
-  Loader2,
-  Building2,
-  Calendar
-} from 'lucide-react';
+import { ArrowUpRight, Check, Loader2, Plus } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { v4Sans, v4Display } from '@/components/v4/fonts';
 
 interface Job {
   id: string;
@@ -42,6 +32,43 @@ interface Job {
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+/** Soft double shadow shared with the v4 page kit. */
+const CARD_SHADOW = 'shadow-[0_3px_9px_rgba(63,74,126,0.06),0_1px_29px_rgba(63,74,126,0.12)]';
+
+/** Blue check badge, matching CheckBadge in src/components/v4/page/kit.tsx.
+    Defined locally so this client page skips the server kit bundle. */
+function CheckBadge() {
+  return (
+    <span
+      aria-hidden="true"
+      className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+      style={{ background: '#1D4ED8' }}
+    >
+      <Check size={12} strokeWidth={3} className="text-white" />
+    </span>
+  );
+}
+
+/** Animated-underline text link, the v4 house style. */
+function TextLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-blue-700"
+    >
+      <span className="relative">
+        {children}
+        <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+      </span>
+      <ArrowUpRight
+        size={15}
+        aria-hidden="true"
+        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+      />
+    </Link>
+  );
 }
 
 export default function JobDetailPage({ params }: PageProps) {
@@ -164,10 +191,10 @@ export default function JobDetailPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-gray-50 pt-32 pb-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-[var(--aci-primary)] mx-auto" />
-          <p className="text-gray-500 mt-4">Loading job details...</p>
+      <main className={`min-h-screen bg-white pb-20 pt-20 text-black ${v4Sans}`}>
+        <div className="mx-auto max-w-[840px] px-6 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-[#1D4ED8]" />
+          <p className="mt-4 text-gray-500">Loading job details...</p>
         </div>
       </main>
     );
@@ -175,21 +202,20 @@ export default function JobDetailPage({ params }: PageProps) {
 
   if (error || !job) {
     return (
-      <main className="min-h-screen bg-gray-50 pt-32 pb-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="bg-white p-8 rounded-xl shadow-sm">
-            <Briefcase className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{error || 'Job Not Found'}</h1>
-            <p className="text-gray-500 mb-6">
-              This position may have been filled or removed.
-            </p>
-            <Link
-              href="/careers"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--aci-primary)] text-white rounded-lg hover:bg-blue-700"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              View All Positions
-            </Link>
+      <main className={`min-h-screen bg-white pb-24 pt-16 text-black ${v4Sans}`}>
+        <div className="mx-auto max-w-[840px] px-6">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            / Careers
+          </p>
+          <h1 className={`text-3xl font-bold tracking-tight sm:text-4xl ${v4Display}`}>
+            {error || 'Job Not Found'}
+          </h1>
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-gray-600">
+            This position may have been filled or removed. The full list of
+            open roles is one click&nbsp;away.
+          </p>
+          <div className="mt-8">
+            <TextLink href="/careers">View all open roles</TextLink>
           </div>
         </div>
       </main>
@@ -198,220 +224,293 @@ export default function JobDetailPage({ params }: PageProps) {
 
   if (submitted) {
     return (
-      <main className="min-h-screen bg-gray-50 pt-32 pb-20">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-white p-8 rounded-xl shadow-sm text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Application Submitted!</h1>
-            <p className="text-gray-600 mb-6">
-              Thank you for applying to {job.title}. We've received your application and will be in touch soon.
-            </p>
-            <Link
-              href="/careers"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--aci-primary)] text-white rounded-lg hover:bg-blue-700"
+      <main className={`min-h-screen bg-white pb-24 pt-16 text-black ${v4Sans}`}>
+        <div className="mx-auto max-w-[840px] px-6">
+          <div className={`rounded-2xl bg-white p-8 md:p-10 ${CARD_SHADOW}`}>
+            <span
+              aria-hidden="true"
+              className="flex h-12 w-12 items-center justify-center rounded-full"
+              style={{ background: '#1D4ED8' }}
             >
-              View More Positions
-            </Link>
+              <Check size={22} strokeWidth={3} className="text-white" />
+            </span>
+            <h1 className={`mt-6 text-3xl font-bold tracking-tight sm:text-4xl ${v4Display}`}>
+              Application submitted
+            </h1>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-gray-600">
+              Thank you for applying to {job.title}. We&apos;ve received your
+              application and will be in touch&nbsp;soon.
+            </p>
+            <div className="mt-8">
+              <TextLink href="/careers">View more open roles</TextLink>
+            </div>
           </div>
         </div>
       </main>
     );
   }
 
+  const employmentLabel =
+    job.employment_type.charAt(0).toUpperCase() + job.employment_type.slice(1).replace('-', ' ');
+  const experienceLabel =
+    job.experience_level.charAt(0).toUpperCase() + job.experience_level.slice(1);
+  const salaryLabel =
+    job.show_salary && job.salary_min
+      ? formatSalary(job.salary_min, job.salary_max, job.salary_currency)
+      : '';
+
+  // JobPosting structured data, built from the same fields the page
+  // renders. Injected client-side alongside the content it describes.
+  const jobPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    title: job.title,
+    description: job.description,
+    datePosted: job.published_at,
+    ...(job.closes_at ? { validThrough: job.closes_at } : {}),
+    employmentType: job.employment_type.replace(/-/g, '_').toUpperCase(),
+    hiringOrganization: {
+      '@type': 'Organization',
+      name: 'ACI Infotech',
+      sameAs: 'https://aciinfotech.com',
+    },
+    jobLocation: {
+      '@type': 'Place',
+      address: { '@type': 'PostalAddress', addressLocality: job.location },
+    },
+    ...(job.location_type === 'remote' ? { jobLocationType: 'TELECOMMUTE' } : {}),
+    ...(job.show_salary && job.salary_min
+      ? {
+          baseSalary: {
+            '@type': 'MonetaryAmount',
+            currency: job.salary_currency || 'USD',
+            value: {
+              '@type': 'QuantitativeValue',
+              minValue: job.salary_min,
+              ...(job.salary_max ? { maxValue: job.salary_max } : {}),
+              unitText: 'YEAR',
+            },
+          },
+        }
+      : {}),
+  };
+
+  const applyButton = (
+    <button
+      type="button"
+      onClick={() => setShowForm(true)}
+      className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-blue-700"
+    >
+      <span className="relative">
+        Apply for this role
+        <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+      </span>
+      <ArrowUpRight
+        size={15}
+        aria-hidden="true"
+        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+      />
+    </button>
+  );
+
   return (
-    <main className="min-h-screen bg-gray-50">
-      {/* Hero */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/careers"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors"
+    <main className={`min-h-screen bg-white text-black ${v4Sans}`}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }}
+      />
+
+      {/* Job header */}
+      <header className="border-b border-gray-200 bg-white">
+        <div className="mx-auto max-w-[840px] px-6 pb-10 pt-12 md:pt-16">
+          <TextLink href="/careers">All open roles</TextLink>
+
+          <p className="mb-4 mt-10 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+            / {job.department} / {job.location_type}
+          </p>
+          <h1
+            className={`text-3xl font-bold tracking-tight sm:text-4xl lg:text-[44px] ${v4Display}`}
+            style={{ lineHeight: 1.08 }}
           >
-            <ArrowLeft className="w-4 h-4" />
-            All Positions
-          </Link>
-
-          <div className="flex items-center gap-3 mb-4">
-            <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm">
-              {job.department}
-            </span>
-            <span className="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm capitalize">
-              {job.location_type}
-            </span>
-          </div>
-
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {job.title}
           </h1>
 
-          <div className="flex flex-wrap gap-6 text-gray-400">
-            <span className="flex items-center gap-2">
-              <MapPin className="w-5 h-5" />
-              {job.location}
-            </span>
-            <span className="flex items-center gap-2">
-              <Clock className="w-5 h-5" />
-              {job.employment_type.charAt(0).toUpperCase() + job.employment_type.slice(1).replace('-', ' ')}
-            </span>
-            <span className="flex items-center gap-2">
-              <Briefcase className="w-5 h-5" />
-              {job.experience_level.charAt(0).toUpperCase() + job.experience_level.slice(1)} Level
-            </span>
-            {job.show_salary && job.salary_min && (
-              <span className="flex items-center gap-2 text-green-400">
-                <DollarSign className="w-5 h-5" />
-                {formatSalary(job.salary_min, job.salary_max, job.salary_currency)}
-              </span>
-            )}
-          </div>
+          <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+            <li className="whitespace-nowrap">{job.location}</li>
+            <li className="whitespace-nowrap">{employmentLabel}</li>
+            <li className="whitespace-nowrap">{experienceLabel} level</li>
+            {salaryLabel ? <li className="whitespace-nowrap">{salaryLabel}</li> : null}
+          </ul>
 
           {job.closes_at && (
-            <div className="mt-4 flex items-center gap-2 text-yellow-400 text-sm">
-              <Calendar className="w-4 h-4" />
-              Applications close: {new Date(job.closes_at).toLocaleDateString()}
-            </div>
+            <p className="mt-4 text-sm text-gray-500">
+              Applications close {new Date(job.closes_at).toLocaleDateString()}
+            </p>
           )}
+
+          <div className="mt-8">{applyButton}</div>
         </div>
-      </section>
+      </header>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Description */}
-            <div className="bg-white p-6 rounded-xl shadow-sm">
-              <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-4">About This Role</h2>
-              <div className="prose prose-gray max-w-none">
-                <ReactMarkdown>{job.description}</ReactMarkdown>
-              </div>
-            </div>
-
-            {/* Responsibilities */}
-            {job.responsibilities && job.responsibilities.length > 0 && (
-              <div className="bg-white p-6 rounded-xl shadow-sm">
-                <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-4">Responsibilities</h2>
-                <ul className="space-y-3">
-                  {job.responsibilities.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Requirements */}
-            {job.requirements && job.requirements.length > 0 && (
-              <div className="bg-white p-6 rounded-xl shadow-sm">
-                <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-4">Requirements</h2>
-                <ul className="space-y-3">
-                  {job.requirements.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-[var(--aci-primary)] flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Nice to Have */}
-            {job.nice_to_have && job.nice_to_have.length > 0 && (
-              <div className="bg-white p-6 rounded-xl shadow-sm">
-                <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-4">Nice to Have</h2>
-                <ul className="space-y-3">
-                  {job.nice_to_have.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <span className="w-5 h-5 flex items-center justify-center text-gray-400 flex-shrink-0">+</span>
-                      <span className="text-gray-700">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Skills */}
-            {job.skills && job.skills.length > 0 && (
-              <div className="bg-white p-6 rounded-xl shadow-sm">
-                <h2 className="text-xl font-bold text-[var(--aci-secondary)] mb-4">Required Skills</h2>
-                <div className="flex flex-wrap gap-2">
-                  {job.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Apply Card */}
-            <div className="bg-white p-6 rounded-xl shadow-sm sticky top-24">
-              <h3 className="text-lg font-bold text-[var(--aci-secondary)] mb-4">
-                Apply for this position
-              </h3>
-              <button
-                onClick={() => setShowForm(true)}
-                className="w-full py-3 bg-[var(--aci-primary)] text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
+      {/* Job body */}
+      <article className="bg-white py-12 md:py-16">
+        <div className="mx-auto max-w-[720px] px-6">
+          {/* Description */}
+          <section>
+            <h2 className={`text-2xl font-bold tracking-tight sm:text-3xl ${v4Display}`}>
+              About this role
+            </h2>
+            <div className="mt-5 text-[17px] leading-relaxed text-gray-800">
+              <ReactMarkdown
+                components={{
+                  h1: ({ children }) => (
+                    <h3 className={`mt-8 text-xl font-semibold text-black ${v4Display}`}>{children}</h3>
+                  ),
+                  h2: ({ children }) => (
+                    <h3 className={`mt-8 text-xl font-semibold text-black ${v4Display}`}>{children}</h3>
+                  ),
+                  h3: ({ children }) => (
+                    <h4 className={`mt-6 text-lg font-semibold text-black ${v4Display}`}>{children}</h4>
+                  ),
+                  p: ({ children }) => <p className="mt-4 first:mt-0">{children}</p>,
+                  ul: ({ children }) => <ul className="mt-4 list-disc space-y-2 pl-5">{children}</ul>,
+                  ol: ({ children }) => <ol className="mt-4 list-decimal space-y-2 pl-5">{children}</ol>,
+                  a: ({ href, children }) => (
+                    <a href={href} className="font-semibold text-blue-700 underline underline-offset-2">
+                      {children}
+                    </a>
+                  ),
+                }}
               >
-                <Send className="w-5 h-5" />
-                Apply Now
-              </button>
-
-              {/* Benefits */}
-              {job.benefits && job.benefits.length > 0 && (
-                <div className="mt-6 pt-6 border-t">
-                  <h4 className="text-sm font-medium text-gray-500 mb-3">Benefits</h4>
-                  <ul className="space-y-2">
-                    {job.benefits.slice(0, 5).map((benefit, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm text-gray-600">
-                        <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        {benefit}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Company Info */}
-              <div className="mt-6 pt-6 border-t">
-                <div className="flex items-center gap-3 mb-3">
-                  <Building2 className="w-5 h-5 text-gray-400" />
-                  <span className="font-medium text-gray-700">ACI Infotech</span>
-                </div>
-                <p className="text-sm text-gray-500">
-                  Enterprise technology consulting firm serving Fortune 500 clients globally.
-                </p>
-              </div>
+                {job.description}
+              </ReactMarkdown>
             </div>
-          </div>
+          </section>
+
+          {/* Responsibilities */}
+          {job.responsibilities && job.responsibilities.length > 0 && (
+            <section className="mt-12 border-t border-gray-200 pt-10">
+              <h2 className={`text-2xl font-bold tracking-tight sm:text-3xl ${v4Display}`}>
+                Responsibilities
+              </h2>
+              <ul className="mt-6 space-y-3">
+                {job.responsibilities.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckBadge />
+                    <span className="text-[15px] leading-relaxed text-gray-800">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Requirements */}
+          {job.requirements && job.requirements.length > 0 && (
+            <section className="mt-12 border-t border-gray-200 pt-10">
+              <h2 className={`text-2xl font-bold tracking-tight sm:text-3xl ${v4Display}`}>
+                Requirements
+              </h2>
+              <ul className="mt-6 space-y-3">
+                {job.requirements.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckBadge />
+                    <span className="text-[15px] leading-relaxed text-gray-800">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Nice to have */}
+          {job.nice_to_have && job.nice_to_have.length > 0 && (
+            <section className="mt-12 border-t border-gray-200 pt-10">
+              <h2 className={`text-2xl font-bold tracking-tight sm:text-3xl ${v4Display}`}>
+                Nice to have
+              </h2>
+              <ul className="mt-6 space-y-3">
+                {job.nice_to_have.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <Plus
+                      size={16}
+                      strokeWidth={3}
+                      aria-hidden="true"
+                      className="mt-1 shrink-0 text-gray-400"
+                    />
+                    <span className="text-[15px] leading-relaxed text-gray-800">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Skills */}
+          {job.skills && job.skills.length > 0 && (
+            <section className="mt-12 border-t border-gray-200 pt-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+                / Skills
+              </p>
+              <p className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                {job.skills.map((skill) => (
+                  <span key={skill} className="whitespace-nowrap">
+                    {skill}
+                  </span>
+                ))}
+              </p>
+            </section>
+          )}
+
+          {/* Benefits */}
+          {job.benefits && job.benefits.length > 0 && (
+            <section className="mt-12 border-t border-gray-200 pt-10">
+              <h2 className={`text-2xl font-bold tracking-tight sm:text-3xl ${v4Display}`}>
+                Benefits
+              </h2>
+              <ul className="mt-6 space-y-3">
+                {job.benefits.slice(0, 5).map((benefit, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckBadge />
+                    <span className="text-[15px] leading-relaxed text-gray-800">{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Apply band */}
+          <section className={`mt-14 rounded-2xl bg-white p-7 md:p-8 ${CARD_SHADOW}`}>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+              / Apply
+            </p>
+            <h2 className={`mt-3 text-xl font-semibold text-black ${v4Display}`}>
+              Ready when you&nbsp;are
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-gray-600">
+              ACI Infotech is an enterprise technology consulting firm serving
+              Fortune 500 clients globally. The form takes a few&nbsp;minutes.
+            </p>
+            <div className="mt-5">{applyButton}</div>
+          </section>
         </div>
-      </div>
+      </article>
 
       {/* Application Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-lg font-semibold">Apply for {job.title}</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-hidden rounded-2xl bg-white">
+            <div className="flex items-center justify-between border-b border-gray-200 p-4 md:px-6">
+              <h2 className={`text-lg font-semibold ${v4Display}`}>Apply for {job.title}</h2>
               <button
+                type="button"
                 onClick={() => setShowForm(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg"
+                aria-label="Close application form"
+                className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-black"
               >
                 ×
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="p-6 overflow-y-auto max-h-[calc(90vh-120px)] space-y-6">
+            <form onSubmit={handleSubmit} className="max-h-[calc(90vh-120px)] space-y-6 overflow-y-auto p-6">
               {formError && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
                   {formError}
                 </div>
               )}
@@ -419,7 +518,7 @@ export default function JobDetailPage({ params }: PageProps) {
               {/* Name */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     First Name *
                   </label>
                   <input
@@ -427,11 +526,11 @@ export default function JobDetailPage({ params }: PageProps) {
                     required
                     value={form.first_name}
                     onChange={(e) => setForm({ ...form, first_name: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     Last Name *
                   </label>
                   <input
@@ -439,7 +538,7 @@ export default function JobDetailPage({ params }: PageProps) {
                     required
                     value={form.last_name}
                     onChange={(e) => setForm({ ...form, last_name: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
               </div>
@@ -447,7 +546,7 @@ export default function JobDetailPage({ params }: PageProps) {
               {/* Contact */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     Email *
                   </label>
                   <input
@@ -455,11 +554,11 @@ export default function JobDetailPage({ params }: PageProps) {
                     required
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     Phone *
                   </label>
                   <input
@@ -467,14 +566,14 @@ export default function JobDetailPage({ params }: PageProps) {
                     required
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
               </div>
 
               {/* Location */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
                   Location
                 </label>
                 <input
@@ -482,14 +581,14 @@ export default function JobDetailPage({ params }: PageProps) {
                   value={form.location}
                   onChange={(e) => setForm({ ...form, location: e.target.value })}
                   placeholder="City, Country (e.g., Bengaluru, India)"
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                 />
               </div>
 
               {/* Links */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     LinkedIn URL
                   </label>
                   <input
@@ -497,11 +596,11 @@ export default function JobDetailPage({ params }: PageProps) {
                     value={form.linkedin_url}
                     onChange={(e) => setForm({ ...form, linkedin_url: e.target.value })}
                     placeholder="https://linkedin.com/in/..."
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     Portfolio URL
                   </label>
                   <input
@@ -509,7 +608,7 @@ export default function JobDetailPage({ params }: PageProps) {
                     value={form.portfolio_url}
                     onChange={(e) => setForm({ ...form, portfolio_url: e.target.value })}
                     placeholder="https://..."
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
               </div>
@@ -517,38 +616,38 @@ export default function JobDetailPage({ params }: PageProps) {
               {/* Current Role */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     Current Company
                   </label>
                   <input
                     type="text"
                     value={form.current_company}
                     onChange={(e) => setForm({ ...form, current_company: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     Current Title
                   </label>
                   <input
                     type="text"
                     value={form.current_title}
                     onChange={(e) => setForm({ ...form, current_title: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
               </div>
 
               {/* Experience */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
                   Years of Experience
                 </label>
                 <select
                   value={form.years_experience}
                   onChange={(e) => setForm({ ...form, years_experience: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                 >
                   <option value="">Select...</option>
                   <option value="0">Less than 1 year</option>
@@ -562,13 +661,13 @@ export default function JobDetailPage({ params }: PageProps) {
               {/* Work authorization + notice period */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     Work Authorization
                   </label>
                   <select
                     value={form.work_authorization}
                     onChange={(e) => setForm({ ...form, work_authorization: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   >
                     <option value="">Select...</option>
                     <option value="Citizen / National">Citizen / National</option>
@@ -579,13 +678,13 @@ export default function JobDetailPage({ params }: PageProps) {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     Notice Period
                   </label>
                   <select
                     value={form.notice_period}
                     onChange={(e) => setForm({ ...form, notice_period: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   >
                     <option value="">Select...</option>
                     <option value="Immediately available">Immediately available</option>
@@ -599,7 +698,7 @@ export default function JobDetailPage({ params }: PageProps) {
 
               {/* Salary expectation */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
                   Salary Expectation
                 </label>
                 <input
@@ -607,13 +706,13 @@ export default function JobDetailPage({ params }: PageProps) {
                   value={form.salary_expectation}
                   onChange={(e) => setForm({ ...form, salary_expectation: e.target.value })}
                   placeholder="e.g., $120,000 or ₹25 LPA"
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                 />
               </div>
 
               {/* Resume */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
                   Resume
                 </label>
                 <input
@@ -625,14 +724,14 @@ export default function JobDetailPage({ params }: PageProps) {
                   // accepts the same set of files.
                   accept="application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx"
                   onChange={(e) => setForm({ ...form, resume: e.target.files?.[0] || null })}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                 />
-                <p className="text-xs text-gray-500 mt-1">PDF or Word document, max 5MB</p>
+                <p className="mt-1 text-xs text-gray-500">PDF or Word document, max 5MB</p>
               </div>
 
               {/* Cover Letter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
                   Cover Letter
                 </label>
                 <textarea
@@ -640,19 +739,19 @@ export default function JobDetailPage({ params }: PageProps) {
                   onChange={(e) => setForm({ ...form, cover_letter: e.target.value })}
                   rows={4}
                   placeholder="Tell us why you're interested in this role..."
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                 />
               </div>
 
               {/* How did you hear about us */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
                   How did you hear about us?
                 </label>
                 <select
                   value={form.heard_from}
                   onChange={(e) => setForm({ ...form, heard_from: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                 >
                   <option value="">Select...</option>
                   <option value="LinkedIn">LinkedIn</option>
@@ -666,30 +765,28 @@ export default function JobDetailPage({ params }: PageProps) {
                 </select>
               </div>
 
-              {/* Submit */}
-              <div className="flex justify-end gap-4 pt-4 border-t">
+              {/* Submit: the one filled button on the page, because it is a
+                  functional form submit. */}
+              <div className="flex items-center justify-end gap-6 border-t border-gray-200 pt-5">
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-6 py-2 border rounded-lg hover:bg-gray-50"
+                  className="text-sm font-semibold text-gray-500 hover:text-black"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-6 py-2 bg-[var(--aci-primary)] text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#1D4ED8] px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
                 >
                   {submitting ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                       Submitting...
                     </>
                   ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      Submit Application
-                    </>
+                    'Submit Application'
                   )}
                 </button>
               </div>
