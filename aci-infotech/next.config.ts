@@ -79,6 +79,120 @@ const nextConfig: NextConfig = {
         destination: '/case-studies/global-food-facilities-data-intelligence',
         permanent: true,
       },
+
+      // ================= LEGACY-SITE REDIRECT MAP =================
+      // GTM tag-coverage data (July 2026) showed hundreds of old
+      // HubSpot-era URLs still receiving traffic and 404ing on the
+      // new app. Specific slugs first, section wildcards last
+      // (redirects are evaluated in order). All 301.
+
+      // -- Client-name slugs still in the wild (anonymization policy) --
+      { source: '/case-study/msci-powers-scalable-data-automation-with-aci-infotech', destination: '/case-studies/modernizes-finance-reporting-with-sap-transformation', permanent: true },
+      { source: '/case-study/nestle-self-service-intelligence', destination: '/case-studies/global-cpg-self-service-analytics-brand-managers', permanent: true },
+      { source: '/case-studies/how-nestle-empowered-brand-managers-with-self-service-intelligence', destination: '/case-studies/global-cpg-self-service-analytics-brand-managers', permanent: true },
+      { source: '/case-studies/databricks-modernization-ai-enablement-for-racetrac', destination: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain', permanent: true },
+      { source: '/case-studies/yesbot-enhances-eligibility-verification-for-a-leading-healthcare-giant', destination: '/case-studies/healthcare-eligibility-verification-automation-aci-yesbot', permanent: true },
+      { source: '/case-study/:path*', destination: '/case-studies', permanent: true },
+
+      // -- Foundation pages, old paths --
+      { source: '/contact-us', destination: '/contact', permanent: true },
+      { source: '/about-us', destination: '/about', permanent: true },
+      { source: '/partner', destination: '/partners', permanent: true },
+      { source: '/insights', destination: '/blogs', permanent: true },
+      { source: '/carrers', destination: '/careers', permanent: true },
+      { source: '/media/news', destination: '/news', permanent: true },
+      { source: '/news-events', destination: '/news', permanent: true },
+      { source: '/testimonials', destination: '/case-studies', permanent: true },
+      { source: '/gallery', destination: '/about', permanent: true },
+      { source: '/automation', destination: '/services/digital-transformation', permanent: true },
+      { source: '/build-your-data-ai-advantage', destination: '/services/data-engineering', permanent: true },
+      { source: '/solutions-that-power-whats-next', destination: '/services', permanent: true },
+
+      // -- Legacy service slugs --
+      { source: '/services/data-engineering-services', destination: '/services/data-engineering', permanent: true },
+      { source: '/services/data-analytics', destination: '/services/data-engineering', permanent: true },
+      { source: '/services/data-analytics-services', destination: '/services/data-engineering', permanent: true },
+      { source: '/services/analytics-big-data', destination: '/services/data-engineering', permanent: true },
+      { source: '/services/ai-ml-services', destination: '/services/applied-ai-ml', permanent: true },
+      { source: '/services/ai-ml-devlopment', destination: '/services/applied-ai-ml', permanent: true },
+      { source: '/services/applied-ai-ml-services', destination: '/services/applied-ai-ml', permanent: true },
+      { source: '/services/artificial-intelligence-old', destination: '/services/applied-ai-ml', permanent: true },
+      { source: '/services/generative-ai-service', destination: '/services/applied-ai-ml', permanent: true },
+      { source: '/services/generative-ai-services', destination: '/services/applied-ai-ml', permanent: true },
+      { source: '/services/cloud-consulting-services', destination: '/services/cloud-modernization', permanent: true },
+      { source: '/services/cloud-enablement-services', destination: '/services/cloud-modernization', permanent: true },
+      { source: '/services/cloud-devops', destination: '/services/cloud-modernization', permanent: true },
+      { source: '/services/cyber-security-services', destination: '/services/cyber-security', permanent: true },
+      { source: '/services/cloud-cybersecurity', destination: '/services/cyber-security', permanent: true },
+      { source: '/services/devsecops-services', destination: '/services/cyber-security', permanent: true },
+      { source: '/services/managed-it', destination: '/services/managed-operations', permanent: true },
+      { source: '/services/managed-it-services', destination: '/services/managed-operations', permanent: true },
+      { source: '/services/it-service-management', destination: '/services/managed-operations', permanent: true },
+      { source: '/services/intelligent-automation-services', destination: '/services/digital-transformation', permanent: true },
+      { source: '/services/intelligent-process-automation', destination: '/services/digital-transformation', permanent: true },
+      { source: '/services/business-transformation', destination: '/services/digital-transformation', permanent: true },
+      { source: '/services/digitalcore', destination: '/services/digital-transformation', permanent: true },
+      { source: '/services/quality-engineering-and-assurance', destination: '/services/quality-engineering', permanent: true },
+      { source: '/services/digital-application-development', destination: '/services/app-development', permanent: true },
+      { source: '/services/digital-application', destination: '/services/app-development', permanent: true },
+      { source: '/services/enterprise-application', destination: '/services/app-development', permanent: true },
+      { source: '/services/enterprise-application-services', destination: '/services/app-development', permanent: true },
+      { source: '/services/digital-experience', destination: '/services/martech-cdp', permanent: true },
+      { source: '/services/digital-experience-services', destination: '/services/martech-cdp', permanent: true },
+      { source: '/services/digital-commerce-services', destination: '/services/martech-cdp', permanent: true },
+      { source: '/services/customer-experience', destination: '/services/martech-cdp', permanent: true },
+      { source: '/services/digital-consulting-services', destination: '/services/advisory-strategy', permanent: true },
+      { source: '/services/sap', destination: '/platforms/sap', permanent: true },
+      { source: '/services/sap-brim', destination: '/platforms/sap', permanent: true },
+      { source: '/services/erp', destination: '/platforms/sap', permanent: true },
+      { source: '/services/salesforce-integration', destination: '/platforms/salesforce', permanent: true },
+
+      // -- Legacy platform slugs --
+      { source: '/platforms/snowflake-consulting', destination: '/platforms/snowflake', permanent: true },
+      { source: '/platforms/salesforce-consulting-solutions', destination: '/platforms/salesforce', permanent: true },
+      { source: '/platforms/sap-consulting-solutions', destination: '/platforms/sap', permanent: true },
+      { source: '/platforms/mulesoft-consulting-services', destination: '/platforms', permanent: true },
+      { source: '/platforms/sitecore', destination: '/platforms', permanent: true },
+      { source: '/platforms/adobe-consulting-services', destination: '/platforms', permanent: true },
+
+      // -- Old /industry/* structure --
+      { source: '/industry/banking', destination: '/industries/financial-services', permanent: true },
+      { source: '/industry/insurance', destination: '/industries/financial-services', permanent: true },
+      { source: '/industry/life-sciences', destination: '/industries/healthcare', permanent: true },
+      { source: '/industry/healthcare-lifesciences', destination: '/industries/healthcare', permanent: true },
+      { source: '/industry/utility', destination: '/industries/energy', permanent: true },
+      { source: '/industry/oil-and-gas', destination: '/industries/oil-gas', permanent: true },
+      { source: '/industry/retail-consulting', destination: '/industries/retail', permanent: true },
+      { source: '/industry/:path*', destination: '/industries', permanent: true },
+      { source: '/industries/insurance-industry', destination: '/industries/financial-services', permanent: true },
+      { source: '/industries/transportation-logistics-industry', destination: '/industries/transportation', permanent: true },
+
+      // -- Old /solutions/* structure --
+      { source: '/solutions/cybersecurity', destination: '/services/cyber-security', permanent: true },
+      { source: '/solutions/sap-modernization', destination: '/platforms/sap', permanent: true },
+      { source: '/solutions/salesforce-optimization-assessment', destination: '/platforms/salesforce', permanent: true },
+      { source: '/solutions/retail-enterprise-ai-cloud-data-success', destination: '/industries/retail', permanent: true },
+      { source: '/solutions/:path*', destination: '/services', permanent: true },
+
+      // -- Old gated-content sections (singular/renamed) --
+      { source: '/whitepaper/:path*', destination: '/whitepapers', permanent: true },
+      { source: '/whitepaper', destination: '/whitepapers', permanent: true },
+      { source: '/ebook/:path*', destination: '/whitepapers', permanent: true },
+      { source: '/ebook', destination: '/whitepapers', permanent: true },
+      { source: '/press-releases/:path*', destination: '/news', permanent: true },
+      { source: '/webinar/:path*', destination: '/news', permanent: true },
+
+      // -- Old nested blog categories (new structure is flat).
+      //    2-level: keep the post slug; 3-level: keep the last segment.
+      //    Excludes /blogs/page/:n pagination. --
+      { source: '/blogs/:category((?!page/)[^/]+)/:slug([^/]+)', destination: '/blogs/:slug', permanent: true },
+      { source: '/blogs/:category/:sub/:slug([^/]+)', destination: '/blogs/:slug', permanent: true },
+
+      // -- Root-level legacy post URL still receiving hits --
+      { source: '/how-rpa-is-playing-a-paramount-role-in-reducing-rd-costs-for-the-pharma-industry', destination: '/blogs/how-rpa-is-playing-a-paramount-role-in-reducing-rd-costs-for-the-pharma-industry', permanent: true },
+
+      // -- Renamed LP --
+      { source: '/lp/power-bi-consulting-services', destination: '/lp/power-bi-consulting', permanent: true },
     ];
   },
 
