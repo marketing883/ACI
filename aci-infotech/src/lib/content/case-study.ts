@@ -105,3 +105,25 @@ export function parseCaseStudyMetrics(
     })
     .filter((m): m is CaseStudyMetric => m !== null);
 }
+
+/**
+ * Case studies tagged with a technology (the `technologies` column,
+ * e.g. "Databricks", "Snowflake", "Salesforce"). Featured rows first,
+ * then newest. Returns [] on missing creds or error.
+ */
+export const getCaseStudiesByTechnology = cache(
+  async (technology: string, limit = 3): Promise<CaseStudyListItem[]> => {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return [];
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data, error } = await supabase
+      .from('case_studies')
+      .select(LIST_COLUMNS)
+      .eq('status', 'published')
+      .contains('technologies', [technology])
+      .order('is_featured', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    if (error || !data) return [];
+    return data as unknown as CaseStudyListItem[];
+  },
+);

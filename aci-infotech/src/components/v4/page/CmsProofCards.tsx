@@ -1,5 +1,6 @@
 import {
   getCaseStudiesByService,
+  getCaseStudiesByTechnology,
   parseCaseStudyMetrics,
 } from '@/lib/content/case-study';
 import { displayClient } from '@/lib/content/anonymize';
@@ -39,18 +40,26 @@ function industryImage(industry: string | null): string | undefined {
 
 export default async function CmsProofCards({
   service,
+  technology,
   fallback,
   fallbackVideo,
   fallbackImages,
 }: {
   /** Service display name as tagged in the CMS, e.g. "Data Engineering". */
-  service: string;
+  service?: string;
+  /** Technology tag for platform pages, e.g. "Databricks". Used when
+      `service` is not given. */
+  technology?: string;
   /** Authored cards shown when the CMS yields fewer than two usable rows. */
   fallback: ProofCard[];
   fallbackVideo?: { mp4: string; webm?: string };
   fallbackImages?: string[];
 }) {
-  const rows = await getCaseStudiesByService(service, 6);
+  const rows = service
+    ? await getCaseStudiesByService(service, 6)
+    : technology
+      ? await getCaseStudiesByTechnology(technology, 6)
+      : [];
 
   const cards: ProofCard[] = [];
   for (const row of rows) {
