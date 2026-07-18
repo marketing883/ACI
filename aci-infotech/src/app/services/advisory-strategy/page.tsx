@@ -238,6 +238,7 @@ export default function AdvisoryStrategyPage() {
       {/* Problem band: strategy decks that outlive their authors */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/case-finance.jpg"
         pill="Why strategy stalls"
         headline={
           <>

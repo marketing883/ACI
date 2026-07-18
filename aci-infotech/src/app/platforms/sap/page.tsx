@@ -1,24 +1,41 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Award, Building2, Shield, TrendingUp, Cog } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { sapRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { getSiteUrl } from '@/lib/site-url';
+import { v4Sans, v4Geist } from '@/components/v4/fonts';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  DecisionPanel,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
-import { displayClient } from '@/lib/content/anonymize';
+export const revalidate = 3600;
+
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://aciinfotech.com/platforms/sap' },
+  alternates: { canonical: `${siteUrl}/platforms/sap` },
   title: 'SAP Implementation Services',
-  description: 'ACI Infotech is an SAP Partner. S/4HANA implementation, migration, integration, and managed services for enterprise.',
-  // Per-page social card. Without this, every share and link preview
-  // inherited the homepage's OpenGraph (title, image, and og:url all
-  // pointing at /), mis-attributing all 21 service/platform pages.
+  description:
+    'ACI Infotech is an SAP Partner. S/4HANA implementation, migration, integration, and managed services for enterprise.',
   openGraph: {
     title: 'SAP Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is an SAP Partner. S/4HANA implementation, migration, integration, and managed services for enterprise.',
-    url: 'https://aciinfotech.com/platforms/sap',
+    description:
+      'ACI Infotech is an SAP Partner. S/4HANA implementation, migration, integration, and managed services for enterprise.',
+    url: `${siteUrl}/platforms/sap`,
     siteName: 'ACI Infotech',
     type: 'website',
     images: DEFAULT_OG_IMAGES,
@@ -26,283 +43,302 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'SAP Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is an SAP Partner. S/4HANA implementation, migration, integration, and managed services for enterprise.',
+    description:
+      'ACI Infotech is an SAP Partner. S/4HANA implementation, migration, integration, and managed services for enterprise.',
     images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
-const capabilities = [
+/* ------------------------------- page data ------------------------------- */
+
+const OFFERINGS = [
   {
-    title: 'S/4HANA Implementation',
-    description: 'Greenfield and brownfield S/4HANA implementations with industry best practices.',
-    features: ['Greenfield implementation', 'Brownfield conversion', 'Selective data migration', 'Fit-to-standard'],
+    title: 'S/4HANA implementation',
+    body: 'Greenfield when the process debt is worth clearing, fit-to-standard where the standard is good enough, and straight advice about which is which before the program gets priced. SAP Activate keeps the build on rails.',
+    chips: ['SAP S/4HANA', 'SAP Activate', 'Fit-to-standard', 'Greenfield'],
   },
   {
-    title: 'S/4HANA Migration',
-    description: 'Migrate from ECC to S/4HANA with minimal business disruption.',
-    features: ['Assessment & roadmap', 'System conversion', 'Data migration', 'Testing & validation'],
+    title: 'ECC to S/4HANA conversion',
+    body: 'System conversion that keeps your history and the processes that are sound. Custom code gets inventoried, dead objects retired, the rest remediated. Most clients find a third of their custom code can simply go.',
+    chips: ['System conversion', 'Custom code remediation', 'Selective data transition', 'Parallel runs'],
   },
   {
-    title: 'SAP Integration',
-    description: 'Connect SAP to cloud platforms, data warehouses, and enterprise applications.',
-    features: ['SAP BTP integration', 'API management', 'CDC integration', 'Real-time sync'],
+    title: 'Integration on BTP',
+    body: 'New extensions go on SAP BTP instead of into the core, so future upgrades stop being projects of their own. APIs, events, and CDC keep the rest of the estate in sync in real time.',
+    chips: ['SAP BTP', 'API management', 'Event Mesh', 'CDC'],
   },
   {
-    title: 'SAP Analytics',
-    description: 'Implement SAP Analytics Cloud and embedded analytics for real-time insights.',
-    features: ['SAC implementation', 'Embedded analytics', 'Planning & forecasting', 'Dashboard development'],
+    title: 'SAP analytics',
+    body: 'SAP Analytics Cloud for planning and reporting, embedded analytics where the work happens, and group reporting that consolidates the close instead of exporting it to spreadsheets.',
+    chips: ['SAP Analytics Cloud', 'Embedded analytics', 'Planning', 'Group reporting'],
   },
   {
-    title: 'SAP on Cloud',
-    description: 'Deploy and manage SAP workloads on AWS, Azure, or Google Cloud.',
-    features: ['RISE with SAP', 'Cloud migration', 'Infrastructure design', 'HA/DR setup'],
+    title: 'SAP on cloud',
+    body: 'S/4HANA on AWS, Azure, or Google Cloud, directly or through RISE with SAP, with HA and DR sized to your recovery objectives. The cloud choice follows where the rest of your estate already lives.',
+    chips: ['RISE with SAP', 'AWS', 'Azure', 'GCP'],
   },
   {
-    title: 'Managed Services',
-    description: 'Ongoing SAP Basis administration, monitoring, and support.',
-    features: ['Basis administration', 'Performance monitoring', 'Security patches', 'Upgrade management'],
+    title: 'Managed SAP operations',
+    body: 'Basis administration, performance monitoring, security patching, and upgrade management under SLAs, around the clock. Go-live is the start of the run phase, not the end of the engagement.',
+    chips: ['Basis administration', 'Monitoring', 'Security patching', 'Upgrade management'],
   },
 ];
 
-const caseStudies = [
+const DECISION_ROWS = [
+  { need: 'A finance close that needs one version of the truth', pick: 'a' as const },
+  { need: 'Process debt worth clearing with fit-to-standard', pick: 'a' as const },
+  { need: 'New builds landing on BTP, not in the core', pick: 'a' as const },
+  { need: 'Real-time reporting on live transactions', pick: 'a' as const },
+  { need: 'A stable ECC core and bigger fires elsewhere', pick: 'b' as const },
+  { need: 'Acquisitions still reshaping the org chart', pick: 'b' as const },
+];
+
+const PROOF_FALLBACK = [
   {
-    client: 'Global Financial Giant',
-    industry: 'Financial Services',
-    challenge: '40+ finance systems post-acquisitions requiring consolidation with zero disruption',
-    solution: 'SAP S/4HANA implementation with automated data quality gates and real-time integration',
-    results: ['$500K annual savings', '18-month delivery', 'Zero financial disruptions'],
+    eyebrow: 'Fortune 500 Financial Services Firm',
+    metric: '40+',
+    metricLabel: 'Finance systems consolidated',
+    summary:
+      'Finance reporting consolidated from 40+ systems onto one S/4HANA core, without disrupting the close along the way.',
+    href: '/case-studies/modernizes-finance-reporting-with-sap-transformation',
+    linkLabel: 'Read the SAP story',
+    image: '/images/v4/case-finance.jpg',
   },
   {
-    client: 'Global Manufacturer',
-    industry: 'Manufacturing',
-    challenge: 'Legacy ECC system limiting digital transformation and operational efficiency',
-    solution: 'System conversion to S/4HANA with selective data migration and process optimization',
-    results: ['30% faster close', '50% reduced inventory', 'Real-time visibility'],
+    eyebrow: 'Global Food Services Operator',
+    metric: '22%',
+    metricLabel: 'Faster decisions',
+    summary:
+      'One data platform for operations in 53 countries, replacing dozens of regional reporting stacks.',
+    href: '/case-studies/global-food-facilities-data-intelligence',
+    linkLabel: 'Read the story',
+    image: '/images/v4/case-retail.jpg',
+  },
+  {
+    eyebrow: 'Enterprise Technology Company',
+    metric: '99.97%',
+    metricLabel: 'Uptime across 72+ servers',
+    summary:
+      'Automated DevOps and monitoring across the estate, run as a steady operation instead of a rescue.',
+    href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+    linkLabel: 'Read the story',
+    image: '/images/v4/svc-ops.jpg',
   },
 ];
 
-const sapFaqs = [
+const PROCESS = [
   {
-    q: 'How long does an ECC to S/4HANA move take?',
-    a: 'A system conversion for a single-instance ECC typically runs 9 to 18 months, depending on how much custom code and historical data comes along. Greenfield programs that redesign processes take longer and ship in phases. The honest answer comes out of the assessment, which sizes your custom code, data volumes, and interfaces before anyone commits to a date.',
+    title: 'Assess',
+    body: 'Custom code inventory, data volumes, and interface count sized before anyone commits to a date. Greenfield or brownfield gets decided here, on evidence.',
   },
   {
-    q: 'Greenfield or brownfield: which S/4HANA path is right for us?',
-    a: 'Brownfield conversion keeps your processes and history, so it is faster and cheaper when your ECC processes are basically sound. Greenfield is a reset: fit-to-standard processes and clean data, at the cost of a bigger change program. Selective data transition sits between the two. We recommend based on how much process debt you are actually carrying.',
+    title: 'Design',
+    body: 'Target processes, the BTP extension plan, and the data migration approach agreed. The fit-to-standard debates happen here, once.',
   },
   {
-    q: 'What happens to our ECC customizations in S/4HANA?',
-    a: 'We inventory every custom object, drop the ones nobody has run in years, and remediate the rest for S/4HANA. New extensions go on SAP BTP instead of into the core, which keeps future upgrades from becoming projects of their own. Most clients find a third of their custom code can simply be retired.',
+    title: 'Build',
+    body: 'Conversion or build in staged increments, with test cycles on real data. A single-instance conversion typically runs 9 to 18 months end to end.',
   },
   {
-    q: 'Can SAP run on AWS, Azure, or Google Cloud?',
-    a: 'Yes. We deploy S/4HANA on all three hyperscalers, directly or through RISE with SAP, with HA/DR architecture sized for your recovery objectives. The cloud choice usually follows where the rest of your estate already lives.',
+    title: 'Rehearse',
+    body: 'Full dress rehearsals of the cutover, timed, until the downtime window is a measurement instead of an estimate.',
   },
   {
-    q: 'Do you support the SAP estate after go-live?',
-    a: 'Yes. Our managed services team runs Basis administration, performance monitoring, security patching, and upgrade management under an SLA. Go-live is the start of the run phase, not the end of the engagement.',
+    title: 'Run',
+    body: 'Basis, monitoring, patching, and upgrades under SLAs with our managed team, or a structured handover to yours, runbooks included.',
   },
 ];
 
-const modules = [
-  { name: 'Finance (FICO)', color: 'bg-green-100 text-green-700' },
-  { name: 'Supply Chain (MM/SD)', color: 'bg-blue-100 text-blue-700' },
-  { name: 'Manufacturing (PP)', color: 'bg-orange-100 text-orange-700' },
-  { name: 'Human Capital (HCM)', color: 'bg-purple-100 text-purple-700' },
-  { name: 'Plant Maintenance', color: 'bg-yellow-100 text-yellow-700' },
-  { name: 'Project Systems', color: 'bg-pink-100 text-pink-700' },
+const FACTS = [
+  {
+    label: 'Delivery',
+    line: 'S/4HANA programs delivered greenfield and by conversion. That includes consolidating finance reporting for a Fortune 500 financial services firm.',
+  },
+  {
+    label: 'Method',
+    line: 'SAP Activate with parallel runs and rehearsed cutovers. Go-live is a milestone, not a gamble.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Operations',
+    line: 'ISO 27001 certified and CMMI Level 3 appraised, with 24/7 Basis operations under SLAs.',
+  },
 ];
+
+const FAQS = [
+  {
+    question: 'How long does an ECC to S/4HANA move take?',
+    answer:
+      'A system conversion for a single-instance ECC typically runs 9 to 18 months, depending on how much custom code and historical data comes along. Greenfield programs that redesign processes take longer and ship in phases. The honest answer comes out of the assessment, which sizes your custom code, data volumes, and interfaces before anyone commits to a date.',
+  },
+  {
+    question: 'Greenfield or brownfield: which S/4HANA path is right for us?',
+    answer:
+      'Brownfield conversion keeps your processes and history, so it is faster and cheaper when your ECC processes are basically sound. Greenfield is a reset: fit-to-standard processes and clean data, at the cost of a bigger change program. Selective data transition sits between the two. We recommend based on how much process debt you are actually carrying.',
+  },
+  {
+    question: 'What happens to our ECC customizations in S/4HANA?',
+    answer:
+      'We inventory every custom object, drop the ones nobody has run in years, and remediate the rest for S/4HANA. New extensions go on SAP BTP instead of into the core, which keeps future upgrades from becoming projects of their own. Most clients find a third of their custom code can simply be retired.',
+  },
+  {
+    question: 'Can SAP run on AWS, Azure, or Google Cloud?',
+    answer:
+      'Yes. We deploy S/4HANA on all three hyperscalers, directly or through RISE with SAP, with HA/DR architecture sized for your recovery objectives. The cloud choice usually follows where the rest of your estate already lives.',
+  },
+  {
+    question: 'Do you support the SAP estate after go-live?',
+    answer:
+      'Yes. Our managed services team runs Basis administration, performance monitoring, security patching, and upgrade management under an SLA. Go-live is the start of the run phase, not the end of the engagement.',
+  },
+];
+
+/* --------------------------------- page ---------------------------------- */
 
 export default function SAPPage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/platforms"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Platforms
-          </Link>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <ServiceSchema
+        name="SAP Implementation Services"
+        description="SAP consulting and delivery. S/4HANA implementation, ECC conversion, BTP integration, analytics, and managed Basis operations."
+        url="/platforms/sap"
+        serviceType="SAP Consulting"
+      />
+      {/* FAQPage JSON-LD comes from PageFaq below. One per page. */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Platforms', url: '/platforms' },
+          { name: 'SAP', url: '/platforms/sap' },
+        ]}
+      />
 
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-[#0FAAFF] rounded-2xl flex items-center justify-center">
-              <Building2 className="w-8 h-8 text-white" />
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="px-3 py-1 bg-[#0FAAFF]/20 text-[#0FAAFF] text-sm font-medium rounded-full flex items-center gap-1">
-                <Award className="w-4 h-4" />
-                SAP Partner
-              </span>
-            </div>
-          </div>
+      <ServiceHero
+        kicker="SAP"
+        title={
+          <>
+            SAP that makes it to&nbsp;
+            <span style={{ color: '#1D4ED8' }}>S/4HANA</span>
+          </>
+        }
+        lede="We move enterprises from ECC to S/4HANA, greenfield or system conversion, using SAP Activate and selective data transition. Custom code gets inventoried and mostly retired, new extensions land on BTP, and the cutover is rehearsed until it is boring. After go-live we run Basis and the estate under SLAs."
+        chips={[
+          'S/4HANA conversions and greenfield',
+          'SAP Activate delivery',
+          '24/7 Basis operations',
+          'ISO 27001',
+        ]}
+        primary={{ label: 'Book an S/4HANA assessment', href: '/contact' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        visual={<FlowScene config={FLOWS['platform-sap']} />}
+      />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            SAP Consulting
-            <span className="text-[var(--aci-primary-light)]"> and S/4HANA&nbsp;Migration</span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            We move enterprises from ECC to S/4HANA, greenfield or system conversion, using
-            SAP Activate and selective data migration. We rehearse the cutover until it is
-            boring, then run Basis and the estate under an SLA after go-live.
-          </p>
+      {/* Problem band: the ECC clock is not yours */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        image="/images/v4/case-manufacturing.jpg"
+        pill="Why ECC estates stall"
+        headline={
+          <>
+            The deadline belongs to SAP.{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">The risk belongs to you.</span>
+          </>
+        }
+        body="Every year on ECC adds custom code nobody dares touch, interfaces nobody mapped, and a close that takes longer than it should. The move to S/4HANA is not the risk. Drifting toward it without a plan is."
+        story={{
+          metric: { value: '40+', label: 'Finance systems consolidated' },
+          title:
+            'A Fortune 500 financial services firm consolidated finance reporting from 40+ systems onto one S/4HANA core.',
+          href: '/case-studies/modernizes-finance-reporting-with-sap-transformation',
+          logoSrc: '/brand/sap-color.svg',
+          logoAlt: 'SAP',
+        }}
+      />
 
-          <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule SAP Assessment
-            </Button>
-            <Button href="/case-studies" variant="secondary" size="lg">
-              View Case Studies
-            </Button>
-          </div>
+      {/* Offerings */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we do on SAP"
+            title={
+              <>
+                One clean core. <span style={{ color: '#1D4ED8' }}>Six disciplines.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Modules */}
-      <section className="py-12 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-center font-semibold text-gray-500 mb-6">SAP Modules We Implement</h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {modules.map((module) => (
-              <span key={module.name} className={`px-4 py-2 ${module.color} text-sm font-medium rounded-full`}>
-                {module.name}
-              </span>
-            ))}
-          </div>
+      {/* Honest fit panel */}
+      <DecisionPanel
+        title={<>Move to S/4HANA now, or&nbsp;wait?</>}
+        body="The move is coming either way. The timing is the real decision. S/4HANA earns it when the close, the reporting, and the process debt are costing you today. Waiting can be right too, when ECC is stable and the bigger fire is somewhere else. Either way, the answer should come from an assessment of your code, data, and interfaces, not from a license renewal date."
+        colA={{ src: '/brand/sap-color.svg', alt: 'SAP', px: 40 }}
+        colB={{ label: 'Keep ECC longer' }}
+        rows={DECISION_ROWS}
+        footnote="Waiting is a legitimate strategy, but it needs a date attached. The assessment sizes your custom code, data volumes, and interfaces so the wait is a decision, not a drift."
+      />
+
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Transformations that <span style={{ color: '#1D4ED8' }}>closed the&nbsp;books.</span>
+              </>
+            }
+          />
+          <CmsProofCards technology="SAP" fallback={PROOF_FALLBACK} />
         </div>
       </section>
 
-      {/* Value Props */}
-      <section className="py-16 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#0FAAFF]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Cog className="w-7 h-7 text-[#0FAAFF]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Deep SAP Expertise</h3>
-              <p className="text-gray-600 text-sm">
-                20+ years of SAP experience across industries and modules.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#0FAAFF]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-7 h-7 text-[#0FAAFF]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Proven Methodology</h3>
-              <p className="text-gray-600 text-sm">
-                SAP Activate methodology combined with agile delivery practices.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#0FAAFF]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-7 h-7 text-[#0FAAFF]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Zero Disruption</h3>
-              <p className="text-gray-600 text-sm">
-                Meticulous testing and cutover planning for risk-free go-lives.
-              </p>
-            </div>
-          </div>
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* Capabilities */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What We Deliver
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              End-to-end SAP services from assessment to managed operations.
-            </p>
-          </div>
+      {/* Bridge to the digital transformation practice */}
+      <BridgeBand
+        title={<>The ERP is the spine, not the&nbsp;strategy.</>}
+        body="S/4HANA pays off when the processes, data, and operating model around it move too. That is our digital transformation practice, and the ERP core is where it usually starts."
+        link={{ label: 'Digital Transformation', href: '/services/digital-transformation' }}
+      />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {capabilities.map((cap) => (
-              <div key={cap.title} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-3">{cap.title}</h3>
-                <p className="text-gray-600 mb-4">{cap.description}</p>
-                <ul className="space-y-2">
-                  {cap.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm text-gray-700">
-                      <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+      {/* Why us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title={<>Why enterprises run SAP with&nbsp;us</>} />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
 
-      {/* Case Studies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              SAP Success Stories
-            </h2>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            {caseStudies.map((cs, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="px-3 py-1 bg-[#0FAAFF]/10 text-[#0FAAFF] text-sm font-medium rounded-full">
-                    {cs.industry}
-                  </span>
-                  <span className="text-gray-500 text-sm">{displayClient(cs)}</span>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Challenge</h3>
-                  <p className="text-gray-600">{cs.challenge}</p>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Solution</h3>
-                  <p className="text-gray-600">{cs.solution}</p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-700 mb-3">Results</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {cs.results.map((result) => (
-                      <span key={result} className="px-3 py-2 bg-green-100 text-green-700 text-sm font-medium rounded-lg">
-                        {result}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ClusterPosts keywords={['sap', 's/4hana', 'erp', 'ecc']} />
 
       <RelatedLinks items={sapRelated} />
 
-      <FaqBlock items={sapFaqs} eyebrow="SAP FAQ" />
+      <PageFaq
+        kicker="SAP FAQ"
+        title={
+          <>
+            S/4HANA questions,
+            <br />
+            answered straight.
+          </>
+        }
+        faqs={FAQS}
+      />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[#0FAAFF]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Transform with S/4HANA?
-          </h2>
-          <p className="text-xl text-cyan-100 mb-8">
-            Schedule a free SAP assessment with our certified consultants.
-          </p>
-          <Button href="/contact?platform=sap" variant="lime" size="lg">
-            Talk to SAP Expert
-          </Button>
-        </div>
-      </section>
-    </main>
+      <CtaSection label="Let's talk S/4HANA" />
+    </div>
   );
 }

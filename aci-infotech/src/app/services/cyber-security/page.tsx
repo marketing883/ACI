@@ -309,6 +309,7 @@ export default function CyberSecurityPage() {
       {/* Problem band: bolted-on security */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/hero-atmosphere.jpg"
         pill="Why breaches still happen"
         headline={
           <>

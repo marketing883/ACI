@@ -1,24 +1,41 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Award, Users, Shield, TrendingUp, Zap } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { salesforceRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { getSiteUrl } from '@/lib/site-url';
+import { v4Sans, v4Geist } from '@/components/v4/fonts';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  DecisionPanel,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
-import { displayClient } from '@/lib/content/anonymize';
+export const revalidate = 3600;
+
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://aciinfotech.com/platforms/salesforce' },
+  alternates: { canonical: `${siteUrl}/platforms/salesforce` },
   title: 'Salesforce Implementation Services',
-  description: 'ACI Infotech is a Salesforce Consulting Partner. Sales Cloud, Service Cloud, Marketing Cloud, and Data Cloud implementation and integration.',
-  // Per-page social card. Without this, every share and link preview
-  // inherited the homepage's OpenGraph (title, image, and og:url all
-  // pointing at /), mis-attributing all 21 service/platform pages.
+  description:
+    'ACI Infotech is a Salesforce Consulting Partner. Sales Cloud, Service Cloud, Marketing Cloud, and Data Cloud implementation and integration.',
   openGraph: {
     title: 'Salesforce Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is a Salesforce Consulting Partner. Sales Cloud, Service Cloud, Marketing Cloud, and Data Cloud implementation and integration.',
-    url: 'https://aciinfotech.com/platforms/salesforce',
+    description:
+      'ACI Infotech is a Salesforce Consulting Partner. Sales Cloud, Service Cloud, Marketing Cloud, and Data Cloud implementation and integration.',
+    url: `${siteUrl}/platforms/salesforce`,
     siteName: 'ACI Infotech',
     type: 'website',
     images: DEFAULT_OG_IMAGES,
@@ -26,284 +43,307 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Salesforce Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is a Salesforce Consulting Partner. Sales Cloud, Service Cloud, Marketing Cloud, and Data Cloud implementation and integration.',
+    description:
+      'ACI Infotech is a Salesforce Consulting Partner. Sales Cloud, Service Cloud, Marketing Cloud, and Data Cloud implementation and integration.',
     images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
-const capabilities = [
+/* ------------------------------- page data ------------------------------- */
+
+const OFFERINGS = [
   {
-    title: 'Sales Cloud Implementation',
-    description: 'Deploy and customize Sales Cloud to accelerate revenue and improve sales productivity.',
-    features: ['Lead management', 'Opportunity tracking', 'Forecasting', 'CPQ integration'],
+    title: 'Sales Cloud',
+    body: 'Pipeline, forecasting, and CPQ set up around how your deals actually move. Fewer required fields, cleaner stages, and reporting sales leaders actually read. Adoption is designed in, not begged for later.',
+    chips: ['Sales Cloud', 'CPQ', 'Einstein Forecasting', 'Revenue reporting'],
   },
   {
-    title: 'Service Cloud Solutions',
-    description: 'Transform customer service with omnichannel support and AI-powered case management.',
-    features: ['Case management', 'Knowledge base', 'Omnichannel routing', 'Einstein AI bots'],
+    title: 'Service Cloud',
+    body: 'Case routing, knowledge, and Einstein Bots that deflect the easy tickets and escalate the hard ones with context attached. Omnichannel means one queue for agents, not five consoles.',
+    chips: ['Service Cloud', 'Omni-Channel', 'Einstein Bots', 'Knowledge'],
   },
   {
     title: 'Marketing Cloud',
-    description: 'Deliver personalized customer journeys across email, mobile, social, and advertising.',
-    features: ['Journey Builder', 'Email Studio', 'Audience segmentation', 'Analytics'],
+    body: 'Journeys built on segments that resolve to real people. Email, mobile, and ads working from the same profile, measured against revenue instead of open rates.',
+    chips: ['Marketing Cloud', 'Journey Builder', 'Email Studio', 'Segmentation'],
   },
   {
-    title: 'Data Cloud & Agentforce',
-    description: 'Unify customer data into a single record, then put Agentforce agents to work on top of CRM and Data Cloud.',
-    features: ['Data unification', 'Identity resolution', 'Agentforce agents', 'Segmentation & activation'],
+    title: 'Data Cloud and Agentforce',
+    body: 'Identity resolution turns six conflicting records into one, and Agentforce agents work from that record: qualifying leads, resolving cases, drafting follow-ups. Agents are only as good as the data they read, so we build the data first.',
+    chips: ['Data Cloud', 'Agentforce', 'Identity resolution', 'Activation'],
   },
   {
-    title: 'Integration Services',
-    description: 'Connect Salesforce with your enterprise systems using MuleSoft or custom integrations.',
-    features: ['MuleSoft', 'REST/SOAP APIs', 'Platform Events', 'CDC integration'],
+    title: 'Integration',
+    body: 'Salesforce wired to the ERP and the warehouse through MuleSoft, Platform Events, or plain APIs, chosen by latency and volume. Orders and invoices stay in the ERP. Salesforce gets a live view, not a stale copy.',
+    chips: ['MuleSoft', 'Platform Events', 'REST APIs', 'CDC'],
   },
   {
-    title: 'Managed Services',
-    description: 'Ongoing Salesforce administration, optimization, and support with certified experts.',
-    features: ['Admin support', 'Release management', 'User training', 'Performance tuning'],
+    title: 'Managed services',
+    body: 'Three Salesforce releases a year, handled. Release management, admin support, and ongoing configuration under SLAs, with your team trained so the knowledge stays when the project ends.',
+    chips: ['Release management', 'Admin support', 'SLAs', 'User training'],
   },
 ];
 
-const caseStudies = [
+const DECISION_ROWS = [
+  { need: 'Sales, service, and marketing on one platform', pick: 'a' as const },
+  { need: 'Admins, not engineers, running the roadmap', pick: 'a' as const },
+  { need: 'AI agents inside the CRM with Agentforce', pick: 'a' as const },
+  { need: 'One resolved customer record with Data Cloud', pick: 'a' as const },
+  { need: 'Best-of-breed tools on a warehouse core', pick: 'b' as const },
+  { need: 'Engineering owns the customer data stack', pick: 'b' as const },
+  { need: 'Deep custom logic that fights any suite', pick: 'b' as const },
+];
+
+const PROOF_FALLBACK = [
   {
-    client: 'Fortune 500 Convenience Retailer',
-    industry: 'Retail',
-    challenge: 'Fragmented customer data across 800+ locations preventing personalized engagement',
-    solution: 'Salesforce Marketing Cloud with custom CDP integration and journey automation',
-    results: ['Unified customer profiles', '35% engagement lift', '$2.3M incremental revenue'],
+    eyebrow: 'Fortune 500 Convenience Retail Chain',
+    metric: '2.5x',
+    metricLabel: 'Email engagement',
+    summary:
+      'Customer data unified across 600+ locations, with email engagement up 2.5x and promotions working 15% harder.',
+    href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+    linkLabel: 'Read the story',
+    image: '/images/v4/case-retail.jpg',
   },
   {
-    client: 'Financial Services Firm',
-    industry: 'Financial Services',
-    challenge: 'Manual processes and disconnected systems slowing sales cycles',
-    solution: 'Sales Cloud + CPQ implementation with ERP and data warehouse integration',
-    results: ['40% faster quotes', '25% higher win rate', 'Single source of truth'],
+    eyebrow: 'National Healthcare Provider',
+    metric: '4h',
+    metricLabel: 'Claims processing, down from 72',
+    summary:
+      'Eligibility verification automated end to end, taking claims processing from 72 hours to 4.',
+    href: '/case-studies/healthcare-eligibility-verification-automation-aci-yesbot',
+    linkLabel: 'Read the story',
+    image: '/images/v4/case-healthcare.jpg',
+  },
+  {
+    eyebrow: 'Global Technology Enterprise',
+    metric: '0.1%',
+    metricLabel: 'Contract error rate',
+    summary:
+      'Contract performance run through intelligent automation, with the error rate held at 0.1%.',
+    href: '/case-studies/accelerating-contract-performance-through-intelligent-automation',
+    linkLabel: 'Read the story',
+    image: '/images/v4/svc-ai.jpg',
   },
 ];
 
-const salesforceFaqs = [
+const PROCESS = [
   {
-    q: 'Do you work with our existing Salesforce org or rebuild it?',
-    a: 'We work with the org you have. Most engagements start with an org audit: what is customized, what is dead, and what is blocking the roadmap. A rebuild only makes sense when years of technical debt cost more to untangle than to replace, and we will show you that math before recommending it.',
+    title: 'Audit',
+    body: 'Org audit first: what is customized, what is dead, and what blocks the roadmap. Rebuilds get recommended only when the math says so.',
   },
   {
-    q: 'How long does a Salesforce implementation take?',
-    a: 'A focused Sales Cloud or Service Cloud rollout typically lands in 10 to 16 weeks. Multi-cloud programs with Data Cloud and heavy integration run longer and ship in phases, so sales teams are working in the system while later phases build. Scope discipline, not headcount, is what keeps the timeline honest.',
+    title: 'Design',
+    body: 'Object model, integration contracts, and the Data Cloud identity plan agreed before anyone builds. Scope discipline starts here.',
   },
   {
-    q: 'What is Agentforce and do we need Data Cloud to use it?',
-    a: 'Agentforce is Salesforce’s platform for AI agents that take actions in your CRM: qualifying leads, resolving cases, drafting follow-ups. The agents are only as good as the data they read, which is why Data Cloud matters; it gives them one resolved customer record instead of six conflicting ones. We implement both together.',
+    title: 'Build',
+    body: 'Configuration over code, shipped in phases so sales teams work in the system while later phases land. A focused cloud rollout lands in 10 to 16 weeks.',
   },
   {
-    q: 'Can you integrate Salesforce with our ERP and data warehouse?',
-    a: 'Yes, that is most of our Salesforce work. We build integrations through MuleSoft, REST and SOAP APIs, Platform Events, and CDC, depending on latency and volume. Orders, invoices, and inventory stay in the ERP; Salesforce gets a live view instead of a stale copy.',
+    title: 'Adopt',
+    body: 'Training, admin enablement, and adoption tracking with real numbers. A CRM nobody updates is an expensive address book.',
   },
   {
-    q: 'Who runs Salesforce after go-live?',
-    a: 'Your admins, if you have them; our managed services team, if you do not. We handle release management for the three Salesforce releases a year, user support, and ongoing configuration under an SLA. Either way, we train your team so knowledge does not walk out with the project.',
+    title: 'Run',
+    body: 'Managed services under SLAs: release management, user support, and the backlog worked steadily. Or a clean handover to your admins.',
   },
 ];
 
-const clouds = [
-  { name: 'Sales Cloud', color: 'bg-blue-100 text-blue-700' },
-  { name: 'Service Cloud', color: 'bg-green-100 text-green-700' },
-  { name: 'Marketing Cloud', color: 'bg-purple-100 text-purple-700' },
-  { name: 'Data Cloud', color: 'bg-cyan-100 text-cyan-700' },
-  { name: 'Experience Cloud', color: 'bg-orange-100 text-orange-700' },
-  { name: 'Commerce Cloud', color: 'bg-pink-100 text-pink-700' },
+const FACTS = [
+  {
+    label: 'Partnership',
+    line: 'Salesforce consulting partner with an Agentforce practice. We implement what we recommend.',
+  },
+  {
+    label: 'Integration',
+    line: 'Most of our Salesforce work is integration. ERP, warehouse, and CRM connected through MuleSoft, Platform Events, and APIs.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Operations',
+    line: 'ISO 27001 certified and CMMI Level 3 appraised, with 24/7 managed operations under SLAs.',
+  },
 ];
+
+const FAQS = [
+  {
+    question: 'Do you work with our existing Salesforce org or rebuild it?',
+    answer:
+      'We work with the org you have. Most engagements start with an org audit: what is customized, what is dead, and what is blocking the roadmap. A rebuild only makes sense when years of technical debt cost more to untangle than to replace, and we will show you that math before recommending it.',
+  },
+  {
+    question: 'How long does a Salesforce implementation take?',
+    answer:
+      'A focused Sales Cloud or Service Cloud rollout typically lands in 10 to 16 weeks. Multi-cloud programs with Data Cloud and heavy integration run longer and ship in phases, so sales teams are working in the system while later phases build. Scope discipline, not headcount, is what keeps the timeline honest.',
+  },
+  {
+    question: 'What is Agentforce and do we need Data Cloud to use it?',
+    answer:
+      'Agentforce is Salesforce’s platform for AI agents that take actions in your CRM: qualifying leads, resolving cases, drafting follow-ups. The agents are only as good as the data they read, which is why Data Cloud matters; it gives them one resolved customer record instead of six conflicting ones. We implement both together.',
+  },
+  {
+    question: 'Can you integrate Salesforce with our ERP and data warehouse?',
+    answer:
+      'Yes, that is most of our Salesforce work. We build integrations through MuleSoft, REST and SOAP APIs, Platform Events, and CDC, depending on latency and volume. Orders, invoices, and inventory stay in the ERP; Salesforce gets a live view instead of a stale copy.',
+  },
+  {
+    question: 'Who runs Salesforce after go-live?',
+    answer:
+      'Your admins, if you have them; our managed services team, if you do not. We handle release management for the three Salesforce releases a year, user support, and ongoing configuration under an SLA. Either way, we train your team so knowledge does not walk out with the project.',
+  },
+];
+
+/* --------------------------------- page ---------------------------------- */
 
 export default function SalesforcePage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/platforms"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Platforms
-          </Link>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <ServiceSchema
+        name="Salesforce Implementation Services"
+        description="Salesforce consulting partner. Sales Cloud, Service Cloud, Marketing Cloud, Data Cloud, and Agentforce implementation and integration."
+        url="/platforms/salesforce"
+        serviceType="Salesforce Consulting"
+      />
+      {/* FAQPage JSON-LD comes from PageFaq below. One per page. */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Platforms', url: '/platforms' },
+          { name: 'Salesforce', url: '/platforms/salesforce' },
+        ]}
+      />
 
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-[#00A1E0] rounded-2xl flex items-center justify-center">
-              <Users className="w-8 h-8 text-white" />
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="px-3 py-1 bg-[#00A1E0]/20 text-[#00A1E0] text-sm font-medium rounded-full flex items-center gap-1">
-                <Award className="w-4 h-4" />
-                Consulting Partner
-              </span>
-            </div>
-          </div>
+      <ServiceHero
+        kicker="Salesforce"
+        title={
+          <>
+            Salesforce that runs on{' '}
+            <span style={{ color: '#1D4ED8' }}>one&nbsp;record</span>
+          </>
+        }
+        lede="ACI Infotech is a Salesforce consulting partner with an Agentforce practice. We implement Sales Cloud, Service Cloud, Marketing Cloud, and Data Cloud working from one customer record, wire the org to your ERP and warehouse through MuleSoft or APIs, and put Agentforce agents to work on data they can actually trust."
+        chips={[
+          'Salesforce consulting partner',
+          'Agentforce practice',
+          'Certified across the clouds',
+          'ISO 27001',
+        ]}
+        primary={{ label: 'Book a Salesforce org audit', href: '/contact' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        visual={<FlowScene config={FLOWS['platform-salesforce']} />}
+      />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Salesforce Consulting
-            <span className="text-[var(--aci-primary-light)]"> and&nbsp;Implementation</span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            We implement and integrate Salesforce: Sales Cloud, Service Cloud, Marketing Cloud,
-            and Data Cloud working from one customer record. We start with the org you have,
-            wire it to your ERP and warehouse through MuleSoft or APIs, and put Agentforce
-            agents to work on top of CRM and Data Cloud.
-          </p>
+      {/* Problem band: the org is fine, the record is not */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        image="/images/v4/case-retail.jpg"
+        pill="Why CRM programs stall"
+        headline={
+          <>
+            Six systems. Six versions{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">of the customer.</span>
+          </>
+        }
+        body="The org is rarely the problem. The problem is years of fields nobody owns, integrations nobody documented, and reports nobody trusts. AI agents put on top of that inherit all of it. We fix the record first, then put the platform to work."
+        story={{
+          metric: { value: '2.5x', label: 'Email engagement' },
+          title:
+            'Customer data unified across 600+ retail locations, with email engagement up 2.5x and promotions working 15% harder.',
+          href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+          logoSrc: '/brand/salesforce-color.png',
+          logoAlt: 'Salesforce',
+        }}
+      />
 
-          <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule Salesforce Assessment
-            </Button>
-            <Button href="/case-studies" variant="secondary" size="lg">
-              View Case Studies
-            </Button>
-          </div>
+      {/* Offerings */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we do on Salesforce"
+            title={
+              <>
+                One customer record. <span style={{ color: '#1D4ED8' }}>Six&nbsp;disciplines.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Clouds */}
-      <section className="py-12 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-center font-semibold text-gray-500 mb-6">Salesforce Clouds We Implement</h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {clouds.map((cloud) => (
-              <span key={cloud.name} className={`px-4 py-2 ${cloud.color} text-sm font-medium rounded-full`}>
-                {cloud.name}
-              </span>
-            ))}
-          </div>
+      {/* Honest fit panel */}
+      <DecisionPanel
+        title={<>Is Salesforce the right&nbsp;call?</>}
+        body="Usually, when you want one platform to carry sales, service, and marketing, and admins rather than engineers to run the roadmap. When your team wants to compose best-of-breed tools on a warehouse instead, that is a real architecture too, and we build it. The recommendation follows your operating model, not our certification wall."
+        colA={{ src: '/brand/salesforce-color.png', alt: 'Salesforce', px: 48 }}
+        colB={{ label: 'A composable stack' }}
+        rows={DECISION_ROWS}
+        footnote="When the composable column wins, the answer is usually a warehouse-native customer stack with a tool like Braze on top. That comparison lives on our MarTech and CDP page."
+      />
+
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Customer data that <span style={{ color: '#1D4ED8' }}>went to&nbsp;work.</span>
+              </>
+            }
+          />
+          <CmsProofCards
+            technology="Salesforce"
+            fallback={PROOF_FALLBACK}
+            fallbackVideo={{ mp4: '/videos/retail-bg.mp4' }}
+          />
         </div>
       </section>
 
-      {/* Value Props */}
-      <section className="py-16 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#00A1E0]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-7 h-7 text-[#00A1E0]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Certified Experts</h3>
-              <p className="text-gray-600 text-sm">
-                30+ Salesforce certifications across Sales, Service, Marketing, and Platform.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#00A1E0]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-7 h-7 text-[#00A1E0]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">End-to-End Delivery</h3>
-              <p className="text-gray-600 text-sm">
-                From strategy to implementation to ongoing managed services.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#00A1E0]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-7 h-7 text-[#00A1E0]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Integration Focus</h3>
-              <p className="text-gray-600 text-sm">
-                Deep expertise connecting Salesforce to ERPs, data warehouses, and more.
-              </p>
-            </div>
-          </div>
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* Capabilities */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What We Deliver
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Comprehensive Salesforce services from strategy to managed operations.
-            </p>
-          </div>
+      {/* Bridge to the MarTech and CDP practice */}
+      <BridgeBand
+        title={<>The CRM is half the&nbsp;story.</>}
+        body="Salesforce pays off when the customer data underneath it is resolved, governed, and activated across every channel. That is our MarTech and CDP practice, and Data Cloud is one of its home fields."
+        link={{ label: 'MarTech & CDP', href: '/services/martech-cdp' }}
+      />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {capabilities.map((cap) => (
-              <div key={cap.title} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-3">{cap.title}</h3>
-                <p className="text-gray-600 mb-4">{cap.description}</p>
-                <ul className="space-y-2">
-                  {cap.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm text-gray-700">
-                      <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+      {/* Why us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title={<>Why enterprises run Salesforce with&nbsp;us</>} />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
 
-      {/* Case Studies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Salesforce Success Stories
-            </h2>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            {caseStudies.map((cs, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="px-3 py-1 bg-[#00A1E0]/10 text-[#00A1E0] text-sm font-medium rounded-full">
-                    {cs.industry}
-                  </span>
-                  <span className="text-gray-500 text-sm">{displayClient(cs)}</span>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Challenge</h3>
-                  <p className="text-gray-600">{cs.challenge}</p>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Solution</h3>
-                  <p className="text-gray-600">{cs.solution}</p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-700 mb-3">Results</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {cs.results.map((result) => (
-                      <span key={result} className="px-3 py-2 bg-green-100 text-green-700 text-sm font-medium rounded-lg">
-                        {result}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ClusterPosts keywords={['salesforce', 'crm', 'agentforce', 'data cloud', 'cdp']} />
 
       <RelatedLinks items={salesforceRelated} />
 
-      <FaqBlock items={salesforceFaqs} eyebrow="Salesforce FAQ" />
+      <PageFaq
+        kicker="Salesforce FAQ"
+        title={
+          <>
+            Salesforce questions,
+            <br />
+            answered straight.
+          </>
+        }
+        faqs={FAQS}
+      />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[#00A1E0]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Get More Out of&nbsp;Salesforce?
-          </h2>
-          <p className="text-xl text-cyan-100 mb-8">
-            Schedule a free assessment with our Salesforce certified consultants.
-          </p>
-          <Button href="/contact?platform=salesforce" variant="lime" size="lg">
-            Talk to Salesforce Expert
-          </Button>
-        </div>
-      </section>
-    </main>
+      <CtaSection label="Let's talk Salesforce" />
+    </div>
   );
 }

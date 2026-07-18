@@ -245,6 +245,7 @@ export default function MarTechCDPPage() {
       {/* Problem band: identity, consent, and activation as the real fight */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/case-retail.jpg"
         pill="Why customer 360 fails"
         headline={
           <>

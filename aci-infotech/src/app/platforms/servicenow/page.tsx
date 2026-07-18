@@ -1,28 +1,42 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Award, Workflow, Shield, TrendingUp, Zap } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
-import { servicenowFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { servicenowRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
+import { servicenowFaqs } from '@/content/pillar-faqs';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { getSiteUrl } from '@/lib/site-url';
+import { v4Sans, v4Geist } from '@/components/v4/fonts';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  DecisionPanel,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
-import { displayClient } from '@/lib/content/anonymize';
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://aciinfotech.com/platforms/servicenow' },
+  alternates: { canonical: `${siteUrl}/platforms/servicenow` },
   title: 'ServiceNow Implementation Services',
-  description: 'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
-  // Per-page social card. Without this, every share and link preview
-  // inherited the homepage's OpenGraph (title, image, and og:url all
-  // pointing at /), mis-attributing all 21 service/platform pages.
+  description:
+    'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
   openGraph: {
     title: 'ServiceNow Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
-    url: 'https://aciinfotech.com/platforms/servicenow',
+    description:
+      'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
+    url: `${siteUrl}/platforms/servicenow`,
     siteName: 'ACI Infotech',
     type: 'website',
     images: DEFAULT_OG_IMAGES,
@@ -30,239 +44,256 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'ServiceNow Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
+    description:
+      'ACI Infotech is a ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation and optimization.',
     images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
-const capabilities = [
+/* ------------------------------- page data ------------------------------- */
+
+const OFFERINGS = [
   {
-    title: 'ITSM Implementation',
-    description: 'Deploy ServiceNow IT Service Management for streamlined incident, problem, and change management.',
-    features: ['Incident management', 'Problem management', 'Change management', 'Service catalog'],
+    title: 'ITSM implementation',
+    body: 'Incident, problem, change, and a service catalog people actually order from. We design the process with the teams who live in the queue, then configure the platform to match. Configure first, customize only where it earns its keep.',
+    chips: ['ITSM', 'Service catalog', 'Change management', 'Virtual Agent'],
   },
   {
-    title: 'ITOM & Discovery',
-    description: 'Gain visibility into your IT infrastructure with automated discovery and event management.',
-    features: ['Discovery', 'Service mapping', 'Event management', 'Cloud management'],
+    title: 'CMDB and Discovery',
+    body: 'An auto-populated CMDB with no owner rots within a quarter. We set discovery schedules, reconciliation rules, and named owners, so impact analysis becomes a lookup instead of a meeting.',
+    chips: ['CMDB', 'Discovery', 'Service Mapping'],
+  },
+  {
+    title: 'ITOM and event management',
+    body: 'Event management wired to the monitoring you already run, not a parallel universe of alerts. Noise gets correlated away, and what remains routes to the team that owns the service.',
+    chips: ['ITOM', 'Event Management', 'Dynatrace', 'Splunk'],
   },
   {
     title: 'HR Service Delivery',
-    description: 'Transform employee experiences with self-service HR and automated workflows.',
-    features: ['Employee center', 'Case management', 'Onboarding', 'Knowledge management'],
+    body: 'Employee center, case management, and onboarding flows that spare HR the shared inbox. The same workflow discipline as ITSM, pointed at the employee side of the house.',
+    chips: ['HRSD', 'Employee Center', 'Case management', 'Onboarding'],
   },
   {
-    title: 'App Engine & Low-Code',
-    description: 'Build custom applications rapidly with ServiceNow App Engine and Flow Designer.',
-    features: ['App Engine Studio', 'Flow Designer', 'Integration Hub', 'Custom apps'],
+    title: 'App Engine and Integration Hub',
+    body: 'Custom apps on App Engine where the standard process does not fit how you work, and Integration Hub spokes instead of one-off scripts. Low code where it helps, real engineering where it counts.',
+    chips: ['App Engine', 'Flow Designer', 'Integration Hub'],
   },
   {
-    title: 'Security Operations',
-    description: 'Streamline security incident response with ServiceNow SecOps integration.',
-    features: ['Security incident response', 'Vulnerability management', 'Threat intelligence', 'GRC'],
-  },
-  {
-    title: 'Managed Services',
-    description: 'Ongoing ServiceNow administration, optimization, and support with certified experts.',
-    features: ['Platform admin', 'Upgrade management', 'Performance tuning', 'User training'],
+    title: 'Managed ServiceNow operations',
+    body: 'ServiceNow ships two major releases a year, ready or not. We keep instances current, patched, and close to standard under an SLA, so upgrade weekend stays boring.',
+    chips: ['Upgrade management', '24/7 support', 'SLAs', 'Platform admin'],
   },
 ];
 
-const caseStudies = [
+const DECISION_ROWS = [
+  { need: 'One system of record for incidents, changes, and requests', pick: 'a' as const },
+  { need: 'Workflows that cross IT, HR, and facilities', pick: 'a' as const },
+  { need: 'A CMDB driving change and impact analysis', pick: 'a' as const },
+  { need: 'Approvals and audit trails a regulator will read', pick: 'a' as const },
+  { need: 'A ticket queue for a single team', pick: 'b' as const },
+  { need: 'A helpdesk for a company of fifty', pick: 'b' as const },
+];
+
+const PROOF_FALLBACK = [
   {
-    client: 'Fortune 500 Financial',
-    industry: 'Financial Services',
-    challenge: 'Manual IT processes causing slow ticket resolution and poor employee satisfaction',
-    solution: 'Full ITSM implementation with AI-powered virtual agent and self-service portal',
-    results: ['70% faster resolution', '45% ticket deflection', '92% employee satisfaction'],
+    eyebrow: 'Enterprise Technology Company',
+    metric: '99.97%',
+    metricLabel: 'Uptime across 72+ servers',
+    summary:
+      'Automated DevOps and monitoring across the estate, with incidents caught and routed before users noticed them.',
+    href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+    linkLabel: 'Read the operations story',
+    image: '/images/v4/svc-ops.jpg',
   },
   {
-    client: 'Global Manufacturing',
-    industry: 'Manufacturing',
-    challenge: 'No visibility into IT assets and infrastructure dependencies',
-    solution: 'ServiceNow ITOM with Discovery and Service Mapping across hybrid infrastructure',
-    results: ['100% asset visibility', '60% faster RCA', '$2M avoided downtime'],
+    eyebrow: 'National Healthcare Provider',
+    metric: '4h',
+    metricLabel: 'Claims processing, down from 72',
+    summary:
+      'Eligibility verification automated end to end, taking claims processing from three days to four hours.',
+    href: '/case-studies/healthcare-eligibility-verification-automation-aci-yesbot',
+    linkLabel: 'Read the automation story',
+    image: '/images/v4/case-healthcare.jpg',
+  },
+  {
+    eyebrow: 'Global Technology Enterprise',
+    metric: '0.1%',
+    metricLabel: 'Error rate after automation',
+    summary:
+      'Contract lifecycle automation across a global enterprise, with manual rework engineered out of the process.',
+    href: '/case-studies/accelerating-contract-performance-through-intelligent-automation',
+    linkLabel: 'Read the contract story',
+    image: '/images/v4/svc-ai.jpg',
   },
 ];
 
-const modules = [
-  { name: 'ITSM', color: 'bg-green-100 text-green-700' },
-  { name: 'ITOM', color: 'bg-blue-100 text-blue-700' },
-  { name: 'HRSD', color: 'bg-purple-100 text-purple-700' },
-  { name: 'CSM', color: 'bg-orange-100 text-orange-700' },
-  { name: 'SecOps', color: 'bg-red-100 text-red-700' },
-  { name: 'App Engine', color: 'bg-cyan-100 text-cyan-700' },
+const PROCESS = [
+  {
+    title: 'Assess',
+    body: 'Instance and process audit. Where the queue actually hurts, what the CMDB really contains, and which workflows deserve the platform.',
+  },
+  {
+    title: 'Design',
+    body: 'Process decisions first: how incident, change, and request should flow, and who owns each step. The cleaner these calls, the faster everything after.',
+  },
+  {
+    title: 'Build',
+    body: 'Configuration in sprints, kept close to standard. A focused ITSM rollout typically lands in 10 to 16 weeks, and the variable is process, not configuration.',
+  },
+  {
+    title: 'Adopt',
+    body: 'Go live team by team, with training and a feedback loop. Adoption gets measured in the platform, not asserted in a deck.',
+  },
+  {
+    title: 'Run',
+    body: 'Upgrades, new workflows, and run support under SLA. Staying current is a standing job, and it is one we take on.',
+  },
 ];
+
+const FACTS = [
+  {
+    label: 'Partnership',
+    line: 'ServiceNow partner. Certified consultants across ITSM, ITOM, HRSD, and platform development.',
+  },
+  {
+    label: 'Delivery',
+    line: 'The consultants who design your workflows configure them. No handoff between the process workshop and the build.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Operations',
+    line: 'ISO 27001 certified and CMMI Level 3 appraised, with 24/7 operations under SLAs.',
+  },
+];
+
+const FAQS = servicenowFaqs.map((f) => ({ question: f.q, answer: f.a }));
+
+/* --------------------------------- page ---------------------------------- */
 
 export default function ServiceNowPage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/platforms"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Platforms
-          </Link>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <ServiceSchema
+        name="ServiceNow Implementation Services"
+        description="ServiceNow partner. ITSM, ITOM, HR Service Delivery, and workflow automation implementation, optimization, and managed support."
+        url="/platforms/servicenow"
+        serviceType="ServiceNow Consulting"
+      />
+      {/* FAQPage JSON-LD comes from PageFaq below. One per page. */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Platforms', url: '/platforms' },
+          { name: 'ServiceNow', url: '/platforms/servicenow' },
+        ]}
+      />
 
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-[#81B5A1] rounded-2xl flex items-center justify-center">
-              <Workflow className="w-8 h-8 text-white" />
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="px-3 py-1 bg-[#81B5A1]/20 text-[#81B5A1] text-sm font-medium rounded-full flex items-center gap-1">
-                <Award className="w-4 h-4" />
-                Partner
-              </span>
-            </div>
-          </div>
+      <ServiceHero
+        kicker="ServiceNow"
+        title={
+          <>
+            ServiceNow that outlasts{' '}
+            <span style={{ color: '#1D4ED8' }}>the&nbsp;go-live</span>
+          </>
+        }
+        lede="ACI Infotech is a ServiceNow partner. We implement ITSM with a CMDB that stays accurate, wire ITOM into the monitoring you actually run, and build workflows with an owner and an SLA. Then we stay on for the upgrades, twice a year, every year."
+        chips={[
+          'ServiceNow partner',
+          'ITSM, ITOM, HRSD',
+          'Upgrade management',
+          'ISO 27001',
+        ]}
+        primary={{ label: 'Talk to a ServiceNow consultant', href: '/contact' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        visual={<FlowScene config={FLOWS['platform-servicenow']} />}
+      />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            ServiceNow Implementation
-            <span className="text-[var(--aci-primary-light)]"> & Workflow Automation</span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            We implement ServiceNow the way operations teams actually use it: ITSM with a
-            CMDB that stays accurate, ITOM wired to real monitoring, and workflows with an
-            owner and an SLA. Certified consultants build it and stay on it.
-          </p>
+      {/* Problem band: the license was the easy part */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        image="/images/v4/svc-ops.jpg"
+        pill="Why ServiceNow rollouts stall"
+        headline={
+          <>
+            The platform went live.{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">The old habits did not.</span>
+          </>
+        }
+        body="Most stalled ServiceNow estates share a story: a broad license, a thin rollout, a CMDB nobody trusts, and workflows that mirror the org chart instead of the work. Fixing that is process design first and configuration second. We have done both enough times to know the order matters."
+        story={{
+          metric: { value: '99.97%', label: 'Uptime across 72+ servers' },
+          title:
+            'Automated DevOps and monitoring for an enterprise technology company, with incidents caught before users felt them.',
+          href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
+          logoSrc: '/images/Solution-Partners/servicenow.png',
+          logoAlt: 'ServiceNow',
+        }}
+      />
 
-          <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule ServiceNow Assessment
-            </Button>
-            <Button href="/case-studies" variant="secondary" size="lg">
-              View Case Studies
-            </Button>
-          </div>
+      {/* Offerings */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we do on ServiceNow"
+            title={
+              <>
+                One platform. <span style={{ color: '#1D4ED8' }}>Six disciplines.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Modules */}
-      <section className="py-12 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-center font-semibold text-gray-500 mb-6">ServiceNow Products We Implement</h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {modules.map((module) => (
-              <span key={module.name} className={`px-4 py-2 ${module.color} text-sm font-medium rounded-full`}>
-                {module.name}
-              </span>
-            ))}
-          </div>
+      {/* Honest fit panel */}
+      <DecisionPanel
+        title={<>Is ServiceNow the right&nbsp;call?</>}
+        body="Usually, when work crosses teams. ServiceNow earns its licenses when incidents, changes, and requests need one system of record, with audit trails and a CMDB underneath. When the need is a queue for one team, lighter tooling wins, and we will say so before you sign anything."
+        colA={{ src: '/images/Solution-Partners/servicenow.png', alt: 'ServiceNow', px: 40 }}
+        colB={{ label: 'Lighter tooling' }}
+        rows={DECISION_ROWS}
+        footnote="When the second column wins, the honest answer is usually Jira Service Management or Zendesk. An enterprise platform with one team on it is the most expensive queue you can buy."
+      />
+
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Workflows that hold <span style={{ color: '#1D4ED8' }}>under&nbsp;load.</span>
+              </>
+            }
+          />
+          <CmsProofCards technology="ServiceNow" fallback={PROOF_FALLBACK} />
         </div>
       </section>
 
-      {/* Value Props */}
-      <section className="py-16 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#81B5A1]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-7 h-7 text-[#81B5A1]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Certified Experts</h3>
-              <p className="text-gray-600 text-sm">
-                50+ ServiceNow certifications across ITSM, ITOM, HRSD, and development.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#81B5A1]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-7 h-7 text-[#81B5A1]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Rapid Time-to-Value</h3>
-              <p className="text-gray-600 text-sm">
-                Accelerated implementations with pre-built templates and best practices.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#81B5A1]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-7 h-7 text-[#81B5A1]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Enterprise Scale</h3>
-              <p className="text-gray-600 text-sm">
-                Experience with global rollouts across 100K+ users.
-              </p>
-            </div>
-          </div>
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* Capabilities */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What We Deliver
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              End-to-end ServiceNow services from strategy to managed operations.
-            </p>
-          </div>
+      {/* Bridge to the digital transformation practice */}
+      <BridgeBand
+        title={<>Workflow is a transformation&nbsp;job.</>}
+        body="ServiceNow pays off when the processes around it get redesigned, not just recorded. That is our digital transformation practice: process, integration, and change management delivered with engineering rigor."
+        link={{ label: 'Digital Transformation', href: '/services/digital-transformation' }}
+      />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {capabilities.map((cap) => (
-              <div key={cap.title} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-3">{cap.title}</h3>
-                <p className="text-gray-600 mb-4">{cap.description}</p>
-                <ul className="space-y-2">
-                  {cap.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm text-gray-700">
-                      <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              ServiceNow Success Stories
-            </h2>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            {caseStudies.map((cs, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="px-3 py-1 bg-[#81B5A1]/10 text-[#81B5A1] text-sm font-medium rounded-full">
-                    {cs.industry}
-                  </span>
-                  <span className="text-gray-500 text-sm">{displayClient(cs)}</span>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Challenge</h3>
-                  <p className="text-gray-600">{cs.challenge}</p>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Solution</h3>
-                  <p className="text-gray-600">{cs.solution}</p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-700 mb-3">Results</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {cs.results.map((result) => (
-                      <span key={result} className="px-3 py-2 bg-green-100 text-green-700 text-sm font-medium rounded-lg">
-                        {result}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Why us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title={<>Why enterprises run ServiceNow with&nbsp;us</>} />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
 
@@ -270,22 +301,19 @@ export default function ServiceNowPage() {
 
       <RelatedLinks items={servicenowRelated} />
 
-      <FaqBlock items={servicenowFaqs} eyebrow="ServiceNow FAQ" />
+      <PageFaq
+        kicker="ServiceNow FAQ"
+        title={
+          <>
+            ServiceNow questions,
+            <br />
+            answered straight.
+          </>
+        }
+        faqs={FAQS}
+      />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[#81B5A1]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Transform Your Digital Workflows?
-          </h2>
-          <p className="text-xl text-green-100 mb-8">
-            Schedule a free assessment with our ServiceNow certified consultants.
-          </p>
-          <Button href="/contact?platform=servicenow" variant="lime" size="lg">
-            Talk to ServiceNow Expert
-          </Button>
-        </div>
-      </section>
-    </main>
+      <CtaSection label="Let's talk ServiceNow" />
+    </div>
   );
 }

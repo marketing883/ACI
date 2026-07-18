@@ -307,6 +307,7 @@ export default function CloudModernizationPage() {
       {/* Problem band: the estate nobody can turn off */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/svc-cloud.jpg"
         pill="Why estates stall"
         headline={
           <>

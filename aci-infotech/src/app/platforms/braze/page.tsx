@@ -1,24 +1,41 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Award, MessageSquare, Zap, TrendingUp, Users } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { brazeRelated } from '@/content/related-links';
+import ClusterPosts from '@/components/seo/ClusterPosts';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { getSiteUrl } from '@/lib/site-url';
+import { v4Sans, v4Geist } from '@/components/v4/fonts';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  DecisionPanel,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
-import { displayClient } from '@/lib/content/anonymize';
+export const revalidate = 3600;
+
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://aciinfotech.com/platforms/braze' },
+  alternates: { canonical: `${siteUrl}/platforms/braze` },
   title: 'Braze Implementation Services',
-  description: 'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
-  // Per-page social card. Without this, every share and link preview
-  // inherited the homepage's OpenGraph (title, image, and og:url all
-  // pointing at /), mis-attributing all 21 service/platform pages.
+  description:
+    'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
   openGraph: {
     title: 'Braze Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
-    url: 'https://aciinfotech.com/platforms/braze',
+    description:
+      'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
+    url: `${siteUrl}/platforms/braze`,
     siteName: 'ACI Infotech',
     type: 'website',
     images: DEFAULT_OG_IMAGES,
@@ -26,284 +43,305 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Braze Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
+    description:
+      'ACI Infotech is a Braze Alloy Partner. Customer engagement, lifecycle marketing, and real-time personalization implementation.',
     images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
-const capabilities = [
+/* ------------------------------- page data ------------------------------- */
+
+const OFFERINGS = [
   {
-    title: 'Platform Implementation',
-    description: 'End-to-end Braze implementation with SDK integration, data pipelines, and campaign setup.',
-    features: ['SDK integration', 'Data architecture', 'Template setup', 'Team training'],
+    title: 'Platform implementation',
+    body: 'SDK integration, identity resolution, subscription groups, and the first live campaigns. We train your marketers as we build, so handover is not a separate phase at the end.',
+    chips: ['Braze', 'SDK integration', 'Subscription groups'],
   },
   {
-    title: 'Customer Journey Orchestration',
-    description: 'Design and implement automated customer journeys across email, push, SMS, and in-app.',
-    features: ['Canvas flows', 'Multi-channel journeys', 'Trigger automation', 'A/B testing'],
+    title: 'Canvas journey orchestration',
+    body: 'Lifecycle journeys in Canvas across email, push, SMS, and in-app, with triggers, experiments, and exit rules that respect the customer. The channel decision happens per person, not per campaign.',
+    chips: ['Braze Canvas', 'Email', 'Push and SMS', 'In-app'],
   },
   {
-    title: 'Data Integration',
-    description: 'Connect Braze to your data warehouse, CDP, and enterprise systems for real-time personalization.',
-    features: ['Currents setup', 'CDP integration', 'Real-time sync', 'Data transformation'],
+    title: 'Data integration',
+    body: 'Cloud Data Ingestion from your warehouse, the SDK streaming behavioral events, and Currents streaming engagement back out for analytics. Braze reads from the warehouse and reports back to it.',
+    chips: ['Cloud Data Ingestion', 'Braze Currents', 'Snowflake', 'Databricks'],
   },
   {
-    title: 'Personalization at Scale',
-    description: 'Implement dynamic content, recommendation engines, and AI-powered send time optimization.',
-    features: ['Liquid templating', 'Connected Content', 'Intelligent timing', 'Predictive analytics'],
+    title: 'Personalization at scale',
+    body: 'Liquid templating, Connected Content calling your APIs at send time, and catalogs for product and offer data. Send-time optimization where it earns its keep, simple sends where it does not.',
+    chips: ['Liquid', 'Connected Content', 'Catalogs'],
   },
   {
-    title: 'Migration Services',
-    description: 'Migrate from legacy ESPs or competing platforms to Braze with zero disruption.',
-    features: ['Platform audit', 'Data migration', 'Template conversion', 'Parallel testing'],
+    title: 'ESP migration',
+    body: 'Templates converted, subscriber data and preferences migrated, IPs and domains warmed while both systems run in parallel. Deliverability is what breaks in rushed migrations, so we do not cut over until inbox placement holds.',
+    chips: ['IP warmup', 'Template migration', 'Parallel runs'],
   },
   {
-    title: 'Managed Services',
-    description: 'Ongoing Braze optimization, campaign management, and strategic support.',
-    features: ['Campaign operations', 'Performance optimization', 'Deliverability', 'Strategic guidance'],
+    title: 'Managed campaign operations',
+    body: 'Campaign operations under a managed agreement, or your team trained with us on call for deliverability and optimization. Either way, someone owns the send calendar and answers for it.',
+    chips: ['Campaign ops', 'Deliverability', 'SLAs'],
   },
 ];
 
-const caseStudies = [
+const DECISION_ROWS = [
+  { need: 'Messages triggered by live product events', pick: 'a' as const },
+  { need: 'Mobile-first: push, in-app, and Content Cards', pick: 'a' as const },
+  { need: 'Marketers shipping journeys without engineering tickets', pick: 'a' as const },
+  { need: 'Engagement data streamed back to your warehouse', pick: 'a' as const },
+  { need: 'CRM, service, and sales already on Salesforce', pick: 'b' as const },
+  { need: 'Journeys driven by CRM fields more than app events', pick: 'b' as const },
+];
+
+const PROOF_FALLBACK = [
   {
-    client: 'Fortune 500 Convenience Retailer',
-    industry: 'Retail',
-    challenge: 'Fragmented engagement across 800+ convenience stores with no real-time capabilities',
-    solution: 'Braze implementation with real-time triggers, location-based messaging, and loyalty integration',
-    results: ['35% engagement lift', '$2.3M incremental revenue', 'Real-time personalization'],
+    eyebrow: 'Fortune 500 Convenience Retail Chain',
+    metric: '2.5x',
+    metricLabel: 'Email engagement lift',
+    summary:
+      'A unified customer data foundation across 600+ locations feeding real-time engagement, with promotion effectiveness up 15%.',
+    href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+    linkLabel: 'Read the retail story',
   },
   {
-    client: 'E-commerce Brand',
-    industry: 'Retail',
-    challenge: 'Low email engagement and no mobile push strategy',
-    solution: 'Full Braze implementation with lifecycle campaigns and predictive send time',
-    results: ['52% higher open rates', '3x push opt-ins', '28% revenue from Braze'],
+    eyebrow: 'Global Financial Services Firm',
+    metric: '90d',
+    metricLabel: 'From prototype to production',
+    summary:
+      'A governed data foundation stood up in 90 days, the pattern every engagement platform reads from.',
+    href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
+    linkLabel: 'Read the data story',
+    image: '/images/v4/case-finance.jpg',
+  },
+  {
+    eyebrow: 'Global Food Services Operator',
+    metric: '22%',
+    metricLabel: 'Faster decisions',
+    summary:
+      'One data platform across 53 countries and 400,000 employees, replacing dozens of regional reporting stacks.',
+    href: '/case-studies/global-food-facilities-data-intelligence',
+    linkLabel: 'Read the story',
+    image: '/images/v4/case-retail.jpg',
   },
 ];
 
-const brazeFaqs = [
+const PROCESS = [
   {
-    q: 'How long does a Braze implementation take?',
-    a: 'A standard implementation runs 8 to 12 weeks: SDK integration, data architecture, template setup, and the first live campaigns. Add time if identity resolution is messy or if you are migrating an ESP at the same time. We train your team as we build, so handover is not a separate phase.',
+    title: 'Assess',
+    body: 'Stack and data audit: identity, events, consent, and what the current ESP actually sends. The gaps surface here, not mid-build.',
   },
   {
-    q: 'Can you migrate us from our current ESP to Braze?',
-    a: 'Yes. We audit the existing platform, convert templates, migrate subscriber data and preferences, and run both systems in parallel while the new IPs and domains warm up. Deliverability is the thing that breaks in rushed migrations, so we do not cut over until inbox placement holds.',
+    title: 'Architect',
+    body: 'Data design first: identity resolution, event taxonomy, and the warehouse sync. A journey is only as smart as the profile that triggers it.',
   },
   {
-    q: 'How does Braze get our customer data?',
-    a: 'Three routes, usually together: the SDK streams behavioral events from your apps and sites, Cloud Data Ingestion syncs profiles from your warehouse or CDP, and Currents streams engagement data back out for analytics. We design the data architecture first, because a campaign is only as good as the profile behind it.',
+    title: 'Build',
+    body: 'SDK integration, templates, and the first live Canvas journeys. A standard implementation runs 8 to 12 weeks.',
   },
   {
-    q: 'Which channels can Braze actually send?',
-    a: 'Email, mobile and web push, SMS and MMS, in-app messages, Content Cards, and webhooks into anything else. Canvas orchestrates all of them in one journey, so the channel decision happens per customer rather than per campaign.',
+    title: 'Prove',
+    body: 'Parallel sends while IPs and domains warm. We cut over when inbox placement holds, not when the calendar says so.',
   },
   {
-    q: 'Do you run our campaigns after launch or train our team?',
-    a: 'Either. Some clients hand us campaign operations under a managed services agreement; most have us build, train their marketers, and stay on for deliverability and optimization. The goal is that your team ships campaigns without a ticket queue in the middle.',
+    title: 'Run',
+    body: 'Your team ships campaigns while we watch deliverability and experiments, or we run the whole calendar under a managed agreement.',
   },
 ];
 
-const channels = [
-  { name: 'Email', color: 'bg-blue-100 text-blue-700' },
-  { name: 'Push Notifications', color: 'bg-green-100 text-green-700' },
-  { name: 'SMS/MMS', color: 'bg-purple-100 text-purple-700' },
-  { name: 'In-App Messages', color: 'bg-orange-100 text-orange-700' },
-  { name: 'Content Cards', color: 'bg-pink-100 text-pink-700' },
-  { name: 'Webhooks', color: 'bg-cyan-100 text-cyan-700' },
+const FACTS = [
+  {
+    label: 'Partnership',
+    line: 'Braze Alloy partner. Implementations, ESP migrations, and managed campaign operations.',
+  },
+  {
+    label: 'Delivery',
+    line: 'The engineers who design the data architecture wire the SDK. Marketing and data work as one pod, not two vendors.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Operations',
+    line: 'ISO 27001 certified, with 24/7 operations under SLAs.',
+  },
 ];
+
+const FAQS = [
+  {
+    question: 'How long does a Braze implementation take?',
+    answer:
+      'A standard implementation runs 8 to 12 weeks: SDK integration, data architecture, template setup, and the first live campaigns. Add time if identity resolution is messy or if you are migrating an ESP at the same time. We train your team as we build, so handover is not a separate phase.',
+  },
+  {
+    question: 'Can you migrate us from our current ESP to Braze?',
+    answer:
+      'Yes. We audit the existing platform, convert templates, migrate subscriber data and preferences, and run both systems in parallel while the new IPs and domains warm up. Deliverability is the thing that breaks in rushed migrations, so we do not cut over until inbox placement holds.',
+  },
+  {
+    question: 'How does Braze get our customer data?',
+    answer:
+      'Three routes, usually together: the SDK streams behavioral events from your apps and sites, Cloud Data Ingestion syncs profiles from your warehouse or CDP, and Currents streams engagement data back out for analytics. We design the data architecture first, because a campaign is only as good as the profile behind it.',
+  },
+  {
+    question: 'Which channels can Braze actually send?',
+    answer:
+      'Email, mobile and web push, SMS and MMS, in-app messages, Content Cards, and webhooks into anything else. Canvas orchestrates all of them in one journey, so the channel decision happens per customer rather than per campaign.',
+  },
+  {
+    question: 'Do you run our campaigns after launch or train our team?',
+    answer:
+      'Either. Some clients hand us campaign operations under a managed services agreement; most have us build, train their marketers, and stay on for deliverability and optimization. The goal is that your team ships campaigns without a ticket queue in the middle.',
+  },
+];
+
+/* --------------------------------- page ---------------------------------- */
 
 export default function BrazePage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/platforms"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Platforms
-          </Link>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <ServiceSchema
+        name="Braze Implementation Services"
+        description="Braze Alloy Partner. Customer engagement, lifecycle marketing, Canvas orchestration, ESP migration, and real-time personalization implementation."
+        url="/platforms/braze"
+        serviceType="Braze Consulting"
+      />
+      {/* FAQPage JSON-LD comes from PageFaq below. One per page. */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Platforms', url: '/platforms' },
+          { name: 'Braze', url: '/platforms/braze' },
+        ]}
+      />
 
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-[#ED4B4B] rounded-2xl flex items-center justify-center">
-              <MessageSquare className="w-8 h-8 text-white" />
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="px-3 py-1 bg-[#ED4B4B]/20 text-[#ED4B4B] text-sm font-medium rounded-full flex items-center gap-1">
-                <Award className="w-4 h-4" />
-                Alloy Partner
-              </span>
-            </div>
-          </div>
+      <ServiceHero
+        kicker="Braze"
+        title={
+          <>
+            Braze, wired into{' '}
+            <span style={{ color: '#1D4ED8' }}>your&nbsp;data</span>
+          </>
+        }
+        lede="ACI Infotech is a Braze Alloy partner. We implement Braze end to end: SDK integration, data pipelines from your warehouse, and Canvas journeys across email, push, SMS, and in-app. ESP migrations run in parallel until deliverability holds, and your team ships campaigns without a ticket queue in the middle."
+        chips={[
+          'Braze Alloy partner',
+          'Canvas orchestration',
+          'ESP migrations',
+          'Deliverability watched',
+        ]}
+        primary={{ label: 'Talk to a Braze consultant', href: '/contact' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        visual={<FlowScene config={FLOWS['platform-braze']} />}
+      />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Braze Implementation
-            <span className="text-[var(--aci-primary-light)]"> and Customer&nbsp;Engagement</span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            We implement Braze end to end: SDK integration, data pipelines into your warehouse,
-            and Canvas journeys across email, push, SMS, and in-app. ESP migrations run in
-            parallel until deliverability holds, then your team takes over with playbooks
-            they will actually use.
-          </p>
+      {/* Problem band: the platform is rarely the weak link */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        image="/images/v4/hero-atmosphere.jpg"
+        pill="Why engagement platforms disappoint"
+        headline={
+          <>
+            The platform sends.{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">The data never arrives.</span>
+          </>
+        }
+        body="Most Braze estates underperform for the same reason: the profile behind the message is thin. Events never leave the app, the warehouse syncs weekly, and personalization falls back to first name. We build the data plumbing first, because a journey is only as smart as the profile that triggers it."
+        story={{
+          metric: { value: '2.5x', label: 'Email engagement lift' },
+          title:
+            'A governed customer data foundation across 600+ retail locations, feeding real-time engagement.',
+          href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+          logoSrc: '/images/Solution-Partners/braze.png',
+          logoAlt: 'Braze',
+        }}
+      />
 
-          <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule Braze Assessment
-            </Button>
-            <Button href="/case-studies" variant="secondary" size="lg">
-              View Case Studies
-            </Button>
-          </div>
+      {/* Offerings */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we do on Braze"
+            title={
+              <>
+                One platform. <span style={{ color: '#1D4ED8' }}>Six disciplines.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Channels */}
-      <section className="py-12 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-center font-semibold text-gray-500 mb-6">Channels We Implement</h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {channels.map((channel) => (
-              <span key={channel.name} className={`px-4 py-2 ${channel.color} text-sm font-medium rounded-full`}>
-                {channel.name}
-              </span>
-            ))}
-          </div>
+      {/* Honest fit panel */}
+      <DecisionPanel
+        title={<>Is Braze the right&nbsp;call?</>}
+        body="Usually, when engagement has to react in real time. Braze earns its place when product events should trigger messages in seconds and marketers need to ship journeys without engineering tickets. When the center of gravity is Salesforce CRM, the Marketing Cloud route can win, and we will tell you which, since we implement both."
+        colA={{ src: '/images/Solution-Partners/braze.png', alt: 'Braze', px: 36 }}
+        colB={{ label: 'Marketing Cloud route' }}
+        rows={DECISION_ROWS}
+        footnote="We hold both the Braze Alloy partnership and a Salesforce partnership, so the recommendation follows your stack, not our badge list."
+      />
+
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Engagement that <span style={{ color: '#1D4ED8' }}>moved&nbsp;numbers.</span>
+              </>
+            }
+          />
+          <CmsProofCards
+            technology="Braze"
+            fallback={PROOF_FALLBACK}
+            fallbackVideo={{ mp4: '/videos/retail-bg.mp4' }}
+          />
         </div>
       </section>
 
-      {/* Value Props */}
-      <section className="py-16 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#ED4B4B]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-7 h-7 text-[#ED4B4B]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Certified Team</h3>
-              <p className="text-gray-600 text-sm">
-                Braze-certified consultants with deep platform expertise.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#ED4B4B]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-7 h-7 text-[#ED4B4B]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Proven ROI</h3>
-              <p className="text-gray-600 text-sm">
-                Average 35% lift in customer engagement for our clients.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#ED4B4B]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Users className="w-7 h-7 text-[#ED4B4B]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Full Lifecycle</h3>
-              <p className="text-gray-600 text-sm">
-                From implementation to ongoing managed services.
-              </p>
-            </div>
-          </div>
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* Capabilities */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What We Deliver
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              End-to-end Braze services from implementation to managed operations.
-            </p>
-          </div>
+      {/* Bridge to the MarTech and CDP practice */}
+      <BridgeBand
+        title={<>The message is the last&nbsp;step.</>}
+        body="Braze performs when the customer data underneath is unified, consented, and current. That is our MarTech and CDP practice: the customer record first, then the journeys that read it."
+        link={{ label: 'MarTech & CDP', href: '/services/martech-cdp' }}
+      />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {capabilities.map((cap) => (
-              <div key={cap.title} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-3">{cap.title}</h3>
-                <p className="text-gray-600 mb-4">{cap.description}</p>
-                <ul className="space-y-2">
-                  {cap.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm text-gray-700">
-                      <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+      {/* Why us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title={<>Why brands run Braze with&nbsp;us</>} />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
 
-      {/* Case Studies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Braze Success Stories
-            </h2>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            {caseStudies.map((cs, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="px-3 py-1 bg-[#ED4B4B]/10 text-[#ED4B4B] text-sm font-medium rounded-full">
-                    {cs.industry}
-                  </span>
-                  <span className="text-gray-500 text-sm">{displayClient(cs)}</span>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Challenge</h3>
-                  <p className="text-gray-600">{cs.challenge}</p>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Solution</h3>
-                  <p className="text-gray-600">{cs.solution}</p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-700 mb-3">Results</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {cs.results.map((result) => (
-                      <span key={result} className="px-3 py-2 bg-green-100 text-green-700 text-sm font-medium rounded-lg">
-                        {result}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ClusterPosts keywords={['braze', 'customer engagement', 'martech', 'cdp']} />
 
       <RelatedLinks items={brazeRelated} />
 
-      <FaqBlock items={brazeFaqs} eyebrow="Braze FAQ" />
+      <PageFaq
+        kicker="Braze FAQ"
+        title={
+          <>
+            Braze questions,
+            <br />
+            answered straight.
+          </>
+        }
+        faqs={FAQS}
+      />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[#ED4B4B]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Transform Customer Engagement?
-          </h2>
-          <p className="text-xl text-red-100 mb-8">
-            Schedule a free assessment with our Braze certified consultants.
-          </p>
-          <Button href="/contact?platform=braze" variant="lime" size="lg">
-            Talk to Braze Expert
-          </Button>
-        </div>
-      </section>
-    </main>
+      <CtaSection label="Let's talk Braze" />
+    </div>
   );
 }

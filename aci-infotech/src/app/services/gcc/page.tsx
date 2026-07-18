@@ -229,6 +229,7 @@ export default function GCCPage() {
       {/* Problem band: outsourcing contracts that never become your team */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/case-transport.jpg"
         pill="Why captives beat contracts"
         headline={
           <>

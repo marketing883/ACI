@@ -267,6 +267,7 @@ export default function DigitalTransformationPage() {
       {/* Problem band: the manual work nobody puts on the org chart */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/why-visual.jpg"
         pill="Why processes stay manual"
         headline={
           <>

@@ -216,6 +216,7 @@ export default function DatabricksPage() {
       {/* Problem band: workspaces are easy, production is not */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/svc-data.jpg"
         pill="Why lakehouses stall"
         headline={
           <>

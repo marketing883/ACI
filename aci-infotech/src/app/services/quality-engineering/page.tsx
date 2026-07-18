@@ -287,6 +287,7 @@ export default function QualityEngineeringPage() {
       {/* Problem band: the release gate nobody trusts */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/case-manufacturing.jpg"
         pill="Why releases stall"
         headline={
           <>

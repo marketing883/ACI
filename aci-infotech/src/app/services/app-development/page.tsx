@@ -263,6 +263,7 @@ export default function AppDevelopmentPage() {
       {/* Problem band: the integration layer is where apps die */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/svc-data.jpg"
         pill="Where enterprise apps fail"
         headline={
           <>

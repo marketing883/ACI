@@ -247,6 +247,7 @@ export default function AppliedAIMLPage() {
       {/* Problem band: where pilots go to die */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/svc-ai.jpg"
         pill="Why pilots stall"
         headline={
           <>

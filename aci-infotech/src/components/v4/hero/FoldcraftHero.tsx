@@ -49,6 +49,7 @@ const DEFAULT_BODY =
  */
 export default function FoldcraftHero({
   geistClass,
+  image,
   pill = 'Why Most AI Stalls',
   headline = DEFAULT_HEADLINE,
   body = DEFAULT_BODY,
@@ -59,6 +60,10 @@ export default function FoldcraftHero({
   headline?: React.ReactNode;
   body?: string;
   story?: FoldcraftStory;
+  /** Cinematic still instead of the underwater video. The subject sits
+      right of center; a left-heavy veil keeps the copy readable. The
+      fish loop stays reserved for the data engineering page. */
+  image?: string;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -76,6 +81,27 @@ export default function FoldcraftHero({
 
   return (
     <section className={`foldcraft relative min-h-screen w-full overflow-hidden bg-black ${geistClass}`}>
+      {image ? (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={image}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: '70% center' }}
+          />
+          {/* Left-heavy veil: copy stays readable, the image breathes right */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(90deg, rgba(2,4,9,0.92) 0%, rgba(2,4,9,0.66) 42%, rgba(2,4,9,0.3) 75%, rgba(2,4,9,0.42) 100%)',
+            }}
+          />
+        </>
+      ) : (
       <video
         ref={videoRef}
         muted
@@ -88,6 +114,7 @@ export default function FoldcraftHero({
         <source src="/videos/foldcraft.webm" type="video/webm" />
         <source src="/videos/foldcraft.mp4" type="video/mp4" />
       </video>
+      )}
 
       {/* Dust-particle rings floating with the fish */}
       <div className="pointer-events-none absolute right-[2%] top-1/2 h-[74%] w-[56%] -translate-y-1/2 opacity-90">

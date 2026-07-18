@@ -240,6 +240,7 @@ export default function ManagedOperationsPage() {
       {/* Problem band: the 3am page and the newest person on the rotation */}
       <FoldcraftHero
         geistClass={v4Geist}
+        image="/images/v4/svc-ops.jpg"
         pill="Why on-call breaks"
         headline={
           <>

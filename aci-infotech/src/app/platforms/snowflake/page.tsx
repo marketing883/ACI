@@ -1,28 +1,42 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Award, Database, Shield, TrendingUp, Snowflake } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
-import { snowflakeFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { snowflakeRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
+import { snowflakeFaqs } from '@/content/pillar-faqs';
+import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { getSiteUrl } from '@/lib/site-url';
+import { v4Sans, v4Geist } from '@/components/v4/fonts';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  DecisionPanel,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+import CmsProofCards from '@/components/v4/page/CmsProofCards';
+import FlowScene from '@/components/v4/page/FlowScene';
+import { FLOWS } from '@/components/v4/page/flow-configs';
 
 export const revalidate = 3600;
 
-import { displayClient } from '@/lib/content/anonymize';
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://aciinfotech.com/platforms/snowflake' },
+  alternates: { canonical: `${siteUrl}/platforms/snowflake` },
   title: 'Snowflake Implementation Services',
-  description: 'ACI Infotech is a Snowflake Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
-  // Per-page social card. Without this, every share and link preview
-  // inherited the homepage's OpenGraph (title, image, and og:url all
-  // pointing at /), mis-attributing all 21 service/platform pages.
+  description:
+    'ACI Infotech is a Snowflake Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
   openGraph: {
     title: 'Snowflake Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is a Snowflake Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
-    url: 'https://aciinfotech.com/platforms/snowflake',
+    description:
+      'ACI Infotech is a Snowflake Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
+    url: `${siteUrl}/platforms/snowflake`,
     siteName: 'ACI Infotech',
     type: 'website',
     images: DEFAULT_OG_IMAGES,
@@ -30,216 +44,256 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Snowflake Implementation Services | ACI Infotech',
-    description: 'ACI Infotech is a Snowflake Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
+    description:
+      'ACI Infotech is a Snowflake Partner. Data Cloud architecture, data sharing, Snowpark, and enterprise analytics solutions.',
     images: DEFAULT_TWITTER_IMAGES,
   },
 };
 
-const capabilities = [
+/* ------------------------------- page data ------------------------------- */
+
+const OFFERINGS = [
   {
-    title: 'Data Cloud Architecture',
-    description: 'Design scalable, performant Snowflake architectures that support analytics, data sharing, and AI/ML workloads.',
-    features: ['Multi-cluster warehouses', 'Resource monitors', 'Time travel & fail-safe', 'Zero-copy cloning'],
+    title: 'Warehouse and platform architecture',
+    body: 'Warehouses sized for the workloads you actually run, with resource monitors and auto-suspend set on day one. Storage and compute scale apart, roles and masking are designed in, and month six on the platform looks like month one.',
+    chips: ['Snowflake', 'Multi-cluster warehouses', 'Zero-copy cloning', 'Resource monitors'],
   },
   {
-    title: 'Data Sharing & Marketplace',
-    description: 'Enable secure data sharing across organizations and monetize data through Snowflake Marketplace.',
-    features: ['Secure data sharing', 'Data Clean Rooms', 'Marketplace publishing', 'Reader accounts'],
+    title: 'Migrations from legacy warehouses',
+    body: 'Teradata, Oracle, Netezza, and homegrown estates moved by domain, heaviest cost first. Old and new run in parallel until the numbers match, and nothing cuts over until the business signs off on parity.',
+    chips: ['Teradata', 'Oracle', 'Netezza', 'Parallel runs'],
   },
   {
-    title: 'Snowpark Development',
-    description: 'Build data pipelines and ML models directly in Snowflake using Python, Java, or Scala.',
-    features: ['Python UDFs', 'Snowpark ML', 'Stored procedures', 'Streamlit apps'],
+    title: 'Snowpark and data apps',
+    body: 'Pipelines, UDFs, and ML built in Python where the data already lives, plus Streamlit apps for teams who need more than a dashboard. One platform to govern instead of a sidecar stack nobody owns.',
+    chips: ['Snowpark', 'Python', 'Snowpark ML', 'Streamlit'],
   },
   {
-    title: 'Performance Optimization',
-    description: 'Optimize query performance and reduce costs with our deep Snowflake expertise.',
-    features: ['Query optimization', 'Warehouse sizing', 'Clustering strategies', 'Cost governance'],
+    title: 'Data sharing and clean rooms',
+    body: 'Live shares with partners and customers, with no copies and no file drops to babysit. Clean rooms let two companies compute on joined data without seeing each other’s rows, and the governance model comes along for free.',
+    chips: ['Secure Data Sharing', 'Data Clean Rooms', 'Snowflake Marketplace'],
   },
   {
-    title: 'Migration Services',
-    description: 'Migrate from legacy data warehouses like Teradata, Oracle, or Netezza to Snowflake.',
-    features: ['Assessment', 'Schema conversion', 'Data migration', 'Query translation'],
+    title: 'Performance and cost control',
+    body: 'Snowflake bills by the second, so the bill follows the query plan. We profile the heavy queries, right-size the warehouses, and set clustering only where it pays. Then finance gets a report that explains the number.',
+    chips: ['Query profiling', 'Warehouse sizing', 'Clustering', 'FinOps baseline'],
   },
   {
-    title: 'Managed Services',
-    description: 'Ongoing Snowflake administration, monitoring, and optimization with SLA-backed support.',
-    features: ['24/7 monitoring', 'Cost optimization', 'Security management', 'Upgrade planning'],
+    title: 'Managed Snowflake operations',
+    body: 'Monitoring, security management, access reviews, and upgrade planning after go-live, under SLAs and around the clock. The platform stays fast and governed without pulling your engineers off their own roadmap.',
+    chips: ['24/7 NOC', 'SLAs', 'Access reviews', 'Cost reporting'],
   },
 ];
 
-const caseStudies = [
+const DECISION_ROWS = [
+  { need: 'SQL analytics and BI as the center of gravity', pick: 'a' as const },
+  { need: 'Sharing governed data with partners and customers', pick: 'a' as const },
+  { need: 'A small platform team with no appetite for tuning clusters', pick: 'a' as const },
+  { need: 'Elastic concurrency without capacity planning', pick: 'a' as const },
+  { need: 'Heavy streaming and ML on one copy of the data', pick: 'b' as const },
+  { need: 'Deep Spark skills already in the building', pick: 'b' as const },
+];
+
+const PROOF_FALLBACK = [
   {
-    client: 'Global Insurance Company',
-    industry: 'Financial Services',
-    challenge: 'Legacy Teradata warehouse with $2M+ annual costs and limited scalability',
-    solution: 'Full migration to Snowflake with automated data pipelines and real-time dashboards',
-    results: ['25% cost reduction', '3-4x faster queries', 'Unlimited scalability'],
+    eyebrow: 'Global Food Services Operator',
+    metric: '22%',
+    metricLabel: 'Faster decisions',
+    summary:
+      'One governed data platform for 400,000 employees across 53 countries, replacing dozens of regional reporting stacks.',
+    href: '/case-studies/global-food-facilities-data-intelligence',
+    linkLabel: 'Read the story',
+    image: '/images/v4/svc-data.jpg',
   },
   {
-    client: 'Major Retailer',
-    industry: 'Retail',
-    challenge: 'Siloed data preventing unified customer analytics across channels',
-    solution: 'Snowflake data mesh with secure data sharing between business units',
-    results: ['Single customer view', '22% faster insights', 'Self-service analytics'],
+    eyebrow: 'Global Financial Services Firm',
+    metric: '90d',
+    metricLabel: 'From prototype to production',
+    summary:
+      'A governed cloud data foundation for analytics and machine learning, taken from first prototype to production in one quarter.',
+    href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
+    linkLabel: 'Read the lakehouse story',
+    image: '/images/v4/case-finance.jpg',
+  },
+  {
+    eyebrow: 'Fortune 500 Convenience Retail Chain',
+    metric: '30%',
+    metricLabel: 'Reduction in data latency',
+    summary:
+      'A modern data platform across 600+ locations, with real-time inventory visibility and zero downtime through the cutover.',
+    href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+    linkLabel: 'Read the retail story',
+    image: '/images/v4/case-retail.jpg',
   },
 ];
+
+const PROCESS = [
+  {
+    title: 'Assess',
+    body: 'Current spend, workload inventory, and the first domain worth moving. If Snowflake is the wrong tool for your workloads, this is where we say so.',
+  },
+  {
+    title: 'Architect',
+    body: 'Warehouse layout, role hierarchy, masking policies, and resource monitors, with a cost model you can defend to finance before a single credit burns.',
+  },
+  {
+    title: 'Migrate',
+    body: 'Schemas, pipelines, and reports moved by domain. Most enterprise migrations land in 3 to 6 months; a single-source warehouse swap can land in weeks.',
+  },
+  {
+    title: 'Prove',
+    body: 'Old and new run in parallel until the numbers match and the data owners sign off. Nothing gets switched off on faith.',
+  },
+  {
+    title: 'Run',
+    body: 'Around-the-clock operations under SLA with our managed team, or a clean handover to yours with runbooks that hold up at 3am.',
+  },
+];
+
+const FACTS = [
+  {
+    label: 'Partnership',
+    line: 'Snowflake partner with SnowPro certified architects. We are a Databricks partner too, so the platform recommendation follows your workloads, not our margins.',
+  },
+  {
+    label: 'Delivery',
+    line: 'The architects who design your warehouse are the ones who tune it. No handoff between the pitch deck and the delivery pod.',
+  },
+  {
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
+  },
+  {
+    label: 'Operations',
+    line: 'ISO 27001 certified and CMMI Level 3 appraised, with 24/7 managed operations under published SLAs.',
+  },
+];
+
+const FAQS = snowflakeFaqs.map((f) => ({ question: f.q, answer: f.a }));
+
+/* --------------------------------- page ---------------------------------- */
 
 export default function SnowflakePage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-[var(--aci-secondary)] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/platforms"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            All Platforms
-          </Link>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <ServiceSchema
+        name="Snowflake Implementation Services"
+        description="Snowflake Partner. Data Cloud architecture, migrations, Snowpark, data sharing, and cost governance for enterprise."
+        url="/platforms/snowflake"
+        serviceType="Snowflake Consulting"
+      />
+      {/* FAQPage JSON-LD comes from PageFaq below — one per page. */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Platforms', url: '/platforms' },
+          { name: 'Snowflake', url: '/platforms/snowflake' },
+        ]}
+      />
 
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-[#29B5E8] rounded-2xl flex items-center justify-center">
-              <Snowflake className="w-8 h-8 text-white" />
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="px-3 py-1 bg-[#29B5E8]/20 text-[#29B5E8] text-sm font-medium rounded-full flex items-center gap-1">
-                <Award className="w-4 h-4" />
-                Snowflake Partner
-              </span>
-            </div>
-          </div>
+      <ServiceHero
+        kicker="Snowflake"
+        title={
+          <>
+            Snowflake that stays fast{' '}
+            <span style={{ color: '#1D4ED8' }}>and on&nbsp;budget</span>
+          </>
+        }
+        lede="ACI Infotech is a Snowflake Partner with SnowPro certified architects. We design the warehouse, migrate the data by domain, and set resource monitors and auto-suspend before the first invoice lands. Then we run the platform, around the clock, under SLAs."
+        chips={[
+          'Snowflake partner',
+          'SnowPro certified architects',
+          '500+ enterprise projects',
+          'ISO 27001',
+        ]}
+        primary={{ label: 'Talk to a Snowflake architect', href: '/contact' }}
+        secondary={{ label: 'See the data platform stories', href: '/case-studies' }}
+        visual={<FlowScene config={FLOWS['platform-snowflake']} />}
+      />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Snowflake Implementation
-            <span className="text-[var(--aci-primary-light)]"> & Data Cloud</span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mb-8">
-            As a Snowflake Partner, we design the warehouse, migrate the data, and tune the
-            spend. Our certified architects ship Snowflake platforms that stay fast under
-            real workloads and stay on budget after the honeymoon quarter.
-          </p>
+      {/* Problem band: starting is easy, the bill is the hard part */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        image="/images/v4/case-finance.jpg"
+        pill="Why warehouses drift"
+        headline={
+          <>
+            The demo was fast.{' '}
+            <br className="hidden sm:block" />
+            <span className="text-[#60A5FA]">The invoice was faster.</span>
+          </>
+        }
+        body="Snowflake makes it easy to start and just as easy to overspend. Warehouses that never suspend, queries nobody profiled, credits burning on jobs no one owns. We have tuned enough Snowflake estates to know where the money hides, and how to get it back."
+        story={{
+          metric: { value: '22%', label: 'Faster decisions' },
+          title:
+            'One governed data platform for 400,000 employees across 53 countries.',
+          href: '/case-studies/global-food-facilities-data-intelligence',
+          logoSrc: '/brand/snowflake-color.svg',
+          logoAlt: 'Snowflake',
+        }}
+      />
 
-          <div className="flex flex-wrap gap-4">
-            <Button href="/contact?reason=architecture-call" variant="primary" size="lg">
-              Schedule Snowflake Assessment
-            </Button>
-            <Button href="/case-studies" variant="secondary" size="lg">
-              View Case Studies
-            </Button>
-          </div>
+      {/* Offerings */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we do on Snowflake"
+            title={
+              <>
+                One warehouse. <span style={{ color: '#1D4ED8' }}>Six disciplines.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* Value Props */}
-      <section className="py-16 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#29B5E8]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Database className="w-7 h-7 text-[#29B5E8]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Certified Architects</h3>
-              <p className="text-gray-600 text-sm">
-                SnowPro certified team with deep expertise in Data Cloud architecture.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#29B5E8]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-7 h-7 text-[#29B5E8]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Proven ROI</h3>
-              <p className="text-gray-600 text-sm">
-                Average 22% reduction in total cost of ownership for our clients.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-[#29B5E8]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-7 h-7 text-[#29B5E8]" />
-              </div>
-              <h3 className="font-semibold text-[var(--aci-secondary)] mb-2">Enterprise Security</h3>
-              <p className="text-gray-600 text-sm">
-                Built-in governance, encryption, and compliance from day one.
-              </p>
-            </div>
-          </div>
+      {/* Honest fit panel */}
+      <DecisionPanel
+        title={<>Is Snowflake the right&nbsp;call?</>}
+        body="Often, when SQL analytics is the center of gravity and the platform team is small. Snowflake removes most of the knobs other platforms make you turn, and data sharing is where it has no real rival. When heavy streaming and ML need the same copy of the data, a lakehouse can fit better, and we will say so before you buy anything. We hold certifications on both."
+        colA={{ src: '/brand/snowflake-color.svg', alt: 'Snowflake', label: 'Snowflake', px: 40 }}
+        colB={{ label: 'A different road' }}
+        rows={DECISION_ROWS}
+        footnote="When the second column wins, the honest answer is usually Databricks. The full comparison lives on our data engineering page."
+      />
+
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Data platforms that <span style={{ color: '#1D4ED8' }}>held&nbsp;up.</span>
+              </>
+            }
+          />
+          <CmsProofCards technology="Snowflake" fallback={PROOF_FALLBACK} />
         </div>
       </section>
 
-      {/* Capabilities */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What We Deliver
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              End-to-end Snowflake services from assessment to managed operations.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {capabilities.map((cap) => (
-              <div key={cap.title} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-[var(--aci-secondary)] mb-3">{cap.title}</h3>
-                <p className="text-gray-600 mb-4">{cap.description}</p>
-                <ul className="space-y-2">
-                  {cap.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm text-gray-700">
-                      <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+      {/* Process */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No suspense." />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* Case Studies */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Snowflake Success Stories
-            </h2>
-          </div>
+      {/* Bridge to the data engineering practice */}
+      <BridgeBand
+        title={<>The warehouse is half the&nbsp;job.</>}
+        body="Snowflake pays off when the pipelines, models, and governance around it get the same engineering care as the platform choice. That is our data engineering practice, and the warehouse sits at the center of it."
+        link={{ label: 'Data Engineering', href: '/services/data-engineering' }}
+      />
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            {caseStudies.map((cs, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="px-3 py-1 bg-[#29B5E8]/10 text-[#29B5E8] text-sm font-medium rounded-full">
-                    {cs.industry}
-                  </span>
-                  <span className="text-gray-500 text-sm">{displayClient(cs)}</span>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Challenge</h3>
-                  <p className="text-gray-600">{cs.challenge}</p>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Solution</h3>
-                  <p className="text-gray-600">{cs.solution}</p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-700 mb-3">Results</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {cs.results.map((result) => (
-                      <span key={result} className="px-3 py-2 bg-green-100 text-green-700 text-sm font-medium rounded-lg">
-                        {result}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Why us */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title={<>Why enterprises run Snowflake with&nbsp;us</>} />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
 
@@ -247,22 +301,19 @@ export default function SnowflakePage() {
 
       <RelatedLinks items={snowflakeRelated} />
 
-      <FaqBlock items={snowflakeFaqs} eyebrow="Snowflake FAQ" />
+      <PageFaq
+        kicker="Snowflake FAQ"
+        title={
+          <>
+            Snowflake questions,
+            <br />
+            answered straight.
+          </>
+        }
+        faqs={FAQS}
+      />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[#29B5E8]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Harness the Data Cloud?
-          </h2>
-          <p className="text-xl text-cyan-100 mb-8">
-            Schedule a free assessment with our Snowflake experts to discuss your data strategy.
-          </p>
-          <Button href="/contact?platform=snowflake" variant="lime" size="lg">
-            Talk to Snowflake Expert
-          </Button>
-        </div>
-      </section>
-    </main>
+      <CtaSection label="Let's talk Snowflake" />
+    </div>
   );
 }
