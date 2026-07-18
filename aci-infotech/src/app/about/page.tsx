@@ -1,12 +1,20 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
-import { ArrowRight, Linkedin, CheckCircle, Target, Eye } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { ArrowUpRight } from 'lucide-react';
 import { BreadcrumbSchema } from '@/components/seo/StructuredData';
-import ParallaxBalloons from '@/components/about/ParallaxBalloons';
 import { getSiteUrl } from '@/lib/site-url';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
+import { v4Sans, v4Display } from '@/components/v4/fonts';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import {
+  SectionHead,
+  ServiceHero,
+  CheckBadge,
+  BridgeBand,
+  FactsRow,
+  cardShadow,
+  glueWidow,
+} from '@/components/v4/page/kit';
 
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -41,15 +49,54 @@ export const metadata: Metadata = {
   },
 };
 
-// About page data
-const stats = [
-  { number: '2006', unit: 'Founded', description: 'USA, India, Europe & APAC' },
-  { number: '1,200+', unit: 'Experts', description: 'Across global delivery' },
-  { number: '500+', unit: 'Projects', description: 'Large enterprise projects' },
-  { number: '11', unit: 'Hubs', description: 'Global delivery hubs' },
+/* ------------------------------- page data ------------------------------- */
+
+// Company facts. Same numbers that appear on every practice page:
+// founded 2006, 1,200+ engineers, 500+ projects, 11 hubs, plus the
+// certifications held right now.
+const COMPANY_FACTS = [
+  {
+    label: 'Founded',
+    line: '2006, in Monmouth Junction, New Jersey. Teams across the USA, India, Europe, and APAC.',
+  },
+  {
+    label: 'Scale',
+    line: '1,200+ engineers across 11 global delivery hubs. Product, data, apps, QA, and SRE working as one unit.',
+  },
+  {
+    label: 'Delivery',
+    line: '500+ large enterprise projects. Banking, healthcare, retail, manufacturing, and hospitality.',
+  },
+  {
+    label: 'Credentials',
+    line: 'ISO 27001:2022 certified and CMMI Level 3 appraised. Great Place to Work Certified 2024-25.',
+  },
 ];
 
-const principles = [
+const TIMELINE = [
+  {
+    marker: '2006',
+    title: 'Founded',
+    body: 'ACI Infotech starts in Monmouth Junction, New Jersey, with a small team of passionate engineers.',
+  },
+  {
+    marker: '20 yrs',
+    title: 'One discipline',
+    body: 'Twenty years spent on one thing: production-grade enterprise systems. Code that runs in production, carries SLAs, and delivers measurable ROI.',
+  },
+  {
+    marker: '500+',
+    title: 'Enterprise projects',
+    body: 'Delivered for enterprise companies in banking, healthcare, retail, manufacturing, and hospitality.',
+  },
+  {
+    marker: 'Today',
+    title: 'Global delivery',
+    body: '1,200+ experts across 11 delivery hubs in the USA, India, Europe, and APAC.',
+  },
+];
+
+const PRINCIPLES = [
   {
     number: '01',
     title: 'Outcome-Engineered',
@@ -84,7 +131,7 @@ const principles = [
   },
 ];
 
-const capabilities = [
+const CAPABILITIES = [
   {
     title: 'Data Resilience',
     description: 'Unify your data estate and make it AI-ready with platform-native observability, lineage, and policy controls.',
@@ -115,9 +162,9 @@ const capabilities = [
 const ceo = {
   name: 'Jag Kanumuri',
   title: 'Founder & CEO',
-  vision: `At ACI Infotech, our purpose is to drive enterprise excellence through innovation and intelligence. We partner with organizations to help them reimagine their business models, modernize operations, and unlock value through technology.
+  vision: `At ACI Infotech, our purpose is enterprise excellence through innovation and intelligence. We partner with organizations to reimagine business models, modernize operations, and turn technology into value you can measure.
 
-Under Jag's leadership, ACI has grown from a small team of passionate engineers to a global organization that has delivered 500+ large enterprise projects. His vision is simple yet powerful: deliver production-grade systems that create measurable business value, backed by engineers who take ownership and stay accountable.
+Under Jag's leadership, ACI has grown from a small team of passionate engineers to a global organization that has delivered 500+ large enterprise projects. His vision is simple: deliver production-grade systems that create measurable business value, backed by engineers who take ownership and stay accountable.
 
 "We don't just deliver projects. We build partnerships. When your system goes down at 2am, we're the team that answers the phone. That's not a policy. That's who we are."`,
   photo_url: '/images/about-team/Jag.png',
@@ -133,7 +180,7 @@ const cro = {
 
 A seasoned business leader with more than 25 years of experience, Prakash has successfully scaled organizations across multiple industries and geographies, delivering transformative growth through technology, innovation, and customer-centric leadership.
 
-He is responsible for accelerating ACI's global expansion, strengthening its position as an AI-first technology company, and driving enterprise adoption of innovative solutions powered by ArqAI Labs and industry-specific AI capabilities.
+He is responsible for accelerating ACI's global expansion, strengthening its position as an AI-first technology company, and growing enterprise adoption of solutions powered by ArqAI Labs and industry-specific AI capabilities.
 
 Prakash is passionate about building high-performance teams, creating lasting customer value, and helping organizations navigate the next era of AI-driven business transformation.`,
   photo_url: '/images/about-team/Prakash.jpg',
@@ -202,13 +249,6 @@ const certifications = [
   { name: '5 Best Data Analytics', description: 'Industry Recognition', logo_url: '/images/certifications-awards/best-data-analytics-company.webp' },
 ];
 
-const trackRecord = [
-  { number: '2006', label: 'Founded', context: 'USA, India, Europe & APAC' },
-  { number: '1,200+', label: 'Experts', context: 'Across global delivery' },
-  { number: '500+', label: 'Large enterprise projects', context: 'Engineers, architects, data scientists' },
-  { number: '11', label: 'Global delivery hubs', context: 'US, India, and beyond' },
-];
-
 // AboutPage + executive Person entities. Person schema on named
 // leadership is a primary E-E-A-T and knowledge-panel signal; both
 // people are already public on this page with LinkedIn profiles.
@@ -242,9 +282,87 @@ const aboutSchema = {
   ],
 };
 
+/* ------------------------------ local pieces ----------------------------- */
+
+function LinkedInLink({ href, name }: { href: string; name: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${name}'s LinkedIn profile`}
+      className="group inline-flex items-center gap-1 text-sm font-semibold text-blue-700"
+    >
+      <span className="relative">
+        LinkedIn
+        <span className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+      </span>
+      <ArrowUpRight size={14} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+    </a>
+  );
+}
+
+function ExecutiveCard({
+  person,
+  paragraphs,
+  quoteIndex,
+  photoSize,
+}: {
+  person: { name: string; title: string; photo_url: string; photo_webp: string; linkedin_url: string };
+  paragraphs: string[];
+  quoteIndex?: number;
+  photoSize: number;
+}) {
+  return (
+    <div className={`grid items-start gap-8 rounded-3xl bg-white p-8 lg:grid-cols-[auto_1fr] lg:gap-12 lg:p-12 ${cardShadow}`}>
+      <div className="flex justify-center lg:justify-start">
+        <div
+          className="overflow-hidden rounded-2xl ring-1 ring-gray-200"
+          style={{ width: photoSize, height: photoSize, maxWidth: '100%' }}
+        >
+          <picture>
+            <source srcSet={person.photo_webp} type="image/webp" />
+            <Image
+              src={person.photo_url}
+              alt={person.name}
+              width={photoSize}
+              height={photoSize}
+              className="h-full w-full object-cover object-top"
+            />
+          </picture>
+        </div>
+      </div>
+      <div>
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <div>
+            <h3 className={`text-2xl font-bold text-black md:text-3xl ${v4Display}`}>{person.name}</h3>
+            <p className="mt-1 text-sm font-semibold uppercase tracking-[0.14em] text-blue-700">
+              {person.title}
+            </p>
+          </div>
+          <LinkedInLink href={person.linkedin_url} name={person.name} />
+        </div>
+        <div className="mt-5 space-y-4 text-[15px] leading-relaxed text-gray-600">
+          {paragraphs.map((paragraph, idx) =>
+            idx === quoteIndex ? (
+              <p key={idx} className="border-l-2 border-[#84CC16] pl-5 font-medium text-gray-800">
+                {glueWidow(paragraph)}
+              </p>
+            ) : (
+              <p key={idx}>{glueWidow(paragraph)}</p>
+            ),
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* --------------------------------- page ---------------------------------- */
+
 export default function AboutPage() {
   return (
-    <>
+    <div className={`bg-white text-black ${v4Sans}`}>
       {/* Structured Data for SEO */}
       <script
         type="application/ld+json"
@@ -257,147 +375,168 @@ export default function AboutPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto mb-16">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              The Engineers Behind Enterprise Modernization
-            </h1>
-            <p className="text-lg md:text-xl text-gray-300">
-              We're the technical team between your strategy and your operations.
-              We build data platforms, deploy AI systems, and stabilize cloud architectures, then
-              we stand behind them with SLAs. We're the team that answers the 2am call.
+      {/* Hero: who ACI is, answered in one line */}
+      <ServiceHero
+        kicker="About"
+        title={
+          <>
+            The engineers behind{' '}
+            <span style={{ color: '#1D4ED8' }}>enterprise&nbsp;modernization</span>
+          </>
+        }
+        lede="ACI Infotech is an enterprise technology consultancy headquartered in Monmouth Junction, New Jersey. Founded in 2006, we build and run data platforms, AI systems, and cloud architectures for enterprises in banking, healthcare, retail, manufacturing, and hospitality. We stand behind the work with SLAs, and we answer the 2am call."
+        chips={[
+          'Founded 2006',
+          '1,200+ engineers',
+          '11 global delivery hubs',
+          'ISO 27001:2022',
+        ]}
+        primary={{ label: 'Meet the leadership', href: '#leadership' }}
+        secondary={{ label: 'See the work', href: '/case-studies' }}
+        visual={
+          <div className="relative h-full min-h-[320px] overflow-hidden rounded-3xl ring-1 ring-gray-200 lg:min-h-[440px]">
+            <Image
+              src="/images/v4/svc-ops.jpg"
+              alt="An operations control room with live system consoles"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-x-0 bottom-0 h-32"
+              style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(4,7,13,0.78) 100%)' }}
+            />
+            <p className="absolute bottom-5 left-6 right-6 text-sm font-medium text-white/90">
+              The desk where the 2am call gets&nbsp;answered.
             </p>
           </div>
+        }
+      />
 
-          {/* Stats Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {stats.map((stat) => (
-              <div key={stat.unit} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-[var(--aci-primary-light)]">
-                  {stat.number}
-                </div>
-                <div className="text-sm font-semibold text-white">{stat.unit}</div>
-                <div className="text-xs text-gray-400">{stat.description}</div>
-              </div>
-            ))}
+      {/* Company facts */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="The company"
+            title={
+              <>
+                ACI Infotech <span style={{ color: '#1D4ED8' }}>at a&nbsp;glance</span>
+              </>
+            }
+          />
+          <FactsRow facts={COMPANY_FACTS} />
+        </div>
+      </section>
+
+      {/* Story + timeline */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Our story"
+            title={<>Twenty years, one&nbsp;discipline</>}
+          />
+          <div className="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-16">
+            <div className="space-y-4 text-[15px] leading-relaxed text-gray-600 md:text-base">
+              <p>
+                ACI Infotech isn&apos;t trying to be the next Accenture. We&apos;re the alternative: large
+                enough to staff enterprise projects, small enough to make decisions in days not
+                months, and focused enough to deliver deep expertise in the platforms enterprises
+                actually use.
+              </p>
+              <p>
+                Founded in 2006, we&apos;ve spent 20 years building one thing: production-grade
+                enterprise systems. Not strategy. Not advisory. Not staff augmentation. We ship
+                code that runs in production, carries SLAs, and delivers measurable ROI.
+              </p>
+              <p>
+                Our clients are enterprise companies in banking, healthcare, retail, manufacturing,
+                and hospitality. They choose us because we combine Big 4 capabilities with boutique
+                speed and cost. Senior architects lead every project. We move fast. We cost 40-60% less.
+              </p>
+              <p className="font-semibold text-black">
+                When your system goes down at 2am, we&apos;re the team that answers the phone.
+                That&apos;s the difference between consultants who leave and engineers who&nbsp;stay.
+              </p>
+            </div>
+            <ol className="relative border-l border-gray-200 pl-8">
+              {TIMELINE.map((step, i) => (
+                <li key={step.marker} className={i < TIMELINE.length - 1 ? 'pb-9' : ''}>
+                  <span
+                    aria-hidden="true"
+                    className="absolute -left-[5px] mt-2 h-[9px] w-[9px] rounded-full bg-[#1D4ED8]"
+                  />
+                  <p className={`text-sm font-bold uppercase tracking-[0.14em] text-blue-700 ${v4Display}`}>
+                    {step.marker}
+                  </p>
+                  <h3 className={`mt-1 text-lg font-semibold text-black ${v4Display}`}>{step.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{glueWidow(step.body)}</p>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
 
-      {/* Vision & Mission Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
-            {/* Vision */}
-            <div className="relative p-8 lg:p-10 bg-gradient-to-br from-[var(--aci-primary)]/5 to-[var(--aci-primary)]/10 rounded-2xl border border-[var(--aci-primary)]/20">
-              <div className="absolute -top-5 left-8">
-                <div className="w-10 h-10 bg-[var(--aci-primary)] rounded-xl flex items-center justify-center shadow-lg">
-                  <Eye className="w-5 h-5 text-white" />
-                </div>
-              </div>
-              <div className="pt-4">
-                <h2 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)] mb-4">
-                  Our Vision
-                </h2>
-                <p className="text-lg md:text-xl text-gray-700 leading-relaxed font-medium">
-                  To be the engineering partner that enterprises trust to turn ambitious technology strategies into production-grade reality, while setting the standard for what a modern, agile consultancy can achieve.
-                </p>
-                <p className="mt-4 text-gray-600">
-                  We envision a world where enterprises don't have to choose between scale and speed, between capability and cost. We're building that alternative.
-                </p>
-              </div>
+      {/* Vision and mission */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Vision & mission"
+            title={<>The standard we hold ourselves&nbsp;to</>}
+          />
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            <div className={`rounded-3xl bg-white p-8 lg:p-10 ${cardShadow}`}>
+              <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>Our Vision</h3>
+              <p className="mt-4 text-[15px] leading-relaxed text-gray-700 md:text-base">
+                To be the engineering partner that enterprises trust to turn ambitious technology
+                strategies into production-grade reality, while setting the standard for what a
+                modern, agile consultancy can achieve.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-gray-600">
+                We envision a world where enterprises don&apos;t have to choose between scale and
+                speed, between capability and cost. We&apos;re building that&nbsp;alternative.
+              </p>
             </div>
-
-            {/* Mission */}
-            <div className="relative p-8 lg:p-10 bg-gradient-to-br from-[var(--aci-secondary)]/5 to-[var(--aci-secondary)]/10 rounded-2xl border border-[var(--aci-secondary)]/20">
-              <div className="absolute -top-5 left-8">
-                <div className="w-10 h-10 bg-[var(--aci-secondary)] rounded-xl flex items-center justify-center shadow-lg">
-                  <Target className="w-5 h-5 text-white" />
-                </div>
-              </div>
-              <div className="pt-4">
-                <h2 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)] mb-4">
-                  Our Mission
-                </h2>
-                <p className="text-lg md:text-xl text-gray-700 leading-relaxed font-medium">
-                  To deliver production-grade data platforms, AI systems, and cloud architectures that drive measurable business outcomes, backed by SLAs and supported by engineers who stay.
-                </p>
-                <p className="mt-4 text-gray-600">
-                  Every system we build runs in production, carries accountability, and creates value you can measure. That's not a tagline. That's our operating model.
-                </p>
-              </div>
+            <div className={`rounded-3xl bg-white p-8 lg:p-10 ${cardShadow}`}>
+              <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>Our Mission</h3>
+              <p className="mt-4 text-[15px] leading-relaxed text-gray-700 md:text-base">
+                To deliver production-grade data platforms, AI systems, and cloud architectures
+                with measurable business outcomes, backed by SLAs and supported by engineers
+                who stay.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-gray-600">
+                Every system we build runs in production, carries accountability, and creates value
+                you can measure. That&apos;s not a tagline. That&apos;s our operating&nbsp;model.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Who We Are Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-6">
-                Built for Enterprise Scale, Moves Like a Startup
-              </h2>
-              <div className="space-y-4 text-gray-600">
-                <p>
-                  ACI Infotech isn't trying to be the next Accenture. We're the alternative: large
-                  enough to staff enterprise projects, small enough to make decisions in days not
-                  months, and focused enough to deliver deep expertise in the platforms enterprises
-                  actually use.
-                </p>
-                <p>
-                  Founded in 2006, we've spent 20 years building one thing: production-grade
-                  enterprise systems. Not strategy. Not advisory. Not staff augmentation. We ship
-                  code that runs in production, carries SLAs, and delivers measurable ROI.
-                </p>
-                <p>
-                  Our clients are enterprise companies in banking, healthcare, retail, manufacturing,
-                  and hospitality. They choose us because we combine Big 4 capabilities with boutique
-                  speed and cost. Senior architects lead every project. We move fast. We cost 40-60% less.
-                </p>
-                <p className="font-semibold text-[var(--aci-secondary)]">
-                  When your system goes down at 2am, we're the team that answers the phone.
-                  That's the difference between consultants who leave and engineers who stay.
-                </p>
-              </div>
-            </div>
-            <ParallaxBalloons />
-          </div>
-        </div>
-      </section>
-
-      {/* How We Work Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              How We Work
-            </h2>
-            <p className="text-lg text-gray-600">
-              Three principles that define every engagement
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {principles.map((principle) => (
-              <div
-                key={principle.number}
-                className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow"
-              >
-                <div className="text-5xl font-bold text-[var(--aci-primary)]/20 mb-4">
-                  {principle.number}
+      {/* How we work */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="How we work"
+            title={<>Three principles run every&nbsp;engagement</>}
+          />
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {PRINCIPLES.map((principle) => (
+              <div key={principle.number} className={`flex flex-col rounded-2xl bg-white p-7 ${cardShadow}`}>
+                <div className="flex items-center gap-3">
+                  <span className={`text-sm font-bold text-[#1D4ED8] ${v4Display}`}>{principle.number}</span>
+                  <span aria-hidden="true" className="h-px flex-1 bg-gray-200" />
                 </div>
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
+                <h3 className={`mt-5 text-lg font-semibold text-black md:text-xl ${v4Display}`}>
                   {principle.title}
                 </h3>
-                <p className="text-gray-600 mb-6">{principle.description}</p>
-                <ul className="space-y-2">
+                <p className="mt-3 text-sm leading-relaxed text-gray-600">{glueWidow(principle.description)}</p>
+                <ul className="mt-5 space-y-2.5">
                   {principle.proofPoints.map((point) => (
-                    <li key={point} className="flex items-center gap-2 text-sm text-gray-500">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                    <li key={point} className="flex items-start gap-2.5 text-sm text-gray-700">
+                      <CheckBadge />
                       {point}
                     </li>
                   ))}
@@ -408,316 +547,137 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Capabilities Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              What We've Built Across 500+ Projects
-            </h2>
-            <p className="text-lg text-gray-600">
-              Four capability areas where we have deep, proven expertise
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {capabilities.map((capability) => (
-              <div
-                key={capability.title}
-                className="bg-gray-50 p-8 rounded-xl"
-              >
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
-                  {capability.title}
-                </h3>
-                <p className="text-gray-600 mb-6">{capability.description}</p>
-
-                <div className="mb-6">
-                  <div className="text-sm font-semibold text-gray-500 uppercase mb-3">Outcomes</div>
-                  <ul className="grid grid-cols-2 gap-2">
-                    {capability.outcomes.map((outcome) => (
-                      <li key={outcome} className="flex items-center gap-2 text-sm text-gray-600">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        {outcome}
-                      </li>
-                    ))}
-                  </ul>
+      {/* Capabilities */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build"
+            title={<>What we&apos;ve built across 500+&nbsp;projects</>}
+            sub="Four capability areas where the work goes deep, with the outcomes and the stack on the record."
+          />
+          <div className="mt-12 grid gap-x-14 md:grid-cols-2">
+            {CAPABILITIES.map((capability, i) => (
+              <div key={capability.title} className="border-t border-gray-200 py-8">
+                <div className="flex items-baseline gap-4">
+                  <span className={`text-sm font-semibold text-gray-300 ${v4Display}`}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>
+                    {capability.title}
+                  </h3>
                 </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {capability.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 bg-white rounded-full text-xs text-gray-600 border border-gray-200"
-                    >
-                      {tech}
-                    </span>
+                <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
+                  {glueWidow(capability.description)}
+                </p>
+                <ul className="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                  {capability.outcomes.map((outcome) => (
+                    <li key={outcome} className="flex items-start gap-2.5 text-sm text-gray-700">
+                      <CheckBadge />
+                      {outcome}
+                    </li>
                   ))}
-                </div>
+                </ul>
+                <p className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+                  {capability.technologies.map((tech) => (
+                    <span key={tech} className="whitespace-nowrap">{tech}</span>
+                  ))}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Leadership Section - CEO Featured */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Our Leadership
-            </h2>
-            <p className="text-lg text-gray-600">
-              Leadership that's built enterprise systems, not just managed them
-            </p>
+      {/* Leadership */}
+      <section id="leadership" className="scroll-mt-24 border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Leadership"
+            title={
+              <>
+                The people who sign <span style={{ color: '#1D4ED8' }}>the&nbsp;work</span>
+              </>
+            }
+            sub="Leadership that has built enterprise systems, not just managed them."
+          />
+
+          <div className="mt-12 space-y-8">
+            <ExecutiveCard
+              person={ceo}
+              paragraphs={ceo.vision.split('\n\n')}
+              quoteIndex={2}
+              photoSize={300}
+            />
+            <ExecutiveCard
+              person={cro}
+              paragraphs={cro.bio.split('\n\n')}
+              photoSize={280}
+            />
           </div>
 
-          {/* CEO Featured Section */}
-          <div className="mb-20">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 lg:p-12 shadow-sm border border-gray-100">
-              {/* CEO Photo - Left Side */}
-              <div className="flex justify-center lg:justify-start">
-                <div className="relative">
-                  <div className="w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden shadow-xl">
-                    <picture>
-                      <source srcSet={ceo.photo_webp} type="image/webp" />
-                      <Image
-                        src={ceo.photo_url}
-                        alt={ceo.name}
-                        width={400}
-                        height={400}
-                        className="w-full h-full object-cover"
-                      />
-                    </picture>
-                  </div>
-                  {/* Decorative accent */}
-                  <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-[var(--aci-primary)]/10 rounded-xl -z-10" />
-                </div>
-              </div>
-
-              {/* CEO Info - Right Side */}
-              <div>
-                <div className="flex items-center gap-4 mb-4">
-                  <div>
-                    <h3 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)]">
-                      {ceo.name}
-                    </h3>
-                    <p className="text-lg text-[var(--aci-primary)] font-medium">{ceo.title}</p>
-                  </div>
-                  <a
-                    href={ceo.linkedin_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ml-auto p-2 bg-[#0077B5] text-white rounded-lg hover:bg-[#006396] transition-colors"
-                    aria-label={`${ceo.name}'s LinkedIn profile`}
-                  >
-                    <Linkedin className="w-5 h-5" />
-                  </a>
-                </div>
-                <div className="space-y-4 text-gray-600 leading-relaxed">
-                  {ceo.vision.split('\n\n').map((paragraph, idx) => (
-                    <p key={idx} className={idx === 2 ? 'italic text-[var(--aci-secondary)] font-medium' : ''}>
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* CRO Featured Section — same layout as CEO, photo intentionally one step smaller */}
-          <div className="mb-20">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 lg:p-12 shadow-sm border border-gray-100">
-              {/* CRO Photo - Left Side */}
-              <div className="flex justify-center lg:justify-start">
-                <div className="relative">
-                  <div className="w-56 h-56 md:w-72 md:h-72 rounded-2xl overflow-hidden shadow-xl">
-                    <picture>
-                      <source srcSet={cro.photo_webp} type="image/webp" />
-                      <Image
-                        src={cro.photo_url}
-                        alt={cro.name}
-                        width={360}
-                        height={360}
-                        className="w-full h-full object-cover object-top"
-                      />
-                    </picture>
-                  </div>
-                  {/* Decorative accent */}
-                  <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-[var(--aci-primary)]/10 rounded-xl -z-10" />
-                </div>
-              </div>
-
-              {/* CRO Info - Right Side */}
-              <div>
-                <div className="flex items-center gap-4 mb-4">
-                  <div>
-                    <h3 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)]">
-                      {cro.name}
-                    </h3>
-                    <p className="text-lg text-[var(--aci-primary)] font-medium">{cro.title}</p>
-                  </div>
-                  <a
-                    href={cro.linkedin_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ml-auto p-2 bg-[#0077B5] text-white rounded-lg hover:bg-[#006396] transition-colors"
-                    aria-label={`${cro.name}'s LinkedIn profile`}
-                  >
-                    <Linkedin className="w-5 h-5" />
-                  </a>
-                </div>
-                <div className="space-y-4 text-gray-600 leading-relaxed">
-                  {cro.bio.split('\n\n').map((paragraph, idx) => (
-                    <p key={idx}>{paragraph}</p>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Leadership Team Grid - hidden pending updated roster + photography */}
-          {false && (
-          <div>
-            <h3 className="text-2xl font-bold text-[var(--aci-secondary)] text-center mb-10">
-              Leadership Team
-            </h3>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {/* Leadership team grid */}
+          <div className="mt-16">
+            <h3 className={`text-2xl font-bold text-black ${v4Display}`}>Leadership&nbsp;Team</h3>
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {leadershipTeam.map((member) => (
-                <div
-                  key={member.name}
-                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-gray-100"
-                >
-                  <div className="h-56 bg-gray-200 relative">
-                    {member.photo_url ? (
-                      <picture>
-                        <source srcSet={member.photo_webp || undefined} type="image/webp" />
-                        <Image
-                          src={member.photo_url}
-                          alt={member.name}
-                          fill
-                          className={`object-cover ${member.imageClass || 'object-[center_15%]'}`}
-                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                        />
-                      </picture>
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--aci-primary)] to-[var(--aci-primary-dark)]">
-                        <span className="text-white text-4xl font-bold opacity-50">
-                          {member.name.split(' ').map(n => n[0]).join('')}
-                        </span>
-                      </div>
-                    )}
+                <div key={member.name} className={`flex flex-col overflow-hidden rounded-2xl bg-white ${cardShadow}`}>
+                  <div className="relative h-56 bg-gray-100">
+                    <picture>
+                      <source srcSet={member.photo_webp} type="image/webp" />
+                      <Image
+                        src={member.photo_url}
+                        alt={member.name}
+                        fill
+                        className={`object-cover ${member.imageClass || 'object-[center_15%]'}`}
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      />
+                    </picture>
                   </div>
-                  <div className="p-5">
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className="font-semibold text-lg text-[var(--aci-secondary)]">
-                        {member.name}
-                      </h4>
-                      <a
-                        href={member.linkedin_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#0077B5] hover:text-[#006396] transition-colors"
-                        aria-label={`${member.name}'s LinkedIn profile`}
-                      >
-                        <Linkedin className="w-5 h-5" />
-                      </a>
+                  <div className="flex flex-1 flex-col p-5">
+                    <h4 className={`text-lg font-semibold text-black ${v4Display}`}>{member.name}</h4>
+                    <p className="mt-0.5 text-sm text-gray-500">{member.title}</p>
+                    <div className="mt-3">
+                      <LinkedInLink href={member.linkedin_url} name={member.name} />
                     </div>
-                    <p className="text-sm text-[var(--aci-primary)]">{member.title}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          )}
         </div>
       </section>
 
-      {/* Certifications Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-[var(--aci-secondary)] mb-3">
-              Trusted & Certified
-            </h2>
-            <p className="text-gray-600">
-              Our work, culture, and capabilities have been validated by global benchmarks
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      {/* Certifications band */}
+      <section className="border-t border-gray-200 bg-gray-50/60">
+        <div className="mx-auto max-w-7xl px-6 py-14 md:py-16">
+          <SectionHead
+            kicker="Certifications & recognition"
+            title={<>Certified, appraised, and&nbsp;audited</>}
+            sub="The paperwork behind the claims: security, process maturity, and workplace certifications held right now."
+          />
+          <div className="mt-10 grid grid-cols-2 gap-5 md:grid-cols-4">
             {certifications.map((cert) => (
-              <div
-                key={cert.name}
-                className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-sm"
-              >
-                <div className="relative w-24 h-24 mb-4">
-                  <Image
-                    src={cert.logo_url}
-                    alt={cert.name}
-                    fill
-                    className="object-contain"
-                  />
+              <div key={cert.name} className={`flex flex-col items-center rounded-2xl bg-white p-6 text-center ${cardShadow}`}>
+                <div className="relative h-20 w-20">
+                  <Image src={cert.logo_url} alt={cert.name} fill className="object-contain" />
                 </div>
-                <h5 className="font-semibold text-[var(--aci-secondary)] text-sm mb-1">
-                  {cert.name}
-                </h5>
-                <p className="text-xs text-gray-500">{cert.description}</p>
+                <h3 className={`mt-4 text-sm font-semibold text-black ${v4Display}`}>{cert.name}</h3>
+                <p className="mt-1 text-xs text-gray-500">{cert.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Track Record Section */}
-      <section className="py-20 bg-[var(--aci-secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              The ACI Track Record
-            </h2>
-            <p className="text-lg text-gray-400">
-              Numbers that represent 20 years of production-grade engineering
-            </p>
-          </div>
+      {/* Bridge to the proof */}
+      <BridgeBand
+        title={<>You&apos;ve met the team. Now read the&nbsp;work.</>}
+        body="500+ enterprise projects left a paper trail: case studies with baseline numbers, the architecture that shipped, and results audited at close. The team on this page is the team in those stories."
+        link={{ label: 'Read the case studies', href: '/case-studies' }}
+      />
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {trackRecord.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-[var(--aci-primary-light)] mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-sm font-medium text-white mb-1">{stat.label}</div>
-                <div className="text-xs text-gray-400">{stat.context}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Discuss Your Challenge?
-          </h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Talk to an architect about your specific needs. No sales pitch, just an
-            engineering conversation about what's actually possible.
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <span className="text-blue-200 text-sm">Talk to senior architects, not sales reps</span>
-            <span className="text-blue-300">|</span>
-            <span className="text-blue-200 text-sm">30-minute technical discussion</span>
-            <span className="text-blue-300">|</span>
-            <span className="text-blue-200 text-sm">No pressure, no obligation</span>
-          </div>
-
-          <Button href="/contact" variant="lime" size="lg">
-            Discuss Your Challenge
-          </Button>
-        </div>
-      </section>
-    </>
+      {/* Closing CTA: one button, nothing else */}
+      <CtaSection label="Meet the team behind the work" />
+    </div>
   );
 }
