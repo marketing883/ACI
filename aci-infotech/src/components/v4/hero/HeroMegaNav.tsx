@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -428,6 +429,29 @@ function CompanyPanel({ headingClass, onNavigate }: { headingClass: string; onNa
 export default function HeroMegaNav({ headingClass }: { headingClass: string }) {
   const [open, setOpen] = useState<MenuId | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const router = useRouter();
+
+  // Menu links only mount when a panel opens, so Next's viewport
+  // prefetch never sees them in advance. Warm every nav destination
+  // once the page has settled, so a click mid-hover is instant instead
+  // of fetching the route payload on demand.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const hrefs = new Set<string>([
+        '/services', '/platforms', '/industries', '/case-studies',
+        '/blogs', '/whitepapers', '/playbooks', '/about', '/careers',
+        '/news', '/partners', '/contact',
+      ]);
+      SERVICES.forEach((s) => hrefs.add(s.href));
+      PLATFORM_CATEGORIES.forEach((c) => c.items.forEach((i) => hrefs.add(i.href)));
+      INDUSTRIES.forEach((i) => hrefs.add(i.href));
+      Object.values(RESOURCES).forEach((r) => hrefs.add(r.indexHref));
+      hrefs.forEach((href) => {
+        if (href.startsWith('/')) router.prefetch(href);
+      });
+    }, 2500);
+    return () => clearTimeout(t);
+  }, [router]);
 
   const cancel = () => {
     if (timer.current) clearTimeout(timer.current);
