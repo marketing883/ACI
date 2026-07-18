@@ -241,15 +241,15 @@ export default function AWSPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/svc-cloud.jpg"
-        pill="Why migrations stall"
+        pill="Landed and well run"
         headline={
           <>
-            Getting to AWS is easy.{' '}
+            Land on AWS.{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">Running it well is not.</span>
+            <span className="text-[#60A5FA]">Run it well from day&nbsp;one.</span>
           </>
         }
-        body="Estates stall in the messy middle: tangled dependencies, servers nobody owns, and a cloud bill that grows while the old data center is still on the books. We have run 200+ cloud migrations, and the pattern of what goes wrong is depressingly stable. So is the fix."
+        body="We have run 200+ cloud migrations, and the playbook holds: name an owner for every server, untangle dependencies before the move, and retire the old data center on a date finance can circle. The estate lands clean, and the bill reads the way the business expects."
         story={{
           metric: { value: '99.97%', label: 'Uptime across 72+ servers' },
           title:

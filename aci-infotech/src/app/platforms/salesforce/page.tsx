@@ -241,15 +241,15 @@ export default function SalesforcePage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/case-retail.jpg"
-        pill="Why CRM programs stall"
+        pill="Fix the record first"
         headline={
           <>
-            Six systems. Six versions{' '}
+            Make the record true.{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">of the customer.</span>
+            <span className="text-[#60A5FA]">Then put AI on&nbsp;it.</span>
           </>
         }
-        body="The org is rarely the problem. The problem is years of fields nobody owns, integrations nobody documented, and reports nobody trusts. AI agents put on top of that inherit all of it. We fix the record first, then put the platform to work."
+        body="Clean fields with owners, documented integrations, reports the team trusts. Fix the record first and everything on top compounds: Sales Cloud sells, Service Cloud resolves, and Agentforce inherits a customer worth knowing."
         story={{
           metric: { value: '2.5x', label: 'Email engagement' },
           title:

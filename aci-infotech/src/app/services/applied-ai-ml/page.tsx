@@ -248,15 +248,15 @@ export default function AppliedAIMLPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/svc-ai.jpg"
-        pill="Why pilots stall"
+        pill="From pilot to production"
         headline={
           <>
-            The demo impressed everyone.{' '}
+            Production AI starts with{' '}
             <br className="hidden sm:block" />
-            Then it met <span className="text-[#60A5FA]">production.</span>
+            <span className="text-[#60A5FA]">the unglamorous&nbsp;part.</span>
           </>
         }
-        body="Most GenAI pilots never make it out of the sandbox. Not because the model is weak, but because nobody built the unglamorous part: evaluation gates, guardrails, drift monitoring, and an answer for the auditor who asks why the model said what it said. We build that part first, which is why our models are still running a year later."
+        body="Evaluation gates, guardrails, drift monitoring, and an answer ready for the auditor who asks why the model said what it said. Build that layer first and the pilot graduates: the model keeps working, the business keeps trusting it, and the system is still earning its keep a year later."
         story={{
           metric: { value: '30%', label: 'Improvement in forecast accuracy' },
           title: 'Forecasting engines retrained daily at a Fortune 500 bank',

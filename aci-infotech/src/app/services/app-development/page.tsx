@@ -264,15 +264,15 @@ export default function AppDevelopmentPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/svc-data.jpg"
-        pill="Where enterprise apps fail"
+        pill="Wiring first, polish second"
         headline={
           <>
-            Apps do not fail at the UI. They fail at{' '}
+            Apps earn trust at{' '}
             <br className="hidden sm:block" />
             <span className="text-[#60A5FA]">the integration&nbsp;layer.</span>
           </>
         }
-        body="Authenticating against your SSO. Querying the lakehouse without melting it. Calling your models with governance attached. Holding steady when 10,000 concurrent users show up at once. The demo always works; production is where the wiring gets tested. So we engineer the wiring first and the polish second."
+        body="Authenticate against your SSO, query the lakehouse gently, call your models with governance attached, and hold steady when 10,000 concurrent users arrive at once. We engineer that wiring first and the polish second, which is why the demo and production behave the same."
         story={{
           metric: { value: '2.5x', label: 'Email engagement lift' },
           title: 'Guest experience and loyalty platform across 600+ locations',

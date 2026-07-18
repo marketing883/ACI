@@ -239,15 +239,15 @@ export default function BrazePage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/hero-atmosphere.jpg"
-        pill="Why engagement platforms disappoint"
+        pill="Profile first"
         headline={
           <>
-            The platform sends.{' '}
+            Journeys get smart when{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">The data never arrives.</span>
+            <span className="text-[#60A5FA]">the profile arrives&nbsp;first.</span>
           </>
         }
-        body="Most Braze estates underperform for the same reason: the profile behind the message is thin. Events never leave the app, the warehouse syncs weekly, and personalization falls back to first name. We build the data plumbing first, because a journey is only as smart as the profile that triggers it."
+        body="Events streaming in real time, the warehouse synced continuously, catalogs wired to the message. Build the data plumbing first and Canvas earns its keep: personalization that goes deeper than a first name, on every channel."
         story={{
           metric: { value: '2.5x', label: 'Email engagement lift' },
           title:

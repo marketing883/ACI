@@ -294,15 +294,15 @@ export default function QualityEngineeringPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/case-manufacturing.jpg"
-        pill="Why releases stall"
+        pill="Quality at commit speed"
         headline={
           <>
-            Everyone waits on <span className="text-[#60A5FA]">the gate.</span>{' '}
+            A gate everyone trusts{' '}
             <br className="hidden sm:block" />
-            Nobody trusts it.
+            <span className="text-[#60A5FA]">moves at commit&nbsp;speed.</span>
           </>
         }
-        body="Regression week at the end of every cycle. A spreadsheet of manual cases, a separate team running them, and a pass that still ships bugs. The gate slows every release and catches less every quarter. Quality engineering moves the checks into the sprint, the pipeline, and production telemetry, where they run on every commit instead of once at the end."
+        body="Move the checks into the sprint, the pipeline, and production telemetry and they run on every commit: automated suites in CI, AI agents growing the coverage, and a release train that leaves on schedule. The gate becomes a green light."
         story={{
           metric: { value: '99.97%', label: 'Uptime across 72+ servers' },
           title: 'CI/CD, monitoring, and quality gates automated across a complex estate',

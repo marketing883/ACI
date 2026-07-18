@@ -240,15 +240,15 @@ export default function SAPPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/case-manufacturing.jpg"
-        pill="Why ECC estates stall"
+        pill="S/4HANA on your terms"
         headline={
           <>
-            The deadline belongs to SAP.{' '}
+            Move to S/4HANA{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">The risk belongs to you.</span>
+            <span className="text-[#60A5FA]">on your own&nbsp;schedule.</span>
           </>
         }
-        body="Every year on ECC adds custom code nobody dares touch, interfaces nobody mapped, and a close that takes longer than it should. The move to S/4HANA is not the risk. Drifting toward it without a plan is."
+        body="A clean core, interfaces mapped, custom code retired on evidence. Plan the move early and the deadline becomes a milestone you chose: the close gets faster, the estate gets simpler, and the business keeps running through every wave."
         story={{
           metric: { value: '40+', label: 'Finance systems consolidated' },
           title:

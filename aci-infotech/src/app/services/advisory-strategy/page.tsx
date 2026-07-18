@@ -242,15 +242,15 @@ export default function AdvisoryStrategyPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/case-finance.jpg"
-        pill="Why strategy stalls"
+        pill="Plans that ship"
         headline={
           <>
-            The deck outlived <span className="text-[#60A5FA]">its author.</span>{' '}
+            Write the plan like code:{' '}
             <br className="hidden sm:block" />
-            The problem stayed.
+            <span className="text-[#60A5FA]">short, testable,&nbsp;owned.</span>
           </>
         }
-        body="Every enterprise has one: a strategy deck from a firm that left before slide forty shipped. The plan was directionally right and structurally unbuildable, because nobody who wrote it had to live with it. We write plans the way engineers write code: short, testable, and attached to the pod that builds the first increment."
+        body="We write plans the way engineers write code, attached to the pod that builds the first increment. The deck stays thin, the roadmap carries dates and owners, and slide forty ships while the ink is still fresh."
         story={{
           metric: { value: '90d', label: 'From prototype to production' },
           title: 'A plan that became a production lakehouse in one quarter',

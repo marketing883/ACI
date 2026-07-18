@@ -308,15 +308,15 @@ export default function CloudModernizationPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/svc-cloud.jpg"
-        pill="Why estates stall"
+        pill="Sorting the estate"
         headline={
           <>
-            The estate nobody{' '}
+            Move the estate in waves.{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">can turn off.</span>
+            <span className="text-[#60A5FA]">Keep the business&nbsp;running.</span>
           </>
         }
-        body="Every enterprise has one: the VMware renewal that doubled, the mainframe contract nobody will touch, the cloud accounts that grew without an owner. The migration has been next year for five years, because nobody can say what breaks if a server goes dark. The fix is not a bigger lift and shift. It is sorting the estate honestly, then moving it in waves that never bet the business on one weekend."
+        body="Sort the estate honestly first: what moves as is, what gets a new platform, what earns a rebuild, what retires with a small party. Then migrate in waves sized to keep every cutover boring. Renewals shrink, every server gets an owner, and the bill starts telling the truth."
         story={{
           metric: { value: '$8M', label: 'Saved per year' },
           title: 'Data center exit in 18 months with zero downtime',

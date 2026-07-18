@@ -235,15 +235,15 @@ export default function GCCPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/case-transport.jpg"
-        pill="Why captives beat contracts"
+        pill="Your team, your IP"
         headline={
           <>
-            Ten years of outsourcing.{' '}
+            A captive gives you the team,{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">Still not your&nbsp;team.</span>
+            <span className="text-[#60A5FA]">the IP, and the&nbsp;keys.</span>
           </>
         }
-        body="Outsourcing contracts promise a partner and deliver a vendor. The engineers change every renewal, the knowledge stays on their side of the wall, and after a decade you own nothing but the invoices. A captive flips that: your entity, your employees, your leadership from week one, with us running the plumbing until you are ready to take the keys."
+        body="Your entity, your employees, your leadership from week one, with us running the plumbing until the handover. Knowledge compounds on your side of the wall, and after the transfer everything from the codebase to the culture belongs to you."
         story={{
           metric: { value: '53', label: 'Countries on one data platform' },
           title: 'One global operating model serving 400,000 employees',

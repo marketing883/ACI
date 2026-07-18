@@ -240,15 +240,15 @@ export default function GCPPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/svc-ai.jpg"
-        pill="Why cloud data platforms stall"
+        pill="Platform before workloads"
         headline={
           <>
-            The console made it look easy.{' '}
+            Landing zone, governance, cost model.{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">The bill said otherwise.</span>
+            <span className="text-[#60A5FA]">Then the&nbsp;workloads.</span>
           </>
         }
-        body="BigQuery answers its first query in minutes. Then the pipelines multiply, IAM sprawls, and the invoice grows a life of its own. A data platform needs a landing zone, governance, and a cost model before the workloads arrive, and we build in that order."
+        body="BigQuery answers its first query in minutes. Give it a landing zone, an IAM design, and a cost model first, and it keeps answering at scale: pipelines with owners, budgets with alerts, and an invoice that grows only with the business."
         story={{
           metric: { value: '22%', label: 'Faster decisions' },
           title:

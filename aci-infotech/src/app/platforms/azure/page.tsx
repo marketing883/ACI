@@ -242,15 +242,15 @@ export default function AzurePage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/case-energy.jpg"
-        pill="Why Azure estates sprawl"
+        pill="Identity first"
         headline={
           <>
-            Subscriptions multiply.{' '}
+            Identity, guardrails, workloads.{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">Owners do not.</span>
+            <span className="text-[#60A5FA]">In that&nbsp;order.</span>
           </>
         }
-        body="Azure is easy to start and just as easy to sprawl: dozens of subscriptions, no landing zone, policy bolted on after the audit. Identity comes first, then guardrails, then workloads. Done in that order, every wave after the first one gets faster."
+        body="Start with identity, add the landing zone and policy guardrails, then bring the workloads. Done in that order, every subscription has an owner, the audit reads clean, and each wave after the first lands faster."
         story={{
           metric: { value: '90d', label: 'From prototype to production' },
           title:

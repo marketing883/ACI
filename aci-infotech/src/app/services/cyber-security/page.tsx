@@ -310,15 +310,15 @@ export default function CyberSecurityPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/hero-atmosphere.jpg"
-        pill="Why breaches still happen"
+        pill="Security, built in"
         headline={
           <>
-            The audit passed.{' '}
+            Security works best{' '}
             <br className="hidden sm:block" />
-            The breach <span className="text-[#60A5FA]">did not care.</span>
+            <span className="text-[#60A5FA]">built into the&nbsp;system.</span>
           </>
         }
-        body="Most enterprises treat security as a phase: build the system, then hand it to a team who bolts controls onto the outside. The paperwork passes and the gaps stay, because controls added after the fact protect the diagram, not the system. We build security into the pipeline, the identity layer, and the architecture itself, then keep watching it after go-live."
+        body="Controls that live in the pipeline, the identity layer, and the architecture protect the running system, and the paperwork follows on its own. We build them in from the first commit and keep watching after go-live, so the audit and the estate tell the same story."
         story={{
           metric: { value: '100%', label: 'HIPAA compliance achieved' },
           title: 'Vulnerabilities down 25%, zero findings on the next audit',

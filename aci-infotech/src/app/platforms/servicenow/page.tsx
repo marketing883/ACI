@@ -215,15 +215,15 @@ export default function ServiceNowPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/svc-ops.jpg"
-        pill="Why ServiceNow rollouts stall"
+        pill="Process first"
         headline={
           <>
-            The platform went live.{' '}
+            Design the process.{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">The old habits did not.</span>
+            <span className="text-[#60A5FA]">Then configure the&nbsp;platform.</span>
           </>
         }
-        body="Most stalled ServiceNow estates share a story: a broad license, a thin rollout, a CMDB nobody trusts, and workflows that mirror the org chart instead of the work. Fixing that is process design first and configuration second. We have done both enough times to know the order matters."
+        body="Workflows shaped around the work, a CMDB the team trusts, and a rollout that earns the license. Process design comes first and configuration second. We have done both enough times to know the order matters."
         story={{
           metric: { value: '99.97%', label: 'Uptime across 72+ servers' },
           title:

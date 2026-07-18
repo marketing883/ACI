@@ -264,15 +264,15 @@ export default function ManagedOperationsPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/svc-ops.jpg"
-        pill="Why on-call breaks"
+        pill="A staffed desk, always"
         headline={
           <>
-            The 3am page goes to whoever{' '}
+            The 3am page goes to{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">joined the rotation&nbsp;last.</span>
+            <span className="text-[#60A5FA]">a staffed&nbsp;desk.</span>
           </>
         }
-        body="Every on-call rotation has a newest member, and the worst incidents have a talent for finding them. Runbooks go stale, context lives in one senior engineer's head, and the estate is only as safe as whoever answered the page. A managed NOC and SOC replaces that lottery with a staffed desk: certified engineers on shift around the clock, runbooks that travel with the ticket, and an SLA someone actually answers for."
+        body="Certified engineers on shift around the clock, runbooks that travel with the ticket, and an SLA someone answers for by name. The estate stays up, your senior engineers keep their weekends, and every incident leaves the runbook a little sharper."
         story={{
           metric: { value: '99.97%', label: 'Uptime across 72+ servers' },
           title: 'A complex digital estate, engineered to stay available',

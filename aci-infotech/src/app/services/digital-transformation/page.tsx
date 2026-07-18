@@ -268,15 +268,15 @@ export default function DigitalTransformationPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/why-visual.jpg"
-        pill="Why processes stay manual"
+        pill="Engineering the busywork away"
         headline={
           <>
-            Your processes run on <span className="text-[#60A5FA]">swivel-chair work</span>{' '}
+            Give the swivel-chair work{' '}
             <br className="hidden sm:block" />
-            and quiet spreadsheets.
+            <span className="text-[#60A5FA]">to the&nbsp;machines.</span>
           </>
         }
-        body="Somebody copies numbers from one system into another all day. Somebody else keeps the real process in a spreadsheet the auditors have never seen. Every handoff adds a day and a chance to fat-finger an account number. Transformation is not a slide deck about culture. It is finding that work, measuring it, and engineering it away."
+        body="Find the copy-paste work, measure it, and engineer it away: workflows that carry the process end to end, integrations that let systems talk, and people moved onto the judgment calls. Hours saved, error rates, and cycle times land in a monthly report, so progress is a number."
         story={{
           metric: { value: '67%', label: 'Reduction in contract cycle time' },
           title: 'Contract operations automated end to end',

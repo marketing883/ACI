@@ -249,15 +249,15 @@ export default function DataEngineeringPage() {
       {/* Problem band: the underwater beat, retargeted at data platforms */}
       <FoldcraftHero
         geistClass={v4Geist}
-        pill="Why platforms stall"
+        pill="The case for one platform"
         headline={
           <>
-            Your data is not <span className="text-[#60A5FA]">the problem.</span>{' '}
+            Data works best{' '}
             <br className="hidden sm:block" />
-            Where it lives is.
+            <span className="text-[#60A5FA]">living in one&nbsp;place.</span>
           </>
         }
-        body="Most enterprises sit on ten to fifty source systems collected through years of growth and acquisitions. CRM in one cloud, ERP in another, operational data stuck in overnight batch jobs. Every report needs three teams, and every AI pilot dies waiting for clean data. The fix is not another tool. It is an engineered platform with ownership, lineage, and a pipeline SLA that somebody actually answers for."
+        body="Most enterprises grew into ten to fifty source systems: CRM in one cloud, ERP in another, operational data on overnight batches. Bring them onto one engineered platform with ownership, lineage, and a pipeline SLA, and reports assemble themselves, AI pilots find clean data on day one, and the three-team report request becomes a single query."
         story={{
           metric: { value: '87%', label: 'Reduction in processing time' },
           title: 'Lakehouse modernization across 600+ locations',

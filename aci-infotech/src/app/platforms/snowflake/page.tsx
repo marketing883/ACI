@@ -215,15 +215,15 @@ export default function SnowflakePage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/case-finance.jpg"
-        pill="Why warehouses drift"
+        pill="Fast and on budget"
         headline={
           <>
-            The demo was fast.{' '}
+            Keep Snowflake fast{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">The invoice was faster.</span>
+            <span className="text-[#60A5FA]">and the invoice&nbsp;calm.</span>
           </>
         }
-        body="Snowflake makes it easy to start and just as easy to overspend. Warehouses that never suspend, queries nobody profiled, credits burning on jobs no one owns. We have tuned enough Snowflake estates to know where the money hides, and how to get it back."
+        body="Resource monitors and auto-suspend from day one, queries profiled, credits attached to owners. We have tuned enough Snowflake estates to know where the money hides, and we wire the platform so it stays found."
         story={{
           metric: { value: '22%', label: 'Faster decisions' },
           title:

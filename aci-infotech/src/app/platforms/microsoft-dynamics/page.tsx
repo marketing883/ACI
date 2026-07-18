@@ -246,15 +246,15 @@ export default function MicrosoftDynamicsPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/why-visual.jpg"
-        pill="Why ERP programs drag"
+        pill="Clean core, calm cutover"
         headline={
           <>
-            The demo was clean.{' '}
+            Keep the core clean{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">The rollout was not.</span>
+            <span className="text-[#60A5FA]">and the cutover&nbsp;boring.</span>
           </>
         }
-        body="Dynamics programs stall the way most ERP programs do: customizations pile into core code, the legacy system never quite dies, and every integration becomes a special case. We keep extensions in Power Platform, reconcile the numbers before cutover, and retire the old system on evidence, not hope."
+        body="Extensions live in Power Platform, the numbers reconcile before cutover, and the legacy system retires on evidence. Dynamics lands as one system, and every integration stays a pattern instead of a special case."
         story={{
           metric: { value: '0.1%', label: 'Error rate after automation' },
           title:

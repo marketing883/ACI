@@ -246,15 +246,15 @@ export default function MarTechCDPPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/case-retail.jpg"
-        pill="Why customer 360 fails"
+        pill="One customer, one record"
         headline={
           <>
-            Your customer exists in <span className="text-[#60A5FA]">12 systems.</span>{' '}
+            Twelve systems can agree{' '}
             <br className="hidden sm:block" />
-            None of them agree.
+            <span className="text-[#60A5FA]">on one&nbsp;customer.</span>
           </>
         }
-        body="Web, app, email, store, loyalty, service desk: every channel keeps its own version of the same person. Identity never resolves, consent lives in a spreadsheet, and activation means exporting a CSV at 5pm. A CDP only fixes this when the identity resolution and the governance under it are engineered properly. That part is the job."
+        body="Web, app, email, store, loyalty, and service desk each hold a piece of the same person. Engineer the identity resolution and the consent layer properly and the pieces snap together: one profile, activation in real time, and campaign numbers that reconcile with finance."
         story={{
           metric: { value: '2.5x', label: 'Email engagement lift' },
           title: 'One customer profile across 600+ retail locations',

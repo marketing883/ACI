@@ -217,15 +217,15 @@ export default function DatabricksPage() {
       <FoldcraftHero
         geistClass={v4Geist}
         image="/images/v4/svc-data.jpg"
-        pill="Why lakehouses stall"
+        pill="Built for day two"
         headline={
           <>
-            The workspace was easy.{' '}
+            A lakehouse designed for{' '}
             <br className="hidden sm:block" />
-            <span className="text-[#60A5FA]">Production was not.</span>
+            <span className="text-[#60A5FA]">day&nbsp;two.</span>
           </>
         }
-        body="Costs drift, small files pile up, governance arrives late, and the first production workload exposes every shortcut in the demo. We have taken enough lakehouses live to know where the walls are before you hit them."
+        body="Design for production from the first workspace: costs profiled, files compacted, governance in place before the first workload ships. We have taken enough lakehouses live to know where the walls are, and we route around them in the design."
         story={{
           metric: { value: '30%', label: 'Reduction in data latency' },
           title:
