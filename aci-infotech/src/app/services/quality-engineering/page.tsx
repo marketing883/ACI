@@ -11,9 +11,15 @@ import { v4Sans, v4Geist, v4Display } from '@/components/v4/fonts';
 import {
   SectionHead,
   ServiceHero,
+  OfferingList,
+  ProcessStrip,
   BridgeBand,
   FactsRow,
   PageFaq,
+  cardShadow,
+  CheckBadge,
+  DecisionCircle,
+  glueWidow,
 } from '@/components/v4/page/kit';
 import FlowScene from '@/components/v4/page/FlowScene';
 import { FLOWS } from '@/components/v4/page/flow-configs';
@@ -319,31 +325,39 @@ export default function QualityEngineeringPage() {
             sub="We rebranded because the work changed. The old framing stopped describing what we actually do."
           />
 
-          <div className="mt-12 overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-              <thead>
-                <tr>
-                  <th className="w-1/2 border-b border-gray-200 pb-4 pr-8 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                    QA, the old way
-                  </th>
-                  <th className="w-1/2 border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
-                    QE, the way we do it
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {QA_VS_QE.map((row) => (
-                  <tr key={row.qa}>
-                    <td className="border-b border-gray-200 py-5 pr-8 align-top text-[15px] leading-relaxed text-gray-500">
-                      {row.qa}
-                    </td>
-                    <td className="border-b border-gray-200 py-5 align-top text-[15px] font-medium leading-relaxed text-gray-900">
-                      {row.qe}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Two-column decision grammar: the old way in muted cards, the
+              way we do it with check badges, circle window in between. */}
+          <div className="mt-12 flex flex-col gap-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:gap-10">
+            <div className="order-first flex justify-center lg:order-none lg:col-start-2 lg:row-start-1 lg:self-center">
+              <DecisionCircle />
+            </div>
+
+            <div className="flex flex-col gap-4 lg:col-start-1 lg:row-start-1">
+              <div className={`flex items-center justify-center rounded-2xl bg-white px-6 py-6 ${cardShadow}`}>
+                <span className={`text-center text-xl font-semibold text-gray-400 ${v4Display}`}>
+                  QA, the old way
+                </span>
+              </div>
+              {QA_VS_QE.map((row) => (
+                <div key={row.qa} className={`rounded-2xl bg-white px-5 py-4 ${cardShadow}`}>
+                  <p className="text-[15px] leading-snug text-gray-500">{glueWidow(row.qa)}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-4 lg:col-start-3 lg:row-start-1">
+              <div className={`flex items-center justify-center rounded-2xl bg-white px-6 py-6 ${cardShadow}`}>
+                <span className={`text-center text-xl font-semibold text-black ${v4Display}`}>
+                  QE, the way we do it
+                </span>
+              </div>
+              {QA_VS_QE.map((row) => (
+                <div key={row.qe} className={`flex items-start gap-3 rounded-2xl bg-white px-5 py-4 ${cardShadow}`}>
+                  <CheckBadge />
+                  <p className="text-[15px] font-medium leading-snug text-gray-800">{glueWidow(row.qe)}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <p className="mt-8 max-w-3xl text-sm leading-relaxed text-gray-500">
@@ -366,20 +380,13 @@ export default function QualityEngineeringPage() {
             sub="Four stages of delivery, each with the work it produces and the specific AI augmentation that applies there."
           />
 
-          <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-            {QUALITY_LOOP.map((stage, i) => (
-              <div key={stage.label}>
-                <span className={`block text-6xl font-bold leading-none text-gray-200 ${v4Display}`}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <h3 className={`mt-4 text-lg font-semibold text-black ${v4Display}`}>{stage.label}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-gray-600">{stage.work}</p>
-                <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-blue-700">
-                  AI: {stage.aiRole}
-                </p>
-              </div>
-            ))}
-          </div>
+          <ProcessStrip
+            steps={QUALITY_LOOP.map((stage) => ({
+              title: stage.label,
+              timeframe: `AI: ${stage.aiRole}`,
+              body: stage.work,
+            }))}
+          />
 
           <p className="mt-10 border-t border-gray-200 pt-6 text-sm font-medium text-gray-500">
             Then the loop closes: production feedback flows into the next design
@@ -438,24 +445,7 @@ export default function QualityEngineeringPage() {
             }
             sub="Not as a separate phase, not by a different team, not on a different contract. Part of how the system is built."
           />
-          <div className="mt-12 grid gap-x-14 md:grid-cols-2">
-            {CAPABILITIES.map((item, i) => (
-              <div key={item.title} className="border-t border-gray-200 py-8">
-                <div className="flex items-baseline gap-4">
-                  <span className={`text-sm font-semibold text-gray-300 ${v4Display}`}>
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>
-                    {item.title}
-                  </h3>
-                </div>
-                <p className="mt-3 text-[15px] leading-relaxed text-gray-600">{item.body}</p>
-                <p className="mt-4 text-xs font-medium uppercase tracking-wide text-gray-400">
-                  {item.chips.join(' · ')}
-                </p>
-              </div>
-            ))}
-          </div>
+          <OfferingList items={CAPABILITIES} />
           <p className="mt-8 max-w-3xl text-sm leading-relaxed text-gray-500">
             Default stacks above. We meet you where you are; if your team runs a
             different toolchain we plug into that rather than forcing a swap.
