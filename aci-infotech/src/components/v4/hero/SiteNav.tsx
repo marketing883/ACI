@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Funnel_Display, Funnel_Sans } from 'next/font/google';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ArrowUpRight, X } from 'lucide-react';
 import HeroMegaNav from './HeroMegaNav';
+import { v4Display, v4Sans } from '../fonts';
 
 // The v4 site navigation, extracted from EditorialHero so the same
 // mega-nav chrome serves every page:
@@ -17,11 +17,8 @@ import HeroMegaNav from './HeroMegaNav';
 // The component owns its fonts so layout-level callers do not need to
 // thread className props through.
 
-const display = Funnel_Display({ subsets: ['latin'], weight: ['500', '600', '700'], display: 'swap' });
-const sans = Funnel_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap' });
-
-export const v4HeadingClass = display.className;
-export const v4BodyClass = sans.className;
+export const v4HeadingClass = v4Display;
+export const v4BodyClass = v4Sans;
 
 const ACCENT = '#1D4ED8';
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -75,7 +72,7 @@ export default function SiteNav({
 }) {
   const [menu, setMenu] = useState(false);
   const [pastFold, setPastFold] = useState(false);
-  const heading = headingClass ?? display.className;
+  const heading = headingClass ?? v4Display;
   // Solid variant is always glass; overlay goes glass after scroll.
   const scrolled = variant === 'solid' || pastFold;
 
@@ -95,7 +92,7 @@ export default function SiteNav({
   return (
     <>
       <nav
-        className={`fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-3 px-5 transition-all duration-300 sm:px-8 md:px-6 lg:px-7 xl:px-12 ${sans.className} ${
+        className={`fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-3 px-5 transition-all duration-300 sm:px-8 md:px-6 lg:px-7 xl:px-12 ${v4Sans} ${
           scrolled
             ? 'border-b border-black/[0.06] bg-white/80 py-3 shadow-[0_12px_40px_-18px_rgba(3,12,24,0.25)] backdrop-blur-2xl'
             : 'border-b border-transparent bg-transparent py-5 md:py-6'
@@ -151,7 +148,7 @@ export default function SiteNav({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className={`fixed inset-0 z-50 flex flex-col bg-white px-6 py-5 text-black ${sans.className}`}
+            className={`fixed inset-0 z-50 flex flex-col bg-white px-6 py-5 text-black ${v4Sans}`}
           >
             <div className="flex items-center justify-between">
               <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={150} height={42} className="h-10 w-auto" />

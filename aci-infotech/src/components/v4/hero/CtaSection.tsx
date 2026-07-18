@@ -13,7 +13,13 @@ const VIDEO_WEBM = '/videos/v4-editorial-signal.webm';
  * the hero: a mild tone lift plus a radial feather so the sphere sits
  * on a uniformly white field with no visible video box.
  */
-export default function CtaSection() {
+export default function CtaSection({
+  label = "Let's Talk Over a Coffee",
+  href = '/contact',
+}: {
+  label?: string;
+  href?: string;
+} = {}) {
   return (
     <section id="lets-talk" className="relative h-[52vh] min-h-[420px] w-full overflow-hidden border-t border-gray-200 bg-white md:h-[76vh] md:min-h-[520px]">
       <FadingVideo
@@ -42,11 +48,11 @@ export default function CtaSection() {
 
       <div className="relative z-10 flex h-full items-center justify-center px-6">
         <Link
-          href="/contact"
+          href={href}
           className="group inline-flex items-center gap-3 rounded-full bg-[#1D4ED8] px-8 py-4 text-lg font-semibold text-white shadow-[0_20px_60px_-15px_rgba(29,78,216,0.55)] ring-1 ring-white/20 transition-all duration-300 hover:scale-[1.03] hover:bg-[#84CC16] hover:text-black hover:shadow-[0_20px_60px_-15px_rgba(132,204,22,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1D4ED8] sm:px-10 sm:py-5 sm:text-xl"
         >
           <Coffee size={22} className="transition-transform duration-300 group-hover:-rotate-6" aria-hidden="true" />
-          Let&apos;s Talk Over a Coffee
+          {label}
         </Link>
       </div>
     </section>

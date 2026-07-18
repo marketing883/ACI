@@ -1,18 +1,27 @@
 import { Metadata } from 'next';
-import { ArrowRight, CheckCircle, ChevronDown, Database, Zap, Eye, Shield, Settings, Cloud, Activity, FileCheck, TrendingUp, Users } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import FaqBlock from '@/components/seo/FaqBlock';
-import { dataEngineeringFaqs } from '@/content/pillar-faqs';
 import RelatedLinks from '@/components/seo/RelatedLinks';
 import { dataEngineeringRelated } from '@/content/related-links';
 import ClusterPosts from '@/components/seo/ClusterPosts';
-
-export const revalidate = 3600;
 import { ServiceSchema, BreadcrumbSchema } from '@/components/seo/StructuredData';
-
-import { displayClient } from '@/lib/content/anonymize';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { getSiteUrl } from '@/lib/site-url';
+import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
+import CtaSection from '@/components/v4/hero/CtaSection';
+import { v4Sans, v4Geist } from '@/components/v4/fonts';
+import {
+  SectionHead,
+  ServiceHero,
+  OfferingList,
+  DecisionPanel,
+  ProofCards,
+  ProcessStrip,
+  BridgeBand,
+  FactsRow,
+  PageFaq,
+} from '@/components/v4/page/kit';
+
+export const revalidate = 3600;
+
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
 const siteUrl = getSiteUrl();
@@ -24,9 +33,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteUrl}/services/data-engineering`,
   },
-  // Per-page social card. Without this, every share and link preview
-  // inherited the homepage's OpenGraph (title, image, and og:url all
-  // pointing at /), mis-attributing all 21 service/platform pages.
   openGraph: {
     title: 'Data Engineering Services | ACI Infotech',
     description: 'Data engineering services that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability.',
@@ -43,216 +49,166 @@ export const metadata: Metadata = {
   },
 };
 
-// Service data
-const keyOutcomes = [
-  'Cut data latency 30%+ with real-time pipelines',
-  'Unify scattered data into single source of truth',
-  'Enable AI-ready data products from day one',
-  'Instrument observability so you see issues before users',
-];
+/* ------------------------------- page copy ------------------------------- */
 
-const offerings = [
+const OFFERINGS = [
   {
-    id: 'unified-lakehouse',
-    title: 'Unified Data Lakehouse',
-    description: 'Consolidate scattered data warehouses into one governed lakehouse built on Databricks or Snowflake.',
-    icon: Database,
-    technologies: ['Azure Databricks', 'Delta Lake', 'Snowflake', 'Apache Iceberg', 'dbt'],
-    outcomes: ['15-20% storage cost reduction', 'Single source of truth', 'AI-ready data products'],
+    title: 'Lakehouse architecture',
+    body: 'Databricks lakehouses on Delta Lake with Unity Catalog governance. One copy of the data serves BI, streaming, and machine learning, with lineage and access controls from day one.',
+    chips: ['Databricks', 'Delta Lake', 'Unity Catalog', 'Apache Iceberg'],
   },
   {
-    id: 'real-time-pipelines',
-    title: 'Real-Time Data Pipelines',
-    description: 'Streaming data pipelines that feed dashboards, ML models, and operational systems with millisecond latency.',
-    icon: Zap,
-    technologies: ['Kafka', 'Spark Streaming', 'AWS Kinesis', 'Azure Event Hubs'],
-    outcomes: ['<1 second data latency', 'Real-time insights', 'Self-healing pipelines'],
+    title: 'Cloud data warehouses',
+    body: 'Snowflake warehouses sized and tuned so compute spend follows real demand. Resource monitors and auto-suspend go in on day one, because most Snowflake overspend is warehouses nobody turned off.',
+    chips: ['Snowflake', 'Snowpark', 'dbt'],
   },
   {
-    id: 'data-observability',
-    title: 'Data Observability & Quality',
-    description: 'Monitor data lineage, freshness, and SLAs end-to-end with Dynatrace or similar platforms.',
-    icon: Eye,
-    technologies: ['Dynatrace', 'Great Expectations', 'Monte Carlo', 'DataHub'],
-    outcomes: ['65% reduction in quality incidents', 'Full lineage tracking', 'SLA compliance visibility'],
+    title: 'Real-time pipelines',
+    body: 'Kafka and Spark streaming for decisions that cannot wait for the nightly batch: inventory, fraud, pricing, alerts. Millions of records per second, with observability wired through Dynatrace.',
+    chips: ['Kafka', 'Spark Streaming', 'Kinesis', 'Event Hubs', 'Dynatrace'],
   },
   {
-    id: 'dataops-automation',
-    title: 'DataOps & Automation',
-    description: 'CI/CD pipelines for data with automated testing, deployment, and monitoring.',
-    icon: Settings,
-    technologies: ['GitLab CI/CD', 'Terraform', 'Airflow', 'Dagster'],
-    outcomes: ['20% faster pipeline development', 'Automated testing', 'Version-controlled infrastructure'],
+    title: 'Data governance',
+    body: 'Catalogs, quality scores, lineage, and access policy written as code. When an auditor asks where a number came from, the answer is a query, not a meeting.',
+    chips: ['Unity Catalog', 'Collibra', 'Alation', 'Great Expectations'],
   },
   {
-    id: 'data-governance',
-    title: 'Data Governance & Cataloging',
-    description: 'Enterprise data governance with Unity Catalog, Collibra, or Alation.',
-    icon: Shield,
-    technologies: ['Unity Catalog', 'Collibra', 'Alation', 'Apache Atlas'],
-    outcomes: ['100% data cataloged', 'Automated PII classification', 'Audit-ready logs'],
+    title: 'Migration and modernization',
+    body: 'Teradata, Oracle, Netezza, and Hadoop estates moved in staged waves. Parallel runs prove parity before anything old gets switched off.',
+    chips: ['Teradata', 'Oracle', 'Netezza', 'Hadoop'],
   },
   {
-    id: 'cloud-data-migration',
-    title: 'Cloud Data Migration',
-    description: 'Migrate on-premises data warehouses to cloud with zero downtime.',
-    icon: Cloud,
-    technologies: ['AWS DMS', 'Azure Data Migration', 'Snowflake Migration'],
-    outcomes: ['Zero-downtime migration', '15-25% cost reduction', 'Legacy decommissioning'],
+    title: 'AI-ready data products',
+    body: 'Feature stores, vector search, and curated datasets your models can train on without a six-week data hunt. This is the layer most stalled AI programs are missing.',
+    chips: ['Feature stores', 'Vector search', 'MLflow'],
   },
 ];
 
-const caseStudies = [
+const DECISION_ROWS = [
+  { need: 'SQL analytics, BI, and governed data sharing', pick: 'a' as const },
+  { need: 'BI, streaming, and machine learning on one copy of the data', pick: 'b' as const },
+  { need: 'Enterprise governance across every workload', pick: 'both' as const },
+];
+
+const PROOF = [
   {
-    slug: 'modernizes-finance-reporting-with-sap-transformation',
-    client: 'Global Financial Giant',
-    client_descriptor: 'Global Financial Services Giant',
-    industry: 'Financial Services',
-    challenge: '40+ finance systems post-acquisitions needed consolidation into unified platform',
-    results: [
-      { metric: '$500K', description: 'Operational savings in year one' },
-      { metric: '18 months', description: 'Delivery timeline' },
-      { metric: 'Zero', description: 'Financial reporting disruptions' },
-    ],
-    technologies: ['SAP S/4HANA', 'Python', 'Azure DevOps'],
+    eyebrow: 'Fortune 500 Convenience Retail Chain',
+    metric: '30%',
+    metricLabel: 'Reduction in data latency',
+    summary: 'A governed Databricks lakehouse across 600+ locations, with real-time inventory visibility and zero downtime through the cutover.',
+    href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+    linkLabel: 'Read the Databricks story',
   },
   {
-    slug: 'databricks-modernization-ai-enablement-for-leading-c-store-chain',
-    client: 'Fortune 500 Convenience Retailer',
-    client_descriptor: 'Fortune 500 Convenience Retail Chain',
-    industry: 'Retail',
-    challenge: 'Payment systems across 600+ locations needed real-time data with zero downtime',
-    results: [
-      { metric: '30%', description: 'Reduction in data latency' },
-      { metric: '600+', description: 'Locations with zero downtime' },
-      { metric: 'Real-time', description: 'Inventory visibility' },
-    ],
-    technologies: ['Databricks', 'Kafka', 'AWS', 'Braze'],
+    eyebrow: 'Global Financial Services Firm',
+    metric: '90d',
+    metricLabel: 'From prototype to production',
+    summary: 'Azure Data Lake, Databricks, AKS, and Synapse connected into one governed foundation for analytics and machine learning.',
+    href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
+    linkLabel: 'Read the Azure Lakehouse story',
   },
   {
-    slug: 'global-food-facilities-data-intelligence',
-    client: 'Global Hospitality Leader',
-    client_descriptor: 'Global Hospitality & Food Services Leader',
-    industry: 'Hospitality',
-    challenge: 'Global operations with data scattered across regional silos',
-    results: [
-      { metric: 'Single', description: 'Source of truth' },
-      { metric: 'Global', description: 'Supply chain visibility' },
-      { metric: '22%', description: 'Faster decision-making' },
-    ],
-    technologies: ['Informatica IICS', 'MDM', 'Cloud Integration'],
+    eyebrow: 'Global Food Services Operator',
+    metric: '53',
+    metricLabel: 'Countries on one data platform',
+    summary: 'One platform for 400,000 employees replacing dozens of regional reporting stacks, with decisions landing 22% faster.',
+    href: '/case-studies/global-food-facilities-data-intelligence',
+    linkLabel: 'Read the story',
   },
 ];
 
-const processPhases = [
+const PROCESS = [
   {
-    number: 1,
-    title: 'Discovery & Architecture',
-    duration: 'Weeks 1-4',
-    description: 'Assess your current data landscape, understand business requirements, and design the target architecture.',
+    title: 'Discover',
+    timeframe: 'Weeks 1 to 4',
+    body: 'Inventory the sources, meet the teams, and agree on the first use case that is worth real money.',
   },
   {
-    number: 2,
-    title: 'Foundation & Setup',
-    duration: 'Weeks 5-12',
-    description: 'Platform provisioning, security framework, governance setup. The foundation everything builds on.',
+    title: 'Architect',
+    timeframe: 'Weeks 3 to 6',
+    body: 'Platform choice, governance model, and a cost plan you can defend to finance.',
   },
   {
-    number: 3,
-    title: 'Build & Iterate',
-    duration: 'Months 4-8',
-    description: 'Iterative development in 2-week sprints. Build pipelines, transform data, create data products.',
+    title: 'Build',
+    timeframe: 'Weeks 6 to 16',
+    body: 'Pipelines, lakehouse, and quality gates shipped in increments, not saved up for a big reveal.',
   },
   {
-    number: 4,
-    title: 'Launch & Stabilize',
-    duration: 'Weeks 9-12',
-    description: 'Production deployment with monitoring, alerting, and runbooks. We stabilize until SLAs are met.',
+    title: 'Prove',
+    body: 'Parallel run against the old numbers until the business signs off. Nothing legacy is turned off on faith.',
   },
   {
-    number: 5,
-    title: 'Optimize & Scale',
-    duration: 'Ongoing',
-    description: 'Continuous optimization, cost management, and feature enhancements.',
+    title: 'Run',
+    body: 'Around-the-clock operations under SLA with our managed team, or a clean handover to yours with runbooks that work at 3am.',
   },
 ];
 
-const beyondDelivery = [
+const FACTS = [
   {
-    title: 'Production Operations',
-    description: '24/7 monitoring, incident response, and platform health management. When a pipeline breaks at 2am, we are on the call.',
-    icon: Activity,
+    label: 'Delivery',
+    line: 'The architects who scope your platform are the ones who build it. No switch between the pitch team and the delivery pod.',
   },
   {
-    title: 'SLA-Backed Support',
-    description: 'Contractual response times, defined escalation paths, and accountable ownership. Not helpdesk tickets — engineering ownership.',
-    icon: FileCheck,
+    label: 'Partnerships',
+    line: 'Databricks and Snowflake partners, with certified architects on both and 40+ lakehouse implementations behind them.',
   },
   {
-    title: 'Continuous Optimization',
-    description: 'Cost tuning, performance improvements, and capacity planning. Your platform gets better over time, not worse.',
-    icon: TrendingUp,
+    label: 'Scale',
+    line: 'Founded 2006. 1,200+ engineers across 11 global delivery hubs. 500+ enterprise projects.',
   },
   {
-    title: 'Evolution as Partners',
-    description: "Roadmap co-ownership, new data product delivery, and architectural evolution. We're with you for the long arc.",
-    icon: Users,
+    label: 'Operations',
+    line: 'ISO 27001 certified, with 24/7 managed operations under published SLAs.',
   },
 ];
 
-const differentiators = [
+const FAQS = [
   {
-    title: 'Deep Platform Expertise',
-    description: "We're Databricks Exclusive Partner and Snowflake certified with 40+ lakehouse implementations.",
-    proof: '40+ enterprise data platforms deployed',
+    question: 'What is enterprise data engineering?',
+    answer: 'Building the pipelines, storage, and governance that turn scattered source data into something analytics and AI can use. It covers ingestion, the lakehouse or warehouse itself, quality, lineage, and serving data to the people and systems that need it.',
   },
   {
-    title: 'Observability Built In',
-    description: 'Dynatrace partnership means we instrument observability from day one.',
-    proof: 'Every platform ships with monitoring',
+    question: 'How long does a data platform take?',
+    answer: 'A first governed use case ships in 8 to 12 weeks. Full platform migrations run 6 to 18 months depending on the estate. We ship in increments either way, so value lands long before the final cutover.',
   },
   {
-    title: 'Production-Grade from Start',
-    description: "We don't build pilots that die. We architect for production scale from the first sprint.",
-    proof: 'SLA-backed operations on every platform',
+    question: 'Snowflake or Databricks: which one do we need?',
+    answer: 'Snowflake for SQL-centered analytics and sharing, Databricks when BI, streaming, and ML must share one copy of the data. Many enterprises run both. We are certified on each and will tell you which fits, workload by workload.',
   },
   {
-    title: 'Cost-Effective Delivery',
-    description: 'Senior architects leading the work, not junior analysts learning on your budget.',
-    proof: 'Senior engineers on every project',
+    question: 'What is the ROI of a modern data platform?',
+    answer: 'Typical results from our engagements: 15 to 20% lower storage costs, insights delivered 22% faster, and roughly double the productivity per analyst. The bigger number is usually the AI projects that stop stalling.',
+  },
+  {
+    question: 'Can you work with our existing team and stack?',
+    answer: 'Yes. We build alongside your engineers and operate the tools you already run. The goal is a platform your team owns, not a dependency on ours.',
+  },
+  {
+    question: 'How do you handle governance and compliance?',
+    answer: 'Lineage, access control, and audit trails are designed in from the start, not patched on before an audit. Every dataset gets an owner, a quality score, and a documented path back to its source.',
+  },
+  {
+    question: 'Do you run the platform after go-live?',
+    answer: 'Both options. Our managed operations team runs it 24/7 under SLA, or we hand over to your team with runbooks and stay on call during the transition.',
+  },
+  {
+    question: 'Is our data ready for AI?',
+    answer: 'Probably not yet, and that is normal. AI-ready means governed, documented, and fresh enough for the use case. We assess that gap in the first four weeks and build the missing layer instead of writing a report about it.',
   },
 ];
 
-const faqs = [
-  {
-    question: 'How long does a typical data platform project take?',
-    answer: '6-12 months for enterprise-scale lakehouse consolidation. Smaller projects (single pipeline, specific integration) can be 3-6 months.',
-  },
-  {
-    question: "What's the ROI of a modern data platform?",
-    answer: 'Typical clients see 15-20% reduction in storage costs, 22%+ faster time to insights, and 2x improvement in data analyst productivity.',
-  },
-  {
-    question: 'Do we need to migrate everything at once?',
-    answer: "No. We use a phased approach, critical systems first, then expand. You'll see value within 3-4 months.",
-  },
-  {
-    question: 'Can you work with our existing cloud provider?',
-    answer: "Yes. We're certified on AWS, Azure, and GCP. We design for your environment and can handle multi-cloud.",
-  },
-];
+/* --------------------------------- page ---------------------------------- */
 
 export default function DataEngineeringPage() {
   return (
-    <>
-      {/* Structured Data for SEO/AEO */}
+    <div className={`bg-white text-black ${v4Sans}`}>
       <ServiceSchema
         name="Data Engineering Services"
         description="Enterprise data platforms that feed AI and analytics. Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability."
         url="/services/data-engineering"
         serviceType="Data Engineering Consulting"
       />
-      {/* FAQPage JSON-LD comes from FaqBlock below — one per page. */}
+      {/* FAQPage JSON-LD comes from PageFaq below — one per page. */}
       <BreadcrumbSchema
         items={[
           { name: 'Home', url: '/' },
@@ -261,383 +217,134 @@ export default function DataEngineeringPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[var(--aci-primary-light)] font-semibold text-sm uppercase tracking-wide">
-                Data Engineering
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-6">
-                Data Engineering That Feeds AI and&nbsp;Analytics
-              </h1>
-              <p className="text-lg text-gray-300 mb-8">
-                Databricks lakehouses, Snowflake warehouses, real-time pipelines with Dynatrace observability.
-                We build data platforms that feed AI, power analytics, and run 24/7 with SLAs.
-                Not architecture diagrams, production code that handles millions of records per second.
-              </p>
+      <ServiceHero
+        kicker="Data Engineering"
+        title={
+          <>
+            Data engineering that feeds{' '}
+            <span style={{ color: '#1D4ED8' }}>AI and&nbsp;analytics</span>
+          </>
+        }
+        lede="ACI Infotech builds enterprise data platforms: Databricks lakehouses, Snowflake warehouses, and real-time pipelines that run around the clock with SLAs. We take data scattered across dozens of systems and turn it into one governed foundation your analysts, your applications, and your AI models can actually use."
+        chips={[
+          '40+ lakehouse implementations',
+          'Databricks and Snowflake partner',
+          '24/7 run teams',
+          'ISO 27001',
+        ]}
+        primary={{ label: 'Talk to a data architect', href: '/contact' }}
+        secondary={{ label: 'See the case studies', href: '/case-studies' }}
+        logos={[
+          { src: '/brand/databricks-color-on-light.svg', alt: 'Databricks' },
+          { src: '/brand/snowflake-color.svg', alt: 'Snowflake' },
+        ]}
+        logosCaption="Certified on both, with 40+ lakehouse implementations delivered."
+      />
 
-              {/* Key Outcomes */}
-              <ul className="space-y-3 mb-8">
-                {keyOutcomes.map((outcome) => (
-                  <li key={outcome} className="flex items-center gap-3 text-gray-300">
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                    {outcome}
-                  </li>
-                ))}
-              </ul>
+      {/* Problem band: the underwater beat, retargeted at data platforms */}
+      <FoldcraftHero
+        geistClass={v4Geist}
+        pill="Why platforms stall"
+        headline={
+          <>
+            Your data is not <span className="text-[#60A5FA]">the problem.</span>{' '}
+            <br className="hidden sm:block" />
+            Where it lives is.
+          </>
+        }
+        body="Most enterprises sit on ten to fifty source systems collected through years of growth and acquisitions. CRM in one cloud, ERP in another, operational data stuck in overnight batch jobs. Every report needs three teams, and every AI pilot dies waiting for clean data. The fix is not another tool. It is an engineered platform with ownership, lineage, and a pipeline SLA that somebody actually answers for."
+        story={{
+          metric: { value: '87%', label: 'Reduction in processing time' },
+          title: 'Lakehouse modernization across 600+ locations',
+          quote:
+            'They flawlessly delivered top-tier digital data on a milestone that mattered to us. Their dedication and expertise made them a genuine partner, not a vendor.',
+          role: 'Director of Data and MarTech',
+          org: 'A national convenience retailer',
+          href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
+        }}
+      />
 
-              <p className="text-sm text-[var(--aci-primary-light)] mb-8">
-                40+ enterprise data platforms deployed | 30%+ average latency reduction
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button href="/contact?service=data-engineering" variant="primary" size="lg">
-                  Talk to a Data Architect
-                </Button>
-                <Button
-                  href="/case-studies?service=data-engineering"
-                  variant="ghost"
-                  size="lg"
-                  className="text-white border-white hover:bg-white/10"
-                >
-                  See Data Projects
-                </Button>
-              </div>
-            </div>
-
-            {/* Visual - Data Flow Diagram Mockup */}
-            <div className="relative hidden lg:block">
-              <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <div className="text-sm text-gray-400 mb-4">Data Platform Architecture</div>
-                <div className="space-y-4">
-                  {/* Source Layer */}
-                  <div className="flex gap-2">
-                    {['CRM', 'ERP', 'APIs', 'IoT'].map((src) => (
-                      <div key={src} className="flex-1 bg-gray-700 rounded-lg p-3 text-center text-xs text-gray-300">
-                        {src}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  {/* Ingestion */}
-                  <div className="bg-[var(--aci-primary)]/20 rounded-lg p-4 text-center">
-                    <div className="text-[var(--aci-primary-light)] font-medium">Data Ingestion Layer</div>
-                    <div className="text-xs text-gray-400 mt-1">Kafka • Spark Streaming • AWS Glue</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  {/* Lakehouse */}
-                  <div className="bg-[var(--aci-primary)]/30 rounded-lg p-4 text-center">
-                    <div className="text-white font-bold">Unified Lakehouse</div>
-                    <div className="text-xs text-gray-300 mt-1">Databricks • Delta Lake • Unity Catalog</div>
-                  </div>
-                  <div className="text-center text-gray-500">↓</div>
-                  {/* Consumption */}
-                  <div className="flex gap-2">
-                    {['AI/ML', 'BI', 'Apps'].map((dest) => (
-                      <div key={dest} className="flex-1 bg-green-900/30 rounded-lg p-3 text-center text-xs text-green-300">
-                        {dest}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -inset-4 bg-[var(--aci-primary)]/10 rounded-3xl blur-3xl -z-10"></div>
-            </div>
-          </div>
+      {/* What we build */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="What we build"
+            title={
+              <>
+                One governed platform. <span style={{ color: '#1D4ED8' }}>Six ways&nbsp;in.</span>
+              </>
+            }
+          />
+          <OfferingList items={OFFERINGS} />
         </div>
       </section>
 
-      {/* What We Build */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-6">
-              What We Actually Build
-            </h2>
-            <div className="space-y-4 text-gray-600">
-              <p>
-                We build data platforms on Databricks, Snowflake, and AWS/Azure cloud data services.
-                This isn&rsquo;t abstract architecture, it&rsquo;s production code that handles your data volumes,
-                meets your SLAs, and feeds your AI models.
-              </p>
-              <p>
-                Most enterprises have data scattered across 10-50 systems accumulated over decades of
-                acquisitions, point solutions, and organic growth. We consolidate that chaos into a
-                governed lakehouse where every dataset has lineage, quality scores, and access controls.
-              </p>
-              <p className="font-semibold text-[var(--aci-secondary)]">
-                We&rsquo;ve done this for Fortune 500 companies since 2006. When something breaks at 2am,
-                we&rsquo;re on the call with you.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Decision block */}
+      <DecisionPanel
+        title="Snowflake or Databricks?"
+        body="Both, honestly, depending on the job. Snowflake wins when the center of gravity is SQL analytics, sharing, and a predictable warehouse. Databricks wins when the same data has to serve BI, streaming, and machine learning without keeping three copies of it. Plenty of enterprises run both under one governance layer. We hold certifications on each, so the recommendation follows your workloads, not our margins."
+        colA={{ src: '/brand/snowflake-color.svg', alt: 'Snowflake' }}
+        colB={{ src: '/brand/databricks-color-on-light.svg', alt: 'Databricks' }}
+        rows={DECISION_ROWS}
+      />
 
-      {/* Service Offerings */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Data Engineering Services
-            </h2>
-            <p className="text-lg text-gray-600">
-              Six core offerings, each delivered with production-grade quality
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offerings.map((offering) => {
-              const Icon = offering.icon;
-              return (
-                <div
-                  key={offering.id}
-                  className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow"
-                >
-                  <Icon className="w-10 h-10 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
-                    {offering.title}
-                  </h3>
-                  <p className="text-gray-600 mb-6">{offering.description}</p>
-
-                  <div className="mb-4">
-                    <div className="text-sm font-medium text-gray-500 mb-2">Key Outcomes</div>
-                    <ul className="space-y-1">
-                      {offering.outcomes.map((outcome) => (
-                        <li key={outcome} className="flex items-center gap-2 text-sm text-gray-600">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          {outcome}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {offering.technologies.slice(0, 4).map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2 py-1 bg-gray-100 rounded text-xs text-gray-600"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies */}
-      <section className="py-20 bg-[var(--aci-secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Data Engineering Projects We&rsquo;ve Built
-            </h2>
-            <p className="text-lg text-gray-400">
-              Real projects. Real Fortune 500 clients. Real outcomes.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {caseStudies.map((study) => (
-              <div
-                key={study.slug}
-                className="bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-700 transition-colors"
-              >
-                <div className="p-6 border-b border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xl font-bold text-white">{displayClient(study)}</span>
-                    <span className="text-sm text-gray-400">{study.industry}</span>
-                  </div>
-                  <p className="text-gray-300 text-sm">{study.challenge}</p>
-                </div>
-                <div className="p-6">
-                  <div className="space-y-3 mb-6">
-                    {study.results.map((result, idx) => (
-                      <div key={idx} className="flex items-baseline gap-3">
-                        <span className="text-2xl font-bold text-[var(--aci-primary-light)]">
-                          {result.metric}
-                        </span>
-                        <span className="text-sm text-gray-400">{result.description}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {study.technologies.map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-gray-700 rounded text-xs text-gray-300">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Button href="/case-studies?service=data-engineering" variant="secondary" size="lg">
-              See All Data Engineering Case Studies <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
+      {/* Proof */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead
+            kicker="Results"
+            title={
+              <>
+                Built for enterprises. <span style={{ color: '#1D4ED8' }}>Measured in&nbsp;production.</span>
+              </>
+            }
+          />
+          <ProofCards cards={PROOF} />
         </div>
       </section>
 
       {/* Process */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Our Data Engineering Process
-            </h2>
-            <p className="text-lg text-gray-600">
-              From engagement to production: how we work
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-5 gap-6">
-            {processPhases.map((phase, index) => (
-              <div key={phase.number} className="relative">
-                <div className="bg-gray-50 rounded-xl p-6 h-full">
-                  <div className="text-4xl font-bold text-[var(--aci-primary)]/20 mb-2">
-                    0{phase.number}
-                  </div>
-                  <h3 className="font-semibold text-[var(--aci-secondary)] mb-1">
-                    {phase.title}
-                  </h3>
-                  <div className="text-sm text-[var(--aci-primary)] mb-3">{phase.duration}</div>
-                  <p className="text-sm text-gray-600">{phase.description}</p>
-                </div>
-                {index < processPhases.length - 1 && (
-                  <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-gray-300">
-                    →
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="How an engagement runs" title="Five phases. No mystery." />
+          <ProcessStrip steps={PROCESS} />
         </div>
       </section>
 
-      {/* Beyond Delivery — Managed Services */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Beyond Delivery
-            </h2>
-            <p className="text-lg text-gray-600">
-              We don&rsquo;t hand over and walk away. Post-deployment operations, SLA-backed support,
-              and continuous optimization are part of how we engage.
-              <span className="block mt-2 font-semibold text-[var(--aci-secondary)]">We run what we build.</span>
-            </p>
-          </div>
+      {/* Bridge to managed operations */}
+      <BridgeBand
+        title="Go-live is the halfway point."
+        body="A data platform earns its keep in year two, when the pipelines still run, the costs still hold, and the quality scores still mean something. Our managed operations team keeps platforms up around the clock, with P1 response in fifteen minutes and misses reported monthly with root cause."
+        link={{ label: 'Managed Operations', href: '/services/managed-operations' }}
+      />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {beyondDelivery.map((pillar) => {
-              const Icon = pillar.icon;
-              return (
-                <div key={pillar.title} className="bg-white p-6 rounded-xl shadow-sm">
-                  <Icon className="w-8 h-8 text-[var(--aci-primary)] mb-4" />
-                  <h3 className="text-lg font-semibold text-[var(--aci-secondary)] mb-2">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-sm text-gray-600">{pillar.description}</p>
-                </div>
-              );
-            })}
-          </div>
+      {/* Why ACI */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <SectionHead kicker="Why ACI" title="Why enterprises pick us for data" />
+          <FactsRow facts={FACTS} />
         </div>
       </section>
 
-      {/* Why Choose ACI */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Why Choose ACI for Data Engineering
-            </h2>
-            <p className="text-lg text-gray-600">
-              What makes us different from other consulting firms
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {differentiators.map((diff) => (
-              <div key={diff.title} className="bg-white p-8 rounded-xl shadow-sm">
-                <h3 className="text-xl font-semibold text-[var(--aci-secondary)] mb-3">
-                  {diff.title}
-                </h3>
-                <p className="text-gray-600 mb-4">{diff.description}</p>
-                <div className="flex items-center gap-2 text-sm text-[var(--aci-primary)]">
-                  <CheckCircle className="w-4 h-4" />
-                  {diff.proof}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Common Questions About Data Engineering
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <details key={faq.question} className="group bg-gray-50 rounded-xl">
-                <summary className="flex items-center justify-between cursor-pointer p-6 text-lg font-medium text-[var(--aci-secondary)]">
-                  {faq.question}
-                  <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 text-gray-600">
-                  {faq.answer}
-                </div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PageFaq
+        kicker="Questions"
+        title={
+          <>
+            Data questions,
+            <br />
+            <span style={{ color: '#1D4ED8' }}>answered straight.</span>
+          </>
+        }
+        sub="The questions we hear most before a data engagement. Anything else belongs in a conversation."
+        faqs={FAQS}
+      />
 
       <ClusterPosts keywords={['data engineering', 'data pipeline', 'data platform', 'lakehouse', 'etl']} />
 
       <RelatedLinks items={dataEngineeringRelated} />
 
-      <FaqBlock items={dataEngineeringFaqs} eyebrow="Data engineering FAQ" />
-
-      {/* Final CTA */}
-      <section className="py-20 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Build Your Data Platform?
-          </h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Schedule a 30-minute technical call with one of our data architects.
-            No sales pitch, just an engineering conversation about your specific data challenges.
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <span className="text-blue-200 text-sm">Talk to senior data architects, not sales reps</span>
-            <span className="text-blue-300">|</span>
-            <span className="text-blue-200 text-sm">30-minute technical discussion</span>
-            <span className="text-blue-300">|</span>
-            <span className="text-blue-200 text-sm">We&rsquo;ll tell you if we&rsquo;re not the right fit</span>
-          </div>
-
-          <Button href="/contact?service=data-engineering" variant="lime" size="lg">
-            Talk to a Data Architect
-          </Button>
-        </div>
-      </section>
-    </>
+      {/* Closing CTA: video stage, one button, nothing else */}
+      <CtaSection label="Let's talk about your data" />
+    </div>
   );
 }
