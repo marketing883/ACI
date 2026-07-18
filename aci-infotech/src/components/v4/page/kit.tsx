@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowUpRight, Plus } from 'lucide-react';
+import { ArrowUpRight, Check, Plus } from 'lucide-react';
 import { v4Display } from '../fonts';
+import '../hero/hero.css';
+
+/** Soft double shadow for white cards sitting on a white field. */
+const CARD_SHADOW = 'shadow-[0_3px_9px_rgba(63,74,126,0.06),0_1px_29px_rgba(63,74,126,0.12)]';
 
 // v4 inner-page kit. Server components only: every word these render
 // ships in the initial HTML. The visual grammar mirrors the homepage
@@ -179,65 +183,102 @@ export function OfferingList({
 
 /* ---------------------------- decision panel ----------------------------- */
 
+function JobCard({ row }: { row: { need: string; pick: 'a' | 'b' | 'both' } }) {
+  return (
+    <div className={`flex items-start gap-3 rounded-2xl bg-white px-5 py-4 ${CARD_SHADOW}`}>
+      <span
+        aria-hidden="true"
+        className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+        style={{ background: ACCENT }}
+      >
+        <Check size={12} strokeWidth={3} className="text-white" />
+      </span>
+      <div>
+        <p className="text-[15px] font-medium leading-snug text-gray-800">{row.need}</p>
+        {row.pick === 'both' ? (
+          <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+            Both platforms
+          </p>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function ColHead({ col }: { col: { src: string; alt: string } }) {
+  return (
+    <div className={`flex items-center justify-center rounded-2xl bg-white px-6 py-5 ${CARD_SHADOW}`}>
+      <Image src={col.src} alt={col.alt} width={180} height={40} className="h-9 w-auto object-contain" />
+    </div>
+  );
+}
+
 export function DecisionPanel({
   title,
   body,
   colA,
   colB,
   rows,
+  video = { mp4: '/videos/v4-editorial.mp4', webm: '/videos/v4-editorial.webm' },
 }: {
   title: React.ReactNode;
   body: string;
   colA: { src: string; alt: string };
   colB: { src: string; alt: string };
   rows: { need: string; pick: 'a' | 'b' | 'both' }[];
+  /** Loop playing inside the center circle. */
+  video?: { mp4: string; webm?: string };
 }) {
-  const Dot = ({ on }: { on: boolean }) => (
-    <span
-      aria-hidden="true"
-      className="mx-auto block h-3 w-3 rounded-full"
-      style={{ background: on ? ACCENT : 'rgba(0,0,0,0.08)' }}
-    />
-  );
+  const aRows = rows.filter((r) => r.pick !== 'b');
+  const bRows = rows.filter((r) => r.pick !== 'a');
+
   return (
-    <section className="border-t border-gray-200 bg-gray-50">
-      <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+    <section className="border-t border-gray-200 bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
         <h2
-          className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+          className={`text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-[44px] ${v4Display}`}
           style={{ lineHeight: 1.08 }}
         >
           {title}
         </h2>
         <p className="mt-5 max-w-3xl text-base leading-relaxed text-gray-600 md:text-lg">{body}</p>
 
-        <div className="mt-9 overflow-x-auto">
-          <table className="w-full min-w-[560px] border-collapse text-left text-sm">
-            <thead>
-              <tr>
-                <th className="w-1/2 border-b border-gray-200 pb-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  The job at hand
-                </th>
-                {[colA, colB].map((col) => (
-                  <th key={col.alt} className="border-b border-gray-200 pb-4 text-center">
-                    <Image src={col.src} alt={col.alt} width={140} height={32} className="mx-auto h-7 w-auto object-contain" />
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.need}>
-                  <td className="border-b border-gray-200 py-4 pr-6 font-medium text-gray-800">{row.need}</td>
-                  <td className="border-b border-gray-200 py-4">
-                    <Dot on={row.pick === 'a' || row.pick === 'both'} />
-                  </td>
-                  <td className="border-b border-gray-200 py-4">
-                    <Dot on={row.pick === 'b' || row.pick === 'both'} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="mt-12 flex flex-col gap-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:gap-10">
+          {/* Center circle first on mobile, middle on desktop */}
+          <div className="order-first flex justify-center lg:order-none lg:col-start-2 lg:row-start-1 lg:pt-6">
+            <div
+              className="relative shrink-0 overflow-hidden rounded-full ring-1 ring-gray-200 shadow-[0_20px_60px_-20px_rgba(63,74,126,0.35)]"
+              style={{ width: 'clamp(200px, 21vw, 320px)', height: 'clamp(200px, 21vw, 320px)' }}
+            >
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                aria-hidden="true"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 object-cover"
+                style={{ width: '115%', height: '115%' }}
+              >
+                {video.webm ? <source src={video.webm} type="video/webm" /> : null}
+                <source src={video.mp4} type="video/mp4" />
+              </video>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4 lg:col-start-1 lg:row-start-1">
+            <ColHead col={colA} />
+            {aRows.map((row) => (
+              <JobCard key={row.need} row={row} />
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-4 lg:col-start-3 lg:row-start-1">
+            <ColHead col={colB} />
+            {bRows.map((row) => (
+              <JobCard key={row.need} row={row} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -248,24 +289,66 @@ export function DecisionPanel({
 
 export function ProofCards({
   cards,
+  video = { mp4: '/videos/retail-bg.mp4' },
 }: {
   cards: { eyebrow: string; metric: string; metricLabel: string; summary: string; href: string; linkLabel: string }[];
+  /** Backdrop loop inside the feature card (first card). */
+  video?: { mp4: string; webm?: string };
 }) {
+  const [feature, ...rest] = cards;
   return (
-    <div className="mt-12 grid gap-6 md:grid-cols-3">
-      {cards.map((card) => (
+    <div className="mt-12 grid gap-5 lg:grid-cols-2 lg:grid-rows-2">
+      {/* Feature card: tall, with a quiet video backdrop */}
+      <Link
+        href={feature.href}
+        className="group relative flex min-h-[420px] flex-col overflow-hidden rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25 lg:row-span-2 lg:p-10"
+      >
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover opacity-35"
+        >
+          {video.webm ? <source src={video.webm} type="video/webm" /> : null}
+          <source src={video.mp4} type="video/mp4" />
+        </video>
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(180deg, rgba(11,18,32,0.35) 0%, rgba(11,18,32,0.82) 62%, rgba(11,18,32,0.96) 100%)' }}
+        />
+        <div className="relative flex flex-1 flex-col">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">{feature.eyebrow}</p>
+          <div className="flex-1" />
+          <span className={`text-7xl font-bold leading-none text-[#84CC16] lg:text-[104px] ${v4Display}`}>
+            {feature.metric}
+          </span>
+          <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">{feature.metricLabel}</p>
+          <p className="mt-5 max-w-md text-[15px] leading-relaxed text-white/80">{feature.summary}</p>
+          <span className="mt-7 flex items-center gap-1 text-sm font-semibold text-[#84CC16]">
+            {feature.linkLabel}
+            <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </span>
+        </div>
+      </Link>
+
+      {/* Supporting cards with a film-grain finish */}
+      {rest.map((card) => (
         <Link
           key={card.href}
           href={card.href}
-          className="group flex flex-col rounded-2xl border border-white/10 bg-[#0b1220] p-7 transition-colors duration-300 hover:border-white/25"
+          className="v4-noise group flex flex-col overflow-hidden rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25"
         >
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-white/50">{card.eyebrow}</p>
-          <div className="mt-5 flex items-baseline gap-2">
-            <span className={`text-5xl font-bold leading-none text-[#84CC16] ${v4Display}`}>{card.metric}</span>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">{card.eyebrow}</p>
+          <div className="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span className={`text-6xl font-bold leading-none text-[#84CC16] ${v4Display}`}>{card.metric}</span>
+            <span className="max-w-[220px] text-[11px] font-semibold uppercase leading-tight tracking-[0.16em] text-white/60">
+              {card.metricLabel}
+            </span>
           </div>
-          <p className="mt-2 text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/50">
-            {card.metricLabel}
-          </p>
           <p className="mt-5 flex-1 text-sm leading-relaxed text-white/75">{card.summary}</p>
           <span className="mt-6 flex items-center gap-1 text-xs font-semibold text-[#84CC16]">
             {card.linkLabel}
@@ -285,13 +368,21 @@ export function ProcessStrip({
   steps: { title: string; timeframe?: string; body: string }[];
 }) {
   return (
-    <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8">
+    <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
       {steps.map((step, i) => (
-        <div key={step.title}>
-          <span className={`block text-6xl font-bold leading-none text-gray-200 ${v4Display}`}>
-            {String(i + 1).padStart(2, '0')}
-          </span>
-          <h3 className={`mt-4 text-lg font-semibold text-black ${v4Display}`}>{step.title}</h3>
+        <div key={step.title} className={`flex flex-col rounded-2xl bg-white p-6 ${CARD_SHADOW}`}>
+          <div className="flex items-center gap-3">
+            <span className={`text-sm font-bold text-[#1D4ED8] ${v4Display}`}>
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span aria-hidden="true" className="h-px flex-1 bg-gray-200" />
+            {i < steps.length - 1 ? (
+              <ArrowUpRight size={13} aria-hidden="true" className="rotate-45 text-gray-300" />
+            ) : (
+              <Check size={13} aria-hidden="true" className="text-[#84CC16]" strokeWidth={3} />
+            )}
+          </div>
+          <h3 className={`mt-5 text-lg font-semibold text-black ${v4Display}`}>{step.title}</h3>
           {step.timeframe ? (
             <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-blue-700">{step.timeframe}</p>
           ) : null}
@@ -308,24 +399,48 @@ export function BridgeBand({
   title,
   body,
   link,
+  video = { mp4: '/videos/v4-slide1.mp4', webm: '/videos/v4-slide1.webm' },
 }: {
   title: React.ReactNode;
   body: string;
   link: { label: string; href: string };
+  /** Full-bleed backdrop loop behind the stylized overlay. */
+  video?: { mp4: string; webm?: string };
 }) {
   return (
-    <section className="border-t border-gray-200 bg-gray-50">
-      <div className="mx-auto max-w-4xl px-6 py-16 md:py-20">
+    <section className="relative overflow-hidden border-t border-gray-200">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover"
+      >
+        {video.webm ? <source src={video.webm} type="video/webm" /> : null}
+        <source src={video.mp4} type="video/mp4" />
+      </video>
+      {/* Stylized veil: heavy on the reading side, easing right */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(100deg, rgba(4,7,13,0.93) 0%, rgba(4,7,13,0.78) 45%, rgba(11,18,32,0.45) 100%)',
+        }}
+      />
+      <div className="relative mx-auto max-w-7xl px-6 py-20 md:py-24">
         <h2
-          className={`text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}
+          className={`max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl ${v4Display}`}
           style={{ lineHeight: 1.08 }}
         >
           {title}
         </h2>
-        <p className="mt-5 text-base leading-relaxed text-gray-600 md:text-lg">{body}</p>
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/75 md:text-lg">{body}</p>
         <Link
           href={link.href}
-          className="group mt-7 inline-flex items-center gap-1.5 text-[15px] font-semibold text-blue-700"
+          className="group mt-7 inline-flex items-center gap-1.5 text-[15px] font-semibold text-white"
         >
           <span className="relative">
             {link.label}
@@ -342,13 +457,24 @@ export function BridgeBand({
 
 export function FactsRow({ facts }: { facts: { label: string; line: string }[] }) {
   return (
-    <div className="mt-12 grid gap-x-8 gap-y-10 border-t border-gray-200 pt-10 sm:grid-cols-2 lg:grid-cols-4">
-      {facts.map((fact) => (
-        <div key={fact.label}>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">{fact.label}</p>
-          <p className="mt-3 text-[15px] font-medium leading-relaxed text-black">{fact.line}</p>
-        </div>
-      ))}
+    <div className="mt-12 grid gap-x-0 gap-y-10 border-t border-gray-200 pt-10 sm:grid-cols-2 lg:grid-cols-4">
+      {facts.map((fact, i) => {
+        // Lead sentence carries the claim; the rest is supporting detail.
+        // Last two words of the lead are glued so no width strands a widow.
+        const stop = fact.line.indexOf('. ');
+        const rawLead = stop === -1 ? fact.line : fact.line.slice(0, stop + 1);
+        const lead = rawLead.replace(/ (\S+)$/, ' $1');
+        const detail = stop === -1 ? '' : fact.line.slice(stop + 2);
+        const smDivider = i % 2 === 1 ? 'sm:border-l sm:border-gray-200 sm:pl-8' : '';
+        const lgDivider = i > 0 ? 'lg:border-l lg:border-gray-200 lg:pl-8' : 'lg:border-l-0 lg:pl-0';
+        return (
+          <div key={fact.label} className={`sm:pr-8 ${smDivider} ${lgDivider}`}>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ {fact.label}</p>
+            <p className={`mt-4 text-[17px] font-semibold leading-snug text-black ${v4Display}`}>{lead}</p>
+            {detail ? <p className="mt-2 text-sm leading-relaxed text-gray-600">{detail}</p> : null}
+          </div>
+        );
+      })}
     </div>
   );
 }
