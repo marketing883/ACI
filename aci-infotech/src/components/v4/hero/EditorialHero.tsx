@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, AnimatePresence, useReducedMotion, type Variants } from 'framer-motion';
-import { ArrowUpRight, X } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 import FadingVideo from './FadingVideo';
-import HeroMegaNav from './HeroMegaNav';
+import SiteNav from './SiteNav';
 
 const VIDEO = '/videos/v4-editorial-signal.mp4';
 const VIDEO_WEBM = '/videos/v4-editorial-signal.webm';
@@ -14,13 +14,6 @@ const ACCENT = '#1D4ED8'; // deep royal blue (primary)
 const LIME = '#84CC16'; // lime (accent / highlight)
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-const MOBILE_NAV = [
-  { label: 'Services', href: '/services' },
-  { label: 'Platforms', href: '/platforms' },
-  { label: 'Industries', href: '/industries' },
-  { label: 'Resources', href: '/playbooks' },
-  { label: 'Company', href: '/about' },
-];
 
 type Mark =
   | { kind: 'logo'; src: string; alt: string; h: number }
@@ -78,10 +71,6 @@ const SLIDES: Slide[] = [
   },
 ];
 
-const fadeDown: Variants = {
-  hidden: { opacity: 0, y: -20 },
-  show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5, ease: EASE } }),
-};
 
 /** Render a headline line, painting *marked* key words in the accent
  *  blue so the hero matches the partially-colored section headings. */
@@ -158,8 +147,6 @@ export default function EditorialHero({
   bodyClass: string;
 }) {
   const [i, setI] = useState(0);
-  const [menu, setMenu] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const reduce = useReducedMotion();
 
   useEffect(() => {
@@ -168,14 +155,6 @@ export default function EditorialHero({
     return () => clearInterval(t);
   }, [reduce]);
 
-  // The nav is fixed so the mega menu stays reachable down the page;
-  // once the visitor scrolls it picks up a translucent glass backdrop.
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   const s = SLIDES[i];
 
@@ -213,56 +192,9 @@ export default function EditorialHero({
         />
       </div>
 
-      {/* NAV — fixed so the mega menu follows the visitor down the page.
-          Transparent over the hero, translucent glass once scrolled. */}
-      <nav
-        className={`fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-3 px-5 transition-all duration-300 sm:px-8 md:px-6 lg:px-7 xl:px-12 ${
-          scrolled
-            ? 'border-b border-black/[0.06] bg-white/80 py-3 shadow-[0_12px_40px_-18px_rgba(3,12,24,0.25)] backdrop-blur-2xl'
-            : 'border-b border-transparent bg-transparent py-5 md:py-6'
-        }`}
-      >
-        <motion.div custom={0} variants={fadeDown} initial="hidden" animate="show" className="shrink-0">
-          <Link href="/" aria-label="ACI Infotech home" className="flex items-center">
-            <Image
-              src="/aci-infotech-logo.png"
-              alt="ACI Infotech"
-              width={200}
-              height={64}
-              priority
-              className={`w-auto transition-all duration-300 ${scrolled ? 'h-10 md:h-11' : 'h-12 md:h-14'}`}
-            />
-          </Link>
-        </motion.div>
-
-        <motion.div custom={2} variants={fadeDown} initial="hidden" animate="show">
-          <HeroMegaNav headingClass={headingClass} />
-        </motion.div>
-
-        <motion.div custom={5} variants={fadeDown} initial="hidden" animate="show" className="flex shrink-0 items-center gap-4">
-          {/* Wrapped rather than classed: ArrowLink sets inline-flex on
-              itself, which would fight a `hidden` utility passed in. Only
-              shows at lg — below that the nav has no room for it. */}
-          <span className="hidden lg:block">
-            <ArrowLink
-              href="/contact"
-              arrowSize={16}
-              className="whitespace-nowrap text-[15px] font-semibold capitalize tracking-wide text-black"
-            >
-              Start a project
-            </ArrowLink>
-          </span>
-          <button
-            onClick={() => setMenu(true)}
-            aria-label="Open menu"
-            className="flex h-9 w-9 flex-col items-center justify-center gap-1 lg:hidden"
-          >
-            <span className="h-0.5 w-5 bg-black" />
-            <span className="h-0.5 w-5 bg-black" />
-            <span className="h-0.5 w-5 bg-black" />
-          </button>
-        </motion.div>
-      </nav>
+      {/* NAV — the shared v4 chrome (see SiteNav.tsx). Overlay variant:
+          transparent over the hero, translucent glass once scrolled. */}
+      <SiteNav variant="overlay" headingClass={headingClass} />
 
       {/* Foreground */}
       <div className="relative z-20 flex min-h-[100dvh] flex-col pt-24 md:pt-28">
@@ -409,62 +341,6 @@ export default function EditorialHero({
           </div>
         </div>
       </div>
-
-      {/* MOBILE MENU */}
-      <AnimatePresence>
-        {menu ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className={`fixed inset-0 z-50 flex flex-col bg-white px-6 py-5 text-black ${bodyClass}`}
-          >
-            <div className="flex items-center justify-between">
-              <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={150} height={42} className="h-10 w-auto" />
-              <button
-                onClick={() => setMenu(false)}
-                aria-label="Close menu"
-                className="flex h-9 w-9 items-center justify-center"
-              >
-                <X size={22} className="text-black" />
-              </button>
-            </div>
-            <div className="mt-14 flex flex-col gap-7">
-              {MOBILE_NAV.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setMenu(false)}
-                  className="text-3xl font-semibold capitalize tracking-wide text-black"
-                >
-                  {l.label}
-                </Link>
-              ))}
-              <a
-                href="https://thearq.ai"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMenu(false)}
-                className="inline-flex items-center gap-2 text-3xl font-semibold capitalize tracking-wide"
-                style={{ color: ACCENT }}
-              >
-                ArqAI Labs
-                <ArrowUpRight size={26} />
-              </a>
-            </div>
-            <ArrowLink
-              href="/contact"
-              onClick={() => setMenu(false)}
-              arrowSize={22}
-              className="mt-auto text-xl font-semibold capitalize tracking-wide"
-              style={{ color: ACCENT }}
-            >
-              Start a project
-            </ArrowLink>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
 
       {/* Non-active hero slides, server-rendered so every headline and
           description is in the initial HTML (standard hidden-tab

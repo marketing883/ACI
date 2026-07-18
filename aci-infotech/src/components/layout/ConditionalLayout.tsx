@@ -1,17 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import Navigation from '@/components/layout/Navigation';
-import Footer from '@/components/layout/Footer';
-import NavV2 from '@/components/v2/nav/NavV2';
-import FooterV2 from '@/components/v2/home/FooterV2';
-import { isV2NavRoute } from '@/components/layout/v2-routes';
-import {
-  getNavFeatured,
-  type NavFeaturedResponse,
-} from '@/lib/v2/nav-featured-client';
+import SiteNav, { v4HeadingClass } from '@/components/v4/hero/SiteNav';
+import SiteFooter from '@/components/v4/hero/SiteFooter';
 
 // Lazy load ChatWidget - it's 887 lines and not critical for initial page render
 const ChatWidgetWrapper = dynamic(
@@ -40,23 +32,8 @@ export default function ConditionalLayout({
   const isAdminRoute = pathname?.startsWith('/admin');
   const isLandingPage = pathname?.startsWith('/lp');
 
-  // Mega-menu spotlight data (latest case study / whitepaper / blog /
-  // news from the CMS). Lives at the layout level rather than inside
-  // NavV2 so it survives soft navigations and the data isn't re-fetched
-  // when the user moves between marketing pages. getNavFeatured()
-  // dedupes via a module-level promise.
-  const [navFeatured, setNavFeatured] = useState<NavFeaturedResponse | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    getNavFeatured().then((data) => {
-      if (!cancelled) setNavFeatured(data);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
   // v2 preview routes render standalone so the new dark aesthetic can
-  // be judged without v1 nav/footer chrome on top. Only affects
+  // be judged without site chrome on top. Only affects
   // /preview/v2* routes; /preview/home and all other existing routes
   // keep their existing layout behavior.
   const isV2Preview = pathname?.startsWith('/preview/v2');
@@ -84,49 +61,18 @@ export default function ConditionalLayout({
     return <>{children}</>;
   }
 
-  // V2 chrome rollout: marketing sections migrate one at a time
-  // (see src/components/layout/v2-routes.ts for the allowlist). On
-  // a matching route, render NavV2/FooterV2 instead of the v1
-  // Navigation/Footer. The mega-menu spotlight cards (featured
-  // case study / whitepaper / blog) load empty here — V2HomeContent
-  // pre-fetches them server-side because it's an async server
-  // component, while this layout is client-only. A follow-up can
-  // hydrate them via a small /api/nav/featured endpoint once we
-  // decide whether the bandwidth is worth the visual richness on
-  // every inner page.
-  if (isV2NavRoute(pathname)) {
-    // No top padding on the wrapper — V2 pages place a hero or
-    // top-padded section as their first child (the careers hero has
-    // its own pt-32, well above the ~70px nav). A wrapper pt-20
-    // would just paint an 80px strip in the body background between
-    // the dark nav and the page's dark hero. The dark background
-    // here is a safety net for any future migrated page whose first
-    // element doesn't fully cover the viewport top.
-    return (
-      <>
-        <NavV2
-          forceSolid
-          resources={navFeatured?.resources}
-          company={navFeatured?.company}
-        />
-        <main style={{ background: 'var(--v2-bg)', minHeight: '100vh' }}>
-          {children}
-        </main>
-        <FooterV2 />
-        <ChatWidgetWrapper />
-        <AtherosNudge />
-      </>
-    );
-  }
-
   const isOverlayHero = OVERLAY_HERO_ROUTES.has(pathname ?? '');
 
-  // Regular site pages with Navigation, Footer, and Chat
+  // Every regular page gets the v4 chrome: the homepage mega-nav
+  // (solid glass variant, since inner pages have no white hero for it
+  // to float over) and the v4 SiteFooter, plus chat + nudge. The
+  // fixed nav needs pt-20 on the content wrapper; overlay-hero
+  // routes render the nav transparent over their own hero instead.
   return (
     <>
-      <Navigation />
+      <SiteNav variant={isOverlayHero ? 'overlay' : 'solid'} />
       <main className={isOverlayHero ? '' : 'pt-20'}>{children}</main>
-      <Footer />
+      <SiteFooter headingClass={v4HeadingClass} />
       <ChatWidgetWrapper />
       <AtherosNudge />
     </>
