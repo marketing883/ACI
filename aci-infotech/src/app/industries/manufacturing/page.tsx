@@ -215,7 +215,7 @@ export default function ManufacturingPage() {
       {/* Problem band: the plant floor already produces the data */}
       <FoldcraftHero
         geistClass={v4Geist}
-        image="/images/v4/case-manufacturing.jpg"
+        image="/images/v4/ind-manufacturing.jpg"
         pill="Why plants fly blind"
         headline={
           <>

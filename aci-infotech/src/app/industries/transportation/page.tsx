@@ -230,7 +230,7 @@ export default function TransportationPage() {
       {/* Problem band: margins leak between systems */}
       <FoldcraftHero
         geistClass={v4Geist}
-        image="/images/v4/case-transport.jpg"
+        image="/images/v4/ind-transport.jpg"
         pill="Why margins leak"
         headline={
           <>

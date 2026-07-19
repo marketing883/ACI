@@ -215,7 +215,7 @@ export default function RetailPage() {
       {/* Problem band: the batch is too slow for the shelf */}
       <FoldcraftHero
         geistClass={v4Geist}
-        image="/images/v4/case-retail.jpg"
+        image="/images/v4/ind-retail.jpg"
         pill="Why retail data stalls"
         headline={
           <>

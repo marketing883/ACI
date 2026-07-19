@@ -230,7 +230,7 @@ export default function EnergyPage() {
       {/* Problem band: the grid modernized, the data did not */}
       <FoldcraftHero
         geistClass={v4Geist}
-        image="/images/v4/case-energy.jpg"
+        image="/images/v4/ind-energy.jpg"
         pill="Why utility data stalls"
         headline={
           <>

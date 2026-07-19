@@ -47,6 +47,33 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(target, 301);
   }
 
+  const pathname = request.nextUrl.pathname;
+  const isAuthPage = pathname === '/admin/login';
+  const isAdminPage = pathname.startsWith('/admin');
+  const isAdminApi = pathname.startsWith('/api/admin');
+
+  // ---------------------------------------------------------------
+  // Fast path: everything outside the admin tree returns immediately,
+  // BEFORE any Supabase work. The old order created the Supabase
+  // client and awaited auth.getUser() (a network round-trip to the
+  // auth server) on every request, so a visitor with auth cookies —
+  // anyone logged into the admin — paid that round-trip on every
+  // public page navigation. That was the multi-second freeze on menu
+  // clicks. Public API routes handle their own auth.
+  // ---------------------------------------------------------------
+  if (!isAdminPage && !isAdminApi) {
+    return NextResponse.next({ request });
+  }
+
+  // Public site pages (/blogs, /case-studies, /whitepapers) still
+  // fetch from a handful of /api/admin/* read endpoints. Allow
+  // anonymous GETs on that allowlist so the marketing site keeps
+  // rendering for visitors; writes on these same paths fall
+  // through to the normal auth + role gate below.
+  if (isAdminApi && isPublicReadOnAdminApi(pathname, request.method)) {
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -81,44 +108,20 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // Refresh session if expired
+  // Refresh session if expired. Only admin routes reach this point,
+  // so the auth round-trip is paid where it is actually needed.
   const { data: { user } } = await supabase.auth.getUser();
-
-  const pathname = request.nextUrl.pathname;
-  const isAuthPage = pathname === '/admin/login';
-  const isAdminPage = pathname.startsWith('/admin');
-  const isAdminApi = pathname.startsWith('/api/admin');
-  const isPublicApi = pathname.startsWith('/api') && !isAdminApi;
-
-  // Public API routes (e.g. /api/jobs/apply, /api/contact) handle their
-  // own auth — middleware only gates the admin tree.
-  if (isPublicApi) {
-    return supabaseResponse;
-  }
 
   // Admin API: must be authenticated AND the user's role must permit
   // the path. Returns JSON, not a redirect — these endpoints are
   // called by fetch() from admin pages, not navigated to.
   if (isAdminApi) {
-    // Public site pages (/blogs, /case-studies, /whitepapers) still
-    // fetch from a handful of /api/admin/* read endpoints. Allow
-    // anonymous GETs on that allowlist so the marketing site keeps
-    // rendering for visitors; writes on these same paths fall
-    // through to the normal auth + role gate below.
-    if (isPublicReadOnAdminApi(pathname, request.method)) {
-      return supabaseResponse;
-    }
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     if (!canAccessPath(roleForUser(user), pathname)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    return supabaseResponse;
-  }
-
-  // Non-admin pages — public site, no gate.
-  if (!isAdminPage) {
     return supabaseResponse;
   }
 

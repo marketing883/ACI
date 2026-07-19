@@ -215,7 +215,7 @@ export default function HealthcarePage() {
       {/* Problem band: fragmented systems, one patient */}
       <FoldcraftHero
         geistClass={v4Geist}
-        image="/images/v4/case-healthcare.jpg"
+        image="/images/v4/ind-healthcare.jpg"
         pill="Why care data stalls"
         headline={
           <>
