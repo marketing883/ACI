@@ -285,7 +285,7 @@ export default function QualityEngineeringPage() {
           'CI/CD quality gates',
           'Observability-fed',
         ]}
-        primary={{ label: 'Talk to a quality engineer', href: '/contact?service=quality-engineering' }}
+        primary={{ label: 'Talk to a quality engineer', href: '/contact?service=quality-engineering&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['quality-engineering']} />}
       />
@@ -514,7 +514,7 @@ export default function QualityEngineeringPage() {
       <RelatedLinks items={qualityEngineeringRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Let's raise the quality bar" href="/contact?service=quality-engineering" />
+      <CtaSection label="Let's raise the quality bar" href="/contact?service=quality-engineering&source=cta-section" />
     </div>
   );
 }

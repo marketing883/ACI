@@ -60,7 +60,7 @@ export default async function WhitepapersPage() {
       <WhitepapersClient initialItems={whitepapers} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Bring us the hard question" />
+      <CtaSection label="Bring us the hard question" href="/contact?reason=project-inquiry&source=whitepapers-hub" />
     </main>
   );
 }

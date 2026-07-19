@@ -222,7 +222,7 @@ export default function TransportationPage() {
           'EDI partner feeds',
           'OTIF visibility',
         ]}
-        primary={{ label: 'Talk to a logistics data architect', href: '/contact?industry=transportation' }}
+        primary={{ label: 'Talk to a logistics data architect', href: '/contact?industry=transportation&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['industry-transportation']} />}
       />
@@ -361,7 +361,7 @@ export default function TransportationPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Get every shipment on one set of numbers" href="/contact?industry=transportation" />
+      <CtaSection label="Get every shipment on one set of numbers" href="/contact?industry=transportation&source=cta-section" />
     </div>
   );
 }

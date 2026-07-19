@@ -232,7 +232,7 @@ export default function SalesforcePage() {
           'Certified across the clouds',
           'ISO 27001',
         ]}
-        primary={{ label: 'Book a Salesforce org audit', href: '/contact' }}
+        primary={{ label: 'Book a Salesforce org audit', href: '/contact?platform=salesforce&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['platform-salesforce']} />}
       />
@@ -343,7 +343,7 @@ export default function SalesforcePage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk Salesforce" />
+      <CtaSection label="Let's talk Salesforce" href="/contact?platform=salesforce&source=cta-section" />
     </div>
   );
 }

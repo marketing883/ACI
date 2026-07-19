@@ -237,7 +237,7 @@ export default function MicrosoftDynamicsPage() {
           'Power Platform',
           'Azure underneath',
         ]}
-        primary={{ label: 'Talk to a Dynamics consultant', href: '/contact' }}
+        primary={{ label: 'Talk to a Dynamics consultant', href: '/contact?platform=microsoft-dynamics&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['platform-microsoft-dynamics']} />}
       />
@@ -344,7 +344,7 @@ export default function MicrosoftDynamicsPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk Dynamics 365" />
+      <CtaSection label="Let's talk Dynamics 365" href="/contact?platform=microsoft-dynamics&source=cta-section" />
     </div>
   );
 }

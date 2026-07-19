@@ -232,7 +232,7 @@ export default function AWSPage() {
           'Well-Architected reviews',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to an AWS architect', href: '/contact' }}
+        primary={{ label: 'Talk to an AWS architect', href: '/contact?platform=aws&source=hero' }}
         secondary={{ label: 'See the cloud stories', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['platform-aws']} />}
       />
@@ -339,7 +339,7 @@ export default function AWSPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk AWS" />
+      <CtaSection label="Let's talk AWS" href="/contact?platform=aws&source=cta-section" />
     </div>
   );
 }

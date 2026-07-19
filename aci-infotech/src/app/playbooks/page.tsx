@@ -357,7 +357,7 @@ export default function PlaybooksPage() {
       </section>
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Ask about the other patterns" />
+      <CtaSection label="Ask about the other patterns" href="/contact?reason=project-inquiry&source=playbooks-hub" />
     </main>
   );
 }

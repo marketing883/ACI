@@ -224,7 +224,7 @@ export default function PlatformsPage() {
       </section>
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Tell us which platform you are on" />
+      <CtaSection label="Tell us which platform you are on" href="/contact?reason=project-inquiry&source=platforms-hub" />
     </main>
   );
 }

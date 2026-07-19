@@ -208,7 +208,7 @@ export default function DatabricksPage() {
           'Certified architects',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to a lakehouse architect', href: '/contact' }}
+        primary={{ label: 'Talk to a lakehouse architect', href: '/contact?platform=databricks&source=hero' }}
         secondary={{ label: 'See the Databricks stories', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['platform-databricks']} />}
       />
@@ -323,7 +323,7 @@ export default function DatabricksPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk Databricks" />
+      <CtaSection label="Let's talk Databricks" href="/contact?platform=databricks&source=cta-section" />
     </div>
   );
 }

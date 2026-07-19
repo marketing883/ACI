@@ -207,7 +207,7 @@ export default function HealthcarePage() {
           'FHIR and HL7 integration',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to a healthcare team', href: '/contact?reason=architecture-call' }}
+        primary={{ label: 'Talk to a healthcare team', href: '/contact?industry=healthcare&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['industry-healthcare']} />}
       />
@@ -327,7 +327,7 @@ export default function HealthcarePage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk healthcare data" />
+      <CtaSection label="Let's talk healthcare data" href="/contact?industry=healthcare&source=cta-section" />
     </div>
   );
 }

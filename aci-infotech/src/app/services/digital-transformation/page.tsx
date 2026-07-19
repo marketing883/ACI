@@ -259,7 +259,7 @@ export default function DigitalTransformationPage() {
           'Process discovery first',
           'Human in the loop',
         ]}
-        primary={{ label: 'Talk to an automation engineer', href: '/contact' }}
+        primary={{ label: 'Talk to an automation engineer', href: '/contact?service=digital-transformation&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['digital-transformation']} />}
       />
@@ -419,7 +419,7 @@ export default function DigitalTransformationPage() {
       <RelatedLinks items={digitalTransformationRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Let's automate the busywork" />
+      <CtaSection label="Let's automate the busywork" href="/contact?service=digital-transformation&source=cta-section" />
     </div>
   );
 }

@@ -255,7 +255,7 @@ export default function ManagedOperationsPage() {
           'ISO 27001 Certified',
           'Follow the sun',
         ]}
-        primary={{ label: 'Talk to an operations architect', href: '/contact?service=managed-operations' }}
+        primary={{ label: 'Talk to an operations architect', href: '/contact?service=managed-operations&source=hero' }}
         secondary={{ label: 'See operations case studies', href: '/case-studies?service=managed-operations' }}
         visual={<FlowScene config={FLOWS['managed-operations']} />}
       />
@@ -497,7 +497,7 @@ export default function ManagedOperationsPage() {
       <RelatedLinks items={managedOperationsRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Hand over the 3am pager" href="/contact?service=managed-operations" />
+      <CtaSection label="Hand over the 3am pager" href="/contact?service=managed-operations&source=cta-section" />
     </div>
   );
 }

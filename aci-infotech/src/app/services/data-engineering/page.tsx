@@ -241,7 +241,7 @@ export default function DataEngineeringPage() {
           '24/7 run teams',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to a data architect', href: '/contact' }}
+        primary={{ label: 'Talk to a data architect', href: '/contact?service=data-engineering&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['data-engineering']} />}
       />
@@ -354,7 +354,7 @@ export default function DataEngineeringPage() {
       <RelatedLinks items={dataEngineeringRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Let's talk about your data" />
+      <CtaSection label="Let's talk about your data" href="/contact?service=data-engineering&source=cta-section" />
     </div>
   );
 }

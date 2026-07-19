@@ -207,7 +207,7 @@ export default function RetailPage() {
           '85% forecast accuracy',
           '23% fewer stockouts',
         ]}
-        primary={{ label: 'Talk to a retail data team', href: '/contact?reason=architecture-call' }}
+        primary={{ label: 'Talk to a retail data team', href: '/contact?industry=retail&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['industry-retail']} />}
       />
@@ -330,7 +330,7 @@ export default function RetailPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk retail data" />
+      <CtaSection label="Let's talk retail data" href="/contact?industry=retail&source=cta-section" />
     </div>
   );
 }

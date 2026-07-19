@@ -237,7 +237,7 @@ export default function MarTechCDPPage() {
           'Adobe Solution Partner',
           'GDPR and CCPA built in',
         ]}
-        primary={{ label: 'Talk to a MarTech engineer', href: '/contact' }}
+        primary={{ label: 'Talk to a MarTech engineer', href: '/contact?service=martech-cdp&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['martech-cdp']} />}
       />
@@ -416,7 +416,7 @@ export default function MarTechCDPPage() {
       <RelatedLinks items={martechCdpRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Let's unify your customer data" />
+      <CtaSection label="Let's unify your customer data" href="/contact?service=martech-cdp&source=cta-section" />
     </div>
   );
 }

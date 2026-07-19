@@ -231,7 +231,7 @@ export default function GCPPage() {
           'BigQuery and Vertex AI delivery',
           'ISO 27001',
         ]}
-        primary={{ label: 'Book a Google Cloud assessment', href: '/contact' }}
+        primary={{ label: 'Book a Google Cloud assessment', href: '/contact?platform=gcp&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['platform-gcp']} />}
       />
@@ -338,7 +338,7 @@ export default function GCPPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk Google Cloud" />
+      <CtaSection label="Let's talk Google Cloud" href="/contact?platform=gcp&source=cta-section" />
     </div>
   );
 }

@@ -207,7 +207,7 @@ export default function FinancialServicesPage() {
           'SOX and SOC 2 delivery',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to a financial services team', href: '/contact?reason=architecture-call' }}
+        primary={{ label: 'Talk to a financial services team', href: '/contact?industry=financial-services&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['industry-financial-services']} />}
       />
@@ -326,7 +326,7 @@ export default function FinancialServicesPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk regulated data" />
+      <CtaSection label="Let's talk regulated data" href="/contact?industry=financial-services&source=cta-section" />
     </div>
   );
 }

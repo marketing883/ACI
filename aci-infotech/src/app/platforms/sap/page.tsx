@@ -231,7 +231,7 @@ export default function SAPPage() {
           '24/7 Basis operations',
           'ISO 27001',
         ]}
-        primary={{ label: 'Book an S/4HANA assessment', href: '/contact' }}
+        primary={{ label: 'Book an S/4HANA assessment', href: '/contact?platform=sap&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['platform-sap']} />}
       />
@@ -338,7 +338,7 @@ export default function SAPPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk S/4HANA" />
+      <CtaSection label="Let's talk S/4HANA" href="/contact?platform=sap&source=cta-section" />
     </div>
   );
 }

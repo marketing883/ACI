@@ -1,55 +1,163 @@
 'use client';
 
-import { Suspense, useState, useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle, Globe2 } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { ArrowUpRight, Check, X } from 'lucide-react';
 import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleTagManager';
 import { trackContactFormConversion } from '@/components/analytics/LinkedInInsightTag';
-import Image from 'next/image';
 import { isWorkEmail } from '@/lib/email-validation';
 import { captureAttribution, type Attribution } from '@/lib/analytics/attribution';
+import {
+  parseContactIntent,
+  intentLabel,
+  intentServiceInterest,
+  intentToRecord,
+  type ContactIntent,
+} from '@/lib/contact-intent';
+import { v4Sans, v4Display } from '@/components/v4/fonts';
 
-const contactReasons = [
-  { value: 'architecture-call', label: 'Schedule Architecture Discussion' },
-  { value: 'project-inquiry', label: 'Project Inquiry' },
-  { value: 'partnership', label: 'Partnership Opportunity' },
-  { value: 'careers', label: 'Career Inquiry' },
-  { value: 'general', label: 'General Inquiry' },
+const ATHEROS_SESSION_KEY = 'atheros_session_id';
+
+const REASON_OPTIONS = [
+  { value: 'project-inquiry', label: 'Project inquiry' },
+  { value: 'architecture-call', label: 'Architecture discussion' },
+  { value: 'partnership', label: 'Partnership' },
+  { value: 'careers', label: 'Careers' },
+  { value: 'general', label: 'General question' },
 ];
 
-function ContactForm() {
+/** Real, published proof per intent. Slugs and metrics only from live
+    case studies; nothing invented. */
+const PROOF_BY_KEY: Record<string, { metric?: string; metricLabel?: string; title: string; href: string }> = {
+  'service:data-engineering': { metric: '30%', metricLabel: 'reduction in data latency', title: 'A governed lakehouse across 600+ retail locations.', href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain' },
+  'service:applied-ai-ml': { metric: '4h', metricLabel: 'claims processing, down from 72', title: 'AI document automation for a national healthcare provider.', href: '/case-studies/healthcare-eligibility-verification-automation-aci-yesbot' },
+  'service:cloud-modernization': { metric: '90d', metricLabel: 'from prototype to production', title: 'An Azure lakehouse for a global financial services firm.', href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse' },
+  'service:martech-cdp': { metric: '2.5x', metricLabel: 'email engagement', title: 'Salesforce and Braze on a governed identity spine.', href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain' },
+  'service:digital-transformation': { metric: '0.1%', metricLabel: 'error rate after automation', title: 'Contract lifecycle automated end to end.', href: '/case-studies/accelerating-contract-performance-through-intelligent-automation' },
+  'service:quality-engineering': { metric: '99.97%', metricLabel: 'uptime across 72+ servers', title: 'Automated DevOps and monitoring for a tech enterprise.', href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring' },
+  'service:managed-operations': { metric: '99.97%', metricLabel: 'uptime across 72+ servers', title: 'Operations run under published SLAs.', href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring' },
+  'platform:databricks': { metric: '30%', metricLabel: 'reduction in data latency', title: 'A governed Databricks lakehouse across 600+ locations.', href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain' },
+  'platform:salesforce': { metric: '2.5x', metricLabel: 'email engagement', title: 'Salesforce activated on a governed identity spine.', href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain' },
+  'platform:braze': { metric: '2.5x', metricLabel: 'email engagement', title: 'Braze wired to the data platform, journeys in real time.', href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain' },
+  'platform:sap': { title: 'Finance reporting consolidated on an SAP transformation.', href: '/case-studies/modernizes-finance-reporting-with-sap-transformation' },
+  'industry:healthcare': { metric: '4h', metricLabel: 'claims processing, down from 72', title: 'Eligibility verification automated with AI.', href: '/case-studies/healthcare-eligibility-verification-automation-aci-yesbot' },
+  'industry:retail': { metric: '30%', metricLabel: 'reduction in data latency', title: 'Real-time retail data across 600+ locations.', href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain' },
+  'industry:financial-services': { metric: '90d', metricLabel: 'from prototype to production', title: 'A governed Azure data foundation for a financial firm.', href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse' },
+  'industry:hospitality': { metric: '53', metricLabel: 'countries on one platform', title: 'One data platform for 400,000 employees.', href: '/case-studies/global-food-facilities-data-intelligence' },
+};
+
+const DEFAULT_PROOF = { metric: '500+', metricLabel: 'enterprise projects since 2006', title: 'The case studies carry the details.', href: '/case-studies' };
+
+function proofFor(intent: ContactIntent) {
+  const keys = [
+    intent.service && `service:${intent.service}`,
+    intent.platform && `platform:${intent.platform}`,
+    intent.industry && `industry:${intent.industry}`,
+  ].filter(Boolean) as string[];
+  for (const k of keys) if (PROOF_BY_KEY[k]) return PROOF_BY_KEY[k];
+  // Cross-fill: cloud platforms share the migration story.
+  if (intent.platform && ['aws', 'azure', 'gcp'].includes(intent.platform)) {
+    return PROOF_BY_KEY['service:cloud-modernization'];
+  }
+  return DEFAULT_PROOF;
+}
+
+interface ChatContext {
+  name: string | null;
+  email: string | null;
+  company: string | null;
+  industry: string | null;
+  serviceInterest: string | null;
+  painPoint: string | null;
+}
+
+function ContactExperience() {
   const searchParams = useSearchParams();
-  const initialType = searchParams.get('type') || searchParams.get('reason') || 'general';
+  const [intent, setIntent] = useState<ContactIntent>(() => parseContactIntent(searchParams));
+  const label = intentLabel(intent);
+  const proof = proofFor(intent);
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     company: '',
     phone: '',
-    reason: initialType,
+    reason: intent.reason ?? (label ? 'project-inquiry' : 'general'),
     message: '',
   });
+  const [chatContext, setChatContext] = useState<ChatContext | null>(null);
+  const [chatApplied, setChatApplied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // First-touch attribution (utm/gclid/referrer/landing), snapshotted once
-  // on mount and reused on submit. `formStarted` fires the form_start
-  // event exactly once, on the first field the visitor touches.
   const attributionRef = useRef<Attribution>({});
   const formStarted = useRef(false);
+  const loadedAt = useRef(Date.now());
+  const sessionIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     attributionRef.current = captureAttribution();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  // Ask the server what Atheros already knows about this visitor's own
+  // session. Absent a session or context, this stays silent.
+  useEffect(() => {
+    let cancelled = false;
+    try {
+      const sessionId = window.localStorage.getItem(ATHEROS_SESSION_KEY);
+      if (!sessionId) return;
+      sessionIdRef.current = sessionId;
+      fetch('/api/contact/context', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          if (!cancelled && data?.context) {
+            setChatContext(data.context);
+            trackEvent('contact_context_found', { source: 'atheros_chat' });
+          }
+        })
+        .catch(() => {});
+    } catch {
+      // localStorage unavailable: nothing to do
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     if (!formStarted.current) {
       formStarted.current = true;
-      trackEvent('form_start', { form_location: 'contact_page' });
+      trackEvent('form_start', { form_location: 'contact_page', ...intentToRecord(intent) });
     }
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const applyChatContext = () => {
+    if (!chatContext) return;
+    setFormData((prev) => ({
+      ...prev,
+      name: prev.name || chatContext.name || '',
+      email: prev.email || chatContext.email || '',
+      company: prev.company || chatContext.company || '',
+      message:
+        prev.message ||
+        (chatContext.painPoint ? `From my chat with Atheros: ${chatContext.painPoint}` : ''),
+    }));
+    setChatApplied(true);
+    trackEvent('contact_context_applied', { source: 'atheros_chat' });
+  };
+
+  const clearIntent = () => {
+    setIntent({});
+    setFormData((prev) => ({ ...prev, reason: 'general' }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,375 +165,301 @@ function ContactForm() {
     setIsSubmitting(true);
     setError(null);
 
-    // Validate work email before submitting
     if (!isWorkEmail(formData.email)) {
       setError('Please use your work email. Personal emails (Gmail, Yahoo, etc.) are not accepted.');
       setIsSubmitting(false);
       return;
     }
 
+    const honeypot = (document.getElementById('company_website') as HTMLInputElement | null)?.value ?? '';
+    const intentRecord = intentToRecord(intent);
+    const serviceInterest = intentServiceInterest(intent);
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, ...attributionRef.current }),
+        body: JSON.stringify({
+          ...formData,
+          ...attributionRef.current,
+          intent: intentRecord,
+          service_interest: serviceInterest,
+          atheros_session_id: sessionIdRef.current,
+          source: intent.source ? `cta:${intent.source}` : 'website_contact_form',
+          _honeypot: honeypot,
+          _formLoadTime: loadedAt.current,
+          _submitTime: Date.now(),
+        }),
       });
 
       const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Failed to submit form');
 
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to submit form');
-      }
-
-      // Track successful contact form submission
       trackFormSubmission('contact_form', 'contact_page', {
         contact_reason: formData.reason,
         company: formData.company || 'Not provided',
+        ...intentRecord,
       });
-
       trackEvent('contact_form_submitted', {
         form_location: 'contact_page',
         inquiry_type: formData.reason,
         has_company: formData.company ? 'yes' : 'no',
         has_phone: formData.phone ? 'yes' : 'no',
+        chat_context: chatApplied ? 'applied' : chatContext ? 'available' : 'none',
+        ...intentRecord,
         ...attributionRef.current,
       });
-
-      // Track LinkedIn conversion for lead gen campaigns
       trackContactFormConversion();
-
       setIsSubmitted(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again or email us directly.');
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
+
+  const inputClass =
+    'w-full border-0 border-b border-gray-300 bg-transparent px-0 py-3 text-[15px] text-black outline-none transition-colors focus:border-[#1D4ED8] placeholder:text-gray-400';
 
   if (isSubmitted) {
     return (
-      <div className="text-center py-12">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <CheckCircle className="w-8 h-8 text-green-500" />
-        </div>
-        <h3 className="text-2xl font-bold text-[var(--aci-secondary)] mb-3">
-          Thank You!
-        </h3>
-        <p className="text-gray-600 mb-6">
-          We've received your message. A senior architect will be in touch within 24 business hours.
+      <div className="mx-auto max-w-2xl px-6 py-24 text-center">
+        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#1D4ED8]">
+          <Check size={26} className="text-white" strokeWidth={3} />
+        </span>
+        <h2 className={`mt-8 text-3xl font-bold tracking-tight text-black sm:text-4xl ${v4Display}`}>
+          On its way.
+        </h2>
+        <p className="mt-4 text-base leading-relaxed text-gray-600">
+          A senior architect reads every submission{label ? ` about ${label}` : ''} and replies
+          within 24 business hours. If it moves faster than that, even better.
         </p>
-        <Button
-          variant="secondary"
-          onClick={() => {
-            setIsSubmitted(false);
-            setFormData({
-              name: '',
-              email: '',
-              company: '',
-              phone: '',
-              reason: 'general',
-              message: '',
-            });
-          }}
+        <Link
+          href="/case-studies"
+          className="group mt-8 inline-flex items-center gap-1.5 text-[15px] font-semibold text-blue-700"
         >
-          Send Another Message
-        </Button>
+          <span className="relative">
+            Read the case studies while you wait
+            <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+          </span>
+          <ArrowUpRight size={16} aria-hidden="true" />
+        </Link>
       </div>
     );
   }
 
   return (
-    <>
-      <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-6">
-        Send Us a Message
-      </h2>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-              Full Name *
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
-              placeholder="John Doe"
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Work Email *
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
-              placeholder="john@company.com"
-            />
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-              Company
-            </label>
-            <input
-              type="text"
-              id="company"
-              name="company"
-              value={formData.company}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
-              placeholder="Company Name"
-            />
-          </div>
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-              Phone
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent"
-              placeholder="+1 (555) 123-4567"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-2">
-            What can we help you with? *
-          </label>
-          <select
-            id="reason"
-            name="reason"
-            value={formData.reason}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent bg-white"
-          >
-            {contactReasons.map((reason) => (
-              <option key={reason.value} value={reason.value}>
-                {reason.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-            Tell us about your project or challenge *
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-            rows={5}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--aci-primary)] focus:border-transparent resize-none"
-            placeholder="Describe your project, timeline, and any specific requirements..."
-          />
-        </div>
-
-        {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-            {error}
-          </div>
-        )}
-
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          className="w-full md:w-auto"
-          disabled={isSubmitting}
-          rightIcon={!isSubmitting ? <Send className="w-4 h-4" /> : undefined}
+    <div className="mx-auto max-w-7xl px-6 pb-20 pt-12 md:pt-16">
+      {/* Header, aware of where the visitor came from */}
+      <div className="max-w-3xl">
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">/ Contact</p>
+        <h1
+          className={`text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-[44px] ${v4Display}`}
+          style={{ lineHeight: 1.08 }}
         >
-          {isSubmitting ? 'Sending...' : 'Send Message'}
-        </Button>
-      </form>
-    </>
+          {label ? (
+            <>
+              Let&apos;s talk about <span style={{ color: '#1D4ED8' }}>{label}</span>
+            </>
+          ) : (
+            <>
+              Talk to an engineer, <span style={{ color: '#1D4ED8' }}>not a&nbsp;pitch</span>
+            </>
+          )}
+        </h1>
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-gray-600">
+          A senior architect reads this, thinks about it, and replies within 24 business hours.
+          If we are the wrong fit for the work, we say so in the first call.
+        </p>
+
+        {/* Intent + chat context chips: visible, honest, removable */}
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          {label ? (
+            <span className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-4 py-1.5 text-xs font-semibold text-gray-700">
+              From: {label}
+              <button
+                type="button"
+                onClick={clearIntent}
+                aria-label="Clear this topic"
+                className="text-gray-400 transition-colors hover:text-black"
+              >
+                <X size={13} />
+              </button>
+            </span>
+          ) : null}
+          {chatContext && !chatApplied ? (
+            <button
+              type="button"
+              onClick={applyChatContext}
+              className="group inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700"
+            >
+              <span className="relative">
+                Atheros already has some of this. Fill it in for me.
+                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+              </span>
+            </button>
+          ) : null}
+          {chatApplied ? (
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500">
+              <Check size={13} className="text-[#1D4ED8]" /> Filled from your chat
+            </span>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="mt-12 grid gap-14 lg:grid-cols-12">
+        {/* Form */}
+        <div className="lg:col-span-7">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Honeypot: hidden from humans, irresistible to bots */}
+            <div className="absolute -left-[9999px] top-auto" aria-hidden="true">
+              <label htmlFor="company_website">Company website</label>
+              <input type="text" id="company_website" name="company_website" tabIndex={-1} autoComplete="off" />
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2">
+              <div>
+                <label htmlFor="name" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
+                  Full name *
+                </label>
+                <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required className={inputClass} placeholder="Your name" />
+              </div>
+              <div>
+                <label htmlFor="email" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
+                  Work email *
+                </label>
+                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required className={inputClass} placeholder="you@company.com" />
+              </div>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2">
+              <div>
+                <label htmlFor="company" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
+                  Company
+                </label>
+                <input type="text" id="company" name="company" value={formData.company} onChange={handleChange} className={inputClass} placeholder="Company name" />
+              </div>
+              <div>
+                <label htmlFor="phone" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
+                  Phone
+                </label>
+                <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} className={inputClass} placeholder="+1 (555) 123-4567" />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="reason" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
+                What is this about? *
+              </label>
+              <select id="reason" name="reason" value={formData.reason} onChange={handleChange} required className={`${inputClass} appearance-none bg-white`}>
+                {REASON_OPTIONS.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                    {r.value === 'project-inquiry' && label ? `: ${label}` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="message" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
+                The situation *
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows={5}
+                className={`${inputClass} resize-none`}
+                placeholder={
+                  label
+                    ? `Where does the ${label} work stand today, and what do you want running in production?`
+                    : 'What are you building, what is in the way, and when does it need to work?'
+                }
+              />
+            </div>
+
+            {error ? (
+              <p className="border-l-2 border-red-400 pl-4 text-sm text-red-600">{error}</p>
+            ) : null}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="inline-flex items-center gap-2 rounded-full bg-[#1D4ED8] px-8 py-3.5 text-[15px] font-semibold text-white transition-colors duration-300 hover:bg-black disabled:opacity-60"
+            >
+              {isSubmitting ? 'Sending...' : 'Send it to an architect'}
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </button>
+          </form>
+        </div>
+
+        {/* Context rail: proof relevant to the intent, then the facts */}
+        <aside className="lg:col-span-5">
+          <Link
+            href={proof.href}
+            className="group block overflow-hidden rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 transition-all duration-300 hover:ring-white/25"
+          >
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
+              {label ? `Relevant work: ${label}` : 'The work speaks first'}
+            </p>
+            {proof.metric ? (
+              <p className={`mt-5 text-5xl font-bold leading-none text-[#84CC16] ${v4Display}`}>{proof.metric}</p>
+            ) : null}
+            {proof.metricLabel ? (
+              <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">{proof.metricLabel}</p>
+            ) : null}
+            <p className="mt-4 text-sm leading-relaxed text-white/80">{proof.title}</p>
+            <span className="mt-5 inline-flex items-center gap-1 text-xs font-semibold text-[#84CC16]">
+              Read the case study
+              <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </span>
+          </Link>
+
+          <div className="mt-8 space-y-4 border-t border-gray-200 pt-8">
+            {[
+              'A senior architect reads it, and a senior architect answers',
+              'A 30-minute technical conversation, on your stack',
+              'A straight answer if we are the wrong fit',
+            ].map((line) => (
+              <p key={line} className="flex items-start gap-3 text-sm leading-relaxed text-gray-700">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#1D4ED8]">
+                  <Check size={12} strokeWidth={3} className="text-white" />
+                </span>
+                {line}
+              </p>
+            ))}
+          </div>
+
+          {/* NAP: keep the visible entity facts search engines cross-check */}
+          <div className="mt-8 border-t border-gray-200 pt-8 text-sm leading-relaxed text-gray-600">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">Headquarters</p>
+            <p className="mt-2">
+              1100 Cornwall Road, Suite 215
+              <br />
+              Monmouth Junction, NJ 08852
+            </p>
+            <p className="mt-4">
+              <a href="mailto:insights@aciinfotech.com" className="font-semibold text-blue-700">insights@aciinfotech.com</a>
+              <br />
+              <a href="tel:+18882254638" className="font-semibold text-blue-700">+1 (888) 225-4638</a>
+            </p>
+            <p className="mt-4 text-xs text-gray-500">Replies within 24 business hours. 24/7 support for existing clients.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
   );
 }
 
 export default function ContactPage() {
   return (
-    <>
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-[var(--aci-secondary)] to-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Let's Talk About Your Challenge
-            </h1>
-            <p className="text-lg text-gray-300">
-              Talk to a senior architect about your specific needs. No sales pitch, just an
-              engineering conversation about what's actually possible.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form & Info Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-3 gap-12">
-            {/* Contact Info */}
-            <div className="lg:col-span-1">
-              <h2 className="text-2xl font-bold text-[var(--aci-secondary)] mb-6">
-                Get In Touch
-              </h2>
-
-              <div className="space-y-6 mb-8">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-[var(--aci-primary)]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-5 h-5 text-[var(--aci-primary)]" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-[var(--aci-secondary)]">Email</div>
-                    <a href="mailto:insights@aciinfotech.com" className="text-gray-600 hover:text-[var(--aci-primary)]">
-                      insights@aciinfotech.com
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-[var(--aci-primary)]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-5 h-5 text-[var(--aci-primary)]" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-[var(--aci-secondary)]">Phone</div>
-                    <a href="tel:+18882254638" className="text-gray-600 hover:text-[var(--aci-primary)]">
-                      +1 (888) 225-4638
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-[var(--aci-primary)]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-5 h-5 text-[var(--aci-primary)]" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-[var(--aci-secondary)]">Headquarters</div>
-                    <p className="text-gray-600">
-                      1100 Cornwall Road, Suite 215
-                      <br />
-                      Monmouth Junction, NJ 08852
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-[var(--aci-primary)]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-5 h-5 text-[var(--aci-primary)]" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-[var(--aci-secondary)]">Response Time</div>
-                    <p className="text-gray-600">
-                      Typically within 24 business hours
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Trust Signals */}
-              <div className="bg-gray-50 p-6 rounded-xl">
-                <h3 className="font-semibold text-[var(--aci-secondary)] mb-4">What to Expect</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    Talk to senior architects, not sales reps
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    30-minute technical discussion
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    We'll tell you if we're not the right fit
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    No pressure, no obligation
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Contact Form */}
-            <div className="lg:col-span-2">
-              <div className="bg-gray-50 p-8 rounded-xl">
-                <Suspense fallback={<div className="animate-pulse h-96 bg-gray-200 rounded-lg"></div>}>
-                  <ContactForm />
-                </Suspense>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Global Offices Section - Map Image */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--aci-primary)]/10 rounded-full text-[var(--aci-primary)] font-medium text-sm mb-4">
-              <Globe2 className="w-4 h-4" />
-              Global Presence
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--aci-secondary)] mb-4">
-              Our Offices Around the World
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              With 11 global delivery hubs across the USA, India, Europe, and APAC, we deliver enterprise solutions with global expertise and local presence.
-            </p>
-          </div>
-
-          {/* Office Location Map */}
-          <div className="relative w-full rounded-xl overflow-hidden shadow-lg">
-            <Image
-              src="/aci-office-location-on-map.webp"
-              alt="ACI Infotech global office locations"
-              width={1920}
-              height={971}
-              className="w-full h-auto"
-              priority
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-16 bg-[var(--aci-primary)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Ready to Get Started?
-          </h2>
-          <p className="text-lg text-blue-100 mb-6">
-            Email us at{' '}
-            <a href="mailto:insights@aciinfotech.com" className="underline hover:no-underline font-semibold">
-              insights@aciinfotech.com
-            </a>
-          </p>
-          <p className="text-sm text-blue-200">
-            We typically respond within 24 business hours | 24/7 support for existing clients
-          </p>
-        </div>
-      </section>
-    </>
+    <div className={`bg-white text-black ${v4Sans}`}>
+      <Suspense fallback={<div className="mx-auto h-96 max-w-7xl animate-pulse px-6 py-16" />}>
+        <ContactExperience />
+      </Suspense>
+    </div>
   );
 }

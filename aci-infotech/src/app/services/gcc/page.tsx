@@ -226,7 +226,7 @@ export default function GCCPage() {
           'Build-operate-transfer',
           'One statement of work',
         ]}
-        primary={{ label: 'Scope a captive center', href: '/contact?service=gcc' }}
+        primary={{ label: 'Scope a captive center', href: '/contact?service=gcc&source=hero' }}
         secondary={{ label: 'See delivery outcomes', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['gcc']} />}
       />
@@ -379,7 +379,7 @@ export default function GCCPage() {
       <RelatedLinks items={gccRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Let's plan the captive" href="/contact?service=gcc" />
+      <CtaSection label="Let's plan the captive" href="/contact?service=gcc&source=cta-section" />
     </div>
   );
 }

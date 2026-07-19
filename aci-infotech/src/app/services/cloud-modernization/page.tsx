@@ -299,7 +299,7 @@ export default function CloudModernizationPage() {
           'Zero-downtime cutovers',
           '15 to 25% cost reduction',
         ]}
-        primary={{ label: 'Talk to a cloud architect', href: '/contact?service=cloud-modernization' }}
+        primary={{ label: 'Talk to a cloud architect', href: '/contact?service=cloud-modernization&source=hero' }}
         secondary={{ label: 'See the cloud case studies', href: '/case-studies?service=cloud-modernization' }}
         visual={<FlowScene config={FLOWS['cloud-modernization']} />}
       />
@@ -402,7 +402,7 @@ export default function CloudModernizationPage() {
       <RelatedLinks items={cloudModernizationRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Let's plan the migration" />
+      <CtaSection label="Let's plan the migration" href="/contact?service=cloud-modernization&source=cta-section" />
     </div>
   );
 }

@@ -233,7 +233,7 @@ export default function AzurePage() {
           'Fabric and Synapse',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to an Azure architect', href: '/contact' }}
+        primary={{ label: 'Talk to an Azure architect', href: '/contact?platform=azure&source=hero' }}
         secondary={{ label: 'See the cloud stories', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['platform-azure']} />}
       />
@@ -340,7 +340,7 @@ export default function AzurePage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk Azure" />
+      <CtaSection label="Let's talk Azure" href="/contact?platform=azure&source=cta-section" />
     </div>
   );
 }

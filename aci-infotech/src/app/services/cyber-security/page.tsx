@@ -301,7 +301,7 @@ export default function CyberSecurityPage() {
           '24/7 SOC coverage',
           'Dynatrace partner',
         ]}
-        primary={{ label: 'Talk to a security architect', href: '/contact?service=cyber-security' }}
+        primary={{ label: 'Talk to a security architect', href: '/contact?service=cyber-security&source=hero' }}
         secondary={{ label: 'See the security case studies', href: '/case-studies?service=cyber-security' }}
         visual={<FlowScene config={FLOWS['cyber-security']} />}
       />
@@ -402,7 +402,7 @@ export default function CyberSecurityPage() {
       <RelatedLinks items={cyberSecurityRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Let's talk security" />
+      <CtaSection label="Let's talk security" href="/contact?service=cyber-security&source=cta-section" />
     </div>
   );
 }

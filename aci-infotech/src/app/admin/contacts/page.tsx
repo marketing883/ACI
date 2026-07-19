@@ -30,6 +30,43 @@ import {
   Trash2,
 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import {
+  intentLabel,
+  humanizeTopic,
+  type ContactIntent,
+} from '@/lib/contact-intent';
+
+interface ChatContext {
+  job_title?: string;
+  industry?: string;
+  role?: string;
+  service_interest?: string;
+  pain_point?: string;
+  budget?: string;
+  timeline?: string;
+  team?: string;
+  priority?: string;
+  decision_role?: string;
+  intent_level?: string;
+  lead_score?: number;
+}
+
+interface ContactMetadata {
+  intent?: ContactIntent;
+  atheros_session_id?: string;
+  chat_context?: ChatContext;
+}
+
+interface Attribution {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+  gclid?: string;
+  referrer?: string;
+  landing_page?: string;
+}
 
 interface Contact {
   id: string;
@@ -43,8 +80,11 @@ interface Contact {
   status: 'new' | 'contacted' | 'qualified' | 'closed';
   notes: string | null;
   source?: string;
+  service_interest?: string | null;
   lead_score?: number;
   intelligence?: IntelligenceReport | null;
+  metadata?: ContactMetadata | null;
+  attribution?: Attribution | null;
 }
 
 interface IntelligenceReport {
@@ -169,6 +209,38 @@ const mockContacts: Contact[] = [
   },
 ];
 
+/** Compact plain-text journey summary handed to the intelligence
+    analyst so on-demand reports see the same context as auto reports. */
+function buildJourneyNotes(contact: Contact): string | undefined {
+  const parts: string[] = [];
+  const intent = contact.metadata?.intent;
+  if (intent) {
+    const bits: string[] = [];
+    if (intent.service) bits.push(`service page: ${humanizeTopic(intent.service)}`);
+    if (intent.platform) bits.push(`platform page: ${humanizeTopic(intent.platform)}`);
+    if (intent.industry) bits.push(`industry page: ${humanizeTopic(intent.industry)}`);
+    if (intent.topic) bits.push(`topic: ${humanizeTopic(intent.topic)}`);
+    if (intent.source) bits.push(`CTA position: ${intent.source}`);
+    if (bits.length) parts.push(`Converted via ${bits.join(', ')}.`);
+  }
+  const chat = contact.metadata?.chat_context;
+  if (chat) {
+    const bits = Object.entries(chat)
+      .filter(([k, v]) => k !== 'lead_score' && v)
+      .map(([k, v]) => `${k.replace(/_/g, ' ')}: ${v}`);
+    if (bits.length) parts.push(`From their Atheros chat session: ${bits.join('; ')}.`);
+  }
+  const attr = contact.attribution;
+  if (attr?.utm_source || attr?.gclid) {
+    parts.push(
+      `Paid/campaign touch: ${[attr.utm_source, attr.utm_medium, attr.utm_campaign]
+        .filter(Boolean)
+        .join(' / ') || 'Google Ads click'}.`,
+    );
+  }
+  return parts.length ? parts.join(' ') : undefined;
+}
+
 export default function ContactsPage() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
@@ -228,9 +300,14 @@ export default function ContactsPage() {
             email: contact.email,
             company: contact.company,
             phone: contact.phone,
+            job_title: contact.metadata?.chat_context?.job_title || null,
             inquiry_type: contact.inquiry_type,
             message: contact.message,
-            service_interest: contact.inquiry_type,
+            service_interest:
+              contact.service_interest ||
+              (contact.metadata?.intent && intentLabel(contact.metadata.intent)) ||
+              contact.inquiry_type,
+            requirements: buildJourneyNotes(contact),
           },
         }),
       });
@@ -355,13 +432,16 @@ export default function ContactsPage() {
   }
 
   function exportCSV() {
-    const headers = ['Name', 'Email', 'Company', 'Phone', 'Inquiry Type', 'Status', 'Lead Score', 'Source', 'Date'];
+    const headers = ['Name', 'Email', 'Company', 'Phone', 'Inquiry Type', 'Interest', 'CTA Source', 'Chatted', 'Status', 'Lead Score', 'Source', 'Date'];
     const rows = filteredContacts.map(c => [
       c.name,
       c.email,
       c.company || '',
       c.phone || '',
       c.inquiry_type,
+      (c.metadata?.intent && intentLabel(c.metadata.intent)) || c.service_interest || '',
+      c.metadata?.intent?.source || '',
+      c.metadata?.chat_context ? 'yes' : '',
       c.status,
       c.intelligence?.leadScore || c.lead_score || '',
       sourceLabels[c.source || ''] || c.source || '',
@@ -488,6 +568,20 @@ export default function ContactsPage() {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 truncate">{contact.email}</p>
+                  {(() => {
+                    const label =
+                      (contact.metadata?.intent && intentLabel(contact.metadata.intent)) ||
+                      contact.service_interest;
+                    return label ? (
+                      <span className="mt-1 inline-flex items-center gap-1 rounded bg-indigo-50 px-1.5 py-0.5 text-xs text-indigo-700">
+                        <Target className="w-3 h-3" />
+                        {label}
+                        {contact.metadata?.chat_context && (
+                          <MessageSquare className="w-3 h-3 text-orange-400" aria-label="Also chatted with Atheros" />
+                        )}
+                      </span>
+                    ) : null;
+                  })()}
                   {contact.company && (
                     <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
                       <Building2 className="w-3 h-3" />
@@ -574,6 +668,98 @@ export default function ContactsPage() {
                 <p className="text-xs font-medium text-gray-500 mb-2">ORIGINAL MESSAGE</p>
                 <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{selectedContact.message}</p>
               </div>
+
+              {/* Captured Journey: which CTA brought them, first-touch
+                  attribution, and what the Atheros chat already learned. */}
+              {(selectedContact.metadata?.intent ||
+                selectedContact.metadata?.chat_context ||
+                selectedContact.attribution) && (
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <p className="text-xs font-medium text-gray-500 mb-2">CAPTURED JOURNEY</p>
+                  <div className="space-y-3">
+                    {selectedContact.metadata?.intent && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedContact.metadata.intent.service && (
+                          <span className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
+                            Service: {humanizeTopic(selectedContact.metadata.intent.service)}
+                          </span>
+                        )}
+                        {selectedContact.metadata.intent.platform && (
+                          <span className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
+                            Platform: {humanizeTopic(selectedContact.metadata.intent.platform)}
+                          </span>
+                        )}
+                        {selectedContact.metadata.intent.industry && (
+                          <span className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
+                            Industry: {humanizeTopic(selectedContact.metadata.intent.industry)}
+                          </span>
+                        )}
+                        {selectedContact.metadata.intent.topic && (
+                          <span className="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded">
+                            Topic: {humanizeTopic(selectedContact.metadata.intent.topic)}
+                          </span>
+                        )}
+                        {selectedContact.metadata.intent.playbook && (
+                          <span className="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded">
+                            Playbook: {humanizeTopic(selectedContact.metadata.intent.playbook)}
+                          </span>
+                        )}
+                        {selectedContact.metadata.intent.source && (
+                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                            CTA: {selectedContact.metadata.intent.source}
+                          </span>
+                        )}
+                        {selectedContact.metadata.intent.reason && (
+                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                            Reason: {humanizeTopic(selectedContact.metadata.intent.reason)}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {selectedContact.attribution && (
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+                        {selectedContact.attribution.utm_source && (
+                          <span>
+                            Campaign: {selectedContact.attribution.utm_source}
+                            {selectedContact.attribution.utm_medium && ` / ${selectedContact.attribution.utm_medium}`}
+                            {selectedContact.attribution.utm_campaign && ` / ${selectedContact.attribution.utm_campaign}`}
+                          </span>
+                        )}
+                        {selectedContact.attribution.gclid && <span>Google Ads click</span>}
+                        {selectedContact.attribution.referrer && (
+                          <span className="truncate max-w-[240px]">Referrer: {selectedContact.attribution.referrer}</span>
+                        )}
+                        {selectedContact.attribution.landing_page && (
+                          <span className="truncate max-w-[240px]">Landed: {selectedContact.attribution.landing_page}</span>
+                        )}
+                      </div>
+                    )}
+                    {selectedContact.metadata?.chat_context && (
+                      <div className="rounded-lg bg-orange-50 p-3">
+                        <p className="text-xs font-medium text-orange-700 mb-2 flex items-center gap-1">
+                          <MessageSquare className="w-3 h-3" />
+                          From their Atheros chat session
+                          {typeof selectedContact.metadata.chat_context.lead_score === 'number' && (
+                            <span className="ml-auto rounded bg-white px-1.5 py-0.5 text-orange-600">
+                              Chat score: {selectedContact.metadata.chat_context.lead_score}
+                            </span>
+                          )}
+                        </p>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-700">
+                          {Object.entries(selectedContact.metadata.chat_context)
+                            .filter(([k, v]) => k !== 'lead_score' && v)
+                            .map(([k, v]) => (
+                              <div key={k}>
+                                <span className="text-gray-500">{humanizeTopic(k.replace(/_/g, '-'))}: </span>
+                                {String(v)}
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Actions */}
               <div className="mt-4 flex gap-2">

@@ -214,7 +214,7 @@ export default function HospitalityPage() {
           'GDPR & CCPA',
           'Global scale',
         ]}
-        primary={{ label: 'Talk to a hospitality data architect', href: '/contact?industry=hospitality' }}
+        primary={{ label: 'Talk to a hospitality data architect', href: '/contact?industry=hospitality&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['industry-hospitality']} />}
       />
@@ -341,7 +341,7 @@ export default function HospitalityPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Get to one guest record" href="/contact?industry=hospitality" />
+      <CtaSection label="Get to one guest record" href="/contact?industry=hospitality&source=cta-section" />
     </div>
   );
 }

@@ -206,7 +206,7 @@ export default function ServiceNowPage() {
           'Upgrade management',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to a ServiceNow consultant', href: '/contact' }}
+        primary={{ label: 'Talk to a ServiceNow consultant', href: '/contact?platform=servicenow&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['platform-servicenow']} />}
       />
@@ -313,7 +313,7 @@ export default function ServiceNowPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk ServiceNow" />
+      <CtaSection label="Let's talk ServiceNow" href="/contact?platform=servicenow&source=cta-section" />
     </div>
   );
 }

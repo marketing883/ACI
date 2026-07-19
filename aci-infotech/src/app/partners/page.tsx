@@ -298,7 +298,7 @@ export default function PartnersPage() {
       </section>
 
       {/* Closing CTA: one button, nothing else */}
-      <CtaSection label="Tell us which platform you are on" />
+      <CtaSection label="Tell us which platform you are on" href="/contact?reason=partnership&source=partners" />
     </div>
   );
 }

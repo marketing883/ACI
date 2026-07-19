@@ -233,7 +233,7 @@ export default function AdvisoryStrategyPage() {
           'TCO models',
           'ROI frameworks',
         ]}
-        primary={{ label: 'Start an advisory engagement', href: '/contact?service=advisory-strategy' }}
+        primary={{ label: 'Start an advisory engagement', href: '/contact?service=advisory-strategy&source=hero' }}
         secondary={{ label: 'See delivery outcomes', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['advisory-strategy']} />}
       />
@@ -360,7 +360,7 @@ export default function AdvisoryStrategyPage() {
       <RelatedLinks items={advisoryStrategyRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Bring us the problem" href="/contact?service=advisory-strategy" />
+      <CtaSection label="Bring us the problem" href="/contact?service=advisory-strategy&source=cta-section" />
     </div>
   );
 }

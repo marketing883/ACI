@@ -4,6 +4,8 @@ import { generateIntelligence } from '@/lib/intelligence';
 import { isWorkEmail, validateEmail } from '@/lib/email-validation';
 import { detectBot, checkHoneypot } from '@/lib/bot-detection';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { parseContactIntent, intentServiceInterest, humanizeTopic } from '@/lib/contact-intent';
+import { readLeadContext } from '@/lib/copilot/session';
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,6 +37,22 @@ export async function POST(request: NextRequest) {
 
     // Support both 'inquiry_type' (new) and 'reason' (legacy)
     const inquiryType = inquiry_type || reason;
+
+    // Structured intent from the CTA that brought the visitor here.
+    // Re-validated server-side through the same closed vocabulary the
+    // client used, so nothing unvalidated reaches the database.
+    const intent = parseContactIntent(
+      (data.intent && typeof data.intent === 'object' ? data.intent : {}) as Record<string, string>,
+    );
+    const hasIntent = Object.keys(intent).length > 0;
+
+    // The visitor's own Atheros chat session id, if the form offered a
+    // prefill. Lets us join the two lead channels on one contact row.
+    const atherosSessionId =
+      typeof data.atheros_session_id === 'string' &&
+      /^[a-zA-Z0-9_-]{8,64}$/.test(data.atheros_session_id)
+        ? data.atheros_session_id
+        : null;
 
     // Check 1: Honeypot field (if filled, it's definitely a bot)
     if (checkHoneypot(_honeypot)) {
@@ -79,8 +97,8 @@ export async function POST(request: NextRequest) {
 
     // Determine status based on bot detection
     let submissionStatus = 'new';
-    let spamScore = botCheck.score;
-    let spamFlags = botCheck.flags;
+    const spamScore = botCheck.score;
+    const spamFlags = botCheck.flags;
 
     if (botCheck.action === 'block') {
       submissionStatus = 'spam';
@@ -108,6 +126,47 @@ export async function POST(request: NextRequest) {
     }
     const attributionValue = Object.keys(attribution).length ? attribution : null;
 
+    // Merge the Atheros chat channel: if the visitor chatted before
+    // filling the form, pull what the chat already captured so the two
+    // lead channels land on one contact row instead of two silos.
+    let chatContext: Record<string, string | number> | null = null;
+    if (atherosSessionId) {
+      try {
+        const { state, score } = await readLeadContext(atherosSessionId);
+        const chat: Record<string, string | number> = {};
+        if (state.jobTitle) chat.job_title = state.jobTitle;
+        if (state.industry) chat.industry = state.industry;
+        if (state.role) chat.role = state.role;
+        if (state.serviceInterest) chat.service_interest = state.serviceInterest;
+        if (state.painPoint) chat.pain_point = state.painPoint;
+        if (state.budget) chat.budget = state.budget;
+        if (state.timeline) chat.timeline = state.timeline;
+        if (state.team) chat.team = state.team;
+        if (state.priority) chat.priority = state.priority;
+        if (state.decisionRole) chat.decision_role = state.decisionRole;
+        if (state.intent) chat.intent_level = state.intent;
+        if (typeof score === 'number') chat.lead_score = score;
+        if (Object.keys(chat).length) chatContext = chat;
+      } catch (e) {
+        console.error('Chat context merge failed:', e);
+      }
+    }
+
+    // service_interest: the resolved intent label (client sends it too,
+    // but we recompute server-side), falling back to what the chat knew.
+    const serviceInterest =
+      intentServiceInterest(intent) ||
+      (typeof chatContext?.service_interest === 'string' ? chatContext.service_interest : null);
+
+    const metadataValue =
+      hasIntent || atherosSessionId || chatContext
+        ? {
+            ...(hasIntent ? { intent } : {}),
+            ...(atherosSessionId ? { atheros_session_id: atherosSessionId } : {}),
+            ...(chatContext ? { chat_context: chatContext } : {}),
+          }
+        : null;
+
     // Insert into Supabase with spam detection data
     const { data: contact, error } = await supabase
       .from('contacts')
@@ -119,11 +178,13 @@ export async function POST(request: NextRequest) {
           phone: phone || null,
           inquiry_type: inquiryType,
           message,
+          service_interest: serviceInterest,
           source: source || 'website_contact_form',
           status: submissionStatus,
           spam_score: spamScore,
           spam_flags: spamFlags.length > 0 ? spamFlags : null,
           attribution: attributionValue,
+          ...(metadataValue ? { metadata: metadataValue } : {}),
         },
       ])
       .select()
@@ -136,7 +197,9 @@ export async function POST(request: NextRequest) {
       if (
         error.message?.includes('spam_score') ||
         error.message?.includes('spam_flags') ||
-        error.message?.includes('attribution')
+        error.message?.includes('attribution') ||
+        error.message?.includes('service_interest') ||
+        error.message?.includes('metadata')
       ) {
         const { data: contactFallback, error: fallbackError } = await supabase
           .from('contacts')
@@ -173,14 +236,40 @@ export async function POST(request: NextRequest) {
 
     // Generate and store AI intelligence in background (only for non-spam)
     if (contact?.id && submissionStatus === 'new') {
+      // Give the analyst everything both channels know: which page/CTA
+      // the visitor converted from, and what the chat already captured.
+      const requirementsParts: string[] = [];
+      if (hasIntent) {
+        const intentBits: string[] = [];
+        if (intent.service) intentBits.push(`service page: ${humanizeTopic(intent.service)}`);
+        if (intent.platform) intentBits.push(`platform page: ${humanizeTopic(intent.platform)}`);
+        if (intent.industry) intentBits.push(`industry page: ${humanizeTopic(intent.industry)}`);
+        if (intent.topic) intentBits.push(`section topic: ${humanizeTopic(intent.topic)}`);
+        if (intent.playbook) intentBits.push(`playbook: ${humanizeTopic(intent.playbook)}`);
+        if (intent.source) intentBits.push(`CTA position: ${intent.source}`);
+        if (intent.reason) intentBits.push(`reason: ${intent.reason}`);
+        requirementsParts.push(`Converted via ${intentBits.join(', ')}.`);
+      }
+      if (chatContext) {
+        const chatBits = Object.entries(chatContext)
+          .filter(([k]) => k !== 'lead_score')
+          .map(([k, v]) => `${k.replace(/_/g, ' ')}: ${v}`);
+        if (chatBits.length) {
+          requirementsParts.push(`From their Atheros chat session: ${chatBits.join('; ')}.`);
+        }
+      }
+
       generateIntelligence({
         name,
         email,
         company,
         phone,
+        job_title:
+          typeof chatContext?.job_title === 'string' ? chatContext.job_title : null,
         inquiry_type: inquiryType,
         message,
-        service_interest: inquiryType,
+        service_interest: serviceInterest || inquiryType,
+        requirements: requirementsParts.length ? requirementsParts.join(' ') : undefined,
       }).then(async (intelligence) => {
         try {
           await supabase

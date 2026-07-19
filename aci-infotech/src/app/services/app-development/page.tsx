@@ -255,7 +255,7 @@ export default function AppDevelopmentPage() {
           'Cloud native on your stack',
           'We run what we build',
         ]}
-        primary={{ label: 'Talk to an engineer', href: '/contact' }}
+        primary={{ label: 'Talk to an engineer', href: '/contact?service=app-development&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['app-development']} />}
       />
@@ -445,7 +445,7 @@ export default function AppDevelopmentPage() {
       <RelatedLinks items={appDevelopmentRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Let's scope the build" />
+      <CtaSection label="Let's scope the build" href="/contact?service=app-development&source=cta-section" />
     </div>
   );
 }

@@ -677,7 +677,7 @@ export default function AboutPage() {
       />
 
       {/* Closing CTA: one button, nothing else */}
-      <CtaSection label="Meet the team behind the work" />
+      <CtaSection label="Meet the team behind the work" href="/contact?reason=general&source=about" />
     </div>
   );
 }

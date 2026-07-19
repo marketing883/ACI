@@ -224,7 +224,7 @@ export default function OilGasPage() {
           'HSE & emissions',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to an energy data architect', href: '/contact?industry=oil-gas' }}
+        primary={{ label: 'Talk to an energy data architect', href: '/contact?industry=oil-gas&source=hero' }}
         secondary={{ label: 'See the proof', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['industry-oil-gas']} />}
       />
@@ -358,7 +358,7 @@ export default function OilGasPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Put your operational data to work" href="/contact?industry=oil-gas" />
+      <CtaSection label="Put your operational data to work" href="/contact?industry=oil-gas&source=cta-section" />
     </div>
   );
 }

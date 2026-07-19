@@ -230,7 +230,7 @@ export default function BrazePage() {
           'ESP migrations',
           'Deliverability watched',
         ]}
-        primary={{ label: 'Talk to a Braze consultant', href: '/contact' }}
+        primary={{ label: 'Talk to a Braze consultant', href: '/contact?platform=braze&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['platform-braze']} />}
       />
@@ -341,7 +341,7 @@ export default function BrazePage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk Braze" />
+      <CtaSection label="Let's talk Braze" href="/contact?platform=braze&source=cta-section" />
     </div>
   );
 }

@@ -196,7 +196,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Tell us what you are building" />
+      <CtaSection label="Tell us what you are building" href="/contact?reason=project-inquiry&source=services-hub" />
     </main>
   );
 }

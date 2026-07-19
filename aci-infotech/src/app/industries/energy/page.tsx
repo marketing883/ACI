@@ -222,7 +222,7 @@ export default function EnergyPage() {
           'Grid analytics',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to an energy data architect', href: '/contact?industry=energy' }}
+        primary={{ label: 'Talk to an energy data architect', href: '/contact?industry=energy&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['industry-energy']} />}
       />
@@ -360,7 +360,7 @@ export default function EnergyPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Talk through your grid data" href="/contact?industry=energy" />
+      <CtaSection label="Talk through your grid data" href="/contact?industry=energy&source=cta-section" />
     </div>
   );
 }

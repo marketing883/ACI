@@ -239,7 +239,7 @@ export default function AppliedAIMLPage() {
           'MLOps on every model',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to an AI architect', href: '/contact?service=applied-ai-ml' }}
+        primary={{ label: 'Talk to an AI architect', href: '/contact?service=applied-ai-ml&source=hero' }}
         secondary={{ label: 'See the AI case studies', href: '/case-studies?service=applied-ai-ml' }}
         visual={<FlowScene config={FLOWS['applied-ai-ml']} />}
       />
@@ -349,7 +349,7 @@ export default function AppliedAIMLPage() {
       <RelatedLinks items={appliedAiRelated} />
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Let's get your AI into production" />
+      <CtaSection label="Let's get your AI into production" href="/contact?service=applied-ai-ml&source=cta-section" />
     </div>
   );
 }

@@ -178,7 +178,7 @@ export default function IndustriesPage() {
       </section>
 
       {/* Closing CTA: video stage, one button, nothing else */}
-      <CtaSection label="Tell us which rulebook you answer to" />
+      <CtaSection label="Tell us which rulebook you answer to" href="/contact?reason=project-inquiry&source=industries-hub" />
     </main>
   );
 }

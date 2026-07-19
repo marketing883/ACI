@@ -206,7 +206,7 @@ export default function SnowflakePage() {
           '500+ enterprise projects',
           'ISO 27001',
         ]}
-        primary={{ label: 'Talk to a Snowflake architect', href: '/contact' }}
+        primary={{ label: 'Talk to a Snowflake architect', href: '/contact?platform=snowflake&source=hero' }}
         secondary={{ label: 'See the data platform stories', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['platform-snowflake']} />}
       />
@@ -313,7 +313,7 @@ export default function SnowflakePage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk Snowflake" />
+      <CtaSection label="Let's talk Snowflake" href="/contact?platform=snowflake&source=cta-section" />
     </div>
   );
 }

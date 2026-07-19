@@ -207,7 +207,7 @@ export default function ManufacturingPage() {
           '99.2% equipment availability',
           'OT and IT integration',
         ]}
-        primary={{ label: 'Talk to a manufacturing team', href: '/contact?reason=architecture-call' }}
+        primary={{ label: 'Talk to a manufacturing team', href: '/contact?industry=manufacturing&source=hero' }}
         secondary={{ label: 'See the case studies', href: '/case-studies' }}
         visual={<FlowScene config={FLOWS['industry-manufacturing']} />}
       />
@@ -326,7 +326,7 @@ export default function ManufacturingPage() {
         faqs={FAQS}
       />
 
-      <CtaSection label="Let's talk about the plant floor" />
+      <CtaSection label="Let's talk about the plant floor" href="/contact?industry=manufacturing&source=cta-section" />
     </div>
   );
 }
