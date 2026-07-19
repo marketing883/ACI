@@ -114,7 +114,11 @@ export default function ParallaxBalloons() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-80 lg:h-[450px] rounded-xl overflow-hidden"
+      // `isolate` keeps the balloons' internal z-indexes (10-40) inside
+      // this component's own stacking context. Without it they compete
+      // at page level, where the fixed SiteNav is also z-40, and the
+      // hero balloon painted over the nav bar on scroll.
+      className="relative isolate w-full h-80 lg:h-[450px] rounded-xl overflow-hidden"
     >
       {/* Background layer */}
       <div className="absolute inset-0">
