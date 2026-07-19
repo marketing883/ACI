@@ -232,7 +232,7 @@ export default function OilGasPage() {
       {/* Problem band: decades of data, none of it talking */}
       <FoldcraftHero
         geistClass={v4Geist}
-        image="/images/v4/case-energy.jpg"
+        image="/images/v4/ind-oil-gas.jpg"
         pill="Why operators stall"
         headline={
           <>

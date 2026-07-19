@@ -222,7 +222,7 @@ export default function HospitalityPage() {
       {/* Problem band: the guest the systems forgot */}
       <FoldcraftHero
         geistClass={v4Geist}
-        image="/images/v4/case-retail.jpg"
+        image="/images/v4/ind-hospitality.jpg"
         pill="Why guest data fragments"
         headline={
           <>
