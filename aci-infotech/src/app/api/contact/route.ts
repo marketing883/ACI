@@ -54,6 +54,22 @@ export async function POST(request: NextRequest) {
         ? data.atheros_session_id
         : null;
 
+    // The smart-form answers: job title plus the structured project
+    // questions. Length-capped, and focus areas are bounded plain
+    // strings, so nothing free-form leaks into the qualification data.
+    const jobTitle =
+      typeof data.job_title === 'string' && data.job_title.trim()
+        ? data.job_title.trim().slice(0, 120)
+        : null;
+    const VALID_STAGES = new Set(['exploring', 'scoping', 'live-project', 'urgent']);
+    const stage =
+      typeof data.stage === 'string' && VALID_STAGES.has(data.stage) ? data.stage : null;
+    const focusAreas = Array.isArray(data.focus_areas)
+      ? data.focus_areas
+          .filter((f: unknown): f is string => typeof f === 'string' && f.length > 0 && f.length <= 60)
+          .slice(0, 8)
+      : [];
+
     // Check 1: Honeypot field (if filled, it's definitely a bot)
     if (checkHoneypot(_honeypot)) {
       // Return fake success to not alert bots - but don't save
@@ -158,12 +174,24 @@ export async function POST(request: NextRequest) {
       intentServiceInterest(intent) ||
       (typeof chatContext?.service_interest === 'string' ? chatContext.service_interest : null);
 
+    // The smart-form answers travel with the row as one qualification
+    // object next to intent and chat context.
+    const qualification =
+      jobTitle || stage || focusAreas.length
+        ? {
+            ...(jobTitle ? { job_title: jobTitle } : {}),
+            ...(stage ? { stage } : {}),
+            ...(focusAreas.length ? { focus_areas: focusAreas } : {}),
+          }
+        : null;
+
     const metadataValue =
-      hasIntent || atherosSessionId || chatContext
+      hasIntent || atherosSessionId || chatContext || qualification
         ? {
             ...(hasIntent ? { intent } : {}),
             ...(atherosSessionId ? { atheros_session_id: atherosSessionId } : {}),
             ...(chatContext ? { chat_context: chatContext } : {}),
+            ...(qualification ? { qualification } : {}),
           }
         : null;
 
@@ -250,6 +278,18 @@ export async function POST(request: NextRequest) {
         if (intent.reason) intentBits.push(`reason: ${intent.reason}`);
         requirementsParts.push(`Converted via ${intentBits.join(', ')}.`);
       }
+      if (stage || focusAreas.length) {
+        const stageLabels: Record<string, string> = {
+          exploring: 'just exploring',
+          scoping: 'scoping, wants an estimate',
+          'live-project': 'live project needs help',
+          urgent: 'something is broken right now',
+        };
+        const qualBits: string[] = [];
+        if (stage) qualBits.push(`stage: ${stageLabels[stage] ?? stage}`);
+        if (focusAreas.length) qualBits.push(`focus areas: ${focusAreas.join(', ')}`);
+        requirementsParts.push(`From the form's project questions, ${qualBits.join('; ')}.`);
+      }
       if (chatContext) {
         const chatBits = Object.entries(chatContext)
           .filter(([k]) => k !== 'lead_score')
@@ -265,7 +305,8 @@ export async function POST(request: NextRequest) {
         company,
         phone,
         job_title:
-          typeof chatContext?.job_title === 'string' ? chatContext.job_title : null,
+          jobTitle ??
+          (typeof chatContext?.job_title === 'string' ? chatContext.job_title : null),
         inquiry_type: inquiryType,
         message,
         service_interest: serviceInterest || inquiryType,

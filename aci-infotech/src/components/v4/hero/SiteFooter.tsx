@@ -114,7 +114,7 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
                 answer engines lift, worded to stand alone when quoted. */}
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/50">
               ACI Infotech is an enterprise data and AI engineering firm headquartered in
-              Monmouth Junction, New Jersey, with delivery hubs worldwide. We build the data
+              Somerset, New Jersey, with delivery hubs worldwide. We build the data
               foundation, put AI on top of it, and run both in production for enterprises in
               financial services, healthcare, retail, manufacturing, and&nbsp;energy.
             </p>

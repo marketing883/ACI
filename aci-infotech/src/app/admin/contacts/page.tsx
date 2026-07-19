@@ -51,10 +51,17 @@ interface ChatContext {
   lead_score?: number;
 }
 
+interface Qualification {
+  job_title?: string;
+  stage?: string;
+  focus_areas?: string[];
+}
+
 interface ContactMetadata {
   intent?: ContactIntent;
   atheros_session_id?: string;
   chat_context?: ChatContext;
+  qualification?: Qualification;
 }
 
 interface Attribution {
@@ -223,6 +230,14 @@ function buildJourneyNotes(contact: Contact): string | undefined {
     if (intent.source) bits.push(`CTA position: ${intent.source}`);
     if (bits.length) parts.push(`Converted via ${bits.join(', ')}.`);
   }
+  const qual = contact.metadata?.qualification;
+  if (qual) {
+    const bits: string[] = [];
+    if (qual.job_title) bits.push(`job title: ${qual.job_title}`);
+    if (qual.stage) bits.push(`stage: ${humanizeTopic(qual.stage)}`);
+    if (qual.focus_areas?.length) bits.push(`focus areas: ${qual.focus_areas.join(', ')}`);
+    if (bits.length) parts.push(`From the form's project questions, ${bits.join('; ')}.`);
+  }
   const chat = contact.metadata?.chat_context;
   if (chat) {
     const bits = Object.entries(chat)
@@ -300,7 +315,10 @@ export default function ContactsPage() {
             email: contact.email,
             company: contact.company,
             phone: contact.phone,
-            job_title: contact.metadata?.chat_context?.job_title || null,
+            job_title:
+              contact.metadata?.qualification?.job_title ||
+              contact.metadata?.chat_context?.job_title ||
+              null,
             inquiry_type: contact.inquiry_type,
             message: contact.message,
             service_interest:
@@ -673,6 +691,7 @@ export default function ContactsPage() {
                   attribution, and what the Atheros chat already learned. */}
               {(selectedContact.metadata?.intent ||
                 selectedContact.metadata?.chat_context ||
+                selectedContact.metadata?.qualification ||
                 selectedContact.attribution) && (
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   <p className="text-xs font-medium text-gray-500 mb-2">CAPTURED JOURNEY</p>
@@ -714,6 +733,25 @@ export default function ContactsPage() {
                             Reason: {humanizeTopic(selectedContact.metadata.intent.reason)}
                           </span>
                         )}
+                      </div>
+                    )}
+                    {selectedContact.metadata?.qualification && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedContact.metadata.qualification.job_title && (
+                          <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded">
+                            Title: {selectedContact.metadata.qualification.job_title}
+                          </span>
+                        )}
+                        {selectedContact.metadata.qualification.stage && (
+                          <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded">
+                            Stage: {humanizeTopic(selectedContact.metadata.qualification.stage)}
+                          </span>
+                        )}
+                        {selectedContact.metadata.qualification.focus_areas?.map((f) => (
+                          <span key={f} className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded">
+                            {f}
+                          </span>
+                        ))}
                       </div>
                     )}
                     {selectedContact.attribution && (

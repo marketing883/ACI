@@ -39,10 +39,10 @@ const contactSchema = {
     ],
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '1100 Cornwall Road, Suite 215',
-      addressLocality: 'Monmouth Junction',
+      streetAddress: '220 Davidson Ave, 2nd Floor, Suite 209',
+      addressLocality: 'Somerset',
       addressRegion: 'NJ',
-      postalCode: '08852',
+      postalCode: '08873',
       addressCountry: 'US',
     },
   },

@@ -166,7 +166,7 @@ export async function GET(): Promise<Response> {
     '',
     '> Enterprise technology consulting. We build data platforms, AI systems, and cloud architectures that run in production for large enterprises.',
     '',
-    'ACI Infotech is an enterprise engineering firm based in Monmouth Junction, New Jersey, with delivery teams worldwide. Founded in 2006, with 1,200+ engineers across 11 global delivery hubs. We build the enterprise data foundation, put AI on top of it, and run both in production: data engineering and lakehouse platforms, applied AI and GenAI, cloud modernization, MarTech and CDP (through our specialized division ACI Interactive), security, and 24/7 managed operations. 500+ enterprise projects, documented as reusable playbooks. Forward-deployed AI engineering is delivered with our strategic partner ArqAI through ArqAI Labs (https://thearq.ai). To start a conversation, visit https://aciinfotech.com/contact.',
+    'ACI Infotech is an enterprise engineering firm based in Somerset, New Jersey, with delivery teams worldwide. Founded in 2006, with 1,200+ engineers across 11 global delivery hubs. We build the enterprise data foundation, put AI on top of it, and run both in production: data engineering and lakehouse platforms, applied AI and GenAI, cloud modernization, MarTech and CDP (through our specialized division ACI Interactive), security, and 24/7 managed operations. 500+ enterprise projects, documented as reusable playbooks. Forward-deployed AI engineering is delivered with our strategic partner ArqAI through ArqAI Labs (https://thearq.ai). To start a conversation, visit https://aciinfotech.com/contact.',
     '',
   ].join('\n');
 

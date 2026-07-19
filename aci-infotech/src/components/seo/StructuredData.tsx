@@ -98,10 +98,10 @@ export function OrganizationSchema({
   email = 'insights@aciinfotech.com',
   phone = '+1-888-225-4638',
   address = {
-    streetAddress: '1100 Cornwall Road, Suite 215',
-    addressLocality: 'Monmouth Junction',
+    streetAddress: '220 Davidson Ave, 2nd Floor, Suite 209',
+    addressLocality: 'Somerset',
     addressRegion: 'NJ',
-    postalCode: '08852',
+    postalCode: '08873',
     addressCountry: 'US',
   },
   // Keep in sync with the social links in the site footers.
@@ -302,10 +302,10 @@ export function LocalBusinessSchema({
   telephone = '+1-888-225-4638',
   email = 'insights@aciinfotech.com',
   address = {
-    streetAddress: '1100 Cornwall Road, Suite 215',
-    addressLocality: 'Monmouth Junction',
+    streetAddress: '220 Davidson Ave, 2nd Floor, Suite 209',
+    addressLocality: 'Somerset',
     addressRegion: 'NJ',
-    postalCode: '08852',
+    postalCode: '08873',
     addressCountry: 'US',
   },
   geo = {

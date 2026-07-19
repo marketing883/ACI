@@ -60,7 +60,7 @@ const COMPANY_FACTS = [
   {
     value: '2006',
     label: 'Founded',
-    line: 'Monmouth Junction, New Jersey. Teams across the USA, India, Europe, and APAC.',
+    line: 'Somerset, New Jersey. Teams across the USA, India, Europe, and APAC.',
   },
   {
     value: '1,200+',
@@ -83,7 +83,7 @@ const TIMELINE = [
   {
     marker: '2006',
     title: 'Founded',
-    body: 'ACI Infotech starts in Monmouth Junction, New Jersey, with a small team of passionate engineers.',
+    body: 'ACI Infotech starts in New Jersey with a small team of passionate engineers.',
   },
   {
     marker: '20 yrs',
@@ -311,7 +311,7 @@ export default function AboutPage() {
             <span style={{ color: '#1D4ED8' }}>enterprise&nbsp;modernization</span>
           </>
         }
-        lede="ACI Infotech is an enterprise technology consultancy headquartered in Monmouth Junction, New Jersey. Founded in 2006, we build and run data platforms, AI systems, and cloud architectures for enterprises in banking, healthcare, retail, manufacturing, and hospitality. We stand behind the work with SLAs, and we answer the 2am call."
+        lede="ACI Infotech is an enterprise technology consultancy headquartered in Somerset, New Jersey. Founded in 2006, we build and run data platforms, AI systems, and cloud architectures for enterprises in banking, healthcare, retail, manufacturing, and hospitality. We stand behind the work with SLAs, and we answer the 2am call."
         chips={[
           'Founded 2006',
           '1,200+ engineers',
