@@ -96,7 +96,9 @@ export function OrganizationSchema({
   logo = `${siteUrl}/aci-infotech-logo.png`,
   description = 'ACI Infotech is an enterprise engineering firm. We build the data foundation, put AI on top of it, and run both in production: data engineering, applied AI and GenAI, cloud modernization, MarTech, and managed operations.',
   email = 'insights@aciinfotech.com',
-  phone = '+1-888-225-4638',
+  // Contact is email-only by design; no phone in the schema unless a
+  // caller passes one explicitly.
+  phone,
   address = {
     streetAddress: '220 Davidson Ave, 2nd Floor, Suite 209',
     addressLocality: 'Somerset',
@@ -127,7 +129,7 @@ export function OrganizationSchema({
     },
     description,
     email,
-    telephone: phone,
+    ...(phone ? { telephone: phone } : {}),
     address: {
       '@type': 'PostalAddress',
       ...address,
@@ -299,7 +301,7 @@ export function LocalBusinessSchema({
   url = siteUrl,
   logo = `${siteUrl}/images/logo.png`,
   image = `${siteUrl}/images/office.jpg`,
-  telephone = '+1-888-225-4638',
+  telephone,
   email = 'insights@aciinfotech.com',
   address = {
     streetAddress: '220 Davidson Ave, 2nd Floor, Suite 209',
@@ -328,7 +330,7 @@ export function LocalBusinessSchema({
     url,
     logo,
     image,
-    telephone,
+    ...(telephone ? { telephone } : {}),
     email,
     address: {
       '@type': 'PostalAddress',

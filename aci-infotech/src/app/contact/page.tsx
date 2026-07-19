@@ -571,8 +571,6 @@ function ContactExperience() {
               </p>
               <p className="mt-4">
                 <a href="mailto:insights@aciinfotech.com" className="font-semibold text-blue-700">insights@aciinfotech.com</a>
-                <br />
-                <a href="tel:+18882254638" className="font-semibold text-blue-700">+1 (888) 225-4638</a>
               </p>
               <p className="mt-4 text-xs text-gray-500">Replies within 24 business hours. 24/7 support for existing clients.</p>
             </div>

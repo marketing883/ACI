@@ -15,8 +15,9 @@ export const metadata: Metadata = {
 
 // ContactPage + ContactPoint JSON-LD. The page itself is a Client
 // Component, so the schema lives here where it server-renders. The
-// phone and address match the Organization schema in
+// address matches the Organization schema in
 // src/components/seo/StructuredData.tsx; if one changes, change both.
+// Contact is email-only by design: no phone number anywhere.
 const contactSchema = {
   '@context': 'https://schema.org',
   '@type': 'ContactPage',
@@ -32,7 +33,6 @@ const contactSchema = {
         '@type': 'ContactPoint',
         contactType: 'sales',
         email: 'insights@aciinfotech.com',
-        telephone: '+1-888-225-4638',
         areaServed: 'Worldwide',
         availableLanguage: 'English',
       },

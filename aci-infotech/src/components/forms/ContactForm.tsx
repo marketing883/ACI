@@ -246,10 +246,7 @@ export default function ContactForm({
         </Button>
 
         <p className="text-sm text-gray-500 mt-4 text-center">
-          We typically respond within 24 hours. For urgent matters, call us at{' '}
-          <a href="tel:+17324167900" className="text-[#0052CC] hover:underline">
-            +1 (732) 416-7900
-          </a>
+          We typically respond within 24 hours.
         </p>
       </div>
     </form>

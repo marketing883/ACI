@@ -214,7 +214,6 @@ export default function TermsOfServicePage() {
             <div className="bg-gray-50 rounded-lg p-6">
               <p className="text-gray-800 font-semibold mb-2">ACI Infotech</p>
               <p className="text-gray-600">Email: <a href="mailto:legal@aciinfotech.com" className="text-[var(--aci-primary)] hover:underline">legal@aciinfotech.com</a></p>
-              <p className="text-gray-600">Phone: +1 (732) 416-7900</p>
               <p className="text-gray-600">Website: <a href="https://aciinfotech.com" className="text-[var(--aci-primary)] hover:underline">aciinfotech.com</a></p>
             </div>
           </section>
