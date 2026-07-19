@@ -10,9 +10,11 @@ import * as topojson from 'topojson-client';
 const topo = JSON.parse(readFileSync('node_modules/world-atlas/land-50m.json', 'utf8'));
 const land = topojson.feature(topo, topo.objects.land);
 
-// Map window: full longitude sweep, latitudes cropped to where land
-// actually is (drop Antarctica and the empty far south).
-const LON_MIN = -170, LON_MAX = 180, LAT_MIN = -56, LAT_MAX = 74;
+// Map window: full longitude sweep, latitudes cropped to where the
+// offices are. The top stops at 66N: above that is arctic archipelago
+// noise (Svalbard, the Canadian islands) that reads as clutter at dot
+// resolution. The bottom drops Antarctica.
+const LON_MIN = -170, LON_MAX = 180, LAT_MIN = -56, LAT_MAX = 66;
 const STEP = 1.4; // degrees between dots
 
 // Ray-casting point-in-polygon on [lon, lat] rings.

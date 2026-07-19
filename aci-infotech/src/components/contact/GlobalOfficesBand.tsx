@@ -1,12 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import FadingVideo from '@/components/v4/hero/FadingVideo';
 import { v4Display } from '@/components/v4/fonts';
 import mapData from './world-map-data.json';
-
-const VIDEO = '/videos/v4-editorial-signal.mp4';
-const VIDEO_WEBM = '/videos/v4-editorial-signal.webm';
 
 type Office = { city: string; hq: boolean; region: string; x: number; y: number };
 
@@ -18,17 +14,17 @@ const OFFICES = mapData.offices as Office[];
 // neighboring labels (Noida/Hyderabad/Bangalore, Atlanta/Miami) never
 // collide. Tuned by hand against the generated projection.
 const LABEL_SIDE: Record<string, { dx: number; dy: number; anchor: 'start' | 'end' | 'middle' }> = {
-  'Somerset, NJ': { dx: 8, dy: -6, anchor: 'start' },
-  Atlanta: { dx: 8, dy: 2, anchor: 'start' },
-  Dallas: { dx: -8, dy: 2, anchor: 'end' },
-  Miami: { dx: 8, dy: 8, anchor: 'start' },
-  London: { dx: -8, dy: -5, anchor: 'end' },
-  Dubai: { dx: -8, dy: 8, anchor: 'end' },
-  Noida: { dx: 7, dy: -6, anchor: 'start' },
-  Hyderabad: { dx: 9, dy: 4, anchor: 'start' },
-  Bangalore: { dx: -8, dy: 9, anchor: 'end' },
-  'Kuala Lumpur': { dx: -9, dy: 2, anchor: 'end' },
-  Singapore: { dx: 9, dy: 8, anchor: 'start' },
+  'Somerset, NJ': { dx: 11, dy: -8, anchor: 'start' },
+  Atlanta: { dx: 11, dy: 3, anchor: 'start' },
+  Dallas: { dx: -11, dy: 3, anchor: 'end' },
+  Miami: { dx: 11, dy: 10, anchor: 'start' },
+  London: { dx: -11, dy: -6, anchor: 'end' },
+  Dubai: { dx: -11, dy: 10, anchor: 'end' },
+  Noida: { dx: 10, dy: -8, anchor: 'start' },
+  Hyderabad: { dx: 12, dy: 4, anchor: 'start' },
+  Bangalore: { dx: -11, dy: 11, anchor: 'end' },
+  'Kuala Lumpur': { dx: -12, dy: 3, anchor: 'end' },
+  Singapore: { dx: 12, dy: 10, anchor: 'start' },
 };
 
 const REGIONS: { name: string; cities: string[] }[] = [
@@ -39,41 +35,39 @@ const REGIONS: { name: string; cities: string[] }[] = [
 ];
 
 /**
- * Full-width dark band: the homepage header video under a heavy veil,
- * with a dotted world map on top marking all 11 ACI offices. The dot
- * grid is generated from real land geometry (scripts/generate-world-dots.mjs),
- * so continents and city positions are accurate, not decorative.
+ * Full-width dark band with a dotted world map marking all 11 ACI
+ * offices. The dot grid is generated from real land geometry
+ * (scripts/generate-world-dots.mjs), so continents and city positions
+ * are accurate, not decorative. Background is a quiet layered
+ * gradient: anything busier fights the map.
  */
 export default function GlobalOfficesBand({ headingClass = v4Display }: { headingClass?: string }) {
   const [active, setActive] = useState<string | null>(null);
 
   return (
     <section className="relative isolate overflow-hidden bg-[#070d1a] text-white">
-      {/* Homepage header video, reframed for a wide short band and
-          buried deeper under the veil so the map stays the subject. */}
-      <FadingVideo
-        src={VIDEO}
-        webmSrc={VIDEO_WEBM}
-        className="absolute inset-0 h-full w-full object-cover"
-        style={{ filter: 'saturate(0.7) brightness(0.55)' }}
-        scale={1.06}
-      />
+      {/* Subtle depth: a cool glow behind the Atlantic, a faint lime
+          breath near the HQ side, and a vignette holding the edges. */}
       <div
         aria-hidden="true"
         className="absolute inset-0"
         style={{
-          background:
-            'linear-gradient(180deg, rgba(7,13,26,0.92) 0%, rgba(7,13,26,0.72) 35%, rgba(7,13,26,0.78) 70%, rgba(7,13,26,0.95) 100%)',
+          background: [
+            'radial-gradient(ellipse 60% 55% at 42% 38%, rgba(29,78,216,0.14) 0%, transparent 70%)',
+            'radial-gradient(ellipse 45% 40% at 28% 30%, rgba(132,204,22,0.05) 0%, transparent 70%)',
+            'radial-gradient(ellipse 55% 50% at 78% 55%, rgba(96,165,250,0.07) 0%, transparent 70%)',
+            'linear-gradient(180deg, #0a1122 0%, #070d1a 45%, #060b16 100%)',
+          ].join(', '),
         }}
       />
 
       <div className="relative mx-auto max-w-7xl px-6 py-20 md:py-24">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#84CC16]">/ Where we are</p>
         <h2
-          className={`mt-4 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl ${headingClass}`}
+          className={`mt-4 max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl ${headingClass}`}
           style={{ lineHeight: 1.08 }}
         >
-          One firm, <span className="text-[#60A5FA]">eleven offices.</span>
+          We&apos;re probably in <span className="text-[#60A5FA]">your time&nbsp;zone.</span>
         </h2>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/70">
           Headquartered in Somerset, New Jersey, with delivery hubs across four regions.
@@ -111,15 +105,28 @@ export default function GlobalOfficesBand({ headingClass = v4Display }: { headin
                         <animate attributeName="r" values="6;11;6" dur="2.6s" repeatCount="indefinite" />
                         <animate attributeName="opacity" values="0.9;0.2;0.9" dur="2.6s" repeatCount="indefinite" />
                       </circle>
+                      <circle cx={o.x} cy={o.y} r={6} fill="none" stroke="rgba(132,204,22,0.45)" strokeWidth={1} />
                       <circle cx={o.x} cy={o.y} r={3.4} fill="#84CC16" />
                     </>
                   ) : (
                     <>
-                      <circle cx={o.x} cy={o.y} r={7} fill="transparent" />
+                      <circle cx={o.x} cy={o.y} r={9} fill="transparent" />
+                      {/* Soft glow + hairline ring lift the marker off the
+                          dot grid without shouting. */}
+                      <circle cx={o.x} cy={o.y} r={6.5} fill={isActive ? 'rgba(96,165,250,0.18)' : 'rgba(226,232,240,0.08)'} className="transition-all duration-200" />
                       <circle
                         cx={o.x}
                         cy={o.y}
-                        r={isActive ? 3.4 : 2.6}
+                        r={5}
+                        fill="none"
+                        stroke={isActive ? 'rgba(96,165,250,0.7)' : 'rgba(226,232,240,0.35)'}
+                        strokeWidth={1}
+                        className="transition-all duration-200"
+                      />
+                      <circle
+                        cx={o.x}
+                        cy={o.y}
+                        r={isActive ? 3 : 2.4}
                         fill={isActive ? '#60A5FA' : '#e2e8f0'}
                         className="transition-all duration-200"
                       />
@@ -131,8 +138,10 @@ export default function GlobalOfficesBand({ headingClass = v4Display }: { headin
                     textAnchor={side.anchor}
                     fontSize={o.hq ? 11.5 : 10.5}
                     fontWeight={o.hq ? 700 : 600}
-                    fill={o.hq ? '#84CC16' : isActive ? '#ffffff' : 'rgba(255,255,255,0.82)'}
-                    style={{ letterSpacing: '0.02em' }}
+                    fill={o.hq ? '#A3E635' : isActive ? '#ffffff' : 'rgba(255,255,255,0.88)'}
+                    stroke="#070d1a"
+                    strokeWidth={3}
+                    style={{ letterSpacing: '0.02em', paintOrder: 'stroke' }}
                   >
                     {o.city}
                     {o.hq ? ' · HQ' : ''}
