@@ -6,12 +6,13 @@ import { getSiteUrl } from '@/lib/site-url';
 import { DEFAULT_OG_IMAGES, DEFAULT_TWITTER_IMAGES } from '@/lib/seo/og';
 import { v4Sans, v4Display } from '@/components/v4/fonts';
 import CtaSection from '@/components/v4/hero/CtaSection';
+import ParallaxBalloons from '@/components/about/ParallaxBalloons';
+import CapabilityBars from '@/components/about/CapabilityBars';
 import {
   SectionHead,
   ServiceHero,
   CheckBadge,
   BridgeBand,
-  FactsRow,
   cardShadow,
   glueWidow,
 } from '@/components/v4/page/kit';
@@ -53,23 +54,28 @@ export const metadata: Metadata = {
 
 // Company facts. Same numbers that appear on every practice page:
 // founded 2006, 1,200+ engineers, 500+ projects, 11 hubs, plus the
-// certifications held right now.
+// certifications held right now. Rendered as a dark stat band with
+// the number carrying the type.
 const COMPANY_FACTS = [
   {
+    value: '2006',
     label: 'Founded',
-    line: '2006, in Monmouth Junction, New Jersey. Teams across the USA, India, Europe, and APAC.',
+    line: 'Monmouth Junction, New Jersey. Teams across the USA, India, Europe, and APAC.',
   },
   {
-    label: 'Scale',
-    line: '1,200+ engineers across 11 global delivery hubs. Product, data, apps, QA, and SRE working as one unit.',
+    value: '1,200+',
+    label: 'Engineers',
+    line: '11 global delivery hubs. Product, data, apps, QA, and SRE working as one unit.',
   },
   {
-    label: 'Delivery',
-    line: '500+ large enterprise projects. Banking, healthcare, retail, manufacturing, and hospitality.',
+    value: '500+',
+    label: 'Enterprise projects',
+    line: 'Banking, healthcare, retail, manufacturing, and hospitality.',
   },
   {
+    value: 'ISO 27001',
     label: 'Credentials',
-    line: 'ISO 27001:2022 certified and CMMI Level 3 appraised. Great Place to Work Certified 2024-25.',
+    line: 'ISO 27001:2022 certified, CMMI Level 3 appraised, Great Place to Work 2024-25.',
   },
 ];
 
@@ -131,32 +137,7 @@ const PRINCIPLES = [
   },
 ];
 
-const CAPABILITIES = [
-  {
-    title: 'Data Resilience',
-    description: 'Unify your data estate and make it AI-ready with platform-native observability, lineage, and policy controls.',
-    outcomes: ['Executive-grade dashboards', 'Real-time decisioning', 'Compliant analytics', 'High-trust data products'],
-    technologies: ['Databricks', 'Snowflake', 'AWS Glue', 'Azure Data Factory', 'dbt', 'Dynatrace'],
-  },
-  {
-    title: 'Observability & Platform Reliability',
-    description: 'Instrument apps, data pipelines, and infrastructure end to end. Set SLOs, trace latency across the stack.',
-    outcomes: ['Fewer Sev1 incidents', 'Faster MTTR', 'Release stability', 'Performance SLOs met'],
-    technologies: ['Dynatrace', 'Datadog', 'Prometheus', 'Grafana', 'PagerDuty'],
-  },
-  {
-    title: 'MarTech & CDP',
-    description: 'Modern growth runs on composable CDP stacks and signal-rich journeys.',
-    outcomes: ['1:1 personalization', 'Loyalty intelligence', 'Media ROI measurement', 'Privacy-safe activation'],
-    technologies: ['Salesforce Marketing Cloud', 'Adobe Experience Platform', 'Braze', 'Segment'],
-  },
-  {
-    title: 'Intelligent Automation',
-    description: 'Move from scattered bots to intelligent process automation that spans systems and teams.',
-    outcomes: ['Straight-through processing', 'Faster close cycles', 'Measurable cost reduction', 'Human-in-the-loop where needed'],
-    technologies: ['ServiceNow', 'UiPath', 'Automation Anywhere', 'Power Automate'],
-  },
-];
+// Capability data lives in src/components/about/CapabilityBars.tsx.
 
 // CEO Data
 const ceo = {
@@ -187,60 +168,6 @@ Prakash is passionate about building high-performance teams, creating lasting cu
   photo_webp: '/images/about-team/Prakash.webp',
   linkedin_url: 'https://www.linkedin.com/in/prakash-hingorani/',
 };
-
-// Leadership Team Data
-const leadershipTeam = [
-  {
-    name: 'Krish Karanam',
-    title: 'SVP - Global Resources',
-    photo_url: '/images/about-team/Krish.png',
-    photo_webp: '/images/about-team/Krish.webp',
-    linkedin_url: 'https://www.linkedin.com/in/krish-karanam-423783113/',
-  },
-  {
-    name: 'Habib Mehmoodi',
-    title: 'VP - Strategy & Innovation',
-    photo_url: '/images/about-team/Habib.png',
-    photo_webp: '/images/about-team/Habib.webp',
-    linkedin_url: 'https://www.linkedin.com/in/hmehmoodi/',
-    imageClass: 'object-contain',
-  },
-  {
-    name: 'Amit Alshaikh',
-    title: 'VP - Client Success',
-    photo_url: '/images/about-team/Amit-A.png',
-    photo_webp: '/images/about-team/Amit-A.webp',
-    linkedin_url: 'https://www.linkedin.com/in/amitalshaikh/',
-  },
-  {
-    name: 'Narayanan Nanjan',
-    title: 'VP - Project Delivery',
-    photo_url: '/images/about-team/Narayanan.png',
-    photo_webp: '/images/about-team/Narayanan.webp',
-    linkedin_url: 'https://www.linkedin.com/in/narayanan-nanjan-5b655433/',
-  },
-  {
-    name: 'Thomas George',
-    title: 'AVP - Strategic Partnerships',
-    photo_url: '/images/about-team/Thomas.png',
-    photo_webp: '/images/about-team/Thomas.webp',
-    linkedin_url: 'https://www.linkedin.com/in/thomas-george-25bb5a61/',
-  },
-  {
-    name: 'Amit Khare',
-    title: 'AVP - Client Success, APAC',
-    photo_url: '/images/about-team/Amit-K.png',
-    photo_webp: '/images/about-team/Amit-K.webp',
-    linkedin_url: 'https://www.linkedin.com/in/amit-khare-27850a186/',
-  },
-  {
-    name: 'Madhu Noone',
-    title: 'Director - Sales',
-    photo_url: '/images/about-team/Madhu.png',
-    photo_webp: '/images/about-team/Madhu.webp',
-    linkedin_url: 'https://www.linkedin.com/in/madhu-n-mis-mba-9a546b117/',
-  },
-];
 
 const certifications = [
   { name: 'Great Place to Work', description: 'Certified 2024-25', logo_url: '/images/certifications-awards/best-place-to-work.webp' },
@@ -394,23 +321,8 @@ export default function AboutPage() {
         primary={{ label: 'Meet the leadership', href: '#leadership' }}
         secondary={{ label: 'See the work', href: '/case-studies' }}
         visual={
-          <div className="relative h-full min-h-[320px] overflow-hidden rounded-3xl ring-1 ring-gray-200 lg:min-h-[440px]">
-            <Image
-              src="/images/v4/svc-ops.jpg"
-              alt="An operations control room with live system consoles"
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute inset-x-0 bottom-0 h-32"
-              style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(4,7,13,0.78) 100%)' }}
-            />
-            <p className="absolute bottom-5 left-6 right-6 text-sm font-medium text-white/90">
-              The desk where the 2am call gets&nbsp;answered.
-            </p>
+          <div className="overflow-hidden rounded-3xl ring-1 ring-gray-200">
+            <ParallaxBalloons />
           </div>
         }
       />
@@ -426,7 +338,21 @@ export default function AboutPage() {
               </>
             }
           />
-          <FactsRow facts={COMPANY_FACTS} />
+          <div className="mt-12 overflow-hidden rounded-3xl bg-[#0b1220] ring-1 ring-white/10">
+            <div className="grid divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4 lg:divide-x">
+              {COMPANY_FACTS.map((fact) => (
+                <div key={fact.label} className="p-8 lg:p-9">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#A3E635]">
+                    / {fact.label}
+                  </p>
+                  <p className={`mt-4 text-4xl font-bold tracking-tight text-white lg:text-[44px] ${v4Display}`}>
+                    {fact.value}
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-white/60">{glueWidow(fact.line)}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -460,18 +386,19 @@ export default function AboutPage() {
                 That&apos;s the difference between consultants who leave and engineers who&nbsp;stay.
               </p>
             </div>
-            <ol className="relative border-l border-gray-200 pl-8">
-              {TIMELINE.map((step, i) => (
-                <li key={step.marker} className={i < TIMELINE.length - 1 ? 'pb-9' : ''}>
-                  <span
-                    aria-hidden="true"
-                    className="absolute -left-[5px] mt-2 h-[9px] w-[9px] rounded-full bg-[#1D4ED8]"
-                  />
-                  <p className={`text-sm font-bold uppercase tracking-[0.14em] text-blue-700 ${v4Display}`}>
+            <ol className="m-0 list-none border-t border-black p-0">
+              {TIMELINE.map((step) => (
+                <li
+                  key={step.marker}
+                  className="grid grid-cols-[minmax(96px,auto)_1fr] items-baseline gap-x-6 border-b border-gray-200 py-6 md:grid-cols-[minmax(128px,auto)_1fr] md:gap-x-8"
+                >
+                  <span className={`text-3xl font-bold tracking-tight text-[#1D4ED8] md:text-4xl ${v4Display}`}>
                     {step.marker}
-                  </p>
-                  <h3 className={`mt-1 text-lg font-semibold text-black ${v4Display}`}>{step.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{glueWidow(step.body)}</p>
+                  </span>
+                  <span>
+                    <h3 className={`text-lg font-semibold text-black md:text-xl ${v4Display}`}>{step.title}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{glueWidow(step.body)}</p>
+                  </span>
                 </li>
               ))}
             </ol>
@@ -524,18 +451,28 @@ export default function AboutPage() {
           />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {PRINCIPLES.map((principle) => (
-              <div key={principle.number} className={`flex flex-col rounded-2xl bg-white p-7 ${cardShadow}`}>
-                <div className="flex items-center gap-3">
-                  <span className={`text-sm font-bold text-[#1D4ED8] ${v4Display}`}>{principle.number}</span>
-                  <span aria-hidden="true" className="h-px flex-1 bg-gray-200" />
-                </div>
-                <h3 className={`mt-5 text-lg font-semibold text-black md:text-xl ${v4Display}`}>
+              <div
+                key={principle.number}
+                className="group relative flex flex-col overflow-hidden rounded-3xl bg-[#0b1220] p-8 ring-1 ring-white/10 lg:p-9"
+              >
+                {/* soft glow that answers the hover, homepage-style */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-30"
+                  style={{ background: '#84CC16' }}
+                />
+                <span className={`relative text-sm font-bold uppercase tracking-[0.18em] text-[#A3E635] ${v4Display}`}>
+                  / {principle.number}
+                </span>
+                <h3 className={`relative mt-5 text-xl font-semibold text-white md:text-2xl ${v4Display}`}>
                   {principle.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-gray-600">{glueWidow(principle.description)}</p>
-                <ul className="mt-5 space-y-2.5">
+                <p className="relative mt-3 text-sm leading-relaxed text-white/65">
+                  {glueWidow(principle.description)}
+                </p>
+                <ul className="relative mt-6 space-y-2.5 border-t border-white/10 pt-6">
                   {principle.proofPoints.map((point) => (
-                    <li key={point} className="flex items-start gap-2.5 text-sm text-gray-700">
+                    <li key={point} className="flex items-start gap-2.5 text-sm text-white/85">
                       <CheckBadge />
                       {point}
                     </li>
@@ -553,38 +490,9 @@ export default function AboutPage() {
           <SectionHead
             kicker="What we build"
             title={<>What we&apos;ve built across 500+&nbsp;projects</>}
-            sub="Four capability areas where the work goes deep, with the outcomes and the stack on the record."
+            sub="Four capability areas where the work goes deep, with the outcomes and the stack on the record. Each one links to the practice that owns it."
           />
-          <div className="mt-12 grid gap-x-14 md:grid-cols-2">
-            {CAPABILITIES.map((capability, i) => (
-              <div key={capability.title} className="border-t border-gray-200 py-8">
-                <div className="flex items-baseline gap-4">
-                  <span className={`text-sm font-semibold text-gray-300 ${v4Display}`}>
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <h3 className={`text-xl font-semibold text-black md:text-2xl ${v4Display}`}>
-                    {capability.title}
-                  </h3>
-                </div>
-                <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
-                  {glueWidow(capability.description)}
-                </p>
-                <ul className="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                  {capability.outcomes.map((outcome) => (
-                    <li key={outcome} className="flex items-start gap-2.5 text-sm text-gray-700">
-                      <CheckBadge />
-                      {outcome}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium uppercase tracking-wide text-gray-400">
-                  {capability.technologies.map((tech) => (
-                    <span key={tech} className="whitespace-nowrap">{tech}</span>
-                  ))}
-                </p>
-              </div>
-            ))}
-          </div>
+          <CapabilityBars headingClass={v4Display} />
         </div>
       </section>
 
@@ -615,35 +523,6 @@ export default function AboutPage() {
             />
           </div>
 
-          {/* Leadership team grid */}
-          <div className="mt-16">
-            <h3 className={`text-2xl font-bold text-black ${v4Display}`}>Leadership&nbsp;Team</h3>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {leadershipTeam.map((member) => (
-                <div key={member.name} className={`flex flex-col overflow-hidden rounded-2xl bg-white ${cardShadow}`}>
-                  <div className="relative h-56 bg-gray-100">
-                    <picture>
-                      <source srcSet={member.photo_webp} type="image/webp" />
-                      <Image
-                        src={member.photo_url}
-                        alt={member.name}
-                        fill
-                        className={`object-cover ${member.imageClass || 'object-[center_15%]'}`}
-                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      />
-                    </picture>
-                  </div>
-                  <div className="flex flex-1 flex-col p-5">
-                    <h4 className={`text-lg font-semibold text-black ${v4Display}`}>{member.name}</h4>
-                    <p className="mt-0.5 text-sm text-gray-500">{member.title}</p>
-                    <div className="mt-3">
-                      <LinkedInLink href={member.linkedin_url} name={member.name} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 
