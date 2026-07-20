@@ -67,10 +67,24 @@ function sha256(text: string): string {
   return crypto.createHash('sha256').update(text).digest('hex');
 }
 
-function sanitize(text: string, where: string): void {
+// Editorial source types where a denylisted brand may legitimately appear
+// as an example ("a brand like Coca-Cola"), not as a claim that it is an
+// ACI client. There, a hit is a logged warning, not a fatal stop. On the
+// work-claim surfaces (service, industry, platform, case_study, lp) a
+// denylisted name means "we did this for them", so it stays fatal.
+const SOFT_SANITIZE_SOURCES = new Set(['blog', 'whitepaper']);
+
+function sanitize(text: string, where: string, sourceType?: ContentChunk['source_type']): void {
+  const soft = sourceType ? SOFT_SANITIZE_SOURCES.has(sourceType) : false;
   for (const name of DENYLIST) {
     const re = new RegExp(`\\b${name.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}\\b`, 'i');
     if (re.test(text)) {
+      if (soft) {
+        log.warn('indexer', `denylisted brand "${name}" in editorial ${where}; indexing anyway (used as an example, not a client claim)`, {
+          extra: { where, snippet: text.slice(0, 200) },
+        });
+        continue;
+      }
       log.error('indexer', `client_leak: "${name}" in ${where}`, {
         extra: { where, snippet: text.slice(0, 200) },
       });
@@ -105,8 +119,8 @@ function pushChunk(
     });
     chunk.text = chunk.text.slice(0, MAX_CHUNK_CHARS);
   }
-  sanitize(chunk.text, where);
-  sanitize(chunk.title, `${where}:title`);
+  sanitize(chunk.text, where, chunk.source_type);
+  sanitize(chunk.title, `${where}:title`, chunk.source_type);
   out.push(chunk);
 }
 
