@@ -55,9 +55,24 @@ export default function ConditionalLayout({
   const isV2Root =
     pathname === '/' && process.env.NEXT_PUBLIC_USE_V2_HOME === 'true';
 
-  // Admin routes, landing pages, v2 previews, and the staging v2
-  // root all bypass the v1 Navigation / Footer / chat widgets.
-  if (isAdminRoute || isLandingPage || isV2Preview || isV3Preview || isV4Preview || isV4Home || isV2Root) {
+  // The homepage renders its own nav and footer (v4 EditorialHero), so it
+  // skips the shared SiteNav / SiteFooter, but it still needs the floating
+  // Atheros chat + nudge like every other public page. Without this it was
+  // the one public page with no chat launcher.
+  if (isV4Home || isV2Root) {
+    return (
+      <>
+        {children}
+        <ChatWidgetWrapper />
+        <AtherosNudge />
+      </>
+    );
+  }
+
+  // Admin routes, landing pages, and dev previews bypass all site chrome,
+  // including the chat (admin has no chat; LPs stay conversion-focused;
+  // previews are standalone).
+  if (isAdminRoute || isLandingPage || isV2Preview || isV3Preview || isV4Preview) {
     return <>{children}</>;
   }
 
