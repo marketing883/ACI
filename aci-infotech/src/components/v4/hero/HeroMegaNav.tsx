@@ -160,7 +160,7 @@ function ServicesPanel({ headingClass, onNavigate }: { headingClass: string; onN
           {/* text-white is load-bearing: the design system paints all
               headings near-black, which vanishes on this dark card. */}
           <h4 className={`mt-1 text-lg font-semibold leading-snug text-white ${headingClass}`}>
-            Nine practices, one delivery model.
+            One team behind every practice.
           </h4>
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium">
             Explore all services

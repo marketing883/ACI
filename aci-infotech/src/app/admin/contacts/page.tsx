@@ -170,6 +170,30 @@ const sourceLabels: Record<string, string> = {
   lp_ai_ml: 'LP: AI/ML',
 };
 
+// Decode the raw `source` column into a readable channel. Works for
+// every lead, including ones submitted before the metadata column
+// existed, because `source` is always stored. `cta:<position>` means
+// the lead clicked a tracked CTA at that spot on the site.
+function describeSource(source?: string | null): { label: string; detail?: string } {
+  if (!source) return { label: 'Direct or unknown' };
+  if (source.startsWith('cta:')) {
+    return { label: 'CTA click', detail: humanizeTopic(source.slice(4)) };
+  }
+  const known: Record<string, string> = {
+    website_contact_form: 'Contact page',
+    contact_form: 'Contact page',
+    chat_widget: 'Atheros chat',
+    newsletter: 'Newsletter signup',
+    website_footer: 'Footer signup',
+    playbook_download: 'Playbook download',
+  };
+  if (known[source]) return { label: known[source] };
+  if (source.startsWith('lp_')) {
+    return { label: 'Landing page', detail: humanizeTopic(source.replace(/^lp_/, '')) };
+  }
+  return { label: humanizeTopic(source) };
+}
+
 // Mock data for demo
 const mockContacts: Contact[] = [
   {
@@ -610,7 +634,10 @@ export default function ContactsPage() {
                     <p className="text-xs text-gray-400">{formatDate(contact.created_at)}</p>
                     <span className="flex items-center gap-1 text-xs text-gray-400">
                       <SourceIcon className="w-3 h-3" />
-                      {sourceLabels[contact.source || ''] || contact.source}
+                      {(() => {
+                        const s = describeSource(contact.source);
+                        return s.detail ? `${s.label}: ${s.detail}` : s.label;
+                      })()}
                     </span>
                   </div>
                 </button>
@@ -679,6 +706,48 @@ export default function ContactsPage() {
                     <span>{selectedContact.inquiry_type}</span>
                   </div>
                 )}
+              </div>
+
+              {/* Where this lead came from — always shown, decoded from the
+                  source column so it works for every lead, old or new. */}
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <p className="text-xs font-medium text-gray-500 mb-2">WHERE THIS LEAD CAME FROM</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  {(() => {
+                    const s = describeSource(selectedContact.source);
+                    return (
+                      <span className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--aci-primary)] px-3 py-1.5 text-xs font-semibold text-white">
+                        <Globe className="w-3.5 h-3.5" />
+                        {s.label}
+                        {s.detail ? <span className="font-normal text-white/85">· {s.detail}</span> : null}
+                      </span>
+                    );
+                  })()}
+                  {(() => {
+                    const topic =
+                      (selectedContact.metadata?.intent &&
+                        (selectedContact.metadata.intent.service ||
+                          selectedContact.metadata.intent.platform ||
+                          selectedContact.metadata.intent.industry ||
+                          selectedContact.metadata.intent.topic)) ||
+                      selectedContact.service_interest;
+                    return topic ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700">
+                        <Target className="w-3.5 h-3.5" />
+                        {humanizeTopic(String(topic))}
+                      </span>
+                    ) : null;
+                  })()}
+                  <span className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600">
+                    {selectedContact.inquiry_type}
+                  </span>
+                  {selectedContact.metadata?.chat_context ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-lg bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700">
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      Also chatted with Atheros
+                    </span>
+                  ) : null}
+                </div>
               </div>
 
               {/* Original Message */}
