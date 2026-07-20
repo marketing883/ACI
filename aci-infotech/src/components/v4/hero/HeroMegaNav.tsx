@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowUpRight,
   ChevronDown,
@@ -36,9 +35,9 @@ import {
   INDUSTRY_FEATURES,
   RESOURCES,
 } from '@/components/v2/nav/menu-data';
+import './nav.css';
 
 const ACCENT = '#1D4ED8';
-const EASE = [0.16, 1, 0.3, 1] as const;
 
 type MenuId = 'services' | 'platforms' | 'industries' | 'resources' | 'company';
 const TRIGGERS: { id: MenuId; label: string }[] = [
@@ -256,14 +255,7 @@ function IndustriesPanel({ headingClass, onNavigate }: { headingClass: string; o
         })}
       </div>
       <div className="flex-1">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={slug}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: EASE }}
-          >
+        <div key={slug} className="nav-feat-in">
             <Link href={feat?.href ?? '/case-studies'} onClick={onNavigate} className="group/feat block overflow-hidden rounded-2xl bg-black text-white">
               <div className="relative h-40 w-full overflow-hidden">
                 <Image
@@ -294,8 +286,7 @@ function IndustriesPanel({ headingClass, onNavigate }: { headingClass: string; o
                 ) : null}
               </div>
             </Link>
-          </motion.div>
-        </AnimatePresence>
+        </div>
       </div>
     </div>
   );
@@ -507,25 +498,20 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
       </div>
 
       {/* Shared dropdown panel */}
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.22, ease: EASE }}
+      {open ? (
+          <div
+            key={open}
             onMouseEnter={cancel}
             onMouseLeave={requestClose}
-            className="absolute left-1/2 top-full z-50 mt-3 w-[min(1040px,92vw)] -translate-x-1/2 rounded-3xl border border-black/[0.06] bg-white/95 p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)] backdrop-blur-2xl"
+            className="nav-panel-in absolute left-1/2 top-full z-50 mt-3 w-[min(1040px,92vw)] -translate-x-1/2 rounded-3xl border border-black/[0.06] bg-white/95 p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)] backdrop-blur-2xl"
           >
             {open === 'services' && <ServicesPanel headingClass={headingClass} onNavigate={close} />}
             {open === 'platforms' && <PlatformsPanel onNavigate={close} />}
             {open === 'industries' && <IndustriesPanel headingClass={headingClass} onNavigate={close} />}
             {open === 'resources' && <ResourcesPanel headingClass={headingClass} onNavigate={close} />}
             {open === 'company' && <CompanyPanel headingClass={headingClass} onNavigate={close} />}
-          </motion.div>
+          </div>
         ) : null}
-      </AnimatePresence>
     </div>
   );
 }

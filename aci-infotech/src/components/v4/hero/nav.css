@@ -1,0 +1,36 @@
+/* Nav animations, CSS-only. Replaces framer-motion in SiteNav +
+   HeroMegaNav so the site navigation hydrates without pulling the
+   framer-motion bundle onto the critical path. The nav is on every
+   page and above the fold, so its interactivity should never wait on
+   a large animation library to parse and execute. */
+
+@keyframes navFadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes navPanelIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes navFeatIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes navOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.nav-fade-down { animation: navFadeDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.nav-panel-in { animation: navPanelIn 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
+.nav-feat-in { animation: navFeatIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+.nav-overlay-in { animation: navOverlayIn 0.3s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-fade-down,
+  .nav-panel-in,
+  .nav-feat-in,
+  .nav-overlay-in {
+    animation: none;
+  }
+}

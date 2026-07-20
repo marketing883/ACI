@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ArrowUpRight, X } from 'lucide-react';
 import HeroMegaNav from './HeroMegaNav';
 import { v4Display, v4Sans } from '../fonts';
+import './nav.css';
 
 // The v4 site navigation, extracted from EditorialHero so the same
 // mega-nav chrome serves every page:
@@ -21,7 +21,6 @@ export const v4HeadingClass = v4Display;
 export const v4BodyClass = v4Sans;
 
 const ACCENT = '#1D4ED8';
-const EASE = [0.16, 1, 0.3, 1] as const;
 
 const MOBILE_NAV = [
   { label: 'Services', href: '/services' },
@@ -30,11 +29,6 @@ const MOBILE_NAV = [
   { label: 'Resources', href: '/playbooks' },
   { label: 'Company', href: '/about' },
 ];
-
-const fadeDown: Variants = {
-  hidden: { opacity: 0, y: -20 },
-  show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5, ease: EASE } }),
-};
 
 /** Text link with a growing underline + arrow nudge on hover. */
 function ArrowLink({
@@ -98,7 +92,7 @@ export default function SiteNav({
             : 'border-b border-transparent bg-transparent py-5 md:py-6'
         }`}
       >
-        <motion.div custom={0} variants={fadeDown} initial="hidden" animate="show" className="shrink-0">
+        <div className="nav-fade-down shrink-0" style={{ animationDelay: '0ms' }}>
           <Link href="/" aria-label="ACI Infotech home" className="flex items-center">
             <Image
               src="/aci-infotech-logo.png"
@@ -109,13 +103,13 @@ export default function SiteNav({
               className={`w-auto transition-all duration-300 ${scrolled ? 'h-10 md:h-11' : 'h-12 md:h-14'}`}
             />
           </Link>
-        </motion.div>
+        </div>
 
-        <motion.div custom={2} variants={fadeDown} initial="hidden" animate="show">
+        <div className="nav-fade-down" style={{ animationDelay: '120ms' }}>
           <HeroMegaNav headingClass={heading} />
-        </motion.div>
+        </div>
 
-        <motion.div custom={5} variants={fadeDown} initial="hidden" animate="show" className="flex shrink-0 items-center gap-4">
+        <div className="nav-fade-down flex shrink-0 items-center gap-4" style={{ animationDelay: '240ms' }}>
           {/* Wrapped rather than classed: ArrowLink sets inline-flex on
               itself, which would fight a `hidden` utility passed in. Only
               shows at lg — below that the nav has no room for it. */}
@@ -137,18 +131,13 @@ export default function SiteNav({
             <span className="h-0.5 w-5 bg-black" />
             <span className="h-0.5 w-5 bg-black" />
           </button>
-        </motion.div>
+        </div>
       </nav>
 
       {/* MOBILE MENU */}
-      <AnimatePresence>
-        {menu ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className={`fixed inset-0 z-50 flex flex-col bg-white px-6 py-5 text-black ${v4Sans}`}
+      {menu ? (
+          <div
+            className={`nav-overlay-in fixed inset-0 z-50 flex flex-col bg-white px-6 py-5 text-black ${v4Sans}`}
           >
             <div className="flex items-center justify-between">
               <Image src="/aci-infotech-logo.png" alt="ACI Infotech" width={150} height={42} className="h-10 w-auto" />
@@ -192,9 +181,8 @@ export default function SiteNav({
             >
               Start a project
             </ArrowLink>
-          </motion.div>
+          </div>
         ) : null}
-      </AnimatePresence>
     </>
   );
 }
