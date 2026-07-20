@@ -534,6 +534,16 @@ export async function upsertChatLead(
         service_interest:
           fields.serviceInterest ?? existing?.service_interest ?? undefined,
         requirements: fields.team ?? existing?.requirements ?? undefined,
+        // Structured qualification the chat captured: pass it through so
+        // the score reflects the stated truth instead of re-guessing it.
+        industry: fields.industry ?? existing?.industry ?? null,
+        budget: fields.budget ?? existing?.budget ?? null,
+        timeline: fields.timeline ?? null,
+        intent_level: fields.intent ?? existing?.intent ?? null,
+        priority: fields.priority ?? existing?.priority ?? null,
+        pain_point: fields.painPoint ?? existing?.pain_point ?? null,
+        decision_role: fields.decisionRole ?? existing?.decision_role ?? null,
+        came_from: 'Atheros chat',
         conversation: conversation ?? [],
       });
       try {

@@ -20,8 +20,8 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     id: 'data-engineering',
     slug: 'data-engineering',
     title: 'Data Engineering',
-    tagline: '',
-    description: '',
+    tagline: 'Lakehouses that match the ledger',
+    description: 'Governed lakehouses on Databricks or Snowflake, real-time pipelines, and lineage you can audit. AI-ready data products, with observability that catches problems before your users do.',
     keyOutcomes: [
   'Cut data latency 30%+ with real-time pipelines',
   'Unify scattered data into single source of truth',
@@ -205,8 +205,8 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     id: 'applied-ai-ml',
     slug: 'applied-ai-ml',
     title: 'Applied AI ML',
-    tagline: '',
-    description: '',
+    tagline: 'Models in production, not pilot purgatory',
+    description: 'GenAI, predictive models, and MLOps pipelines that run in production under real load. Automated retraining, drift detection, and governance that holds up to an audit.',
     keyOutcomes: [
   'Ship models to production, not pilot purgatory',
   'GenAI chatbots with enterprise security',
@@ -244,9 +244,9 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
   },
   {
     id: 'ai-governance',
-    title: 'AI Governance & ArqAI',
-    description: 'Policy-as-code, bias monitoring, drift detection. EU AI Act, GDPR compliant from day one.',
-    technologies: ['ArqAI', 'MLflow Governance', 'Great Expectations'],
+    title: 'AI Governance with ArqAI Labs',
+    description: 'Policy-as-code, bias monitoring, and drift detection, delivered together with ArqAI Labs, our AI engineering partner. EU AI Act and GDPR compliant from day one.',
+    technologies: ['ArqAI Labs', 'MLflow Governance', 'Great Expectations'],
     outcomes: ['Audit-ready AI systems', 'Automated compliance checks', 'Bias monitoring'],
   },
   {
@@ -313,7 +313,7 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     faqs: [
   {
     question: 'How do you handle AI governance and compliance?',
-    answer: 'We use ArqAI, our purpose-built AI governance platform, to implement policy-as-code, automated bias monitoring, and audit trails. This ensures compliance with EU AI Act, GDPR, and industry-specific regulations from day one.',
+    answer: 'We deliver AI governance together with ArqAI Labs, our strategic partner for forward-deployed AI engineering (https://thearq.ai). Together we implement policy-as-code, automated bias monitoring, and audit trails, so you meet EU AI Act, GDPR, and industry-specific regulations from day one.',
   },
   {
     question: 'Can we use private LLMs for sensitive data?',
@@ -333,8 +333,8 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     id: 'cloud-modernization',
     slug: 'cloud-modernization',
     title: 'Cloud Modernization',
-    tagline: '',
-    description: '',
+    tagline: 'Migrations that land on schedule',
+    description: 'Cloud migrations and application modernization on AWS, Azure, or GCP, with zero downtime. Multi-cloud where it earns its keep, security built in, and 15-25% off the infrastructure bill.',
     keyOutcomes: [
   'On-time, on-budget cloud migrations with zero downtime',
   'Multi-cloud architectures without vendor lock-in',
@@ -487,8 +487,8 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     id: 'martech-cdp',
     slug: 'martech-cdp',
     title: 'MarTech CDP',
-    tagline: '',
-    description: '',
+    tagline: 'One customer profile, every channel',
+    description: 'CDP builds on Salesforce Data Cloud, Adobe RT-CDP, or Segment that stitch scattered data into one customer profile. Real-time journey orchestration and personalization that moves conversion and retention.',
     keyOutcomes: [
   '1:1 personalization at scale',
   'Unified customer view across all touchpoints',
@@ -616,8 +616,8 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     id: 'digital-transformation',
     slug: 'digital-transformation',
     title: 'Digital Transformation',
-    tagline: '',
-    description: '',
+    tagline: 'Automate the routine, keep the judgment',
+    description: 'ServiceNow, RPA, and intelligent document processing that take the repetitive work off people. Straight-through for routine tasks, a human in the loop where judgment matters.',
     keyOutcomes: [
   '20% reduction in manual processes',
   'Straight-through processing for routine tasks',
@@ -769,8 +769,8 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     id: 'cyber-security',
     slug: 'cyber-security',
     title: 'Cyber Security',
-    tagline: '',
-    description: '',
+    tagline: 'Security wired in, not bolted on',
+    description: 'DevSecOps, identity, and threat monitoring built into the pipeline from day one. SOC 2, ISO 27001, and HIPAA-ready architectures, with the audit trail already in place.',
     keyOutcomes: [
   'Security built in from day one, not bolted on later',
   'SOC 2, ISO 27001, HIPAA compliant architectures',
@@ -926,8 +926,8 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
     id: 'app-development',
     slug: 'app-development',
     title: 'App Development',
-    tagline: '',
-    description: '',
+    tagline: 'Enterprise apps that survive production',
+    description: 'Custom enterprise and AI-powered applications built to carry production load, not demo well. Wired into your data and AI stack from day one, and backed by SLAs after launch.',
     keyOutcomes: [
   'Enterprise applications that survive production scale',
   'AI-powered features that ship, not PoC demos',
@@ -1136,6 +1136,219 @@ export const services: Record<ServiceClusterId, ServiceEntry> = {
       {
         question: 'How do you plug into our CI/CD pipeline?',
         answer: 'Whatever you run. GitHub Actions, GitLab CI, Jenkins, CircleCI, Azure DevOps. Quality gates wire into pull request checks, deploy stages, and post-deploy smoke. Results flow back into your existing tools; no context switching.',
+      },
+    ],
+  },
+  'advisory-strategy': {
+    id: 'advisory-strategy',
+    slug: 'advisory-strategy',
+    title: 'Advisory & Strategy',
+    tagline: 'Strategy grounded in delivery',
+    description: 'Data, AI, and cloud strategy, architecture, and roadmaps from a team that also runs the build. The plan survives contact with production because the people who wrote it have shipped it.',
+    keyOutcomes: [
+      'A roadmap sequenced by value, not vendor slideware',
+      'Architecture decisions the build team can actually execute',
+      'Cloud and vendor spend reviewed against what you use',
+      'A plan that holds up once it reaches production',
+    ],
+    offerings: [
+      {
+        id: 'data-ai-strategy',
+        title: 'Data & AI Strategy & Roadmap',
+        description: 'Where data and AI move the business, in what order, and what each step costs. A sequenced roadmap tied to outcomes, not a wish list.',
+        technologies: ['Databricks', 'Snowflake', 'Azure OpenAI', 'AWS Bedrock'],
+        outcomes: ['Value-sequenced roadmap', 'Clear investment cases', 'Executive alignment'],
+      },
+      {
+        id: 'architecture-assessment',
+        title: 'Architecture & Platform Assessment',
+        description: 'A read on your current architecture, its gaps, and the target state. We map the path from where you are to where the workloads need to run.',
+        technologies: ['AWS', 'Azure', 'GCP', 'Kubernetes', 'Terraform'],
+        outcomes: ['Target-state architecture', 'Gap and risk analysis', 'Migration path'],
+      },
+      {
+        id: 'cloud-vendor-cost-review',
+        title: 'Cloud, Vendor & Cost Review',
+        description: 'A look at cloud spend, vendor contracts, and license sprawl against actual usage. We find the waste and the lock-in before renewal season does.',
+        technologies: ['AWS Cost Explorer', 'Azure Cost Management', 'FinOps'],
+        outcomes: ['Right-sized spend', 'Vendor consolidation options', 'Renewal leverage'],
+      },
+    ],
+    caseStudies: [],
+    processPhases: [
+      {
+        number: 1,
+        title: 'Assess',
+        duration: 'Weeks 1-3',
+        description: 'Interview stakeholders, inventory the stack, and read the current architecture, spend, and delivery track record.',
+      },
+      {
+        number: 2,
+        title: 'Design',
+        duration: 'Weeks 4-6',
+        description: 'Target-state architecture and a roadmap sequenced by value and dependency, with cost and risk attached to each move.',
+      },
+      {
+        number: 3,
+        title: 'Hand off to build',
+        duration: 'Weeks 7-8',
+        description: 'Walk the roadmap into delivery with the team that executes it, so nothing gets lost between the deck and the sprint board.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Do you just write the strategy, or do you build it too?',
+        answer: 'Both, and that is the point. The same firm that writes the roadmap runs the build. The plan comes from people who know what production costs, so it survives contact with reality instead of stalling at the first architecture review.',
+      },
+      {
+        question: 'Are you tied to a particular cloud or vendor?',
+        answer: 'No. We are certified across AWS, Azure, and GCP and work with Databricks and Snowflake both. Recommendations follow your workloads and contracts, not a reseller quota.',
+      },
+      {
+        question: 'How long does a strategy engagement take?',
+        answer: '6 to 10 weeks for most roadmaps. A focused architecture or cost review can be shorter. You get findings as we go, not a single reveal at the end.',
+      },
+    ],
+  },
+  'gcc': {
+    id: 'gcc',
+    slug: 'gcc',
+    title: 'GCC & Captive Centers',
+    tagline: 'Captive centers stood up, not outsourced',
+    description: 'Global Capability Centers set up and scaled as an extension of your team, not an outsourcing arm. Your roadmap, your standards, your people, with us handling the setup, hiring, and operating model.',
+    keyOutcomes: [
+      'A captive center that runs on your standards, not a vendor bench',
+      'Engineers who stay on your roadmap, not a shared pool',
+      'Setup and transition without the first-year chaos',
+      'An operating model and governance that scale past the pilot team',
+    ],
+    offerings: [
+      {
+        id: 'gcc-setup-transition',
+        title: 'GCC Setup & Transition',
+        description: 'Stand up a Global Capability Center from entity and site to the first working teams. We handle the transition of work so nothing drops between here and there.',
+        technologies: ['Entity setup', 'Transition management', 'Knowledge transfer'],
+        outcomes: ['Center live in months, not years', 'Structured work transition', 'No delivery gap'],
+      },
+      {
+        id: 'team-scaling-talent',
+        title: 'Team Scaling & Talent',
+        description: 'Hire, onboard, and grow engineering and operations teams that belong to you. We recruit for your bar and your stack, not a generic staffing profile.',
+        technologies: ['Technical hiring', 'Onboarding', 'Retention programs'],
+        outcomes: ['Teams built to your bar', 'Faster ramp', 'Lower attrition'],
+      },
+      {
+        id: 'operating-model-governance',
+        title: 'Operating Model & Governance',
+        description: 'The processes, reporting lines, and controls that let a captive center run as one team with the parent. Governance that holds as headcount grows.',
+        technologies: ['Operating model design', 'Governance frameworks', 'Reporting'],
+        outcomes: ['Clear ownership', 'Parent-aligned governance', 'Scales past the pilot'],
+      },
+    ],
+    caseStudies: [],
+    processPhases: [
+      {
+        number: 1,
+        title: 'Design the center',
+        duration: 'Weeks 1-6',
+        description: 'Decide scope, location, entity structure, and the operating model. Plan the roles and the work that moves in.',
+      },
+      {
+        number: 2,
+        title: 'Stand up & staff',
+        duration: 'Months 2-5',
+        description: 'Set up the site and entity, recruit the first teams, and transition work with structured knowledge transfer.',
+      },
+      {
+        number: 3,
+        title: 'Scale & govern',
+        duration: 'Ongoing',
+        description: 'Grow headcount against the roadmap, mature the governance, and hand steady-state control to the parent.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'How is a GCC different from outsourcing to you?',
+        answer: 'An outsourcing team works to a contract and a shared bench. A captive center is yours: your brand, your standards, your roadmap, your people. We set it up and can run it during transition, but the center reports to you, not to us.',
+      },
+      {
+        question: 'Can we take full control of the center later?',
+        answer: 'Yes, that is usually the plan. We stand it up, staff it, and run the operating model through transition, then hand steady-state control to you on a timeline we agree upfront. No lock-in that keeps you dependent.',
+      },
+      {
+        question: 'How long before the center is delivering?',
+        answer: 'First teams are typically productive within a few months. Full scale depends on headcount and scope, but you see working delivery early rather than waiting for the whole center to be built.',
+      },
+    ],
+  },
+  'managed-operations': {
+    id: 'managed-operations',
+    slug: 'managed-operations',
+    title: 'Managed Operations',
+    tagline: '24/7 NOC and SOC coverage',
+    description: 'Run-and-operate under published SLAs. NOC and SOC coverage, DevOps, SRE, and monitoring for the platforms that carry production, staffed around the clock by the team that knows your environment.',
+    keyOutcomes: [
+      '99.97% uptime across 72+ servers under our watch',
+      '24/7 NOC and SOC coverage backed by published SLAs',
+      'Incidents caught by monitoring, not by your users',
+      'The team that built it is the team that runs it',
+    ],
+    offerings: [
+      {
+        id: 'noc-soc',
+        title: '24/7 NOC & SOC',
+        description: 'Round-the-clock network and security operations. Eyes on the platform at all hours, with runbooks and escalation paths written for your environment, not a template.',
+        technologies: ['Splunk', 'Microsoft Sentinel', 'PagerDuty', 'ServiceNow'],
+        outcomes: ['24/7 coverage', 'SLA-backed response', 'Threats and outages caught early'],
+      },
+      {
+        id: 'devops-sre',
+        title: 'DevOps & SRE',
+        description: 'Reliability engineering for the systems that carry production. CI/CD, automation, and error-budget discipline so releases ship without breaking what is already live.',
+        technologies: ['Kubernetes', 'Terraform', 'GitLab CI/CD', 'ArgoCD'],
+        outcomes: ['Reliable releases', 'Automated remediation', 'Less toil, fewer pages'],
+      },
+      {
+        id: 'observability-incident',
+        title: 'Observability & Incident Management',
+        description: 'Monitoring, alerting, and incident response wired into one view. When something breaks, the alert fires, the runbook opens, and the on-call already knows the system.',
+        technologies: ['Dynatrace', 'Datadog', 'Grafana', 'Prometheus'],
+        outcomes: ['Full-stack visibility', 'Faster mean time to recovery', 'Post-incident reviews that stick'],
+      },
+    ],
+    caseStudies: [],
+    processPhases: [
+      {
+        number: 1,
+        title: 'Onboard & baseline',
+        duration: 'Weeks 1-4',
+        description: 'Inventory the environment, wire up monitoring, write the runbooks, and agree the SLAs we will operate to.',
+      },
+      {
+        number: 2,
+        title: 'Operate',
+        duration: 'Ongoing',
+        description: '24/7 NOC and SOC coverage, incident response, and release support under the agreed SLAs.',
+      },
+      {
+        number: 3,
+        title: 'Improve',
+        duration: 'Ongoing',
+        description: 'Feed incidents and telemetry back into automation and hardening, so the same page never wakes anyone twice.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'What uptime can you actually hold?',
+        answer: 'We currently run 99.97% uptime across 72+ servers under managed operations. Your target gets written into the SLA, and monitoring backs it so we catch problems before your users file a ticket.',
+      },
+      {
+        question: 'Do you operate what someone else built?',
+        answer: 'Yes, though we prefer to run what we built because we already know the environment. When we inherit a platform, onboarding starts with a full inventory, monitoring, and runbooks so the on-call is never flying blind.',
+      },
+      {
+        question: 'Is coverage really around the clock?',
+        answer: 'Yes. NOC and SOC are staffed 24/7 with defined escalation paths, not a pager ringing into an empty room overnight. Response times are set in the SLA, not left to best effort.',
       },
     ],
   }

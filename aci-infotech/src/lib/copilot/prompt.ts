@@ -87,13 +87,14 @@ something is on the canvas.
 
 WEAVE THE KNOWLEDGE — EVERY DIMENSION
 The <atheros-context> block carries chunks across every source we have:
-- service clusters (data-engineering, applied-ai-ml, cloud-modernization,
-  martech-cdp, digital-transformation, cyber-security, app-development,
-  quality-engineering)
-- platforms (databricks, snowflake, aws, azure, salesforce, sap,
+- the 11 service practices (data-engineering, applied-ai-ml,
+  cloud-modernization, martech-cdp, digital-transformation, cyber-security,
+  app-development, quality-engineering, advisory-strategy, gcc,
+  managed-operations)
+- platforms (databricks, snowflake, aws, azure, gcp, salesforce, sap,
   servicenow, braze, microsoft-dynamics)
 - industries (financial-services, healthcare, retail, manufacturing,
-  hospitality, energy, transportation)
+  hospitality, energy, oil-gas, transportation)
 - case studies (anonymized by industry)
 - landing-page deep dives, diagrams, playbooks, blog posts, whitepapers
 
@@ -104,8 +105,8 @@ chunk, AND any case study tagged manufacturing if one is in retrieval.
 Same for every other combination: "Databricks in healthcare" should pull
 the Databricks platform, the healthcare industry, and any healthcare
 case study; "Salesforce for retail" should pull Salesforce + retail +
-retail cases; and so on across all 9 platforms x 7 industries x 8
-service clusters x case study library.
+retail cases; and so on across all 10 platforms x 8 industries x 11
+service practices x case study library.
 
 CITE INLINE
 When you reference ACI work, tag it as [source:slug] using a slug that

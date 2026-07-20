@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import { z } from 'zod';
+import { companyContextBlock, icpBlock, ACI_PROOF } from '@/lib/company';
 
 // Model configuration with 4-layer fallback (Claude Sonnet -> Claude Haiku -> GPT-4o -> GPT-4o-mini)
 const MODELS = {
@@ -141,6 +142,19 @@ export interface LeadData {
   conversation?: Array<{ role: string; content: string }>;
   pages_visited?: string[];
   entry_page?: string;
+  // Structured signals the chat qualifier and contact form already
+  // captured. Passing them through means the agent scores on the truth
+  // we collected instead of re-guessing it from raw text.
+  industry?: string | null;
+  budget?: string | null;
+  timeline?: string | null;
+  intent_level?: string | null;
+  priority?: string | null;
+  pain_point?: string | null;
+  decision_role?: string | null;
+  focus_areas?: string[];
+  stage?: string | null;
+  came_from?: string | null;
 }
 
 export interface IntelligenceReport {
@@ -292,8 +306,26 @@ function buildContext(lead: LeadData): string {
   if (lead.job_title) parts.push(`Job Title: ${lead.job_title}`);
   if (lead.location) parts.push(`Location: ${lead.location}`);
   if (lead.service_interest) parts.push(`Service Interest: ${lead.service_interest}`);
+  if (lead.industry) parts.push(`Industry: ${lead.industry}`);
   if (lead.inquiry_type) parts.push(`Inquiry Type: ${lead.inquiry_type}`);
   if (lead.phone) parts.push(`Phone: ${lead.phone}`);
+
+  // Captured qualification signals. These are stated by the lead (chat
+  // qualifier or smart contact form), so treat them as ground truth,
+  // not inference.
+  const captured: string[] = [];
+  if (lead.came_from) captured.push(`Came from: ${lead.came_from}`);
+  if (lead.stage) captured.push(`Stage: ${lead.stage}`);
+  if (lead.intent_level) captured.push(`Stated intent: ${lead.intent_level}`);
+  if (lead.priority) captured.push(`Priority: ${lead.priority}`);
+  if (lead.budget) captured.push(`Budget: ${lead.budget}`);
+  if (lead.timeline) captured.push(`Timeline: ${lead.timeline}`);
+  if (lead.pain_point) captured.push(`Pain point: ${lead.pain_point}`);
+  if (lead.decision_role) captured.push(`Decision role: ${lead.decision_role}`);
+  if (lead.focus_areas?.length) captured.push(`Focus areas: ${lead.focus_areas.join(', ')}`);
+  if (captured.length) {
+    parts.push(`\nCAPTURED (stated by the lead, treat as fact not inference):\n${captured.map((c) => `- ${c}`).join('\n')}`);
+  }
 
   if (lead.entry_page) parts.push(`Entry Page: ${lead.entry_page}`);
   if (lead.pages_visited?.length) {
@@ -395,21 +427,20 @@ export async function generateIntelligence(lead: LeadData): Promise<Intelligence
 
   const context = buildContext(lead);
 
-  const prompt = `You are a B2B sales intelligence analyst for ACI Infotech, an enterprise tech consulting firm.
+  const prompt = `You are a B2B sales intelligence analyst for ACI Infotech.
 
-ACI CONTEXT:
-- 80+ Fortune 500 clients, $1B+ value delivered, 95% retention
-- Services: Data Engineering (Databricks, Snowflake, dbt), AI/ML (MLOps, GenAI, ArqAI), Cloud (AWS, Azure, K8s), MarTech/CDP (Salesforce, Braze), Digital Transformation (SAP S/4HANA, ServiceNow), Cyber Security
-- Case Studies: Global Financial Giant ($500K savings, SAP consolidation), Fortune 500 Convenience Retailer (25% promotion lift, MarTech), Global Hospitality Leader (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
+${companyContextBlock()}
+
+${icpBlock()}
 
 LEAD DATA:
 ${context}
 
-Analyze this lead comprehensively. Use your knowledge about companies and roles to make informed inferences.
+Score this lead's fit against the Ideal Customer Profile and the rubric above, and analyze the opportunity. When the CAPTURED block gives a stated intent, budget, timeline, priority, or pain point, use those values directly in the signals rather than re-inferring them. Only fill gaps with inference, and lower confidence when data is sparse. relevantServices must be drawn from ACI's actual 11 practices listed above.
 
 Return a JSON object with this EXACT structure (no markdown, just JSON):
 {
-  "leadScore": <0-100 based on fit and intent>,
+  "leadScore": <0-100, calibrated to the LEAD SCORE RUBRIC above>,
   "person": {
     "summary": "<2 sentences about this person - who they are, what they likely do>",
     "inferredRole": "<their likely responsibilities>",
@@ -575,8 +606,8 @@ function createFallbackNurturingContent(whitepaperSlug: string): WhitepaperNurtu
   // Default fallback
   return {
     relatedTopics: ['Enterprise Architecture', 'Digital Transformation', 'Technology Strategy'],
-    valueProps: ['80+ Fortune 500 clients', '$1B+ value delivered', '95% client retention'],
-    caseStudies: ['Global Financial Giant: Enterprise-wide data transformation', 'Global Hospitality Leader: 400K employee platform'],
+    valueProps: ['1,200+ engineers across 11 global delivery hubs', '500+ enterprise projects since 2006', 'Build the foundation, put AI on top, run it in production'],
+    caseStudies: [ACI_PROOF[0], ACI_PROOF[5]],
     nextSteps: ['Schedule an architecture call', 'Explore our case studies', 'Connect with our architects'],
     ctaText: 'Schedule Architecture Call',
     ctaUrl: 'https://aciinfotech.com/contact?reason=architecture-call',
@@ -600,12 +631,9 @@ export async function generateWhitepaperNurturing(
   const firstName = leadName.split(' ')[0];
   const companyContext = leadCompany ? `The lead works at ${leadCompany}.` : '';
 
-  const prompt = `You are a B2B content strategist for ACI Infotech, an enterprise tech consulting firm.
+  const prompt = `You are a B2B content strategist for ACI Infotech.
 
-ACI CONTEXT:
-- 80+ Fortune 500 clients, $1B+ value delivered, 95% retention
-- Services: Data Engineering (Databricks, Snowflake, dbt), AI/ML (MLOps, GenAI, ArqAI), Cloud (AWS, Azure, K8s), MarTech/CDP (Salesforce, Braze), Digital Transformation (SAP S/4HANA, ServiceNow)
-- Case Studies: Global Financial Giant ($500K savings, SAP consolidation), Fortune 500 Convenience Retailer (25% promotion lift, MarTech), Global Hospitality Leader (400K employee platform), AI Forecasting ($18M savings, 92% accuracy)
+${companyContextBlock()}
 
 CONTEXT:
 A lead named ${firstName} just downloaded the whitepaper: "${whitepaperTitle}" (slug: ${whitepaperSlug})

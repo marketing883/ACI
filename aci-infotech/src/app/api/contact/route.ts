@@ -304,6 +304,8 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      const chatStr = (k: string) =>
+        typeof chatContext?.[k] === 'string' ? (chatContext[k] as string) : null;
       generateIntelligence({
         name,
         email,
@@ -316,6 +318,18 @@ export async function POST(request: NextRequest) {
         message,
         service_interest: serviceInterest || inquiryType,
         requirements: requirementsParts.length ? requirementsParts.join(' ') : undefined,
+        // Structured signals so the score uses the captured truth, not
+        // just the prose summary above.
+        industry: intent.industry ?? chatStr('industry'),
+        stage: stage ?? null,
+        focus_areas: focusAreas,
+        pain_point: chatStr('pain_point'),
+        budget: chatStr('budget'),
+        timeline: chatStr('timeline'),
+        intent_level: chatStr('intent_level'),
+        priority: chatStr('priority'),
+        decision_role: chatStr('decision_role'),
+        came_from: intent.source ? `CTA: ${humanizeTopic(intent.source)}` : 'Contact page',
       }).then(async (intelligence) => {
         try {
           await supabase

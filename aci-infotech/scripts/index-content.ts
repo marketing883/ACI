@@ -31,6 +31,7 @@ import { displayClient } from '@/lib/content/anonymize';
 import { services } from '@/data/services';
 import { industries } from '@/data/industries';
 import { platforms } from '@/data/platforms';
+import { PLAYBOOKS, type PlaybookData } from '@/data/playbooks';
 import { LP_CONTENT } from '@/lib/lp-content';
 import type {
   ContentChunk,
@@ -112,6 +113,62 @@ function pushChunk(
 // ---------------------------------------------------------------------------
 // Chunkers
 // ---------------------------------------------------------------------------
+
+function chunkPlaybook(p: PlaybookData): ProtoChunk[] {
+  const out: ProtoChunk[] = [];
+  const where = `playbook:${p.slug}`;
+  const title = p.displayTitle || p.name;
+  pushChunk(
+    out,
+    {
+      source_type: 'playbook',
+      source_slug: p.slug,
+      title,
+      section_path: 'overview',
+      text: [
+        title,
+        p.challengePattern?.length ? `Challenge pattern:\n${p.challengePattern.map((c) => `- ${c}`).join('\n')}` : '',
+        p.arqaiAcceleration ? `ArqAI acceleration: ${p.arqaiAcceleration}` : '',
+        `${p.deployments} deployments.`,
+      ].filter(Boolean).join('\n'),
+      metadata: { industry: p.industries?.[0], tech: p.architecture ?? [] },
+    },
+    `${where}:overview`,
+  );
+  if (p.keyLearnings?.length || p.outcomes?.length) {
+    pushChunk(
+      out,
+      {
+        source_type: 'playbook',
+        source_slug: p.slug,
+        title: `${title}: learnings and outcomes`,
+        section_path: 'learnings',
+        text: [
+          p.keyLearnings?.length ? `Key learnings:\n${p.keyLearnings.map((l) => `- ${l}`).join('\n')}` : '',
+          p.outcomes?.length ? `Outcomes:\n${p.outcomes.map((o) => `- ${o.metric}: ${o.description}`).join('\n')}` : '',
+        ].filter(Boolean).join('\n'),
+        metadata: { tech: p.architecture ?? [], outcomes: p.outcomes?.map((o) => `${o.metric} ${o.description}`) ?? [] },
+      },
+      `${where}:learnings`,
+    );
+  }
+  pushChunk(
+    out,
+    {
+      source_type: 'playbook',
+      source_slug: p.slug,
+      title: `${title}: architecture and industries`,
+      section_path: 'architecture',
+      text: [
+        p.architecture?.length ? `Architecture: ${p.architecture.join(', ')}.` : '',
+        p.industries?.length ? `Industries: ${p.industries.join(', ')}.` : '',
+      ].filter(Boolean).join('\n'),
+      metadata: { tech: p.architecture ?? [] },
+    },
+    `${where}:architecture`,
+  );
+  return out;
+}
 
 function chunkService(s: ServiceEntry): ProtoChunk[] {
   const out: ProtoChunk[] = [];
@@ -652,6 +709,9 @@ async function main(): Promise<void> {
   }
   if (wantSource('platform')) {
     for (const e of Object.values(platforms)) chunks.push(...chunkPlatform(e));
+  }
+  if (wantSource('playbook')) {
+    for (const p of PLAYBOOKS) chunks.push(...chunkPlaybook(p));
   }
   if (wantSource('case_study')) {
     chunks.push(...(await loadDbCaseStudies(supabase)));

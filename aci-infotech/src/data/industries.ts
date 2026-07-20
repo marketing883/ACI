@@ -571,5 +571,34 @@ export const industries: Record<IndustryId, IndustryEntry> = {
   }
 ],
     faqs: [],
+  },
+  'oil-gas': {
+    id: 'oil-gas',
+    slug: 'oil-gas',
+    title: 'Oil & Gas Technology Solutions',
+    tagline: 'Data, AI, and cloud for upstream, midstream, and downstream operations',
+    description: 'Oil and gas technology consulting: production and drilling analytics, predictive maintenance for rotating equipment, HSE and emissions reporting, and OT/IT integration across the field and the plant.',
+    painPoints: [],
+    useCases: [
+  {
+    title: 'Production Optimization',
+    description: 'Well and reservoir analytics to lift output'
+  },
+  {
+    title: 'Predictive Maintenance',
+    description: 'Sensor data on pumps, compressors, and turbines'
+  },
+  {
+    title: 'HSE & Emissions Reporting',
+    description: 'Automated safety and methane reporting'
+  },
+  {
+    title: 'OT/IT Integration',
+    description: 'SCADA and historian data into the cloud'
+  }
+],
+    relevantServices: [],
+    caseStudies: [],
+    faqs: [],
   }
 };

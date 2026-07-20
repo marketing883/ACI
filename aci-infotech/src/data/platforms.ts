@@ -724,5 +724,40 @@ export const platforms: Record<PlatformId, PlatformEntry> = {
     slug: 'd365-services-project-ops'
   }
 ],
+  },
+  'gcp': {
+    id: 'gcp',
+    slug: 'gcp',
+    title: 'Google Cloud Services',
+    tagline: 'Data, AI, and analytics on Google Cloud',
+    description: 'Google Cloud consulting: BigQuery data warehousing, Vertex AI, cloud migration, and Kubernetes on GKE for enterprise workloads.',
+    capabilities: [
+  {
+    title: 'BigQuery & Analytics',
+    description: 'Serverless data warehousing on BigQuery with Looker for enterprise analytics and BI.'
+  },
+  {
+    title: 'Vertex AI & ML',
+    description: 'Build, deploy, and govern ML and GenAI models on Vertex AI, including Gemini and custom models.'
+  },
+  {
+    title: 'Cloud Migration',
+    description: 'Migrate workloads to Google Cloud with minimal disruption, from lift-and-shift to re-platforming.'
+  },
+  {
+    title: 'GKE & Containers',
+    description: 'Run containerized workloads on Google Kubernetes Engine with autoscaling and Anthos.'
+  },
+  {
+    title: 'Data Engineering',
+    description: 'Streaming and batch pipelines on Dataflow, Pub/Sub, and Dataproc.'
+  },
+  {
+    title: 'DevOps & Infrastructure',
+    description: 'CI/CD and infrastructure as code with Cloud Build and Terraform.'
+  }
+],
+    useCases: [],
+    caseStudies: [],
   }
 };

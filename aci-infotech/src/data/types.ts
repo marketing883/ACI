@@ -22,7 +22,10 @@ export type ServiceClusterId =
   | 'digital-transformation'
   | 'cyber-security'
   | 'app-development'
-  | 'quality-engineering';
+  | 'quality-engineering'
+  | 'advisory-strategy'
+  | 'gcc'
+  | 'managed-operations';
 
 export type IndustryId =
   | 'financial-services'
@@ -31,6 +34,7 @@ export type IndustryId =
   | 'manufacturing'
   | 'hospitality'
   | 'energy'
+  | 'oil-gas'
   | 'transportation';
 
 export type PlatformId =
@@ -38,6 +42,7 @@ export type PlatformId =
   | 'snowflake'
   | 'aws'
   | 'azure'
+  | 'gcp'
   | 'salesforce'
   | 'sap'
   | 'servicenow'
