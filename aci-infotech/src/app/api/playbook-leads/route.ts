@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabase, getServerClient } from '@/lib/supabase';
 import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
+    // Service-role client so the insert bypasses RLS and the lead lands.
+    const db = getServerClient();
     const data = await request.json();
 
     const { name, email, company, playbook_slug, playbook_title } = data;
@@ -21,7 +23,7 @@ export async function POST(request: NextRequest) {
     const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
     // Insert into Supabase
-    const { error } = await supabase.from('playbook_leads').insert([
+    const { error } = await db.from('playbook_leads').insert([
       {
         name,
         email,

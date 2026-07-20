@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { getServerClient, isSupabaseConfigured } from '@/lib/supabase';
 import { generateIntelligence } from '@/lib/intelligence';
 import { isWorkEmail, validateEmail } from '@/lib/email-validation';
 import { detectBot, checkHoneypot } from '@/lib/bot-detection';
@@ -19,6 +19,11 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json();
+
+    // Service-role client so the insert and the follow-up intelligence
+    // update bypass RLS. With the anon client, an RLS-enabled contacts
+    // table silently drops the write, and the lead never lands.
+    const supabase = getServerClient();
 
     const {
       name,

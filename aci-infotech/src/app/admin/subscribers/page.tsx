@@ -11,7 +11,7 @@ import {
   Clock,
   Trash2,
 } from 'lucide-react';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 interface Subscriber {
   id: string;
@@ -125,13 +125,11 @@ export default function SubscribersPage() {
 
   async function fetchSubscribers() {
     try {
-      const { data, error } = await supabase
-        .from('newsletter_subscribers')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setSubscribers(data || []);
+      // Service-role server route: the browser anon client is RLS-denied.
+      const res = await fetch('/api/admin/subscribers');
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to load subscribers');
+      setSubscribers(json.subscribers || []);
     } catch (error) {
       console.error('Error fetching subscribers:', error);
     } finally {
@@ -151,12 +149,10 @@ export default function SubscribersPage() {
     }
 
     try {
-      const { error } = await supabase
-        .from('newsletter_subscribers')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      const res = await fetch(`/api/admin/subscribers?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error('Failed to delete');
       setSubscribers(subscribers.filter(s => s.id !== id));
     } catch (error) {
       console.error('Error deleting subscriber:', error);

@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getServerClient } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
+    // Service-role client so the insert bypasses RLS and the subscriber lands.
+    const supabase = getServerClient();
     const data = await request.json();
 
     const { email, source } = data;

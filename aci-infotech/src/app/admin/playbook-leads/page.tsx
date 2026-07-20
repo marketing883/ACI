@@ -18,7 +18,7 @@ import {
   Eye,
   Trash2,
 } from 'lucide-react';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 interface PlaybookLead {
   id: string;
@@ -128,13 +128,15 @@ export default function PlaybookLeadsPage() {
 
   async function fetchLeads() {
     try {
-      const { data, error } = await supabase
-        .from('playbook_leads')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setLeads(data || []);
+      // Service-role server route: the browser anon client is RLS-denied.
+      const res = await fetch('/api/admin/playbook-leads');
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to load leads');
+      if (json.demo) {
+        setLeads(mockLeads);
+      } else {
+        setLeads(json.leads || []);
+      }
     } catch (error) {
       console.error('Error fetching leads:', error);
       setLeads(mockLeads);
@@ -155,12 +157,10 @@ export default function PlaybookLeadsPage() {
     }
 
     try {
-      const { error } = await supabase
-        .from('playbook_leads')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      const res = await fetch(`/api/admin/playbook-leads?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error('Failed to delete');
       setLeads(leads.filter(l => l.id !== id));
     } catch (error) {
       console.error('Error deleting lead:', error);

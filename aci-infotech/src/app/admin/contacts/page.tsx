@@ -29,7 +29,7 @@ import {
   Download,
   Trash2,
 } from 'lucide-react';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import {
   intentLabel,
   humanizeTopic,
@@ -281,13 +281,16 @@ export default function ContactsPage() {
 
   async function fetchContacts() {
     try {
-      const { data, error } = await supabase
-        .from('contacts')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setContacts(data || []);
+      // Read through the service-role server route: the browser anon
+      // client is denied SELECT on contacts by RLS and returns empty.
+      const res = await fetch('/api/admin/contacts');
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to load contacts');
+      if (json.demo) {
+        setContacts(mockContacts);
+      } else {
+        setContacts(json.contacts || []);
+      }
     } catch (error) {
       console.error('Error fetching contacts:', error);
     } finally {
@@ -334,18 +337,17 @@ export default function ContactsPage() {
         const data = await response.json();
         setIntelligence(data);
 
-        // Cache the intelligence in the database
+        // Cache the intelligence in the database via the service-role route
         if (configured && contact.id) {
-          supabase
-            .from('contacts')
-            .update({ intelligence: data })
-            .eq('id', contact.id)
-            .then(() => {
-              // Update local state
-              setContacts(prev => prev.map(c =>
-                c.id === contact.id ? { ...c, intelligence: data } : c
-              ));
-            });
+          fetch('/api/admin/contacts', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: contact.id, intelligence: data }),
+          }).then(() => {
+            setContacts(prev => prev.map(c =>
+              c.id === contact.id ? { ...c, intelligence: data } : c
+            ));
+          });
         }
       }
     } catch (error) {
@@ -365,12 +367,12 @@ export default function ContactsPage() {
     }
 
     try {
-      const { error } = await supabase
-        .from('contacts')
-        .update({ status })
-        .eq('id', id);
-
-      if (error) throw error;
+      const res = await fetch('/api/admin/contacts', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      });
+      if (!res.ok) throw new Error('Failed to update status');
 
       setContacts(contacts.map(c => c.id === id ? { ...c, status } : c));
       if (selectedContact?.id === id) {
@@ -393,12 +395,10 @@ export default function ContactsPage() {
     }
 
     try {
-      const { error } = await supabase
-        .from('contacts')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      const res = await fetch(`/api/admin/contacts?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error('Failed to delete');
 
       setContacts(contacts.filter(c => c.id !== id));
       setSelectedContact(null);
