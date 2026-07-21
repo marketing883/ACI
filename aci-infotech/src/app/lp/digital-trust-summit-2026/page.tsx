@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, Fragment } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Bricolage_Grotesque } from 'next/font/google';
 import {
@@ -8,13 +8,11 @@ import {
   ArrowRight,
   ArrowLeft,
   ArrowUpRight,
-  ChevronRight,
   Calendar,
   MapPin,
   Gift,
   Loader2,
   Shield,
-  Bot,
   Cloud,
   Database,
   Workflow,
@@ -22,6 +20,12 @@ import {
   Store,
   Landmark,
   Sparkles,
+  Megaphone,
+  Code2,
+  BadgeCheck,
+  Server,
+  Compass,
+  Building2,
   Clock,
   Download,
   Trophy,
@@ -250,32 +254,21 @@ const SPEAKERS = [
   },
 ];
 
-// Capabilities as a trust-wrapped stack, echoing the homepage
-// "What We Build" architecture but lighter: three tiers of nodes, all
-// held inside the Cybersecurity and Digital Trust frame.
-const CAPABILITY_TIERS = [
-  {
-    label: 'Foundation',
-    items: [
-      { icon: Cloud, title: 'Cloud and Data Modernization', desc: 'Re-architected cloud, not lift and shift.' },
-      { icon: Database, title: 'Data Engineering and Analytics', desc: 'Governed pipelines that feed the AI.' },
-      { icon: Layers, title: 'Enterprise Applications', desc: 'SAP, Oracle, and Dynamics, wired to run.' },
-    ],
-  },
-  {
-    label: 'Intelligence',
-    items: [
-      { icon: Sparkles, title: 'Enterprise AI and GenAI', desc: 'GenAI copilots, live in production.' },
-      { icon: Bot, title: 'AI Agents and Automation', desc: 'Agents that clear the busywork.' },
-    ],
-  },
-  {
-    label: 'Industry',
-    items: [
-      { icon: Store, title: 'Retail and Banking', desc: 'Stacks built for shelves and vaults.' },
-      { icon: Workflow, title: 'Industry AI Accelerators', desc: 'Pre-built starts that save months.' },
-    ],
-  },
+// The full ACI service line, matching the site navigation. No arbitrary
+// cut, no count in the heading: these are the practices we can talk
+// through at the booth.
+const SERVICES = [
+  { icon: Sparkles, title: 'Applied AI & ML', desc: 'Copilots and agents that ship.' },
+  { icon: Cloud, title: 'Cloud Modernization', desc: 'Multi-cloud without the chaos.' },
+  { icon: Database, title: 'Data Engineering', desc: 'Lakehouses that match the ledger.' },
+  { icon: Megaphone, title: 'MarTech & CDP', desc: 'Customer data, live in real time.' },
+  { icon: Code2, title: 'App Development', desc: 'Apps built to survive production.' },
+  { icon: BadgeCheck, title: 'Quality Engineering', desc: 'Quality built into every release.' },
+  { icon: Workflow, title: 'Digital Transformation', desc: 'Intelligent process automation.' },
+  { icon: Shield, title: 'Cyber Security', desc: 'Security built in, not bolted on.' },
+  { icon: Server, title: 'Managed Operations', desc: 'NOC and SOC cover, around the clock.' },
+  { icon: Compass, title: 'Advisory & Strategy', desc: 'Strategy grounded in delivery.' },
+  { icon: Building2, title: 'GCC & Captive Centers', desc: 'Captive centers stood up, not outsourced.' },
 ];
 
 const STORIES = [
@@ -1048,75 +1041,58 @@ export default function DigitalTrustSummitPage() {
       <section className="bg-white py-20 lg:py-28" ref={capRef.ref}>
         <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
           <SectionBadge label="What we can talk about at the booth" />
-          <h2
-            className="mt-8 max-w-3xl font-medium leading-[1.1] tracking-[-0.02em] text-gray-900"
-            style={{ fontSize: 'clamp(1.7rem, 3.4vw, 3rem)' }}
-          >
-            Eight things we build for enterprises every day. Pick one, or bring your&nbsp;own.
-          </h2>
+          <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <h2
+              className="max-w-2xl font-medium leading-[1.1] tracking-[-0.02em] text-gray-900"
+              style={{ fontSize: 'clamp(1.7rem, 3.4vw, 3rem)' }}
+            >
+              What we build for enterprises.
+            </h2>
+            <p className="max-w-sm text-[15px] leading-relaxed text-gray-600">
+              The whole service line, from the first strategy call to the team that runs it in
+              production. Pick what is slowing you down, or bring your&nbsp;own.
+            </p>
+          </div>
 
-          {/* Trust-wrapped stack: the homepage "What We Build" architecture,
-              lighter. Foundation feeds intelligence feeds industry, and the
-              Cybersecurity and Digital Trust frame holds all of it, which is
-              the whole point of the summit. */}
-          <div className="mt-12 overflow-hidden rounded-[28px] border border-[#0052CC]/20 bg-gradient-to-b from-[#0052CC]/[0.035] to-transparent">
-            {/* Wrapper header: the trust frame */}
-            <div className="flex flex-col gap-3 border-b border-[#0052CC]/12 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0052CC]">
-                  <Shield className="h-5 w-5 text-[#C4FF61]" aria-hidden />
+          {/* Clean grid of the full service line. Eleven practices plus a
+              trust-and-register tile, which keeps the summit theme without
+              a heavy frame and squares the grid off at twelve. */}
+          <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 lg:gap-4">
+            {SERVICES.map((s, i) => (
+              <div
+                key={s.title}
+                className={`group rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-500 hover:-translate-y-0.5 hover:border-[#0A1628] hover:shadow-[0_14px_34px_rgba(10,22,40,0.10)] ${
+                  capRef.isInView ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                }`}
+                style={{ transitionDelay: `${i * 45}ms`, transitionTimingFunction: EASE }}
+              >
+                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#0052CC]/10 transition-colors duration-500 group-hover:bg-[#0A1628]">
+                  <s.icon className="h-5 w-5 text-[#0052CC] transition-colors duration-500 group-hover:text-[#C4FF61]" aria-hidden />
                 </span>
-                <div>
-                  <h3 className="text-[15px] font-semibold text-[#0A1628]">Cybersecurity and Digital Trust</h3>
-                  <p className="text-[13px] text-gray-500">Wraps every layer we build</p>
-                </div>
+                <h3 className="text-[15px] font-semibold leading-tight text-[#0A1628]">{s.title}</h3>
+                <p className="mt-1.5 text-[13px] leading-snug text-gray-500">{s.desc}</p>
               </div>
-              <span className="w-fit rounded-full border border-[#0052CC]/25 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#0052CC]">
-                SOC 2 and ISO 27001, from day one
-              </span>
-            </div>
+            ))}
 
-            {/* Tiers, left to right, with flow arrows between them */}
-            <div className="flex flex-col gap-5 p-5 sm:p-6 lg:flex-row lg:items-stretch lg:gap-3">
-              {CAPABILITY_TIERS.map((tier, ti) => {
-                const startIndex = CAPABILITY_TIERS
-                  .slice(0, ti)
-                  .reduce((sum, t) => sum + t.items.length, 0);
-                return (
-                  <Fragment key={tier.label}>
-                    <div className="flex-1">
-                      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400">
-                        {tier.label}
-                      </p>
-                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                        {tier.items.map((cap, i) => (
-                          <div
-                            key={cap.title}
-                            className={`group flex items-start gap-3 rounded-2xl border border-[#0052CC]/15 bg-white p-4 transition-all duration-500 hover:border-[#0052CC] hover:shadow-[0_10px_28px_rgba(0,82,204,0.14)] ${
-                              capRef.isInView ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                            }`}
-                            style={{ transitionDelay: `${(startIndex + i) * 70}ms`, transitionTimingFunction: EASE }}
-                          >
-                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#0052CC]/90 transition-colors duration-500 group-hover:bg-[#0A1628]">
-                              <cap.icon className="h-[18px] w-[18px] text-[#C4FF61]" aria-hidden />
-                            </span>
-                            <div>
-                              <h4 className="text-[14px] font-semibold leading-tight text-[#0A1628]">{cap.title}</h4>
-                              <p className="mt-1 text-[12.5px] leading-snug text-gray-500">{cap.desc}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    {ti < CAPABILITY_TIERS.length - 1 && (
-                      <div className="hidden shrink-0 items-center justify-center pt-8 lg:flex" aria-hidden>
-                        <ChevronRight className="h-5 w-5 text-[#0052CC]/40" />
-                      </div>
-                    )}
-                  </Fragment>
-                );
-              })}
-            </div>
+            <button
+              onClick={scrollToForm}
+              className={`group flex flex-col rounded-2xl bg-[#0A1628] p-5 text-left transition-all duration-500 hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(10,22,40,0.28)] ${
+                capRef.isInView ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+              }`}
+              style={{ transitionDelay: `${SERVICES.length * 45}ms`, transitionTimingFunction: EASE }}
+            >
+              <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
+                <Shield className="h-5 w-5 text-[#C4FF61]" aria-hidden />
+              </span>
+              <h3 className="text-[15px] font-semibold leading-tight text-white">Secured at every layer</h3>
+              <p className="mt-1.5 text-[13px] leading-snug text-white/60">
+                Cybersecurity and digital trust run through all of it.
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1 text-[13px] font-semibold text-[#C4FF61]">
+                Register
+                <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
+              </span>
+            </button>
           </div>
         </div>
       </section>
@@ -1243,7 +1219,7 @@ export default function DigitalTrustSummitPage() {
                 className="mt-3 h-10 w-auto"
               />
               <p className="mt-4 text-[15px] leading-relaxed text-white/70">
-                ArqAI Labs is an independent AI company. They design, build, and run production AI
+                ArqAI Labs is our strategic AI partner. They design, build, and run production AI
                 agents for regulated operations, with an audit trail on every action. See it live at
                 our&nbsp;booth.
               </p>

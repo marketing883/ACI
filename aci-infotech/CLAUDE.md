@@ -73,9 +73,11 @@ or subsidiary of the other.
   AI agents for regulated operations, one vertical at a time, with
   governance and an audit trail on every action. Its moat is a growing
   library of vertical accelerators.
-- On the ACI site, ArqAI Labs is **ACI's strategic AI partner**, pointed
-  to, not leaned on. ACI is ArqAI Labs's delivery and distribution
-  partner; ArqAI Labs is ACI's frontier AI partner.
+- On ACI's own surfaces (site, LPs), call ArqAI Labs **"our strategic
+  AI partner"**, pointed to, not leaned on. The "independent AI company"
+  framing is for outside reference, not our own pages. ACI is ArqAI
+  Labs's delivery and distribution partner; ArqAI Labs is ACI's frontier
+  AI partner.
 
 Never say, either direction: "wing", "arm", "division", "owned by";
 that ArqAI Labs is "our proprietary platform" or "ACI's AI platform /
