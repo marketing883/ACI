@@ -27,6 +27,7 @@ interface DashboardStats {
   chatLeads: { total: number; new: number };
   playbookLeads: { total: number; new: number };
   whitepaperLeads: { total: number; new: number };
+  eventLeads: { total: number; new: number };
   caseStudies: { total: number; published: number };
   blogPosts: { total: number; published: number };
 }
@@ -36,7 +37,7 @@ interface RecentLead {
   name: string;
   email: string;
   company?: string;
-  type: 'contact' | 'chat' | 'playbook' | 'whitepaper';
+  type: 'contact' | 'chat' | 'playbook' | 'whitepaper' | 'event';
   source?: string;
   created_at: string;
   status: string;
@@ -49,6 +50,7 @@ export default function AdminDashboard() {
     chatLeads: { total: 0, new: 0 },
     playbookLeads: { total: 0, new: 0 },
     whitepaperLeads: { total: 0, new: 0 },
+    eventLeads: { total: 0, new: 0 },
     caseStudies: { total: 0, published: 0 },
     blogPosts: { total: 0, published: 0 },
   });
@@ -69,6 +71,7 @@ export default function AdminDashboard() {
         chatLeads: { total: 23, new: 8 },
         playbookLeads: { total: 28, new: 8 },
         whitepaperLeads: { total: 35, new: 5 },
+        eventLeads: { total: 64, new: 22 },
         caseStudies: { total: 12, published: 10 },
         blogPosts: { total: 24, published: 18 },
       });
@@ -164,6 +167,22 @@ export default function AdminDashboard() {
       const totalWhitepaperLeads = await safeCount('whitepaper_leads');
       const newWhitepaperLeads = await safeCount('whitepaper_leads', { column: 'status', value: 'new' });
 
+      // Fetch event registrations via the service-role admin route.
+      // event_leads grants SELECT only to authenticated users, so the
+      // browser anon client above cannot read it; the API route can.
+      let eventLeadRows: Array<Record<string, unknown>> = [];
+      try {
+        const res = await fetch('/api/admin/event-leads');
+        if (res.ok) {
+          const json = await res.json();
+          if (!json.demo && Array.isArray(json.leads)) eventLeadRows = json.leads;
+        }
+      } catch {
+        // Dashboard degrades gracefully to zero on any read failure.
+      }
+      const totalEventLeads = eventLeadRows.length;
+      const newEventLeads = eventLeadRows.filter((l) => l.status === 'new').length;
+
       // Fetch case studies stats (uses status column)
       const totalCaseStudies = await safeCount('case_studies');
       const publishedCaseStudies = await safeCount('case_studies', { column: 'status', value: 'published' });
@@ -187,6 +206,7 @@ export default function AdminDashboard() {
         chatLeads: { total: totalChatLeads, new: newChatLeads },
         playbookLeads: { total: totalPlaybookLeads, new: newPlaybookLeads },
         whitepaperLeads: { total: totalWhitepaperLeads, new: newWhitepaperLeads },
+        eventLeads: { total: totalEventLeads, new: newEventLeads },
         caseStudies: { total: totalCaseStudies, published: publishedCaseStudies },
         blogPosts: { total: totalBlog, published: publishedBlog },
       });
@@ -260,6 +280,16 @@ export default function AdminDashboard() {
           type: 'whitepaper' as const,
           source: w.whitepaper_title as string,
         })),
+        ...eventLeadRows.slice(0, 3).map((e: Record<string, unknown>) => ({
+          id: e.id as string,
+          name: e.full_name as string,
+          email: e.email as string,
+          company: e.company_name as string | undefined,
+          created_at: e.created_at as string,
+          status: e.status as string,
+          type: 'event' as const,
+          source: 'AION 2026',
+        })),
       ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         .slice(0, 6);
 
@@ -275,14 +305,14 @@ export default function AdminDashboard() {
   const summaryCards = [
     {
       title: 'Total Leads',
-      value: stats.contacts.total + stats.chatLeads.total + stats.playbookLeads.total + stats.whitepaperLeads.total,
+      value: stats.contacts.total + stats.chatLeads.total + stats.playbookLeads.total + stats.whitepaperLeads.total + stats.eventLeads.total,
       change: '+12%',
       changeType: 'positive',
       icon: Users,
     },
     {
       title: 'New This Week',
-      value: stats.contacts.new + stats.chatLeads.new + stats.playbookLeads.new + stats.whitepaperLeads.new,
+      value: stats.contacts.new + stats.chatLeads.new + stats.playbookLeads.new + stats.whitepaperLeads.new + stats.eventLeads.new,
       change: '+8%',
       changeType: 'positive',
       icon: Activity,
@@ -305,6 +335,16 @@ export default function AdminDashboard() {
 
   // Lead category cards with links
   const leadCards = [
+    {
+      title: 'Event Registrations',
+      total: stats.eventLeads.total,
+      new: stats.eventLeads.new,
+      icon: Calendar,
+      color: 'from-violet-500 to-violet-600',
+      bgLight: 'bg-violet-50',
+      textColor: 'text-violet-600',
+      href: '/admin/event-leads',
+    },
     {
       title: 'Contact Form',
       total: stats.contacts.total,
@@ -386,12 +426,13 @@ export default function AdminDashboard() {
     return date.toLocaleDateString();
   }
 
-  function getLeadTypeLabel(type: 'contact' | 'chat' | 'playbook' | 'whitepaper') {
+  function getLeadTypeLabel(type: 'contact' | 'chat' | 'playbook' | 'whitepaper' | 'event') {
     const labels = {
       contact: { label: 'Contact', color: 'bg-blue-100 text-blue-700', icon: FileText },
       chat: { label: 'Chat', color: 'bg-violet-100 text-violet-700', icon: MessageSquare },
       playbook: { label: 'Playbook', color: 'bg-amber-100 text-amber-700', icon: BookOpen },
       whitepaper: { label: 'Whitepaper', color: 'bg-emerald-100 text-emerald-700', icon: Download },
+      event: { label: 'Event', color: 'bg-fuchsia-100 text-fuchsia-700', icon: Calendar },
     };
     return labels[type];
   }
@@ -401,7 +442,7 @@ export default function AdminDashboard() {
       {/* Page Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-500 mt-1">Welcome back. Here's what's happening with your leads.</p>
+        <p className="text-gray-500 mt-1">Welcome back. Here’s what’s happening with your leads.</p>
       </div>
 
       {!configured && (

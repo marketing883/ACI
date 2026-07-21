@@ -27,6 +27,7 @@ import {
   UserCheck,
   Newspaper,
   BarChart3,
+  Ticket,
 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 import HotLeadToast from '@/components/admin/HotLeadToast';
@@ -47,6 +48,7 @@ const navItems: NavItem[] = [
     label: 'Leads',
     icon: Users,
     children: [
+      { href: '/admin/event-leads', label: 'Event Registrations', icon: Ticket },
       { href: '/admin/contacts', label: 'Contact Submissions', icon: FileText },
       { href: '/admin/playbook-leads', label: 'Playbook Leads', icon: BookOpen },
       { href: '/admin/whitepaper-leads', label: 'Whitepaper Leads', icon: FileCheck },
