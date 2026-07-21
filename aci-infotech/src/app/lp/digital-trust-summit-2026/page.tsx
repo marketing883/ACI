@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Fragment } from 'react';
 import Image from 'next/image';
 import { Bricolage_Grotesque } from 'next/font/google';
 import {
@@ -8,6 +8,7 @@ import {
   ArrowRight,
   ArrowLeft,
   ArrowUpRight,
+  ChevronRight,
   Calendar,
   MapPin,
   Gift,
@@ -23,6 +24,7 @@ import {
   Sparkles,
   Clock,
   Download,
+  Trophy,
 } from 'lucide-react';
 import { trackFormSubmission, trackEvent } from '@/components/analytics/GoogleTagManager';
 import { isWorkEmail } from '@/lib/lp-dropdown-options';
@@ -182,25 +184,18 @@ function RollButton({
   );
 }
 
-// Numbered circle + pill label, the section wayfinding device.
-function SectionBadge({ n, label, dark = false }: { n: string; label: string; dark?: boolean }) {
+// Section eyebrow: a lime-dotted pill label, the section wayfinding
+// device. No step number, just the label.
+function SectionBadge({ label, dark = false }: { label: string; dark?: boolean }) {
   return (
-    <div className="flex items-center gap-3">
-      <span
-        className={`flex h-7 w-7 items-center justify-center rounded-full text-[12px] font-semibold ${
-          dark ? 'bg-[#C4FF61] text-[#0A1628]' : 'bg-[#0A1628] text-white'
-        }`}
-      >
-        {n}
-      </span>
-      <span
-        className={`rounded-full border px-4 py-1.5 text-[13px] font-medium ${
-          dark ? 'border-white/20 text-white/80' : 'border-gray-300 text-gray-700'
-        }`}
-      >
-        {label}
-      </span>
-    </div>
+    <span
+      className={`inline-flex items-center gap-2.5 rounded-full border px-4 py-1.5 text-[13px] font-medium ${
+        dark ? 'border-white/20 text-white/80' : 'border-gray-300 text-gray-700'
+      }`}
+    >
+      <span className={`h-1.5 w-1.5 rounded-full ${dark ? 'bg-[#C4FF61]' : 'bg-[#0052CC]'}`} aria-hidden />
+      {label}
+    </span>
   );
 }
 
@@ -256,15 +251,32 @@ const SPEAKERS = [
   },
 ];
 
-const CAPABILITIES = [
-  { icon: Sparkles, title: 'Enterprise AI and GenAI' },
-  { icon: Bot, title: 'AI Agents and Intelligent Automation' },
-  { icon: Cloud, title: 'Cloud and Data Modernization' },
-  { icon: Shield, title: 'Cybersecurity and Digital Trust' },
-  { icon: Database, title: 'Data Engineering and Analytics' },
-  { icon: Layers, title: 'Enterprise Applications' },
-  { icon: Store, title: 'Retail and Banking Transformation' },
-  { icon: Workflow, title: 'Industry AI Accelerators' },
+// Capabilities as a trust-wrapped stack, echoing the homepage
+// "What We Build" architecture but lighter: three tiers of nodes, all
+// held inside the Cybersecurity and Digital Trust frame.
+const CAPABILITY_TIERS = [
+  {
+    label: 'Foundation',
+    items: [
+      { icon: Cloud, title: 'Cloud and Data Modernization', desc: 'Re-architected cloud, not lift and shift.' },
+      { icon: Database, title: 'Data Engineering and Analytics', desc: 'Governed pipelines that feed the AI.' },
+      { icon: Layers, title: 'Enterprise Applications', desc: 'SAP, Oracle, and Dynamics, wired to run.' },
+    ],
+  },
+  {
+    label: 'Intelligence',
+    items: [
+      { icon: Sparkles, title: 'Enterprise AI and GenAI', desc: 'GenAI copilots, live in production.' },
+      { icon: Bot, title: 'AI Agents and Automation', desc: 'Agents that clear the busywork.' },
+    ],
+  },
+  {
+    label: 'Industry',
+    items: [
+      { icon: Store, title: 'Retail and Banking', desc: 'Stacks built for shelves and vaults.' },
+      { icon: Workflow, title: 'Industry AI Accelerators', desc: 'Pre-built starts that save months.' },
+    ],
+  },
 ];
 
 const STORIES = [
@@ -272,6 +284,7 @@ const STORIES = [
     key: 'cstore',
     tab: 'C-Store',
     icon: Store,
+    image: '/images/v4/case-retail.jpg',
     title: 'AI-powered store intelligence',
     body: 'A leading convenience store chain now forecasts demand, cuts stock-outs, and personalizes offers with AI and real-time operational dashboards.',
     chips: ['Predictive Analytics', 'Inventory Optimization', 'Customer Insights', 'Real-time Reporting'],
@@ -280,6 +293,7 @@ const STORIES = [
     key: 'fashion',
     tab: 'Fashion',
     icon: Sparkles,
+    image: '/images/v4/ind-retail.jpg',
     title: 'Omnichannel customer experience',
     body: 'A global fashion retailer unified online and in-store journeys with AI-driven recommendations, merchandising analytics, and customer segmentation.',
     chips: ['Personalization Engine', 'Customer 360', 'Demand Forecasting', 'Omnichannel Analytics'],
@@ -288,6 +302,7 @@ const STORIES = [
     key: 'retail',
     tab: 'Retail',
     icon: Layers,
+    image: '/images/preview-bg/case-retail.jpg',
     title: 'Intelligent retail transformation',
     body: 'We wired cloud, AI, and data platforms into one stack, sharpening pricing, supply chain visibility, and executive decision-making.',
     chips: ['Retail Analytics', 'Supply Chain Intelligence', 'Pricing Optimization', 'Executive Dashboards'],
@@ -296,6 +311,7 @@ const STORIES = [
     key: 'bfsi',
     tab: 'Banking',
     icon: Landmark,
+    image: '/images/v4/case-finance.jpg',
     title: 'Secure, intelligent banking',
     body: 'Financial institutions moved faster on fraud detection, risk analytics, compliance, and secure cloud modernization with our AI stack.',
     chips: ['Fraud Detection', 'Risk and Compliance', 'Intelligent Automation', 'AI Customer Service'],
@@ -485,29 +501,38 @@ export default function DigitalTrustSummitPage() {
           <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: GRAIN }} />
         </div>
 
-        {/* Pill navbar */}
+        {/* Pill navbar: both brand marks, prominent, no CTA button */}
         <div className="relative z-20 mx-auto w-full max-w-[1440px] p-3 sm:p-4">
-          <nav className="flex items-center justify-between rounded-full bg-white p-[5px] pl-4 shadow-[0_2px_16px_rgba(0,0,0,0.25)]">
-            <div className="flex items-center gap-4">
+          <nav className="flex items-center justify-between rounded-full bg-white px-5 py-3 shadow-[0_2px_16px_rgba(0,0,0,0.25)] sm:px-6">
+            <div className="flex items-center gap-3 sm:gap-5">
               <Image
                 src="/aci-infotech-logo.png"
                 alt="ACI Infotech"
+                width={130}
+                height={35}
+                className="h-7 w-auto sm:h-8"
+                priority
+              />
+              <span className="h-7 w-px bg-gray-200 sm:h-8" aria-hidden />
+              <Image
+                src="/images/ArqAI-Logo-no-tagline.png"
+                alt="ArqAI"
                 width={120}
-                height={32}
+                height={42}
                 className="h-6 w-auto sm:h-7"
                 priority
               />
-              <span className="hidden items-center gap-2 text-[13px] text-gray-500 lg:flex">
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="hidden items-center gap-2 text-[12px] text-gray-500 xl:flex">
                 <Starburst className="h-4 w-4 text-[#0052CC]" />
                 In association with CXO Elite Forum and National Cyber Security Standards
               </span>
-            </div>
-            <div className="flex items-center gap-3 sm:gap-4">
+              <span className="hidden h-6 w-px bg-gray-200 xl:block" aria-hidden />
               <span className="hidden items-center gap-1.5 text-[13px] text-gray-600 md:flex">
                 <Clock className="h-3.5 w-3.5" aria-hidden />
                 <span className="tabular-nums">{bengaluruTime ?? '--:--'}</span> in Bengaluru
               </span>
-              <RollButton label="Register now" variant="ink" onClick={scrollToForm} className="!py-1.5 text-[13px]" />
             </div>
           </nav>
         </div>
@@ -532,8 +557,7 @@ export default function DigitalTrustSummitPage() {
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg">
               Meet the ACI Infotech team in Bengaluru. Talk AI risk, cyber resilience, and
-              data security with people who build this for a living. Registering below also
-              puts you in the draw for Ray-Ban Meta smart&nbsp;glasses.
+              data security with the people who build this for a&nbsp;living.
             </p>
 
             {/* Date / venue chips */}
@@ -548,8 +572,36 @@ export default function DigitalTrustSummitPage() {
               </span>
             </div>
 
+            {/* Prize hook: the reason to register, right where we ask.
+                The glasses ride into the hero so nobody has to scroll to
+                find out what is in it for them. */}
+            <div className="mt-8 flex max-w-md items-center gap-4 rounded-3xl border border-white/12 bg-white/[0.06] p-3 pr-6 backdrop-blur-[2px]">
+              <div className="relative shrink-0">
+                <div className="absolute inset-0 rounded-full bg-[#C4FF61]/25 blur-2xl" aria-hidden />
+                <Image
+                  src="/images/events/rayban-meta-glasses.png"
+                  alt="Ray-Ban Meta smart glasses, the grand prize"
+                  width={320}
+                  height={160}
+                  className="relative w-[140px] animate-[float_7s_ease-in-out_infinite] drop-shadow-[0_16px_28px_rgba(0,0,0,0.5)] sm:w-[160px]"
+                />
+              </div>
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C4FF61] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0A1628]">
+                  <Trophy className="h-3 w-3" aria-hidden />
+                  Register to win
+                </span>
+                <p className="mt-2 font-semibold leading-snug text-white">
+                  Ray-Ban Meta smart&nbsp;glasses
+                </p>
+                <p className="mt-0.5 text-[13px] leading-snug text-white/60">
+                  One winner, drawn live at our&nbsp;booth.
+                </p>
+              </div>
+            </div>
+
             {/* Countdown strip */}
-            <div className="mt-7 h-16">
+            <div className="mt-8 h-16">
               {countdown && (
                 <div className="flex items-center gap-5 sm:gap-7">
                   {[
@@ -872,7 +924,7 @@ export default function DigitalTrustSummitPage() {
         </div>
 
         <div className="relative mx-auto max-w-[1440px] px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
-          <SectionBadge n="1" label="The lucky draw" dark />
+          <SectionBadge label="The lucky draw" dark />
 
           <div className="mt-8 grid items-center gap-12 lg:grid-cols-2 lg:gap-8">
             <div>
@@ -927,12 +979,6 @@ export default function DigitalTrustSummitPage() {
           </div>
         </div>
 
-        <style jsx>{`
-          @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-16px); }
-          }
-        `}</style>
       </section>
 
       {/* ============================================
@@ -940,7 +986,7 @@ export default function DigitalTrustSummitPage() {
           ============================================ */}
       <section className="bg-[#F4F5F3] py-20 lg:py-28" ref={expertsRef.ref}>
         <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
-          <SectionBadge n="2" label="Meet the team on the floor" />
+          <SectionBadge label="Meet the team on the floor" />
           <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <h2
               className="max-w-2xl font-medium leading-[1.1] tracking-[-0.02em] text-gray-900"
@@ -994,7 +1040,7 @@ export default function DigitalTrustSummitPage() {
           ============================================ */}
       <section className="bg-white py-20 lg:py-28" ref={capRef.ref}>
         <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
-          <SectionBadge n="3" label="What we can talk about at the booth" />
+          <SectionBadge label="What we can talk about at the booth" />
           <h2
             className="mt-8 max-w-3xl font-medium leading-[1.1] tracking-[-0.02em] text-gray-900"
             style={{ fontSize: 'clamp(1.7rem, 3.4vw, 3rem)' }}
@@ -1002,21 +1048,68 @@ export default function DigitalTrustSummitPage() {
             Eight things we build for enterprises every day. Pick one, or bring your&nbsp;own.
           </h2>
 
-          <div className="mt-12 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-            {CAPABILITIES.map((cap, i) => (
-              <div
-                key={cap.title}
-                className={`group rounded-2xl border border-gray-200 p-5 transition-all duration-500 hover:border-[#0A1628] hover:bg-[#0A1628] sm:p-6 ${
-                  capRef.isInView ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
-                }`}
-                style={{ transitionDelay: `${i * 60}ms`, transitionTimingFunction: EASE }}
-              >
-                <cap.icon className="mb-8 h-7 w-7 text-[#0052CC] transition-colors duration-500 group-hover:text-[#C4FF61]" aria-hidden />
-                <h3 className="text-sm font-semibold text-gray-900 transition-colors duration-500 group-hover:text-white sm:text-[15px]">
-                  {cap.title}
-                </h3>
+          {/* Trust-wrapped stack: the homepage "What We Build" architecture,
+              lighter. Foundation feeds intelligence feeds industry, and the
+              Cybersecurity and Digital Trust frame holds all of it, which is
+              the whole point of the summit. */}
+          <div className="mt-12 overflow-hidden rounded-[28px] border border-[#0052CC]/20 bg-gradient-to-b from-[#0052CC]/[0.035] to-transparent">
+            {/* Wrapper header: the trust frame */}
+            <div className="flex flex-col gap-3 border-b border-[#0052CC]/12 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0052CC]">
+                  <Shield className="h-5 w-5 text-[#C4FF61]" aria-hidden />
+                </span>
+                <div>
+                  <h3 className="text-[15px] font-semibold text-[#0A1628]">Cybersecurity and Digital Trust</h3>
+                  <p className="text-[13px] text-gray-500">Wraps every layer we build</p>
+                </div>
               </div>
-            ))}
+              <span className="w-fit rounded-full border border-[#0052CC]/25 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#0052CC]">
+                SOC 2 and ISO 27001, from day one
+              </span>
+            </div>
+
+            {/* Tiers, left to right, with flow arrows between them */}
+            <div className="flex flex-col gap-5 p-5 sm:p-6 lg:flex-row lg:items-stretch lg:gap-3">
+              {CAPABILITY_TIERS.map((tier, ti) => {
+                const startIndex = CAPABILITY_TIERS
+                  .slice(0, ti)
+                  .reduce((sum, t) => sum + t.items.length, 0);
+                return (
+                  <Fragment key={tier.label}>
+                    <div className="flex-1">
+                      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                        {tier.label}
+                      </p>
+                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                        {tier.items.map((cap, i) => (
+                          <div
+                            key={cap.title}
+                            className={`group flex items-start gap-3 rounded-2xl border border-[#0052CC]/15 bg-white p-4 transition-all duration-500 hover:border-[#0052CC] hover:shadow-[0_10px_28px_rgba(0,82,204,0.14)] ${
+                              capRef.isInView ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                            }`}
+                            style={{ transitionDelay: `${(startIndex + i) * 70}ms`, transitionTimingFunction: EASE }}
+                          >
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#0052CC]/90 transition-colors duration-500 group-hover:bg-[#0A1628]">
+                              <cap.icon className="h-[18px] w-[18px] text-[#C4FF61]" aria-hidden />
+                            </span>
+                            <div>
+                              <h4 className="text-[14px] font-semibold leading-tight text-[#0A1628]">{cap.title}</h4>
+                              <p className="mt-1 text-[12.5px] leading-snug text-gray-500">{cap.desc}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {ti < CAPABILITY_TIERS.length - 1 && (
+                      <div className="hidden shrink-0 items-center justify-center pt-8 lg:flex" aria-hidden>
+                        <ChevronRight className="h-5 w-5 text-[#0052CC]/40" />
+                      </div>
+                    )}
+                  </Fragment>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
@@ -1026,46 +1119,92 @@ export default function DigitalTrustSummitPage() {
           ============================================ */}
       <section className="bg-[#F4F5F3] py-20 lg:py-28">
         <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
-          <SectionBadge n="4" label="Work we can show you" />
-          <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <SectionBadge label="Work we can show you" />
+          <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <h2
               className="font-medium leading-[1.1] tracking-[-0.02em] text-gray-900"
               style={{ fontSize: 'clamp(1.7rem, 3.4vw, 3rem)' }}
             >
               Four industries, four transformations.
             </h2>
-            <div className="flex flex-wrap gap-2">
-              {STORIES.map((story, i) => (
-                <button
-                  key={story.key}
-                  onClick={() => setActiveStory(i)}
-                  className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${
-                    activeStory === i
-                      ? 'bg-[#0A1628] text-[#C4FF61]'
-                      : 'bg-white text-gray-600 hover:bg-gray-200'
-                  }`}
-                >
-                  {story.tab}
-                </button>
-              ))}
+            {/* Refined segmented control: pills live in a single track,
+                each with its sector glyph, the active one filled ink. */}
+            <div className="flex flex-wrap gap-1 rounded-full border border-gray-200 bg-white p-1.5">
+              {STORIES.map((story, i) => {
+                const TabIcon = story.icon;
+                const active = activeStory === i;
+                return (
+                  <button
+                    key={story.key}
+                    onClick={() => setActiveStory(i)}
+                    aria-pressed={active}
+                    className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 ${
+                      active
+                        ? 'bg-[#0A1628] text-[#C4FF61] shadow-[0_4px_14px_rgba(10,22,40,0.2)]'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <TabIcon className={`h-4 w-4 ${active ? 'text-[#C4FF61]' : 'text-[#0052CC]'}`} aria-hidden />
+                    {story.tab}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="mt-10 rounded-[28px] bg-white p-8 shadow-[0_2px_24px_rgba(10,22,40,0.06)] sm:p-12">
-            {(() => {
-              const story = STORIES[activeStory];
+          {/* Featured card: the sector image is the background, held under a
+              stylized ink overlay so the story stays legible. Cards crossfade
+              as the pills switch. */}
+          <div className="relative mt-10 min-h-[520px] overflow-hidden rounded-[28px] bg-[#0A1628] shadow-[0_24px_70px_rgba(10,22,40,0.22)] sm:min-h-[480px]">
+            {STORIES.map((story, i) => {
               const StoryIcon = story.icon;
+              const active = activeStory === i;
               return (
-                <div className="flex flex-col gap-8 sm:flex-row sm:items-start">
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#0A1628]">
-                    <StoryIcon className="h-7 w-7 text-[#C4FF61]" aria-hidden />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-semibold tracking-tight text-gray-900">{story.title}</h3>
-                    <p className="mt-3 max-w-2xl leading-relaxed text-gray-600">{story.body}</p>
-                    <div className="mt-6 flex flex-wrap gap-2">
+                <div
+                  key={story.key}
+                  aria-hidden={!active}
+                  className={`absolute inset-0 transition-opacity duration-700 ${
+                    active ? 'opacity-100' : 'pointer-events-none opacity-0'
+                  }`}
+                  style={{ transitionTimingFunction: EASE }}
+                >
+                  <Image
+                    src={story.image}
+                    alt=""
+                    fill
+                    className={`object-cover transition-transform duration-[1200ms] ${active ? 'scale-100' : 'scale-105'}`}
+                    style={{ transitionTimingFunction: EASE }}
+                    sizes="(max-width: 1024px) 100vw, 1200px"
+                  />
+                  {/* Stylized overlay: ink from the left for copy legibility,
+                      ink from the bottom, a brand tint, and grain. */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0A1628] via-[#0A1628]/85 to-[#0A1628]/35" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628] via-[#0A1628]/20 to-transparent" />
+                  <div className="absolute inset-0 bg-[#0052CC]/15 mix-blend-overlay" />
+                  <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: GRAIN }} />
+
+                  <div className="relative flex h-full max-w-2xl flex-col justify-end gap-5 p-8 sm:p-12">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/10 backdrop-blur-sm">
+                        <StoryIcon className="h-6 w-6 text-[#C4FF61]" aria-hidden />
+                      </span>
+                      <span className="rounded-full border border-white/20 bg-[#0A1628]/40 px-3.5 py-1.5 text-[12px] font-semibold uppercase tracking-wider text-white/85 backdrop-blur-sm">
+                        {story.tab}
+                      </span>
+                    </div>
+                    <h3
+                      className="font-semibold tracking-tight text-white"
+                      style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)' }}
+                    >
+                      {story.title}
+                    </h3>
+                    <p className="max-w-xl text-[15px] leading-relaxed text-white/75 sm:text-base">{story.body}</p>
+                    <div className="flex flex-wrap gap-2">
                       {story.chips.map((chip) => (
-                        <span key={chip} className="rounded-full border border-gray-200 px-3.5 py-1.5 text-[13px] font-medium text-gray-700">
+                        <span
+                          key={chip}
+                          className="rounded-full border border-white/15 bg-white/[0.08] px-3.5 py-1.5 text-[13px] font-medium text-white/85 backdrop-blur-sm"
+                        >
                           {chip}
                         </span>
                       ))}
@@ -1073,7 +1212,7 @@ export default function DigitalTrustSummitPage() {
                   </div>
                 </div>
               );
-            })()}
+            })}
           </div>
 
           {/* About strip folded into the same section rhythm */}
