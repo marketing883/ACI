@@ -222,9 +222,9 @@ const PAIN_POINT_OPTIONS = [
 
 const JOURNEY_STAGES = [
   { value: 'exploring', label: 'Exploring', desc: 'Evaluating, nothing live yet' },
-  { value: 'piloting', label: 'Piloting', desc: 'A few POCs in flight' },
-  { value: 'scaling', label: 'Scaling', desc: 'AI in production, growing it' },
-  { value: 'optimizing', label: 'Optimizing', desc: 'Mature, tuning cost and risk' },
+  { value: 'piloting', label: 'Piloting', desc: 'A few pilots running' },
+  { value: 'scaling', label: 'Scaling', desc: 'Live and growing it' },
+  { value: 'optimizing', label: 'Optimizing', desc: 'Live, tuning cost and risk' },
 ];
 
 // Speakers from the event creative. Each card falls back to an initials
@@ -284,8 +284,8 @@ const STORIES = [
     tab: 'C-Store',
     icon: Store,
     image: '/images/v4/case-retail.jpg',
-    title: 'AI-powered store intelligence',
-    body: 'A leading convenience store chain now forecasts demand, cuts stock-outs, and personalizes offers with AI and real-time operational dashboards.',
+    title: 'Fewer stock-outs, smarter shelves',
+    body: 'A convenience store chain now sees demand coming, runs out of stock far less, and tailors offers to each shopper. AI and live dashboards do the work behind the counter.',
     chips: ['Predictive Analytics', 'Inventory Optimization', 'Customer Insights', 'Real-time Reporting'],
   },
   {
@@ -293,8 +293,8 @@ const STORIES = [
     tab: 'Fashion',
     icon: Sparkles,
     image: '/images/v4/ind-retail.jpg',
-    title: 'Omnichannel customer experience',
-    body: 'A global fashion retailer unified online and in-store journeys with AI-driven recommendations, merchandising analytics, and customer segmentation.',
+    title: 'One journey, online and in store',
+    body: 'A fashion retailer joined up its online and in-store experience, with AI recommendations, sharper merchandising, and a clear read on every customer.',
     chips: ['Personalization Engine', 'Customer 360', 'Demand Forecasting', 'Omnichannel Analytics'],
   },
   {
@@ -302,8 +302,8 @@ const STORIES = [
     tab: 'Retail',
     icon: Layers,
     image: '/images/preview-bg/case-retail.jpg',
-    title: 'Intelligent retail transformation',
-    body: 'We wired cloud, AI, and data platforms into one stack, sharpening pricing, supply chain visibility, and executive decision-making.',
+    title: 'The whole retail stack, joined up',
+    body: 'We pulled cloud, AI, and data onto one stack. Pricing got sharper, the supply chain got visible, and leaders got numbers they could trust.',
     chips: ['Retail Analytics', 'Supply Chain Intelligence', 'Pricing Optimization', 'Executive Dashboards'],
   },
   {
@@ -311,16 +311,16 @@ const STORIES = [
     tab: 'Banking',
     icon: Landmark,
     image: '/images/v4/case-finance.jpg',
-    title: 'Secure, intelligent banking',
-    body: 'Financial institutions moved faster on fraud detection, risk analytics, compliance, and secure cloud modernization with our AI stack.',
+    title: 'Faster, safer banking',
+    body: 'Banks got quicker at catching fraud, reading risk, and staying compliant, on a cloud setup built to be secure from the start.',
     chips: ['Fraud Detection', 'Risk and Compliance', 'Intelligent Automation', 'AI Customer Service'],
   },
 ];
 
 const DRAW_STEPS = [
-  { number: '01', title: 'Register on this page', desc: 'Two minutes, two steps. That puts you in the draw pool.' },
-  { number: '02', title: 'Visit our booth on 31 July', desc: 'Say hello to the team. That activates your entry.' },
-  { number: '03', title: 'Win at the live draw', desc: 'One winner, picked live. On the spot prizes run all day.' },
+  { number: '01', title: 'Register on this page', desc: 'Two steps here, and you’re in the draw.' },
+  { number: '02', title: 'Come by our booth on 31 July', desc: 'Say hi to the team. That’s what makes your entry count.' },
+  { number: '03', title: 'We draw a winner, live', desc: 'One winner, picked on the spot. Smaller prizes run all day.' },
 ];
 
 // .ics file so the date survives the CXO calendar
@@ -413,11 +413,11 @@ export default function DigitalTrustSummitPage() {
     setError(null);
 
     if (painPoints.length === 0) {
-      setError('Pick at least one challenge. That is what powers the draw.');
+      setError('Pick at least one, so we know what to bring.');
       return;
     }
     if (!journeyStage) {
-      setError('Tell us where you are on the AI journey.');
+      setError('Let us know where you are with AI.');
       return;
     }
 
@@ -556,15 +556,16 @@ export default function DigitalTrustSummitPage() {
               className="font-medium leading-[1.05] tracking-[-0.03em] text-white"
               style={{ fontSize: 'clamp(2.4rem, 6vw, 4.6rem)' }}
             >
-              AI, data and
+              Let’s talk AI, data,
               <br />
-              <span className="text-[#C4FF61]">digital trust.</span>
+              and <span className="text-[#C4FF61]">digital&nbsp;trust.</span>
               <br />
-              One room. One day.
+              Face to face.
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg">
-              Meet the ACI Infotech team in Bengaluru. Talk AI risk, cyber resilience, and
-              data security with the people who build this for a&nbsp;living.
+              We’re at AION 2026 in Bengaluru on 31 July. Bring your hardest questions on AI,
+              data, and security. You’ll talk to the people who build this, not a
+              sales&nbsp;desk.
             </p>
 
             {/* Date / venue chips */}
@@ -639,14 +640,14 @@ export default function DigitalTrustSummitPage() {
                     <CheckCircle2 className="h-10 w-10 text-[#0A1628]" aria-hidden />
                   </div>
                   <h3 className="text-2xl font-semibold tracking-tight text-gray-900">
-                    {alreadyRegistered ? 'You were already in the draw.' : 'You are in the draw.'}
+                    {alreadyRegistered ? 'You’re already in the draw.' : 'You’re in the draw.'}
                   </h3>
                   <p className="mt-3 text-gray-600">
-                    See you at the booth on 31 July. The winner is picked live at the event,
-                    so be in the room.
+                    See you at the booth on 31 July. We draw the winner live, so plan to
+                    be&nbsp;there.
                   </p>
                   <p className="mb-6 mt-2 text-sm text-gray-500">
-                    A confirmation email is on its way to your inbox.
+                    Check your inbox for a confirmation email.
                   </p>
                   <a
                     href={ICS_HREF}
@@ -664,7 +665,7 @@ export default function DigitalTrustSummitPage() {
                       Register and enter the draw
                     </h2>
                     <p className="mt-1 text-[14px] text-gray-500">
-                      Two quick steps. Done in under two minutes.
+                      Two steps, under two minutes.
                     </p>
                     <div className="mt-4 flex items-center gap-2">
                       <div className={`h-1 w-14 rounded-full ${step === 1 ? 'bg-[#0052CC]' : 'bg-[#C4FF61]'}`} />
@@ -784,7 +785,7 @@ export default function DigitalTrustSummitPage() {
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <div>
                         <p className="mb-2 block text-[13px] font-medium text-gray-700">
-                          What is eating your roadmap right now? * <span className="font-normal text-gray-400">(pick any)</span>
+                          What’s slowing you down right now? * <span className="font-normal text-gray-400">(pick any)</span>
                         </p>
                         <div className="flex flex-wrap gap-1.5">
                           {PAIN_POINT_OPTIONS.map((option) => {
@@ -819,7 +820,7 @@ export default function DigitalTrustSummitPage() {
 
                       <div>
                         <p className="mb-2 block text-[13px] font-medium text-gray-700">
-                          Where are you on the AI journey? *
+                          Where are you with AI right now? *
                         </p>
                         <div className="grid grid-cols-2 gap-2">
                           {JOURNEY_STAGES.map((stage) => (
@@ -939,12 +940,11 @@ export default function DigitalTrustSummitPage() {
                 className="font-medium leading-[1.08] tracking-[-0.03em] text-white"
                 style={{ fontSize: 'clamp(2rem, 4.4vw, 3.6rem)' }}
               >
-                One of you walks out wearing
+                One of you leaves wearing
                 <span className="text-[#C4FF61]"> Ray-Ban Meta smart&nbsp;glasses</span>
               </h2>
               <p className="mt-5 max-w-lg text-lg leading-relaxed text-white/70">
-                Plus on the spot prizes through the day. Here is how it works, in the time
-                it takes to read three lines.
+                There are smaller prizes through the day too. Here’s how the draw&nbsp;works.
               </p>
 
               <div className="mt-10 space-y-4">
@@ -999,11 +999,11 @@ export default function DigitalTrustSummitPage() {
               className="max-w-2xl font-medium leading-[1.1] tracking-[-0.02em] text-gray-900"
               style={{ fontSize: 'clamp(1.7rem, 3.4vw, 3rem)' }}
             >
-              The people running our session on AI risk, cyber resilience, and data&nbsp;security.
+              The team running our session on AI risk, security, and&nbsp;data.
             </h2>
             <p className="max-w-sm text-[15px] leading-relaxed text-gray-600">
-              Bring your hardest problem. They collect those. Ask for a 1:1 in the form and
-              we will fix a slot before the event.
+              Bring your hardest problem, they collect those. Ask for a 1:1 in the form and
+              we’ll set up a slot before the&nbsp;event.
             </p>
           </div>
 
@@ -1132,7 +1132,7 @@ export default function DigitalTrustSummitPage() {
               className="font-medium leading-[1.1] tracking-[-0.02em] text-gray-900"
               style={{ fontSize: 'clamp(1.7rem, 3.4vw, 3rem)' }}
             >
-              Four industries, four transformations.
+              Four industries. Four real&nbsp;builds.
             </h2>
             {/* Refined segmented control: pills live in a single track,
                 each with its sector glyph, the active one filled ink. */}
@@ -1227,9 +1227,9 @@ export default function DigitalTrustSummitPage() {
             <div className="rounded-[28px] bg-white p-8 shadow-[0_2px_24px_rgba(10,22,40,0.06)]">
               <h3 className="text-lg font-semibold tracking-tight text-gray-900">ACI Infotech</h3>
               <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
-                A global digital transformation and technology consulting company. We modernize
-                enterprise operations with AI, cloud, data, cybersecurity, automation, and
-                enterprise platforms, from strategy through managed&nbsp;services.
+                We’re a global technology consulting firm. We help large enterprises modernize
+                with AI, cloud, data, security, and automation, from the first plan through to
+                the team that keeps it&nbsp;running.
               </p>
             </div>
             <div className="rounded-[28px] bg-[#0A1628] p-8">
@@ -1241,9 +1241,9 @@ export default function DigitalTrustSummitPage() {
                 className="h-8 w-auto"
               />
               <p className="mt-3 text-[15px] leading-relaxed text-white/70">
-                Our enterprise AI platform. GenAI, intelligent agents, predictive analytics,
-                and secure AI, built for organizations that need outcomes without cutting
-                corners on trust. See it live at the&nbsp;booth.
+                Our enterprise AI platform. GenAI, agents, and predictive analytics, built so
+                you get results without giving up on security. Come see it run at
+                the&nbsp;booth.
               </p>
             </div>
           </div>
@@ -1271,13 +1271,13 @@ export default function DigitalTrustSummitPage() {
             className="mx-auto max-w-3xl font-medium leading-[1.08] tracking-[-0.03em] text-white"
             style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}
           >
-            Bengaluru. One day.
+            See you in Bengaluru,
             <br />
-            <span className="text-[#C4FF61]">Be&nbsp;there.</span>
+            <span className="text-[#C4FF61]">on 31&nbsp;July.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/70">
-            Register now, meet the team at Taj Yeshwantpur, and give those Ray-Ban Meta
-            smart glasses a reason to leave with&nbsp;you.
+            Register now, find us at Taj Yeshwantpur, and put your name in for the Ray-Ban
+            Meta smart&nbsp;glasses.
           </p>
 
           <div className="mt-10 flex justify-center">
@@ -1285,7 +1285,7 @@ export default function DigitalTrustSummitPage() {
           </div>
 
           <p className="mt-6 text-sm text-white/40">
-            Free to register. Two minutes. One pair of very smart glasses.
+            Free to register. Takes two minutes. One winner leaves with the&nbsp;glasses.
           </p>
         </div>
       </section>
