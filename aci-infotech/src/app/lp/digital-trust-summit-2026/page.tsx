@@ -227,9 +227,8 @@ const JOURNEY_STAGES = [
   { value: 'optimizing', label: 'Optimizing', desc: 'Mature, tuning cost and risk' },
 ];
 
-// Speakers from the event creative. Rajiv has no photo in the repo yet,
-// so his card falls back to an initials avatar until one lands in
-// /public/images/about-team/.
+// Speakers from the event creative. Each card falls back to an initials
+// avatar if a photo is ever missing from /public/images/about-team/.
 const SPEAKERS = [
   {
     name: 'Prakash Hingorani',
@@ -240,7 +239,7 @@ const SPEAKERS = [
   {
     name: 'Rajiv Kumar Pandey',
     title: 'VP, Global Presales and Delivery Solutions',
-    photo: null,
+    photo: '/images/about-team/Rajiv.webp',
     initials: 'RK',
   },
   {
@@ -483,22 +482,30 @@ export default function DigitalTrustSummitPage() {
           bottom-anchored headline, form card right
           ============================================ */}
       <section id="register" className="relative flex min-h-screen flex-col">
-        {/* Background video + stylized overlay */}
+        {/* Background event film + dark stylized overlay */}
         <div className="absolute inset-0 overflow-hidden">
           <video
             className="h-full w-full object-cover"
-            src="/videos/aion-2026/hero-wave.mp4"
             autoPlay
             muted
             loop
             playsInline
+            poster="/videos/aion-2026/event-hero-poster.webp"
             aria-hidden
-          />
-          {/* Brand tint + legibility gradient */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/80 via-[#0A1628]/45 to-[#0A1628]/95" />
+          >
+            <source src="/videos/aion-2026/event-hero.mp4" type="video/mp4" />
+          </video>
+          {/* Dark stylized overlay: heavy ink over the busy expo footage so
+              the headline and form stay legible, a brand tint, an edge
+              vignette for depth, and film grain. */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/90 via-[#0A1628]/64 to-[#0A1628]/97" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0A1628]/85 via-[#0A1628]/35 to-[#0A1628]/75" />
           <div className="absolute inset-0 bg-[#0052CC]/20 mix-blend-overlay" />
-          {/* Film grain */}
-          <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: GRAIN }} />
+          <div
+            className="absolute inset-0"
+            style={{ background: 'radial-gradient(120% 85% at 50% 15%, transparent 42%, rgba(10,22,40,0.55) 100%)' }}
+          />
+          <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: GRAIN }} />
         </div>
 
         {/* Pill navbar: both brand marks, prominent, no CTA button */}
