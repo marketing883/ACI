@@ -511,22 +511,22 @@ export default function DigitalTrustSummitPage() {
         {/* Pill navbar: both brand marks, prominent, no CTA button */}
         <div className="relative z-20 mx-auto w-full max-w-[1440px] p-3 sm:p-4">
           <nav className="flex items-center justify-between rounded-full bg-white px-5 py-3 shadow-[0_2px_16px_rgba(0,0,0,0.25)] sm:px-6">
-            <div className="flex items-center gap-3 sm:gap-5">
+            <div className="flex items-center gap-4 sm:gap-5">
               <Image
                 src="/aci-infotech-logo.png"
                 alt="ACI Infotech"
-                width={130}
-                height={35}
-                className="h-7 w-auto sm:h-8"
+                width={150}
+                height={40}
+                className="h-8 w-auto sm:h-10"
                 priority
               />
-              <span className="h-7 w-px bg-gray-200 sm:h-8" aria-hidden />
+              <span className="h-8 w-px bg-gray-200 sm:h-10" aria-hidden />
               <Image
-                src="/images/ArqAI-Logo-no-tagline.png"
-                alt="ArqAI"
-                width={120}
-                height={42}
-                className="h-6 w-auto sm:h-7"
+                src="/images/ArqAI-Labs-Logo.png"
+                alt="ArqAI Labs"
+                width={200}
+                height={76}
+                className="h-9 w-auto sm:h-11"
                 priority
               />
             </div>
@@ -1225,25 +1225,27 @@ export default function DigitalTrustSummitPage() {
           {/* About strip folded into the same section rhythm */}
           <div className="mt-6 grid gap-6 md:grid-cols-2">
             <div className="rounded-[28px] bg-white p-8 shadow-[0_2px_24px_rgba(10,22,40,0.06)]">
-              <h3 className="text-lg font-semibold tracking-tight text-gray-900">ACI Infotech</h3>
+              <p className="text-[12px] font-semibold uppercase tracking-wider text-[#0052CC]">Who we are</p>
+              <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">ACI Infotech</h3>
               <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
-                We’re a global technology consulting firm. We help large enterprises modernize
-                with AI, cloud, data, security, and automation, from the first plan through to
-                the team that keeps it&nbsp;running.
+                An enterprise technology firm. We deliver AI outcomes in your industry, built on a
+                data and delivery foundation we run ourselves. 280+ systems in production, a billion
+                dollars delivered, 20&nbsp;years.
               </p>
             </div>
             <div className="rounded-[28px] bg-[#0A1628] p-8">
+              <p className="text-[12px] font-semibold uppercase tracking-wider text-[#C4FF61]">Our strategic AI partner</p>
               <Image
-                src="/images/arqai/arq-ai-logo-white.svg"
-                alt="ArqAI"
-                width={110}
-                height={36}
-                className="h-8 w-auto"
+                src="/images/ArqAI-Labs-Logo-light.png"
+                alt="ArqAI Labs"
+                width={200}
+                height={76}
+                className="mt-3 h-10 w-auto"
               />
-              <p className="mt-3 text-[15px] leading-relaxed text-white/70">
-                Our enterprise AI platform. GenAI, agents, and predictive analytics, built so
-                you get results without giving up on security. Come see it run at
-                the&nbsp;booth.
+              <p className="mt-4 text-[15px] leading-relaxed text-white/70">
+                ArqAI Labs is an independent AI company. They design, build, and run production AI
+                agents for regulated operations, with an audit trail on every action. See it live at
+                our&nbsp;booth.
               </p>
             </div>
           </div>

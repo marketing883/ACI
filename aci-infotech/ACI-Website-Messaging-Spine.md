@@ -75,14 +75,14 @@ Foundation framing line, reusable: "Data and AI are the work. Cloud, platform en
 
 Keep platform pages (Databricks, Snowflake, SAP, ServiceNow and the rest) intact. Buyers search by platform, and those pages bring them in. The data platform pages matter most here, since data is now half the headline.
 
-## ArqAI on the ACI site
+## ArqAI Labs on the ACI site
 
-Light touch, partner framed. ArqAI is a strategic AI partner, not ACI's proprietary platform.
+Light touch, partner framed. ArqAI Labs is an independent AI company and ACI's strategic AI partner, not ACI's platform, division, or arm. (The correct name is "ArqAI Labs", not "ArqAI".)
 
-- Approved: "We work with ArqAI, an independent operational-AI company, on production AI in regulated industries."
-- Do not say: "our proprietary AI delivery platform," "ArqAI ships with every engagement," "nothing to license, nothing to deploy."
-- ACI's own data and AI proof carries the story. ArqAI is a mention, not the engine.
-- The clean line between the two: ACI is Data and AI, the full stack from foundation to outcome. ArqAI is pure operational AI, the vertical agents. Keep them in their lanes.
+- Approved: "accelerated by ArqAI Labs, our strategic AI partner," with ACI's own proof leading. "ArqAI Labs is an independent AI company that designs, builds, and runs production AI agents in regulated operations, with governance on every action."
+- Do not say: "our proprietary platform," "ACI's AI platform / vertical / division," "ArqAI ships with every engagement," "nothing to license, nothing to deploy," or "wing / arm / owned by" for either company.
+- ACI's own data and AI proof carries the story. ArqAI Labs is a mention and proof of depth, never the engine.
+- The clean line between the two: ACI sells AI outcomes by industry, on a foundation it builds and runs. ArqAI Labs is production operational AI, the vertical agents with governance on every action. Keep them in their lanes.
 
 ## Voice rules
 

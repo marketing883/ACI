@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'ACI Infotech at AION 2026 | National Digital Trust Summit',
     description:
-      'Register for AION 2026 in Bengaluru, 31 July. Meet our experts, see ArqAI in action, and enter the lucky draw for Ray-Ban Meta smart glasses.',
+      'Register for AION 2026 in Bengaluru, 31 July. Meet our experts, see ArqAI Labs in action, and enter the lucky draw for Ray-Ban Meta smart glasses.',
     url: 'https://aciinfotech.com/lp/digital-trust-summit-2026',
     type: 'website',
   },

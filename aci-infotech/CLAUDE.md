@@ -57,6 +57,35 @@ Avoid em-dashes (`—`) and en-dashes (`–`) in body copy. Plain sentences,
 short words, one or two relevant buzzwords where they earn their keep.
 Human voice, not marketing gloss.
 
+## ACI and ArqAI Labs positioning
+
+Source of truth: the "ACI Infotech and ArqAI Labs" positioning doc
+(shared, 22 June 2026). Two separate, independent companies with shared
+founders, in a strategic partnership. Neither is a wing, arm, division,
+or subsidiary of the other.
+
+- **ACI Infotech**: an enterprise technology firm. Center of gravity is
+  AI outcomes by industry, on a data and delivery foundation ACI builds
+  and runs. Proof stands on its own: 280+ systems in production, $1B+
+  delivered, 95% retention, 20 years.
+- **ArqAI Labs**: an independent AI company (correct name is "ArqAI
+  Labs", not "ArqAI"). It designs, builds, deploys, and runs production
+  AI agents for regulated operations, one vertical at a time, with
+  governance and an audit trail on every action. Its moat is a growing
+  library of vertical accelerators.
+- On the ACI site, ArqAI Labs is **ACI's strategic AI partner**, pointed
+  to, not leaned on. ACI is ArqAI Labs's delivery and distribution
+  partner; ArqAI Labs is ACI's frontier AI partner.
+
+Never say, either direction: "wing", "arm", "division", "owned by";
+that ArqAI Labs is "our proprietary platform" or "ACI's AI platform /
+vertical"; "nothing to license, nothing to deploy". Logos live at
+`public/images/ArqAI-Labs-Logo.png` (dark mark, for light backgrounds)
+and `ArqAI-Labs-Logo-light.png` (for dark backgrounds).
+
+Do not commit ArqAI Labs's internal accelerator names/specs or any
+fundraising or IP details to this repo. They are confidential.
+
 ## Where things live
 
 - Next.js app: `aci-infotech/`
