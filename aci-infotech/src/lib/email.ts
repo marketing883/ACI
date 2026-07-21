@@ -217,6 +217,215 @@ export async function sendThankYouEmail(data: ThankYouEmailData): Promise<boolea
   }
 }
 
+// Event lead (AION 2026 / Digital Trust Summit) notification interfaces
+interface EventLeadNotificationData {
+  fullName: string;
+  email: string;
+  phone?: string;
+  companyName: string;
+  jobTitle: string;
+  painPoints: string[];
+  painPointOther?: string;
+  journeyStage: string;
+  wantsExpertMeeting: boolean;
+  eventName: string;
+  utmSource?: string;
+  utmCampaign?: string;
+}
+
+interface EventThankYouData {
+  fullName: string;
+  email: string;
+  eventName: string;
+  eventDateLine: string;
+  eventVenueLine: string;
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// Notify the sales team about a new event registration / draw entry
+export async function sendEventLeadNotificationEmail(data: EventLeadNotificationData): Promise<boolean> {
+  if (!resend) {
+    console.log('[Email] Resend not configured - skipping event lead notification');
+    console.log('[Email] Event lead data:', data);
+    return false;
+  }
+
+  const subject = `New ${data.eventName} registration: ${data.fullName} (${data.companyName})`;
+
+  const painPointRows = data.painPoints
+    .map((p) => `<li style="padding: 4px 0;">${escapeHtml(p)}</li>`)
+    .join('');
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #0A1628; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0; font-size: 22px;">New Event Registration</h1>
+        <p style="margin: 8px 0 0 0; opacity: 0.8; font-size: 14px;">${escapeHtml(data.eventName)}</p>
+      </div>
+
+      <div style="padding: 30px; background: #f9f9f9;">
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <h2 style="color: #0066FF; margin-top: 0;">Contact</h2>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 8px 0; color: #666; width: 150px;">Name:</td>
+              <td style="padding: 8px 0; font-weight: bold;">${escapeHtml(data.fullName)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #666;">Email:</td>
+              <td style="padding: 8px 0;"><a href="mailto:${escapeHtml(data.email)}" style="color: #0066FF;">${escapeHtml(data.email)}</a></td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #666;">Phone:</td>
+              <td style="padding: 8px 0;">${escapeHtml(data.phone || 'Not provided')}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #666;">Company:</td>
+              <td style="padding: 8px 0; font-weight: bold;">${escapeHtml(data.companyName)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #666;">Designation:</td>
+              <td style="padding: 8px 0;">${escapeHtml(data.jobTitle)}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <h2 style="color: #0066FF; margin-top: 0;">Qualification</h2>
+          <p style="margin: 0 0 6px 0; color: #666;">Pain points:</p>
+          <ul style="margin: 0 0 16px 0; padding-left: 20px; color: #333;">${painPointRows}</ul>
+          ${data.painPointOther ? `<p style="margin: 0 0 16px 0; color: #333;"><span style="color: #666;">In their words:</span> ${escapeHtml(data.painPointOther)}</p>` : ''}
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 8px 0; color: #666; width: 150px;">AI journey stage:</td>
+              <td style="padding: 8px 0; font-weight: bold;">${escapeHtml(data.journeyStage)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #666;">Wants a 1:1:</td>
+              <td style="padding: 8px 0; font-weight: bold;">${data.wantsExpertMeeting ? 'Yes, book them' : 'No'}</td>
+            </tr>
+          </table>
+        </div>
+
+        ${data.utmSource || data.utmCampaign ? `
+        <div style="background: white; padding: 20px; border-radius: 8px;">
+          <h2 style="color: #0066FF; margin-top: 0;">Campaign Attribution</h2>
+          <table style="width: 100%; border-collapse: collapse;">
+            ${data.utmSource ? `<tr><td style="padding: 8px 0; color: #666; width: 150px;">Source:</td><td style="padding: 8px 0;">${escapeHtml(data.utmSource)}</td></tr>` : ''}
+            ${data.utmCampaign ? `<tr><td style="padding: 8px 0; color: #666;">Campaign:</td><td style="padding: 8px 0;">${escapeHtml(data.utmCampaign)}</td></tr>` : ''}
+          </table>
+        </div>
+        ` : ''}
+      </div>
+
+      <div style="padding: 20px; text-align: center; color: #666; font-size: 12px;">
+        <p>Captured from the ${escapeHtml(data.eventName)} landing page. This entry is in the lucky draw pool.</p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: ADMIN_EMAIL,
+      subject,
+      html,
+    });
+
+    if (error) {
+      console.error('[Email] Failed to send event lead notification:', error);
+      return false;
+    }
+
+    console.log('[Email] Event lead notification sent successfully');
+    return true;
+  } catch (error) {
+    console.error('[Email] Error sending event lead notification:', error);
+    return false;
+  }
+}
+
+// Confirm the registration + draw entry to the attendee
+export async function sendEventThankYouEmail(data: EventThankYouData): Promise<boolean> {
+  if (!resend) {
+    console.log('[Email] Resend not configured - skipping event thank you email');
+    return false;
+  }
+
+  const firstName = data.fullName.trim().split(/\s+/)[0] || data.fullName;
+  const subject = `You are in the draw. See you at ${data.eventName}`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: linear-gradient(135deg, #0A1628 0%, #0f2744 100%); color: white; padding: 40px; text-align: center;">
+        <h1 style="margin: 0; font-size: 26px;">You are in, ${escapeHtml(firstName)}.</h1>
+        <p style="margin: 15px 0 0 0; opacity: 0.9;">Your registration for ${escapeHtml(data.eventName)} is confirmed, and so is your lucky draw entry.</p>
+      </div>
+
+      <div style="padding: 40px 30px; background: #ffffff;">
+        <div style="background: #f5f7fa; padding: 25px; border-radius: 8px; margin-bottom: 30px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 6px 0; color: #666; width: 90px;">When:</td>
+              <td style="padding: 6px 0; font-weight: bold; color: #333;">${escapeHtml(data.eventDateLine)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #666;">Where:</td>
+              <td style="padding: 6px 0; font-weight: bold; color: #333;">${escapeHtml(data.eventVenueLine)}</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3 style="margin: 0 0 15px 0; color: #0066FF;">Three things to do on the day</h3>
+        <ol style="margin: 0 0 30px 0; padding-left: 20px; color: #555; line-height: 1.8;">
+          <li>Come to the ACI Infotech booth and say hello. That activates your draw entry.</li>
+          <li>Catch our session on AI risks, cyber resilience, and data security.</li>
+          <li>Stay for the live draw. One registrant walks out with Ray-Ban Meta smart glasses, and on the spot prizes run all day.</li>
+        </ol>
+
+        <p style="font-size: 15px; color: #333; line-height: 1.6;">
+          If you asked for a 1:1 with our leaders, someone from our team will reach out before the event to fix a slot.
+        </p>
+      </div>
+
+      <div style="padding: 30px; background: #0A1628; color: #ffffff; text-align: center;">
+        <p style="margin: 0 0 10px 0; font-size: 14px;">ACI Infotech</p>
+        <p style="margin: 0; font-size: 12px; opacity: 0.7;">AI | Data Engineering | Cloud | Cybersecurity</p>
+        <div style="margin-top: 20px;">
+          <a href="https://aciinfotech.com" style="color: #7CB3FF; text-decoration: none; font-size: 12px;">aciinfotech.com</a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject,
+      html,
+    });
+
+    if (error) {
+      console.error('[Email] Failed to send event thank you email:', error);
+      return false;
+    }
+
+    console.log('[Email] Event thank you email sent to:', data.email);
+    return true;
+  } catch (error) {
+    console.error('[Email] Error sending event thank you email:', error);
+    return false;
+  }
+}
+
 // Whitepaper lead notification interfaces
 interface WhitepaperLeadNotificationData {
   name: string;
