@@ -26,7 +26,6 @@ import {
   Server,
   Compass,
   Building2,
-  Clock,
   Download,
   Trophy,
 } from 'lucide-react';
@@ -67,31 +66,6 @@ function useCountdown(target: Date) {
     minutes: Math.floor((diff % 3600000) / 60000),
     seconds: Math.floor((diff % 60000) / 1000),
   };
-}
-
-// Live Bengaluru clock for the navbar, mount-gated like the countdown.
-function useBengaluruTime() {
-  const [time, setTime] = useState<string | null>(null);
-
-  useEffect(() => {
-    const update = () =>
-      setTime(
-        new Date().toLocaleTimeString('en-IN', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-          timeZone: 'Asia/Kolkata',
-        })
-      );
-    const raf = requestAnimationFrame(update);
-    const timer = setInterval(update, 1000);
-    return () => {
-      cancelAnimationFrame(raf);
-      clearInterval(timer);
-    };
-  }, []);
-
-  return time;
 }
 
 // Intersection observer hook for scroll animations
@@ -360,7 +334,6 @@ export default function DigitalTrustSummitPage() {
   const [activeStory, setActiveStory] = useState(0);
 
   const countdown = useCountdown(EVENT_START);
-  const bengaluruTime = useBengaluruTime();
 
   const expertsRef = useInView(0.2);
   const capRef = useInView(0.2);
@@ -505,33 +478,32 @@ export default function DigitalTrustSummitPage() {
         <div className="relative z-20 mx-auto w-full max-w-[1440px] p-3 sm:p-4">
           <nav className="flex items-center justify-between rounded-full bg-white px-5 py-3 shadow-[0_2px_16px_rgba(0,0,0,0.25)] sm:px-6">
             <div className="flex items-center gap-4 sm:gap-5">
-              <Image
-                src="/aci-infotech-logo.png"
-                alt="ACI Infotech"
-                width={150}
-                height={40}
-                className="h-8 w-auto sm:h-10"
-                priority
-              />
+              <a href="https://aciinfotech.com" target="_blank" rel="noopener noreferrer">
+                <Image
+                  src="/aci-infotech-logo.png"
+                  alt="ACI Infotech"
+                  width={150}
+                  height={40}
+                  className="h-9 w-auto sm:h-11"
+                  priority
+                />
+              </a>
               <span className="h-8 w-px bg-gray-200 sm:h-10" aria-hidden />
-              <Image
-                src="/images/ArqAI-Labs-Logo.png"
-                alt="ArqAI Labs"
-                width={200}
-                height={76}
-                className="h-9 w-auto sm:h-11"
-                priority
-              />
+              <a href="https://thearq.ai" target="_blank" rel="noopener noreferrer">
+                <Image
+                  src="/images/ArqAI-Labs-Logo.png"
+                  alt="ArqAI Labs"
+                  width={200}
+                  height={76}
+                  className="h-9 w-auto sm:h-11"
+                  priority
+                />
+              </a>
             </div>
             <div className="flex items-center gap-4">
               <span className="hidden items-center gap-2 text-[12px] text-gray-500 xl:flex">
                 <Starburst className="h-4 w-4 text-[#0052CC]" />
                 In association with CXO Elite Forum and National Cyber Security Standards
-              </span>
-              <span className="hidden h-6 w-px bg-gray-200 xl:block" aria-hidden />
-              <span className="hidden items-center gap-1.5 text-[13px] text-gray-600 md:flex">
-                <Clock className="h-3.5 w-3.5" aria-hidden />
-                <span className="tabular-nums">{bengaluruTime ?? '--:--'}</span> in Bengaluru
               </span>
             </div>
           </nav>
