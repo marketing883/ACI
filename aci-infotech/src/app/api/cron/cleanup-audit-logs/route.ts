@@ -5,9 +5,14 @@ import { cleanupAuditLogs } from '@/lib/audit-log';
 const CRON_SECRET = process.env.CRON_SECRET;
 
 /**
- * Cleanup old audit logs - call this from an external cron service
+ * Cleanup old audit logs.
  *
- * Example: Set up a daily cron job at cron-job.org or use GitHub Actions
+ * Scheduling runs in Supabase via pg_cron (see
+ * supabase/migrations/20260723_schedule_audit_log_cleanup.sql, daily,
+ * 90-day retention). This endpoint is a manual fallback for ad-hoc runs
+ * with a custom retention, e.g. ?days=30 — no external cron service
+ * needs to call it.
+ *
  * URL: https://yourdomain.com/api/cron/cleanup-audit-logs
  * Header: Authorization: Bearer YOUR_CRON_SECRET
  */

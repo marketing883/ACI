@@ -8,8 +8,10 @@ const CRON_SECRET = process.env.CRON_SECRET;
  * mark_inactive_sessions() which sets is_active = FALSE for sessions
  * with last_activity_at older than 30 minutes.
  *
- * Schedule via Vercel cron (vercel.json) every 5 minutes, or via an
- * external cron service.
+ * Scheduling runs in Supabase via pg_cron (see
+ * supabase/migrations/20260416_schedule_session_cleanup.sql, every
+ * 5 minutes). This endpoint is a manual fallback / smoke test only —
+ * no external cron service needs to call it.
  *
  * GET /api/cron/cleanup-sessions
  * Header: Authorization: Bearer <CRON_SECRET>
