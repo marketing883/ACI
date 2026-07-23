@@ -198,6 +198,32 @@ const PAIN_POINT_OPTIONS = [
   'Something else',
 ];
 
+// Open discovery questions: optional, free text, gold for the booth team.
+const DISCOVERY_QUESTIONS = [
+  {
+    key: 'teamChallenges',
+    label: 'What are some of the biggest challenges your team is currently facing?',
+    placeholder: 'A line or two is plenty',
+  },
+  {
+    key: 'reportingChallenges',
+    label: 'Are there any reporting or analytics challenges?',
+    placeholder: 'Dashboards, data quality, slow reports...',
+  },
+  {
+    key: 'aiMlExploration',
+    label: 'Are you exploring AI or Machine Learning for any business functions?',
+    placeholder: 'Which functions, and how far along?',
+  },
+  {
+    key: 'aiAdoptionChallenge',
+    label: 'What is the biggest challenge you are facing in adopting AI?',
+    placeholder: 'Skills, data, budget, governance...',
+  },
+] as const;
+
+type DiscoveryKey = (typeof DISCOVERY_QUESTIONS)[number]['key'];
+
 const JOURNEY_STAGES = [
   { value: 'exploring', label: 'Exploring', desc: 'Evaluating, nothing live yet' },
   { value: 'piloting', label: 'Piloting', desc: 'A few pilots running' },
@@ -325,6 +351,12 @@ export default function DigitalTrustSummitPage() {
   const [painPoints, setPainPoints] = useState<string[]>([]);
   const [painPointOther, setPainPointOther] = useState('');
   const [journeyStage, setJourneyStage] = useState('');
+  const [discovery, setDiscovery] = useState<Record<DiscoveryKey, string>>({
+    teamChallenges: '',
+    reportingChallenges: '',
+    aiMlExploration: '',
+    aiAdoptionChallenge: '',
+  });
   const [wantsExpertMeeting, setWantsExpertMeeting] = useState(false);
   const [utm, setUtm] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -398,6 +430,10 @@ export default function DigitalTrustSummitPage() {
           painPoints,
           painPointOther: painPoints.includes('Something else') ? painPointOther : '',
           journeyStage,
+          teamChallenges: discovery.teamChallenges.trim(),
+          reportingChallenges: discovery.reportingChallenges.trim(),
+          aiMlExploration: discovery.aiMlExploration.trim(),
+          aiAdoptionChallenge: discovery.aiAdoptionChallenge.trim(),
           wantsExpertMeeting,
           utmSource: utm.utm_source,
           utmMedium: utm.utm_medium,
@@ -809,6 +845,29 @@ export default function DigitalTrustSummitPage() {
                           ))}
                         </div>
                       </div>
+
+                      {DISCOVERY_QUESTIONS.map((q) => (
+                        <div key={q.key}>
+                          <label
+                            htmlFor={q.key}
+                            className="mb-1 block text-[13px] font-medium text-gray-700"
+                          >
+                            {q.label} <span className="font-normal text-gray-400">(optional)</span>
+                          </label>
+                          <textarea
+                            id={q.key}
+                            name={q.key}
+                            value={discovery[q.key]}
+                            onChange={(e) =>
+                              setDiscovery((prev) => ({ ...prev, [q.key]: e.target.value }))
+                            }
+                            rows={2}
+                            maxLength={500}
+                            className={`${inputClass} resize-none`}
+                            placeholder={q.placeholder}
+                          />
+                        </div>
+                      ))}
 
                       <label className="flex cursor-pointer items-start gap-3 rounded-xl bg-gray-50 p-3">
                         <input

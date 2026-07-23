@@ -28,6 +28,10 @@ interface EventLead {
   pain_points: string[];
   pain_point_other: string | null;
   journey_stage: 'exploring' | 'piloting' | 'scaling' | 'optimizing' | null;
+  team_challenges?: string | null;
+  reporting_challenges?: string | null;
+  ai_ml_exploration?: string | null;
+  ai_adoption_challenge?: string | null;
   wants_expert_meeting: boolean;
   utm_source: string | null;
   utm_medium: string | null;
@@ -43,6 +47,14 @@ const STAGE_LABELS: Record<string, string> = {
   scaling: 'Scaling',
   optimizing: 'Optimizing',
 };
+
+// Short labels for the four open discovery questions on the LP form.
+const DISCOVERY_FIELDS = [
+  { key: 'team_challenges', label: 'Team challenges' },
+  { key: 'reporting_challenges', label: 'Reporting/analytics' },
+  { key: 'ai_ml_exploration', label: 'AI/ML exploration' },
+  { key: 'ai_adoption_challenge', label: 'AI adoption blocker' },
+] as const;
 
 const STATUS_STYLES: Record<string, string> = {
   new: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -201,7 +213,9 @@ export default function EventLeadsPage() {
   function exportCsv() {
     const headers = [
       'Name', 'Email', 'Phone', 'Company', 'Designation', 'Journey stage',
-      'Wants 1:1', 'Challenges', 'Other', 'UTM source', 'UTM campaign', 'Status', 'Registered',
+      'Wants 1:1', 'Challenges', 'Other',
+      'Team challenges', 'Reporting/analytics challenges', 'AI/ML exploration', 'AI adoption challenge',
+      'UTM source', 'UTM campaign', 'Status', 'Registered',
     ];
     const escape = (v: string) => `"${String(v).replace(/"/g, '""')}"`;
     const rows = filtered.map((l) => [
@@ -209,6 +223,8 @@ export default function EventLeadsPage() {
       l.journey_stage ? STAGE_LABELS[l.journey_stage] : '',
       l.wants_expert_meeting ? 'Yes' : 'No',
       (l.pain_points || []).join('; '), l.pain_point_other || '',
+      l.team_challenges || '', l.reporting_challenges || '',
+      l.ai_ml_exploration || '', l.ai_adoption_challenge || '',
       l.utm_source || '', l.utm_campaign || '', l.status, l.created_at,
     ].map((v) => escape(v as string)).join(','));
     const csv = [headers.map(escape).join(','), ...rows].join('\r\n');
@@ -375,6 +391,11 @@ export default function EventLeadsPage() {
                       {l.pain_point_other && (
                         <p className="mt-1 max-w-[240px] text-[12px] italic text-gray-400">“{l.pain_point_other}”</p>
                       )}
+                      {DISCOVERY_FIELDS.filter((f) => l[f.key]).map((f) => (
+                        <p key={f.key} className="mt-1 max-w-[240px] text-[12px] text-gray-500">
+                          <span className="font-medium text-gray-400">{f.label}:</span> {l[f.key]}
+                        </p>
+                      ))}
                     </td>
                     <td className="px-5 py-4">
                       {l.journey_stage ? (

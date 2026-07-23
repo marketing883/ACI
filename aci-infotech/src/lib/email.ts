@@ -227,6 +227,10 @@ interface EventLeadNotificationData {
   painPoints: string[];
   painPointOther?: string;
   journeyStage: string;
+  teamChallenges?: string;
+  reportingChallenges?: string;
+  aiMlExploration?: string;
+  aiAdoptionChallenge?: string;
   wantsExpertMeeting: boolean;
   eventName: string;
   utmSource?: string;
@@ -262,6 +266,27 @@ export async function sendEventLeadNotificationEmail(data: EventLeadNotification
   const painPointRows = data.painPoints
     .map((p) => `<li style="padding: 4px 0;">${escapeHtml(p)}</li>`)
     .join('');
+
+  const discoveryAnswers = [
+    { question: 'What are some of the biggest challenges your team is currently facing?', answer: data.teamChallenges },
+    { question: 'Are there any reporting or analytics challenges?', answer: data.reportingChallenges },
+    { question: 'Are you exploring AI or Machine Learning for any business functions?', answer: data.aiMlExploration },
+    { question: 'What is the biggest challenge you are facing in adopting AI?', answer: data.aiAdoptionChallenge },
+  ].filter((qa) => qa.answer);
+
+  const discoveryBlock = discoveryAnswers.length
+    ? `
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <h2 style="color: #0066FF; margin-top: 0;">In Their Words</h2>
+          ${discoveryAnswers
+            .map(
+              (qa) => `
+          <p style="margin: 0 0 4px 0; color: #666;">${escapeHtml(qa.question)}</p>
+          <p style="margin: 0 0 16px 0; color: #333;">${escapeHtml(qa.answer as string)}</p>`
+            )
+            .join('')}
+        </div>`
+    : '';
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -313,6 +338,8 @@ export async function sendEventLeadNotificationEmail(data: EventLeadNotification
             </tr>
           </table>
         </div>
+
+        ${discoveryBlock}
 
         ${data.utmSource || data.utmCampaign ? `
         <div style="background: white; padding: 20px; border-radius: 8px;">
