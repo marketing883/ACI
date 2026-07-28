@@ -8,7 +8,19 @@ const resend = process.env.RESEND_API_KEY
   : null;
 
 const FROM_EMAIL = process.env.FROM_EMAIL || 'ACI Infotech <noreply@aciinfotech.com>';
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'leads@aciinfotech.com';
+// Where lead notifications land. Accepts a comma-separated list so one
+// misrouted inbox does not lose a lead again: the AION 2026 registrations went
+// missing partly because this was a single unmonitored address.
+//
+// Prefer an address that is NOT on the sending domain. Mail from
+// noreply@aciinfotech.com to an @aciinfotech.com mailbox arrives at Google
+// Workspace from an outside relay, which gets it quarantined as spoofing,
+// while the same send to an outside domain is delivered normally.
+const ADMIN_EMAIL: string | string[] = (() => {
+  const raw = process.env.ADMIN_EMAIL || 'leads@aciinfotech.com';
+  const list = raw.split(',').map((a) => a.trim()).filter(Boolean);
+  return list.length > 1 ? list : list[0] || 'leads@aciinfotech.com';
+})();
 // Resource Management Group (India) — gets every new candidate application
 // for triage. Override via env if the inbox ever changes; the default keeps
 // the wiring honest if the env var is missing.

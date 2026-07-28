@@ -25,7 +25,7 @@ function check(name: string, cond: boolean, extra?: unknown) {
 }
 
 // Capture the payload Resend would have been sent, and answer as Resend does.
-let captured: { subject?: string; html?: string } = {};
+let captured: { subject?: string; html?: string; to?: string | string[] } = {};
 const realFetch = globalThis.fetch;
 globalThis.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
   const href = String(url instanceof Request ? url.url : url);
@@ -73,6 +73,19 @@ async function main() {
   check('subject matches the prefix the backfill filters on',
     Boolean(captured.subject?.startsWith(REGISTRATION_SUBJECT_PREFIX)), captured.subject);
   check('html body captured', Boolean(captured.html));
+
+  // ADMIN_EMAIL takes a comma-separated list so one misrouted inbox cannot
+  // lose a lead again. A single address must still go out as a plain string.
+  const configured = (process.env.ADMIN_EMAIL || 'leads@aciinfotech.com')
+    .split(',').map((a) => a.trim()).filter(Boolean);
+  if (configured.length > 1) {
+    check('multiple ADMIN_EMAIL addresses sent as an array',
+      Array.isArray(captured.to) && JSON.stringify(captured.to) === JSON.stringify(configured),
+      captured.to);
+  } else {
+    check('single ADMIN_EMAIL sent as a string',
+      captured.to === configured[0], captured.to);
+  }
   if (!captured.html) {
     console.log('\nNo HTML captured - cannot continue.');
     process.exit(1);
@@ -131,8 +144,47 @@ async function main() {
   check('no utm invented', minimal?.utm_source === null && minimal?.utm_campaign === null);
   check('pain_points still read', JSON.stringify(minimal?.pain_points) === JSON.stringify(['Scaling AI beyond pilots']));
 
-  console.log('4. Junk input:');
+  // The confirmation email: the fallback source if the notifications turn out
+  // never to have reached Resend.
+  const { sendEventThankYouEmail } = await import('../src/lib/email');
+  const { parseConfirmationEmail, CONFIRMATION_SUBJECT_PREFIX } = await import(
+    '../src/lib/event-leads-email-parse'
+  );
+
+  captured = {};
+  await sendEventThankYouEmail({
+    fullName: 'Ananya Rao',
+    email: 'ananya.rao@fintechbank.com',
+    eventName: 'National Digital Trust Summit, AION 2026',
+    eventDateLine: 'Friday, 31 July 2026',
+    eventVenueLine: 'Taj Yeshwantpur, Bengaluru',
+  });
+  console.log('4. Confirmation email fallback:');
+  check('subject matches the fallback prefix',
+    Boolean(captured.subject?.startsWith(CONFIRMATION_SUBJECT_PREFIX)), captured.subject);
+  const confirmed = parseConfirmationEmail(captured.html!, 'Ananya.Rao@FinTechBank.com');
+  check('first name read from the greeting', confirmed?.first_name === 'Ananya', confirmed?.first_name);
+  check('email lowercased from the Resend recipient',
+    confirmed?.email === 'ananya.rao@fintechbank.com', confirmed?.email);
+
+  // A first name that is itself an abbreviation must not lose its period.
+  captured = {};
+  await sendEventThankYouEmail({
+    fullName: 'Dr. Meera Iyer',
+    email: 'meera@hospitalgroup.in',
+    eventName: 'National Digital Trust Summit, AION 2026',
+    eventDateLine: 'Friday, 31 July 2026',
+    eventVenueLine: 'Taj Yeshwantpur, Bengaluru',
+  });
+  const abbreviated = parseConfirmationEmail(captured.html!, 'meera@hospitalgroup.in');
+  check('abbreviated first name survives', abbreviated?.first_name === 'Dr.', abbreviated?.first_name);
+
+  console.log('5. Junk input:');
   check('unrelated html returns null', parseEventLeadEmail('<p>hello</p>') === null);
+  check('confirmation parser rejects unrelated html',
+    parseConfirmationEmail('<p>hello</p>', 'a@b.com') === null);
+  check('confirmation parser rejects a blank recipient',
+    parseConfirmationEmail(captured.html!, '   ') === null);
 
   console.log(failures === 0 ? '\nAll checks passed.' : `\n${failures} check(s) FAILED.`);
   process.exit(failures === 0 ? 0 : 1);

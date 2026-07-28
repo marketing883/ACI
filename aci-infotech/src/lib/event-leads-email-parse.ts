@@ -12,6 +12,12 @@
 export const REGISTRATION_SUBJECT_PREFIX =
   'New National Digital Trust Summit, AION 2026 registration:';
 
+// The attendee's confirmation. Worth far less than the notification, but it is
+// the only trace left if the notifications never reached Resend at all: the
+// recipient address comes off the Resend record, the first name off the
+// greeting. Everything else about the registration is gone.
+export const CONFIRMATION_SUBJECT_PREFIX = 'You are in the draw. See you at';
+
 export const VALID_JOURNEY_STAGES = ['exploring', 'piloting', 'scaling', 'optimizing'];
 
 // Match each discovery question on a distinctive fragment, never on position:
@@ -47,6 +53,11 @@ export interface ParsedEventLead {
   utm_source: string | null;
   utm_campaign: string | null;
 }
+
+// Placeholder for the two NOT NULL columns a confirmation email cannot supply.
+// Deliberately conspicuous: a partial row must never read as a real one on the
+// dashboard.
+export const PARTIAL_PLACEHOLDER = 'Unknown (recovered from confirmation email)';
 
 // Inverse of escapeHtml() in src/lib/email.ts. Order matters: &amp; goes last,
 // or an escaped "&amp;lt;" would decode twice. Note ' is never escaped there.
@@ -130,4 +141,21 @@ export function parseEventLeadEmail(html: string): ParsedEventLead | null {
     utm_source: labelledCell(html, 'Source:') || null,
     utm_campaign: labelledCell(html, 'Campaign:') || null,
   };
+}
+
+// Everything a confirmation email can give up: the first name from the
+// greeting. The address is not in the body, so the caller passes it in from
+// Resend's `to` field. Returns null if the greeting is not there, so a
+// different template cannot be mistaken for a registration.
+export function parseConfirmationEmail(
+  html: string,
+  recipient: string
+): { first_name: string; email: string } | null {
+  // Greedy up to the last period before </h1>, so a first name that is itself
+  // an abbreviation ("Dr.") survives.
+  const match = html.match(/You are in,\s*([\s\S]*)\.\s*<\/h1>/i);
+  const first_name = clean(match?.[1]);
+  const email = recipient.trim().toLowerCase();
+  if (!first_name || !email) return null;
+  return { first_name, email };
 }

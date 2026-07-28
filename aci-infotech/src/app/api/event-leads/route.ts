@@ -176,9 +176,23 @@ export async function POST(request: NextRequest) {
         eventName: EVENT_NAME,
         utmSource: utmSource || undefined,
         utmCampaign: utmCampaign || undefined,
-      }).catch((err) => {
-        console.error('[Event Lead] Failed to send admin notification:', err);
-      });
+      })
+        .then((sent) => {
+          // These senders report failure by returning false, and every caller
+          // used to throw that away. That is how the AION 2026 notifications
+          // went missing without a trace in the logs.
+          if (!sent) {
+            console.error(
+              '[Event Lead] NOTIFICATION NOT SENT - nobody has been told about this ' +
+                `registration: ${leadData.email}. Check RESEND_API_KEY and ADMIN_EMAIL. ` +
+                'A send that succeeds here can still be quarantined by the recipient; ' +
+                'check last_event in Resend.'
+            );
+          }
+        })
+        .catch((err) => {
+          console.error('[Event Lead] Failed to send admin notification:', err);
+        });
 
       // Confirm the draw entry to the attendee (async, don't block response)
       sendEventThankYouEmail({

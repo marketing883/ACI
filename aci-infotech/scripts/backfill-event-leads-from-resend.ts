@@ -29,7 +29,10 @@ import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import {
   parseEventLeadEmail,
+  parseConfirmationEmail,
   REGISTRATION_SUBJECT_PREFIX,
+  CONFIRMATION_SUBJECT_PREFIX,
+  PARTIAL_PLACEHOLDER,
   type ParsedEventLead,
 } from '../src/lib/event-leads-email-parse';
 
@@ -88,6 +91,103 @@ function writeCsv(leads: ParsedLead[]): string {
   return path;
 }
 
+// -------------------------------------------------- tier 2: confirmations
+
+type ConfirmationRef = { id: string; created_at: string; subject: string; to: string[] };
+
+// Last resort. A confirmation email holds the registrant's first name and, via
+// Resend's `to` field, their address. Company and designation are NOT NULL on
+// the table, so rows recovered this way carry a conspicuous placeholder and go
+// in only when asked for with --include-partial. The CSV is written either way:
+// it is enough to rebuild the draw pool and to mail these people for the rest.
+async function recoverFromConfirmations(resend: Resend, confirmations: ConfirmationRef[]) {
+  const includePartial = process.argv.includes('--include-partial');
+  const found: Array<{ first_name: string; email: string; createdAt: string; emailId: string }> = [];
+  const failed: Array<{ id: string; subject: string; reason: string }> = [];
+
+  for (const mail of confirmations) {
+    const recipient = mail.to[0];
+    if (!recipient) {
+      failed.push({ id: mail.id, subject: mail.subject, reason: 'no recipient on the record' });
+      continue;
+    }
+    const { data, error } = await resend.emails.get(mail.id);
+    if (error || !data?.html) {
+      failed.push({ id: mail.id, subject: mail.subject, reason: error?.message ?? 'no html body' });
+      continue;
+    }
+    const parsed = parseConfirmationEmail(data.html, recipient);
+    if (!parsed) {
+      failed.push({ id: mail.id, subject: mail.subject, reason: 'could not read the greeting' });
+      continue;
+    }
+    found.push({ ...parsed, createdAt: mail.created_at, emailId: mail.id });
+  }
+
+  found.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  const seen = new Set<string>();
+  const unique = found.filter((r) => {
+    if (seen.has(r.email)) return false;
+    seen.add(r.email);
+    return true;
+  });
+
+  const escape = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const csvPath = `event-leads-partial-${new Date().toISOString().slice(0, 10)}.csv`;
+  writeFileSync(
+    csvPath,
+    [
+      ['Registered', 'First name', 'Email', 'Resend email id'].map(escape).join(','),
+      ...unique.map((r) => [r.createdAt, r.first_name, r.email, r.emailId].map(escape).join(',')),
+    ].join('\r\n')
+  );
+
+  log(`Identified ${unique.length} registrant(s) from ${confirmations.length} confirmation(s).`);
+  log(`Wrote ${csvPath}.`);
+  log('Company, designation, phone, pain points and the discovery answers are');
+  log('not in these emails. Mail these people to collect the rest.\n');
+
+  if (!includePartial) {
+    log('Not inserting: partial rows would sit on the dashboard missing everything');
+    log('but a name. Re-run with --include-partial to insert them anyway, with a');
+    log(`visible "${PARTIAL_PLACEHOLDER}" in the required columns.\n`);
+  } else if (dryRun) {
+    for (const r of unique) log(`  would insert  ${r.email.padEnd(34)} ${r.first_name}`);
+  } else {
+    const supabase = createClient(supabaseUrl!, serviceKey!, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    let inserted = 0;
+    let present = 0;
+    for (const r of unique) {
+      const { error } = await supabase.from('event_leads').insert({
+        event_slug: EVENT_SLUG,
+        full_name: r.first_name,
+        email: r.email,
+        company_name: PARTIAL_PLACEHOLDER,
+        job_title: PARTIAL_PLACEHOLDER,
+        pain_points: [],
+        wants_expert_meeting: false,
+        status: 'new',
+        created_at: r.createdAt,
+      });
+      if (!error) {
+        inserted++;
+        log(`  inserted      ${r.email}`);
+      } else if (error.code === '23505') {
+        present++;
+        log(`  already there ${r.email}`);
+      } else {
+        log(`  FAILED        ${r.email}: ${error.message}`);
+      }
+    }
+    log(`\ninserted: ${inserted}, already in the pool: ${present}`);
+  }
+
+  for (const f of failed) log(`\n  unreadable: ${f.subject}\n    ${f.id}: ${f.reason}`);
+  log('');
+}
+
 // ----------------------------------------------------------------- main
 
 async function main() {
@@ -95,8 +195,9 @@ async function main() {
 
   const resend = new Resend(resendKey);
 
-  // 1. Page through every sent email, keeping the registration notifications.
+  // 1. Page through every sent email, keeping both kinds of event mail.
   const notifications: Array<{ id: string; created_at: string; subject: string }> = [];
+  const confirmations: ConfirmationRef[] = [];
   let oldestSeen: string | null = null;
   let scanned = 0;
   let cursor: string | undefined;
@@ -117,6 +218,13 @@ async function main() {
       if (!oldestSeen || mail.created_at < oldestSeen) oldestSeen = mail.created_at;
       if (mail.subject?.startsWith(REGISTRATION_SUBJECT_PREFIX)) {
         notifications.push({ id: mail.id, created_at: mail.created_at, subject: mail.subject });
+      } else if (mail.subject?.startsWith(CONFIRMATION_SUBJECT_PREFIX)) {
+        confirmations.push({
+          id: mail.id,
+          created_at: mail.created_at,
+          subject: mail.subject,
+          to: mail.to ?? [],
+        });
       }
     }
 
@@ -125,11 +233,21 @@ async function main() {
   }
 
   log(`Scanned ${scanned} sent emails, back to ${oldestSeen ?? 'n/a'}.`);
-  log(`Found ${notifications.length} registration notifications.`);
-  log('If that is fewer than the inbox shows, Resend retention has trimmed the history.\n');
+  log(`Found ${notifications.length} registration notifications, ${confirmations.length} attendee confirmations.`);
+  log('If that is fewer than expected, Resend retention has trimmed the history.\n');
 
-  if (!notifications.length) {
+  if (!notifications.length && !confirmations.length) {
     log('Nothing to recover.\n');
+    return;
+  }
+
+  // The notifications carry the whole submission. Only fall back to the
+  // confirmations if they are not there, since those give up little more than
+  // a name and an address.
+  if (!notifications.length) {
+    log('No notifications in Resend, so the full submissions are gone.');
+    log('Falling back to the attendee confirmations: name and email only.\n');
+    await recoverFromConfirmations(resend, confirmations);
     return;
   }
 
