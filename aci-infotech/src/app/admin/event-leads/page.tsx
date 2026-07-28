@@ -124,6 +124,8 @@ export default function EventLeadsPage() {
   const [stageFilter, setStageFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [meetingOnly, setMeetingOnly] = useState(false);
+  const [demo, setDemo] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const isConfigured = isSupabaseConfigured();
@@ -131,6 +133,7 @@ export default function EventLeadsPage() {
     if (isConfigured) {
       fetchLeads();
     } else {
+      setDemo(true);
       setLeads(mockLeads);
       setLoading(false);
     }
@@ -142,10 +145,16 @@ export default function EventLeadsPage() {
       const res = await fetch('/api/admin/event-leads');
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Failed to load registrations');
+      // json.demo means the server has no service-role key, so these are
+      // sample rows. Flag it: sample data that looks live is worse than an
+      // empty table, because nobody goes looking for the missing entries.
+      setDemo(Boolean(json.demo));
       setLeads(json.demo ? mockLeads : json.leads || []);
+      setLoadError(null);
     } catch (error) {
       console.error('Error fetching event registrations:', error);
-      setLeads(mockLeads);
+      setLeads([]);
+      setLoadError(error instanceof Error ? error.message : 'Failed to load registrations');
     } finally {
       setLoading(false);
     }
@@ -263,9 +272,19 @@ export default function EventLeadsPage() {
         </button>
       </div>
 
-      {!configured && (
+      {demo && (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
-          Demo mode: showing sample registrations. Configure Supabase to see live entries.
+          Demo mode: showing sample registrations, not live entries.{' '}
+          {configured
+            ? 'The server is missing SUPABASE_SERVICE_ROLE_KEY.'
+            : 'Configure Supabase to see live entries.'}
+        </div>
+      )}
+
+      {loadError && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          Could not load registrations: {loadError}. Retry, and check the server logs if it keeps
+          failing.
         </div>
       )}
 

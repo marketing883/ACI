@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { isWorkEmail } from '@/lib/lp-dropdown-options';
 import { sendEventLeadNotificationEmail, sendEventThankYouEmail } from '@/lib/email';
+import { insertEventLead } from '@/lib/event-leads-db';
 
 const EVENT_SLUG = 'digital-trust-summit-2026';
 const EVENT_NAME = 'National Digital Trust Summit, AION 2026';
@@ -113,35 +114,46 @@ export async function POST(request: NextRequest) {
     const supabase = getServiceSupabase();
     let leadId: string | null = null;
     let alreadyRegistered = false;
+    // A registration that never reached the table is invisible to the
+    // admin dashboard, so say so in the response and shout in the logs.
+    let persisted = false;
 
     if (supabase) {
-      const { data: lead, error } = await supabase
-        .from('event_leads')
-        .insert({
-          ...leadData,
-          ip_address: ip,
-          user_agent: userAgent,
-          referrer: referrer,
-        })
-        .select('id')
-        .single();
+      const result = await insertEventLead(supabase, {
+        ...leadData,
+        ip_address: ip,
+        user_agent: userAgent,
+        referrer: referrer,
+      });
 
-      if (error) {
-        // 23505 = unique violation: same email already in the draw pool.
-        // That is a success from the visitor's point of view.
-        if (error.code === '23505') {
-          alreadyRegistered = true;
-          console.log('[Event Lead] Duplicate entry for:', leadData.email);
-        } else {
-          console.error('Supabase error:', error);
-          // Don't fail the request - still send emails
-        }
+      if (result.dropped.length) {
+        console.error(
+          `[Event Lead] event_leads is missing ${result.dropped.join(', ')} - saved without them. ` +
+            'Run the pending supabase/migrations against this project.'
+        );
+      }
+
+      if (result.duplicate) {
+        // Same email already in the draw pool. That is a success from the
+        // visitor's point of view, and the row is already on the dashboard.
+        alreadyRegistered = true;
+        persisted = true;
+        console.log('[Event Lead] Duplicate entry for:', leadData.email);
+      } else if (result.error) {
+        console.error('[Event Lead] NOT SAVED - registration exists only in the notification email:', {
+          email: leadData.email,
+          error: result.error,
+        });
       } else {
-        leadId = lead?.id;
+        leadId = result.id;
+        persisted = true;
         console.log('[Event Lead] Saved to database:', leadId);
       }
     } else {
-      console.log('[Event Lead] Supabase not configured - skipping database save');
+      console.error(
+        '[Event Lead] NOT SAVED - Supabase is not configured on this deployment ' +
+          '(NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)'
+      );
       console.log('[Event Lead] Data:', leadData);
     }
 
@@ -184,6 +196,7 @@ export async function POST(request: NextRequest) {
       success: true,
       leadId,
       alreadyRegistered,
+      persisted,
     });
   } catch (error) {
     console.error('Event lead submit error:', error);

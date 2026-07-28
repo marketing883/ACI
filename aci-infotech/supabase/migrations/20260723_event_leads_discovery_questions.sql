@@ -11,3 +11,7 @@ ALTER TABLE event_leads
   ADD COLUMN IF NOT EXISTS reporting_challenges TEXT,
   ADD COLUMN IF NOT EXISTS ai_ml_exploration TEXT,
   ADD COLUMN IF NOT EXISTS ai_adoption_challenge TEXT;
+
+-- PostgREST rejects an insert naming a column its schema cache has not
+-- seen yet, so make it pick these up now instead of on the next restart.
+NOTIFY pgrst, 'reload schema';
