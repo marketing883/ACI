@@ -47,3 +47,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local exports of candidate and lead PII, written by scripts/. Resumes,
+# applicant details and recovered registrations never belong in git.
+/exports/
+event-leads-recovered-*.csv
+event-leads-partial-*.csv
