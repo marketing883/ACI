@@ -4,6 +4,18 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
+  allVisibleSelected,
+  canOfferSelectAll,
+  emptySelection,
+  exportIds,
+  isSelected,
+  selectAllFiltered,
+  selectedCount,
+  toggleOne,
+  toggleVisible,
+  type SelectionState,
+} from '@/lib/bulk-selection';
+import {
   Users,
   Mail,
   Phone,
@@ -93,6 +105,28 @@ function JobApplicationsContent() {
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
+  const [selection, setSelection] = useState<SelectionState>(emptySelection);
+
+  const pageCount = Math.max(1, Math.ceil(applications.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const pageStart = (currentPage - 1) * pageSize;
+  const visible = applications.slice(pageStart, pageStart + pageSize);
+
+  const allIds = applications.map(a => a.id);
+  const visibleIds = visible.map(a => a.id);
+  const selected = selectedCount(selection, applications.length);
+  const visibleAllSelected = allVisibleSelected(selection, visibleIds);
+  const offerSelectAll = canOfferSelectAll(selection, visibleIds, applications.length);
+
+  // Changing the filter or the page size invalidates the page number and any
+  // selection. Keeping ticks for rows that are no longer in view is how people
+  // export the wrong candidates.
+  useEffect(() => {
+    setPage(1);
+    setSelection(emptySelection());
+  }, [filter.job_id, filter.status, pageSize]);
 
   // Every job, for the position filter. Sorted by title because two openings
   // here differ only by region ("... (APAC)" and "... (US)"), so they need to
@@ -116,21 +150,44 @@ function JobApplicationsContent() {
     setExportError(null);
     setExporting(true);
 
-    const params = new URLSearchParams();
-    if (filter.job_id) params.set('job_id', filter.job_id);
-    if (filter.status) params.set('status', filter.status);
-
+    // Posted as a form, not a GET: a hand-picked selection can run to
+    // hundreds of ids, which overruns what a URL will carry. The hidden
+    // iframe still lets the browser handle Content-Disposition natively.
     const frame = document.createElement('iframe');
     frame.style.display = 'none';
-    frame.src = `/api/admin/job-applications/export?${params}`;
+    frame.name = `export-${Date.now()}`;
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/api/admin/job-applications/export';
+    form.target = frame.name;
+    form.style.display = 'none';
+
+    const field = (name: string, value: string) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    };
+
+    if (filter.job_id) field('job_id', filter.job_id);
+    if (filter.status) field('status', filter.status);
+    // An explicit subset wins. "All filtered" and "nothing ticked" both mean
+    // the same thing to the server: export whatever the filter matches.
+    const ids = exportIds(selection);
+    if (ids) field('ids', ids.join(','));
     // The browser takes over on Content-Disposition, so a load event here
     // means the server answered with an error page instead of a file.
     frame.onload = () => {
       setExporting(false);
       setExportError('The export did not start. Check the server logs and try again.');
       frame.remove();
+      form.remove();
     };
     document.body.appendChild(frame);
+    document.body.appendChild(form);
+    form.submit();
 
     // No progress events are available for a native download, so release the
     // button once the stream is plainly under way.
@@ -282,10 +339,17 @@ function JobApplicationsContent() {
             className="inline-flex items-center gap-2 rounded-lg bg-[#0052CC] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#003d99] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Download className="w-4 h-4" />
-            {exporting ? 'Preparing export...' : 'Export'}
+            {exporting
+              ? 'Preparing export...'
+              : exportIds(selection)
+                ? `Export ${selected} selected`
+                : 'Export'}
           </button>
           <p className="mt-1.5 text-xs text-gray-400">
-            {applications.length} application{applications.length === 1 ? '' : 's'} as Excel + resumes
+            {exportIds(selection)
+              ? `${selected} selected`
+              : `${applications.length} application${applications.length === 1 ? '' : 's'}`}
+            {' '}as Excel + resumes
           </p>
         </div>
       </div>
@@ -399,14 +463,56 @@ function JobApplicationsContent() {
             <p className="text-gray-500">No applications found</p>
           </div>
         ) : (
-          // Wrap the table in a horizontal-scroll container. The admin
-          // layout can render narrower than the six-column table on
-          // mobile Safari, where an unwrapped table blows the viewport
-          // and breaks position:sticky ancestors.
+          <>
+          {/* Ticking the header box selects this page only. When there are
+              more rows behind the filter, offer the whole set explicitly
+              rather than leaving people to guess what "select all" covered. */}
+          {selected > 0 && (
+            <div className="flex flex-wrap items-center gap-2 border-b bg-blue-50 px-4 py-3 text-sm text-blue-900">
+              {selection.allFiltered ? (
+                <>
+                  <span className="font-medium">
+                    All {applications.length} applications matching this filter are selected.
+                  </span>
+                  <button onClick={() => setSelection(emptySelection())} className="underline underline-offset-2 hover:no-underline">
+                    Clear selection
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span className="font-medium">{selected} selected.</span>
+                  {offerSelectAll && (
+                    <button
+                      onClick={() => setSelection(selectAllFiltered())}
+                      className="underline underline-offset-2 hover:no-underline"
+                    >
+                      Select all {applications.length} matching this filter
+                    </button>
+                  )}
+                  <button onClick={() => setSelection(emptySelection())} className="underline underline-offset-2 hover:no-underline">
+                    Clear selection
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+          {/* Wrap the table in a horizontal-scroll container. The admin
+              layout can render narrower than the six-column table on
+              mobile Safari, where an unwrapped table blows the viewport
+              and breaks position:sticky ancestors. */}
           <div className="overflow-x-auto">
           <table className="w-full min-w-[720px]">
             <thead className="bg-gray-50 border-b">
               <tr>
+                <th className="w-10 px-4 py-3">
+                  <input
+                    type="checkbox"
+                    checked={visibleAllSelected}
+                    onChange={() => setSelection(toggleVisible(selection, visibleIds, allIds))}
+                    aria-label="Select every application on this page"
+                    className="h-4 w-4 accent-[#0052CC] cursor-pointer"
+                  />
+                </th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Candidate</th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Position</th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Status</th>
@@ -416,8 +522,20 @@ function JobApplicationsContent() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {applications.map((app) => (
-                <tr key={app.id} className="hover:bg-gray-50">
+              {visible.map((app) => (
+                <tr
+                  key={app.id}
+                  className={isSelected(selection, app.id) ? 'bg-blue-50/60' : 'hover:bg-gray-50'}
+                >
+                  <td className="px-4 py-4 align-top">
+                    <input
+                      type="checkbox"
+                      checked={isSelected(selection, app.id)}
+                      onChange={() => setSelection(toggleOne(selection, app.id, allIds))}
+                      aria-label={`Select ${app.first_name} ${app.last_name}`}
+                      className="h-4 w-4 accent-[#0052CC] cursor-pointer"
+                    />
+                  </td>
                   <td className="px-4 py-4">
                     <div>
                       <p className="font-medium text-gray-900">
@@ -500,6 +618,44 @@ function JobApplicationsContent() {
             </tbody>
           </table>
           </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3 text-sm">
+            <div className="flex items-center gap-2 text-gray-500">
+              <span>
+                {pageStart + 1} to {pageStart + visible.length} of {applications.length}
+              </span>
+              <select
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+                className="rounded-lg border px-2 py-1 text-sm"
+                aria-label="Rows per page"
+              >
+                {[25, 50, 100, 200].map(n => (
+                  <option key={n} value={n}>{n} per page</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPage(currentPage - 1)}
+                disabled={currentPage <= 1}
+                className="rounded-lg border px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Previous
+              </button>
+              <span className="text-gray-500">
+                Page {currentPage} of {pageCount}
+              </span>
+              <button
+                onClick={() => setPage(currentPage + 1)}
+                disabled={currentPage >= pageCount}
+                className="rounded-lg border px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+          </>
         )}
       </div>
 

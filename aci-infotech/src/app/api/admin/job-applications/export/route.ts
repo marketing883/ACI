@@ -37,7 +37,39 @@ type ApplicationWithJob = ApplicationRow & {
   jobs?: { title?: string | null } | null;
 };
 
+// POST carries a hand-picked selection: hundreds of ids overrun what a URL
+// will hold, so the page submits a form instead of navigating.
+export async function POST(request: NextRequest) {
+  const form = await request.formData();
+  const ids = String(form.get('ids') ?? '')
+    .split(',')
+    .map((id) => id.trim())
+    .filter(Boolean);
+  return exportApplications({
+    jobId: (form.get('job_id') as string) || null,
+    status: (form.get('status') as string) || null,
+    ids: ids.length ? ids : null,
+  });
+}
+
+// GET keeps working for a plain filtered export, and for pasting a URL.
 export async function GET(request: NextRequest) {
+  return exportApplications({
+    jobId: request.nextUrl.searchParams.get('job_id'),
+    status: request.nextUrl.searchParams.get('status'),
+    ids: null,
+  });
+}
+
+async function exportApplications({
+  jobId,
+  status,
+  ids,
+}: {
+  jobId: string | null;
+  status: string | null;
+  ids: string[] | null;
+}) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) {
@@ -48,9 +80,6 @@ export async function GET(request: NextRequest) {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  const jobId = request.nextUrl.searchParams.get('job_id');
-  const status = request.nextUrl.searchParams.get('status');
-
   // Page through: PostgREST caps a single response at 1000 rows, and an
   // unfiltered export across every role will pass that.
   const applications: ApplicationWithJob[] = [];
@@ -60,6 +89,9 @@ export async function GET(request: NextRequest) {
       .select('*, jobs:job_id (title)')
       .order('created_at', { ascending: true })
       .range(from, from + PAGE_SIZE - 1);
+    // An explicit selection is the whole scope; the filters only narrow it
+    // further, which cannot change the result but keeps the two consistent.
+    if (ids) query = query.in('id', ids);
     if (jobId) query = query.eq('job_id', jobId);
     if (status) query = query.eq('status', status);
 
@@ -77,7 +109,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'No applications match this filter' }, { status: 404 });
   }
 
-  const jobTitle = jobId ? applications[0].jobs?.title ?? null : null;
+  // With an explicit selection the rows can span roles, so only name the file
+  // after a job when every row actually belongs to one.
+  const jobTitles = new Set(applications.map((a) => a.jobs?.title ?? ''));
+  const jobTitle = jobTitles.size === 1 ? [...jobTitles][0] || null : null;
   const baseName = `${jobTitle ? slugify(jobTitle) : 'all-applications'}-${new Date()
     .toISOString()
     .slice(0, 10)}`;
