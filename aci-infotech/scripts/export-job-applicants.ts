@@ -30,7 +30,7 @@ import {
   slugify,
   type ApplicationRow,
   type JobRow,
-} from './lib/job-applicants-export';
+} from '../src/lib/job-applicants-export';
 
 const log = (...args: unknown[]) => console.log(...args);
 const dryRun = process.argv.includes('--dry-run');

@@ -16,7 +16,8 @@ import {
   ChevronDown,
   X,
   Loader2,
-  Trash2
+  Trash2,
+  Download
 } from 'lucide-react';
 
 interface Job {
@@ -89,6 +90,38 @@ function JobApplicationsContent() {
   const [statusNotes, setStatusNotes] = useState('');
   const [internalNotes, setInternalNotes] = useState('');
   const [notesSaving, setNotesSaving] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
+
+  // Hands the zip to the browser through a hidden iframe rather than fetch +
+  // blob. A few hundred MB of resumes would otherwise be held in page memory
+  // before the user sees a single byte, and the tab would sit blank for
+  // minutes. The iframe streams straight to the download manager, and the
+  // page stays interactive.
+  function exportApplications() {
+    setExportError(null);
+    setExporting(true);
+
+    const params = new URLSearchParams();
+    if (filter.job_id) params.set('job_id', filter.job_id);
+    if (filter.status) params.set('status', filter.status);
+
+    const frame = document.createElement('iframe');
+    frame.style.display = 'none';
+    frame.src = `/api/admin/job-applications/export?${params}`;
+    // The browser takes over on Content-Disposition, so a load event here
+    // means the server answered with an error page instead of a file.
+    frame.onload = () => {
+      setExporting(false);
+      setExportError('The export did not start. Check the server logs and try again.');
+      frame.remove();
+    };
+    document.body.appendChild(frame);
+
+    // No progress events are available for a native download, so release the
+    // button once the stream is plainly under way.
+    setTimeout(() => setExporting(false), 8000);
+  }
 
   useEffect(() => {
     if (selectedApp) {
@@ -223,12 +256,38 @@ function JobApplicationsContent() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Job Applications</h1>
           <p className="text-gray-500">Review and manage candidate applications</p>
         </div>
+        <div className="text-right">
+          <button
+            onClick={exportApplications}
+            disabled={exporting || applications.length === 0}
+            className="inline-flex items-center gap-2 rounded-lg bg-[#0052CC] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#003d99] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Download className="w-4 h-4" />
+            {exporting ? 'Preparing export...' : 'Export'}
+          </button>
+          <p className="mt-1.5 text-xs text-gray-400">
+            {applications.length} application{applications.length === 1 ? '' : 's'} as Excel + resumes
+          </p>
+        </div>
       </div>
+
+      {exporting && (
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
+          Building the zip. Large roles take a few minutes, since every resume is
+          fetched one at a time. The download starts on its own, so leave this tab open.
+        </div>
+      )}
+
+      {exportError && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {exportError}
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4">

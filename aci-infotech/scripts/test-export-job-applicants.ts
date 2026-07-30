@@ -19,7 +19,7 @@ import {
   CSV_HEADERS,
   type ApplicationRow,
   type JobRow,
-} from './lib/job-applicants-export';
+} from '../src/lib/job-applicants-export';
 
 let failures = 0;
 function check(name: string, cond: boolean, extra?: unknown) {

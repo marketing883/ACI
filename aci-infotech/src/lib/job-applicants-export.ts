@@ -105,18 +105,25 @@ export function csvEscape(value: unknown): string {
   return `"${String(value ?? '').replace(/"/g, '""')}"`;
 }
 
+// One row per applicant, in CSV_HEADERS order. Shared by the CSV writer and
+// the spreadsheet in the admin export so the two can never drift apart.
+export function applicantToValues(
+  a: ApplicationRow,
+  resumeFile: string | null
+): Array<string | number | null> {
+  return [
+    a.created_at, a.first_name, a.last_name, a.email, a.phone, a.location,
+    a.linkedin_url, a.portfolio_url, a.current_company, a.current_title,
+    a.years_experience, a.work_authorization, a.notice_period,
+    a.salary_expectation, a.heard_from, a.cover_letter, a.source,
+    a.referral_name, a.status, a.resume_filename,
+    resumeFile ? `resumes/${resumeFile}` : '',
+  ];
+}
+
 export function applicantsToCsv(apps: ApplicationRow[], resumeFiles: Array<string | null>): string {
   const rows = apps.map((a, i) =>
-    [
-      a.created_at, a.first_name, a.last_name, a.email, a.phone, a.location,
-      a.linkedin_url, a.portfolio_url, a.current_company, a.current_title,
-      a.years_experience, a.work_authorization, a.notice_period,
-      a.salary_expectation, a.heard_from, a.cover_letter, a.source,
-      a.referral_name, a.status, a.resume_filename,
-      resumeFiles[i] ? `resumes/${resumeFiles[i]}` : '',
-    ]
-      .map(csvEscape)
-      .join(',')
+    applicantToValues(a, resumeFiles[i]).map(csvEscape).join(',')
   );
   // CRLF: Excel on Windows is the usual destination for these.
   return [CSV_HEADERS.map(csvEscape).join(','), ...rows].join('\r\n');
