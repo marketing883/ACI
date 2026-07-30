@@ -258,8 +258,15 @@ const nextConfig: NextConfig = {
               // The CloudFront host serves the 404 hero video until a
               // self-hosted copy lands at public/videos/atheros-404.mp4.
               "media-src 'self' blob: https://d8j0ntlcm91z4.cloudfront.net",
-              "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://px.ads.linkedin.com https://server-side-tagging-p5uycbintq-uc.a.run.app https://*.supabase.co https://api.aciinfotech.com https://*.hotjar.com https://*.hotjar.io https://www.clarity.ms https://cdn-in.pagesense.io ",
-              "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net https://bid.g.doubleclick.net https://vars.hotjar.com",
+              // wss://*.supabase.co is listed alongside the https origin on
+              // purpose: a scheme-bearing source only ever matches its own
+              // scheme, so the https entry does not cover the realtime
+              // websocket and every subscription was being blocked.
+              // ad.doubleclick.net receives the Google Ads conversion beacon.
+              "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://ad.doubleclick.net https://px.ads.linkedin.com https://server-side-tagging-p5uycbintq-uc.a.run.app https://*.supabase.co wss://*.supabase.co https://api.aciinfotech.com https://*.hotjar.com https://*.hotjar.io https://www.clarity.ms https://cdn-in.pagesense.io",
+              // The server-side tagging container is framed by GTM, not just
+              // fetched, so it needs to appear here as well as in connect-src.
+              "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net https://bid.g.doubleclick.net https://server-side-tagging-p5uycbintq-uc.a.run.app https://vars.hotjar.com",
               "manifest-src 'self' https://*.github.dev https://github.dev",
             ].join('; '),
           },
