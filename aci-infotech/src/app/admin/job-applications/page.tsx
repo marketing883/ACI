@@ -92,6 +92,20 @@ function JobApplicationsContent() {
   const [notesSaving, setNotesSaving] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [jobs, setJobs] = useState<Job[]>([]);
+
+  // Every job, for the position filter. Sorted by title because two openings
+  // here differ only by region ("... (APAC)" and "... (US)"), so they need to
+  // sit next to each other and show their location.
+  useEffect(() => {
+    fetch('/api/admin/jobs')
+      .then(res => res.json())
+      .then(data => {
+        const list: Job[] = data.jobs ?? [];
+        setJobs([...list].sort((a, b) => a.title.trim().localeCompare(b.title.trim())));
+      })
+      .catch(err => console.error('Error fetching jobs for the filter:', err));
+  }, []);
 
   // Hands the zip to the browser through a hidden iframe rather than fetch +
   // blob. A few hundred MB of resumes would otherwise be held in page memory
@@ -338,7 +352,22 @@ function JobApplicationsContent() {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-4 bg-white p-4 rounded-lg border">
+      <div className="flex flex-wrap items-center gap-4 bg-white p-4 rounded-lg border">
+        {/* Position picker. Without this, a job could only be filtered by
+            arriving from the Jobs page with ?job_id= in the URL, so there was
+            no way to pull up one opening from here. */}
+        <select
+          value={filter.job_id}
+          onChange={(e) => setFilter({ ...filter, job_id: e.target.value })}
+          className="px-3 py-2 border rounded-lg text-sm max-w-md"
+        >
+          <option value="">All positions</option>
+          {jobs.map(job => (
+            <option key={job.id} value={job.id}>
+              {job.title.trim()}{job.location ? ` - ${job.location.trim()}` : ''}
+            </option>
+          ))}
+        </select>
         <select
           value={filter.status}
           onChange={(e) => setFilter({ ...filter, status: e.target.value })}
@@ -349,12 +378,12 @@ function JobApplicationsContent() {
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
-        {filter.job_id && (
+        {(filter.job_id || filter.status) && (
           <button
-            onClick={() => setFilter({ ...filter, job_id: '' })}
+            onClick={() => setFilter({ status: '', job_id: '' })}
             className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm"
           >
-            Filtered by job
+            Clear filters
             <X className="w-4 h-4" />
           </button>
         )}
