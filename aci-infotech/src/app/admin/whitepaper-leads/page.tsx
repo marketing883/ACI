@@ -123,6 +123,7 @@ export default function WhitepaperLeadsPage() {
   const [whitepaperFilter, setWhitepaperFilter] = useState('all');
   const [downloadedFilter, setDownloadedFilter] = useState('all');
   const [configured, setConfigured] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchLeads();
@@ -132,6 +133,7 @@ export default function WhitepaperLeadsPage() {
     try {
       const response = await fetch('/api/admin/whitepaper-leads');
       const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Failed to load leads');
 
       if (result.demo) {
         setConfigured(false);
@@ -142,10 +144,15 @@ export default function WhitepaperLeadsPage() {
       } else {
         setLeads([]);
       }
+      setLoadError(null);
     } catch (error) {
+      // Do not fall back to mockLeads on a read failure. Sample rows that
+      // look live are worse than an empty table: nobody goes looking for
+      // the leads that are missing.
       console.error('Error fetching leads:', error);
-      setLeads(mockLeads);
+      setLeads([]);
       setConfigured(false);
+      setLoadError(error instanceof Error ? error.message : 'Failed to load leads');
     } finally {
       setLoading(false);
     }
@@ -221,6 +228,13 @@ export default function WhitepaperLeadsPage() {
         <h1 className="text-2xl font-bold text-gray-900">Whitepaper Downloads</h1>
         <p className="text-gray-600">Track and manage whitepaper download leads</p>
       </div>
+
+      {loadError && (
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          Could not load leads: {loadError}. The counts below are not real. Check
+          /api/admin/health for the server&apos;s Supabase project and key.
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

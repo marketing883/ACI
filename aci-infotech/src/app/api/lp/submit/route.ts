@@ -99,6 +99,7 @@ export async function POST(request: NextRequest) {
     const supabase = getServiceSupabase();
 
     let leadId: string | null = null;
+    let persisted = false;
 
     if (supabase) {
       // Insert into Supabase
@@ -114,14 +115,26 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error) {
-        console.error('Supabase error:', error);
-        // Don't fail the request - still send emails
+        // Still send the emails - a lost row is recoverable from the
+        // notification inbox, and failing the request would lose the lead
+        // outright. But say so loudly and hand `persisted: false` back, so
+        // a table that has stopped accepting rows cannot masquerade as a
+        // quiet week. PGRST205/42P01 mean the table is missing: run
+        // supabase/migrations/20260807_lp_leads.sql.
+        console.error(
+          `[LP Lead] NOT SAVED - lp_leads insert failed (${error.code || 'no code'}): ${error.message}. ` +
+            `Lead: ${leadData.email} from ${leadData.landing_page}`,
+        );
       } else {
         leadId = lead?.id;
+        persisted = true;
         console.log('[LP Lead] Saved to database:', leadId);
       }
     } else {
-      console.log('[LP Lead] Supabase not configured - skipping database save');
+      console.error(
+        '[LP Lead] NOT SAVED - Supabase is not configured. ' +
+          'Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.',
+      );
       console.log('[LP Lead] Data:', leadData);
     }
 
@@ -157,6 +170,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       leadId,
+      persisted,
       thankYouData: {
         firstName,
         serviceCluster: resolvedServiceCluster,

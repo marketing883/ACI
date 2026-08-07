@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+// Admin reads/writes for lp_leads (every form under /lp/*).
+//
+// This used to live at /api/lp/leads, which sits outside /api/admin/* -
+// src/middleware.ts returns early on those paths and never checks a user,
+// so GET, PATCH and DELETE on the whole lead table were reachable by
+// anyone on the internet, through a service-role client that bypasses RLS.
+// Moving it under /api/admin puts it behind the same auth gate as every
+// other lead endpoint. Do not add it to PUBLIC_READ_ADMIN_PATHS in
+// src/lib/auth/roles.ts.
+
+export const dynamic = 'force-dynamic';
+
 // Server-side Supabase client with service role key
 function getServiceSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

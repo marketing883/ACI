@@ -290,6 +290,7 @@ export default function ContactsPage() {
   const [configured, setConfigured] = useState(false);
   const [intelligence, setIntelligence] = useState<IntelligenceReport | null>(null);
   const [loadingIntelligence, setLoadingIntelligence] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const isConfigured = isSupabaseConfigured();
@@ -315,8 +316,14 @@ export default function ContactsPage() {
       } else {
         setContacts(json.contacts || []);
       }
+      setLoadError(null);
     } catch (error) {
+      // Never fail quietly here. Swallowing this rendered "No leads
+      // found" over a working table of 57 rows, which reads as an empty
+      // pipeline instead of a broken service-role key.
       console.error('Error fetching contacts:', error);
+      setContacts([]);
+      setLoadError(error instanceof Error ? error.message : 'Failed to load contacts');
     } finally {
       setLoading(false);
     }
@@ -516,6 +523,13 @@ export default function ContactsPage() {
               Export
             </button>
           </div>
+
+          {loadError && (
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700">
+              Could not load leads: {loadError}. The counts below are not real. Check
+              /api/admin/health for the server&apos;s Supabase project and key.
+            </div>
+          )}
 
           {/* Stats */}
           <div className="grid grid-cols-4 gap-2 mb-4">

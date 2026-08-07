@@ -51,6 +51,10 @@ export async function middleware(request: NextRequest) {
   const isAuthPage = pathname === '/admin/login';
   const isAdminPage = pathname.startsWith('/admin');
   const isAdminApi = pathname.startsWith('/api/admin');
+  // /api/debug/* probes the database with the service-role key and
+  // reports config state. It sat outside this gate and was reachable by
+  // anyone. Treat it as an admin API so it needs a logged-in admin.
+  const isDebugApi = pathname.startsWith('/api/debug');
 
   // ---------------------------------------------------------------
   // Fast path: everything outside the admin tree returns immediately,
@@ -61,7 +65,7 @@ export async function middleware(request: NextRequest) {
   // public page navigation. That was the multi-second freeze on menu
   // clicks. Public API routes handle their own auth.
   // ---------------------------------------------------------------
-  if (!isAdminPage && !isAdminApi) {
+  if (!isAdminPage && !isAdminApi && !isDebugApi) {
     return NextResponse.next({ request });
   }
 
@@ -115,11 +119,11 @@ export async function middleware(request: NextRequest) {
   // Admin API: must be authenticated AND the user's role must permit
   // the path. Returns JSON, not a redirect — these endpoints are
   // called by fetch() from admin pages, not navigated to.
-  if (isAdminApi) {
+  if (isAdminApi || isDebugApi) {
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    if (!canAccessPath(roleForUser(user), pathname)) {
+    if (isAdminApi && !canAccessPath(roleForUser(user), pathname)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
     return supabaseResponse;

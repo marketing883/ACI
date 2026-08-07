@@ -113,7 +113,7 @@ export default function LPLeadsPage() {
       if (serviceFilter) params.append('service_cluster', serviceFilter);
       if (statusFilter) params.append('status', statusFilter);
 
-      const response = await fetch(`/api/lp/leads?${params}`);
+      const response = await fetch(`/api/admin/lp-leads?${params}`);
       const data = await response.json();
 
       setLeads(data.leads || []);
@@ -142,7 +142,7 @@ export default function LPLeadsPage() {
   // Update lead status
   async function updateLeadStatus(leadId: string, newStatus: string) {
     try {
-      const response = await fetch('/api/lp/leads', {
+      const response = await fetch('/api/admin/lp-leads', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: leadId, status: newStatus }),
@@ -168,7 +168,7 @@ export default function LPLeadsPage() {
     if (!confirm('Are you sure you want to delete this lead?')) return;
 
     try {
-      const response = await fetch(`/api/lp/leads?id=${leadId}`, {
+      const response = await fetch(`/api/admin/lp-leads?id=${leadId}`, {
         method: 'DELETE',
       });
 

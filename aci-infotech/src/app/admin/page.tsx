@@ -20,7 +20,7 @@ import {
   Target,
   Calendar,
 } from 'lucide-react';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 interface DashboardStats {
   contacts: { total: number; new: number };
@@ -57,6 +57,7 @@ export default function AdminDashboard() {
   const [recentLeads, setRecentLeads] = useState<RecentLead[]>([]);
   const [loading, setLoading] = useState(true);
   const [configured, setConfigured] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const isConfigured = isSupabaseConfigured();
@@ -136,166 +137,20 @@ export default function AdminDashboard() {
 
   async function fetchDashboardData() {
     try {
-      // Helper to safely query with fallback for missing columns
-      const safeCount = async (table: string, filter?: { column: string; value: unknown }) => {
-        try {
-          let query = supabase.from(table).select('*', { count: 'exact', head: true });
-          if (filter) {
-            query = query.eq(filter.column, filter.value);
-          }
-          const { count, error } = await query;
-          if (error) return 0;
-          return count || 0;
-        } catch {
-          return 0;
-        }
-      };
+      // One service-role read for every card and the recent-leads feed.
+      // Counting from the browser here used to hand back an anonymous
+      // read: RLS denied most lead tables, the errors were swallowed into
+      // 0, and this page disagreed with the list pages beside it.
+      const res = await fetch('/api/admin/stats');
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to load dashboard data');
 
-      // Fetch contacts stats
-      const totalContacts = await safeCount('contacts');
-      const newContacts = await safeCount('contacts', { column: 'status', value: 'new' });
-
-      // Fetch chat leads stats
-      const totalChatLeads = await safeCount('chat_leads');
-      const newChatLeads = await safeCount('chat_leads', { column: 'status', value: 'new' });
-
-      // Fetch playbook leads stats
-      const totalPlaybookLeads = await safeCount('playbook_leads');
-      const newPlaybookLeads = await safeCount('playbook_leads', { column: 'status', value: 'new' });
-
-      // Fetch whitepaper leads stats
-      const totalWhitepaperLeads = await safeCount('whitepaper_leads');
-      const newWhitepaperLeads = await safeCount('whitepaper_leads', { column: 'status', value: 'new' });
-
-      // Fetch event registrations via the service-role admin route.
-      // event_leads grants SELECT only to authenticated users, so the
-      // browser anon client above cannot read it; the API route can.
-      let eventLeadRows: Array<Record<string, unknown>> = [];
-      try {
-        const res = await fetch('/api/admin/event-leads');
-        if (res.ok) {
-          const json = await res.json();
-          if (!json.demo && Array.isArray(json.leads)) eventLeadRows = json.leads;
-        }
-      } catch {
-        // Dashboard degrades gracefully to zero on any read failure.
-      }
-      const totalEventLeads = eventLeadRows.length;
-      const newEventLeads = eventLeadRows.filter((l) => l.status === 'new').length;
-
-      // Fetch case studies stats (uses status column)
-      const totalCaseStudies = await safeCount('case_studies');
-      const publishedCaseStudies = await safeCount('case_studies', { column: 'status', value: 'published' });
-
-      // Fetch blog stats (uses published_at not null for published)
-      const totalBlog = await safeCount('blog_posts');
-      // For published blogs, count those with published_at not null
-      let publishedBlog = 0;
-      try {
-        const { count, error } = await supabase
-          .from('blog_posts')
-          .select('*', { count: 'exact', head: true })
-          .not('published_at', 'is', null);
-        if (!error && count !== null) publishedBlog = count;
-      } catch {
-        // Ignore errors
-      }
-
-      setStats({
-        contacts: { total: totalContacts, new: newContacts },
-        chatLeads: { total: totalChatLeads, new: newChatLeads },
-        playbookLeads: { total: totalPlaybookLeads, new: newPlaybookLeads },
-        whitepaperLeads: { total: totalWhitepaperLeads, new: newWhitepaperLeads },
-        eventLeads: { total: totalEventLeads, new: newEventLeads },
-        caseStudies: { total: totalCaseStudies, published: publishedCaseStudies },
-        blogPosts: { total: totalBlog, published: publishedBlog },
-      });
-
-      // Fetch recent leads from all sources
-      const { data: contacts } = await supabase
-        .from('contacts')
-        .select('id, name, email, company, inquiry_type, created_at, status, intelligence')
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      const { data: chatLeads } = await supabase
-        .from('chat_leads')
-        .select('id, name, email, company, service_interest, created_at, status, lead_score, intelligence')
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      const { data: playbookLeads } = await supabase
-        .from('playbook_leads')
-        .select('id, name, email, company, playbook_title, created_at, status')
-        .order('created_at', { ascending: false })
-        .limit(2);
-
-      const { data: whitepaperLeads } = await supabase
-        .from('whitepaper_leads')
-        .select('id, name, email, company, whitepaper_title, created_at, status')
-        .order('created_at', { ascending: false })
-        .limit(2);
-
-      // Combine and sort all leads
-      const allLeads: RecentLead[] = [
-        ...(contacts || []).map((c: Record<string, unknown>) => ({
-          id: c.id as string,
-          name: c.name as string,
-          email: c.email as string,
-          company: c.company as string | undefined,
-          created_at: c.created_at as string,
-          status: c.status as string,
-          type: 'contact' as const,
-          source: c.inquiry_type as string,
-          lead_score: (c.intelligence as Record<string, unknown>)?.leadScore as number | undefined,
-        })),
-        ...(chatLeads || []).map((c: Record<string, unknown>) => ({
-          id: c.id as string,
-          name: c.name as string,
-          email: c.email as string,
-          company: c.company as string | undefined,
-          created_at: c.created_at as string,
-          status: c.status as string,
-          type: 'chat' as const,
-          source: c.service_interest as string,
-          lead_score: ((c.intelligence as Record<string, unknown>)?.leadScore || c.lead_score) as number | undefined,
-        })),
-        ...(playbookLeads || []).map((p: Record<string, unknown>) => ({
-          id: p.id as string,
-          name: p.name as string,
-          email: p.email as string,
-          company: p.company as string | undefined,
-          created_at: p.created_at as string,
-          status: p.status as string,
-          type: 'playbook' as const,
-          source: p.playbook_title as string,
-        })),
-        ...(whitepaperLeads || []).map((w: Record<string, unknown>) => ({
-          id: w.id as string,
-          name: w.name as string,
-          email: w.email as string,
-          company: w.company as string | undefined,
-          created_at: w.created_at as string,
-          status: w.status as string,
-          type: 'whitepaper' as const,
-          source: w.whitepaper_title as string,
-        })),
-        ...eventLeadRows.slice(0, 3).map((e: Record<string, unknown>) => ({
-          id: e.id as string,
-          name: e.full_name as string,
-          email: e.email as string,
-          company: e.company_name as string | undefined,
-          created_at: e.created_at as string,
-          status: e.status as string,
-          type: 'event' as const,
-          source: 'AION 2026',
-        })),
-      ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-        .slice(0, 6);
-
-      setRecentLeads(allLeads);
+      setStats(json.stats);
+      setRecentLeads(json.recentLeads || []);
+      setLoadError(null);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+      setLoadError(error instanceof Error ? error.message : 'Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
@@ -454,6 +309,24 @@ export default function AdminDashboard() {
             <p className="font-semibold text-amber-900">Demo Mode Active</p>
             <p className="text-sm text-amber-700">
               Showing sample data. Configure Supabase to connect to your database.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {loadError && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
+          <div className="p-2 bg-red-100 rounded-lg">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+          </div>
+          <div>
+            <p className="font-semibold text-red-900">Could not load lead data</p>
+            <p className="text-sm text-red-700">
+              {loadError}. The numbers below are not real. Check{' '}
+              <Link href="/api/admin/health" className="underline">
+                /api/admin/health
+              </Link>{' '}
+              to see which Supabase project and key the server is using.
             </p>
           </div>
         </div>

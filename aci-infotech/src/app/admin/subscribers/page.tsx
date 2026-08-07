@@ -110,6 +110,7 @@ export default function SubscribersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [configured, setConfigured] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const isConfigured = isSupabaseConfigured();
@@ -130,8 +131,11 @@ export default function SubscribersPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Failed to load subscribers');
       setSubscribers(json.subscribers || []);
+      setLoadError(null);
     } catch (error) {
       console.error('Error fetching subscribers:', error);
+      setSubscribers([]);
+      setLoadError(error instanceof Error ? error.message : 'Failed to load subscribers');
     } finally {
       setLoading(false);
     }
@@ -216,6 +220,13 @@ export default function SubscribersPage() {
           Export CSV
         </button>
       </div>
+
+      {loadError && (
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          Could not load subscribers: {loadError}. The counts below are not real. Check
+          /api/admin/health for the server&apos;s Supabase project and key.
+        </div>
+      )}
 
       {!configured && (
         <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start gap-3">

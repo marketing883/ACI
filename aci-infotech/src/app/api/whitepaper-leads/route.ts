@@ -86,29 +86,8 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
-  // Admin endpoint to list whitepaper leads
-  try {
-    const supabase = getServiceSupabase();
-    const { data, error } = await supabase
-      .from('whitepaper_leads')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch leads' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ leads: data || [] });
-  } catch (error) {
-    console.error('Fetch whitepaper leads error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
+// No GET here on purpose. This path is public (it is the download-gate
+// POST target), so the listing endpoint that used to live here handed
+// every whitepaper lead to any unauthenticated caller through a
+// service-role client. The admin page reads /api/admin/whitepaper-leads,
+// which sits behind the middleware auth gate.

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, getServerClient } from '@/lib/supabase';
+import { getServerClient } from '@/lib/supabase';
 import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
@@ -66,28 +66,8 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
-  // Admin endpoint to list playbook leads
-  try {
-    const { data, error } = await supabase
-      .from('playbook_leads')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch leads' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ leads: data || [] });
-  } catch (error) {
-    console.error('Fetch playbook leads error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
+// No GET here on purpose, for the same reason as the whitepaper one: a
+// lead-listing endpoint on a public path. It only ever returned empty
+// because RLS denies the anon client it used, so it was one policy change
+// away from handing over every playbook lead. The admin page reads
+// /api/admin/playbook-leads, which sits behind the middleware auth gate.
