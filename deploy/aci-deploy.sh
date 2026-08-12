@@ -72,6 +72,33 @@ build() {
   npm run build
 }
 
+# The prod checkout carries local edits that are not in git: .env is a
+# tracked file and is modified on the server, so a plain `reset --hard`
+# would overwrite the live Supabase config with whatever was committed.
+# Refuse rather than guess. ACI_ALLOW_DIRTY=1 overrides once the dirty
+# files are understood.
+DIRTY=$(git -C "$REPO_ROOT" status --porcelain --untracked-files=no)
+if [ -n "$DIRTY" ] && [ "${ACI_ALLOW_DIRTY:-0}" != "1" ]; then
+  echo "!! refusing to deploy: tracked files are modified in $REPO_ROOT" >&2
+  printf '%s\n' "$DIRTY" >&2
+  echo "commit, stash, or re-run with ACI_ALLOW_DIRTY=1 once you know what these are" >&2
+  exit 1
+fi
+
+# Env files never come from git on this box. Keep them across the reset
+# even when ACI_ALLOW_DIRTY is set, because losing them takes the site down
+# and the values are not recoverable from the repository.
+ENV_BACKUP=$(mktemp -d)
+for f in .env .env.local .env.staging; do
+  [ -f "$APP_DIR/$f" ] && cp -a "$APP_DIR/$f" "$ENV_BACKUP/$f"
+done
+restore_env() {
+  for f in .env .env.local .env.staging; do
+    [ -f "$ENV_BACKUP/$f" ] && cp -a "$ENV_BACKUP/$f" "$APP_DIR/$f"
+  done
+}
+trap 'restore_env; rm -rf "$ENV_BACKUP"' EXIT
+
 git -C "$REPO_ROOT" fetch --prune origin "$REF"
 TARGET=$(git -C "$REPO_ROOT" rev-parse FETCH_HEAD)
 echo "target=$TARGET"
@@ -84,6 +111,7 @@ fi
 trap restore ERR
 
 git -C "$REPO_ROOT" reset --hard "$TARGET"
+restore_env
 cd "$APP_DIR"
 npm ci --no-audit --no-fund
 build
