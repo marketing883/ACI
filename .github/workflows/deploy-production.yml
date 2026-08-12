@@ -1,0 +1,120 @@
+name: Deploy to production
+
+# Deploys a chosen ref to the production VPS (aciinfotech.com).
+#
+# Manual trigger only, on purpose. Auto-deploying every push to a branch
+# means a half-finished commit reaches the live site the moment it is
+# pushed; here the push and the deploy are two decisions. Pick the ref you
+# want in the "Run workflow" dialog, or trigger it through the API.
+#
+# The VPS builds from its own checkout rather than receiving a build
+# artifact, because the build reads .env / .env.local from the server and
+# Next.js inlines NEXT_PUBLIC_* values at build time. A build made
+# anywhere else would bake in the wrong environment.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag or SHA to deploy'
+        required: true
+        default: 'main'
+      health_port:
+        description: 'Local port the service listens on'
+        required: false
+        default: '3002'
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.VPS_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          APP_DIR: ${{ secrets.VPS_APP_DIR }}
+          SERVICE: ${{ secrets.VPS_SERVICE }}
+          DEPLOY_REF: ${{ inputs.ref }}
+          HEALTH_PORT: ${{ inputs.health_port }}
+        run: |
+          ssh -o BatchMode=yes "$VPS_USER@$VPS_HOST" \
+            "APP_DIR='$APP_DIR' SERVICE='$SERVICE' DEPLOY_REF='$DEPLOY_REF' HEALTH_PORT='$HEALTH_PORT' bash -s" <<'REMOTE'
+          set -euo pipefail
+
+          cd "$APP_DIR"
+          # The systemd WorkingDirectory may be the app subdirectory rather
+          # than the repository root, so ask git where the checkout starts.
+          REPO_ROOT=$(git rev-parse --show-toplevel)
+          PREVIOUS=$(git -C "$REPO_ROOT" rev-parse HEAD)
+          echo "app_dir=$APP_DIR repo_root=$REPO_ROOT previous=$PREVIOUS"
+
+          echo "== fetching $DEPLOY_REF =="
+          git -C "$REPO_ROOT" fetch --prune origin "$DEPLOY_REF"
+          TARGET=$(git -C "$REPO_ROOT" rev-parse FETCH_HEAD)
+          git -C "$REPO_ROOT" reset --hard "$TARGET"
+          echo "deploying $TARGET"
+
+          # Roll the checkout back and restart on any failure below, so a
+          # broken build never leaves the live site on half-applied code.
+          rollback() {
+            echo "!! deploy failed, rolling back to $PREVIOUS"
+            git -C "$REPO_ROOT" reset --hard "$PREVIOUS"
+            cd "$APP_DIR"
+            npm ci --no-audit --no-fund || true
+            set -a; . ./.env 2>/dev/null || true; . ./.env.local 2>/dev/null || true; set +a
+            npm run build || echo "!! rollback build also failed - service left on old process"
+            sudo systemctl restart "$SERVICE" || true
+          }
+          trap rollback ERR
+
+          cd "$APP_DIR"
+          npm ci --no-audit --no-fund
+
+          # check-build-env.mjs reads process.env only and does not load
+          # .env files itself, so source them the way docs/staging.md does.
+          set -a
+          . ./.env
+          [ -f ./.env.local ] && . ./.env.local
+          set +a
+          npm run build
+
+          sudo systemctl restart "$SERVICE"
+          trap - ERR
+
+          echo "== health check =="
+          ok=0
+          for i in $(seq 1 20); do
+            sleep 3
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:${HEALTH_PORT}/" || echo 000)
+            state=$(systemctl is-active "$SERVICE" || true)
+            echo "attempt $i: http=$code service=$state"
+            if [ "$state" = "active" ] && [ "$code" -ge 200 ] && [ "$code" -lt 400 ]; then
+              ok=1; break
+            fi
+          done
+
+          if [ "$ok" -ne 1 ]; then
+            echo "!! service unhealthy after restart"
+            systemctl status "$SERVICE" --no-pager -n 40 || true
+            rollback
+            exit 1
+          fi
+
+          echo "deployed $TARGET (was $PREVIOUS)"
+          echo "roll back with: git -C $REPO_ROOT reset --hard $PREVIOUS && cd $APP_DIR && npm ci && npm run build && sudo systemctl restart $SERVICE"
+          REMOTE
