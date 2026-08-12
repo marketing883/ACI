@@ -635,6 +635,14 @@ export default function EditBlogPage() {
         throw new Error(result.error || result.details?.message || 'Failed to save post');
       }
 
+      // Belt and braces: never navigate away as if the post saved when the
+      // server says it did not write.
+      if (result.demo || result.persisted === false) {
+        throw new Error(
+          result.message || result.error || 'The server did not save this post.',
+        );
+      }
+
       router.push('/admin/blog');
     } catch (error) {
       console.error('Error saving post:', error);

@@ -16,7 +16,12 @@ import { createClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
 
-const LEAD_TABLES = [
+// Leads and CMS content both go through the service-role client, so a
+// broken key takes out lead capture and publishing together. Check both
+// here: "I cannot post blogs" and "leads are not showing" are usually the
+// same fault, and this is the one request that proves it.
+const CHECKED_TABLES = [
+  // Leads
   'contacts',
   'chat_leads',
   'event_leads',
@@ -25,6 +30,10 @@ const LEAD_TABLES = [
   'whitepaper_leads',
   'newsletter_subscribers',
   'job_applications',
+  // CMS content
+  'blog_posts',
+  'case_studies',
+  'whitepapers',
 ];
 
 interface KeyInfo {
@@ -111,7 +120,7 @@ export async function GET() {
   if (url && serviceKey) {
     const supabase = createClient(url, serviceKey);
     await Promise.all(
-      LEAD_TABLES.map(async (table) => {
+      CHECKED_TABLES.map(async (table) => {
         const { count, error } = await supabase
           .from(table)
           .select('*', { count: 'exact', head: true });

@@ -755,13 +755,25 @@ export default function NewBlogPostPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to save post');
+        console.error('Save error details:', result);
+        throw new Error(result.error || result.details?.message || 'Failed to save post');
+      }
+
+      // Belt and braces: never navigate away as if the post saved when the
+      // server says it did not write. Redirecting on a demo response is how
+      // posts appeared to publish and then were not there.
+      if (result.demo || result.persisted === false) {
+        throw new Error(
+          result.message || result.error || 'The server did not save this post.',
+        );
       }
 
       router.push('/admin/blog');
     } catch (error) {
       console.error('Error saving post:', error);
-      alert('Failed to save post');
+      // Show the real reason. A generic "Failed to save post" hid the
+      // actual cause (a missing or rejected service-role key) every time.
+      alert(error instanceof Error ? error.message : 'Failed to save post');
     } finally {
       setIsSaving(false);
     }

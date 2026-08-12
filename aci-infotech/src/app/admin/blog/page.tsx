@@ -60,6 +60,7 @@ export default function BlogAdmin() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [deleteModal, setDeleteModal] = useState<BlogPost | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [sortColumn, setSortColumn] = useState<SortColumn>('published_at');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
@@ -81,15 +82,20 @@ export default function BlogAdmin() {
       const response = await fetch('/api/admin/blogs?limit=500');
       const result = await response.json();
 
-      if (result.error) {
+      if (!response.ok || result.error) {
+        // Say so. Swallowing this rendered an empty table, which reads as
+        // "you have no posts" rather than "the server could not read them".
         console.error('Error fetching posts:', result.error);
         setPosts([]);
+        setLoadError(result.error || `Request failed (${response.status})`);
       } else {
         setPosts(result.posts || []);
+        setLoadError(null);
       }
     } catch (error) {
       console.error('Error fetching posts:', getErrorMessage(error));
       setPosts([]);
+      setLoadError(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -244,6 +250,13 @@ export default function BlogAdmin() {
           </Link>
         </div>
       </div>
+
+      {loadError && (
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          Could not load posts: {loadError}. This is a read failure, not an empty blog. Check
+          /api/admin/health for the server&apos;s Supabase project and key.
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-6">

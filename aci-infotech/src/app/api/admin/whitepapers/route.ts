@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { randomUUID } from 'crypto';
+import { cmsWriteUnavailable } from '@/lib/admin/cms-write-guard';
 
 // Check if Supabase is configured
 function isSupabaseConfigured(): boolean {
@@ -105,21 +105,9 @@ export async function POST(request: NextRequest) {
     const rawData = await request.json();
     const data = transformFieldNames(rawData);
 
-    // Demo mode: return mock response when Supabase isn't configured
     if (!isSupabaseConfigured()) {
-      console.log('Demo mode: Supabase not configured, returning mock whitepaper');
-      const mockWhitepaper = {
-        id: randomUUID(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        ...data,
-      };
-      return NextResponse.json({
-        success: true,
-        whitepaper: mockWhitepaper,
-        demo: true,
-        message: 'Demo mode: Whitepaper not actually saved. Configure Supabase for real storage.',
-      });
+      console.error('Whitepaper POST: SUPABASE_SERVICE_ROLE_KEY is not set - NOT saved');
+      return cmsWriteUnavailable('Whitepaper');
     }
 
     const supabase = getServiceSupabase();
@@ -164,20 +152,9 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Demo mode: return mock response when Supabase isn't configured
     if (!isSupabaseConfigured()) {
-      console.log('Demo mode: Supabase not configured, returning mock update');
-      const mockWhitepaper = {
-        id,
-        updated_at: new Date().toISOString(),
-        ...data,
-      };
-      return NextResponse.json({
-        success: true,
-        whitepaper: mockWhitepaper,
-        demo: true,
-        message: 'Demo mode: Whitepaper not actually updated. Configure Supabase for real storage.',
-      });
+      console.error('Whitepaper PUT: SUPABASE_SERVICE_ROLE_KEY is not set - NOT updated');
+      return cmsWriteUnavailable('Whitepaper');
     }
 
     const supabase = getServiceSupabase();
@@ -223,14 +200,9 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Demo mode: return success when Supabase isn't configured
     if (!isSupabaseConfigured()) {
-      console.log('Demo mode: Supabase not configured, returning mock delete');
-      return NextResponse.json({
-        success: true,
-        demo: true,
-        message: 'Demo mode: Whitepaper not actually deleted. Configure Supabase for real storage.',
-      });
+      console.error('Whitepaper DELETE: SUPABASE_SERVICE_ROLE_KEY is not set - NOT deleted');
+      return cmsWriteUnavailable('Whitepaper');
     }
 
     const supabase = getServiceSupabase();
