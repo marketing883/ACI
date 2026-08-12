@@ -1,0 +1,31 @@
+[Unit]
+Description=ACI production deploy hook
+After=network.target
+
+[Service]
+Type=simple
+User=aciadmin
+Group=aciadmin
+EnvironmentFile=/etc/aci-deploy.env
+Environment=ACI_HOOK_HOST=127.0.0.1
+Environment=ACI_HOOK_PORT=9099
+Environment=ACI_SERVICE=aci-next.service
+Environment=ACI_HEALTH_PORT=3002
+ExecStart=/usr/local/bin/aci-deploy-hook
+Restart=on-failure
+RestartSec=5
+
+# It runs a build and restarts a unit, so it cannot be locked down as hard
+# as a pure network service. These are the restrictions that still hold.
+NoNewPrivileges=no
+PrivateTmp=yes
+ProtectSystem=full
+ProtectHome=no
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target
