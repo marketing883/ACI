@@ -16,7 +16,9 @@ set -euo pipefail
 
 SERVICE="${ACI_SERVICE:-aci-next.service}"
 HEALTH_PORT="${ACI_HEALTH_PORT:-3002}"
-LOCK="/var/lock/aci-deploy.lock"
+# In the deploy user's home, not /var/lock: this runs unprivileged, and
+# /var/lock is not writable by it on a default AlmaLinux install.
+LOCK="${ACI_LOCK:-${HOME:-/tmp}/.aci-deploy.lock}"
 
 REF="${1:-}"
 if [ -z "$REF" ]; then
