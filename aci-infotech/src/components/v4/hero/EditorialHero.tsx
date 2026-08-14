@@ -8,8 +8,9 @@ import { ArrowUpRight } from 'lucide-react';
 import FadingVideo from './FadingVideo';
 import SiteNav from './SiteNav';
 
-const VIDEO = '/videos/v4-editorial-signal.mp4';
-const VIDEO_WEBM = '/videos/v4-editorial-signal.webm';
+// Note the directory: this one lives in /video, not /videos.
+const VIDEO = '/video/hero-new-bg.mp4';
+const VIDEO_WEBM = '/video/hero-new-bg.webm';
 const ACCENT = '#1D4ED8'; // deep royal blue (primary)
 const LIME = '#84CC16'; // lime (accent / highlight)
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -213,34 +214,42 @@ export default function EditorialHero({
 
   return (
     <section className={`relative min-h-[100dvh] overflow-hidden bg-white text-black ${bodyClass}`}>
-      {/* Reduced, vertically-centered video sitting on the right. The
-          render ships on a soft gray studio background; a mild
-          brightness/contrast lift pushes that gray to white, and a radial
-          mask feathers every edge into the page so the sphere floats on a
-          uniformly white field with no visible video box. */}
-      <div className="pointer-events-none absolute inset-x-0 top-[9%] h-[30%] w-full sm:left-auto sm:right-0 sm:top-[15%] sm:h-[40%] sm:w-[64%] md:top-1/2 md:h-[66%] md:w-[50%] md:-translate-y-1/2">
+      {/* Full-bleed dot-tunnel background.
+          The footage is a flat grey field (luma ~189) carrying dot rings
+          that are LIGHTER than the field. Brightening it the way the old
+          sphere was treated would clip those dots away and leave a blank
+          white rectangle, which is exactly what the previous video did
+          behind the card. So it gets inverted first: the field then
+          clips to pure white and the dots land as soft grey.
+          That inversion is also why no mask or edge feathering is needed
+          here. Measured across the clip, 97% of pixels come out at pure
+          255, so the video's edges are invisible against the page. */}
+      <div className="pointer-events-none absolute inset-0">
         <FadingVideo
           src={VIDEO}
           webmSrc={VIDEO_WEBM}
-          mirror
-          className="absolute inset-0 h-full w-full object-contain"
-          style={{
-            filter: 'saturate(0.9) brightness(1.06) contrast(1.18)',
-            WebkitMaskImage:
-              'radial-gradient(ellipse 60% 72% at 50% 50%, #000 40%, rgba(0,0,0,0.55) 66%, transparent 92%)',
-            maskImage:
-              'radial-gradient(ellipse 60% 72% at 50% 50%, #000 40%, rgba(0,0,0,0.55) 66%, transparent 92%)',
-          }}
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ filter: 'invert(1) brightness(3.6)' }}
         />
-        {/* The footage's studio vignette still ghosts through at the
-            frame's top and bottom edges where the radial mask is thin.
-            White feathers erase those bands without touching the sphere. */}
+        {/* Desktop: hold the texture off the pitch. The copy sits on
+            clean white on the left, and the dots pick up again under the
+            card on the right, which is what makes the glass read. */}
         <div
           aria-hidden="true"
-          className="absolute inset-0"
+          className="absolute inset-0 hidden md:block"
           style={{
             background:
-              'linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.92) 12%, rgba(255,255,255,0) 34%), linear-gradient(0deg, #fff 0%, rgba(255,255,255,0.85) 6%, rgba(255,255,255,0) 22%)',
+              'linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.95) 28%, rgba(255,255,255,0.6) 46%, rgba(255,255,255,0) 64%)',
+          }}
+        />
+        {/* Phones stack, so the copy is up top and the card is below.
+            Weight the veil to the top for the same reason. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 md:hidden"
+          style={{
+            background:
+              'linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.45) 55%, rgba(255,255,255,0.15) 100%)',
           }}
         />
       </div>
@@ -253,12 +262,12 @@ export default function EditorialHero({
       {/* Bottom padding is tight on phones on purpose: the card grew
           when it took on capability tags, and this keeps the whole hero
           inside one viewport rather than a hair over it. */}
-      <div className="relative z-20 flex min-h-[100dvh] flex-col justify-center px-5 pb-10 pt-28 sm:px-8 md:px-12 md:pb-20 md:pt-32">
+      <div className="relative z-20 flex min-h-[100dvh] flex-col justify-center px-5 pb-8 pt-24 sm:px-8 sm:pb-10 sm:pt-28 md:px-12 md:pb-20 md:pt-32">
         {/* The card column widens with the viewport so the card keeps
             sitting ON the sphere. Kept narrow it drifts to the right of
             the footage on wide screens, ends up over plain white, and
             then reads as a solid panel no matter how low the tint is. */}
-        <div className="grid w-full items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] lg:gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
+        <div className="grid w-full items-center gap-7 sm:gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] lg:gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
           {/* ---------- LEFT: static ----------
               Wide enough that the authored two-line headline stays two
               lines. Narrower and "Foundation." drops to a line of its
@@ -352,7 +361,7 @@ export default function EditorialHero({
                 text has a calm field to sit on rather than a busy one.
                 Saturate stops the blur going gray and lifeless. */}
             <div
-              className="relative overflow-hidden rounded-2xl border border-white/55 bg-white/[0.18] p-6 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.3)] md:p-8"
+              className="relative overflow-hidden rounded-2xl border border-white/55 bg-white/[0.18] p-5 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.3)] sm:p-6 md:p-8"
               style={{
                 backdropFilter: 'blur(34px) saturate(1.7)',
                 WebkitBackdropFilter: 'blur(34px) saturate(1.7)',
@@ -384,7 +393,7 @@ export default function EditorialHero({
                   transition={{ duration: 0.4, ease: EASE }}
                 >
                   {card.mark ? (
-                    <div className="mb-5 flex h-11 items-center">
+                    <div className="mb-4 flex h-10 items-center sm:mb-5 sm:h-11">
                       <Image
                         src={card.mark.src}
                         alt={card.mark.alt}
@@ -411,7 +420,7 @@ export default function EditorialHero({
                       the pitch on the left, one size down. Reserves two
                       lines for the same reason the title does: longer
                       tag sets wrap, and the card must not jog. */}
-                  <div className="mt-3 flex min-h-[2.75rem] flex-wrap content-start gap-x-3 gap-y-1 text-[12px] font-semibold tracking-wide text-black/50">
+                  <div className="mt-3 flex min-h-[2.5rem] flex-wrap content-start gap-x-3 gap-y-1 text-[12px] font-semibold tracking-wide text-black/50">
                     {card.tags.map((t) => (
                       <span key={t}>
                         <span style={{ color: LIME }}>/</span> {t}
