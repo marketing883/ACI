@@ -47,9 +47,9 @@ directly and works fine:
 sudo -u aciadmin bash -c 'cd /var/www/aci-staging/aci-infotech && git status'
 ```
 
-This also means CI cannot SSH in as `aciadmin` (sshd runs the login
-shell), which is why deploys here are pull-based. See the auto-deploy
-section below.
+This also means CI cannot SSH in as `aciadmin` — sshd runs the login
+shell, so an external runner gets the same refusal. Deploys here are
+run by hand from a root shell on the box.
 
 ### The `NEXT_PUBLIC_USE_V2_HOME` flag is obsolete
 
@@ -99,7 +99,6 @@ Copy `.env.staging.example` to `.env.staging` and fill in real
 values. Critical fields:
 
 ```
-NEXT_PUBLIC_USE_V2_HOME=true
 NEXT_PUBLIC_SITE_URL=https://staging.aciinfotech.com
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
@@ -115,7 +114,8 @@ chmod 600 .env.staging     # keep the secrets readable only by aciadmin
 ### 3. First build
 
 ```sh
-cd /var/www/aci-staging/aci-infotech
+cd /var/www/aci-staging/aci-infotech/aci-infotech
+set -a && . ./.env.staging && set +a
 npm run build
 ```
 
@@ -147,11 +147,16 @@ Description=ACI staging (Next.js)
 After=network.target
 
 [Service]
+Type=simple
 User=aciadmin
-WorkingDirectory=/var/www/aci-staging/aci-infotech
-EnvironmentFile=/var/www/aci-staging/aci-infotech/.env.staging
-ExecStart=/usr/bin/node /var/www/aci-staging/aci-infotech/node_modules/.bin/next start -p 3003
-Restart=on-failure
+WorkingDirectory=/var/www/aci-staging/aci-infotech/aci-infotech
+EnvironmentFile=/var/www/aci-staging/aci-infotech/aci-infotech/.env.staging
+Environment=NODE_ENV=production
+Environment=PORT=3004
+ExecStart=/var/www/aci-staging/aci-infotech/aci-infotech/node_modules/.bin/next start -H 127.0.0.1 -p 3004
+Restart=always
+RestartSec=5
+MemoryMax=2G
 
 [Install]
 WantedBy=multi-user.target
@@ -169,7 +174,7 @@ sudo systemctl status aci-staging
 ### 6. Nginx reverse proxy
 
 Add a server block for `staging.aciinfotech.com` that proxies to
-`127.0.0.1:3003`. Do not touch the production server block.
+`127.0.0.1:3004`. Do not touch the production server block.
 
 ```nginx
 server {
@@ -182,7 +187,7 @@ server {
     add_header X-Robots-Tag "noindex, nofollow, noarchive" always;
 
     location / {
-        proxy_pass http://127.0.0.1:3003;
+        proxy_pass http://127.0.0.1:3004;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -202,16 +207,8 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ## Routine deploys
 
-Normally you do not do this by hand — the auto-deploy timer below picks
-up branch movement within 5 minutes. To force a deploy immediately:
-
-```sh
-sudo systemctl start aci-staging-deploy
-journalctl -u aci-staging-deploy -n 40 --no-pager
-```
-
-To do it manually anyway (note the two different directories, and the
-`sudo -u aciadmin bash -c` form):
+Note the two different directories, and the `sudo -u aciadmin bash -c`
+form (see the traps section above):
 
 ```sh
 REPO=/var/www/aci-staging/aci-infotech
@@ -238,77 +235,6 @@ curl -fsS -o /dev/null http://127.0.0.1:3004/ && echo "staging is up"
 If the build fails, the service keeps running the previous build —
 `next start` restarts against whatever is currently in `.next/`. Fix
 the error, rebuild, then restart.
-
----
-
-## Auto-deploy
-
-Staging deploys itself. `aci-staging-deploy.timer` fires every 5
-minutes and runs `scripts/staging-autodeploy.sh`, which pulls the
-tracked branch and, **only if the commit actually moved**, rebuilds and
-restarts the service. Push to the tracked branch and staging follows
-within 5 minutes.
-
-It is pull-based on purpose. `aciadmin` has no login shell, so nothing
-external can SSH in to push a deploy; the box reaching out to GitHub
-over HTTPS is the only direction that works. It also means no deploy
-credentials are stored off-box.
-
-### Safety properties
-
-- **Build first, restart second.** If the build fails, the service is
-  never restarted and keeps serving the previous build. The checkout is
-  put back where it was.
-- **Health-checked.** After the restart it polls
-  `http://127.0.0.1:3004/` (the app directly, not through nginx). If the
-  site does not come up, it rebuilds the previous commit, restarts, and
-  verifies again, logging which commit was bad.
-- **Narrow blast radius.** The script only ever touches the staging
-  checkout and the `aci-staging` unit. The sudoers rule grants exactly
-  one command: `systemctl restart aci-staging`. Production, nginx, and
-  every other vhost on the box are out of reach by construction.
-- **Polite about resources.** The unit runs `Nice=10`, `CPUWeight=20`,
-  `IOSchedulingClass=idle`, `MemoryMax=3G`, so a Next.js build cannot
-  starve or OOM the other sites sharing this server.
-
-### One-time install
-
-```sh
-REPO=/var/www/aci-staging/aci-infotech
-APP=$REPO/aci-infotech
-
-# 1. Which branch should staging track?
-cat >/etc/aci-staging-deploy.conf <<'EOF'
-ACI_STAGING_BRANCH=main
-EOF
-
-# 2. Let aciadmin restart only the staging unit
-SYSTEMCTL=$(command -v systemctl)
-echo "aciadmin ALL=(root) NOPASSWD: $SYSTEMCTL restart aci-staging" \
-  >/etc/sudoers.d/aci-staging-deploy
-chmod 440 /etc/sudoers.d/aci-staging-deploy
-visudo -c
-
-# 3. Install the units
-install -m 644 $APP/scripts/systemd/aci-staging-deploy.service /etc/systemd/system/
-install -m 644 $APP/scripts/systemd/aci-staging-deploy.timer   /etc/systemd/system/
-chmod +x $APP/scripts/staging-autodeploy.sh
-systemctl daemon-reload
-systemctl enable --now aci-staging-deploy.timer
-```
-
-### Operating it
-
-```sh
-systemctl list-timers aci-staging-deploy       # when it next runs
-journalctl -u aci-staging-deploy -n 100        # what it did
-sudo systemctl start aci-staging-deploy        # force a run now
-systemctl disable --now aci-staging-deploy.timer   # pause auto-deploys
-```
-
-To point staging at a different branch, edit
-`/etc/aci-staging-deploy.conf` and it takes effect on the next poll. No
-rebuild of the units needed.
 
 ---
 
@@ -369,10 +295,10 @@ service.
 `NEXT_PUBLIC_USE_V2_HOME === 'true'`. Most likely the env var wasn't
 inlined at build time — re-check the env file, rebuild, restart.
 
-### Port 3003 already in use
+### Port 3004 already in use
 
 ```sh
-sudo lsof -i :3003
+sudo lsof -i :3004
 ```
 
 Kill the squatter (or pick a different free port in the systemd unit
