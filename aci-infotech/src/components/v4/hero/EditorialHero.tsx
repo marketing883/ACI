@@ -19,6 +19,9 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 // cycling: nothing about the positioning depends on where it stops.
 const CARD_DWELL = 5000;
 
+/** Marks are sized so they carry similar optical weight, which means
+ *  balancing rendered AREA rather than height: a square logo set to the
+ *  same height as a wide wordmark reads as roughly half the mark. */
 type Mark = { src: string; alt: string; h: number };
 
 /**
@@ -61,17 +64,23 @@ type Proof = {
  * Every card leads with a platform mark and then says what we build on
  * it, so the rotation reads as capability rather than a logo parade.
  *
- * Marks are all confirmed legible on a light surface: the SVGs are
- * authored in near-black, Databricks uses the explicit on-light variant
- * (the shared databricks-color.svg is a white wordmark meant for dark
- * surfaces and would vanish here), and Azure and ArqAI are dark PNGs.
+ * Marks are dark and, with one exception, monochrome, so the set reads
+ * as one family as it cycles. The exception is Databricks, which keeps
+ * its purpose-built on-light variant: the monochrome file in
+ * Solution-Partners is a vertically stacked lockup whose wordmark is
+ * illegible at the height the horizontal marks need.
+ * Measured rather than eyeballed: the Solution-Partners PNGs are
+ * greyscale-plus-alpha (pix_fmt ya8) silhouettes at luma 0, the SVGs are
+ * authored near-black, and the ArqAI wordmark averages luma 31. All are
+ * safe on the light glass. Note the shared /brand/databricks-color.svg
+ * is a WHITE wordmark for dark surfaces and would vanish here.
  */
 const PROOF: Proof[] = [
   {
     eyebrow: 'Data & Lakehouse',
     title: 'From lakehouse to live AI.',
     tags: ['Delta Lake', 'MLflow', 'Workflows'],
-    mark: { src: '/brand/databricks-color-on-light.svg', alt: 'Databricks', h: 34 },
+    mark: { src: '/brand/databricks-color-on-light.svg', alt: 'Databricks', h: 26 },
     cta: { label: 'Read the case study', href: '/case-studies' },
   },
   {
@@ -81,42 +90,42 @@ const PROOF: Proof[] = [
     // hyphenate and stranding "led." on its own line.
     title: 'The whole Microsoft stack, AI-led.',
     tags: ['Azure', 'Dynamics 365', 'Power Platform'],
-    mark: { src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 42 },
+    mark: { src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 28 },
     cta: { label: 'Explore Microsoft expertise', href: '/partners' },
   },
   {
     eyebrow: 'Applied AI & GenAI',
     title: 'Prototype to production in 90 days.',
     tags: ['Copilots & agents', 'RAG systems', 'MLOps & evals'],
-    mark: { src: '/brand/anthropic-wordmark.svg', alt: 'Anthropic', h: 22 },
+    mark: { src: '/brand/anthropic-wordmark.svg', alt: 'Anthropic', h: 26 },
     cta: { label: 'Explore applied AI', href: '/services/applied-ai-ml' },
   },
   {
     eyebrow: 'Data Engineering',
     title: 'Campaign analysis, three weeks to four hours.',
     tags: ['Real-time pipelines', 'Governance', 'Self-service BI'],
-    mark: { src: '/images/Solution-Partners/snowflake.svg', alt: 'Snowflake', h: 30 },
+    mark: { src: '/images/Solution-Partners/snowflake.svg', alt: 'Snowflake', h: 36 },
     cta: { label: 'Explore data engineering', href: '/services/data-engineering' },
   },
   {
     eyebrow: 'Cloud Modernization',
     title: 'Cutovers run in parallel. Nothing goes dark.',
     tags: ['Landing zones', 'Migrations', 'FinOps'],
-    mark: { src: '/images/Solution-Partners/googlecloud.svg', alt: 'Google Cloud', h: 28 },
+    mark: { src: '/images/Solution-Partners/aws.png', alt: 'Amazon Web Services', h: 28 },
     cta: { label: 'Explore cloud modernization', href: '/services/cloud-modernization' },
   },
   {
     eyebrow: 'Managed Run & SRE',
     title: '99.97% uptime across a 72+ server estate.',
     tags: ['24/7 operations', 'Observability', 'On-call'],
-    mark: { src: '/images/Solution-Partners/kubernetes.svg', alt: 'Kubernetes', h: 32 },
+    mark: { src: '/images/Solution-Partners/kubernetes.svg', alt: 'Kubernetes', h: 36 },
     cta: { label: 'Explore managed operations', href: '/services/managed-operations' },
   },
   {
     eyebrow: 'Strategic Partner',
     title: 'Forward deployed AI engineering, at scale.',
     tags: ['Forward-deployed', 'Accelerators', 'Production AI'],
-    mark: { src: '/brand/arqai-labs-logo.png', alt: 'ArqAI Labs', h: 26 },
+    mark: { src: '/brand/arqai-labs-logo.png', alt: 'ArqAI Labs', h: 22 },
     cta: { label: 'Explore ArqAI Labs', href: 'https://thearq.ai' },
   },
 ];
