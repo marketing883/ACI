@@ -218,9 +218,9 @@ export default function SuccessStories({
           className={`mb-4 text-4xl font-bold tracking-tight text-black sm:text-5xl md:text-6xl lg:text-[64px] ${headingClass}`}
           style={{ lineHeight: 1.04, ...revealStyle(revealed, 0.2) }}
         >
-          Proof that runs
+          Shipped, measured,
           <br />
-          <span className="text-[#1D4ED8]">in production.</span>
+          <span className="text-[#1D4ED8]">still&nbsp;running.</span>
         </h2>
 
         {/* Subtext */}

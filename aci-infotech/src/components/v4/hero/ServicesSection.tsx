@@ -124,7 +124,7 @@ export default function ServicesSection({ headingClass }: { headingClass: string
             / What we build
           </p>
           <h2 className={`text-4xl font-bold tracking-tight text-black sm:text-5xl md:text-6xl lg:text-[64px] ${headingClass}`} style={{ lineHeight: 1.04 }}>
-            From raw data to <span className="text-[#1D4ED8]">AI&nbsp;in&nbsp;production.</span>
+            From raw data to <span className="text-[#1D4ED8]">working&nbsp;AI.</span>
           </h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-gray-600 md:text-base">
             We build the data foundation, put the AI on top of it, and stay on to run both once they

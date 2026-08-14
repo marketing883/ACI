@@ -234,9 +234,16 @@ export default async function HomePage() {
         <EditorialHero headingClass={display.className} bodyClass={sans.className} />
         <PartnerMarquee headingClass={display.className} />
         <FoldcraftHero geistClass={geist.className} />
-        <PlaybooksSection headingClass={display.className} />
-        <SuccessStories headingClass={display.className} facts={storyFacts} />
+        {/* Order matters here, on two counts.
+            Narrative: problem (Foldcraft) -> what we build (Services)
+            -> proof it worked (SuccessStories) -> the repeatable
+            patterns behind it (Playbooks), which lands the "point one
+            at your problem" beat close to the CTA.
+            Rhythm: this also breaks up what used to be three dark
+            sections stacked together, then five light ones. */}
         <ServicesSection headingClass={display.className} />
+        <SuccessStories headingClass={display.className} facts={storyFacts} />
+        <PlaybooksSection headingClass={display.className} />
         <InsightsSection
           headingClass={display.className}
           news={news}

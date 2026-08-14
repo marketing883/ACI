@@ -14,6 +14,13 @@ const ACCENT = '#1D4ED8'; // deep royal blue (primary)
 const LIME = '#84CC16'; // lime (accent / highlight)
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+// Slide 0 carries the positioning line, so it holds longer than the
+// proof slides behind it. After one lap the hero returns to slide 0 and
+// stops advancing: whoever lingers ends up reading the pitch, not
+// whichever slide the timer happened to land on.
+const LEAD_DWELL = 11000;
+const SLIDE_DWELL = 7000;
+
 
 type Mark =
   | { kind: 'logo'; src: string; alt: string; h: number }
@@ -51,7 +58,10 @@ const SLIDES: Slide[] = [
     // On-light variant: the shared databricks-color.svg carries a white
     // wordmark for dark surfaces, which disappears on the white hero.
     mark: { kind: 'logo', src: '/brand/databricks-color-on-light.svg', alt: 'Databricks', h: 56 },
-    stat: { value: '87%', label: 'Reduction in data processing time' },
+    // The 87% that used to sit here also anchors the Foldcraft
+    // testimonial further down. One number, one home: it lands harder
+    // next to the quote and the role than it does as a bare figure in a
+    // rotating slide.
   },
   {
     eyebrow: 'Platform Expertise',
@@ -147,19 +157,47 @@ export default function EditorialHero({
   bodyClass: string;
 }) {
   const [i, setI] = useState(0);
+  // Goes true once the visitor picks a slide by hand, or once the auto
+  // lap finishes. Either way the hero stops advancing on its own.
+  const [settled, setSettled] = useState(false);
+  const [hovering, setHovering] = useState(false);
+  const [tabHidden, setTabHidden] = useState(false);
   const reduce = useReducedMotion();
 
+  // Don't burn through slides while the tab is in the background.
   useEffect(() => {
-    if (reduce) return;
-    const t = setInterval(() => setI((n) => (n + 1) % SLIDES.length), 7000);
-    return () => clearInterval(t);
-  }, [reduce]);
+    const onVis = () => setTabHidden(document.hidden);
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, []);
+
+  useEffect(() => {
+    if (reduce || settled || hovering || tabHidden) return;
+    const t = setTimeout(
+      () => {
+        const next = i + 1;
+        if (next < SLIDES.length) {
+          setI(next);
+        } else {
+          // Lap done: back to the positioning slide, and rest there.
+          setI(0);
+          setSettled(true);
+        }
+      },
+      i === 0 ? LEAD_DWELL : SLIDE_DWELL,
+    );
+    return () => clearTimeout(t);
+  }, [i, reduce, settled, hovering, tabHidden]);
 
 
   const s = SLIDES[i];
 
   return (
-    <section className={`relative min-h-[100dvh] overflow-hidden bg-white text-black ${bodyClass}`}>
+    <section
+      className={`relative min-h-[100dvh] overflow-hidden bg-white text-black ${bodyClass}`}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
       {/* Reduced, vertically-centered video sitting on the right. The
           render ships on a soft gray studio background; a mild
           brightness/contrast lift pushes that gray to white, and a radial
@@ -329,8 +367,14 @@ export default function EditorialHero({
             {SLIDES.map((_, n) => (
               <button
                 key={n}
-                onClick={() => setI(n)}
+                onClick={() => {
+                  // A deliberate pick wins: stop auto-advancing so the
+                  // slide the visitor chose stays on screen.
+                  setI(n);
+                  setSettled(true);
+                }}
                 aria-label={`Slide ${n + 1}`}
+                aria-current={n === i}
                 className="h-1.5 rounded-full transition-all"
                 style={{
                   width: n === i ? 30 : 12,

@@ -17,13 +17,32 @@ separate systemd unit, and a separate port.
 | Checkout | `/var/www/aci-prod/aci-infotech/` | `/var/www/aci-staging/aci-infotech/` |
 | Env file | `.env` | `.env.staging` |
 | Systemd unit | existing (unchanged) | `aci-staging.service` |
-| `/` renders | v1 HomePage | v2 homepage (via `NEXT_PUBLIC_USE_V2_HOME=true`) |
-| `/v1` | mirrors `/` | v1 HomePage (for side-by-side QA) |
-| `/preview/v2-home` | v2 homepage | v2 homepage |
+| `/` renders | v4 editorial homepage | v4 editorial homepage (same code) |
+| `/v1` | v1 HomePage | v1 HomePage (for side-by-side QA) |
 
-The v1/v2 switch is **build-time only** — `NEXT_PUBLIC_USE_V2_HOME`
-is inlined by Next.js during `npm run build`. There is no runtime
-toggle, no middleware rewrite, and no shared `.next` directory.
+### The `NEXT_PUBLIC_USE_V2_HOME` flag is obsolete
+
+This runbook used to describe staging as the place where `/` rendered
+the **v2** homepage behind `NEXT_PUBLIC_USE_V2_HOME=true`. That is no
+longer how the site works. `src/app/page.tsx` now renders the **v4**
+editorial homepage unconditionally, with no flag check, so the
+variable no longer switches anything:
+
+- `ConditionalLayout` suppresses the global chrome on `/` via
+  `isV4Home` regardless of the flag, so the old `isV2Root` branch is
+  dead weight.
+- The only thing the flag still does is label the prebuild env-check
+  output as `STAGING` vs `PRODUCTION`
+  (`scripts/check-build-env.mjs`), which is cosmetic.
+
+Setting it is therefore harmless but pointless. **Staging's job now is
+to preview homepage changes on the same code path production runs**,
+which is what you want before promoting an edit. The v2 homepage is
+still reachable at `/preview/v2-home` if you need to compare.
+
+Everything else here still holds: staging is a separate working tree,
+a separate systemd unit, and a separate port. There is no shared
+`.next` and no shared `node_modules`.
 
 ---
 
@@ -178,26 +197,35 @@ the error, rebuild, then restart.
 ## Smoke tests
 
 ```sh
-# Root should render v2 (look for NavV2 / v2 class markers)
+# Root should render the v4 homepage. These strings come from the
+# section headings, so they only match if the page actually rendered.
 curl -sI https://staging.aciinfotech.com/
-curl -s  https://staging.aciinfotech.com/ | grep -E 'v2-marquee|V2HomeContent|NavV2'
+curl -s  https://staging.aciinfotech.com/ | grep -E 'Our Partner Platforms|Shipped, measured|working&nbsp;AI|Not ready for coffee'
 
-# /v1 should render v1
+# Section order: Services must appear before Playbooks. Prints the
+# order the headings occur in; eyeball that it reads services -> proof
+# -> playbooks.
+curl -s https://staging.aciinfotech.com/ \
+  | grep -oE 'What we build|Shipped, measured|The playbook vault'
+
+# /v1 should still render the old homepage
 curl -sI https://staging.aciinfotech.com/v1
 curl -s  https://staging.aciinfotech.com/v1 | grep -E 'HeroSection|PlaybookVaultSection'
 
-# /preview/v2-home should still work
-curl -sI https://staging.aciinfotech.com/preview/v2-home
-
 # robots.txt must disallow everything
 curl  https://staging.aciinfotech.com/robots.txt
+
+# Canonical must point at PRODUCTION, never at staging — otherwise
+# staging can self-canonicalize into the index.
+curl -s https://staging.aciinfotech.com/ | grep -o 'rel="canonical" href="[^"]*"'
 ```
 
 Also check that production is unchanged:
 
 ```sh
 curl -sI https://aciinfotech.com/
-# / should still serve v1 with the v1 Nav.
+curl -s https://aciinfotech.com/ | grep -oE 'Proof that runs|Shipped, measured'
+# Before promoting, prod should still print "Proof that runs".
 ```
 
 ---
@@ -244,11 +272,16 @@ npm run build
 sudo systemctl restart aci-staging
 ```
 
-### Disabling v2 temporarily
+### Comparing against the old homepage
 
-Edit `.env.staging` to remove (or comment out)
-`NEXT_PUBLIC_USE_V2_HOME=true`, rebuild, restart. `/` reverts to v1
-while `/preview/v2-home` keeps working.
+`/v1` serves the previous homepage from the same build, so you can
+diff the two side by side without touching env vars or rebuilding.
+`/preview/v2-home` still serves the v2 design.
+
+Note that removing `NEXT_PUBLIC_USE_V2_HOME` no longer changes what
+`/` renders — see the obsolete-flag note at the top of this doc. To
+roll `/` back to an earlier design you have to check out an earlier
+commit and rebuild.
 
 ---
 
