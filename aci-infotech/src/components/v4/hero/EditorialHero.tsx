@@ -14,73 +14,105 @@ const ACCENT = '#1D4ED8'; // deep royal blue (primary)
 const LIME = '#84CC16'; // lime (accent / highlight)
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-// Slide 0 carries the positioning line, so it holds longer than the
-// proof slides behind it. After one lap the hero returns to slide 0 and
-// stops advancing: whoever lingers ends up reading the pitch, not
-// whichever slide the timer happened to land on.
-const LEAD_DWELL = 11000;
-const SLIDE_DWELL = 7000;
+// The pitch on the left never moves, so the proof card is free to keep
+// cycling: nothing about the positioning depends on where it stops.
+const CARD_DWELL = 5000;
 
+type Mark = { src: string; alt: string; h: number };
 
-type Mark =
-  | { kind: 'logo'; src: string; alt: string; h: number }
-  | { kind: 'badge'; src: string; alt: string; w: number };
-
-type Slide = {
-  eyebrow: string;
-  /** Optional logo shown in place of the eyebrow text (e.g. a partner
-   *  wordmark) — kept alongside `eyebrow` for alt text / a11y. */
-  eyebrowLogo?: { src: string; w: number; h: number };
-  /** Two headline lines. Wrap the key words in *asterisks* to render
-   *  them in the accent blue, matching the section headings below. */
-  headline: [string, string];
-  desc: string;
-  tags: string[];
-  cta: { label: string; href: string };
-  mark?: Mark;
-  stat?: { value: string; label: string };
+/**
+ * The fixed pitch. This is the whole point of the hero and it does not
+ * rotate: whoever lands, whenever they land, reads the same thing.
+ */
+const LEAD = {
+  eyebrow: 'Service Foundation',
+  /** Two headline lines. Wrap key words in *asterisks* to paint them in
+   *  the accent blue, matching the section headings further down. */
+  headline: ['Build the AI foundation.', 'Run it *in production.*'] as [string, string],
+  desc: 'ACI Infotech engineers the data foundation, builds the AI on top, and runs it in production. Most enterprise AI stalls before it gets there.',
+  tags: ['Pipelines', 'Governance', 'AI-ready data'],
+  cta: { label: 'Explore data engineering', href: '/services/data-engineering' },
 };
 
-const SLIDES: Slide[] = [
+/**
+ * Credentials that cycle in the card sitting on the video. Short on
+ * purpose: a mark, a label, one line, one link. The long version of
+ * each already lives on the page it points at, so repeating it here
+ * only competed with the headline.
+ */
+type Proof = {
+  eyebrow: string;
+  title: string;
+  /** What we actually build on that platform. Three at most: the card
+   *  is a teaser, not the service page. */
+  tags: string[];
+  mark?: Mark;
+  cta: { label: string; href: string };
+};
+
+/**
+ * Every card leads with a platform mark and then says what we build on
+ * it, so the rotation reads as capability rather than a logo parade.
+ *
+ * Marks are all confirmed legible on a light surface: the SVGs are
+ * authored in near-black, Databricks uses the explicit on-light variant
+ * (the shared databricks-color.svg is a white wordmark meant for dark
+ * surfaces and would vanish here), and Azure and ArqAI are dark PNGs.
+ */
+const PROOF: Proof[] = [
   {
-    eyebrow: 'Service Foundation',
-    headline: ['Build the AI foundation.', 'Run it *in production.*'],
-    desc: 'ACI Infotech engineers the data foundation, builds the AI on top, and runs it in production. Most enterprise AI stalls before it gets there.',
-    tags: ['Pipelines', 'Governance', 'AI-ready data'],
-    cta: { label: 'Explore data engineering', href: '/services/data-engineering' },
-  },
-  {
-    eyebrow: 'Case Study',
-    headline: ['From Lakehouse', 'to *Live AI.*'],
-    desc: 'Lakehouse modernization, Delta pipelines, MLflow, governance, and real-time analytics for teams that need Databricks to run in production.',
+    eyebrow: 'Data & Lakehouse',
+    title: 'From lakehouse to live AI.',
     tags: ['Delta Lake', 'MLflow', 'Workflows'],
+    mark: { src: '/brand/databricks-color-on-light.svg', alt: 'Databricks', h: 34 },
     cta: { label: 'Read the case study', href: '/case-studies' },
-    // On-light variant: the shared databricks-color.svg carries a white
-    // wordmark for dark surfaces, which disappears on the white hero.
-    mark: { kind: 'logo', src: '/brand/databricks-color-on-light.svg', alt: 'Databricks', h: 56 },
-    // The 87% that used to sit here also anchors the Foldcraft
-    // testimonial further down. One number, one home: it lands harder
-    // next to the quote and the role than it does as a bare figure in a
-    // rotating slide.
   },
   {
     eyebrow: 'Platform Expertise',
-    headline: ['The Whole Microsoft Stack.', '*AI-Led.*'],
-    desc: 'Azure is strongest when it connects to the business stack. We bring Azure, Dynamics 365, Power Platform, and data engineering together around measurable operations.',
+    // Non-breaking space keeps "AI-led." whole. The balance wrap does
+    // the real work; this stops a fallback from splitting the
+    // hyphenate and stranding "led." on its own line.
+    title: 'The whole Microsoft stack, AI-led.',
     tags: ['Azure', 'Dynamics 365', 'Power Platform'],
+    mark: { src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 42 },
     cta: { label: 'Explore Microsoft expertise', href: '/partners' },
-    mark: { kind: 'logo', src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure', h: 80 },
   },
   {
-    eyebrow: 'ArqAI Labs',
-    eyebrowLogo: { src: '/brand/arqai-labs-logo.png', w: 2439, h: 858 },
-    headline: ['Forward Deployed AI', 'Engineering *At Scale.*'],
-    desc: 'Engineers embedded in the problem, not advising from outside. Delivered with our strategic partner ArqAI, whose accelerators come from years of doing this work.',
+    eyebrow: 'Applied AI & GenAI',
+    title: 'Prototype to production in 90 days.',
+    tags: ['Copilots & agents', 'RAG systems', 'MLOps & evals'],
+    mark: { src: '/brand/anthropic-wordmark.svg', alt: 'Anthropic', h: 22 },
+    cta: { label: 'Explore applied AI', href: '/services/applied-ai-ml' },
+  },
+  {
+    eyebrow: 'Data Engineering',
+    title: 'Campaign analysis, three weeks to four hours.',
+    tags: ['Real-time pipelines', 'Governance', 'Self-service BI'],
+    mark: { src: '/images/Solution-Partners/snowflake.svg', alt: 'Snowflake', h: 30 },
+    cta: { label: 'Explore data engineering', href: '/services/data-engineering' },
+  },
+  {
+    eyebrow: 'Cloud Modernization',
+    title: 'Cutovers run in parallel. Nothing goes dark.',
+    tags: ['Landing zones', 'Migrations', 'FinOps'],
+    mark: { src: '/images/Solution-Partners/googlecloud.svg', alt: 'Google Cloud', h: 28 },
+    cta: { label: 'Explore cloud modernization', href: '/services/cloud-modernization' },
+  },
+  {
+    eyebrow: 'Managed Run & SRE',
+    title: '99.97% uptime across a 72+ server estate.',
+    tags: ['24/7 operations', 'Observability', 'On-call'],
+    mark: { src: '/images/Solution-Partners/kubernetes.svg', alt: 'Kubernetes', h: 32 },
+    cta: { label: 'Explore managed operations', href: '/services/managed-operations' },
+  },
+  {
+    eyebrow: 'Strategic Partner',
+    title: 'Forward deployed AI engineering, at scale.',
     tags: ['Forward-deployed', 'Accelerators', 'Production AI'],
+    mark: { src: '/brand/arqai-labs-logo.png', alt: 'ArqAI Labs', h: 26 },
     cta: { label: 'Explore ArqAI Labs', href: 'https://thearq.ai' },
   },
 ];
-
 
 /** Render a headline line, painting *marked* key words in the accent
  *  blue so the hero matches the partially-colored section headings. */
@@ -157,14 +189,14 @@ export default function EditorialHero({
   bodyClass: string;
 }) {
   const [i, setI] = useState(0);
-  // Goes true once the visitor picks a slide by hand, or once the auto
-  // lap finishes. Either way the hero stops advancing on its own.
-  const [settled, setSettled] = useState(false);
+  // Set once the visitor picks a card by hand. A deliberate choice
+  // outranks the timer, so the card they picked stays put.
+  const [pinned, setPinned] = useState(false);
   const [hovering, setHovering] = useState(false);
   const [tabHidden, setTabHidden] = useState(false);
   const reduce = useReducedMotion();
 
-  // Don't burn through slides while the tab is in the background.
+  // Don't burn through cards while the tab is in the background.
   useEffect(() => {
     const onVis = () => setTabHidden(document.hidden);
     document.addEventListener('visibilitychange', onVis);
@@ -172,32 +204,15 @@ export default function EditorialHero({
   }, []);
 
   useEffect(() => {
-    if (reduce || settled || hovering || tabHidden) return;
-    const t = setTimeout(
-      () => {
-        const next = i + 1;
-        if (next < SLIDES.length) {
-          setI(next);
-        } else {
-          // Lap done: back to the positioning slide, and rest there.
-          setI(0);
-          setSettled(true);
-        }
-      },
-      i === 0 ? LEAD_DWELL : SLIDE_DWELL,
-    );
+    if (reduce || pinned || hovering || tabHidden) return;
+    const t = setTimeout(() => setI((n) => (n + 1) % PROOF.length), CARD_DWELL);
     return () => clearTimeout(t);
-  }, [i, reduce, settled, hovering, tabHidden]);
+  }, [i, reduce, pinned, hovering, tabHidden]);
 
-
-  const s = SLIDES[i];
+  const card = PROOF[i];
 
   return (
-    <section
-      className={`relative min-h-[100dvh] overflow-hidden bg-white text-black ${bodyClass}`}
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-    >
+    <section className={`relative min-h-[100dvh] overflow-hidden bg-white text-black ${bodyClass}`}>
       {/* Reduced, vertically-centered video sitting on the right. The
           render ships on a soft gray studio background; a mild
           brightness/contrast lift pushes that gray to white, and a radial
@@ -234,173 +249,219 @@ export default function EditorialHero({
           transparent over the hero, translucent glass once scrolled. */}
       <SiteNav variant="overlay" headingClass={headingClass} />
 
-      {/* Foreground */}
-      <div className="relative z-20 flex min-h-[100dvh] flex-col pt-24 md:pt-28">
-        {/* CONTENT (left) — vertically centered */}
-        <div className="flex flex-1 flex-col justify-center px-5 sm:px-8 md:px-12">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={i}
-              exit={{ opacity: 0, y: -16, transition: { duration: 0.3, ease: EASE } }}
-              className="max-w-full md:max-w-[63%]"
+      {/* Foreground: fixed pitch left, rotating credential card right. */}
+      {/* Bottom padding is tight on phones on purpose: the card grew
+          when it took on capability tags, and this keeps the whole hero
+          inside one viewport rather than a hair over it. */}
+      <div className="relative z-20 flex min-h-[100dvh] flex-col justify-center px-5 pb-10 pt-28 sm:px-8 md:px-12 md:pb-20 md:pt-32">
+        <div className="grid w-full items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-16">
+          {/* ---------- LEFT: static ----------
+              Wide enough that the authored two-line headline stays two
+              lines. Narrower and "Foundation." drops to a line of its
+              own, which is the widow the copy rules forbid. */}
+          <div className="max-w-2xl">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05, duration: 0.5, ease: EASE }}
+              className="mb-5 flex items-center text-sm font-semibold capitalize tracking-[0.18em] sm:text-[15px]"
+              style={{ color: ACCENT }}
             >
-              {/* brand mark / credential */}
-              {s.mark || s.stat ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } }}
-                  className="mb-7 flex flex-wrap items-center gap-x-6 gap-y-4"
-                >
-                  {s.mark ? (
-                    s.mark.kind === 'badge' ? (
-                      <Image src={s.mark.src} alt={s.mark.alt} width={s.mark.w} height={108} className="h-20 w-auto" />
-                    ) : (
-                      <Image
-                        src={s.mark.src}
-                        alt={s.mark.alt}
-                        width={200}
-                        height={106}
-                        className="w-auto object-contain"
-                        // Scale the mark down with the viewport so the
-                        // credential row fits a phone without wrapping.
-                        style={{ height: `min(${s.mark.h}px, 14vw)` }}
-                      />
-                    )
-                  ) : null}
-                  {s.stat ? (
-                    <>
-                      {s.mark ? <span className="h-12 w-px bg-black/15" /> : null}
-                      <div className="flex items-baseline gap-3">
-                        <span className={`text-4xl font-bold leading-none sm:text-5xl ${headingClass}`} style={{ color: ACCENT }}>
-                          {s.stat.value}
-                        </span>
-                        <span className="max-w-[150px] text-[12px] font-semibold uppercase leading-tight tracking-wide text-black/55">
-                          {s.stat.label}
-                        </span>
-                      </div>
-                    </>
-                  ) : null}
-                </motion.div>
-              ) : null}
+              <span className="text-black/35">/ </span>
+              {LEAD.eyebrow}
+            </motion.p>
 
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0, transition: { delay: 0.05, duration: 0.5, ease: EASE } }}
-                className="mb-5 flex items-center text-sm font-semibold capitalize tracking-[0.18em] sm:text-[15px]"
+            <h1
+              className={`font-semibold capitalize text-black ${headingClass}`}
+              style={{ fontSize: 'clamp(1.75rem, 4.2vw, 3.5rem)', lineHeight: 1.04, letterSpacing: '-0.015em' }}
+            >
+              {LEAD.headline.map((line, li) => (
+                <span key={li} className="block overflow-hidden">
+                  <motion.span
+                    className="block"
+                    initial={{ y: '110%' }}
+                    animate={{ y: 0 }}
+                    transition={{ delay: 0.2 + li * 0.12, duration: 0.7, ease: EASE }}
+                  >
+                    <HeadlineLine line={line} />
+                  </motion.span>
+                </span>
+              ))}
+            </h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6, ease: EASE }}
+              className="mt-7 max-w-md text-base font-medium leading-relaxed tracking-wide text-black/60 sm:text-lg"
+            >
+              {LEAD.desc}
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.62, duration: 0.6, ease: EASE }}
+              className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold capitalize tracking-wide text-black/45"
+            >
+              {LEAD.tags.map((t) => (
+                <span key={t}>
+                  <span style={{ color: LIME }}>/</span> {t}
+                </span>
+              ))}
+            </motion.div>
+
+            {/* CTA sits under the pitch it belongs to, rather than off
+                on the far side of the row. */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.72, duration: 0.6, ease: EASE }}
+              className="mt-8"
+            >
+              <ArrowLink
+                href={LEAD.cta.href}
+                className="text-lg font-semibold capitalize tracking-wide sm:text-xl"
                 style={{ color: ACCENT }}
               >
-                <span className="text-black/35">/ </span>
-                {s.eyebrowLogo ? (
-                  <Image
-                    src={s.eyebrowLogo.src}
-                    alt={s.eyebrow}
-                    width={s.eyebrowLogo.w}
-                    height={s.eyebrowLogo.h}
-                    className="ml-1.5 h-6 w-auto object-contain"
-                  />
-                ) : (
-                  s.eyebrow
-                )}
-              </motion.p>
+                {LEAD.cta.label}
+              </ArrowLink>
+            </motion.div>
+          </div>
 
-              <h1
-                className={`font-semibold capitalize text-black ${headingClass}`}
-                style={{ fontSize: 'clamp(1.55rem, 3.7vw, 3.5rem)', lineHeight: 1.04, letterSpacing: '-0.015em' }}
-              >
-                {s.headline.map((line, li) => (
-                  <span key={li} className="block overflow-hidden">
-                    <motion.span
-                      className="block"
-                      initial={{ y: '110%' }}
-                      animate={{ y: 0, transition: { delay: 0.2 + li * 0.12, duration: 0.7, ease: EASE } }}
-                    >
-                      <HeadlineLine line={line} />
-                    </motion.span>
-                  </span>
-                ))}
-              </h1>
+          {/* ---------- RIGHT: rotating credential card ----------
+              Sits on top of the sphere. Glass rather than solid so the
+              footage still reads behind it, with enough opacity to keep
+              the type legible over the brightest frames. */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85, duration: 0.6, ease: EASE }}
+            className="w-full max-w-sm justify-self-start md:justify-self-end"
+            onMouseEnter={() => setHovering(true)}
+            onMouseLeave={() => setHovering(false)}
+          >
+            {/* Real glass, not frost. The tint is only 32% white, so the
+                sphere reads clearly through it. What keeps the type
+                legible is the heavy backdrop blur: it flattens the
+                footage's high-frequency detail into even tone, so dark
+                text has a calm field to sit on rather than a busy one.
+                Saturate stops the blur going gray and lifeless. */}
+            <div
+              className="relative overflow-hidden rounded-2xl border border-white/60 bg-white/[0.32] p-6 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.35)] md:p-7"
+              style={{
+                backdropFilter: 'blur(28px) saturate(1.6)',
+                WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
+              }}
+            >
+              {/* Top-left sheen, the tell that reads as a pane of glass. */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(158deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.16) 40%, rgba(255,255,255,0) 78%)',
+                }}
+              />
+              {/* Hairline inner edge so the pane has a defined lip where
+                  it crosses the lighter parts of the sphere. */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-black/[0.06]"
+              />
 
-              {/* Stays stacked through tablet: side-by-side at md crushed
-                  the paragraph to a word a line. */}
-              <div className="mt-7 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                <div className="max-w-md">
-                  <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0, transition: { delay: 0.5, duration: 0.6, ease: EASE } }}
-                    className="text-base font-medium leading-relaxed tracking-wide text-black/60 sm:text-lg"
-                  >
-                    {s.desc}
-                  </motion.p>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0, transition: { delay: 0.62, duration: 0.6, ease: EASE } }}
-                    className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold capitalize tracking-wide text-black/45"
-                  >
-                    {s.tags.map((t) => (
+              <div className="relative">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.4, ease: EASE }}
+                >
+                  {card.mark ? (
+                    <div className="mb-5 flex h-11 items-center">
+                      <Image
+                        src={card.mark.src}
+                        alt={card.mark.alt}
+                        width={220}
+                        height={80}
+                        className="w-auto object-contain"
+                        style={{ height: card.mark.h }}
+                      />
+                    </div>
+                  ) : null}
+
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-black/45">
+                    {card.eyebrow}
+                  </p>
+
+                  {/* Reserve two lines. Titles run to one line or two,
+                      and without this the card and its dots jog up and
+                      down every time the credential changes. */}
+                  <p className={`mt-2 min-h-[3.5rem] text-balance text-xl font-semibold leading-snug text-black ${headingClass}`}>
+                    {card.title}
+                  </p>
+
+                  {/* What we build on that platform. Same slash motif as
+                      the pitch on the left, one size down. Reserves two
+                      lines for the same reason the title does: longer
+                      tag sets wrap, and the card must not jog. */}
+                  <div className="mt-3 flex min-h-[2.75rem] flex-wrap content-start gap-x-3 gap-y-1 text-[12px] font-semibold tracking-wide text-black/50">
+                    {card.tags.map((t) => (
                       <span key={t}>
                         <span style={{ color: LIME }}>/</span> {t}
                       </span>
                     ))}
-                  </motion.div>
-                </div>
+                  </div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0, transition: { delay: 0.72, duration: 0.6, ease: EASE } }}
-                >
                   <ArrowLink
-                    href={s.cta.href}
-                    className="whitespace-nowrap text-xl font-semibold capitalize tracking-wide sm:text-2xl"
+                    href={card.cta.href}
+                    arrowSize={16}
+                    className="mt-2 text-sm font-semibold tracking-wide"
                     style={{ color: ACCENT }}
                   >
-                    {s.cta.label}
+                    {card.cta.label}
                   </ArrowLink>
                 </motion.div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+              </AnimatePresence>
 
-        {/* rotation indicator pinned to the bottom */}
-        <div className="px-5 pb-10 sm:px-8 md:px-12 md:pb-12">
-          <div className="flex gap-2">
-            {SLIDES.map((_, n) => (
-              <button
-                key={n}
-                onClick={() => {
-                  // A deliberate pick wins: stop auto-advancing so the
-                  // slide the visitor chose stays on screen.
-                  setI(n);
-                  setSettled(true);
-                }}
-                aria-label={`Slide ${n + 1}`}
-                aria-current={n === i}
-                className="h-1.5 rounded-full transition-all"
-                style={{
-                  width: n === i ? 30 : 12,
-                  background: n === i ? ACCENT : 'rgba(0,0,0,0.2)',
-                }}
-              />
-            ))}
-          </div>
+              {/* Card controls, scoped to the card they drive. */}
+              <div className="mt-6 flex gap-2 border-t border-black/[0.06] pt-5">
+                {PROOF.map((p, n) => (
+                  <button
+                    key={p.eyebrow}
+                    onClick={() => {
+                      setI(n);
+                      setPinned(true);
+                    }}
+                    aria-label={p.title}
+                    aria-current={n === i}
+                    className="h-1.5 rounded-full transition-all"
+                    style={{
+                      width: n === i ? 26 : 10,
+                      background: n === i ? ACCENT : 'rgba(0,0,0,0.18)',
+                    }}
+                  />
+                ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* Non-active hero slides, server-rendered so every headline and
-          description is in the initial HTML (standard hidden-tab
-          pattern; AnimatePresence only mounts the active slide). */}
+      {/* Non-active credential cards, server-rendered so every mark and
+          line is in the initial HTML (standard hidden-tab pattern;
+          AnimatePresence only mounts the active one). */}
       <div hidden>
-        {SLIDES.map((s, idx) =>
+        {PROOF.map((p, idx) =>
           idx === i ? null : (
-            <div key={s.eyebrow}>
-              <p>{s.eyebrow}</p>
-              <p>{s.headline.join(' ').replace(/\*/g, '')}</p>
-              <p>{s.desc}</p>
-              {s.stat ? (
-                <p>
-                  {s.stat.value} {s.stat.label}
-                </p>
-              ) : null}
+            <div key={p.eyebrow}>
+              <p>{p.eyebrow}</p>
+              <p>{p.title}</p>
+              <p>{p.tags.join(', ')}</p>
+              <p>{p.cta.label}</p>
             </div>
           ),
         )}
