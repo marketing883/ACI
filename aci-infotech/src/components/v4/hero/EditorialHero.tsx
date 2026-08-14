@@ -29,10 +29,11 @@ const LEAD = {
   eyebrow: 'What we build',
   /** Two headline lines. Wrap key words in *asterisks* to paint them in
    *  the accent blue, matching the section headings further down.
-   *  One sentence broken over two lines, so there is no full stop after
-   *  the first. Plain on purpose: the second half is the only claim in
-   *  it, and it is the one competitors cannot make. */
-  headline: ['We build data platforms', 'and *keep them running.*'] as [string, string],
+   *  Plain on purpose: "enterprises run on" is the load-bearing half, and
+   *  it is what qualifies the work. The non-breaking spaces
+   *  glue the last two words of each line, so a width narrow enough to
+   *  wrap breaks two-and-two instead of stranding a single word. */
+  headline: ['Data and AI platforms,', 'enterprises *run on.*'] as [string, string],
   // Non-breaking space before "matters.": at every desktop width the
   // paragraph otherwise wraps with that word alone on the last line.
   desc: 'Lakehouses, copilots, cloud cutovers, and the pager that comes with them. We engineer the foundation, build on top, and are still there at 3am when it matters.',
@@ -291,7 +292,7 @@ export default function EditorialHero({
 
             <h1
               className={`font-semibold capitalize text-black ${headingClass}`}
-              style={{ fontSize: 'clamp(1.75rem, 3.5vw, 3.5rem)', lineHeight: 1.04, letterSpacing: '-0.015em' }}
+              style={{ fontSize: 'clamp(1.75rem, 3.9vw, 3.5rem)', lineHeight: 1.04, letterSpacing: '-0.015em' }}
             >
               {LEAD.headline.map((line, li) => (
                 <span key={li} className="block overflow-hidden">
