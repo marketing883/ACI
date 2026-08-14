@@ -26,11 +26,16 @@ type Mark = { src: string; alt: string; h: number };
  * rotate: whoever lands, whenever they land, reads the same thing.
  */
 const LEAD = {
-  eyebrow: 'Service Foundation',
+  eyebrow: 'What we build',
   /** Two headline lines. Wrap key words in *asterisks* to paint them in
-   *  the accent blue, matching the section headings further down. */
-  headline: ['Build the AI foundation.', 'Run it *in production.*'] as [string, string],
-  desc: 'ACI Infotech engineers the data foundation, builds the AI on top, and runs it in production. Most enterprise AI stalls before it gets there.',
+   *  the accent blue, matching the section headings further down.
+   *  Deliberately not "the AI foundation" any more: the cards on the
+   *  right now span cloud cutovers, SRE and the Microsoft stack, and a
+   *  headline about AI alone no longer covers what sits beside it. */
+  headline: ['Build the foundation.', 'Run it *in production.*'] as [string, string],
+  // Non-breaking space before "matters.": at every desktop width the
+  // paragraph otherwise wraps with that word alone on the last line.
+  desc: 'Lakehouses, copilots, cloud cutovers, and the pager that comes with them. We engineer the foundation, build on top, and are still there at 3am when it matters.',
   tags: ['Pipelines', 'Governance', 'AI-ready data'],
   cta: { label: 'Explore data engineering', href: '/services/data-engineering' },
 };
