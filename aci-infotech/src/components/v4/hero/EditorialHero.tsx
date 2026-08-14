@@ -29,10 +29,10 @@ const LEAD = {
   eyebrow: 'What we build',
   /** Two headline lines. Wrap key words in *asterisks* to paint them in
    *  the accent blue, matching the section headings further down.
-   *  Deliberately not "the AI foundation" any more: the cards on the
-   *  right now span cloud cutovers, SRE and the Microsoft stack, and a
-   *  headline about AI alone no longer covers what sits beside it. */
-  headline: ['Build the foundation.', 'Run it *in production.*'] as [string, string],
+   *  One sentence broken over two lines, so there is no full stop after
+   *  the first. Plain on purpose: the second half is the only claim in
+   *  it, and it is the one competitors cannot make. */
+  headline: ['We build data platforms', 'and *keep them running.*'] as [string, string],
   // Non-breaking space before "matters.": at every desktop width the
   // paragraph otherwise wraps with that word alone on the last line.
   desc: 'Lakehouses, copilots, cloud cutovers, and the pager that comes with them. We engineer the foundation, build on top, and are still there at 3am when it matters.',
@@ -272,7 +272,7 @@ export default function EditorialHero({
             sitting ON the sphere. Kept narrow it drifts to the right of
             the footage on wide screens, ends up over plain white, and
             then reads as a solid panel no matter how low the tint is. */}
-        <div className="grid w-full items-center gap-7 sm:gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] lg:gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
+        <div className="grid w-full items-center gap-7 sm:gap-10 md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] xl:gap-14 2xl:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
           {/* ---------- LEFT: static ----------
               Wide enough that the authored two-line headline stays two
               lines. Narrower and "Foundation." drops to a line of its
@@ -291,7 +291,7 @@ export default function EditorialHero({
 
             <h1
               className={`font-semibold capitalize text-black ${headingClass}`}
-              style={{ fontSize: 'clamp(1.75rem, 4.2vw, 3.5rem)', lineHeight: 1.04, letterSpacing: '-0.015em' }}
+              style={{ fontSize: 'clamp(1.75rem, 3.5vw, 3.5rem)', lineHeight: 1.04, letterSpacing: '-0.015em' }}
             >
               {LEAD.headline.map((line, li) => (
                 <span key={li} className="block overflow-hidden">
@@ -355,7 +355,7 @@ export default function EditorialHero({
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.85, duration: 0.6, ease: EASE }}
-            className="w-full justify-self-start md:justify-self-end"
+            className="w-full justify-self-start lg:justify-self-end"
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
           >
