@@ -254,7 +254,11 @@ export default function EditorialHero({
           when it took on capability tags, and this keeps the whole hero
           inside one viewport rather than a hair over it. */}
       <div className="relative z-20 flex min-h-[100dvh] flex-col justify-center px-5 pb-10 pt-28 sm:px-8 md:px-12 md:pb-20 md:pt-32">
-        <div className="grid w-full items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-16">
+        {/* The card column widens with the viewport so the card keeps
+            sitting ON the sphere. Kept narrow it drifts to the right of
+            the footage on wide screens, ends up over plain white, and
+            then reads as a solid panel no matter how low the tint is. */}
+        <div className="grid w-full items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] lg:gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
           {/* ---------- LEFT: static ----------
               Wide enough that the authored two-line headline stays two
               lines. Narrower and "Foundation." drops to a line of its
@@ -337,21 +341,21 @@ export default function EditorialHero({
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.85, duration: 0.6, ease: EASE }}
-            className="w-full max-w-sm justify-self-start md:justify-self-end"
+            className="w-full justify-self-start md:justify-self-end"
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
           >
-            {/* Real glass, not frost. The tint is only 32% white, so the
+            {/* Real glass, not frost. The tint is only 18% white, so the
                 sphere reads clearly through it. What keeps the type
                 legible is the heavy backdrop blur: it flattens the
                 footage's high-frequency detail into even tone, so dark
                 text has a calm field to sit on rather than a busy one.
                 Saturate stops the blur going gray and lifeless. */}
             <div
-              className="relative overflow-hidden rounded-2xl border border-white/60 bg-white/[0.32] p-6 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.35)] md:p-7"
+              className="relative overflow-hidden rounded-2xl border border-white/55 bg-white/[0.18] p-6 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.3)] md:p-8"
               style={{
-                backdropFilter: 'blur(28px) saturate(1.6)',
-                WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
+                backdropFilter: 'blur(34px) saturate(1.7)',
+                WebkitBackdropFilter: 'blur(34px) saturate(1.7)',
               }}
             >
               {/* Top-left sheen, the tell that reads as a pane of glass. */}
