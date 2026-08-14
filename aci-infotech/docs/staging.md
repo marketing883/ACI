@@ -12,13 +12,44 @@ separate systemd unit, and a separate port.
 | | Production | Staging |
 |---|---|---|
 | Hostname | `aciinfotech.com` | `staging.aciinfotech.com` |
-| Port | `3002` | `3003` |
+| Port | `3002` | `3004` |
 | Linux user | `aciadmin` | `aciadmin` (same) |
-| Checkout | `/var/www/aci-prod/aci-infotech/` | `/var/www/aci-staging/aci-infotech/` |
+| Repo root | `/var/www/aci-prod/aci-infotech/` | `/var/www/aci-staging/aci-infotech/` |
+| **App dir** | (one level in) | `/var/www/aci-staging/aci-infotech/aci-infotech/` |
 | Env file | `.env` | `.env.staging` |
 | Systemd unit | existing (unchanged) | `aci-staging.service` |
 | `/` renders | v4 editorial homepage | v4 editorial homepage (same code) |
 | `/v1` | v1 HomePage | v1 HomePage (for side-by-side QA) |
+
+### Two traps this doc used to set
+
+**The checkout is nested.** The whole ACI repo is cloned into a
+directory that is itself called `aci-infotech`, so the Next.js app sits
+one level deeper than you would guess:
+
+```
+/var/www/aci-staging/aci-infotech/            <- git repo root
+/var/www/aci-staging/aci-infotech/aci-infotech/  <- npm/next run HERE
+```
+
+`git` commands run at the repo root; `npm ci` and `npm run build` run in
+the app dir. `.env.staging` lives in the app dir. The systemd unit's
+`WorkingDirectory` is the authoritative answer if you are ever unsure.
+
+**`aciadmin` has no login shell.** It is set to
+`/usr/local/cpanel/bin/noshell`, so `sudo -iu aciadmin` fails with
+"Shell access is not enabled on your account!" — and, importantly, sudo
+returns rather than aborting, so anything you paste after it silently
+runs as **root**. Always use the non-login form, which invokes bash
+directly and works fine:
+
+```sh
+sudo -u aciadmin bash -c 'cd /var/www/aci-staging/aci-infotech && git status'
+```
+
+This also means CI cannot SSH in as `aciadmin` (sshd runs the login
+shell), which is why deploys here are pull-based. See the auto-deploy
+section below.
 
 ### The `NEXT_PUBLIC_USE_V2_HOME` flag is obsolete
 
@@ -171,14 +202,30 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ## Routine deploys
 
+Normally you do not do this by hand — the auto-deploy timer below picks
+up branch movement within 5 minutes. To force a deploy immediately:
+
 ```sh
-cd /var/www/aci-staging/aci-infotech
-git pull origin <staging-branch>
-npm ci
-set -a && source .env.staging && set +a       # export env for the build
-npm run build                                  # prebuild env-check runs first
-sudo systemctl restart aci-staging             # systemd reloads .env.staging for `next start`
-sudo systemctl status aci-staging
+sudo systemctl start aci-staging-deploy
+journalctl -u aci-staging-deploy -n 40 --no-pager
+```
+
+To do it manually anyway (note the two different directories, and the
+`sudo -u aciadmin bash -c` form):
+
+```sh
+REPO=/var/www/aci-staging/aci-infotech
+APP=$REPO/aci-infotech
+BRANCH=<staging-branch>
+
+sudo -u aciadmin bash -c "cd $REPO && \
+  git fetch origin $BRANCH && git checkout -B $BRANCH FETCH_HEAD"
+
+sudo -u aciadmin bash -c "cd $APP && npm ci && \
+  set -a && . ./.env.staging && set +a && npm run build"
+
+sudo systemctl restart aci-staging
+curl -fsS -o /dev/null http://127.0.0.1:3004/ && echo "staging is up"
 ```
 
 > **Why `set -a && source`:** Next.js auto-loads `.env`, `.env.local`,
@@ -191,6 +238,77 @@ sudo systemctl status aci-staging
 If the build fails, the service keeps running the previous build —
 `next start` restarts against whatever is currently in `.next/`. Fix
 the error, rebuild, then restart.
+
+---
+
+## Auto-deploy
+
+Staging deploys itself. `aci-staging-deploy.timer` fires every 5
+minutes and runs `scripts/staging-autodeploy.sh`, which pulls the
+tracked branch and, **only if the commit actually moved**, rebuilds and
+restarts the service. Push to the tracked branch and staging follows
+within 5 minutes.
+
+It is pull-based on purpose. `aciadmin` has no login shell, so nothing
+external can SSH in to push a deploy; the box reaching out to GitHub
+over HTTPS is the only direction that works. It also means no deploy
+credentials are stored off-box.
+
+### Safety properties
+
+- **Build first, restart second.** If the build fails, the service is
+  never restarted and keeps serving the previous build. The checkout is
+  put back where it was.
+- **Health-checked.** After the restart it polls
+  `http://127.0.0.1:3004/` (the app directly, not through nginx). If the
+  site does not come up, it rebuilds the previous commit, restarts, and
+  verifies again, logging which commit was bad.
+- **Narrow blast radius.** The script only ever touches the staging
+  checkout and the `aci-staging` unit. The sudoers rule grants exactly
+  one command: `systemctl restart aci-staging`. Production, nginx, and
+  every other vhost on the box are out of reach by construction.
+- **Polite about resources.** The unit runs `Nice=10`, `CPUWeight=20`,
+  `IOSchedulingClass=idle`, `MemoryMax=3G`, so a Next.js build cannot
+  starve or OOM the other sites sharing this server.
+
+### One-time install
+
+```sh
+REPO=/var/www/aci-staging/aci-infotech
+APP=$REPO/aci-infotech
+
+# 1. Which branch should staging track?
+cat >/etc/aci-staging-deploy.conf <<'EOF'
+ACI_STAGING_BRANCH=main
+EOF
+
+# 2. Let aciadmin restart only the staging unit
+SYSTEMCTL=$(command -v systemctl)
+echo "aciadmin ALL=(root) NOPASSWD: $SYSTEMCTL restart aci-staging" \
+  >/etc/sudoers.d/aci-staging-deploy
+chmod 440 /etc/sudoers.d/aci-staging-deploy
+visudo -c
+
+# 3. Install the units
+install -m 644 $APP/scripts/systemd/aci-staging-deploy.service /etc/systemd/system/
+install -m 644 $APP/scripts/systemd/aci-staging-deploy.timer   /etc/systemd/system/
+chmod +x $APP/scripts/staging-autodeploy.sh
+systemctl daemon-reload
+systemctl enable --now aci-staging-deploy.timer
+```
+
+### Operating it
+
+```sh
+systemctl list-timers aci-staging-deploy       # when it next runs
+journalctl -u aci-staging-deploy -n 100        # what it did
+sudo systemctl start aci-staging-deploy        # force a run now
+systemctl disable --now aci-staging-deploy.timer   # pause auto-deploys
+```
+
+To point staging at a different branch, edit
+`/etc/aci-staging-deploy.conf` and it takes effect on the next poll. No
+rebuild of the units needed.
 
 ---
 
