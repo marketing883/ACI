@@ -30,6 +30,9 @@ interface DashboardStats {
   eventLeads: { total: number; new: number };
   caseStudies: { total: number; published: number };
   blogPosts: { total: number; published: number };
+  whitepapers: { total: number; published: number };
+  webinars: { total: number; upcoming: number };
+  avgLeadScore: number | null;
 }
 
 interface RecentLead {
@@ -53,6 +56,9 @@ export default function AdminDashboard() {
     eventLeads: { total: 0, new: 0 },
     caseStudies: { total: 0, published: 0 },
     blogPosts: { total: 0, published: 0 },
+    whitepapers: { total: 0, published: 0 },
+    webinars: { total: 0, upcoming: 0 },
+    avgLeadScore: null,
   });
   const [recentLeads, setRecentLeads] = useState<RecentLead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,6 +81,9 @@ export default function AdminDashboard() {
         eventLeads: { total: 64, new: 22 },
         caseStudies: { total: 12, published: 10 },
         blogPosts: { total: 24, published: 18 },
+        whitepapers: { total: 8, published: 6 },
+        webinars: { total: 4, upcoming: 2 },
+        avgLeadScore: 78,
       });
       setRecentLeads([
         {
@@ -143,10 +152,17 @@ export default function AdminDashboard() {
       // 0, and this page disagreed with the list pages beside it.
       const res = await fetch('/api/admin/stats');
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Failed to load dashboard data');
 
-      setStats(json.stats);
-      setRecentLeads(json.recentLeads || []);
+      // Take whatever counts came back, then report the failure. The route
+      // answers a partial read with HTTP 500 *and* every count that did
+      // succeed; throwing first discarded them and left this page on its
+      // all-zero initial state. That is how two lead tables missing a
+      // column blanked all seven cards while the list pages beside them
+      // showed rows.
+      if (json.stats) setStats(json.stats);
+      if (json.recentLeads) setRecentLeads(json.recentLeads);
+
+      if (!res.ok) throw new Error(json.error || 'Failed to load dashboard data');
       setLoadError(null);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -156,34 +172,34 @@ export default function AdminDashboard() {
     }
   }
 
-  // Summary cards data
+  // Summary cards data.
+  //
+  // No trend badges. Each card used to carry a hardcoded +12% / +8% / +5%
+  // / +3, which meant the dashboard reported healthy growth over counts
+  // that were reading 0 - and that is a large part of why this page looked
+  // fine while it was broken. A real trend needs a prior-period count the
+  // stats route does not compute yet.
   const summaryCards = [
     {
       title: 'Total Leads',
       value: stats.contacts.total + stats.chatLeads.total + stats.playbookLeads.total + stats.whitepaperLeads.total + stats.eventLeads.total,
-      change: '+12%',
-      changeType: 'positive',
       icon: Users,
     },
     {
       title: 'New This Week',
       value: stats.contacts.new + stats.chatLeads.new + stats.playbookLeads.new + stats.whitepaperLeads.new + stats.eventLeads.new,
-      change: '+8%',
-      changeType: 'positive',
       icon: Activity,
     },
     {
       title: 'Avg Lead Score',
-      value: '78',
-      change: '+5%',
-      changeType: 'positive',
+      // A dash, not a number, when we hold no scores. Better an honest gap
+      // than a plausible-looking average of nothing.
+      value: stats.avgLeadScore ?? '—',
       icon: Target,
     },
     {
       title: 'Content Published',
       value: stats.caseStudies.published + stats.blogPosts.published,
-      change: '+3',
-      changeType: 'neutral',
       icon: FileText,
     },
   ];
@@ -252,16 +268,16 @@ export default function AdminDashboard() {
     },
     {
       title: 'Whitepapers',
-      total: 8,
-      subtitle: '6 published',
+      total: stats.whitepapers.total,
+      subtitle: `${stats.whitepapers.published} published`,
       icon: FileCheck,
       color: 'from-indigo-500 to-indigo-600',
       href: '/admin/whitepapers',
     },
     {
       title: 'Webinars',
-      total: 4,
-      subtitle: '2 upcoming',
+      total: stats.webinars.total,
+      subtitle: `${stats.webinars.upcoming} upcoming`,
       icon: Video,
       color: 'from-pink-500 to-pink-600',
       href: '/admin/webinars',
@@ -338,15 +354,10 @@ export default function AdminDashboard() {
           const Icon = card.icon;
           return (
             <div key={card.title} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center mb-3">
                 <div className="p-2.5 bg-gray-50 rounded-xl">
                   <Icon className="w-5 h-5 text-gray-600" />
                 </div>
-                <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                  card.changeType === 'positive' ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-50 text-gray-600'
-                }`}>
-                  {card.change}
-                </span>
               </div>
               <p className="text-3xl font-bold text-gray-900">
                 {loading ? '...' : card.value.toLocaleString()}

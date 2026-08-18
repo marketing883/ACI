@@ -21,6 +21,16 @@ function configured(): boolean {
   return !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
 }
 
+// "New" means created in the last seven days, on every table. It used to
+// mean status = 'new', which is a triage state, not a date: it never
+// expires on its own, so the "New This Week" card only went down when
+// somebody worked a lead by hand. Worse, playbook_leads and
+// whitepaper_leads have no status column at all (supabase/schema.sql:234
+// and :264 - they track a download with token_used, and the STEP 2
+// backfill block skips them on purpose), so those two counts failed with
+// 42703 on every load and took the whole response down with them.
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
 const EMPTY_STATS = {
   contacts: { total: 0, new: 0 },
   chatLeads: { total: 0, new: 0 },
@@ -29,6 +39,9 @@ const EMPTY_STATS = {
   eventLeads: { total: 0, new: 0 },
   caseStudies: { total: 0, published: 0 },
   blogPosts: { total: 0, published: 0 },
+  whitepapers: { total: 0, published: 0 },
+  webinars: { total: 0, upcoming: 0 },
+  avgLeadScore: null as number | null,
 };
 
 interface RecentLead {
@@ -67,6 +80,21 @@ export async function GET() {
       return n ?? 0;
     };
 
+    // Rows created inside the window. Every lead table has created_at, so
+    // this works the same everywhere and does not depend on a triage
+    // column that only some of them carry.
+    const countSince = async (table: string, iso: string) => {
+      const { count: n, error } = await supabase
+        .from(table)
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', iso);
+      if (error) {
+        errors.push(`${table}: ${error.message}`);
+        return 0;
+      }
+      return n ?? 0;
+    };
+
     const recent = async (table: string, columns: string, limit: number): Promise<Row[]> => {
       const { data, error } = await supabase
         .from(table)
@@ -80,6 +108,40 @@ export async function GET() {
       return (data as unknown as Row[]) || [];
     };
 
+    // Mean of every lead score we actually hold. The card used to print a
+    // hardcoded '78', which is how it kept showing a healthy number while
+    // every real count beside it read 0. Null when we hold none - the
+    // dashboard renders a dash rather than inventing a score.
+    //
+    // Capped at the 1000 newest rows per table: this is a summary tile, not
+    // a report, and it should not get slower as the pipeline grows.
+    const avgLeadScore = async (): Promise<number | null> => {
+      const pull = async (table: string, columns: string) => {
+        const { data, error } = await supabase
+          .from(table)
+          .select(columns)
+          .order('created_at', { ascending: false })
+          .limit(1000);
+        if (error) {
+          errors.push(`${table}: ${error.message}`);
+          return [];
+        }
+        return (data as unknown as Row[]) || [];
+      };
+
+      const [chat, contactRows] = await Promise.all([
+        pull('chat_leads', 'lead_score, intelligence, created_at'),
+        pull('contacts', 'intelligence, created_at'),
+      ]);
+
+      const scores = [...chat, ...contactRows]
+        .map((r) => ((r.intelligence as Row | null)?.leadScore ?? r.lead_score) as unknown)
+        .filter((s): s is number => typeof s === 'number' && Number.isFinite(s));
+
+      if (scores.length === 0) return null;
+      return Math.round(scores.reduce((sum, s) => sum + s, 0) / scores.length);
+    };
+
     const publishedBlogCount = async () => {
       const { count: n, error } = await supabase
         .from('blog_posts')
@@ -91,6 +153,8 @@ export async function GET() {
       }
       return n ?? 0;
     };
+
+    const weekAgo = new Date(Date.now() - WEEK_MS).toISOString();
 
     const [
       totalContacts,
@@ -107,21 +171,31 @@ export async function GET() {
       publishedCaseStudies,
       totalBlog,
       publishedBlog,
+      totalWhitepapers,
+      publishedWhitepapers,
+      totalWebinars,
+      upcomingWebinars,
+      leadScore,
     ] = await Promise.all([
       count('contacts'),
-      count('contacts', { column: 'status', value: 'new' }),
+      countSince('contacts', weekAgo),
       count('chat_leads'),
-      count('chat_leads', { column: 'status', value: 'new' }),
+      countSince('chat_leads', weekAgo),
       count('playbook_leads'),
-      count('playbook_leads', { column: 'status', value: 'new' }),
+      countSince('playbook_leads', weekAgo),
       count('whitepaper_leads'),
-      count('whitepaper_leads', { column: 'status', value: 'new' }),
+      countSince('whitepaper_leads', weekAgo),
       count('event_leads'),
-      count('event_leads', { column: 'status', value: 'new' }),
+      countSince('event_leads', weekAgo),
       count('case_studies'),
       count('case_studies', { column: 'status', value: 'published' }),
       count('blog_posts'),
       publishedBlogCount(),
+      count('whitepapers'),
+      count('whitepapers', { column: 'status', value: 'published' }),
+      count('webinars'),
+      count('webinars', { column: 'status', value: 'upcoming' }),
+      avgLeadScore(),
     ]);
 
     const [contacts, chatLeads, playbookLeads, whitepaperLeads, eventLeads] = await Promise.all([
@@ -131,8 +205,18 @@ export async function GET() {
         'id, name, email, company, service_interest, created_at, status, lead_score, intelligence',
         3,
       ),
-      recent('playbook_leads', 'id, name, email, company, playbook_title, created_at, status', 2),
-      recent('whitepaper_leads', 'id, name, email, company, whitepaper_title, created_at, status', 2),
+      // token_used, not status: these two tables record a download, not a
+      // triage state, and have no status column to select.
+      recent(
+        'playbook_leads',
+        'id, name, email, company, playbook_title, created_at, token_used',
+        2,
+      ),
+      recent(
+        'whitepaper_leads',
+        'id, name, email, company, whitepaper_title, created_at, token_used',
+        2,
+      ),
       recent('event_leads', 'id, full_name, email, company_name, created_at, status', 3),
     ]);
 
@@ -167,7 +251,7 @@ export async function GET() {
         email: p.email as string,
         company: p.company as string | undefined,
         created_at: p.created_at as string,
-        status: p.status as string,
+        status: p.token_used ? 'downloaded' : 'new',
         type: 'playbook' as const,
         source: p.playbook_title as string,
       })),
@@ -177,7 +261,7 @@ export async function GET() {
         email: w.email as string,
         company: w.company as string | undefined,
         created_at: w.created_at as string,
-        status: w.status as string,
+        status: w.token_used ? 'downloaded' : 'new',
         type: 'whitepaper' as const,
         source: w.whitepaper_title as string,
       })),
@@ -195,22 +279,29 @@ export async function GET() {
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
       .slice(0, 6);
 
+    const stats = {
+      contacts: { total: totalContacts, new: newContacts },
+      chatLeads: { total: totalChatLeads, new: newChatLeads },
+      playbookLeads: { total: totalPlaybookLeads, new: newPlaybookLeads },
+      whitepaperLeads: { total: totalWhitepaperLeads, new: newWhitepaperLeads },
+      eventLeads: { total: totalEventLeads, new: newEventLeads },
+      caseStudies: { total: totalCaseStudies, published: publishedCaseStudies },
+      blogPosts: { total: totalBlog, published: publishedBlog },
+      whitepapers: { total: totalWhitepapers, published: publishedWhitepapers },
+      webinars: { total: totalWebinars, upcoming: upcomingWebinars },
+      avgLeadScore: leadScore,
+    };
+
     // A partial read is worse than a visible failure: the dashboard would
-    // under-report leads and look like a quiet week.
+    // under-report leads and look like a quiet week. The counts that did
+    // come back ship with the error so the page can show them - it is the
+    // caller's job not to throw them away.
     if (errors.length > 0) {
       console.error('Admin stats read errors:', errors);
       return NextResponse.json(
         {
           error: errors.join('; '),
-          stats: {
-            contacts: { total: totalContacts, new: newContacts },
-            chatLeads: { total: totalChatLeads, new: newChatLeads },
-            playbookLeads: { total: totalPlaybookLeads, new: newPlaybookLeads },
-            whitepaperLeads: { total: totalWhitepaperLeads, new: newWhitepaperLeads },
-            eventLeads: { total: totalEventLeads, new: newEventLeads },
-            caseStudies: { total: totalCaseStudies, published: publishedCaseStudies },
-            blogPosts: { total: totalBlog, published: publishedBlog },
-          },
+          stats,
           recentLeads,
         },
         { status: 500 },
@@ -218,15 +309,7 @@ export async function GET() {
     }
 
     return NextResponse.json({
-      stats: {
-        contacts: { total: totalContacts, new: newContacts },
-        chatLeads: { total: totalChatLeads, new: newChatLeads },
-        playbookLeads: { total: totalPlaybookLeads, new: newPlaybookLeads },
-        whitepaperLeads: { total: totalWhitepaperLeads, new: newWhitepaperLeads },
-        eventLeads: { total: totalEventLeads, new: newEventLeads },
-        caseStudies: { total: totalCaseStudies, published: publishedCaseStudies },
-        blogPosts: { total: totalBlog, published: publishedBlog },
-      },
+      stats,
       recentLeads,
     });
   } catch (error) {
