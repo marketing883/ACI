@@ -69,6 +69,24 @@ echo "== deploy start =="
 echo "ref=$REF service=$SERVICE app_dir=$APP_DIR repo_root=$REPO_ROOT"
 echo "current=$PREVIOUS"
 
+# Preflight, before anything is fetched or reset. If ENV_SRC is configured
+# it is the authority on .env, so being unable to read it is not something
+# to warn about and carry on from - carrying on means building against a
+# stale .env, which is the drift this setting exists to stop. Fail here,
+# while the checkout and the service are still untouched.
+if [ -n "$ENV_SRC" ] && [ ! -r "$ENV_SRC" ]; then
+  echo "!! ACI_ENV_SRC=$ENV_SRC is not readable by $(id -un)" >&2
+  if [ -e "$ENV_SRC" ]; then
+    # deploy_aci_prod.sh did this copy as root, so the file can be
+    # root-only and still have worked by hand for years.
+    echo "!! it exists but this user cannot read it. Fix on the box with:" >&2
+    echo "!!   chown $(id -un): $ENV_SRC && chmod 600 $ENV_SRC" >&2
+  else
+    echo "!! no such file. Check ACI_ENV_SRC in the unit." >&2
+  fi
+  exit 1
+fi
+
 restore() {
   echo "!! deploy failed - restoring $PREVIOUS"
   git -C "$REPO_ROOT" reset --hard "$PREVIOUS" || true
@@ -140,10 +158,19 @@ restore_env() {
 # authority.
 install_env() {
   restore_env
-  if [ -n "$ENV_SRC" ] && [ -f "$ENV_SRC" ]; then
-    cp -a "$ENV_SRC" "$APP_DIR/.env"
+  if [ -n "$ENV_SRC" ] && [ -r "$ENV_SRC" ]; then
+    # Plain cp, not cp -a. Preserving ownership needs root when the source
+    # belongs to someone else, and this script runs unprivileged. Contents
+    # and a 600 mode are what matter; the owner is set by the copy.
+    cp "$ENV_SRC" "$APP_DIR/.env"
     chmod 600 "$APP_DIR/.env"
     echo "env: .env installed from $ENV_SRC"
+  elif [ -n "$ENV_SRC" ] && [ -e "$ENV_SRC" ]; then
+    # Readable matters more than existing: deploy_aci_prod.sh does this
+    # copy as root, so the file can be root-only and still have worked by
+    # hand for years. Say which it is rather than "missing".
+    echo "!! env: ACI_ENV_SRC=$ENV_SRC exists but is not readable by $(id -un)" >&2
+    echo "!! env: kept the existing .env - fix with: chown $(id -un) $ENV_SRC" >&2
   elif [ -n "$ENV_SRC" ]; then
     echo "!! env: ACI_ENV_SRC=$ENV_SRC is set but missing - kept the existing .env" >&2
   else
