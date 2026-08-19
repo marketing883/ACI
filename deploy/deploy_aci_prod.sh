@@ -16,12 +16,44 @@
 # Everything now goes through /usr/local/bin/aci-deploy, so a deploy run
 # by hand and a deploy run by the hook execute the same code.
 #
-# Usage: deploy_aci_prod.sh [ref]        (default: main)
+# Usage: deploy_aci_prod.sh [ref]
+#
+# With no argument it redeploys the branch this checkout is already on,
+# picking up whatever has been pushed to it. It used to default to `main`,
+# which is wrong for this repo and quietly dangerous: main carries only the
+# old static site and the documentation, with no aci-infotech/ directory at
+# all, so a bare `deploy_aci_prod.sh` would reset production onto a tree
+# with no app in it. The guards would catch it and roll back, but that is
+# an outage window spent on a default nobody wanted.
+#
+# Deploying a different branch is what the argument is for. Nothing here or
+# in aci-deploy pins a branch name - the ref is an input at every layer,
+# including the hook's JSON body - so moving to another branch needs no
+# change to any of this.
 
 set -Eeuo pipefail
 
-REF="${1:-main}"
 DEPLOY_USER="${ACI_DEPLOY_USER:-aciadmin}"
+SERVICE="${ACI_SERVICE:-aci-next.service}"
+
+REF="${1:-}"
+if [ -z "$REF" ]; then
+  APP_DIR=$(systemctl show "$SERVICE" -p WorkingDirectory --value)
+  if [ -z "$APP_DIR" ] || [ ! -d "$APP_DIR" ]; then
+    echo "cannot find $SERVICE's WorkingDirectory to infer a branch" >&2
+    echo "usage: deploy_aci_prod.sh <ref>" >&2
+    exit 2
+  fi
+  REF=$(git -C "$APP_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || true)
+  # Detached HEAD reports the literal string "HEAD", which is not a branch
+  # anyone can mean to deploy. Refuse rather than guess at one.
+  if [ -z "$REF" ] || [ "$REF" = "HEAD" ]; then
+    echo "checkout is not on a branch (detached HEAD), so there is no ref to infer" >&2
+    echo "usage: deploy_aci_prod.sh <ref>" >&2
+    exit 2
+  fi
+  echo "no ref given - redeploying the checked-out branch: $REF"
+fi
 
 # The deploy has to run as the account that owns the checkout. Running it
 # as root leaves root-owned objects in .git, and the next deploy - which

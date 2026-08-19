@@ -144,8 +144,26 @@ curl -s -o /dev/null -w '%{http_code}\n' \
 curl -sS -X POST https://aciinfotech.com/__deploy \
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
-  -d '{"ref":"main"}'
+  -d '{"ref":"<branch, tag or SHA>"}'
 ```
 
 Returns the deploy's exit code plus the tail of stdout/stderr, so a failure
 explains itself rather than just returning 500.
+
+By hand on the box, where no argument redeploys the branch the checkout is
+already on:
+
+```sh
+sudo /home/aciadmin/aci-website/deploy_aci_prod.sh                  # current branch
+sudo /home/aciadmin/aci-website/deploy_aci_prod.sh some/other-branch
+```
+
+No branch name is pinned anywhere in this directory. The ref is an input at
+every layer - the hook's JSON body, the launcher's argument, the deploy
+script's argument - so changing which branch production tracks needs no
+change here, and there is nothing to update when a branch is retired.
+
+Note that `main` is a poor default in this repo specifically: it carries the
+old static site and the documentation, with no `aci-infotech/` directory, so
+deploying it would reset production onto a tree with no app. The wrapper
+used to default to it and no longer does.
