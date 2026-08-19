@@ -61,7 +61,7 @@ restore() {
   echo "!! deploy failed - restoring $PREVIOUS"
   git -C "$REPO_ROOT" reset --hard "$PREVIOUS" || true
   cd "$APP_DIR"
-  npm ci --no-audit --no-fund || true
+  npm ci --include=dev --no-audit --no-fund || true
   build || echo "!! restore build failed too - service left on its running process"
   sudo /usr/bin/systemctl restart "$SERVICE" || true
 }
@@ -118,7 +118,13 @@ trap restore ERR
 git -C "$REPO_ROOT" reset --hard "$TARGET"
 restore_env
 cd "$APP_DIR"
-npm ci --no-audit --no-fund
+# --include=dev, always. .env carries NODE_ENV=production, and build()
+# sources it with `set -a`, so every npm run after the first inherits it
+# and npm ci silently drops devDependencies. next build then cannot
+# transpile next.config.ts because typescript is gone. The restore path
+# hit exactly this: 327 packages instead of 667, and a rollback that
+# could not rebuild. deploy_aci_prod.sh has always passed this flag.
+npm ci --include=dev --no-audit --no-fund
 build
 
 sudo /usr/bin/systemctl restart "$SERVICE"

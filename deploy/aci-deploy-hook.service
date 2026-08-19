@@ -17,15 +17,24 @@ RestartSec=5
 
 # It runs a build and restarts a unit, so it cannot be locked down as hard
 # as a pure network service. These are the restrictions that still hold.
+#
+# The kernel-protection options that used to be here are gone, and the
+# reason is not cosmetic. ProtectKernelTunables, ProtectKernelModules,
+# ProtectControlGroups, RestrictSUIDSGID and LockPersonality each imply
+# NoNewPrivileges=yes, and systemd's implication overrides the explicit
+# `no` below. NoNewPrivileges blocks setuid entirely, so `sudo systemctl
+# restart` inside this unit fails with "the no new privileges flag is
+# set" - the sudoers rule is correct but unreachable, and every deploy
+# builds fine then dies at the restart.
+#
+# The controls that actually gate this endpoint are untouched: it runs as
+# aciadmin rather than root, binds to loopback only, authenticates a
+# bearer token, and can escalate to exactly one command via
+# /etc/sudoers.d/gha-deploy.
 NoNewPrivileges=no
 PrivateTmp=yes
 ProtectSystem=full
 ProtectHome=no
-ProtectKernelTunables=yes
-ProtectKernelModules=yes
-ProtectControlGroups=yes
-RestrictSUIDSGID=yes
-LockPersonality=yes
 
 [Install]
 WantedBy=multi-user.target
