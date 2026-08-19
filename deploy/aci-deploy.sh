@@ -72,7 +72,7 @@ build() {
   set -a
   # shellcheck disable=SC1091
   . ./.env
-  [ -f ./.env.local ] && . ./.env.local
+  if [ -f ./.env.local ]; then . ./.env.local; fi
   set +a
   npm run build
 }
@@ -95,12 +95,19 @@ fi
 # and the values are not recoverable from the repository.
 ENV_BACKUP=$(mktemp -d)
 for f in .env .env.local .env.staging; do
-  [ -f "$APP_DIR/$f" ] && cp -a "$APP_DIR/$f" "$ENV_BACKUP/$f"
+  if [ -f "$APP_DIR/$f" ]; then cp -a "$APP_DIR/$f" "$ENV_BACKUP/$f"; fi
 done
+# `if` rather than `[ -f x ] && cp`, and an explicit return 0. A missing
+# file is the normal case here - prod has no .env.staging - and with the
+# && form the last loop iteration leaves the function returning non-zero.
+# Under `set -E` the ERR trap is inherited into functions, so that turned
+# "there was no .env.staging to put back" into a failed deploy that
+# rolled itself back seconds after the reset.
 restore_env() {
   for f in .env .env.local .env.staging; do
-    [ -f "$ENV_BACKUP/$f" ] && cp -a "$ENV_BACKUP/$f" "$APP_DIR/$f"
+    if [ -f "$ENV_BACKUP/$f" ]; then cp -a "$ENV_BACKUP/$f" "$APP_DIR/$f"; fi
   done
+  return 0
 }
 trap 'restore_env; rm -rf "$ENV_BACKUP"' EXIT
 
