@@ -19,10 +19,34 @@ CONNECT :443 via proxy       HTTP/1.1 200 Connection Established
 
 | File | Path on VPS | Purpose |
 |---|---|---|
-| `aci-deploy.sh` | `/usr/local/bin/aci-deploy` | fetch, build, restart, health check, roll back |
+| `aci-deploy-launcher.sh` | `/usr/local/bin/aci-deploy` | fetches the ref and runs its deploy script |
+| `aci-deploy.sh` | *not installed* | fetch, build, restart, health check, roll back |
 | `deploy-hook.py` | `/usr/local/bin/aci-deploy-hook` | loopback HTTPS-fronted trigger |
 | `aci-deploy-hook.service` | `/etc/systemd/system/` | runs the hook as the deploy user |
 | `nginx-deploy-hook.conf` | nginx server block | proxies `/__deploy` to the hook |
+| `deploy_aci_prod.sh` | `/home/aciadmin/aci-website/` | manual deploy; wraps the same launcher |
+
+`aci-deploy.sh` is deliberately absent from that list. It is read out of the
+ref being deployed, so a fix to the deploy logic ships with the code like
+any other change. The installed launcher is the only file that needs
+reinstalling, and it is built not to need it.
+
+That split exists because the old arrangement cost an afternoon: the deploy
+logic lived in the installed copy, so a fix pushed to git could not reach
+production through a deploy. Three consecutive deploys failed on a bug that
+had already been fixed, because the deploy fetched the fix and then ran the
+stale script.
+
+## Env
+
+`ACI_ENV_SRC` in the unit points at `env/aci-prod.env`, the authoritative
+production env, and `aci-deploy` installs it over `.env` on every deploy.
+`.env` is a tracked file that must differ on the server, so the dirty guard
+excludes it by name rather than relying on a `skip-worktree` flag set by
+hand in the server's git index.
+
+Set no `ACI_ENV_SRC` and the existing `.env` is preserved instead, which is
+what staging wants.
 
 ## Security shape
 
@@ -50,7 +74,7 @@ Rotate the token by editing `/etc/aci-deploy.env` and restarting
 Run as root on the VPS, from a checkout of this repo:
 
 ```sh
-install -m 755 -o root -g root deploy/aci-deploy.sh      /usr/local/bin/aci-deploy
+install -m 755 -o root -g root deploy/aci-deploy-launcher.sh /usr/local/bin/aci-deploy
 install -m 755 -o root -g root deploy/deploy-hook.py     /usr/local/bin/aci-deploy-hook
 install -m 644 -o root -g root deploy/aci-deploy-hook.service /etc/systemd/system/
 

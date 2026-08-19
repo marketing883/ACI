@@ -11,6 +11,10 @@ Environment=ACI_HOOK_HOST=127.0.0.1
 Environment=ACI_HOOK_PORT=9099
 Environment=ACI_SERVICE=aci-next.service
 Environment=ACI_HEALTH_PORT=3002
+# The authoritative production env. aci-deploy installs this over .env on
+# every deploy, which is what deploy_aci_prod.sh has always done - the two
+# used to disagree, and the app-dir .env drifted out of date as a result.
+Environment=ACI_ENV_SRC=/home/aciadmin/aci-website/env/aci-prod.env
 ExecStart=/usr/local/bin/aci-deploy-hook
 Restart=on-failure
 RestartSec=5

@@ -21,6 +21,16 @@ set -Eeuo pipefail
 
 SERVICE="${ACI_SERVICE:-aci-next.service}"
 HEALTH_PORT="${ACI_HEALTH_PORT:-3002}"
+# Where production's real .env comes from. deploy_aci_prod.sh has always
+# copied this file over .env on every deploy; this script used to preserve
+# whatever .env happened to hold instead. That is how the app-dir copy
+# drifted from the authoritative one and lost NEXT_PUBLIC_SITE_URL, which
+# failed a deploy in the prebuild env check while the file it should have
+# been copied from had the value all along. One source, both paths.
+#
+# Unset is supported and means "keep the existing .env" - staging has no
+# equivalent file.
+ENV_SRC="${ACI_ENV_SRC:-}"
 # In the deploy user's home, not /var/lock: this runs unprivileged, and
 # /var/lock is not writable by it on a default AlmaLinux install.
 LOCK="${ACI_LOCK:-${HOME:-/tmp}/.aci-deploy.lock}"
@@ -52,6 +62,8 @@ APP_DIR=$(systemctl show "$SERVICE" -p WorkingDirectory --value)
 cd "$APP_DIR"
 REPO_ROOT=$(git rev-parse --show-toplevel)
 PREVIOUS=$(git -C "$REPO_ROOT" rev-parse HEAD)
+# The app's .env as `git status` names it, e.g. aci-infotech/.env.
+ENV_REL="${APP_DIR#"$REPO_ROOT"/}/.env"
 
 echo "== deploy start =="
 echo "ref=$REF service=$SERVICE app_dir=$APP_DIR repo_root=$REPO_ROOT"
@@ -60,6 +72,11 @@ echo "current=$PREVIOUS"
 restore() {
   echo "!! deploy failed - restoring $PREVIOUS"
   git -C "$REPO_ROOT" reset --hard "$PREVIOUS" || true
+  # That reset restored the committed .env over the live one, so put the
+  # real env back before rebuilding. Without this the rollback build runs
+  # on repo defaults and fails the prebuild check - or worse, succeeds and
+  # ships a build wired to the wrong Supabase project.
+  install_env
   cd "$APP_DIR"
   npm ci --include=dev --no-audit --no-fund || true
   build || echo "!! restore build failed too - service left on its running process"
@@ -82,7 +99,15 @@ build() {
 # would overwrite the live Supabase config with whatever was committed.
 # Refuse rather than guess. ACI_ALLOW_DIRTY=1 overrides once the dirty
 # files are understood.
-DIRTY=$(git -C "$REPO_ROOT" status --porcelain --untracked-files=no)
+#
+# The app's own .env is excluded: this script installs it from ENV_SRC, so
+# it is expected to differ from the commit and is not a surprise anyone
+# needs to adjudicate. Excluding it here also replaces the
+# `git update-index --skip-worktree` that was set on the box by hand -
+# that flag lived in the server's git index where nobody reading this
+# script could see it.
+DIRTY=$(git -C "$REPO_ROOT" status --porcelain --untracked-files=no |
+  awk -v skip="$ENV_REL" '$2 != skip')
 if [ -n "$DIRTY" ] && [ "${ACI_ALLOW_DIRTY:-0}" != "1" ]; then
   echo "!! refusing to deploy: tracked files are modified in $REPO_ROOT" >&2
   printf '%s\n' "$DIRTY" >&2
@@ -109,7 +134,36 @@ restore_env() {
   done
   return 0
 }
-trap 'restore_env; rm -rf "$ENV_BACKUP"' EXIT
+
+# Puts the env files back after a reset, then lets ENV_SRC win for .env if
+# one is configured. Order matters: the backup is the floor, ENV_SRC is the
+# authority.
+install_env() {
+  restore_env
+  if [ -n "$ENV_SRC" ] && [ -f "$ENV_SRC" ]; then
+    cp -a "$ENV_SRC" "$APP_DIR/.env"
+    chmod 600 "$APP_DIR/.env"
+    echo "env: .env installed from $ENV_SRC"
+  elif [ -n "$ENV_SRC" ]; then
+    echo "!! env: ACI_ENV_SRC=$ENV_SRC is set but missing - kept the existing .env" >&2
+  else
+    echo "env: no ACI_ENV_SRC set - kept the existing .env"
+  fi
+  return 0
+}
+
+# Named files only, no recursive delete. ENV_BACKUP is a mktemp -d, but a
+# variable that is empty or wrong turns `rm -rf "$ENV_BACKUP"` into
+# something far worse than a leaked temp directory, and this script has
+# already proved it can surprise us.
+cleanup_env_backup() {
+  for f in .env .env.local .env.staging; do
+    rm -f "$ENV_BACKUP/$f"
+  done
+  rmdir "$ENV_BACKUP" 2>/dev/null || true
+  return 0
+}
+trap 'install_env; cleanup_env_backup' EXIT
 
 git -C "$REPO_ROOT" fetch --prune origin "$REF"
 TARGET=$(git -C "$REPO_ROOT" rev-parse FETCH_HEAD)
@@ -123,7 +177,7 @@ fi
 trap restore ERR
 
 git -C "$REPO_ROOT" reset --hard "$TARGET"
-restore_env
+install_env
 cd "$APP_DIR"
 # --include=dev, always. .env carries NODE_ENV=production, and build()
 # sources it with `set -a`, so every npm run after the first inherits it
