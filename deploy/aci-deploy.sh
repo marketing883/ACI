@@ -12,7 +12,12 @@
 # Usage:  aci-deploy <ref>
 # Install: /usr/local/bin/aci-deploy  (chmod 755, owned by root)
 
-set -euo pipefail
+# -E matters as much as -e here: without errtrace the ERR trap is not
+# inherited by shell functions, so a failure inside build() exits without
+# ever running restore(). Observed live - a build that aborted in the
+# prebuild env check exited in 19s with no rollback and left the checkout
+# on the new commit while the service kept serving the old build.
+set -Eeuo pipefail
 
 SERVICE="${ACI_SERVICE:-aci-next.service}"
 HEALTH_PORT="${ACI_HEALTH_PORT:-3002}"
