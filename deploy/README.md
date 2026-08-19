@@ -45,8 +45,44 @@ production env, and `aci-deploy` installs it over `.env` on every deploy.
 excludes it by name rather than relying on a `skip-worktree` flag set by
 hand in the server's git index.
 
-Set no `ACI_ENV_SRC` and the existing `.env` is preserved instead, which is
-what staging wants.
+Set no `ACI_ENV_SRC` and the existing `.env` is preserved instead.
+
+The file has to be readable by the deploy user. `deploy_aci_prod.sh` used
+to do that one copy as root, so a root-only env file worked by hand for
+years and then failed the moment the hook - which runs as `aciadmin` - took
+over. `aci-deploy` checks readability before it fetches or resets anything,
+so that failure costs nothing.
+
+## Staging
+
+A second instance of the same hook, on port 9098, with its own token, its
+own unit, and `ACI_SERVICE=aci-staging.service`. Separate tokens are the
+point: a staging token cannot deploy production, so standing staging access
+is a much smaller decision than standing production access.
+
+| | Production | Staging |
+|---|---|---|
+| Unit | `aci-deploy-hook.service` | `aci-deploy-hook-staging.service` |
+| Hook port | 9099 | 9098 |
+| Token file | `/etc/aci-deploy.env` | `/etc/aci-deploy-staging.env` |
+| App service | `aci-next.service` | `aci-staging.service` |
+| Health port | 3002 | 3004 |
+| Host | `aciinfotech.com` | `staging.aciinfotech.com` |
+
+`aci-deploy` needs no per-environment logic: it reads `APP_DIR` from the
+unit's `WorkingDirectory`, which is how it copes with the staging repo
+being cloned into a directory that shares the app's name.
+
+Staging needs its own sudoers line. The existing one grants
+`aci-next.service` only, so without this the staging deploy builds and then
+fails at the restart:
+
+```sh
+echo 'aciadmin ALL=(root) NOPASSWD: /usr/bin/systemctl restart aci-staging.service, /usr/bin/systemctl status aci-staging.service' \
+  > /etc/sudoers.d/aci-staging-deploy
+chmod 440 /etc/sudoers.d/aci-staging-deploy
+visudo -c
+```
 
 ## Security shape
 

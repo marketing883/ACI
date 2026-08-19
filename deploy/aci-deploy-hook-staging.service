@@ -1,0 +1,39 @@
+[Unit]
+Description=ACI staging deploy hook
+After=network.target
+
+[Service]
+Type=simple
+User=aciadmin
+Group=aciadmin
+# Its own token, deliberately. A staging token that could also deploy
+# production would make "let the agent deploy staging freely" the same
+# decision as "let the agent deploy production freely", and those are not
+# the same decision.
+EnvironmentFile=/etc/aci-deploy-staging.env
+Environment=ACI_HOOK_HOST=127.0.0.1
+Environment=ACI_HOOK_PORT=9098
+Environment=ACI_SERVICE=aci-staging.service
+Environment=ACI_HEALTH_PORT=3004
+# Staging keeps its env in .env.staging, which Next does not auto-load and
+# which check-build-env.mjs therefore never sees. Installing it as .env
+# gives the build the values it needs; systemd still reads .env.staging
+# for the running process, so both halves see the same file's contents.
+Environment=ACI_ENV_SRC=/var/www/aci-staging/aci-infotech/aci-infotech/.env.staging
+# aci-deploy derives APP_DIR from the unit's WorkingDirectory, so nothing
+# here needs to know that the staging repo is cloned into a directory
+# sharing the app's name.
+ExecStart=/usr/local/bin/aci-deploy-hook
+Restart=on-failure
+RestartSec=5
+
+# Same shape as the production hook. The kernel-protection options are
+# absent for the same reason: they imply NoNewPrivileges=yes, which blocks
+# the one sudo call the deploy needs.
+NoNewPrivileges=no
+PrivateTmp=yes
+ProtectSystem=full
+ProtectHome=no
+
+[Install]
+WantedBy=multi-user.target
