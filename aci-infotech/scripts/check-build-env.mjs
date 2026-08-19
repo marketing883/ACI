@@ -58,16 +58,31 @@ for (const req of CORE_REQUIRED) {
   }
 }
 
-// At least one Supabase key must be present. Service-role is preferred
-// (server-side reads bypass RLS); anon is the fallback for local dev.
-// Without either, the CMS fetchers have nothing to call.
+// The anon key is required, not one-of-two. `next build` prerenders pages
+// that construct a browser Supabase client through @supabase/ssr, and that
+// client needs the URL and the anon key specifically - the service-role key
+// does not satisfy it.
+//
+// This used to accept either key. A staging build passed this check with
+// only the service-role key set, compiled, ran TypeScript, and then died
+// ninety seconds later prerendering /admin/analytics with "@supabase/ssr:
+// Your project's URL and API key are required". The whole point of this
+// script is to catch that in one second instead, so it now names the key
+// the build actually needs.
 const hasServiceKey = !!(process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
 const hasAnonKey = !!(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '').trim();
+if (!hasAnonKey) {
+  missing.push({
+    name: 'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+    reason: 'missing',
+    hint: 'Required at build time: prerendered pages build a @supabase/ssr browser client, which needs the anon key. SUPABASE_SERVICE_ROLE_KEY does not substitute for it.',
+  });
+}
 if (!hasServiceKey && !hasAnonKey) {
   missing.push({
-    name: 'SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY',
-    reason: 'neither is set',
-    hint: 'Set SUPABASE_SERVICE_ROLE_KEY (preferred) or NEXT_PUBLIC_SUPABASE_ANON_KEY. At least one is required for the CMS fetchers to read published content.',
+    name: 'SUPABASE_SERVICE_ROLE_KEY',
+    reason: 'also not set',
+    hint: 'Server-side reads fall back to the anon key and are then subject to RLS, so unpublished rows go missing. Set the service-role key for any real deployment.',
   });
 } else if (!hasServiceKey) {
   warnings.push(

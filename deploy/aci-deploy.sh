@@ -97,8 +97,25 @@ restore() {
   install_env
   cd "$APP_DIR"
   npm ci --include=dev --no-audit --no-fund || true
-  build || echo "!! restore build failed too - service left on its running process"
-  sudo /usr/bin/systemctl restart "$SERVICE" || true
+  # Only restart if the rebuild actually produced something servable. A
+  # failed build leaves .next without prerender-manifest.json, and
+  # `next start` exits immediately on that - so restarting after a failed
+  # restore takes a service that was still serving its previously loaded
+  # build and turns it into a hard 502.
+  #
+  # That is not hypothetical. It took ACI staging down for twenty minutes:
+  # the deploy build failed before any restart, the service was untouched
+  # and healthy, and then this line bounced it onto a half-written .next.
+  # Leaving the old process alone is strictly better - it keeps serving
+  # while a human decides what to do.
+  if build; then
+    sudo /usr/bin/systemctl restart "$SERVICE" || true
+    echo "!! restored $PREVIOUS and restarted"
+  else
+    echo "!! restore build ALSO failed - deliberately NOT restarting" >&2
+    echo "!! the running process still serves its last good build; leaving it alone" >&2
+    echo "!! fix the build, then: sudo systemctl restart $SERVICE" >&2
+  fi
 }
 
 build() {
