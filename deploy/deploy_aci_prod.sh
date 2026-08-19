@@ -38,21 +38,26 @@ SERVICE="${ACI_SERVICE:-aci-next.service}"
 
 REF="${1:-}"
 if [ -z "$REF" ]; then
-  APP_DIR=$(systemctl show "$SERVICE" -p WorkingDirectory --value)
-  if [ -z "$APP_DIR" ] || [ ! -d "$APP_DIR" ]; then
-    echo "cannot find $SERVICE's WorkingDirectory to infer a branch" >&2
-    echo "usage: deploy_aci_prod.sh <ref>" >&2
-    exit 2
+  echo "usage: deploy_aci_prod.sh <ref>" >&2
+  echo >&2
+  # No default, and specifically not the checked-out branch. aci-deploy
+  # advances the checkout with `git reset --hard <sha>`, which moves the
+  # local branch pointer without touching the remote, so the name this
+  # checkout sits on is not evidence of what is deployed. A checkout left
+  # on `main` after months of deploying feature branches would infer
+  # `main`, fetch origin/main, and reset production onto the old static
+  # site. Print what is here and let a person decide.
+  APP_DIR=$(systemctl show "$SERVICE" -p WorkingDirectory --value 2>/dev/null || true)
+  if [ -n "$APP_DIR" ] && [ -d "$APP_DIR" ]; then
+    echo "this checkout is currently:" >&2
+    echo "  branch:   $(git -C "$APP_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)" >&2
+    echo "  upstream: $(git -C "$APP_DIR" rev-parse --abbrev-ref '@{upstream}' 2>/dev/null || echo none)" >&2
+    echo "  commit:   $(git -C "$APP_DIR" log -1 --oneline 2>/dev/null || echo unknown)" >&2
+    echo >&2
+    echo "the branch name above is where the local pointer sits, which is not" >&2
+    echo "necessarily what is deployed - pass the ref you actually want." >&2
   fi
-  REF=$(git -C "$APP_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || true)
-  # Detached HEAD reports the literal string "HEAD", which is not a branch
-  # anyone can mean to deploy. Refuse rather than guess at one.
-  if [ -z "$REF" ] || [ "$REF" = "HEAD" ]; then
-    echo "checkout is not on a branch (detached HEAD), so there is no ref to infer" >&2
-    echo "usage: deploy_aci_prod.sh <ref>" >&2
-    exit 2
-  fi
-  echo "no ref given - redeploying the checked-out branch: $REF"
+  exit 2
 fi
 
 # The deploy has to run as the account that owns the checkout. Running it
