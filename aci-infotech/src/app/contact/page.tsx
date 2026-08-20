@@ -565,7 +565,7 @@ function ContactExperience() {
             <div className="mt-8 border-t border-gray-200 pt-8 text-sm leading-relaxed text-gray-600">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">Headquarters</p>
               <p className="mt-2">
-                220 Davidson Ave, 2nd Floor, Suite 129
+                220 Davidson Ave, Suite 129
                 <br />
                 Somerset, NJ 08873, United States
               </p>
