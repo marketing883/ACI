@@ -100,7 +100,7 @@ export function OrganizationSchema({
   // caller passes one explicitly.
   phone,
   address = {
-    streetAddress: '220 Davidson Ave, 2nd Floor, Suite 209',
+    streetAddress: '220 Davidson Ave, 2nd Floor, Suite 129',
     addressLocality: 'Somerset',
     addressRegion: 'NJ',
     postalCode: '08873',
@@ -304,7 +304,7 @@ export function LocalBusinessSchema({
   telephone,
   email = 'insights@aciinfotech.com',
   address = {
-    streetAddress: '220 Davidson Ave, 2nd Floor, Suite 209',
+    streetAddress: '220 Davidson Ave, 2nd Floor, Suite 129',
     addressLocality: 'Somerset',
     addressRegion: 'NJ',
     postalCode: '08873',

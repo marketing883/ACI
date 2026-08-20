@@ -14,7 +14,7 @@ const offices = [
     label: 'Global Headquarters',
     isHQ: true,
     company: 'ACI Infotech Inc',
-    address: '220 Davidson Avenue, Suite 129',
+    address: '220 Davidson Ave, 2nd Floor, Suite 129',
     cityFull: 'Somerset, New Jersey 08873',
     country: 'United States',
     x: 23,
