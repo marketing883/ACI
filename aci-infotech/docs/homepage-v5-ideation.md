@@ -139,16 +139,23 @@ the template's spaciousness carries through the page:
   finding: entrance currently plays on page load, re-trigger from its
   IntersectionObserver. Card rises last, 87% counts up.
 - **PlaybooksSection**: reimagined in revision 3; the bento grid is
-  retired. The vault becomes an editorial ledger on the dark canvas:
-  a giant 500+ statement (template big-number energy, ~190px display
-  type) with its caption beside it; the five patterns as full-width
-  index rows, each a large lime multiplier, the pattern name in
-  display type, category chip and arrow, hairline-ruled; the flagship
+  retired, and so is the 500+ big number: it was a vague sum
+  ("deployments" of what?) and duplicated the hero's stat rail. The
+  vault becomes an editorial ledger on the dark canvas: the section's
+  thesis is the existing "hundredth mile" line promoted to display
+  type ("Pick the one that fits, and we start from the hundredth
+  mile, not the first.", accent on the hundredth mile); the five
+  patterns as full-width index rows under labeled ledger columns
+  (Times run / Pattern / Domain, with the "10 patterns" chip), each a
+  large lime multiplier, the pattern name in display type, category
+  chip and arrow, hairline-ruled - the multipliers are the section's
+  numbers now, and the column labels make them self-explanatory; the
+  flagship
   Mainframe-to-Cloud playbook as a wide feature band (cloud imagery
   wash right, the three outcomes large in lime); "Runs on" reduced to
   one quiet caption line of stack names; and "Can't find your
   scenario?" closing the section as a ruled text row with the "Talk
-  to an architect" link, not a card. Appear: 500+ counts up big;
+  to an architect" link, not a card. Appear: the statement rises;
   ledger rows rise staggered 80ms, each multiplier counting to its
   number; hairlines wipe with their rows; the flagship band
   clip-reveals; the closer lands last. All copy unchanged.
