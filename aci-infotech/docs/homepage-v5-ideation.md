@@ -1,191 +1,244 @@
 # Homepage v5 ideation: Teckko template mapped onto our content
 
-Status: ideation only. Nothing here is built. Content is frozen to the
-current staging homepage (v4, the root route); this doc decides which
-template sections we keep, how they carry our existing copy, and how
-each section appears on scroll.
+Status: ideation only, revision 2. Nothing here is built. Content is
+frozen to the current staging homepage (v4, the root route).
 
 Reference template: "Teckko" IT-services homepage (dark canvas, blue
-accent). Current page: v4 editorial homepage at `/` (white-dominant,
-Funnel Display, signal-sphere video).
+accent). Current page: v4 editorial homepage at `/`.
+
+Decisions locked in revision 2 (from review):
+
+- The hero follows the template: large, spacious, with a full-bleed
+  office-scene background video. The white editorial hero and the
+  signal-sphere video are retired from the homepage.
+- No CTA section on the page. CtaSection ("Let's Talk Over a Coffee")
+  is removed, and the optional mid-page conversion strip from rev 1 is
+  dropped. Inline section links (case-study links, "See all
+  capabilities", the footer's "Start a project") remain the only
+  conversion points.
+- The outlined ticker dividers are approved.
+- The services section gets a real plan of its own (§5).
+- The governing design idea for the whole page: **space**. Fewer
+  elements per viewport, larger type, more air. Every section below is
+  re-checked against that.
 
 ---
 
-## 1. What the template is actually good at
+## 1. The hero
 
-Strip the stock photos and the template has five devices worth taking:
+### Concept
 
-1. **Giant outlined marquee headlines between chapters** ("Software
-   Development", "Explore Popular Services", "Get In Touch Contact
-   Us"). Stroke-only type at ~12vw, moving with the scroll. This is
-   the template's signature and the single strongest thing to adopt.
-2. **A highlight-box on one hero keyword** ("DIGITAL SOFT" in a filled
-   box inside the headline). Cheap, effective emphasis.
-3. **A rotating circular text badge** in the about section. Gives a
-   static section one point of continuous motion.
-4. **Big stat cards that count up** (36k+, 850+). We already do this
-   in Playbooks; the template confirms it as a recurring motif.
-5. **A long dark run** that makes the light moments feel deliberate.
+One full-viewport (100dvh) scene. A slow, wide office shot runs
+full-bleed behind everything: people at desks, glass, screens, shallow
+depth of field, no readable faces or text. Graded dark and slightly
+blue so it sits under white type and behind our accent colors. Over
+it, a left-heavy gradient scrim for legibility, and a lot of nothing:
+the copy block owns the left ~55%, the rest of the frame stays open so
+the video breathes. That emptiness is the design.
 
-What the template is bad at: generic copy, stock photography, a team
-grid nobody asked for, and a mid-page contact form that competes with
-the footer CTA. We take the skeleton and the motion, not those.
+### Structure (content unchanged, all four slides kept)
 
-## 2. What we keep of ours, non-negotiable
+The video never changes; only the copy block rotates. The four
+existing slides (Service Foundation / Databricks case study /
+Microsoft stack / ArqAI Labs) crossfade over the same scene every 7s,
+so the hero feels like one place with a changing thought, not four
+competing screens.
 
-- All copy, stats, CTAs, and CMS wiring exactly as on staging.
-- The white editorial hero with the signal-sphere video. It is the
-  brand differentiator; the template's photo-hero is weaker.
-- SSR/SEO behavior: hidden-slide SSR text, native `<details>` FAQ,
-  JSON-LD, section order visible to crawlers.
-- `prefers-reduced-motion` kills every animation listed below.
+Per slide, top to bottom, generously spaced:
 
-## 3. Section map: template → ours
+1. Eyebrow with the existing gray-slash prefix.
+2. Headline at genuinely large scale (clamp up to ~7vw, two authored
+   lines as today). The accent phrase ("in production.", "Live AI.",
+   "AI-Led.", "At Scale.") gets the template's treatment: a filled
+   highlight box (accent blue, white text) instead of blue text.
+3. Sub-headline, max-w-xl.
+4. Tag row (existing lime-slash tags).
+5. The slide's CTA link stays as a quiet arrow-link, not a button —
+   consistent with "no CTA blocks", these are navigational links the
+   slides already carry.
 
-Template order: Hero → ticker → About+stats → accordion → ticker →
-Services cards → conversion strip → Team → Case-study carousel →
-Testimonials → CTA+form → Blog → ticker → Footer.
+Pinned to the bottom of the frame, independent of rotation:
 
-| # | Template section | Our section (content unchanged) | Verdict |
-|---|---|---|---|
-| 1 | Hero (copy left, photo right, 2 stats, highlighted word) | EditorialHero, 4-slide rotator | **Retain ours, adopt two treatments**: highlight-box on the accent phrase ("in production.", "Live AI.", "AI-Led.", "At Scale."), and a small 2-stat row under the CTA ("500+ enterprise projects" / "Since 2006", both already in the footer facts). Keep the rotator; template's static hero loses three slides of content. |
-| 2 | Ticker "Software Development" | New decorative divider | **Adopt.** Outlined ticker reading "AI in production" (pulled from the hero headline, no new copy). Sits on the seam where white hero meets dark marquee. |
-| 3 | Logo strip | (template has none; we have PartnerMarquee) | **Retain ours as-is.** Already a marquee; it slots naturally after ticker #1. |
-| 4 | About + rotating badge + stat cards | FoldcraftHero ("Your best data is sitting in the dark.") | **Retain ours, adopt the rotating badge**: a circular text ring ("Engineered · Deployed · Run in Production ·") floating in the underwater scene, replacing or joining ParticleRings. Skip extra stat cards; the story card already carries 87% and the quote, which also absorbs the template's separate Testimonials section. |
-| 5 | Accordion (Vision / Philosophy / Strategy) | HomeFaq | **Pattern maps to our FAQ, which stays late in the page** for AEO. No new mid-page accordion; one accordion per page. |
-| 6 | Ticker "Explore Popular Services" | New divider before Playbooks | **Adopt.** Outlined ticker "The playbook vault" (existing eyebrow copy). |
-| 7 | Services 3-card grid | ServicesSection (5 numbered bars + ACI Interactive card) | **Retain ours.** The bar list with hover photo-takeover is stronger than 3 generic cards and holds 5 services + a division card that a 3-up grid cannot. Adopt only the template's entrance rhythm (see §5). |
-| 8 | Thin conversion strip (avatars, "1.6M+ trusted clients") | Optional new slim band | **Adopt, optional.** A one-line dark band reusing the footer facts strip ("Founded 2006 · 1,200+ engineers · 500+ enterprise projects · 11 delivery hubs") with the existing "Talk to an architect" link. Zero new copy. Placement: between SuccessStories and Services. Cuttable if the page feels long. |
-| 9 | Team grid | — | **Drop.** No team content on the staging homepage, and none is being added. |
-| 10 | Case-study carousel | SuccessStories (tabs + video stage + glass card) | **Retain ours.** Tabs beat a free-scrolling carousel for four curated stories. Adopt the template's framing: consider flipping this section dark so the media stage sits in a dark chapter (see §4). |
-| 11 | Testimonials wall | — | **Drop as a standalone.** Our one real quote lives in the Foldcraft story card; a wall of them is template filler. |
-| 12 | Split CTA + contact form | CtaSection ("Let's Talk Over a Coffee") | **Retain ours.** The single floating button over the returning sphere video is more memorable than a mid-page form; forms live on `/contact`. |
-| 13 | Blog cards | InsightsSection (featured news + 3 rows + whitepaper) | **Retain ours as-is.** Direct match, ours carries more content types. |
-| 14 | Ticker "Get In Touch Contact Us" | New divider before CtaSection | **Adopt.** Outlined ticker "Let's talk" leading into the coffee CTA. Three tickers total; more would dilute the device. |
-| 15 | Footer + newsletter | SiteFooter | **Retain ours.** We already have the template's best footer idea (the oversized wordmark). No newsletter program exists, so the signup block is dropped. |
+- Bottom-left: a 2-stat row in the template's spirit — "500+
+  Enterprise projects" and "Since 2006" (both existing footer facts).
+- Bottom-right: the slide-progress pills, as today.
+- Slide marks (Databricks logo + 87% stat, Azure logo, ArqAI logo)
+  shrink to a small chip beside the eyebrow rather than a separate
+  row, keeping the frame uncluttered.
 
-Resulting v5 order (new elements in bold):
+### Asset note
 
-Hero → **ticker "AI in production"** → PartnerMarquee → Foldcraft (+
-**rotating badge**) → **ticker "The playbook vault"** → Playbooks →
-SuccessStories → **facts strip (optional)** → Services → Insights →
-FAQ → **ticker "Let's talk"** → CTA → Footer.
+We need the office loop: 15 to 25s, 4K source, exported ~1080p, target
+under ~6 MB (webm + mp4), poster frame for first paint, no audio.
+Stock is fine (Pexels/Artgrid class footage) as long as it does not
+look American-sitcom fake; grade it to match the brand blue. The
+FadingVideo component and the Foldcraft lazy play/pause observer are
+reusable as-is.
 
-## 4. Light/dark rhythm
+### Appear animation
 
-Template: dark end to end. Ours today: white hero, dark run
-(marquee/Foldcraft/Playbooks), then white the rest of the way to a
-dark footer.
+1. Poster frame is visible immediately; the video fades in over ~1s
+   and the black scrim eases from 80% to its resting gradient.
+2. First slide staggers in exactly like today's hero (mark → eyebrow →
+   masked headline lines from y:110% → sub → tags → link).
+3. The highlight box is drawn empty first, then wipes filled
+   left-to-right over 0.45s after its line lands, so the emphasis
+   arrives as a separate beat.
+4. Stats count up once on load; pills fade in last.
+5. Slide changes animate copy only (exit fade/-16px, enter stagger);
+   the video and bottom rail never blink.
+6. Optional: a very slow Ken-Burns scale (1.0 → 1.06 over the full
+   loop) if the footage itself is too static. Skip if the shot already
+   has camera movement.
 
-Recommendation: **extend the dark run through SuccessStories**, then
-break to light for Services → Insights → FAQ, and close dark from the
-"Let's talk" ticker through the footer. That gives three clean
-chapters (light open, dark middle, light proof, dark close) and lets
-the tickers sit on the seams. Going full-dark like the template is the
-fallback option, but it flattens the page and costs us the editorial
-white that distinguishes us from every dark IT-services site,
-including this template.
+## 2. Page order and rhythm
 
-SuccessStories dark variant is the only real restyle in scope: white
-bg → near-black, gray pill bar → white/10 glass, and the existing
-glass card gets slightly more opaque for contrast.
+Hero (dark video) → **ticker "AI in production"** → PartnerMarquee →
+FoldcraftHero → **ticker "The playbook vault"** → PlaybooksSection →
+SuccessStories → ServicesSection (§5) → InsightsSection → HomeFaq →
+**ticker "Let's talk"** → SiteFooter.
 
-## 5. Appear animations, section by section
+- The page now opens dark and stays dark through Playbooks: one long
+  cinematic chapter (office scene → logos → underwater scene → vault).
+  That is very close to the template's feel and is what the video hero
+  buys us.
+- SuccessStories through FAQ turn light: the proof chapter. After four
+  dark viewports the white feels intentional, and the case-study
+  videos and service imagery read better on white.
+- The "Let's talk" ticker now leads directly into the dark footer,
+  whose existing "Start a project" link quietly does the CTA job. No
+  CTA section anywhere.
+- With CtaSection gone, the signal-sphere video no longer appears on
+  the homepage at all. Accept that: one hero motif (the office scene),
+  used once, is more of the template's confidence than two competing
+  signature videos. The sphere lives on wherever else it is used.
 
-One shared system, then per-section specifics. Everything below uses
-the easing we already ship, `cubic-bezier(0.22, 1, 0.36, 1)`, reveals
-once via IntersectionObserver / Framer `whileInView` (threshold ~0.15,
-bottom margin -60 to -80px), and collapses to instant under
-`prefers-reduced-motion`.
+## 3. Ticker dividers (approved, unchanged from rev 1)
 
-Shared vocabulary (four moves, reused everywhere):
+Three outlined, stroke-only marquee headlines at ~10 to 12vw, one
+line, edge-masked, phrases lifted from existing copy: "AI in
+production", "The playbook vault", "Let's talk". No entrance
+animation; already drifting (~40s loop) when they scroll into view,
+scroll position adds a scrub offset and flips drift direction.
+Reduced motion: static outlined text.
 
-- **Rise**: fade in + translateY 24px → 0, 0.55 to 0.7s, stagger 80
-  to 120ms across siblings.
-- **Masked line**: headline lines slide up from `y:110%` inside
-  `overflow:hidden` spans (already in the hero); promote to every
-  section H2.
-- **Wipe**: an element scales in horizontally from origin-left
-  (highlight box, hairline rules, tab progress).
-- **Count-up**: rAF number tick with quartic ease-out over ~1.6s
-  (already in Playbooks).
+## 4. Retained sections, spacious pass
 
-Per section:
+Content and mechanics unchanged; each gets an air-and-scale pass so
+the template's spaciousness carries through the page:
 
-1. **EditorialHero** (unchanged mechanics, two additions). Keep the
-   staggered entrance: mark/stat → eyebrow → masked headline lines →
-   description → tags → CTA. New: (a) the accent phrase's highlight
-   box wipes in left-to-right over 0.45s *after* its line lands
-   (~0.9s in), so the headline reads first and the emphasis arrives
-   as a beat; (b) the new 2-stat row counts up on first load only,
-   not per slide.
-2. **Ticker dividers** (all three). No entrance; the ticker is
-   already in motion when it scrolls into view, like the template.
-   Base drift ~40s linear loop; scroll position adds offset so
-   scrolling drags the text (scrub), scroll direction flips drift
-   direction. Stroke-only text, ~10 to 12vw, one line, edge-masked.
-   Under reduced motion: static, centered, no stroke gimmick beyond
-   the outline itself.
-3. **PartnerMarquee**. Heading does a masked-line rise; the logo
-   track is already looping when revealed (never starts from rest).
-   Keep 38s loop, hover-pause, edge masks.
-4. **FoldcraftHero**. Fix in passing: current `fadeSlideUp` runs on
-   page load, so it has already played by the time the user scrolls
-   here. Re-trigger it from the section's existing
-   IntersectionObserver instead. Sequence: video scrim lifts (black
-   overlay fades 0.6s) → kicker/H2 masked lines → body rise → story
-   card rises last with its 87% counting up. The rotating badge spins
-   continuously at ~20s/rev, independent of reveal; it never
-   "appears", it is simply always turning.
-5. **PlaybooksSection**. Keep exactly what ships: `.pb-rise` stagger
-   at 90ms per card, 500+ count-up on reveal, dual-direction stack
-   marquees. Optional polish: add scale 0.985 → 1 to the card rise so
-   the bento settles rather than slides.
-6. **SuccessStories**. Keep the staggered header reveal, 8s
-   auto-rotate, progress bar, and card `AnimatePresence` swap. New:
-   the media stage reveals with a bottom-up `clip-path: inset()` wipe
-   over 0.8s (the template's carousel-image reveal), with the glass
-   card rising 0.15s behind it.
-7. **Facts strip** (if kept). Single rise as one unit; numbers count
-   up; the "Talk to an architect" arrow link gets the existing
-   underline-grow hover. Nothing else; it is a divider, not a scene.
-8. **ServicesSection**. Keep per-bar `whileInView` rise with 60ms
-   stagger. New: each bar's top hairline draws in (wipe, scaleX
-   0 → 1, 0.5s) just before its content rises, so the list appears to
-   rule itself onto the page, matching the bar anatomy. Hover
-   photo-takeover unchanged.
-9. **InsightsSection**. Keep the two-column rise (right column +80ms).
-   New: the featured image reveals inside its overflow-hidden frame
-   with scale 1.06 → 1 alongside the column rise. Row hover flood
-   unchanged.
-10. **HomeFaq**. Header block does masked-line + rise; the accordion
-    rows stagger-fade at 60ms each. Rows stay native `<details>`;
-    entrance is CSS-only so answers remain in initial HTML.
-11. **CtaSection**. After the "Let's talk" ticker, the sphere video
-    fades in from white; the button pops with a small spring (scale
-    0.92 → 1, ~0.5s) when the section centers in the viewport. Hover
-    behavior (blue → lime flip, coffee tilt) unchanged.
-12. **SiteFooter**. No entrance animation, same as today. The footer
-    arrives at rest; after eleven animated sections, stillness is the
-    point.
+- **PartnerMarquee**: taller section padding, slightly larger logos,
+  heading does a masked-line rise. Otherwise as-is.
+- **FoldcraftHero**: already the most spacious section on the site;
+  keep. Add the rotating circular text badge ("Engineered · Deployed ·
+  Run in Production ·", ~20s/rev, always turning). Fix the rev-1
+  finding: entrance currently plays on page load, re-trigger from its
+  IntersectionObserver. Card rises last, 87% counts up.
+- **PlaybooksSection**: keep bento, count-up, and 90ms card stagger;
+  widen grid gaps and card padding a step.
+- **SuccessStories**: keep tabs + video stage + glass card. Stays
+  light (first section of the light chapter). Media stage gains the
+  bottom-up clip-path reveal; header keeps its stagger.
+- **InsightsSection / HomeFaq**: unchanged plans from rev 1 (column
+  rise + image settle; masked header + 60ms row stagger on native
+  `<details>`).
+- **SiteFooter**: unchanged, still no entrance animation. The giant
+  wordmark is the page's last big-type moment.
 
-## 6. Open decisions
+## 5. Services section, planned properly
 
-1. **Hero**: keep the 4-slide rotator restyled (recommended), or go
-   static on slide 1 and relocate the Databricks/Azure/ArqAI slides?
-   Static means finding those three slides a new home, since content
-   is frozen.
-2. **Dark rhythm**: chapter approach from §4 (recommended) vs
-   full-dark like the template.
-3. **Facts strip** (§3 row 8): include or cut?
-4. **Section order**: keep ours (recommended) or mirror the template
-   by moving Services above SuccessStories?
-5. **Ticker copy**: proposed "AI in production" / "The playbook
-   vault" / "Let's talk", all lifted from existing copy. Confirm or
-   swap phrases.
+The content it must carry, unchanged: five services (number, eyebrow
+message, name, one proof line with a hard stat, four chips, three
+platform logos, link) plus ACI Interactive as a distinct
+specialized-division card with its own CTA link. That is six items
+with real depth — exactly what the template's three shallow cards
+cannot hold, and what the current v4 row-list compresses too hard for
+a "spacious" page.
 
-## 7. Explicitly out of scope for v5
+### Option A (recommended): sticky index + full-height chapters
 
-New copy of any kind, team section, testimonial wall, mid-page
-contact form, newsletter signup, changes to JSON-LD or section-level
-SEO behavior, nav/footer redesign.
+A split section. Left ~40% is a sticky rail: eyebrow "/ What we
+build", the H2 "From raw data to AI in production.", and an index list
+01–05 + "ACI Interactive". Right ~60% is a scroll of five tall panels,
+each ~80vh, one service per panel, with the division card as a full
+width closer under the split.
+
+Each panel, spacious by construction:
+
+- The service number as a huge watermark (20vh+, low-contrast).
+- Eyebrow message ("Move your data onto modern ground.") as a large
+  lead line — promoted from decoration to the panel's voice.
+- Service name in display type.
+- The proof line pulled out as the panel's big object, stat first:
+  "3 weeks → 4 hours" large, the sentence small beneath it.
+- Chip row and platform logos at the bottom, arrow-link to the
+  service page.
+- Per-service background image (the existing `svc-*.jpg` hover
+  assets) as a quiet right-edge band or panel wash, always visible at
+  low opacity instead of hover-only.
+
+As the reader scrolls, the sticky index tracks the active panel: a
+small blue marker slides between items, the active item at full
+contrast, the rest dimmed. ACI Interactive breaks the rhythm on
+purpose: full-width dark blue gradient card after the split ends,
+lime glow, "Explore ACI Interactive" link.
+
+Appear animation: rail rises once and pins. Each panel as it enters:
+hairline wipes across the top → number watermark fades in → masked
+name lines → proof stat counts/slides in → chips and logos rise.
+Index marker movement is a spring translate, not a jump. Mobile: rail
+collapses to a plain section header, panels stack at natural height,
+watermark shrinks behind the number.
+
+Why recommended: it is the most literal expression of "big spacious"
+(each service gets most of a viewport), there is no scroll hijack
+(plain document scroll, sticky positioning only), all six items fit
+without crowding, and everything stays in the initial HTML for SEO.
+
+### Option B: expanding columns
+
+Five full-height vertical panels side by side, each a dimmed
+service image with the number and a vertical service name. Hover (or
+click, and on a timer otherwise) expands one panel to ~2.5x width via
+a flex-grow transition, revealing message, proof, chips, logos.
+Template-adjacent (cards on dark), very striking, but: desktop-only
+trick (stacks to cards on mobile), only one service's content visible
+at a time, and six items make the collapsed columns thin. Keep as the
+flashy alternative if A feels too editorial.
+
+### Option C: pinned card deck
+
+Section pins for ~5 viewports; service cards slide up and stack over
+each other, one per scroll step. Spacious and fashionable, but it is
+scroll hijacking, costs a long pinned region on a page that already
+has an auto-rotating hero and stories, and gets awkward exactly at
+the sixth, differently-shaped item. Not recommended.
+
+Decision needed: A vs B (C listed for completeness). Either way the
+current hover photo-takeover rows are retired; the hover assets are
+reused as the panel imagery.
+
+## 6. Animation system (unchanged foundation)
+
+Everything uses `cubic-bezier(0.22, 1, 0.36, 1)`, reveals once
+(threshold ~0.15, bottom margin -60 to -80px), and collapses to
+instant under `prefers-reduced-motion`. Four shared moves: rise
+(fade + 24px, 80–120ms stagger), masked line (H2s site-wide), wipe
+(highlight box, hairlines, clip-path media), count-up (~1.6s quartic
+ease-out).
+
+## 7. Open decisions
+
+1. Services layout: Option A (recommended) or Option B.
+2. Hero footage: source and grade of the office loop; who picks it.
+3. "No CTA" scope check: assumed to mean no CTA sections/blocks;
+   inline arrow-links inside sections and the footer's "Start a
+   project" remain. Flag if the intent was stricter.
+4. Ticker phrases: "AI in production" / "The playbook vault" /
+   "Let's talk" — confirm or swap.
+
+## 8. Out of scope for v5
+
+New copy, team section, testimonial wall, contact form, newsletter,
+CTA sections of any kind, JSON-LD or section-level SEO changes,
+nav/footer redesign.
