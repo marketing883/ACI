@@ -138,8 +138,20 @@ the template's spaciousness carries through the page:
   Run in Production ·", ~20s/rev, always turning). Fix the rev-1
   finding: entrance currently plays on page load, re-trigger from its
   IntersectionObserver. Card rises last, 87% counts up.
-- **PlaybooksSection**: keep bento, count-up, and 90ms card stagger;
-  widen grid gaps and card padding a step.
+- **PlaybooksSection**: reimagined in revision 3; the bento grid is
+  retired. The vault becomes an editorial ledger on the dark canvas:
+  a giant 500+ statement (template big-number energy, ~190px display
+  type) with its caption beside it; the five patterns as full-width
+  index rows, each a large lime multiplier, the pattern name in
+  display type, category chip and arrow, hairline-ruled; the flagship
+  Mainframe-to-Cloud playbook as a wide feature band (cloud imagery
+  wash right, the three outcomes large in lime); "Runs on" reduced to
+  one quiet caption line of stack names; and "Can't find your
+  scenario?" closing the section as a ruled text row with the "Talk
+  to an architect" link, not a card. Appear: 500+ counts up big;
+  ledger rows rise staggered 80ms, each multiplier counting to its
+  number; hairlines wipe with their rows; the flagship band
+  clip-reveals; the closer lands last. All copy unchanged.
 - **SuccessStories**: keep tabs + video stage + glass card, restyled
   dark: glass tab bar, near-black frame, the white case card as the
   section's one light object. Media stage gains the bottom-up
