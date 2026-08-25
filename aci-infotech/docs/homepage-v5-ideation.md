@@ -1,6 +1,6 @@
 # Homepage v5 ideation: Teckko template mapped onto our content
 
-Status: ideation only, revision 2. Nothing here is built. Content is
+Status: ideation only, revision 3. Nothing here is built. Content is
 frozen to the current staging homepage (v4, the root route).
 
 Reference template: "Teckko" IT-services homepage (dark canvas, blue
@@ -98,13 +98,17 @@ FoldcraftHero → **ticker "The playbook vault"** → PlaybooksSection →
 SuccessStories → ServicesSection (§5) → InsightsSection → HomeFaq →
 **ticker "Let's talk"** → SiteFooter.
 
-- The page now opens dark and stays dark through Playbooks: one long
-  cinematic chapter (office scene → logos → underwater scene → vault).
-  That is very close to the template's feel and is what the video hero
-  buys us.
-- SuccessStories through FAQ turn light: the proof chapter. After four
-  dark viewports the white feels intentional, and the case-study
-  videos and service imagery read better on white.
+- Decided in revision 3, from the design sample: the page is **dark
+  end to end**, like the template. No light proof chapter.
+- To keep twelve dark sections from flattening into one slab, the
+  darks step in tone (hero gradient, pure black marquee, deep-water
+  Foldcraft, #0a0b10 vault and stories, #07080d services and FAQ) and
+  every seam carries a white/10 hairline or a ticker.
+- Contrast discipline on dark: headings white, body white at 55 to
+  70%, text accents move from #1D4ED8 to #60A5FA (the dark-legible
+  blue), filled elements keep #1D4ED8, proof stats stay lime. A few
+  deliberate light objects punch through: the stories glass card, the
+  active tab pill, the inverted whitepaper card.
 - The "Let's talk" ticker now leads directly into the dark footer,
   whose existing "Start a project" link quietly does the CTA job. No
   CTA section anywhere.
@@ -136,9 +140,10 @@ the template's spaciousness carries through the page:
   IntersectionObserver. Card rises last, 87% counts up.
 - **PlaybooksSection**: keep bento, count-up, and 90ms card stagger;
   widen grid gaps and card padding a step.
-- **SuccessStories**: keep tabs + video stage + glass card. Stays
-  light (first section of the light chapter). Media stage gains the
-  bottom-up clip-path reveal; header keeps its stagger.
+- **SuccessStories**: keep tabs + video stage + glass card, restyled
+  dark: glass tab bar, near-black frame, the white case card as the
+  section's one light object. Media stage gains the bottom-up
+  clip-path reveal; header keeps its stagger.
 - **InsightsSection / HomeFaq**: unchanged plans from rev 1 (column
   rise + image settle; masked header + 60ms row stagger on native
   `<details>`).
@@ -155,7 +160,10 @@ with real depth — exactly what the template's three shallow cards
 cannot hold, and what the current v4 row-list compresses too hard for
 a "spacious" page.
 
-### Option A (recommended): sticky index + full-height chapters
+Decided in revision 3, from the design sample: **Option B**. Option A
+is kept below for the record.
+
+### Option A (not chosen): sticky index + full-height chapters
 
 A split section. Left ~40% is a sticky rail: eyebrow "/ What we
 build", the H2 "From raw data to AI in production.", and an index list
@@ -195,28 +203,28 @@ Why recommended: it is the most literal expression of "big spacious"
 (plain document scroll, sticky positioning only), all six items fit
 without crowding, and everything stays in the initial HTML for SEO.
 
-### Option B: expanding columns
+### Option B (chosen): expanding columns
 
-Five full-height vertical panels side by side, each a dimmed
-service image with the number and a vertical service name. Hover (or
-click, and on a timer otherwise) expands one panel to ~2.5x width via
-a flex-grow transition, revealing message, proof, chips, logos.
-Template-adjacent (cards on dark), very striking, but: desktop-only
-trick (stacks to cards on mobile), only one service's content visible
-at a time, and six items make the collapsed columns thin. Keep as the
-flashy alternative if A feels too editorial.
+Five full-height vertical panels side by side on the dark canvas:
+the four services plus ACI Interactive as the fifth, division-styled
+column (blue gradient, lime badge). Each collapsed panel is a dimmed
+service image spine with the number and a vertical service name. One
+panel is always open at ~2.6x width via a flex-grow transition
+(~0.6s), revealing the eyebrow message, service name, proof stat in
+lime, chips, and platform logos; it auto-advances roughly every 6s
+until the pointer takes over, and hover or tap expands any spine.
+Appear: the five columns rise staggered on reveal, then the first
+panel opens. Mobile: the columns stack to full-width cards at natural
+height, all content visible, no expansion trick. Known cost, accepted:
+only one service's full content is visible at a time on desktop; the
+collapsed spines carry name and number so the row still scans.
 
 ### Option C: pinned card deck
 
-Section pins for ~5 viewports; service cards slide up and stack over
-each other, one per scroll step. Spacious and fashionable, but it is
-scroll hijacking, costs a long pinned region on a page that already
-has an auto-rotating hero and stories, and gets awkward exactly at
-the sixth, differently-shaped item. Not recommended.
+Rejected (scroll hijacking); noted in rev 2 for completeness.
 
-Decision needed: A vs B (C listed for completeness). Either way the
-current hover photo-takeover rows are retired; the hover assets are
-reused as the panel imagery.
+The current hover photo-takeover rows are retired; the hover assets
+are reused as the column imagery.
 
 ## 6. Animation system (unchanged foundation)
 
@@ -229,12 +237,14 @@ ease-out).
 
 ## 7. Open decisions
 
-1. Services layout: Option A (recommended) or Option B.
-2. Hero footage: source and grade of the office loop; who picks it.
-3. "No CTA" scope check: assumed to mean no CTA sections/blocks;
+Settled so far: services layout is Option B (expanding columns); the
+page theme is dark end to end. Still open:
+
+1. Hero footage: source and grade of the office loop; who picks it.
+2. "No CTA" scope check: assumed to mean no CTA sections/blocks;
    inline arrow-links inside sections and the footer's "Start a
    project" remain. Flag if the intent was stricter.
-4. Ticker phrases: "AI in production" / "The playbook vault" /
+3. Ticker phrases: "AI in production" / "The playbook vault" /
    "Let's talk" — confirm or swap.
 
 ## 8. Out of scope for v5
