@@ -44,6 +44,9 @@ export default function ConditionalLayout({
   // v4 (Effica-based) homepage preview ships its own nav, footer, and
   // design system (src/components/v4), so suppress all site chrome.
   const isV4Preview = pathname?.startsWith('/preview/v4');
+  // v5 (dark template redesign) preview ships its own nav and footer
+  // too (src/components/v5), so suppress all site chrome.
+  const isV5Preview = pathname?.startsWith('/preview/v5');
   // The v4 design is now the production homepage. It renders its own
   // nav and footer, so `/` is fully standalone too.
   const isV4Home = pathname === '/';
@@ -72,7 +75,7 @@ export default function ConditionalLayout({
   // Admin routes, landing pages, and dev previews bypass all site chrome,
   // including the chat (admin has no chat; LPs stay conversion-focused;
   // previews are standalone).
-  if (isAdminRoute || isLandingPage || isV2Preview || isV3Preview || isV4Preview) {
+  if (isAdminRoute || isLandingPage || isV2Preview || isV3Preview || isV4Preview || isV5Preview) {
     return <>{children}</>;
   }
 

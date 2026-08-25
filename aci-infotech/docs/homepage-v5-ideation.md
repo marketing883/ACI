@@ -1,6 +1,8 @@
 # Homepage v5 ideation: Teckko template mapped onto our content
 
-Status: ideation only, revision 3. Nothing here is built. Content is
+Status: built. The v5 page is implemented at `/preview/v5`
+(components in `src/components/v5/`), pending review and promotion to
+the root route. Revision history below. Content is
 frozen to the current staging homepage (v4, the root route).
 
 Reference template: "Teckko" IT-services homepage (dark canvas, blue
