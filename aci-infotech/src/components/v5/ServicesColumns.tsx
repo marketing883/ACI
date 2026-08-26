@@ -16,7 +16,10 @@ const ADVANCE_MS = 6000;
 
 type Column = {
   num: string;
-  eyebrow: string;
+  /** Plain statement of what the service is. Not a metaphor: a reader
+   *  scanning this section should be able to say what they would be
+   *  buying. */
+  summary: string;
   name: string;
   stat: string;
   proof: string;
@@ -29,7 +32,7 @@ type Column = {
 const SERVICES: Column[] = [
   {
     num: '01',
-    eyebrow: 'Move your data onto modern ground.',
+    summary: 'Modern data platforms on Databricks, Snowflake, and cloud-native architectures: lakehouse migration, real-time pipelines, governance and lineage, and self-service BI.',
     name: 'Data Engineering & Lakehouse',
     stat: '3 weeks → 4 hours',
     proof: 'Campaign analysis cut from 3 weeks to 4 hours. 94% adoption.',
@@ -40,7 +43,7 @@ const SERVICES: Column[] = [
   },
   {
     num: '02',
-    eyebrow: 'Build AI on a foundation that holds.',
+    summary: 'Copilots, agents, RAG systems, forecasting, and MLOps that move from prototype to governed production.',
     name: 'Applied AI & GenAI',
     stat: '90 days',
     proof: 'Prototype to production on a governed Azure lakehouse, 94% eval pass rate.',
@@ -51,7 +54,7 @@ const SERVICES: Column[] = [
   },
   {
     num: '03',
-    eyebrow: 'Legacy out, cloud in, nothing goes dark.',
+    summary: 'Landing zones, FinOps, Kubernetes platforms, and mainframe-to-cloud cutovers run in parallel so nothing goes dark.',
     name: 'Cloud Modernization',
     stat: '68% cost cut',
     proof: 'Mainframe-to-cloud cutovers run in parallel: zero downtime.',
@@ -62,7 +65,7 @@ const SERVICES: Column[] = [
   },
   {
     num: '04',
-    eyebrow: 'Past the pilot, into production, for good.',
+    summary: '24/7 NOC and SOC coverage, observability, on-call SRE, and change management for production estates.',
     name: 'Managed Run & SRE',
     stat: '99.97% uptime',
     proof: 'Across a 72+ server estate, releases still moving.',
@@ -74,9 +77,9 @@ const SERVICES: Column[] = [
 ];
 
 const INTERACTIVE = {
-  eyebrow: 'Marketing, run with engineering discipline.',
+  summary: 'Marketing, MarTech, and customer data platform services: strategy, customer data platforms, journey orchestration, and marketing analytics.',
   name: 'ACI Interactive',
-  desc: 'Our specialized division for marketing, MarTech, and CDP services. Strategy, customer data, and activation under one roof, with new products on the way.',
+  note: 'All of it under one roof, with new products on the way under the same name.',
   chips: ['MarTech & CDP strategy', 'Customer data platforms', 'Journey orchestration', 'Marketing analytics'],
   logos: 'Salesforce · Braze',
   href: '/services/martech-cdp',
@@ -89,9 +92,12 @@ function PanelBody({ col, headingClass, compact }: { col: Column; headingClass: 
   return (
     <div className="flex flex-col gap-3.5">
       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#60A5FA]">/ {col.num}</p>
-      <h3 className={`text-2xl font-semibold leading-tight text-white ${compact ? '' : 'lg:text-3xl'} ${headingClass}`}>{col.eyebrow}</h3>
-      <p className={`text-lg font-medium text-white/85 ${headingClass}`}>{col.name}</p>
-      <p className={`text-2xl font-semibold text-[#84CC16] ${compact ? '' : 'lg:text-[32px]'} ${headingClass}`}>{col.stat}</p>
+      {/* The service's actual name leads. It used to sit in small type
+          under a line of metaphor, which left a reader scanning the
+          section unable to tell what was being sold. */}
+      <h3 className={`text-2xl font-semibold leading-tight text-white ${compact ? '' : 'lg:text-[32px]'} ${headingClass}`}>{col.name}</h3>
+      <p className="max-w-md text-sm leading-relaxed text-white/70 md:text-[15px]">{col.summary}</p>
+      <p className={`text-2xl font-semibold text-[#84CC16] ${compact ? '' : 'lg:text-3xl'} ${headingClass}`}>{col.stat}</p>
       <p className="max-w-md text-sm leading-relaxed text-white/60">{col.proof}</p>
       <div className="flex flex-wrap gap-2">
         {col.chips.map((c) => (
@@ -115,9 +121,9 @@ function InteractiveBody({ headingClass, compact }: { headingClass: string; comp
       <span className="w-fit rounded-full bg-[#A3E635] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0a0b10]">
         Specialized Division
       </span>
-      <h3 className={`text-2xl font-semibold text-white ${compact ? '' : 'lg:text-3xl'} ${headingClass}`}>{INTERACTIVE.name}</h3>
-      <p className={`text-lg font-medium text-white/90 ${headingClass}`}>{INTERACTIVE.eyebrow}</p>
-      <p className="max-w-md text-sm leading-relaxed text-white/70">{INTERACTIVE.desc}</p>
+      <h3 className={`text-2xl font-semibold text-white ${compact ? '' : 'lg:text-[32px]'} ${headingClass}`}>{INTERACTIVE.name}</h3>
+      <p className="max-w-md text-sm leading-relaxed text-white/80 md:text-[15px]">{INTERACTIVE.summary}</p>
+      <p className="max-w-md text-sm leading-relaxed text-white/60">{INTERACTIVE.note}</p>
       <div className="flex flex-wrap gap-2">
         {INTERACTIVE.chips.map((c) => (
           <span key={c} className="rounded-full border border-white/[0.16] bg-white/10 px-3 py-1 text-xs text-white/80">
