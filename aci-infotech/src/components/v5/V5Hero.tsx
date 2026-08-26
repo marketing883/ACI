@@ -46,37 +46,53 @@ type Slide = {
   stat?: { value: string; label: string };
 };
 
+// Five slides spanning the business, not five ways of saying AI. Every
+// headline is something ACI does for the client and every slide carries
+// its own number; the partner brands corroborate lower down the page
+// rather than fronting the hero. AI sits inside slide one's foundation
+// line and gets its own frontier beat on slide five, which is the
+// balance the positioning asks for: an enterprise engineering firm whose
+// center of gravity is AI outcomes, not an AI shop.
 const SLIDES: Slide[] = [
   {
-    eyebrow: 'Service Foundation',
-    headline: ['Build the AI foundation.', 'Run it *in production.*'],
-    desc: 'ACI Infotech engineers the data foundation, builds the AI on top, and runs it in production. Most enterprise AI stalls before it gets there.',
-    tags: ['Pipelines', 'Governance', 'AI-ready data'],
+    eyebrow: 'What we do',
+    headline: ['We build the systems', 'the business *runs on.*'],
+    desc: 'Data platforms, cloud, applications, and the operations that keep them up. We build the foundation, put AI on top of it, and stay on the hook long after go-live.',
+    tags: ['Data platforms', 'Cloud', 'Managed operations'],
+    cta: { label: 'See all capabilities', href: '/services' },
+    stat: { value: '500+', label: 'enterprise projects since 2006' },
+  },
+  {
+    eyebrow: 'Data and platforms',
+    headline: ['Move your data onto', '*modern ground.*'],
+    desc: 'Lakehouse migrations, real-time pipelines, governance and lineage, and self-service BI that people actually open.',
+    tags: ['Lakehouse', 'Pipelines', 'Governance'],
     cta: { label: 'Explore data engineering', href: '/services/data-engineering' },
-  },
-  {
-    eyebrow: 'Case Study',
-    headline: ['From Lakehouse', 'to *Live AI.*'],
-    desc: 'Lakehouse modernization, Delta pipelines, MLflow, governance, and real-time analytics for teams that need Databricks to run in production.',
-    tags: ['Delta Lake', 'MLflow', 'Workflows'],
-    cta: { label: 'Read the case study', href: '/case-studies' },
     mark: { src: '/brand/databricks-color.svg', alt: 'Databricks' },
-    stat: { value: '87%', label: 'Reduction in data processing time' },
+    stat: { value: '87%', label: 'less data-processing time' },
   },
   {
-    eyebrow: 'Platform Expertise',
-    headline: ['The Whole Microsoft Stack.', '*AI-Led.*'],
-    desc: 'Azure is strongest when it connects to the business stack. We bring Azure, Dynamics 365, Power Platform, and data engineering together around measurable operations.',
-    tags: ['Azure', 'Dynamics 365', 'Power Platform'],
-    cta: { label: 'Explore Microsoft expertise', href: '/partners' },
-    mark: { src: '/brand/azure-mono.svg', alt: 'Microsoft Azure' },
+    eyebrow: 'Cloud and modernization',
+    headline: ['Legacy out, cloud in,', '*nothing goes dark.*'],
+    desc: 'Mainframe, Hadoop, Teradata, and Oracle estates re-architected for the cloud, cut over in parallel so the business never feels the switch.',
+    tags: ['Landing zones', 'Cutovers', 'FinOps'],
+    cta: { label: 'Explore cloud modernization', href: '/services/cloud-modernization' },
+    stat: { value: '68%', label: 'cost cut, zero downtime' },
+  },
+  {
+    eyebrow: 'Run and operate',
+    headline: ['Past the pilot, into', 'production, *for good.*'],
+    desc: '24/7 operations, SRE and on-call, observability, and change management. Someone is awake whenever your estate is.',
+    tags: ['24/7 operations', 'SRE', 'Observability'],
+    cta: { label: 'Explore managed operations', href: '/services/managed-operations' },
+    stat: { value: '99.97%', label: 'uptime across 72+ servers' },
   },
   {
     eyebrow: 'ArqAI Labs',
     eyebrowLogo: { src: '/images/ArqAI-Labs-Logo-light.png', w: 2439, h: 858 },
-    headline: ['Forward Deployed AI', 'Engineering *At Scale.*'],
-    desc: 'Engineers embedded in the problem, not advising from outside. Delivered with our strategic partner ArqAI, whose accelerators come from years of doing this work.',
-    tags: ['Forward-deployed', 'Accelerators', 'Production AI'],
+    headline: ['Frontier AI, delivered', 'with *ArqAI Labs.*'],
+    desc: 'Our strategic AI partner. Engineers embed in the problem and ship production agents for regulated operations, with governance and an audit trail on every action.',
+    tags: ['Forward-deployed', 'Governed', 'Production AI'],
     cta: { label: 'Explore ArqAI Labs', href: 'https://thearq.ai' },
   },
 ];
@@ -224,17 +240,17 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
                 ) : (
                   s.eyebrow
                 )}
-                {s.mark ? (
+                {s.mark || s.stat ? (
                   <span className="ml-1 inline-flex items-center gap-3 rounded-full border border-white/30 bg-white/[0.1] px-5 py-2 normal-case tracking-normal backdrop-blur-md">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={s.mark.src} alt={s.mark.alt} className="h-7 w-auto object-contain sm:h-8" />
+                    {s.mark ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={s.mark.src} alt={s.mark.alt} className="h-7 w-auto object-contain sm:h-8" />
+                    ) : null}
+                    {s.mark && s.stat ? <span aria-hidden="true" className="h-5 w-px bg-white/25" /> : null}
                     {s.stat ? (
-                      <>
-                        <span aria-hidden="true" className="h-5 w-px bg-white/25" />
-                        <span className="text-[15px] font-medium text-white sm:text-base">
-                          <span className="font-bold text-[#A3E635]">{s.stat.value}</span> {s.stat.label}
-                        </span>
-                      </>
+                      <span className="text-[15px] font-medium text-white sm:text-base">
+                        <span className="font-bold text-[#A3E635]">{s.stat.value}</span> {s.stat.label}
+                      </span>
                     ) : null}
                   </span>
                 ) : null}
