@@ -155,9 +155,17 @@ sudo nginx -t && sudo systemctl reload nginx
 Nobody should be doing this by hand. `.github/workflows/deploy-staging.yml`
 deploys staging automatically on every push to a watched branch, and on
 demand from the Actions tab ("Deploy to staging" > Run workflow) for any
-ref. It fetches, builds, restarts, health-checks, and rolls back on
-failure, all as `aciadmin` over SSH, using the same VPS secrets as the
-production workflow.
+ref. It drives the deploy hook below, which fetches, builds, restarts,
+health-checks and rolls back on failure, all as `aciadmin`.
+
+It needs one **repository** secret, `STAGING_DEPLOY_TOKEN`, holding the
+`ACI_DEPLOY_TOKEN` value from `/etc/aci-deploy-staging.env` on the VPS.
+Repository, not environment: an environment secret is invisible to a job
+that does not declare that environment, which is why the production
+workflow's `VPS_*` secrets (scoped to the `production` environment)
+cannot be borrowed here. Both files on the VPS name their variable
+`ACI_DEPLOY_TOKEN`; the filename is what separates staging from
+production, and only the staging one belongs in Actions.
 
 Two traps it exists to avoid, both of which cost an afternoon:
 
