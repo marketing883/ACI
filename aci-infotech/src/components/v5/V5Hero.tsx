@@ -181,11 +181,12 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
         preload="auto"
         aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover"
-        // The stand-in loop is violet; the grade pulls it onto the
-        // brand's blue and takes the saturation down so white type and
-        // the accent box stay the loudest things in the frame. Harmless
-        // on already-graded office footage.
-        style={{ filter: 'hue-rotate(-35deg) saturate(0.7) brightness(0.85)' }}
+        // The office footage is warm amber and its brightest area falls
+        // on the left, exactly where the copy sits. Pulling saturation
+        // and brightness down does most of the legibility work before
+        // any scrim is applied, and keeps the frame from fighting the
+        // blue accent box.
+        style={{ filter: 'saturate(0.7) brightness(0.78) contrast(1.05)' }}
       >
         {SOURCES.map((s) => (
           <source key={s.src} src={s.src} type={s.type} />
@@ -193,10 +194,13 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
       </video>
 
       {/* Left-heavy scrim + top/bottom veils for copy and rail legibility. */}
-      {/* Scrim: heavy enough under the copy to keep it readable, gone by
-          the middle of the frame so the scene is actually visible. */}
-      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(6,10,18,0.86) 0%, rgba(6,10,18,0.6) 34%, rgba(6,10,18,0.16) 58%, rgba(6,10,18,0) 78%)' }} />
-      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(6,10,18,0.5) 0%, rgba(6,10,18,0) 24%, rgba(6,10,18,0) 74%, rgba(6,10,18,0.45) 100%)' }} />
+      {/* Cool wash: ties the amber footage to the page's blue without
+          hue-rotating the whole frame, which turns skin tones green. */}
+      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(9,18,40,0.6) 0%, rgba(9,18,40,0.34) 55%, rgba(9,18,40,0.2) 100%)' }} />
+      {/* Scrim: heaviest under the copy, thinning across the frame so
+          the office stays visible on the right. */}
+      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(4,8,15,0.94) 0%, rgba(4,8,15,0.8) 32%, rgba(4,8,15,0.44) 58%, rgba(4,8,15,0.14) 100%)' }} />
+      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(4,8,15,0.6) 0%, rgba(4,8,15,0.1) 26%, rgba(4,8,15,0.1) 68%, rgba(4,8,15,0.6) 100%)' }} />
 
       <V5Nav />
 
