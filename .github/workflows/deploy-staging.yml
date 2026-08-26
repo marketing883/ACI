@@ -7,9 +7,14 @@ name: Deploy to staging
 # be looked at, so the push and the deploy are the same decision here.
 # Production stays manual-dispatch-only in deploy-production.yml.
 #
-# Staging tracks whatever branch pushed last. That is fine for a preview
-# box with one reviewer; if two branches start fighting over it, deploy
-# by dispatch instead and drop the branch from the push trigger.
+# Staging tracks whatever branch pushed last. There is one staging
+# checkout and one service, so two active branches will take turns
+# owning it - fine for a preview box with one reviewer, confusing with
+# several. If that starts to bite, narrow the branch list below and ship
+# the odd branch with Run workflow instead.
+#
+# The job announces which branch it deployed in the summary, so a
+# surprising staging site is one click from an explanation.
 #
 # This drives the deploy hook over HTTPS rather than SSH. The hook
 # already runs on the VPS as aciadmin with the staging unit's
@@ -26,13 +31,20 @@ name: Deploy to staging
 on:
   push:
     branches:
-      - claude/homepage-design-ideation-03gxe7
+      # Watch the branch shapes work actually lands on rather than one
+      # branch by name, so the next piece of work deploys itself without
+      # anyone remembering to edit this file. Add a pattern here if a new
+      # naming convention shows up.
+      - main
+      - staging
+      - 'claude/**'
+      - 'feat/**'
+      - 'fix/**'
   workflow_dispatch:
     inputs:
       ref:
-        description: 'Branch, tag or SHA to deploy'
-        required: true
-        default: 'claude/homepage-design-ideation-03gxe7'
+        description: 'Branch, tag or SHA to deploy (blank = the branch selected above)'
+        required: false
 
 concurrency:
   group: deploy-staging
@@ -59,6 +71,13 @@ jobs:
           fi
 
           echo "== deploying $DEPLOY_REF to staging =="
+          {
+            echo "### Staging deploy"
+            echo ""
+            echo "Ref: \`$DEPLOY_REF\`"
+            echo ""
+            echo "<https://staging.aciinfotech.com/>"
+          } >> "$GITHUB_STEP_SUMMARY"
 
           # The hook is synchronous: it fetches, builds, restarts, health
           # checks and rolls back before it answers, so this call is
