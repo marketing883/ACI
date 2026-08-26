@@ -32,11 +32,11 @@ type Column = {
 const SERVICES: Column[] = [
   {
     num: '01',
-    summary: 'Modern data platforms on Databricks, Snowflake, and cloud-native architectures: lakehouse migration, real-time pipelines, governance and lineage, and self-service BI.',
-    name: 'Data Engineering & Lakehouse',
+    summary: 'Modern data platforms on Databricks, Snowflake, and cloud-native architectures: lakehouse migration, real-time pipelines, governance and lineage, and the analytics and BI that run on top of them.',
+    name: 'Data Engineering & Analytics',
     stat: '3 weeks → 4 hours',
     proof: 'Campaign analysis cut from 3 weeks to 4 hours. 94% adoption.',
-    chips: ['Lakehouse migration', 'Real-time pipelines', 'Governance & lineage', 'Self-service BI'],
+    chips: ['Lakehouse migration', 'Real-time pipelines', 'Analytics & BI', 'Governance & lineage'],
     logos: 'Databricks · Snowflake · Azure',
     href: '/services/data-engineering',
     image: '/images/v4/svc-data.jpg',
@@ -73,6 +73,17 @@ const SERVICES: Column[] = [
     logos: 'Kubernetes · Dynatrace · ServiceNow',
     href: '/services/managed-operations',
     image: '/images/v4/svc-ops.jpg',
+  },
+  {
+    num: '05',
+    summary: 'Zero-trust architecture, cloud security posture, compliance readiness, threat response, and 24/7 SOC operations.',
+    name: 'Cybersecurity',
+    stat: '35% smaller',
+    proof: 'Attack surface cut by 35%, with secure releases moving 70% faster.',
+    chips: ['Zero-trust architecture', 'SOC operations', 'Compliance readiness', 'Threat response'],
+    logos: 'Microsoft Sentinel · CrowdStrike · Okta',
+    href: '/services/cyber-security',
+    image: '/images/v4/hero-atmosphere.jpg',
   },
 ];
 
@@ -114,39 +125,11 @@ function PanelBody({ col, headingClass, compact }: { col: Column; headingClass: 
   );
 }
 
-/** ACI Interactive expanded body. */
-function InteractiveBody({ headingClass, compact }: { headingClass: string; compact?: boolean }) {
-  return (
-    <div className="flex flex-col gap-3.5">
-      <span className="w-fit rounded-full bg-[#A3E635] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0a0b10]">
-        Specialized Division
-      </span>
-      <h3 className={`text-2xl font-semibold text-white ${compact ? '' : 'lg:text-[32px]'} ${headingClass}`}>{INTERACTIVE.name}</h3>
-      <p className="max-w-md text-sm leading-relaxed text-white/80 md:text-[15px]">{INTERACTIVE.summary}</p>
-      <p className="max-w-md text-sm leading-relaxed text-white/60">{INTERACTIVE.note}</p>
-      <div className="flex flex-wrap gap-2">
-        {INTERACTIVE.chips.map((c) => (
-          <span key={c} className="rounded-full border border-white/[0.16] bg-white/10 px-3 py-1 text-xs text-white/80">
-            {c}
-          </span>
-        ))}
-      </div>
-      <div className="mt-1 flex items-center gap-4">
-        <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-white">
-          {INTERACTIVE.cta}
-          <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-        </span>
-        <span className="text-xs text-white/50">{INTERACTIVE.logos}</span>
-      </div>
-    </div>
-  );
-}
-
 export default function ServicesColumns({ headingClass }: { headingClass: string }) {
   const { ref, revealed } = useReveal<HTMLElement>(0.12);
   const [active, setActive] = useState(0);
   const [engaged, setEngaged] = useState(false);
-  const total = SERVICES.length + 1; // + ACI Interactive
+  const total = SERVICES.length;
 
   // Auto-advance until the pointer takes over, and only once revealed.
   useEffect(() => {
@@ -237,34 +220,6 @@ export default function ServicesColumns({ headingClass }: { headingClass: string
             );
           })}
 
-          {/* ACI Interactive column */}
-          <Link
-            href={INTERACTIVE.href}
-            className={colClass}
-            style={{ ...colStyle(SERVICES.length), background: 'linear-gradient(200deg, #0b173a 0%, #1D4ED8 160%)' }}
-            onMouseEnter={() => {
-              setEngaged(true);
-              setActive(SERVICES.length);
-            }}
-            onFocus={() => {
-              setEngaged(true);
-              setActive(SERVICES.length);
-            }}
-          >
-            <span aria-hidden="true" className="absolute -right-10 -top-12 h-52 w-52" style={{ background: 'radial-gradient(closest-side, rgba(163,230,53,0.35), rgba(163,230,53,0))', filter: 'blur(30px)' }} />
-            <span className={`absolute inset-0 flex flex-col items-center justify-between py-6 transition-opacity duration-300 ${active === SERVICES.length ? 'pointer-events-none opacity-0' : 'opacity-100'}`}>
-              <span className="self-start pl-6">
-                <span className="rounded-full bg-[#A3E635] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0a0b10]">Division</span>
-              </span>
-              <span className={`whitespace-nowrap text-xl font-semibold text-white ${headingClass}`} style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
-                ACI Interactive
-              </span>
-              <span />
-            </span>
-            <span className={`absolute inset-x-0 bottom-0 block p-8 transition-opacity delay-150 duration-300 ${active === SERVICES.length ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
-              <InteractiveBody headingClass={headingClass} />
-            </span>
-          </Link>
         </div>
 
         {/* Mobile: stacked cards, everything visible. */}
@@ -283,15 +238,43 @@ export default function ServicesColumns({ headingClass }: { headingClass: string
               </span>
             </Link>
           ))}
-          <Link
-            href={INTERACTIVE.href}
-            className="v5-rise group relative overflow-hidden rounded-2xl"
-            style={{ background: 'linear-gradient(200deg, #0b173a 0%, #1D4ED8 160%)', '--v5-d': '0.42s' } as React.CSSProperties}
-          >
-            <span className="relative block p-6">
-              <InteractiveBody headingClass={headingClass} compact />
-            </span>
-          </Link>
+        </div>
+
+        {/* ACI Interactive is a division, not a sixth service, so it
+            gets its own band rather than a column that pretends to be
+            one of the five. */}
+        <div
+          className="v5-rise relative mt-5 overflow-hidden rounded-2xl md:mt-6"
+          style={{ background: 'linear-gradient(110deg, #0b173a 0%, #14307e 55%, #1D4ED8 140%)', '--v5-d': '0.5s' } as React.CSSProperties}
+        >
+          <span aria-hidden="true" className="absolute -right-16 -top-20 h-72 w-72" style={{ background: 'radial-gradient(closest-side, rgba(163,230,53,0.35), rgba(163,230,53,0))', filter: 'blur(36px)' }} />
+          <div className="relative flex flex-col gap-6 p-8 md:flex-row md:items-center md:justify-between md:p-10">
+            <div className="max-w-2xl">
+              <span className="inline-block rounded-full bg-[#A3E635] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0a0b10]">
+                Specialized Division
+              </span>
+              <h3 className={`mt-4 text-2xl font-semibold text-white md:text-[32px] ${headingClass}`}>{INTERACTIVE.name}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/85 md:text-[15px]">{INTERACTIVE.summary}</p>
+              <p className="mt-2 text-sm leading-relaxed text-white/60">{INTERACTIVE.note}</p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {INTERACTIVE.chips.map((c) => (
+                  <span key={c} className="rounded-full border border-white/[0.18] bg-white/10 px-3 py-1 text-xs text-white/85">
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="flex shrink-0 flex-col items-start gap-3 md:items-end">
+              <Link href={INTERACTIVE.href} className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-white">
+                <span className="relative">
+                  {INTERACTIVE.cta}
+                  <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                </span>
+                <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </Link>
+              <span className="text-xs text-white/55">{INTERACTIVE.logos}</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
