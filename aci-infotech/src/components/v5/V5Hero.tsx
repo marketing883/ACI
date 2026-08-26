@@ -40,8 +40,8 @@ type Slide = {
   desc: string;
   tags: string[];
   cta: { label: string; href: string };
-  /** Partner mark, shown only alongside `stat` - a logo on its own
-   *  renders as an empty capsule when the asset is dark-on-dark. */
+  /** Partner mark in the eyebrow capsule. Use a light or mono asset:
+   *  a dark-on-dark logo renders as an empty capsule. */
   mark?: { src: string; alt: string };
   stat?: { value: string; label: string };
 };
@@ -69,7 +69,7 @@ const SLIDES: Slide[] = [
     desc: 'Azure is strongest when it connects to the business stack. We bring Azure, Dynamics 365, Power Platform, and data engineering together around measurable operations.',
     tags: ['Azure', 'Dynamics 365', 'Power Platform'],
     cta: { label: 'Explore Microsoft expertise', href: '/partners' },
-    mark: { src: '/images/Solution-Partners/azure.png', alt: 'Microsoft Azure' },
+    mark: { src: '/brand/azure-mono.svg', alt: 'Microsoft Azure' },
   },
   {
     eyebrow: 'ArqAI Labs',
@@ -224,14 +224,17 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
                 ) : (
                   s.eyebrow
                 )}
-                {s.mark && s.stat ? (
-                  <span className="ml-1 inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/[0.06] px-4 py-1.5 normal-case tracking-normal backdrop-blur-sm">
+                {s.mark ? (
+                  <span className="ml-1 inline-flex items-center gap-3 rounded-full border border-white/30 bg-white/[0.1] px-5 py-2 normal-case tracking-normal backdrop-blur-md">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={s.mark.src} alt={s.mark.alt} className="h-5 w-auto object-contain" />
+                    <img src={s.mark.src} alt={s.mark.alt} className="h-7 w-auto object-contain sm:h-8" />
                     {s.stat ? (
-                      <span className="text-sm font-medium text-white/85">
-                        <span className="font-bold text-[#A3E635]">{s.stat.value}</span> {s.stat.label}
-                      </span>
+                      <>
+                        <span aria-hidden="true" className="h-5 w-px bg-white/25" />
+                        <span className="text-[15px] font-medium text-white sm:text-base">
+                          <span className="font-bold text-[#A3E635]">{s.stat.value}</span> {s.stat.label}
+                        </span>
+                      </>
                     ) : null}
                   </span>
                 ) : null}
