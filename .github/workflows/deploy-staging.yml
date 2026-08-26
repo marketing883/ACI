@@ -27,12 +27,13 @@ on:
   push:
     branches:
       - claude/homepage-design-ideation-03gxe7
+      - claude/staging-deployment-p2pji5
   workflow_dispatch:
     inputs:
       ref:
         description: 'Branch, tag or SHA to deploy'
         required: true
-        default: 'claude/homepage-design-ideation-03gxe7'
+        default: 'claude/staging-deployment-p2pji5'
 
 concurrency:
   group: deploy-staging
