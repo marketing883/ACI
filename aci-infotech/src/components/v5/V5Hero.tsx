@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, Play } from 'lucide-react';
 import V5Nav from './V5Nav';
-import { useCountUp } from './reveal';
 
 // v5 hero: one full-viewport office scene, copy rotating over it. The
 // slides carry the same four stories as the v4 EditorialHero; only the
@@ -128,14 +127,21 @@ function ArrowLink({ href, children }: { href: string; children: React.ReactNode
  *  gradient, matching the approved design sample. */
 function PaintedScene() {
   return (
-    <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(105deg, #0a0f16 0%, #0f1826 40%, #16233a 72%, #20304c 100%)' }}>
-      <div className="absolute -right-32 -top-40 h-[620px] w-[760px]" style={{ background: 'radial-gradient(closest-side, rgba(96,144,210,0.34), rgba(96,144,210,0) 70%)', filter: 'blur(10px)' }} />
-      <div className="absolute right-[16%] top-[26%] h-24 w-24 rounded-full" style={{ background: 'rgba(226,178,110,0.3)', filter: 'blur(22px)' }} />
-      <div className="absolute right-[34%] top-[42%] h-14 w-14 rounded-full" style={{ background: 'rgba(150,190,240,0.28)', filter: 'blur(16px)' }} />
-      <div className="absolute right-[8%] top-[52%] h-[70px] w-[70px] rounded-full" style={{ background: 'rgba(226,178,110,0.22)', filter: 'blur(20px)' }} />
-      <div className="absolute bottom-24 right-[4%] h-44 w-[420px]" style={{ background: 'linear-gradient(180deg, rgba(20,30,48,0) 0%, rgba(6,10,18,0.85) 80%)', filter: 'blur(6px)' }} />
-      <div className="absolute bottom-48 right-[10%] h-24 w-36 rounded-lg" style={{ background: 'rgba(120,160,215,0.13)', boxShadow: '0 0 34px rgba(120,160,215,0.2)', filter: 'blur(2px)' }} />
-      <div className="absolute bottom-44 right-[26%] h-20 w-28 rounded-lg" style={{ background: 'rgba(226,178,110,0.1)', filter: 'blur(3px)' }} />
+    <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(105deg, #101823 0%, #1a2941 38%, #24395c 68%, #33517d 100%)' }}>
+      {/* Window light falling across the right of the frame */}
+      <div className="absolute -right-24 -top-48 h-[820px] w-[900px]" style={{ background: 'radial-gradient(closest-side, rgba(126,176,240,0.55), rgba(126,176,240,0) 72%)', filter: 'blur(8px)' }} />
+      <div className="absolute right-[6%] top-[-12%] h-[560px] w-[300px] rotate-12" style={{ background: 'linear-gradient(180deg, rgba(150,195,250,0.3), rgba(150,195,250,0) 78%)', filter: 'blur(26px)' }} />
+      {/* Warm desk lamps and cool monitor glow, at bokeh scale */}
+      <div className="absolute right-[16%] top-[24%] h-32 w-32 rounded-full" style={{ background: 'rgba(240,186,112,0.55)', filter: 'blur(26px)' }} />
+      <div className="absolute right-[34%] top-[40%] h-20 w-20 rounded-full" style={{ background: 'rgba(160,200,245,0.45)', filter: 'blur(20px)' }} />
+      <div className="absolute right-[7%] top-[50%] h-24 w-24 rounded-full" style={{ background: 'rgba(240,186,112,0.4)', filter: 'blur(24px)' }} />
+      <div className="absolute right-[46%] top-[62%] h-16 w-16 rounded-full" style={{ background: 'rgba(160,200,245,0.3)', filter: 'blur(18px)' }} />
+      {/* Desks and screens, shallow depth of field */}
+      <div className="absolute bottom-40 right-[9%] h-28 w-44 rounded-lg" style={{ background: 'rgba(150,195,250,0.3)', boxShadow: '0 0 60px rgba(140,185,245,0.35)', filter: 'blur(3px)' }} />
+      <div className="absolute bottom-36 right-[27%] h-24 w-36 rounded-lg" style={{ background: 'rgba(240,186,112,0.22)', boxShadow: '0 0 50px rgba(240,186,112,0.25)', filter: 'blur(4px)' }} />
+      <div className="absolute bottom-52 right-[40%] h-20 w-28 rounded-lg" style={{ background: 'rgba(150,195,250,0.16)', filter: 'blur(5px)' }} />
+      {/* Foreground desk edge, grounding the frame */}
+      <div className="absolute -bottom-6 right-0 h-56 w-[70%]" style={{ background: 'linear-gradient(180deg, rgba(12,20,34,0) 0%, rgba(9,15,26,0.9) 78%)', filter: 'blur(10px)' }} />
     </div>
   );
 }
@@ -151,9 +157,6 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
     const t = setInterval(() => setI((n) => (n + 1) % SLIDES.length), ROTATE_MS);
     return () => clearInterval(t);
   }, [reduce]);
-
-  const projects = useCountUp(500, true, 1400);
-  const since = useCountUp(2006, true, 1400);
 
   const s = SLIDES[i];
 
@@ -179,14 +182,16 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
       ) : null}
 
       {/* Left-heavy scrim + top/bottom veils for copy and rail legibility. */}
-      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(4,7,13,0.94) 0%, rgba(4,7,13,0.72) 42%, rgba(4,7,13,0.28) 70%, rgba(4,7,13,0.05) 100%)' }} />
-      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(4,7,13,0.45) 0%, rgba(4,7,13,0) 22%, rgba(4,7,13,0) 70%, rgba(4,7,13,0.55) 100%)' }} />
+      {/* Scrim: heavy enough under the copy to keep it readable, gone by
+          the middle of the frame so the scene is actually visible. */}
+      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(6,10,18,0.86) 0%, rgba(6,10,18,0.6) 34%, rgba(6,10,18,0.16) 58%, rgba(6,10,18,0) 78%)' }} />
+      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(6,10,18,0.5) 0%, rgba(6,10,18,0) 24%, rgba(6,10,18,0) 74%, rgba(6,10,18,0.45) 100%)' }} />
 
       <V5Nav />
 
       {/* Copy block: the only thing that rotates. */}
       <div className="relative z-20 flex min-h-[100dvh] flex-col pt-24 md:pt-28">
-        <div className="flex flex-1 flex-col justify-center px-5 pb-40 sm:px-8 md:px-12 md:pb-44">
+        <div className="flex flex-1 flex-col justify-center px-5 pb-28 sm:px-8 md:px-12 md:pb-32">
           <AnimatePresence mode="wait">
             <motion.div
               key={i}
@@ -196,20 +201,20 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0, transition: { delay: 0.05, duration: 0.5, ease: EASE } }}
-                className="mb-6 flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.16em] text-white/85"
+                className="mb-7 flex flex-wrap items-center gap-x-3 gap-y-3 text-[15px] font-semibold uppercase tracking-[0.14em] text-white sm:text-base"
               >
-                <span className="text-white/40">/</span>
+                <span className="text-white/50">/</span>
                 {s.eyebrowLogo ? (
-                  <Image src={s.eyebrowLogo.src} alt={s.eyebrow} width={s.eyebrowLogo.w} height={s.eyebrowLogo.h} className="h-5 w-auto object-contain" />
+                  <Image src={s.eyebrowLogo.src} alt={s.eyebrow} width={s.eyebrowLogo.w} height={s.eyebrowLogo.h} className="h-7 w-auto object-contain" />
                 ) : (
                   s.eyebrow
                 )}
                 {s.mark ? (
-                  <span className="ml-3 inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 normal-case tracking-normal">
+                  <span className="ml-1 inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/[0.06] px-4 py-1.5 normal-case tracking-normal backdrop-blur-sm">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={s.mark.src} alt={s.mark.alt} className="h-4 w-auto object-contain" />
+                    <img src={s.mark.src} alt={s.mark.alt} className="h-5 w-auto object-contain" />
                     {s.stat ? (
-                      <span className="text-xs text-white/70">
+                      <span className="text-sm font-medium text-white/85">
                         <span className="font-bold text-[#A3E635]">{s.stat.value}</span> {s.stat.label}
                       </span>
                     ) : null}
@@ -265,38 +270,27 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
           </AnimatePresence>
         </div>
 
-        {/* Bottom rail: stats left, pills right. Never rotates. */}
+        {/* Bottom rail: slide pills under the copy column, footage note
+            opposite. Never rotates. */}
         <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-9 sm:px-8 md:px-12 md:pb-11">
           <div className="flex items-end justify-between gap-6">
-            <div className="flex gap-10 sm:gap-14">
-              <div>
-                <div className={`text-3xl font-semibold text-white sm:text-4xl ${headingClass}`}>{projects}+</div>
-                <div className="mt-1 text-xs text-white/55 sm:text-[13px]">Enterprise projects</div>
-              </div>
-              <div>
-                <div className={`text-3xl font-semibold text-white sm:text-4xl ${headingClass}`}>Since {since}</div>
-                <div className="mt-1 text-xs text-white/55 sm:text-[13px]">Engineering in production</div>
-              </div>
+            <div className="flex items-center gap-2">
+              {SLIDES.map((_, n) => (
+                <button
+                  key={n}
+                  onClick={() => setI(n)}
+                  aria-label={`Slide ${n + 1}`}
+                  className="h-2 rounded-full transition-all"
+                  style={{ width: n === i ? 30 : 8, background: n === i ? ACCENT : 'rgba(255,255,255,0.4)' }}
+                />
+              ))}
             </div>
-            <div className="flex flex-col items-end gap-4">
-              {!videoOk ? (
-                <span className="hidden items-center gap-2 rounded-full border border-white/20 px-3.5 py-1.5 text-xs text-white/60 md:inline-flex">
-                  <Play size={10} className="fill-white/60 text-white/60" />
-                  Office scene loop, footage placeholder
-                </span>
-              ) : null}
-              <div className="flex items-center gap-2">
-                {SLIDES.map((_, n) => (
-                  <button
-                    key={n}
-                    onClick={() => setI(n)}
-                    aria-label={`Slide ${n + 1}`}
-                    className="h-2 rounded-full transition-all"
-                    style={{ width: n === i ? 30 : 8, background: n === i ? ACCENT : 'rgba(255,255,255,0.4)' }}
-                  />
-                ))}
-              </div>
-            </div>
+            {!videoOk ? (
+              <span className="hidden items-center gap-2 rounded-full border border-white/20 px-3.5 py-1.5 text-xs text-white/60 md:inline-flex">
+                <Play size={10} className="fill-white/60 text-white/60" />
+                Office scene loop, footage placeholder
+              </span>
+            ) : null}
           </div>
         </div>
       </div>
