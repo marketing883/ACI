@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ArrowUpRight, Play } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import V5Nav from './V5Nav';
 
 // v5 hero: one full-viewport office scene, copy rotating over it. The
@@ -13,12 +13,19 @@ import V5Nav from './V5Nav';
 // wipes in after its line lands.
 //
 // Footage: drop the graded office loop at public/videos/office-hero.webm
-// and .mp4 (15-25s, ~1080p, under ~6MB, no audio). Until those files
-// exist the painted scene below stands in; the <video> hides itself on
-// error so a missing file never shows a broken player.
+// and .mp4 (15-25s, ~1080p, under ~6MB, no audio) and it takes over on
+// its own. The <source> list is tried in order and a missing file is
+// skipped, so until that footage exists the hero plays the existing dark
+// particle loop instead of sitting on a painted still. The painted scene
+// stays underneath as the last resort if no source can play at all.
 
-const VIDEO = '/videos/office-hero.mp4';
-const VIDEO_WEBM = '/videos/office-hero.webm';
+const SOURCES = [
+  { src: '/videos/office-hero.webm', type: 'video/webm' },
+  { src: '/videos/office-hero.mp4', type: 'video/mp4' },
+  // Stand-in: already in the repo, 1.2MB, dark enough to hold white type.
+  { src: '/hero-bg-compressed.webm', type: 'video/webm' },
+  { src: '/hero-video.mp4', type: 'video/mp4' },
+];
 const ACCENT = '#1D4ED8';
 const LIME = '#84CC16';
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -33,6 +40,8 @@ type Slide = {
   desc: string;
   tags: string[];
   cta: { label: string; href: string };
+  /** Partner mark, shown only alongside `stat` - a logo on its own
+   *  renders as an empty capsule when the asset is dark-on-dark. */
   mark?: { src: string; alt: string };
   stat?: { value: string; label: string };
 };
@@ -148,7 +157,6 @@ function PaintedScene() {
 
 export default function V5Hero({ headingClass }: { headingClass: string }) {
   const [i, setI] = useState(0);
-  const [videoOk, setVideoOk] = useState(true);
   const reduce = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -164,22 +172,25 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
     <section className="relative min-h-[100dvh] overflow-hidden bg-[#0a0f16] text-white">
       {/* Stage: painted scene under the (optional) office loop. */}
       <PaintedScene />
-      {videoOk ? (
-        <video
-          ref={videoRef}
-          muted
-          loop
-          playsInline
-          autoPlay
-          preload="metadata"
-          aria-hidden="true"
-          onError={() => setVideoOk(false)}
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src={VIDEO_WEBM} type="video/webm" />
-          <source src={VIDEO} type="video/mp4" />
-        </video>
-      ) : null}
+      <video
+        ref={videoRef}
+        muted
+        loop
+        playsInline
+        autoPlay
+        preload="auto"
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover"
+        // The stand-in loop is violet; the grade pulls it onto the
+        // brand's blue and takes the saturation down so white type and
+        // the accent box stay the loudest things in the frame. Harmless
+        // on already-graded office footage.
+        style={{ filter: 'hue-rotate(-35deg) saturate(0.7) brightness(0.85)' }}
+      >
+        {SOURCES.map((s) => (
+          <source key={s.src} src={s.src} type={s.type} />
+        ))}
+      </video>
 
       {/* Left-heavy scrim + top/bottom veils for copy and rail legibility. */}
       {/* Scrim: heavy enough under the copy to keep it readable, gone by
@@ -209,7 +220,7 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
                 ) : (
                   s.eyebrow
                 )}
-                {s.mark ? (
+                {s.mark && s.stat ? (
                   <span className="ml-1 inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/[0.06] px-4 py-1.5 normal-case tracking-normal backdrop-blur-sm">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={s.mark.src} alt={s.mark.alt} className="h-5 w-auto object-contain" />
@@ -285,12 +296,6 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
                 />
               ))}
             </div>
-            {!videoOk ? (
-              <span className="hidden items-center gap-2 rounded-full border border-white/20 px-3.5 py-1.5 text-xs text-white/60 md:inline-flex">
-                <Play size={10} className="fill-white/60 text-white/60" />
-                Office scene loop, footage placeholder
-              </span>
-            ) : null}
           </div>
         </div>
       </div>
