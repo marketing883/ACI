@@ -1,0 +1,155 @@
+name: Deploy to staging
+
+# Deploys to the staging VPS (staging.aciinfotech.com).
+#
+# Unlike production, this one auto-deploys: a push to a watched branch
+# ships to staging without anyone opening a terminal. Staging exists to
+# be looked at, so the push and the deploy are the same decision here.
+# Production stays manual-dispatch-only in deploy-production.yml.
+#
+# Staging tracks whatever branch pushed last. That is fine for a preview
+# box with one reviewer; if two branches start fighting over it, deploy
+# by dispatch instead and drop the branch from the push trigger.
+#
+# Why this rebuilds unconditionally: the VPS deploy script skips the
+# build when the checkout already sits on the target commit. That guard
+# is right for the hook (it makes a repeated deploy a no-op) and wrong
+# here, because a checkout can reach the target commit without ever
+# producing a build - a git checkout run by hand does exactly that, and
+# then no amount of re-deploying will ever build it. This workflow owns
+# the whole sequence over SSH, so it always builds.
+
+on:
+  push:
+    branches:
+      - claude/homepage-design-ideation-03gxe7
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag or SHA to deploy'
+        required: true
+        default: 'claude/homepage-design-ideation-03gxe7'
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.VPS_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          # Staging's own checkout and unit. The repo is cloned to
+          # /var/www/aci-staging/aci-infotech and the Next app is the
+          # aci-infotech/ directory inside it, hence the doubled path.
+          APP_DIR: /var/www/aci-staging/aci-infotech/aci-infotech
+          SERVICE: aci-staging.service
+          DEPLOY_REF: ${{ inputs.ref || github.ref_name }}
+        run: |
+          ssh -o BatchMode=yes "$VPS_USER@$VPS_HOST" \
+            "APP_DIR='$APP_DIR' SERVICE='$SERVICE' DEPLOY_REF='$DEPLOY_REF' bash -s" <<'REMOTE'
+          set -euo pipefail
+
+          cd "$APP_DIR"
+          REPO_ROOT=$(git rev-parse --show-toplevel)
+          PREVIOUS=$(git -C "$REPO_ROOT" rev-parse HEAD)
+
+          # Ask systemd which port the service actually listens on rather
+          # than hardcoding it. docs/staging.md and the deploy hook's unit
+          # disagreed about 3003 vs 3004 once, and a health check pointed
+          # at the wrong port fails every deploy and rolls back a build
+          # that was fine.
+          PORT=$(systemctl show "$SERVICE" -p ExecStart --value 2>/dev/null \
+                  | grep -oE '\-p [0-9]+' | grep -oE '[0-9]+' | head -1 || true)
+          [ -z "$PORT" ] && PORT=3003
+          echo "app_dir=$APP_DIR repo_root=$REPO_ROOT previous=$PREVIOUS port=$PORT"
+
+          echo "== fetching $DEPLOY_REF =="
+          git -C "$REPO_ROOT" fetch --prune origin "$DEPLOY_REF"
+          TARGET=$(git -C "$REPO_ROOT" rev-parse FETCH_HEAD)
+          git -C "$REPO_ROOT" reset --hard "$TARGET"
+          echo "deploying $TARGET"
+
+          # Staging keeps its values in .env.staging, which Next does not
+          # auto-load and which the prebuild env check never sees. Install
+          # it as .env so both the build and `next start` read the same
+          # values, exactly as the deploy hook does.
+          load_env() {
+            cd "$APP_DIR"
+            [ -f ./.env.staging ] && cp ./.env.staging ./.env
+            set -a
+            [ -f ./.env ] && . ./.env
+            set +a
+          }
+
+          rollback() {
+            echo "!! deploy failed, rolling back to $PREVIOUS"
+            git -C "$REPO_ROOT" reset --hard "$PREVIOUS"
+            load_env
+            npm ci --no-audit --no-fund || true
+            # Only restart if the rollback build produced something
+            # servable. A failed build leaves .next without
+            # prerender-manifest.json and `next start` exits immediately
+            # on that, which turns a service still serving its last good
+            # build into a hard 502.
+            if npm run build; then
+              sudo systemctl restart "$SERVICE" || true
+              echo "!! restored $PREVIOUS and restarted"
+            else
+              echo "!! rollback build also failed - leaving the running process alone" >&2
+            fi
+          }
+          trap rollback ERR
+
+          load_env
+          npm ci --no-audit --no-fund
+          npm run build
+
+          sudo systemctl restart "$SERVICE"
+          trap - ERR
+
+          echo "== health check =="
+          ok=0
+          for i in $(seq 1 20); do
+            sleep 3
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:${PORT}/" || echo 000)
+            state=$(systemctl is-active "$SERVICE" || true)
+            echo "attempt $i: http=$code service=$state"
+            if [ "$state" = "active" ] && [ "$code" -ge 200 ] && [ "$code" -lt 400 ]; then
+              ok=1; break
+            fi
+          done
+
+          if [ "$ok" -ne 1 ]; then
+            echo "!! service unhealthy after restart"
+            systemctl status "$SERVICE" --no-pager -n 40 || true
+            rollback
+            exit 1
+          fi
+
+          echo "deployed $TARGET (was $PREVIOUS)"
+          REMOTE
+
+      - name: Verify the public site
+        run: |
+          for i in $(seq 1 10); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' https://staging.aciinfotech.com/ || echo 000)
+            echo "attempt $i: https://staging.aciinfotech.com/ -> $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 5
+          done
+          echo "!! staging did not answer 200 over HTTPS"
+          exit 1

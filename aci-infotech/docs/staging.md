@@ -152,6 +152,39 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ## Routine deploys
 
+Nobody should be doing this by hand. `.github/workflows/deploy-staging.yml`
+deploys staging automatically on every push to a watched branch, and on
+demand from the Actions tab ("Deploy to staging" > Run workflow) for any
+ref. It fetches, builds, restarts, health-checks, and rolls back on
+failure, all as `aciadmin` over SSH, using the same VPS secrets as the
+production workflow.
+
+Two traps it exists to avoid, both of which cost an afternoon:
+
+- **Never run the deploy as root.** The checkout belongs to `aciadmin`
+  and so does the service. A root `npm ci` or `npm run build` leaves
+  root-owned `node_modules/` and `.next/`, and every later deploy fails
+  on permissions. If it happens:
+  `chown -R aciadmin:aciadmin /var/www/aci-staging/aci-infotech`.
+- **The app is one directory down.** The repo root carries its own
+  small `package.json`; the Next app is
+  `/var/www/aci-staging/aci-infotech/aci-infotech`. Building at the repo
+  root installs one unrelated package and finds no build script.
+
+The deploy hook (`deploy/README.md`) still works for one-off deploys, but
+it skips the build when the checkout already sits on the target commit.
+If a checkout reached that commit without ever being built, re-running
+the hook does nothing, forever. Force it:
+
+```sh
+sudo -u aciadmin ACI_FORCE=1 \
+  ACI_SERVICE=aci-staging.service \
+  ACI_ENV_SRC=/var/www/aci-staging/aci-infotech/aci-infotech/.env.staging \
+  /usr/local/bin/aci-deploy <ref>
+```
+
+The fully manual sequence, for when everything else is unavailable:
+
 ```sh
 cd /var/www/aci-staging/aci-infotech
 git pull origin <staging-branch>

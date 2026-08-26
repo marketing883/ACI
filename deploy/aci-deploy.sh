@@ -213,9 +213,18 @@ git -C "$REPO_ROOT" fetch --prune origin "$REF"
 TARGET=$(git -C "$REPO_ROOT" rev-parse FETCH_HEAD)
 echo "target=$TARGET"
 
-if [ "$TARGET" = "$PREVIOUS" ]; then
+# Same commit, nothing to do - unless the checkout reached that commit
+# without ever producing a build. That happens (a git checkout run by
+# hand does exactly it), and then this guard makes every subsequent
+# deploy a no-op while the service keeps serving the older build, with
+# nothing in the output to say why. ACI_FORCE=1 rebuilds in place.
+if [ "$TARGET" = "$PREVIOUS" ] && [ "${ACI_FORCE:-0}" != "1" ]; then
   echo "already at $TARGET - nothing to deploy"
+  echo "(re-run with ACI_FORCE=1 to rebuild and restart on this same commit)"
   exit 0
+fi
+if [ "$TARGET" = "$PREVIOUS" ]; then
+  echo "already at $TARGET - rebuilding anyway (ACI_FORCE=1)"
 fi
 
 trap restore ERR
