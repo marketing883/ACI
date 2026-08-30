@@ -6,9 +6,42 @@
 **Spec:** `TAPRESUME-CAREERS-CONTRACT-2026-08-30.md` (this directory), wire
 contract version `2026-08-29`
 
-Status in one line: **the receiver is built and deployed to staging, and it
-is not ready for live traffic** — the database migration has not run and no
-signing secret is installed. Both are owner actions. Details below.
+Status in one line: **the receiver is live, verified, and reconciling with
+TapResume; what remains is owner decisions, not engineering.**
+
+## Status at 2026-08-30 15:00 UTC
+
+| | |
+|---|---|
+| Receiver code | production `d902d30`, staging tracking the same branch |
+| Migration | applied |
+| Signing secret | installed both sides, fingerprints matched before restart |
+| Checklist | 12 of 12 automated cases pass |
+| First live signed request | **succeeded** — TapResume's manifest walk completed against production |
+| Historical export | staged at `/home/aciadmin/tapresume-import/`, 700, `aciadmin` |
+| Drift | cleared — the two checklist publications purged, verified 0/0/0 |
+
+The first live walk is worth more than the checklist: one signed request
+proved the secret matches, the pathname-only signature is accepted, the
+manifest route is not shadowed by `/jobs/{id}`, and pagination terminates.
+Case 11 demonstrated against the live receiver rather than a harness.
+
+### Open, and all owner decisions
+
+1. **Case 13**, the PII log grep, has not been run.
+2. **ACI's escalation contact** is unnamed. TapResume's is
+   `hm@aciinfotech.com`. Contract section 13 item 6 closes when ACI names
+   one; a watched alias beats an individual.
+3. **The shared Supabase project.** Staging and production are one
+   database. TapResume now treats the production round trip as a
+   live-data exercise because no rehearsal surface exists, and has asked
+   that no further destructive checklist cases run against staging until
+   this is decided.
+4. **The production round trip** is scheduled by the owner, not from
+   either engineering side.
+
+The three-day drift clock starts after the round trip, since it needs real
+publications to reconcile.
 
 ---
 
