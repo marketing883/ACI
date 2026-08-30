@@ -133,7 +133,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Generate unique filename
+      // Generate unique filename.
+      //
+      // Note the layout for anything that walks this bucket: objects are
+      // nested one level under a job-id prefix, so a Storage `list('')`
+      // returns FOLDERS, not files. Listing files means listing each
+      // prefix in turn. The historical export got this wrong once and
+      // reported every job folder as an orphaned file.
       const fileExt = resume.name.split('.').pop();
       const fileName = `${job_id}/${Date.now()}-${first_name.toLowerCase()}-${last_name.toLowerCase()}.${fileExt}`;
 

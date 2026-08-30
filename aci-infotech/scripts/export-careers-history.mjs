@@ -285,11 +285,30 @@ let orphanResumeFiles = 0;
 let orphanResumesWritten = 0;
 {
   const referenced = new Set(resumeJobs.map((j) => j.storagePath));
-  const { data: listed, error } = await db.storage.from('resumes').list('', { limit: 10000 });
+
+  // Objects live one level down, under a job-id prefix
+  // (`${job_id}/${timestamp}-name.ext`, see src/app/api/jobs/apply/route.ts).
+  // A bare list('') returns those PREFIXES, not files - Supabase marks a
+  // prefix with a null id. The first version compared prefix names against
+  // full object paths, so every job folder looked like an orphaned file:
+  // it reported 64 orphans that do not exist and then failed to download
+  // all 64, because a folder is not a file. Walk each prefix instead.
+  const { data: top, error } = await db.storage.from('resumes').list('', { limit: 10000 });
+  let listed = [];
+  if (!error) {
+    for (const entry of top ?? []) {
+      if (entry.id === null) {
+        const { data: inner } = await db.storage.from('resumes').list(entry.name, { limit: 10000 });
+        for (const f of inner ?? []) if (f.id !== null) listed.push({ name: `${entry.name}/${f.name}` });
+      } else {
+        listed.push({ name: entry.name });
+      }
+    }
+  }
   if (error) {
     notes.push(`could not list the resumes bucket to detect orphaned files: ${error.message}`);
   } else {
-    const orphans = (listed ?? []).filter((f) => f.name && !referenced.has(f.name));
+    const orphans = listed.filter((f) => f.name && !referenced.has(f.name));
     orphanResumeFiles = orphans.length;
     if (orphanResumeFiles > 0) {
       mkdirSync(join(OUT_DIR, 'resumes_orphaned'), { recursive: true, mode: 0o700 });
@@ -300,7 +319,11 @@ let orphanResumesWritten = 0;
           resumeFailures.push({ out_name: `orphaned/${f.name}`, reason: dlErr?.message ?? 'empty body' });
           continue;
         }
-        writeFileSync(join(OUT_DIR, 'resumes_orphaned', f.name), Buffer.from(await data.arrayBuffer()), { mode: 0o600 });
+        // The storage path is `{job_id}/{file}`; flatten the separator so
+        // the export stays one directory deep and the name still records
+        // which opening's folder the file was found under.
+        const flat = f.name.replace(/\//g, '__');
+        writeFileSync(join(OUT_DIR, 'resumes_orphaned', flat), Buffer.from(await data.arrayBuffer()), { mode: 0o600 });
         orphanResumesWritten += 1;
       }
       notes.push(
