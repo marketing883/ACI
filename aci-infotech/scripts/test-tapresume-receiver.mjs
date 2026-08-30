@@ -90,7 +90,13 @@ function runFixtures() {
 async function call(base, secret, method, path, body, overrides = {}) {
   const rawBody = body === null ? '' : JSON.stringify(body);
   const timestamp = overrides.timestamp ?? new Date().toISOString();
-  let signature = sign(secret, timestamp, method, path, rawBody);
+  // Contract 3.1 part 4: the signed path is the pathname only, "no query
+  // string". The receiver signs over request.nextUrl.pathname, so a caller
+  // that signs the query too produces a mismatch and gets a 401 - which is
+  // exactly how the manifest walk failed here: it passed "?cursor=" into
+  // the signer. Split it off, sign the pathname, fetch the full URL.
+  const pathname = path.split('?')[0];
+  let signature = sign(secret, timestamp, method, pathname, rawBody);
   if (overrides.tamperSignature) {
     signature =
       signature.slice(0, -1) + (signature.slice(-1) === '0' ? '1' : '0');
@@ -270,7 +276,13 @@ async function runLive() {
     );
     record(10, 'retired secret is 401', r10.status === 401, `http=${r10.status}`);
   } else {
-    record(10, 'rotation (active secret half only; set TAPRESUME_TEST_SECRET_RETIRED for the 401 half)', true, 'partial');
+    // No retired secret supplied, so prove the half that needs no extra
+    // provisioning: a secret that is not active must be rejected. Every
+    // other case above already proves the active secret is accepted.
+    const r10 = await call(base, `never_active_${randomUUID()}`, 'POST', upsertPath, makeUpsert(pubId, 4, 'x'), {
+      eventId: `evt_pub_${destId}_4`,
+    });
+    record(10, 'non-active secret rejected (full rotation lifecycle needs TAPRESUME_TEST_SECRET_RETIRED)', r10.status === 401, `http=${r10.status}`);
   }
 
   // Case 11: manifest walk to exhaustion
