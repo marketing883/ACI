@@ -138,7 +138,16 @@ function makeUpsert(publicationId, version, title) {
     work_mode: 'remote',
     skills: ['integration', 'testing'],
     published_at: new Date().toISOString(),
-    closing_at: new Date(Date.now() + 7 * 86400_000).toISOString(),
+    // Deliberately already closed. ACI staging and production share one
+    // Supabase project, so this test opening is written into the SAME jobs
+    // table the live careers page reads. /api/jobs filters out any row whose
+    // closes_at is in the past, and the detail route answers 410, so a
+    // closing_at behind us keeps the checklist invisible to the public site
+    // while still exercising the full published path through the receiver:
+    // desired_state stays "published" and the projection records it as such.
+    // Without this, a fake role appears on aciinfotech.com/careers for the
+    // seconds between case 1 and the cleanup unpublish.
+    closing_at: new Date(Date.now() - 86400_000).toISOString(),
     application_url: `https://tapresume.ai/companies/aci-infotech/jobs/checklist-${version}/apply`,
     contract_version: CONTRACT_VERSION,
   };
