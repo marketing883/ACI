@@ -104,8 +104,24 @@ mkdirSync(OUT_DIR, { recursive: true, mode: 0o700 });
 mkdirSync(join(OUT_DIR, 'resumes'), { recursive: true, mode: 0o700 });
 
 console.log('reading source tables...');
-const openings = await fetchAll('jobs');
+const allOpenings = await fetchAll('jobs');
 const applications = await fetchAll('job_applications');
+
+// Openings the TapResume receiver created are not ACI history - they are
+// TapResume's own publications projected into this table, and the first
+// export run swept up the integration checklist's test openings as if they
+// were real roles. managed_by is set only by the receiver, so it is an
+// exact discriminator. Excluded here and counted in the manifest so the
+// omission is visible rather than silent.
+const openings = allOpenings.filter((o) => o.managed_by !== 'tapresume');
+const excludedManaged = allOpenings.length - openings.length;
+if (excludedManaged > 0) {
+  notes.push(
+    `${excludedManaged} opening(s) carrying managed_by='tapresume' were EXCLUDED. Those are receiver-created ` +
+      'publications (including integration checklist test openings), not ACI historical data, and TapResume ' +
+      'already owns them through the publication channel. Counted as counts.excluded_managed_openings.',
+  );
+}
 notes.push(
   `openings read from public.jobs (${openings.length} rows); applications read from public.job_applications (${applications.length} rows)`,
 );
@@ -259,19 +275,40 @@ if (resumeFailures.length > 0) {
   );
 }
 
-// Files in the bucket that no application references.
+// Files in the bucket that no application references. Addendum 2.3 wants
+// two things that cannot both hold in one directory: every file in
+// resumes/ referenced by exactly one application, AND unreferenced files
+// kept in the export. So they are kept, in resumes_orphaned/ - the
+// invariant holds for resumes/, and 64 real candidate documents whose
+// application row is gone are not silently left behind.
 let orphanResumeFiles = 0;
+let orphanResumesWritten = 0;
 {
   const referenced = new Set(resumeJobs.map((j) => j.storagePath));
   const { data: listed, error } = await db.storage.from('resumes').list('', { limit: 10000 });
   if (error) {
     notes.push(`could not list the resumes bucket to detect orphaned files: ${error.message}`);
   } else {
-    orphanResumeFiles = (listed ?? []).filter((f) => f.name && !referenced.has(f.name)).length;
+    const orphans = (listed ?? []).filter((f) => f.name && !referenced.has(f.name));
+    orphanResumeFiles = orphans.length;
     if (orphanResumeFiles > 0) {
+      mkdirSync(join(OUT_DIR, 'resumes_orphaned'), { recursive: true, mode: 0o700 });
+      console.log(`downloading ${orphanResumeFiles} orphaned resume files...`);
+      for (const f of orphans.sort((a, b) => a.name.localeCompare(b.name))) {
+        const { data, error: dlErr } = await db.storage.from('resumes').download(f.name);
+        if (dlErr || !data) {
+          resumeFailures.push({ out_name: `orphaned/${f.name}`, reason: dlErr?.message ?? 'empty body' });
+          continue;
+        }
+        writeFileSync(join(OUT_DIR, 'resumes_orphaned', f.name), Buffer.from(await data.arrayBuffer()), { mode: 0o600 });
+        orphanResumesWritten += 1;
+      }
       notes.push(
-        `${orphanResumeFiles} file(s) in the resumes bucket are referenced by no application. Per addendum 2.3 they ` +
-          'are counted here; they are NOT copied into resumes/, which holds exactly the referenced files.',
+        `${orphanResumeFiles} file(s) in the resumes bucket are referenced by no application row. Addendum 2.3 asks ` +
+          'both that every file in resumes/ be referenced exactly once AND that unreferenced files stay in the ' +
+          `export, so they are kept separately in resumes_orphaned/ (${orphanResumesWritten} downloaded) under ` +
+          'their ORIGINAL storage names, since there is no application id to rename them by. resumes/ therefore ' +
+          'holds exactly the referenced files and the invariant holds.',
       );
     }
   }
@@ -296,6 +333,8 @@ const manifest = {
     applications_without_resumes: applicationsWithoutResume,
     orphaned_applications: orphanApplications,
     orphaned_resume_files: orphanResumeFiles,
+    orphaned_resume_files_exported: orphanResumesWritten,
+    excluded_managed_openings: excludedManaged,
     resume_download_failures: resumeFailures.length,
   },
   date_range: {
@@ -321,9 +360,13 @@ const lines = [
   `${manifest.checksums['openings.jsonl']}  openings.jsonl`,
   `${manifest.checksums['applications.jsonl']}  applications.jsonl`,
 ];
-for (const f of readdirSync(join(OUT_DIR, 'resumes')).sort()) {
-  const p = join(OUT_DIR, 'resumes', f);
-  if (statSync(p).isFile()) lines.push(`${sha256File(p)}  resumes/${f}`);
+for (const dir of ['resumes', 'resumes_orphaned']) {
+  const abs = join(OUT_DIR, dir);
+  if (!existsSync(abs)) continue;
+  for (const f of readdirSync(abs).sort()) {
+    const p = join(abs, f);
+    if (statSync(p).isFile()) lines.push(`${sha256File(p)}  ${dir}/${f}`);
+  }
 }
 writeFileSync(join(OUT_DIR, 'checksums.txt'), lines.join('\n') + '\n', { mode: 0o600 });
 
