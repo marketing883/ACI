@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyTapResumeRequest, tapresumeContentHash, TAPRESUME_CONTRACT_VERSION } from '@/lib/tapresume';
+import {
+  verifyTapResumeRequest,
+  tapresumeContentHash,
+  TAPRESUME_CONTRACT_VERSION,
+  isUuid,
+} from '@/lib/tapresume';
 import {
   tapresumeDb,
   getEvent,
@@ -41,6 +46,10 @@ export async function POST(request: NextRequest) {
   const errors: { field: string; error: string }[] = [];
   if (typeof body.tapresume_publication_id !== 'string' || body.tapresume_publication_id === '') {
     errors.push({ field: 'tapresume_publication_id', error: 'required string' });
+  } else if (!isUuid(body.tapresume_publication_id)) {
+    // Terminal by nature, so 422 rather than a 500 the retry ladder would
+    // chase six times before dead-lettering.
+    errors.push({ field: 'tapresume_publication_id', error: 'must be a uuid' });
   }
   if (typeof body.desired_version !== 'number' || !Number.isInteger(body.desired_version) || body.desired_version < 1) {
     errors.push({ field: 'desired_version', error: 'required positive integer' });

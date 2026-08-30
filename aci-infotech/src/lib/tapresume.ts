@@ -54,6 +54,21 @@ export function tapresumeContentHash(body: Record<string, unknown>): string {
   return createHash('sha256').update(JSON.stringify(sorted), 'utf8').digest('hex');
 }
 
+/**
+ * Publication ids are uuids on the wire, and the column is `uuid`. Postgres
+ * raises 22P02 on a comparison against anything that is not one, which the
+ * route then reports as a 500 - and a 500 means "transient" to TapResume, so
+ * a permanently malformed id would retry six times and dead-letter, paging
+ * an operator over an input that can never succeed. Check the shape first
+ * and answer with something terminal and truthful instead.
+ */
+export function isUuid(value: unknown): value is string {
+  return (
+    typeof value === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
+  );
+}
+
 /** contract 3.1: the five newline-joined parts. Exposed for the test runner. */
 export function tapresumeSignedString(
   timestamp: string,

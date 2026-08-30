@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyTapResumeRequest } from '@/lib/tapresume';
+import { verifyTapResumeRequest, isUuid } from '@/lib/tapresume';
 import { tapresumeDb, getPublication } from '@/lib/tapresume-store';
 
 export const runtime = 'nodejs';
@@ -20,6 +20,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const { tapresumePublicationId } = await params;
+
+  // An id that is not a uuid is one we definitionally do not hold, and it
+  // will never become one. 404 says exactly that; letting it reach Postgres
+  // raises 22P02 and reports as a 500, which TapResume reads as transient
+  // and retries to dead-letter over an input that can never succeed.
+  if (!isUuid(tapresumePublicationId)) {
+    return NextResponse.json({ error: 'unknown publication' }, { status: 404 });
+  }
 
   try {
     const db = tapresumeDb();

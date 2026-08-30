@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyTapResumeRequest, tapresumeContentHash, TAPRESUME_CONTRACT_VERSION } from '@/lib/tapresume';
+import {
+  verifyTapResumeRequest,
+  tapresumeContentHash,
+  TAPRESUME_CONTRACT_VERSION,
+  isUuid,
+} from '@/lib/tapresume';
 import {
   tapresumeDb,
   getEvent,
@@ -44,6 +49,12 @@ function validateUpsert(body: Record<string, unknown>): FieldError[] {
   };
   requireString('organization_external_key');
   requireString('tapresume_publication_id');
+  // A malformed publication id is a schema violation, so 422 (terminal with
+  // field errors) rather than letting it reach Postgres and surface as a
+  // 500, which TapResume would treat as transient and retry to dead-letter.
+  if (body.tapresume_publication_id !== undefined && !isUuid(body.tapresume_publication_id)) {
+    errors.push({ field: 'tapresume_publication_id', error: 'must be a uuid' });
+  }
   requireString('title');
   requireString('application_url');
   requireString('content_hash');
