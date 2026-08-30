@@ -215,17 +215,42 @@ notes.push(
 
 // ------------------------------------------------------------- resumes/
 
+// Downloads run a few at a time and report progress. The first version did
+// these strictly one by one and printed nothing until all of them finished:
+// on the real dataset that is 2410 round trips to object storage, twenty
+// minutes of a silent cursor, and no way to tell a slow run from a hung
+// one. Concurrency does not affect the output - files are written by name
+// and checksums are taken over the sorted listing afterwards - so this
+// stays deterministic and re-runnable per addendum 2.3.
 console.log(`downloading ${resumeJobs.length} resume files...`);
+const CONCURRENCY = 8;
+const startedAt = Date.now();
 let resumesWritten = 0;
+let attempted = 0;
 const resumeFailures = [];
-for (const job of resumeJobs) {
+
+async function downloadOne(job) {
   const { data, error } = await db.storage.from('resumes').download(job.storagePath);
   if (error || !data) {
     resumeFailures.push({ out_name: job.outName, reason: error?.message ?? 'empty body' });
-    continue;
+  } else {
+    writeFileSync(join(OUT_DIR, 'resumes', job.outName), Buffer.from(await data.arrayBuffer()), { mode: 0o600 });
+    resumesWritten += 1;
   }
-  writeFileSync(join(OUT_DIR, 'resumes', job.outName), Buffer.from(await data.arrayBuffer()), { mode: 0o600 });
-  resumesWritten += 1;
+  attempted += 1;
+  if (attempted % 100 === 0 || attempted === resumeJobs.length) {
+    const secs = Math.round((Date.now() - startedAt) / 1000);
+    const rate = attempted / Math.max(secs, 1);
+    const left = Math.round((resumeJobs.length - attempted) / Math.max(rate, 0.01));
+    console.log(
+      `  ${attempted}/${resumeJobs.length} (${resumesWritten} ok, ${resumeFailures.length} failed) ` +
+        `${secs}s elapsed, ~${left}s remaining`,
+    );
+  }
+}
+
+for (let i = 0; i < resumeJobs.length; i += CONCURRENCY) {
+  await Promise.all(resumeJobs.slice(i, i + CONCURRENCY).map(downloadOne));
 }
 if (resumeFailures.length > 0) {
   notes.push(
