@@ -134,16 +134,54 @@ Reproduce the fixtures at any time:
 cd aci-infotech && node scripts/test-tapresume-receiver.mjs --fixtures
 ```
 
-### NOT verified
+### Checklist: 12 of 12 automated cases pass
 
-**None of the 13 checklist cases have been run.** They cannot be until the
-migration is applied and a secret is installed — every write path currently
-fails before it reaches the database. Do not report the receiver as ready
-on the strength of the fixture checks alone; they prove the crypto, not the
-behaviour.
+Run against staging (`https://staging.aciinfotech.com`) with the throwaway
+secret, commit `c801259`:
 
-Specifically unproven: idempotent replay (case 2), version ordering
-(case 3), the manifest walk (case 11), and the whole apply path.
+| # | Case | Observed |
+|---|---|---|
+| 1 | Happy path upsert | 200, `page_state: ready` |
+| 2 | Duplicate event id | 200, acknowledgement **byte-identical** |
+| 3 | Reordered versions | stale delivery acknowledged at `applied_version: 3` |
+| 4 | Tampered signature | 401 |
+| 5 | Stale and future timestamp | 401 both |
+| 6 | Oversized body (300KB) | 413 before parsing |
+| 7 | Unknown publication unpublish | 404, 404 on redelivery |
+| 8 | Hash mismatch | 422 naming `content_hash` |
+| 9 | Wrong contract version | 401 |
+| 10 | Non-active secret | 401 |
+| 11 | Manifest walk | 1 page, 2 publications, 0 duplicates, null cursor |
+| 12 | Single publication read | 200, version 3 |
+
+Case 11 listing two publications is the `unpublish` design confirming
+itself: the earlier run's publication was unpublished and still appears,
+which is what reconciliation requires.
+
+Case 10 covers the half needing no extra provisioning (a non-active secret
+is rejected). Dual-secret acceptance during rotation was proven separately
+against a local server with both `TAPRESUME_SIGNING_SECRET` and
+`TAPRESUME_SIGNING_SECRET_NEXT` set. For the full lifecycle against a
+deployed environment, pass `TAPRESUME_TEST_SECRET_RETIRED`.
+
+Case 13 (PII/log audit) is a server-side grep, run separately.
+
+### Two defects the checklist found
+
+**A malformed publication id returned 500.** `tapresume_publication_id` is
+a `uuid` column; Postgres raises 22P02 against a non-uuid, and the route's
+catch-all reported it as a server error. 500 means *transient* under
+contract section 8, so a permanently malformed id would have climbed the
+whole retry ladder and dead-lettered, paging an operator over an input that
+could never succeed. Fixed in `6702f9a`: 422 with a field error on the POST
+routes, 404 on the GET.
+
+**The checklist signed the query string.** Contract 3.1 part 4 signs the
+pathname with no query. The receiver does this correctly; the harness
+passed `?cursor=` into the signer, so every manifest page was a genuine
+signature mismatch and the walk stopped at zero pages. Fixed in `c801259`.
+Worth noting the receiver behaved correctly throughout — this was the
+harness being the malformed caller.
 
 ---
 
@@ -220,22 +258,50 @@ Four items the contract asks for that only the owner can supply:
 
 ## 5. Deployment state
 
-| Environment | Code | Migration | Secret |
-|---|---|---|---|
-| staging.aciinfotech.com | deployed (`fa3ca98`) | not applied | not installed |
-| aciinfotech.com | **not deployed** | not applied | not installed |
+| Environment | Code | Migration | Secret | Fingerprint |
+|---|---|---|---|---|
+| staging.aciinfotech.com | `c801259` | applied | installed (throwaway) | `0b96d394c49e` |
+| aciinfotech.com | `6702f9a` | applied | installed | `3f5a233e50df` |
 
-The production deploy was attempted and blocked by a tooling permission
-check, not by any failure of the code. To deploy:
+Production is one commit behind staging; the difference is the checklist
+harness only, no receiver code. Both authenticate: an unsigned request is
+401, a well-formed signature with a wrong value is 401, and neither is 503
+any more.
 
-```sh
-sudo /home/aciadmin/aci-website/deploy_aci_prod.sh claude/aci-admin-dashboard-issue-s99mu7
-```
+### Staging is not isolated from production
 
-Deploying the code ahead of the secret is safe: with no secret configured
-every route fails closed with a 503, and TapResume is not yet sending
-traffic. There is no advantage to rushing it either — staging can prove the
-apply path first.
+Both environments point at the same Supabase project
+(`tfqnmtgycndatkqifsow`). Staging does not hold a copy of production data —
+it **is** production data. Both careers listings report the same 65 roles.
+
+This predates the integration and applies to every test anyone has ever run
+on staging: "try it on staging first" has never been a safety net for
+anything touching the database. A separate Supabase project for staging is
+the real fix and is an owner decision.
+
+Until then, the checklist creates its test opening with a `closing_at` one
+day in the past (`e23a925`). `/api/jobs` filters on `closes_at` and the
+detail route answers 410, so the role stays invisible to the public site
+while the receiver still exercises the full `published` path. Verified
+after the passing run: zero checklist roles on either careers listing.
+
+### Staging env keeps reverting
+
+Staging's real environment lives *inside* the repo checkout at
+`.env.staging`, which is what `ACI_ENV_SRC` points at and what every deploy
+copies over `.env`. Its `SUPABASE_SERVICE_ROLE_KEY` was corrected once,
+proved working, and was found reverted to an unrecognised `sb_`-prefixed
+key after the next deploy — while the TapResume secret in the same file
+survived, so something replaced that line specifically. The file is not
+tracked in git, so `reset --hard` is not the explanation, and the cause is
+not yet identified.
+
+Production does not have this exposure: its truth lives at
+`/home/aciadmin/aci-website/env/aci-prod.env`, outside the repo. Moving
+staging's file outside the checkout and repointing `ACI_ENV_SRC` in
+`aci-deploy-hook-staging.service` would close it. Watch for a third
+recurrence after the next staging deploy — that would confirm it is
+deploy-driven.
 
 ---
 
