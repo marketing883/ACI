@@ -331,6 +331,23 @@ async function runLive() {
   const rClean = await call(base, secret, 'POST', unpublishPath, unpub, { eventId: `evt_pub_${destId}_4u` });
   console.log(`cleanup: unpublish http=${rClean.status}`);
 
+  // Unpublishing is NOT full cleanup, and on this deployment that matters.
+  // The contract requires unpublished publications to keep appearing in the
+  // manifest, so the projection row deliberately survives - and because ACI
+  // staging and production share one Supabase project, it survives in the
+  // PRODUCTION projection. TapResume's reconciliation walk then reports it
+  // as a publication we serve that they have no provenance row for, which
+  // is real drift and blocks the three-day clean-drift gate.
+  //
+  // So print the id every run. It is the one thing an operator needs to
+  // purge afterwards, and the first time this happened the ids had to come
+  // back from TapResume's drift report instead.
+  console.log(`\n!! this run created publication ${pubId}`);
+  console.log('!! it now sits in the shared production projection and will be');
+  console.log('!! reported as drift by TapResume reconciliation until purged.');
+  console.log('!! purge with supabase/migrations/20260830_tapresume_purge_checklist_artifacts.sql');
+  console.log('!! (substitute this id), or declare it to TapResume as a known exclusion.');
+
   console.log(
     '\ncase 13 (PII/log audit) runs on the server: journalctl -u <service> | grep -iE "secret|resume|applicant" over the suite window; expect nothing.',
   );
