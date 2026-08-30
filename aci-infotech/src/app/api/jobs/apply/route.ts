@@ -66,12 +66,26 @@ export async function POST(request: NextRequest) {
     // header without a second lookup.
     const { data: job, error: jobError } = await supabase
       .from('jobs')
-      .select('id, title, status, closes_at, location, slug, notification_emails')
+      .select('id, title, status, closes_at, location, slug, notification_emails, managed_by, application_url')
       .eq('id', job_id)
       .single();
 
     if (jobError || !job) {
       return NextResponse.json({ error: 'Job not found' }, { status: 404 });
+    }
+
+    // TapResume-managed roles apply on TapResume only (contract section
+    // 1: no candidate PII or resumes on this site). The page renders an
+    // external link for these, so this is a backstop against direct form
+    // POSTs to a managed job.
+    if (job.managed_by === 'tapresume') {
+      return NextResponse.json(
+        {
+          error: 'Applications for this role are handled externally',
+          ...(job.application_url ? { application_url: job.application_url } : {}),
+        },
+        { status: 400 },
+      );
     }
 
     if (job.status !== 'published') {

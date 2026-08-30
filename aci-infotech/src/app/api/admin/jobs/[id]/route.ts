@@ -15,6 +15,53 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
+/**
+ * TapResume-managed jobs are read-only in the admin (contract section 1:
+ * the projection must never be edited independently, or the daily drift
+ * check flags it and pages someone). The one way past this is the audited
+ * emergency detachment: `?emergency_detach=true` clears managed_by, writes
+ * an audit event, and from then on the row is an ordinary ACI job that
+ * TapResume no longer owns - its next upsert for the publication will
+ * recreate a fresh managed row.
+ */
+async function refuseIfTapResumeManaged(
+  request: NextRequest,
+  supabase: ReturnType<typeof getSupabase>,
+  id: string,
+  action: 'update' | 'delete',
+): Promise<NextResponse | null> {
+  const { data: job } = await supabase
+    .from('jobs')
+    .select('managed_by, title')
+    .eq('id', id)
+    .maybeSingle();
+  if (!job || job.managed_by !== 'tapresume') return null;
+
+  if (request.nextUrl.searchParams.get('emergency_detach') === 'true') {
+    const { error } = await supabase.from('jobs').update({ managed_by: null }).eq('id', id);
+    if (error) {
+      return NextResponse.json({ error: 'Detachment failed' }, { status: 500 });
+    }
+    logAuditEvent({
+      action: 'update',
+      resource_type: 'job',
+      resource_id: id,
+      resource_title: job.title,
+      metadata: { emergency_detach: true, was_managed_by: 'tapresume', requested_action: action },
+    });
+    return null;
+  }
+
+  return NextResponse.json(
+    {
+      error:
+        'This opening is managed by TapResume and cannot be edited here. ' +
+        'Changes belong in TapResume; to sever the link deliberately, retry with ?emergency_detach=true (audited).',
+    },
+    { status: 409 },
+  );
+}
+
 // GET - Get single job
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
@@ -47,6 +94,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     const { id } = await params;
     const supabase = getSupabase();
+
+    const guard = await refuseIfTapResumeManaged(request, supabase, id, 'update');
+    if (guard) return guard;
+
     const body = await request.json();
 
     const {
@@ -159,6 +210,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     const { id } = await params;
     const supabase = getSupabase();
+
+    const guard = await refuseIfTapResumeManaged(request, supabase, id, 'delete');
+    if (guard) return guard;
 
     // Get job details before deletion for audit log
     const { data: jobToDelete } = await supabase
