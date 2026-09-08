@@ -3,7 +3,22 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ArrowUpRight, Database, BrainCircuit, ServerCog, Boxes, ShieldCheck, type LucideIcon } from 'lucide-react';
+import {
+  ArrowUpRight,
+  Database,
+  BrainCircuit,
+  ServerCog,
+  Boxes,
+  ShieldCheck,
+  Table2,
+  GitBranch,
+  Activity,
+  Landmark,
+  ArrowRightLeft,
+  Radar,
+  Siren,
+  type LucideIcon,
+} from 'lucide-react';
 import '../v4/hero/success-stories.css';
 import './v5.css';
 
@@ -15,6 +30,12 @@ import './v5.css';
 
 const ROTATE_MS = 8000;
 
+/** A stack chip. Named products carry their own mark; capabilities that
+ *  are not a product (CI/CD, NOC, Migration) carry a line glyph, because
+ *  the case studies behind those two stories name capabilities rather
+ *  than vendors and we do not invent a logo to fill the row. */
+type Tag = { label: string; logo?: string; Glyph?: LucideIcon };
+
 type Story = {
   id: string;
   tab: string;
@@ -24,12 +45,17 @@ type Story = {
   metric: string;
   metricLabel: string;
   summary: string;
-  tags: string[];
+  tags: Tag[];
   cta: string;
   href: string;
   video: string;
   webm: string;
 };
+
+const AZURE = '/brand/azure-glyph.svg';
+const DATABRICKS = '/brand/tech/databricks.svg';
+const KUBERNETES = '/brand/tech/kubernetes.svg';
+const SAP = '/brand/sap-glyph.svg';
 
 const STORIES: Story[] = [
   {
@@ -42,7 +68,11 @@ const STORIES: Story[] = [
     metricLabel: 'reduction in data-processing time',
     summary:
       'ACI replaced fragmented pipelines with a governed Databricks lakehouse, moving critical analytics from days to hours.',
-    tags: ['Azure', 'Databricks', 'Delta Lake'],
+    tags: [
+      { label: 'Azure', logo: AZURE },
+      { label: 'Databricks', logo: DATABRICKS },
+      { label: 'Delta Lake', Glyph: Table2 },
+    ],
     cta: 'Read the Databricks story',
     href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain',
     video: '/assets/success-stories/data-velocity.mp4',
@@ -58,7 +88,11 @@ const STORIES: Story[] = [
     metricLabel: 'from prototype to production',
     summary:
       'ACI connected Azure Data Lake, Databricks, AKS, and Synapse into a governed foundation for analytics and machine learning.',
-    tags: ['Azure', 'MLOps', 'Databricks'],
+    tags: [
+      { label: 'Azure', logo: AZURE },
+      { label: 'Databricks', logo: DATABRICKS },
+      { label: 'Kubernetes', logo: KUBERNETES },
+    ],
     cta: 'Read the Azure Lakehouse story',
     href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse',
     video: '/assets/success-stories/decision-intelligence.mp4',
@@ -74,7 +108,11 @@ const STORIES: Story[] = [
     metricLabel: 'system uptime across 72+ servers',
     summary:
       'Automated CI/CD, monitoring, load balancing, and centralized logs helped releases move faster without disrupting operations.',
-    tags: ['CI/CD', 'Monitoring', 'Platform ops'],
+    tags: [
+      { label: 'CI/CD', Glyph: GitBranch },
+      { label: 'Monitoring', Glyph: Activity },
+      { label: 'Platform ops', Glyph: ServerCog },
+    ],
     cta: 'Read the DevOps story',
     href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring',
     video: '/assets/success-stories/reliable-scale.mp4',
@@ -90,7 +128,11 @@ const STORIES: Story[] = [
     metricLabel: 'less allocation processing time',
     summary:
       'ACI moved a global investment firm onto SAP S/4HANA and rebuilt its allocation and reporting run, migrating with zero downtime.',
-    tags: ['SAP S/4HANA', 'Finance', 'Migration'],
+    tags: [
+      { label: 'SAP S/4HANA', logo: SAP },
+      { label: 'Finance', Glyph: Landmark },
+      { label: 'Migration', Glyph: ArrowRightLeft },
+    ],
     cta: 'Read the SAP S/4HANA story',
     href: '/case-studies/modernizes-finance-reporting-with-sap-transformation',
     video: '/assets/success-stories/intelligent-operations.mp4',
@@ -106,7 +148,11 @@ const STORIES: Story[] = [
     metricLabel: 'less network downtime',
     summary:
       'ACI placed a Fortune 500 bank estate under proactive NOC and SOC monitoring, holding 99.94% uptime and taking $4.7M a year out of IT cost.',
-    tags: ['NOC', 'SOC', 'Monitoring'],
+    tags: [
+      { label: 'NOC', Glyph: Radar },
+      { label: 'SOC', Glyph: Siren },
+      { label: 'Monitoring', Glyph: Activity },
+    ],
     cta: 'Read the infrastructure story',
     href: '/case-studies/transforming-reactive-it-into-strategic-advantage-with-aci',
     video: '/assets/success-stories/noc-soc.mp4',
@@ -362,8 +408,17 @@ export default function V5SuccessStories({
 
               <div className="mt-4 flex flex-wrap gap-2">
                 {s.tags.map((t) => (
-                  <span key={t} className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-                    {t}
+                  <span
+                    key={t.label}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 py-1 pl-2 pr-3 text-xs font-medium text-gray-600"
+                  >
+                    {t.logo ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={t.logo} alt="" aria-hidden="true" className="h-3.5 w-auto max-w-[26px] shrink-0 object-contain" />
+                    ) : t.Glyph ? (
+                      <t.Glyph size={13} aria-hidden="true" className="shrink-0 text-gray-500" />
+                    ) : null}
+                    {t.label}
                   </span>
                 ))}
               </div>
