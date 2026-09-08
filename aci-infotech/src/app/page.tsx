@@ -14,7 +14,12 @@
  *     graph: WebPage, the service OfferCatalog, and FAQPage.
  *   - The FAQ answers render server-side (native <details>) from the
  *     same data module the JSON-LD is built from, so the visible page
- *     and the schema can never disagree.
+ *     and the schema can never disagree. The case-study ItemList works
+ *     the same way, off the stories component's own export.
+ *   - The ItemList exists for answer engines rather than for a rich
+ *     result: the five stories are the page's most citable claims, and
+ *     without it they are readable only as prose inside a client-side
+ *     tab panel.
  *   - /llms.txt carries the crawlable plain-text site map for
  *     generative engines; the sitemap lists `/` at priority 1.
  */
@@ -23,7 +28,11 @@ import type { Metadata } from 'next';
 import V5Hero from '@/components/v5/V5Hero';
 import V5Foldcraft from '@/components/v5/V5Foldcraft';
 import VaultLedger from '@/components/v5/VaultLedger';
-import V5SuccessStories, { SUCCESS_STORY_SLUGS } from '@/components/v5/V5SuccessStories';
+import V5SuccessStories from '@/components/v5/V5SuccessStories';
+import {
+  SUCCESS_STORY_SLUGS,
+  SUCCESS_STORY_SCHEMA,
+} from '@/components/v5/success-stories-data';
 import ServicesColumns from '@/components/v5/ServicesColumns';
 import V5Insights from '@/components/v5/V5Insights';
 import V5HomeFaq from '@/components/v5/V5HomeFaq';
@@ -173,6 +182,12 @@ function HomeStructuredData() {
           height: 630,
         },
         inLanguage: 'en-US',
+        // Voice surfaces get the positioning line and the FAQ, which are
+        // the two parts of this page that answer a spoken question.
+        speakable: {
+          '@type': 'SpeakableSpecification',
+          cssSelector: ['h1', '#faq'],
+        },
       },
       {
         '@type': 'OfferCatalog',
@@ -189,6 +204,26 @@ function HomeStructuredData() {
             description: s.description,
             url: `${siteUrl}${s.path}`,
             provider: { '@id': `${siteUrl}/#organization` },
+          },
+        })),
+      },
+      {
+        '@type': 'ItemList',
+        '@id': `${siteUrl}/#case-studies`,
+        name: 'Selected ACI Infotech engagements',
+        itemListOrder: 'https://schema.org/ItemListOrderAscending',
+        numberOfItems: SUCCESS_STORY_SCHEMA.length,
+        itemListElement: SUCCESS_STORY_SCHEMA.map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          item: {
+            '@type': 'CreativeWork',
+            '@id': `${siteUrl}${c.path}`,
+            url: `${siteUrl}${c.path}`,
+            name: c.name,
+            description: `${c.description} Result: ${c.metric} ${c.metricLabel}.`,
+            about: c.about,
+            creator: { '@id': `${siteUrl}/#organization` },
           },
         })),
       },

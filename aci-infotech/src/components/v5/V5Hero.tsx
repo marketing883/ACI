@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
-import V5Nav from './V5Nav';
+import SiteNav from '../v4/hero/SiteNav';
 
 // v5 hero: one full-viewport office scene, copy rotating over it. The
 // slides carry the same four stories as the v4 EditorialHero; only the
@@ -230,7 +230,7 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
       <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(4,8,15,0.94) 0%, rgba(4,8,15,0.8) 32%, rgba(4,8,15,0.44) 58%, rgba(4,8,15,0.14) 100%)' }} />
       <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(4,8,15,0.6) 0%, rgba(4,8,15,0.1) 26%, rgba(4,8,15,0.1) 68%, rgba(4,8,15,0.6) 100%)' }} />
 
-      <V5Nav />
+      <SiteNav variant="overlay" theme="dark" headingClass={headingClass} />
 
       {/* Copy block: the only thing that rotates. */}
       <div className="relative z-20 flex min-h-[100dvh] flex-col pt-24 md:pt-28">

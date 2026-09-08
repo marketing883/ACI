@@ -206,7 +206,14 @@ export default function ServicesColumns({ headingClass }: { headingClass: string
                 {/* Collapsed spine */}
                 <span className={`absolute inset-0 flex flex-col items-center justify-between py-6 transition-opacity duration-300 ${open ? 'pointer-events-none opacity-0' : 'opacity-100'}`}>
                   <span className="self-start pl-6 text-[13px] font-semibold tracking-[0.14em] text-white/50">/ {col.num}</span>
-                  <span className={`whitespace-nowrap text-xl font-semibold text-white/85 ${headingClass}`} style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
+                  {/* The open panel's h3 carries this same name, so the
+                      vertical spine is decoration: hidden from the
+                      accessibility tree rather than read out twice. */}
+                  <span
+                    aria-hidden="true"
+                    className={`whitespace-nowrap text-xl font-semibold text-white/85 ${headingClass}`}
+                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+                  >
                     {col.name}
                   </span>
                   <span />

@@ -37,7 +37,54 @@ import {
 } from '@/components/v2/nav/menu-data';
 import './nav.css';
 
-const ACCENT = '#1D4ED8';
+export type NavTheme = 'light' | 'dark';
+
+/* The mega nav serves a white page and the dark homepage. Only colour
+ * moves between them, so the two surfaces are one token table rather
+ * than two copies of the markup. The dark accent is lighter than the
+ * light one on purpose: #1D4ED8 on #0d0f16 sits under 3:1. */
+const TOKENS = {
+  light: {
+    accent: '#1D4ED8',
+    trigger: 'rgba(0,0,0,0.75)',
+    arqBorder: 'rgba(94,14,215,0.3)',
+    panel: 'border-black/[0.06] bg-white/95',
+    hover: 'hover:bg-black/[0.04]',
+    title: 'text-black',
+    body: 'text-black/55',
+    meta: 'text-black/50',
+    kicker: 'text-black/45',
+    chip: 'bg-blue-50 text-blue-700 group-hover/item:bg-blue-700 group-hover/item:text-white',
+    card: 'border-black/[0.07] bg-white hover:shadow-lg',
+    cardTitle: 'text-black',
+    cardMeta: 'text-black/60',
+    // Partner wordmarks are black ink on transparency, so they need no
+    // treatment on white and a full inversion on dark.
+    logo: '',
+    industryFg: '#000',
+    industryChipBg: 'rgba(0,0,0,0.05)',
+    industryChipFg: 'rgba(0,0,0,0.65)',
+  },
+  dark: {
+    accent: '#60A5FA',
+    trigger: 'rgba(255,255,255,0.78)',
+    arqBorder: 'rgba(147,197,253,0.35)',
+    panel: 'border-white/10 bg-[#0d0f16]/[0.98]',
+    hover: 'hover:bg-white/[0.06]',
+    title: 'text-white',
+    body: 'text-white/55',
+    meta: 'text-white/50',
+    kicker: 'text-white/45',
+    chip: 'bg-white/[0.08] text-[#93C5FD] group-hover/item:bg-[#1D4ED8] group-hover/item:text-white',
+    card: 'border-white/10 bg-white/[0.04] hover:bg-white/[0.07]',
+    cardTitle: 'text-white',
+    cardMeta: 'text-white/60',
+    logo: 'brightness-0 invert',
+    industryFg: '#fff',
+    industryChipBg: 'rgba(255,255,255,0.08)',
+    industryChipFg: 'rgba(255,255,255,0.7)',
+  },
+} as const;
 
 type MenuId = 'services' | 'platforms' | 'industries' | 'resources' | 'company';
 const TRIGGERS: { id: MenuId; label: string }[] = [
@@ -58,6 +105,7 @@ const PLATFORM_LOGOS: Record<string, string> = {
   ServiceNow: '/images/Solution-Partners/servicenow.png',
   Salesforce: '/images/Solution-Partners/salesforce.png',
   Braze: '/images/Solution-Partners/braze.png',
+  'Microsoft Dynamics': '/brand/dynamics365-glyph.png',
 };
 
 // Icons keyed by href/slug so the maps survive label copy edits.
@@ -96,6 +144,12 @@ const INDUSTRY_IMAGES: Record<string, string> = {
   transportation: '/images/v4/case-transport.jpg',
 };
 
+type PanelProps = {
+  headingClass: string;
+  onNavigate: () => void;
+  t: (typeof TOKENS)[NavTheme];
+};
+
 function Underline() {
   return (
     <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
@@ -104,7 +158,7 @@ function Underline() {
 
 /* ------------------------------- panels ------------------------------- */
 
-function ServicesPanel({ headingClass, onNavigate }: { headingClass: string; onNavigate: () => void }) {
+function ServicesPanel({ headingClass, onNavigate, t }: PanelProps) {
   return (
     <div className="flex gap-8">
       <div className="grid flex-1 grid-cols-2 gap-x-6 gap-y-1">
@@ -115,23 +169,23 @@ function ServicesPanel({ headingClass, onNavigate }: { headingClass: string; onN
               key={s.href}
               href={s.href}
               onClick={onNavigate}
-              className="group/item flex items-start gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-black/[0.04]"
+              className={`group/item flex items-start gap-3 rounded-xl px-4 py-3 transition-colors ${t.hover}`}
             >
               {Icon ? (
-                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700 transition-colors group-hover/item:bg-blue-700 group-hover/item:text-white">
+                <span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors ${t.chip}`}>
                   <Icon size={18} aria-hidden="true" />
                 </span>
               ) : null}
               <span className="min-w-0">
-                <span className="flex items-center gap-1.5 text-[16px] font-semibold text-black">
+                <span className={`flex items-center gap-1.5 text-[16px] font-semibold ${t.title}`}>
                   {s.label}
                   <ArrowUpRight
                     size={14}
                     className="opacity-0 transition-all -translate-x-1 group-hover/item:translate-x-0 group-hover/item:opacity-100"
-                    style={{ color: ACCENT }}
+                    style={{ color: t.accent }}
                   />
                 </span>
-                <span className="mt-0.5 block text-[13.5px] text-black/55">{s.description}</span>
+                <span className={`mt-0.5 block text-[13.5px] ${t.body}`}>{s.description}</span>
               </span>
             </Link>
           );
@@ -172,19 +226,19 @@ function ServicesPanel({ headingClass, onNavigate }: { headingClass: string; onN
   );
 }
 
-function PlatformsPanel({ onNavigate }: { onNavigate: () => void }) {
+function PlatformsPanel({ onNavigate, t }: Omit<PanelProps, 'headingClass'>) {
   return (
     <div className="grid grid-cols-4 gap-6">
       {PLATFORM_CATEGORIES.map((cat) => (
         <div key={cat.id}>
-          <p className="mb-3 text-[12px] font-semibold uppercase tracking-widest text-black/45">{cat.label}</p>
+          <p className={`mb-3 text-[12px] font-semibold uppercase tracking-widest ${t.kicker}`}>{cat.label}</p>
           <div className="flex flex-col gap-1">
             {cat.items.map((p) => (
               <Link
                 key={p.href}
                 href={p.href}
                 onClick={onNavigate}
-                className="group/item flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-black/[0.04]"
+                className={`group/item flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors ${t.hover}`}
               >
                 {PLATFORM_LOGOS[p.label] ? (
                   // Wide box: most of these files are horizontal wordmarks,
@@ -195,15 +249,15 @@ function PlatformsPanel({ onNavigate }: { onNavigate: () => void }) {
                       alt={p.label}
                       width={128}
                       height={80}
-                      className="max-h-9 w-auto max-w-full object-contain"
+                      className={`max-h-9 w-auto max-w-full object-contain ${t.logo}`}
                     />
                   </span>
                 ) : (
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: ACCENT }} />
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: t.accent }} />
                 )}
                 <span className="min-w-0">
-                  <span className="block text-[15px] font-semibold text-black">{p.label}</span>
-                  <span className="block truncate text-[13px] text-black/50">{p.capability}</span>
+                  <span className={`block text-[15px] font-semibold ${t.title}`}>{p.label}</span>
+                  <span className={`block truncate text-[13px] ${t.meta}`}>{p.capability}</span>
                 </span>
               </Link>
             ))}
@@ -214,7 +268,7 @@ function PlatformsPanel({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
-function IndustriesPanel({ headingClass, onNavigate }: { headingClass: string; onNavigate: () => void }) {
+function IndustriesPanel({ headingClass, onNavigate, t }: PanelProps) {
   const [slug, setSlug] = useState(INDUSTRIES[0].slug);
   const active = INDUSTRIES.find((i) => i.slug === slug) ?? INDUSTRIES[0];
   const feat = INDUSTRY_FEATURES[slug];
@@ -230,15 +284,15 @@ function IndustriesPanel({ headingClass, onNavigate }: { headingClass: string; o
               href={ind.href}
               onClick={onNavigate}
               onMouseEnter={() => setSlug(ind.slug)}
-              className="group/item flex items-center gap-3 rounded-xl px-4 py-2.5 text-[16px] font-semibold transition-colors hover:bg-black/[0.04]"
-              style={{ color: isActive ? ACCENT : '#000' }}
+              className={`group/item flex items-center gap-3 rounded-xl px-4 py-2.5 text-[16px] font-semibold transition-colors ${t.hover}`}
+              style={{ color: isActive ? t.accent : t.industryFg }}
             >
               {Icon ? (
                 <span
                   className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors"
                   style={{
-                    background: isActive ? ACCENT : 'rgba(0,0,0,0.05)',
-                    color: isActive ? '#fff' : 'rgba(0,0,0,0.65)',
+                    background: isActive ? t.accent : t.industryChipBg,
+                    color: isActive ? '#fff' : t.industryChipFg,
                   }}
                 >
                   <Icon size={16} aria-hidden="true" />
@@ -248,7 +302,7 @@ function IndustriesPanel({ headingClass, onNavigate }: { headingClass: string; o
               <ArrowUpRight
                 size={15}
                 className="transition-opacity"
-                style={{ opacity: isActive ? 1 : 0, color: ACCENT }}
+                style={{ opacity: isActive ? 1 : 0, color: t.accent }}
               />
             </Link>
           );
@@ -292,7 +346,7 @@ function IndustriesPanel({ headingClass, onNavigate }: { headingClass: string; o
   );
 }
 
-function ResourcesPanel({ headingClass, onNavigate }: { headingClass: string; onNavigate: () => void }) {
+function ResourcesPanel({ headingClass, onNavigate, t }: PanelProps) {
   const cards = [
     { ...RESOURCES.playbooks, blurb: 'Field-tested delivery patterns you can run.', img: '/images/v4/svc-ai.jpg' },
     { ...RESOURCES.work, blurb: 'Outcomes we shipped, with the numbers.', img: '/images/v4/case-retail.jpg' },
@@ -306,17 +360,17 @@ function ResourcesPanel({ headingClass, onNavigate }: { headingClass: string; on
           key={c.indexHref}
           href={c.indexHref}
           onClick={onNavigate}
-          className="group/item overflow-hidden rounded-2xl border border-black/[0.07] bg-white transition-shadow hover:shadow-lg"
+          className={`group/item overflow-hidden rounded-2xl border transition-all ${t.card}`}
         >
           <div className="relative h-24 w-full overflow-hidden">
             <Image src={c.img} alt={c.eyebrow} fill className="object-cover transition-transform duration-500 group-hover/item:scale-105" sizes="260px" />
           </div>
           <div className="p-4">
-            <span className="text-[12px] font-semibold uppercase tracking-widest" style={{ color: ACCENT }}>
+            <span className="text-[12px] font-semibold uppercase tracking-widest" style={{ color: t.accent }}>
               {c.eyebrow}
             </span>
-            <p className={`mt-1 text-[15px] font-semibold text-black ${headingClass}`}>{c.blurb}</p>
-            <span className="mt-2 inline-flex items-center gap-1 text-[14px] font-medium text-black/60">
+            <p className={`mt-1 text-[15px] font-semibold ${t.cardTitle} ${headingClass}`}>{c.blurb}</p>
+            <span className={`mt-2 inline-flex items-center gap-1 text-[14px] font-medium ${t.cardMeta}`}>
               {c.cta} <ArrowUpRight size={13} />
             </span>
           </div>
@@ -359,7 +413,7 @@ const COMPANY_CARDS = [
   },
 ];
 
-function CompanyPanel({ headingClass, onNavigate }: { headingClass: string; onNavigate: () => void }) {
+function CompanyPanel({ headingClass, onNavigate }: Omit<PanelProps, 't'>) {
   return (
     <div className="grid grid-cols-3 gap-4">
       {COMPANY_CARDS.map((c) => (
@@ -417,7 +471,14 @@ function CompanyPanel({ headingClass, onNavigate }: { headingClass: string; onNa
 
 /* ------------------------------- shell ------------------------------- */
 
-export default function HeroMegaNav({ headingClass }: { headingClass: string }) {
+export default function HeroMegaNav({
+  headingClass,
+  theme = 'light',
+}: {
+  headingClass: string;
+  theme?: NavTheme;
+}) {
+  const t = TOKENS[theme];
   const [open, setOpen] = useState<MenuId | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router = useRouter();
@@ -466,21 +527,21 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
       {/* Full trigger row needs ~1000px; below lg the hero nav falls back
           to the hamburger + mobile menu instead of cramming. */}
       <div className="hidden items-center gap-1 lg:flex">
-        {TRIGGERS.map((t) => (
+        {TRIGGERS.map((trigger) => (
           <button
-            key={t.id}
+            key={trigger.id}
             type="button"
-            onMouseEnter={() => requestOpen(t.id)}
-            onClick={() => (open === t.id ? close() : requestOpen(t.id))}
-            aria-expanded={open === t.id}
+            onMouseEnter={() => requestOpen(trigger.id)}
+            onClick={() => (open === trigger.id ? close() : requestOpen(trigger.id))}
+            aria-expanded={open === trigger.id}
             className="group flex items-center gap-1 whitespace-nowrap px-2 py-2 text-[15px] font-semibold capitalize tracking-wide transition-colors xl:px-3 xl:text-[16px]"
-            style={{ color: open === t.id ? ACCENT : 'rgba(0,0,0,0.75)' }}
+            style={{ color: open === trigger.id ? t.accent : t.trigger }}
           >
             <span className="relative">
-              {t.label}
+              {trigger.label}
               <Underline />
             </span>
-            <ChevronDown size={13} className="transition-transform duration-200" style={{ transform: open === t.id ? 'rotate(180deg)' : 'none' }} />
+            <ChevronDown size={13} className="transition-transform duration-200" style={{ transform: open === trigger.id ? 'rotate(180deg)' : 'none' }} />
           </button>
         ))}
 
@@ -490,7 +551,7 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
           target="_blank"
           rel="noopener noreferrer"
           className="group ml-1 flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-2 text-[15px] font-semibold capitalize tracking-wide transition-colors xl:px-4 xl:text-[16px]"
-          style={{ color: ACCENT, borderColor: 'rgba(94,14,215,0.3)' }}
+          style={{ color: t.accent, borderColor: t.arqBorder }}
         >
           ArqAI Labs
           <ArrowUpRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -503,12 +564,12 @@ export default function HeroMegaNav({ headingClass }: { headingClass: string }) 
             key={open}
             onMouseEnter={cancel}
             onMouseLeave={requestClose}
-            className="nav-panel-in absolute left-1/2 top-full z-50 mt-3 w-[min(1040px,92vw)] -translate-x-1/2 rounded-3xl border border-black/[0.06] bg-white/95 p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)] backdrop-blur-2xl"
+            className={`nav-panel-in absolute left-1/2 top-full z-50 mt-3 w-[min(1040px,92vw)] -translate-x-1/2 rounded-3xl border p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)] backdrop-blur-2xl ${t.panel}`}
           >
-            {open === 'services' && <ServicesPanel headingClass={headingClass} onNavigate={close} />}
-            {open === 'platforms' && <PlatformsPanel onNavigate={close} />}
-            {open === 'industries' && <IndustriesPanel headingClass={headingClass} onNavigate={close} />}
-            {open === 'resources' && <ResourcesPanel headingClass={headingClass} onNavigate={close} />}
+            {open === 'services' && <ServicesPanel headingClass={headingClass} onNavigate={close} t={t} />}
+            {open === 'platforms' && <PlatformsPanel onNavigate={close} t={t} />}
+            {open === 'industries' && <IndustriesPanel headingClass={headingClass} onNavigate={close} t={t} />}
+            {open === 'resources' && <ResourcesPanel headingClass={headingClass} onNavigate={close} t={t} />}
             {open === 'company' && <CompanyPanel headingClass={headingClass} onNavigate={close} />}
           </div>
         ) : null}

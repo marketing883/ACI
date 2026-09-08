@@ -12,12 +12,14 @@ import './v5.css';
 // bento (and its 500+ card, which duplicated the hero stat) is gone.
 
 const PATTERNS = [
-  { runs: 47, name: 'Real-Time Inventory Platform', domain: 'Data' },
-  { runs: 34, name: 'Multi-Source Data Integration', domain: 'Integration' },
-  { runs: 28, name: 'Supply Chain Visibility', domain: 'Analytics' },
-  { runs: 23, name: 'Post-Merger ERP Unification', domain: 'Integration' },
-  { runs: 18, name: 'Agentic AI Deployment', domain: 'AI' },
+  { runs: 47, name: 'Real-Time Inventory Platform', domain: 'Data', slug: 'real-time-data-platform' },
+  { runs: 34, name: 'Multi-Source Data Integration', domain: 'Integration', slug: 'multi-source-integration' },
+  { runs: 28, name: 'Supply Chain Visibility', domain: 'Analytics', slug: 'supply-chain-visibility' },
+  { runs: 23, name: 'Post-Merger ERP Unification', domain: 'Integration', slug: 'post-acquisition-consolidation' },
+  { runs: 18, name: 'Agentic AI Deployment', domain: 'AI', slug: 'agentic-ai-deployment' },
 ];
+
+const FLAGSHIP_SLUG = 'legacy-cloud-migration';
 
 const STACK = [
   'Databricks',
@@ -37,6 +39,7 @@ function LedgerRow({
   runs,
   name,
   domain,
+  slug,
   index,
   revealed,
   headingClass,
@@ -44,6 +47,7 @@ function LedgerRow({
   runs: number;
   name: string;
   domain: string;
+  slug: string;
   index: number;
   revealed: boolean;
   headingClass: string;
@@ -54,7 +58,7 @@ function LedgerRow({
     <div className="relative">
       <span aria-hidden="true" className="v5-rule absolute inset-x-0 top-0 h-px bg-white/10" style={{ '--v5-d': delay } as React.CSSProperties} />
       <Link
-        href="/playbooks"
+        href={`/playbooks/${slug}`}
         className="v5-rise group flex items-center gap-5 py-6 sm:gap-6 md:py-7"
         style={{ '--v5-d': delay } as React.CSSProperties}
       >
@@ -149,7 +153,7 @@ export default function VaultLedger({ headingClass }: { headingClass: string }) 
                 Aging Hadoop, Teradata, and Oracle estates re-architected for the cloud, with a
                 parallel-run cutover so nothing goes dark.
               </p>
-              <Link href="/playbooks" className="group mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-white">
+              <Link href={`/playbooks/${FLAGSHIP_SLUG}`} className="group mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-white">
                 <span className="relative">
                   Explore
                   <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
