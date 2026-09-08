@@ -28,6 +28,12 @@ interface Job {
   benefits: string[];
   published_at: string;
   closes_at: string | null;
+  // TapResume-managed openings (docs/integrations/
+  // TAPRESUME-CAREERS-CONTRACT-2026-08-30.md): salary arrives as one
+  // display string, and Apply must link out to TapResume instead of the
+  // on-site form.
+  salary_display?: string | null;
+  application_url?: string | null;
 }
 
 interface PageProps {
@@ -255,9 +261,10 @@ export default function JobDetailPage({ params }: PageProps) {
   const experienceLabel =
     job.experience_level.charAt(0).toUpperCase() + job.experience_level.slice(1);
   const salaryLabel =
-    job.show_salary && job.salary_min
+    job.salary_display ||
+    (job.show_salary && job.salary_min
       ? formatSalary(job.salary_min, job.salary_max, job.salary_currency)
-      : '';
+      : '');
 
   // JobPosting structured data, built from the same fields the page
   // renders. Injected client-side alongside the content it describes.
@@ -295,7 +302,27 @@ export default function JobDetailPage({ params }: PageProps) {
       : {}),
   };
 
-  const applyButton = (
+  // TapResume-managed roles apply on TapResume: the contract requires the
+  // Apply action to be exactly application_url, with no on-site form and
+  // no candidate data touching this site.
+  const applyButton = job.application_url ? (
+    <a
+      href={job.application_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-blue-700"
+    >
+      <span className="relative">
+        Apply for this role
+        <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
+      </span>
+      <ArrowUpRight
+        size={15}
+        aria-hidden="true"
+        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+      />
+    </a>
+  ) : (
     <button
       type="button"
       onClick={() => setShowForm(true)}

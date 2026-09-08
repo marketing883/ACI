@@ -66,12 +66,26 @@ export async function POST(request: NextRequest) {
     // header without a second lookup.
     const { data: job, error: jobError } = await supabase
       .from('jobs')
-      .select('id, title, status, closes_at, location, slug, notification_emails')
+      .select('id, title, status, closes_at, location, slug, notification_emails, managed_by, application_url')
       .eq('id', job_id)
       .single();
 
     if (jobError || !job) {
       return NextResponse.json({ error: 'Job not found' }, { status: 404 });
+    }
+
+    // TapResume-managed roles apply on TapResume only (contract section
+    // 1: no candidate PII or resumes on this site). The page renders an
+    // external link for these, so this is a backstop against direct form
+    // POSTs to a managed job.
+    if (job.managed_by === 'tapresume') {
+      return NextResponse.json(
+        {
+          error: 'Applications for this role are handled externally',
+          ...(job.application_url ? { application_url: job.application_url } : {}),
+        },
+        { status: 400 },
+      );
     }
 
     if (job.status !== 'published') {
@@ -119,7 +133,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Generate unique filename
+      // Generate unique filename.
+      //
+      // Note the layout for anything that walks this bucket: objects are
+      // nested one level under a job-id prefix, so a Storage `list('')`
+      // returns FOLDERS, not files. Listing files means listing each
+      // prefix in turn. The historical export got this wrong once and
+      // reported every job folder as an orphaned file.
       const fileExt = resume.name.split('.').pop();
       const fileName = `${job_id}/${Date.now()}-${first_name.toLowerCase()}-${last_name.toLowerCase()}.${fileExt}`;
 
