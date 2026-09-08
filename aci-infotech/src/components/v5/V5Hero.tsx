@@ -43,6 +43,9 @@ type Slide = {
   /** Partner mark in the eyebrow capsule. Use a light or mono asset:
    *  a dark-on-dark logo renders as an empty capsule. */
   mark?: { src: string; alt: string };
+  /** Product name set beside the mark, for marks whose own wordmark is
+   *  dark-on-light and would vanish here. */
+  markLabel?: string;
   stat?: { value: string; label: string };
 };
 
@@ -88,12 +91,13 @@ const SLIDES: Slide[] = [
     stat: { value: '99.97%', label: 'uptime across 72+ servers' },
   },
   {
-    eyebrow: 'Microsoft Dynamics 365',
+    eyebrow: 'ERP and business apps',
     headline: ['Dynamics 365, wired', '*into your stack.*'],
     desc: 'Finance, supply chain, sales, and service on one platform, joined up with Azure data and Power Platform automation so the number in the ERP is the number in the report.',
     tags: ['Business Central', 'Sales & Service', 'Power Platform'],
     cta: { label: 'Explore Microsoft Dynamics 365', href: '/platforms/microsoft-dynamics' },
-    mark: { src: '/brand/microsoft-mono.svg', alt: 'Microsoft Dynamics 365' },
+    mark: { src: '/brand/dynamics365-glyph.png', alt: 'Microsoft Dynamics 365' },
+    markLabel: 'Microsoft Dynamics 365',
   },
   {
     eyebrow: 'ArqAI Labs',
@@ -252,7 +256,10 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
                   <span className="ml-1 inline-flex items-center gap-3 rounded-full border border-white/30 bg-white/[0.1] px-5 py-2 normal-case tracking-normal backdrop-blur-md">
                     {s.mark ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={s.mark.src} alt={s.mark.alt} className="h-7 w-auto object-contain sm:h-8" />
+                      <img src={s.mark.src} alt={s.markLabel ? '' : s.mark.alt} className="h-7 w-auto object-contain sm:h-8" />
+                    ) : null}
+                    {s.markLabel ? (
+                      <span className="text-[15px] font-semibold text-white sm:text-base">{s.markLabel}</span>
                     ) : null}
                     {s.mark && s.stat ? <span aria-hidden="true" className="h-5 w-px bg-white/25" /> : null}
                     {s.stat ? (
