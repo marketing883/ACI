@@ -47,9 +47,9 @@ export default function ConditionalLayout({
   // v5 (dark template redesign) preview ships its own nav and footer
   // too (src/components/v5), so suppress all site chrome.
   const isV5Preview = pathname?.startsWith('/preview/v5');
-  // The v4 design is now the production homepage. It renders its own
-  // nav and footer, so `/` is fully standalone too.
-  const isV4Home = pathname === '/';
+  // The v5 design is now the production homepage. It renders its own
+  // nav (V5Nav) and footer, so `/` is fully standalone too.
+  const isStandaloneHome = pathname === '/';
   // Staging builds set NEXT_PUBLIC_USE_V2_HOME=true, which flips `/`
   // to the v2 homepage. That page renders its own NavV2 / FooterV2,
   // so the v1 chrome must be suppressed here too. The env var is
@@ -58,11 +58,11 @@ export default function ConditionalLayout({
   const isV2Root =
     pathname === '/' && process.env.NEXT_PUBLIC_USE_V2_HOME === 'true';
 
-  // The homepage renders its own nav and footer (v4 EditorialHero), so it
+  // The homepage renders its own nav and footer (v5 V5Hero/V5Nav), so it
   // skips the shared SiteNav / SiteFooter, but it still needs the floating
   // Atheros chat + nudge like every other public page. Without this it was
   // the one public page with no chat launcher.
-  if (isV4Home || isV2Root) {
+  if (isStandaloneHome || isV2Root) {
     return (
       <>
         {children}

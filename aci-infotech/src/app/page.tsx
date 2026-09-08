@@ -1,9 +1,12 @@
 /**
- * Root route — the v4 editorial homepage, promoted from /preview/v4.
+ * Root route — the v5 dark homepage, promoted from /preview/v5.
  *
  * Ships its own nav and footer (ConditionalLayout suppresses the
- * global chrome on `/`). Older homepages stay reachable for
- * comparison at /v1 and /preview/home.
+ * global chrome on `/`). The v4 editorial homepage this replaced stays
+ * reachable at /preview/v4, and the older ones at /v1 and /preview/home.
+ *
+ * The page carries no CTA section by design; the footer's "Start a
+ * project" is the only ask on it.
  *
  * SEO/AEO/GEO notes:
  *   - Site-wide Organization + WebSite JSON-LD comes from the root
@@ -17,17 +20,16 @@
  */
 
 import type { Metadata } from 'next';
-import { Funnel_Display, Funnel_Sans, Geist } from 'next/font/google';
-import EditorialHero from '@/components/v4/hero/EditorialHero';
+import V5Hero from '@/components/v5/V5Hero';
+import V5Foldcraft from '@/components/v5/V5Foldcraft';
+import VaultLedger from '@/components/v5/VaultLedger';
+import V5SuccessStories, { SUCCESS_STORY_SLUGS } from '@/components/v5/V5SuccessStories';
+import ServicesColumns from '@/components/v5/ServicesColumns';
+import V5Insights from '@/components/v5/V5Insights';
+import V5HomeFaq from '@/components/v5/V5HomeFaq';
 import PartnerMarquee from '@/components/v4/hero/PartnerMarquee';
-import FoldcraftHero from '@/components/v4/hero/FoldcraftHero';
-import PlaybooksSection from '@/components/v4/hero/PlaybooksSection';
-import SuccessStories, { SUCCESS_STORY_SLUGS } from '@/components/v4/hero/SuccessStories';
-import ServicesSection from '@/components/v4/hero/ServicesSection';
-import InsightsSection from '@/components/v4/hero/InsightsSection';
-import HomeFaq from '@/components/v4/hero/HomeFaq';
-import CtaSection from '@/components/v4/hero/CtaSection';
 import SiteFooter from '@/components/v4/hero/SiteFooter';
+import { v4Display, v4Sans } from '@/components/v4/fonts';
 import { HOME_FAQ } from '@/components/v4/hero/home-faq-data';
 import {
   getV4FeaturedNews,
@@ -36,12 +38,6 @@ import {
   getV4CaseStudyFacts,
 } from '@/lib/v4/fetch-v4-home';
 import { getSiteUrl } from '@/lib/site-url';
-
-// Funnel Display for headings, Funnel Sans for body; Geist is scoped
-// to the Foldcraft section.
-const display = Funnel_Display({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap' });
-const sans = Funnel_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap' });
-const geist = Geist({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap' });
 
 // Canonical origin: always production, so staging builds can never
 // self-canonicalize (see src/lib/site-url.ts).
@@ -228,25 +224,19 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className={sans.className}>
+    <div className={`bg-[#0a0b10] ${v4Sans}`}>
       <HomeStructuredData />
       <main>
-        <EditorialHero headingClass={display.className} bodyClass={sans.className} />
-        <PartnerMarquee headingClass={display.className} />
-        <FoldcraftHero geistClass={geist.className} />
-        <PlaybooksSection headingClass={display.className} />
-        <SuccessStories headingClass={display.className} facts={storyFacts} />
-        <ServicesSection headingClass={display.className} />
-        <InsightsSection
-          headingClass={display.className}
-          news={news}
-          insights={insights}
-          download={whitepaper}
-        />
-        <HomeFaq headingClass={display.className} />
-        <CtaSection />
+        <V5Hero headingClass={v4Display} />
+        <PartnerMarquee headingClass={v4Display} />
+        <V5Foldcraft headingClass={v4Display} />
+        <VaultLedger headingClass={v4Display} />
+        <V5SuccessStories headingClass={v4Display} facts={storyFacts} />
+        <ServicesColumns headingClass={v4Display} />
+        <V5Insights headingClass={v4Display} news={news} insights={insights} download={whitepaper} />
+        <V5HomeFaq headingClass={v4Display} />
       </main>
-      <SiteFooter headingClass={display.className} />
+      <SiteFooter headingClass={v4Display} />
     </div>
   );
 }
