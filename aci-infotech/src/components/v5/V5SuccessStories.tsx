@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ArrowUpRight, Database, BrainCircuit, ServerCog, Workflow, type LucideIcon } from 'lucide-react';
+import { ArrowUpRight, Database, BrainCircuit, ServerCog, Boxes, ShieldCheck, type LucideIcon } from 'lucide-react';
 import '../v4/hero/success-stories.css';
 import './v5.css';
 
@@ -81,20 +81,36 @@ const STORIES: Story[] = [
     webm: '/assets/success-stories/reliable-scale.webm',
   },
   {
-    id: 'intelligent-operations',
-    tab: 'Intelligent operations',
-    Icon: Workflow,
-    eyebrow: 'Technology / Workflow automation',
-    title: 'Contract operations that move at business speed.',
+    id: 'erp-modernization',
+    tab: 'ERP modernization',
+    Icon: Boxes,
+    eyebrow: 'Financial services / SAP S/4HANA',
+    title: 'Finance reporting, rebuilt on S/4HANA.',
     metric: '67%',
-    metricLabel: 'reduction in contract cycle time',
+    metricLabel: 'less allocation processing time',
     summary:
-      'ACI automated creation, review, approval, compliance, and renewal in a governed Conga CLM environment.',
-    tags: ['Conga CLM', 'Automation', 'Governance'],
-    cta: 'Read the automation story',
-    href: '/case-studies/accelerating-contract-performance-through-intelligent-automation',
+      'ACI moved a global investment firm onto SAP S/4HANA and rebuilt its allocation and reporting run, migrating with zero downtime.',
+    tags: ['SAP S/4HANA', 'Finance', 'Migration'],
+    cta: 'Read the SAP S/4HANA story',
+    href: '/case-studies/modernizes-finance-reporting-with-sap-transformation',
     video: '/assets/success-stories/intelligent-operations.mp4',
     webm: '/assets/success-stories/intelligent-operations.webm',
+  },
+  {
+    id: 'noc-soc',
+    tab: 'NOC and SOC',
+    Icon: ShieldCheck,
+    eyebrow: 'Banking / Infrastructure and security operations',
+    title: 'Reactive IT put under constant watch.',
+    metric: '68%',
+    metricLabel: 'less network downtime',
+    summary:
+      'ACI placed a Fortune 500 bank estate under proactive NOC and SOC monitoring, holding 99.94% uptime and taking $4.7M a year out of IT cost.',
+    tags: ['NOC', 'SOC', 'Monitoring'],
+    cta: 'Read the infrastructure story',
+    href: '/case-studies/transforming-reactive-it-into-strategic-advantage-with-aci',
+    video: '/assets/success-stories/noc-soc.mp4',
+    webm: '/assets/success-stories/noc-soc.webm',
   },
 ];
 

@@ -88,6 +88,14 @@ const SLIDES: Slide[] = [
     stat: { value: '99.97%', label: 'uptime across 72+ servers' },
   },
   {
+    eyebrow: 'Microsoft Dynamics 365',
+    headline: ['Dynamics 365, wired', '*into your stack.*'],
+    desc: 'Finance, supply chain, sales, and service on one platform, joined up with Azure data and Power Platform automation so the number in the ERP is the number in the report.',
+    tags: ['Business Central', 'Sales & Service', 'Power Platform'],
+    cta: { label: 'Explore Microsoft Dynamics 365', href: '/platforms/microsoft-dynamics' },
+    mark: { src: '/brand/microsoft-mono.svg', alt: 'Microsoft Dynamics 365' },
+  },
+  {
     eyebrow: 'ArqAI Labs',
     eyebrowLogo: { src: '/images/ArqAI-Labs-Logo-light.png', w: 2439, h: 858 },
     headline: ['Frontier AI, delivered', 'with *ArqAI Labs.*'],

@@ -60,17 +60,6 @@
   transform-origin: center;
 }
 
-/* Outlined ticker type. The drift itself is driven from JS (scroll
- * scrub); this is just the stroke treatment. */
-.v5-ticker-text {
-  white-space: nowrap;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.02);
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.45);
-  user-select: none;
-}
-
 /* Services expanding columns: flex-grow tween. */
 .v5-col {
   transition: flex-grow 0.6s cubic-bezier(0.22, 1, 0.36, 1);

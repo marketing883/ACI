@@ -4,11 +4,10 @@
  * canvas. Content is frozen to the v4 staging homepage; only the
  * presentation changed.
  *
- * Section order: office-scene hero → "AI in production" ticker →
- * partner marquee → underwater "why AI stalls" → "the playbook vault"
- * ticker → vault ledger → success stories → services (expanding
- * columns) → insights → FAQ → "let's talk" ticker → footer. No CTA
- * sections anywhere; the footer's "Start a project" is the only ask.
+ * Section order: office-scene hero → partner marquee → underwater
+ * "why AI stalls" → vault ledger → success stories → services
+ * (expanding columns) → insights → FAQ → footer. No CTA sections
+ * anywhere; the footer's "Start a project" is the only ask.
  *
  * Marked noindex: this is a design preview, not a public page. On
  * promotion to `/` it inherits the root page's metadata and JSON-LD.
@@ -16,7 +15,6 @@
 
 import type { Metadata } from 'next';
 import V5Hero from '@/components/v5/V5Hero';
-import Ticker from '@/components/v5/Ticker';
 import V5Foldcraft from '@/components/v5/V5Foldcraft';
 import VaultLedger from '@/components/v5/VaultLedger';
 import V5SuccessStories, { SUCCESS_STORY_SLUGS } from '@/components/v5/V5SuccessStories';
@@ -54,16 +52,13 @@ export default async function V5PreviewPage() {
     <div className={`bg-[#0a0b10] ${v4Sans}`}>
       <main>
         <V5Hero headingClass={v4Display} />
-        <Ticker text="AI in production" headingClass={v4Display} />
         <PartnerMarquee headingClass={v4Display} />
         <V5Foldcraft headingClass={v4Display} />
-        <Ticker text="The playbook vault" headingClass={v4Display} />
         <VaultLedger headingClass={v4Display} />
         <V5SuccessStories headingClass={v4Display} facts={storyFacts} />
         <ServicesColumns headingClass={v4Display} />
         <V5Insights headingClass={v4Display} news={news} insights={insights} download={whitepaper} />
         <V5HomeFaq headingClass={v4Display} />
-        <Ticker text="Let's talk" headingClass={v4Display} background="#080a12" />
       </main>
       <SiteFooter headingClass={v4Display} />
     </div>
