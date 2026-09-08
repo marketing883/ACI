@@ -160,16 +160,16 @@ export default function ServicesColumns({ headingClass }: { headingClass: string
         <div className="mb-11 flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">
             <p className="v5-rise mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#60A5FA]" style={{ '--v5-d': '0s' } as React.CSSProperties}>
-              / What we build
+              / Services
             </p>
             <h2 className={`v5-rise text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl ${headingClass}`} style={{ lineHeight: 1.06, '--v5-d': '0.05s' } as React.CSSProperties}>
-              From raw data to
+              Build it, run it,
               <br />
-              <span className="text-[#60A5FA]">AI in production.</span>
+              <span className="text-[#60A5FA]">keep it&nbsp;secure.</span>
             </h2>
             <p className="v5-rise mt-4 max-w-xl text-sm leading-relaxed text-white/60 md:text-base" style={{ '--v5-d': '0.1s' } as React.CSSProperties}>
-              We build the data foundation, put the AI on top of it, and stay on to run both once
-              they are live.
+              Data and analytics, applied AI, cloud modernization, managed operations, and
+              cybersecurity. Five practices, one delivery team, on the hook after go-live.
             </p>
           </div>
           <Link href="/services" className="v5-rise group inline-flex items-center gap-1.5 text-sm font-semibold text-white" style={{ '--v5-d': '0.12s' } as React.CSSProperties}>

@@ -63,7 +63,6 @@ const SLIDES: Slide[] = [
     desc: 'Data platforms, cloud, applications, and the operations that keep them up. We build the foundation, put AI on top of it, and stay on the hook long after go-live.',
     tags: ['Data platforms', 'Cloud', 'Managed operations'],
     cta: { label: 'See all capabilities', href: '/services' },
-    stat: { value: '500+', label: 'enterprise projects since 2006' },
   },
   {
     eyebrow: 'Data and platforms',
