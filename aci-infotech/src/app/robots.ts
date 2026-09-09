@@ -18,7 +18,9 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         // /preview/ and /v1 are internal design-comparison routes that
         // near-duplicate the homepage; keep crawlers out entirely.
-        disallow: ['/api/', '/admin/', '/preview/', '/v1'],
+        // /dl/ serves campaign ebooks behind signed links; nothing there
+        // should ever be indexed.
+        disallow: ['/api/', '/admin/', '/preview/', '/v1', '/dl/'],
       },
     ],
     sitemap: `${PRODUCTION_URL}/sitemap.xml`,

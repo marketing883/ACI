@@ -53,3 +53,6 @@ next-env.d.ts
 /exports/
 event-leads-recovered-*.csv
 event-leads-partial-*.csv
+
+# Plaintext ebooks must never be committed; only the .enc blobs.
+private/ebooks/*.pdf
