@@ -83,19 +83,32 @@ jobs:
           # checks and rolls back before it answers, so this call is
           # quiet for minutes on a normal deploy. -m covers the slowest
           # realistic build rather than curl's default of forever.
-          code=$(curl -sS -m 1500 -o response.json -w '%{http_code}' \
-            -X POST https://staging.aciinfotech.com/__deploy \
-            -H "Authorization: Bearer $TOKEN" \
-            -H 'Content-Type: application/json' \
-            -d "{\"ref\":\"$DEPLOY_REF\"}") || {
-              echo "!! the deploy request itself failed (network, timeout, or nginx)"
-              exit 1
-            }
+          #
+          # "Busy" is not a failure. Production and staging deploy as the
+          # same user and share one lock file on the VPS, so a push that
+          # lands while production is building gets turned away: HTTP 409
+          # when this hook is mid-deploy, exit 75 from the deploy script
+          # when the other environment holds the lock. Both mean "try again
+          # shortly", so wait and retry for up to ~15 minutes, and fail
+          # only on a real error. Run #38 failed on exactly this.
+          attempt=0
+          while :; do
+            attempt=$((attempt + 1))
+            code=$(curl -sS -m 1500 -o response.json -w '%{http_code}' \
+              -X POST https://staging.aciinfotech.com/__deploy \
+              -H "Authorization: Bearer $TOKEN" \
+              -H 'Content-Type: application/json' \
+              -d "{\"ref\":\"$DEPLOY_REF\"}") || {
+                echo "!! the deploy request itself failed (network, timeout, or nginx)"
+                exit 1
+              }
+            echo "attempt $attempt: http=$code"
 
-          echo "http=$code"
-          python3 - <<'PY'
+            rc=0
+            python3 - "$code" <<'PY' || rc=$?
           import json, sys
 
+          http = sys.argv[1]
           try:
               with open('response.json') as fh:
                   body = json.load(fh)
@@ -103,6 +116,11 @@ jobs:
               with open('response.json') as fh:
                   print(fh.read()[:4000])
               sys.exit('!! the hook did not return JSON')
+
+          # Another deploy holds a lock: tell the shell loop to retry.
+          if http == '409' or body.get('exit_code') == 75:
+              print('.. another deploy is running on the VPS; will retry')
+              sys.exit(75)
 
           for stream in ('stdout', 'stderr'):
               text = body.get(stream)
@@ -133,6 +151,18 @@ jobs:
 
           print('deploy ok')
           PY
+
+            if [ "$rc" = "75" ]; then
+              if [ "$attempt" -ge 30 ]; then
+                echo "!! the VPS stayed busy for ~15 minutes; giving up"
+                exit 1
+              fi
+              sleep 30
+              continue
+            fi
+            [ "$rc" = "0" ] || exit "$rc"
+            break
+          done
 
           if [ "$code" != "200" ]; then
             echo "!! hook returned HTTP $code"
