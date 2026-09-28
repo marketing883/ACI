@@ -70,8 +70,8 @@ const COLUMNS: { title: string; links: FooterLink[]; badge?: ColumnBadge }[] = [
     badge: {
       src: '/images/certifications-awards/gsa-contract-holder.png',
       alt: 'GSA Contract Holder',
-      width: 704,
-      height: 163,
+      width: 800,
+      height: 186,
     },
   },
   {
@@ -178,9 +178,11 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
                     width={col.badge.width}
                     height={col.badge.height}
                     /* Tailwind's preflight caps images at their column, so
-                       the width is written relative to it: 4px past the
-                       column edge, never more than 180px. */
-                    className="mt-6 h-auto w-[calc(100%+4px)] max-w-[180px] rounded-md"
+                       the width is written relative to it: 28px past the
+                       column edge, into the grid gap, never more than
+                       210px. No corner radius: the mark is cropped to its
+                       ink, so rounding would clip the GSA square. */
+                    className="mt-4 h-auto w-[calc(100%+28px)] max-w-[210px]"
                     sizes="176px"
                   />
                 ) : null}
