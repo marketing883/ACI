@@ -177,7 +177,10 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
                     alt={col.badge.alt}
                     width={col.badge.width}
                     height={col.badge.height}
-                    className="mt-6 h-auto w-44 rounded-md"
+                    /* Tailwind's preflight caps images at their column, so
+                       the width is written relative to it: 4px past the
+                       column edge, never more than 180px. */
+                    className="mt-6 h-auto w-[calc(100%+4px)] max-w-[180px] rounded-md"
                     sizes="176px"
                   />
                 ) : null}
