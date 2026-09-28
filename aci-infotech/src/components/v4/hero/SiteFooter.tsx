@@ -8,7 +8,12 @@ const ACCENT = '#1D4ED8';
 
 type FooterLink = { label: string; href: string; external?: boolean; prefetch?: boolean };
 
-const COLUMNS: { title: string; links: FooterLink[] }[] = [
+/** A certification mark shown under a column's links. The GSA badge
+ *  keeps its own white field by design; GSA's mark guidelines do not
+ *  allow recolouring it for a dark surface, so it sits as a card. */
+type ColumnBadge = { src: string; alt: string; width: number; height: number };
+
+const COLUMNS: { title: string; links: FooterLink[]; badge?: ColumnBadge }[] = [
   {
     title: 'Services',
     links: [
@@ -62,6 +67,12 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
       { label: 'Partners', href: '/partners' },
       { label: 'Contact', href: '/contact' },
     ],
+    badge: {
+      src: '/images/certifications-awards/gsa-contract-holder.png',
+      alt: 'GSA Contract Holder',
+      width: 704,
+      height: 163,
+    },
   },
   {
     title: 'Resources',
@@ -160,6 +171,16 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
                     </li>
                   ))}
                 </ul>
+                {col.badge ? (
+                  <Image
+                    src={col.badge.src}
+                    alt={col.badge.alt}
+                    width={col.badge.width}
+                    height={col.badge.height}
+                    className="mt-6 h-auto w-44 rounded-md"
+                    sizes="176px"
+                  />
+                ) : null}
               </div>
             ))}
           </div>
