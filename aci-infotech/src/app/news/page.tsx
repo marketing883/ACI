@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
 import { createClient } from '@supabase/supabase-js';
 import { ArrowUpRight } from 'lucide-react';
 import { v4Sans, v4Display } from '@/components/v4/fonts';
@@ -20,6 +21,7 @@ interface NewsItem {
   external_url: string;
   link_text: string;
   published_at: string;
+  image_url: string | null;
 }
 
 // Anon key, published-only, newest first: the same public read pattern
@@ -37,7 +39,7 @@ async function getNews(): Promise<NewsItem[]> {
 
   const { data, error } = await supabase
     .from('news')
-    .select('id, title, excerpt, source, external_url, link_text, published_at')
+    .select('id, title, excerpt, source, external_url, link_text, published_at, image_url')
     .eq('status', 'published')
     .order('published_at', { ascending: false });
 
@@ -105,7 +107,7 @@ export default async function NewsPage() {
                       </p>
                     </div>
 
-                    <div className="md:col-span-9">
+                    <div className={item.image_url ? 'md:col-span-7' : 'md:col-span-9'}>
                       <h2
                         className={`max-w-3xl text-xl font-semibold text-black transition-colors group-hover:text-blue-700 md:text-2xl ${v4Display}`}
                         style={{ lineHeight: 1.2 }}
@@ -126,6 +128,23 @@ export default async function NewsPage() {
                         />
                       </span>
                     </div>
+
+                    {/* Square because most of these are square and several
+                        carry the publisher's badge in the bottom-right
+                        corner, which a landscape crop would cut. The title
+                        beside it already names the story, so the image is
+                        decorative to a screen reader. */}
+                    {item.image_url ? (
+                      <div className="relative order-first aspect-square w-32 overflow-hidden rounded-xl bg-gray-100 md:order-none md:col-span-2 md:w-full">
+                        <Image
+                          src={item.image_url}
+                          alt=""
+                          fill
+                          sizes="(min-width: 768px) 200px, 128px"
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                        />
+                      </div>
+                    ) : null}
                   </a>
                 </li>
               ))}
