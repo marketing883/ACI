@@ -148,10 +148,13 @@ export default function V5SuccessStories({
         </div>
 
         <div className="mb-5 flex justify-center" style={revealStyle(revealed, 0.5)}>
+          {/* Five tabs need ~890px in one row, so the single row starts at
+              lg; below that they wrap into a grid. At md the row overflowed
+              768px screens and scrolled the whole page sideways. */}
           <div
             role="tablist"
             aria-label="Success stories"
-            className="grid w-fit max-w-full grid-cols-2 gap-1 rounded-xl bg-white/[0.08] p-1 md:flex md:flex-row"
+            className="grid w-fit max-w-full grid-cols-2 gap-1 rounded-xl bg-white/[0.08] p-1 sm:grid-cols-3 lg:flex lg:flex-row"
           >
             {STORIES.map((story, n) => {
               const isActive = n === active;
@@ -163,7 +166,7 @@ export default function V5SuccessStories({
                   aria-selected={isActive}
                   aria-controls={`ss-panel-${story.id}`}
                   onClick={() => select(n)}
-                  className={`relative flex min-h-12 items-center justify-center gap-2 overflow-hidden rounded-md px-4 py-2.5 text-sm font-medium transition-colors md:min-w-[150px] md:px-4 lg:min-w-[190px] lg:px-5 ${
+                  className={`relative flex min-h-12 items-center justify-center gap-2 overflow-hidden rounded-md px-4 py-2.5 text-sm font-medium transition-colors md:min-w-[150px] md:px-4 lg:min-w-[170px] lg:px-5 xl:min-w-[190px] ${
                     isActive ? 'bg-white text-black shadow-sm' : 'text-white/60 hover:text-white'
                   } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#60A5FA]`}
                 >

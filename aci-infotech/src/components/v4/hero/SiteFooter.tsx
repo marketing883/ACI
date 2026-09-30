@@ -177,12 +177,16 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
                     alt={col.badge.alt}
                     width={col.badge.width}
                     height={col.badge.height}
-                    /* Tailwind's preflight caps images at their column, so
-                       the width is written relative to it: 28px past the
-                       column edge, into the grid gap, never more than
-                       210px. No corner radius: the mark is cropped to its
-                       ink, so rounding would clip the GSA square. */
-                    className="mt-4 h-auto w-[calc(100%+28px)] max-w-[210px]"
+                    /* Below lg the badge fills its own column, capped at
+                       184px: on phones Company is the right-hand column,
+                       and anything wider was clipped at the screen edge.
+                       From lg the columns get narrow (87px at 1024), so the
+                       badge takes a fixed 184px and runs into the gap and
+                       the Resources column, which is empty at this height
+                       (four links against Company's five). No corner
+                       radius: the mark is cropped to its ink, so rounding
+                       would clip the GSA square. */
+                    className="mt-4 h-auto w-full max-w-[184px] lg:w-[184px] lg:max-w-none"
                     sizes="176px"
                   />
                 ) : null}
