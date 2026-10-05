@@ -109,7 +109,7 @@ export function OrganizationSchema({
   // Keep in sync with the social links in the site footers.
   sameAs = [
     'https://www.linkedin.com/company/aciinfotech',
-    'https://x.com/ACIInfotech',
+    'https://x.com/Aciinfotech01',
     'https://www.youtube.com/@aciinfotech',
   ],
   foundingDate = '2006',
@@ -318,7 +318,7 @@ export function LocalBusinessSchema({
   priceRange = '$$$',
   sameAs = [
     'https://www.linkedin.com/company/aci-infotech',
-    'https://x.com/ACIInfotech',
+    'https://x.com/Aciinfotech01',
   ],
 }: LocalBusinessSchemaProps = {}) {
   const schema = {

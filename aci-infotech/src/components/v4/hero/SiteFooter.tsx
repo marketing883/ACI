@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowUpRight, Linkedin, Twitter, Youtube } from 'lucide-react';
+import { ArrowUpRight, Linkedin, Youtube } from 'lucide-react';
+import XIcon from '@/components/ui/XIcon';
 
 const ACCENT = '#1D4ED8';
 
@@ -87,7 +88,7 @@ const COLUMNS: { title: string; links: FooterLink[]; badge?: ColumnBadge }[] = [
 
 const SOCIAL = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/aciinfotech', Icon: Linkedin },
-  { label: 'X', href: 'https://x.com/ACIInfotech', Icon: Twitter },
+  { label: 'X', href: 'https://x.com/Aciinfotech01', Icon: XIcon },
   { label: 'YouTube', href: 'https://www.youtube.com/@aciinfotech', Icon: Youtube },
 ];
 

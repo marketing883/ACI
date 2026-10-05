@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Linkedin, Twitter, Youtube, Mail } from 'lucide-react';
+import { Linkedin, Youtube, Mail } from 'lucide-react';
+import XIcon from '@/components/ui/XIcon';
 import NewsletterForm from '@/components/forms/NewsletterForm';
 
 const FOOTER_LINKS = {
@@ -33,7 +34,7 @@ const FOOTER_LINKS = {
 
 const SOCIAL_LINKS = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/aciinfotech', icon: Linkedin },
-  { label: 'X', href: 'https://x.com/ACIInfotech', icon: Twitter },
+  { label: 'X', href: 'https://x.com/Aciinfotech01', icon: XIcon },
   { label: 'YouTube', href: 'https://www.youtube.com/@aciinfotech', icon: Youtube },
 ];
 

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Linkedin, Twitter, Facebook, Link2, Check } from 'lucide-react';
+import { Linkedin, Facebook, Link2, Check } from 'lucide-react';
+import XIcon from '@/components/ui/XIcon';
 
 // Social share row. Client only (window.open + clipboard); no SEO-bearing
 // content lives here.
@@ -49,8 +50,8 @@ export default function ShareButtons({ title }: { title: string }) {
           <button onClick={shareOnLinkedIn} className={iconButton} title="Share on LinkedIn">
             <Linkedin className="w-4 h-4" />
           </button>
-          <button onClick={shareOnTwitter} className={iconButton} title="Share on X (Twitter)">
-            <Twitter className="w-4 h-4" />
+          <button onClick={shareOnTwitter} className={iconButton} title="Share on X">
+            <XIcon className="w-4 h-4" />
           </button>
           <button onClick={shareOnFacebook} className={iconButton} title="Share on Facebook">
             <Facebook className="w-4 h-4" />
