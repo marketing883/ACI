@@ -144,7 +144,8 @@ export default function RootLayout({
             here (not via next/script in a dynamic ssr:false client
             component) is what makes Tag Assistant actually find it. */}
         <script dangerouslySetInnerHTML={{ __html: GTM_BOOTSTRAP_SCRIPT }} />
-        {/* ZoomInfo WebSights: loads zi-tag.js after the page has loaded. */}
+        {/* ZoomInfo WebSights, gated: loads only once the visitor grants
+            marketing consent (see src/lib/analytics/zoominfo.ts). */}
         <script dangerouslySetInnerHTML={{ __html: ZOOMINFO_SCRIPT }} />
       </head>
       <body className="antialiased font-sans" suppressHydrationWarning>
