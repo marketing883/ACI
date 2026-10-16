@@ -5,6 +5,7 @@ import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import ClientProviders from "@/components/layout/ClientProviders";
 import GlobalStructuredData from "@/components/seo/StructuredData";
 import { CONSENT_DEFAULT_SCRIPT, GTM_BOOTSTRAP_SCRIPT, GTM_ID } from "@/lib/analytics/consent";
+import { ZOOMINFO_SCRIPT } from "@/lib/analytics/zoominfo";
 
 // Self-hosted, automatically subset, font-display: swap. Replaces the
 // render-blocking <link> to fonts.googleapis.com that v1 was using.
@@ -143,6 +144,8 @@ export default function RootLayout({
             here (not via next/script in a dynamic ssr:false client
             component) is what makes Tag Assistant actually find it. */}
         <script dangerouslySetInnerHTML={{ __html: GTM_BOOTSTRAP_SCRIPT }} />
+        {/* ZoomInfo WebSights: loads zi-tag.js after the page has loaded. */}
+        <script dangerouslySetInnerHTML={{ __html: ZOOMINFO_SCRIPT }} />
       </head>
       <body className="antialiased font-sans" suppressHydrationWarning>
         {/* GTM noscript fallback — first thing in <body> per Google's

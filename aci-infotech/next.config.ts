@@ -251,7 +251,7 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://snap.licdn.com https://static.hotjar.com https://script.hotjar.com https://www.clarity.ms https://cdn-in.pagesense.io",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://snap.licdn.com https://static.hotjar.com https://script.hotjar.com https://www.clarity.ms https://cdn-in.pagesense.io https://*.zi-scripts.com https://*.zoominfo.com https://*.insent.ai",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https: http:",
@@ -263,10 +263,13 @@ const nextConfig: NextConfig = {
               // scheme, so the https entry does not cover the realtime
               // websocket and every subscription was being blocked.
               // ad.doubleclick.net receives the Google Ads conversion beacon.
-              "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://ad.doubleclick.net https://px.ads.linkedin.com https://server-side-tagging-p5uycbintq-uc.a.run.app https://*.supabase.co wss://*.supabase.co https://api.aciinfotech.com https://*.hotjar.com https://*.hotjar.io https://www.clarity.ms https://cdn-in.pagesense.io",
+              // ZoomInfo WebSights (src/lib/analytics/zoominfo.ts) loads from
+              // *.zi-scripts.com, then pulls its scheduler and FormComplete from
+              // *.zoominfo.com and its chat widget from *.insent.ai.
+              "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://ad.doubleclick.net https://px.ads.linkedin.com https://server-side-tagging-p5uycbintq-uc.a.run.app https://*.supabase.co wss://*.supabase.co https://api.aciinfotech.com https://*.hotjar.com https://*.hotjar.io https://www.clarity.ms https://cdn-in.pagesense.io https://*.zi-scripts.com https://*.zoominfo.com https://*.insent.ai wss://*.insent.ai",
               // The server-side tagging container is framed by GTM, not just
               // fetched, so it needs to appear here as well as in connect-src.
-              "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net https://bid.g.doubleclick.net https://server-side-tagging-p5uycbintq-uc.a.run.app https://vars.hotjar.com",
+              "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net https://bid.g.doubleclick.net https://server-side-tagging-p5uycbintq-uc.a.run.app https://vars.hotjar.com https://*.zoominfo.com https://*.insent.ai",
               "manifest-src 'self' https://*.github.dev https://github.dev",
             ].join('; '),
           },
