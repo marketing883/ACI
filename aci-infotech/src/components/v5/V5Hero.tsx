@@ -34,12 +34,18 @@ const ROTATE_MS = 7000;
 type Slide = {
   eyebrow: string;
   eyebrowLogo?: { src: string; w: number; h: number };
-  /** Two headline lines; the *marked* phrase renders in the filled
-   *  highlight box. */
-  headline: [string, string];
+  /** Headline lines (two, or three for a long headline); the *marked*
+   *  phrase renders in the filled highlight box. */
+  headline: string[];
   desc: string;
   tags: string[];
-  cta: { label: string; href: string };
+  cta?: { label: string; href: string };
+  /** Photo that replaces the office footage while this slide is up. It
+   *  sits under the same scrims, so the copy stays legible. */
+  bg?: { src: string; alt: string; position?: string };
+  /** Headline font-size override for a headline longer than the usual
+   *  two short lines, so each authored line still fits on one line. */
+  headlineSize?: string;
   /** Partner mark in the eyebrow capsule. Use a light or mono asset:
    *  a dark-on-dark logo renders as an empty capsule. */
   mark?: { src: string; alt: string };
@@ -56,7 +62,21 @@ type Slide = {
 // line and gets its own frontier beat on slide five, which is the
 // balance the positioning asks for: an enterprise engineering firm whose
 // center of gravity is AI outcomes, not an AI shop.
+// The event slide leads while it is current news; the business slides
+// follow in their usual order.
 const SLIDES: Slide[] = [
+  {
+    eyebrow: 'Event',
+    // Non-breaking space keeps "Technology Leaders" together when the
+    // first line has to wrap on a phone.
+    headline: ['Bringing Technology\u00a0Leaders', 'Together at *Tee IT Up*', 'for Techbridge'],
+    headlineSize: 'clamp(2rem, 4vw, 3.6rem)',
+    desc: 'ACI Infotech and ArqAI Labs joined industry leaders at the 20th Annual Tee IT Up for Techbridge Golf Tournament for a day of networking, meaningful conversations, and community impact.',
+    tags: ['October 26, 2026', 'Château Élan · Georgia'],
+    // Sunset fairway (licensed stock photo). Sun and course sit right of
+    // center, so the copy column on the left stays dark.
+    bg: { src: '/images/events/tee-it-up-techbridge-2026.jpg', alt: 'Golf course fairway at sunset', position: '68% center' },
+  },
   {
     eyebrow: 'What we do',
     headline: ['We build the systems', 'the business *runs on.*'],
@@ -220,6 +240,31 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
         ))}
       </video>
 
+      {/* Per-slide photo stage: fades in over the footage for slides that
+          carry their own image, then hands back to the footage. */}
+      <AnimatePresence>
+        {s.bg ? (
+          <motion.div
+            key={s.bg.src}
+            aria-hidden="true"
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { duration: 0.8, ease: EASE } }}
+            exit={{ opacity: 0, transition: { duration: 0.6, ease: EASE } }}
+          >
+            <Image
+              src={s.bg.src}
+              alt=""
+              fill
+              priority={i === 0}
+              sizes="100vw"
+              className="object-cover"
+              style={{ objectPosition: s.bg.position ?? 'center', filter: 'saturate(0.9) brightness(0.95) contrast(1.05)' }}
+            />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
       {/* Left-heavy scrim + top/bottom veils for copy and rail legibility. */}
       {/* Cool wash: ties the amber footage to the page's blue without
           hue-rotating the whole frame, which turns skin tones green. */}
@@ -272,7 +317,7 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
 
               <h1
                 className={`font-semibold text-white ${headingClass}`}
-                style={{ fontSize: 'clamp(2.1rem, 5.4vw, 5rem)', lineHeight: 1.08, letterSpacing: '-0.01em' }}
+                style={{ fontSize: s.headlineSize ?? 'clamp(2.1rem, 5.4vw, 5rem)', lineHeight: 1.08, letterSpacing: '-0.01em' }}
               >
                 {s.headline.map((line, li) => (
                   <span key={li} className="block overflow-hidden pb-1">
@@ -307,13 +352,15 @@ export default function V5Hero({ headingClass }: { headingClass: string }) {
                 ))}
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0, transition: { delay: 0.72, duration: 0.6, ease: EASE } }}
-                className="mt-8"
-              >
-                <ArrowLink href={s.cta.href}>{s.cta.label}</ArrowLink>
-              </motion.div>
+              {s.cta ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0, transition: { delay: 0.72, duration: 0.6, ease: EASE } }}
+                  className="mt-8"
+                >
+                  <ArrowLink href={s.cta.href}>{s.cta.label}</ArrowLink>
+                </motion.div>
+              ) : null}
             </motion.div>
           </AnimatePresence>
         </div>
