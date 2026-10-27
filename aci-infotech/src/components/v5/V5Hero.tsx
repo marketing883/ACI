@@ -73,9 +73,11 @@ const SLIDES: Slide[] = [
     headlineSize: 'clamp(2rem, 4vw, 3.6rem)',
     desc: 'ACI Infotech and ArqAI Labs joined industry leaders at the 20th Annual Tee IT Up for Techbridge Golf Tournament for a day of networking, meaningful conversations, and community impact.',
     tags: ['October 26, 2026', 'Château Élan · Georgia'],
-    // Sunset fairway (licensed stock photo). Sun and course sit right of
-    // center, so the copy column on the left stays dark.
-    bg: { src: '/images/events/tee-it-up-techbridge-2026.jpg', alt: 'Golf course fairway at sunset', position: '68% center' },
+    cta: { label: 'Connect To Our Team', href: '/contact' },
+    // Golfers on the tee by the 15th flag (licensed stock photo; the flag's
+    // number was retouched from 18). The group sits mid-frame and the flag
+    // on the right, so the copy column on the left stays readable.
+    bg: { src: '/images/events/tee-it-up-techbridge-2026-course.jpg', alt: 'Golfers on the tee at a tournament, flag 15 on the green', position: 'center' },
   },
   {
     eyebrow: 'What we do',
