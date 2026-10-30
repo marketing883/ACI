@@ -119,16 +119,22 @@ export default function SiteFooter({ headingClass }: { headingClass: string }) {
           {/* Brand */}
           <div>
             <Image src="/aci-infotech-logo-white.png" alt="ACI Infotech" width={150} height={42} className="h-9 w-auto" />
-            <p className={`mt-5 max-w-xs text-lg leading-snug text-white/70 ${headingClass}`}>
-              Enterprise data and AI, engineered and run in production.
-            </p>
             {/* Sitewide entity statement: the definitional copy search and
                 answer engines lift, worded to stand alone when quoted. */}
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/50">
-              ACI Infotech is an enterprise data and AI engineering firm headquartered in
-              Somerset, New Jersey, with delivery hubs worldwide. We build the data
-              foundation, put AI on top of it, and run both in production for enterprises in
-              financial services, healthcare, retail, manufacturing, and&nbsp;energy.
+            <p className="mt-5 max-w-md text-sm leading-relaxed text-white/60">
+              ACI Infotech partners with Fortune 1000 companies to turn complex data and AI
+              ambitions into measurable business impact. We bring together enterprise data
+              engineering, advanced AI capabilities, and large-scale execution to help
+              organizations modernize their data foundations, move AI from experimentation to
+              production, and embed intelligence into the decisions and operations that drive
+              business&nbsp;performance.
+            </p>
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-white/60">
+              What sets ACI apart is the combination of two decades of enterprise delivery
+              experience and a forward-looking approach to AI innovation. Founded in 2006, ACI
+              Infotech is headquartered in New Jersey, with a global presence spanning the
+              Americas, EMEA, and India. We help enterprises move beyond AI potential to build,
+              scale, and operationalize solutions that deliver lasting business&nbsp;value.
             </p>
             <Link
               href="/contact"
