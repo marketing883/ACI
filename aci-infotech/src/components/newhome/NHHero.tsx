@@ -3,8 +3,7 @@
 // Hero: a full-viewport dark stage. The Magnific "data core" render sits
 // on the right and drifts with the pointer and the scroll; aurora light
 // breathes behind it; the headline rises word by word on the left. A glass
-// proof chip cycles through four verified outcomes, and the partner
-// platforms run along the bottom edge.
+// chip cycles through four company figures.
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
@@ -28,17 +27,6 @@ const PROOFS = [
   { value: '95%', label: 'client retention', where: 'Clients who stay with us' },
   { value: '35+', label: 'global markets', where: 'One global partnership, 4 regions' },
   { value: '20 yrs', label: 'in business', where: 'Founded 2006' },
-];
-
-const PARTNERS = [
-  { src: '/brand/azure-color.png', alt: 'Microsoft Azure' },
-  { src: '/brand/databricks-color.svg', alt: 'Databricks' },
-  { src: '/brand/snowflake-color.svg', alt: 'Snowflake' },
-  { src: '/brand/aws-color.png', alt: 'Amazon Web Services' },
-  { src: '/brand/googlecloud-color.svg', alt: 'Google Cloud' },
-  { src: '/brand/sap-color.svg', alt: 'SAP' },
-  { src: '/brand/salesforce-color.png', alt: 'Salesforce' },
-  { src: '/brand/dynatrace-color.svg', alt: 'Dynatrace' },
 ];
 
 export default function NHHero({ headingClass }: { headingClass: string }) {
@@ -128,7 +116,7 @@ export default function NHHero({ headingClass }: { headingClass: string }) {
 
       <motion.div
         style={{ y: copyY, opacity: copyOpacity }}
-        className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 pb-52 pt-36 md:pb-56 md:pt-40"
+        className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 pb-32 pt-36 md:pb-36 md:pt-40"
       >
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 12 }}
@@ -180,7 +168,7 @@ export default function NHHero({ headingClass }: { headingClass: string }) {
           initial={reduce ? false : { opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, ease: EASE, delay: 1.1 }}
-          className="mt-12 w-full max-w-sm overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] p-5 shadow-[0_30px_80px_-30px_rgba(29,78,216,0.6)] backdrop-blur-xl md:absolute md:bottom-56 md:right-6 md:mt-0 lg:right-10"
+          className="mt-12 w-full max-w-sm overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] p-5 shadow-[0_30px_80px_-30px_rgba(29,78,216,0.6)] backdrop-blur-xl md:absolute md:bottom-28 md:right-6 md:mt-0 lg:right-10"
           aria-live="polite"
         >
           <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.22em] text-white/50">
@@ -208,30 +196,6 @@ export default function NHHero({ headingClass }: { headingClass: string }) {
         </motion.div>
       </motion.div>
 
-      {/* Partner platforms along the bottom edge */}
-      <div className="absolute inset-x-0 bottom-14 border-t border-white/10 bg-[#05070d]/40 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center gap-8 px-6 py-5">
-          <span className="hidden shrink-0 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45 md:block">
-            Partner platforms
-          </span>
-          <div className="relative flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
-            <div className="nh-marquee flex w-max items-center gap-14">
-              {[...PARTNERS, ...PARTNERS].map((l, i) => (
-                <Image
-                  key={i}
-                  src={l.src}
-                  alt={i < PARTNERS.length ? l.alt : ''}
-                  aria-hidden={i >= PARTNERS.length}
-                  width={120}
-                  height={32}
-                  style={{ width: 'auto' }}
-                  className="h-6 w-auto opacity-60 brightness-0 invert transition-opacity duration-300 hover:opacity-100"
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
