@@ -162,7 +162,7 @@ export default function NHChapters({ headingClass }: { headingClass: string }) {
 
         <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-6 pt-16">
           {/* Side index */}
-          <nav aria-label="Chapters" className="absolute left-6 top-1/2 hidden -translate-y-1/2 xl:-left-4 xl:block 2xl:-left-16">
+          <nav aria-label="Chapters" className="absolute left-6 top-1/2 hidden -translate-y-1/2 xl:left-2 xl:block 2xl:-left-12">
             <ol className="space-y-5">
               {CHAPTERS.map((ch, i) => (
                 <li key={ch.key}>

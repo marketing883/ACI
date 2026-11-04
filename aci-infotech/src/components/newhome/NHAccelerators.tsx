@@ -24,9 +24,9 @@ export default function NHAccelerators({ headingClass }: { headingClass: string 
       </div>
 
       <div className="relative mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-[0.85fr_1.35fr]">
-        <div className="lg:sticky lg:top-28 lg:self-start">
+        <div className="min-w-0 lg:sticky lg:top-28 lg:self-start">
           <Eyebrow tone="light">Key solutions and accelerators</Eyebrow>
-          <h2 className={`[color:inherit] mt-6 text-[clamp(2.4rem,4.8vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.035em] ${headingClass}`}>
+          <h2 className={`[color:inherit] mt-6 text-[clamp(2.1rem,4.8vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.035em] ${headingClass}`}>
             <span className="nh-accent-ink">11</span> modernization offers, ready to&nbsp;run.
           </h2>
           <Reveal>
@@ -43,7 +43,7 @@ export default function NHAccelerators({ headingClass }: { headingClass: string 
           </Reveal>
         </div>
 
-        <ol className="space-y-3">
+        <ol className="min-w-0 space-y-3">
           {ACCELERATORS.map((a, i) => (
             <motion.li
               key={`${a.from}-${a.to}`}
@@ -53,8 +53,8 @@ export default function NHAccelerators({ headingClass }: { headingClass: string 
               transition={{ duration: 0.8, ease: EASE, delay: (i % 3) * 0.06 }}
               className="group rounded-2xl border border-[#0a1024]/8 bg-white/80 p-4 shadow-[0_1px_0_rgba(10,16,36,0.04)] backdrop-blur-md transition-all duration-500 hover:-translate-y-0.5 hover:border-[#1d4ed8]/30 hover:bg-white hover:shadow-[0_24px_60px_-30px_rgba(29,78,216,0.45)] md:p-5"
             >
-              <div className="flex items-center gap-3 md:gap-4">
-                <span className="w-[6.5rem] shrink-0 rounded-full border border-[#0a1024]/12 bg-[#f4f6fb] px-3 py-1.5 text-center text-xs font-semibold text-[#0a1024]/70 sm:w-32 sm:text-sm">
+              <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                <span className="relative z-10 w-[5.25rem] shrink-0 rounded-full border border-[#0a1024]/12 bg-[#f4f6fb] px-2 py-1.5 text-center text-[11px] font-semibold sm:px-3 text-[#0a1024]/70 sm:w-32 sm:text-sm">
                   {a.from}
                 </span>
                 {/* migration track with a travelling beam */}
@@ -69,10 +69,10 @@ export default function NHAccelerators({ headingClass }: { headingClass: string 
                   <span className="absolute -top-[1.5px] left-0 h-1 w-16 -translate-x-full rounded-full bg-gradient-to-r from-transparent via-[#3b82f6] to-[#22d3ee] opacity-0 shadow-[0_0_12px_#3b82f6] group-hover:animate-[nh-beam_1.2s_ease-in-out]" />
                   <ArrowUpRight size={14} className="absolute -right-1 -top-[7px] rotate-45 text-[#0a1024]/35 transition-colors group-hover:text-[#1d4ed8]" />
                 </span>
-                <span className="w-[6.5rem] shrink-0 rounded-full bg-[#0a1024] px-3 py-1.5 text-center text-xs font-semibold text-white transition-colors duration-500 group-hover:bg-[#1d4ed8] sm:w-32 sm:text-sm">
+                <span className="relative z-10 w-[5.25rem] shrink-0 rounded-full bg-[#0a1024] px-2 py-1.5 text-center text-[11px] font-semibold sm:px-3 text-white transition-colors duration-500 group-hover:bg-[#1d4ed8] sm:w-32 sm:text-sm">
                   {a.to}
                 </span>
-                <span className={`w-16 shrink-0 text-right text-xl font-semibold tabular-nums text-[#1d4ed8] md:text-2xl ${headingClass}`}>
+                <span className={`w-14 shrink-0 text-right text-lg sm:w-16 sm:text-xl font-semibold tabular-nums text-[#1d4ed8] md:text-2xl ${headingClass}`}>
                   ↑<CountUp value={a.gain} />
                 </span>
               </div>
