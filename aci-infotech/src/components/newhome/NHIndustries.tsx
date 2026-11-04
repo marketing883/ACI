@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { Eyebrow, Reveal, SplitHeadline } from './motion';
+import { MORE_VERTICALS } from './deck-data';
 
 // Focus lines are taken from each industry page's own description
 // (src/data/industries.ts).
@@ -97,6 +98,15 @@ export default function NHIndustries({ headingClass }: { headingClass: string })
             <Tile key={ind.name} ind={ind} headingClass={headingClass} index={i} />
           ))}
         </div>
+
+        <Reveal className="mt-10 flex flex-wrap items-center gap-2">
+          <span className="mr-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#0a1024]/45">We also serve</span>
+          {MORE_VERTICALS.map((v) => (
+            <span key={v} className="rounded-full border border-[#0a1024]/10 bg-white px-4 py-2 text-sm text-[#0a1024]/70">
+              {v}
+            </span>
+          ))}
+        </Reveal>
       </div>
     </section>
   );

@@ -10,17 +10,26 @@ import { ArrowUpRight } from 'lucide-react';
 import { Eyebrow, Reveal, SplitHeadline } from './motion';
 
 const PLATFORMS = [
-  { name: 'Databricks', logo: '/brand/databricks-color.svg', href: '/platforms/databricks' },
-  { name: 'Microsoft Azure', logo: '/brand/azure-color.png', href: '/platforms/azure' },
-  { name: 'Snowflake', logo: '/brand/snowflake-color.svg', href: '/platforms/snowflake' },
-  { name: 'AWS', logo: '/brand/aws-color.png', href: '/platforms/aws' },
-  { name: 'Google Cloud', logo: '/brand/googlecloud-color.svg', href: '/platforms/gcp' },
-  { name: 'SAP', logo: '/brand/sap-color.svg', href: '/platforms/sap' },
-  { name: 'Salesforce', logo: '/brand/salesforce-color.png', href: '/platforms/salesforce' },
+  { name: 'Databricks', logo: '/images/new-home/partners/databricks.png', href: '/platforms/databricks' },
+  { name: 'Microsoft Azure', logo: '/images/new-home/partners/azure.png', href: '/platforms/azure' },
+  { name: 'Snowflake', logo: '/images/new-home/partners/snowflake.png', href: '/platforms/snowflake' },
+  { name: 'AWS', logo: '/images/new-home/partners/aws.png', href: '/platforms/aws' },
+  { name: 'Google Cloud', logo: '/images/new-home/partners/google-cloud.png', href: '/platforms/gcp' },
+  { name: 'SAP', logo: '/images/new-home/partners/sap.png', href: '/platforms/sap' },
+  { name: 'Salesforce', logo: '/images/new-home/partners/salesforce.png', href: '/platforms/salesforce' },
+  { name: 'ServiceNow', logo: '/images/new-home/partners/servicenow.png', href: '/platforms/servicenow' },
   { name: 'Microsoft Dynamics 365', logo: '/brand/MS-Dynamics-365-logo.png', href: '/platforms/microsoft-dynamics' },
 ];
 
-const ALSO = ['ServiceNow', 'Braze', 'Dynatrace', 'Kubernetes', 'Anthropic', 'OpenAI', 'LangGraph'];
+const CERTS = [
+  { name: 'Great Place to Work Certified', src: '/images/certifications-awards/best-place-to-work.webp' },
+  { name: 'CMMI Level 3', src: '/images/certifications-awards/cmmi.webp' },
+  { name: 'ISO/IEC 27001:2022 Certified', src: '/images/certifications-awards/iso-27001.webp' },
+  { name: '5 Best Data Analytics Companies to Watch', src: '/images/certifications-awards/best-data-analytics-company.webp' },
+  { name: 'GSA Contract Holder', src: '/images/certifications-awards/gsa-contract-holder.png' },
+];
+
+const ALSO = ['Braze', 'Dynatrace', 'Kubernetes', 'Anthropic', 'OpenAI', 'LangGraph'];
 
 export default function NHPlatforms({ headingClass }: { headingClass: string }) {
   return (
@@ -42,9 +51,9 @@ export default function NHPlatforms({ headingClass }: { headingClass: string }) 
           </Reveal>
         </div>
 
-        <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {PLATFORMS.map((p, i) => (
-            <Reveal key={p.name} delay={(i % 4) * 0.06}>
+            <Reveal key={p.name} delay={(i % 3) * 0.06}>
               <Link
                 href={p.href}
                 onMouseMove={(e) => {
@@ -57,10 +66,10 @@ export default function NHPlatforms({ headingClass }: { headingClass: string }) 
                 <Image
                   src={p.logo}
                   alt={p.name}
-                  width={160}
-                  height={48}
-                  style={{ width: 'auto' }}
-                  className="h-10 w-auto max-w-[72%] object-contain opacity-85 transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-105 group-hover:opacity-100 md:h-12"
+                  width={240}
+                  height={80}
+                  style={{ width: 'auto', height: 'auto' }}
+                  className="h-auto max-h-11 w-auto max-w-[58%] object-contain opacity-90 transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-105 group-hover:opacity-100 md:max-h-12"
                 />
                 <span className="absolute bottom-4 flex translate-y-3 items-center gap-1 text-xs font-semibold text-[#1d4ed8] opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                   {p.name} <ArrowUpRight size={13} />
@@ -81,6 +90,18 @@ export default function NHPlatforms({ headingClass }: { headingClass: string }) 
             All platforms <ArrowUpRight size={14} />
           </Link>
         </Reveal>
+
+        {/* Certifications and recognition */}
+        <div className="mt-20 rounded-[26px] border border-[#0a1024]/8 bg-[#f4f6fb] p-6 md:p-8">
+          <div className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-[#0a1024]/45">Certifications and recognition</div>
+          <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
+            {CERTS.map((c, i) => (
+              <Reveal as="li" key={c.name} delay={i * 0.06}>
+                <Image src={c.src} alt={c.name} title={c.name} width={160} height={80} style={{ width: 'auto' }} className="h-14 w-auto object-contain transition-transform duration-500 hover:-translate-y-1 hover:scale-105 md:h-16" />
+              </Reveal>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

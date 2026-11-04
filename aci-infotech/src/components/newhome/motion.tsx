@@ -119,7 +119,7 @@ export function SplitHeadline({
 }
 
 /** Counts a number up when it scrolls into view. Keeps prefix/suffix and
- *  decimals from the source string ("99.97%", "1,200+", "$4.7M"). */
+ *  decimals from the source string ("95%", "1,200+", "20 yrs"). */
 export function CountUp({ value, className, duration = 1.6 }: { value: string; className?: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: '0px 0px -10% 0px' });

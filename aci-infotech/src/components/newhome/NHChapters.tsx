@@ -46,8 +46,8 @@ const CHAPTERS: Chapter[] = [
     tint: '#1d4ed8',
     link: { label: 'Explore data engineering', href: '/services/data-engineering' },
     proofs: [
-      { value: '87%', label: 'less data-processing time on a governed Databricks lakehouse', href: '/case-studies/databricks-modernization-ai-enablement-for-leading-c-store-chain', cta: 'Read the Databricks story' },
-      { value: '3 weeks → 4 hours', label: 'campaign analysis, with 94% adoption', href: '/services/data-engineering', cta: 'See the practice' },
+      { value: 'Data Strategy and Architecture', label: 'Agile data strategy, architecture blueprinting, cloud data platforms, hubs and catalogs', href: '/services/advisory-strategy', cta: 'Explore advisory' },
+      { value: 'Data Product Development', label: 'End-to-end product development by dedicated data engineering teams', href: '/services/data-engineering', cta: 'Explore data engineering' },
     ],
   },
   {
@@ -60,8 +60,8 @@ const CHAPTERS: Chapter[] = [
     tint: '#7c3aed',
     link: { label: 'Explore cloud modernization', href: '/services/cloud-modernization' },
     proofs: [
-      { value: '68%', label: 'cost cut on a mainframe-to-cloud migration, zero downtime', href: '/playbooks/legacy-cloud-migration', cta: 'Open the playbook' },
-      { value: '67%', label: 'less allocation processing time after an SAP S/4HANA move', href: '/case-studies/modernizes-finance-reporting-with-sap-transformation', cta: 'Read the SAP story' },
+      { value: 'Data Stack Modernization', label: 'Architecture, cloud migration, warehouse and lake implementation, governance, DevOps', href: '/services/cloud-modernization', cta: 'Explore cloud modernization' },
+      { value: '11 modernization accelerators', label: 'SAS, Synapse, Oracle, Tableau, Cognos, and more, onto modern platforms', href: '#accelerators', cta: 'See the accelerators' },
     ],
   },
   {
@@ -74,8 +74,8 @@ const CHAPTERS: Chapter[] = [
     tint: '#0891b2',
     link: { label: 'Explore managed operations', href: '/services/managed-operations' },
     proofs: [
-      { value: '99.97%', label: 'system uptime across 72+ servers, releases still moving', href: '/case-studies/optimizing-enterprise-it-operations-with-automated-devops-and-monitoring', cta: 'Read the DevOps story' },
-      { value: '68%', label: 'less network downtime under proactive NOC and SOC watch', href: '/case-studies/transforming-reactive-it-into-strategic-advantage-with-aci', cta: 'Read the infrastructure story' },
+      { value: 'Managed Run and SRE', label: '24/7 NOC and SOC coverage, observability, on-call SRE, and change management', href: '/services/managed-operations', cta: 'Explore managed operations' },
+      { value: 'Data Observability', label: 'Quality monitoring, end-to-end lineage, latency tracking, and root cause analysis', href: '#frameworks', cta: 'See the frameworks' },
     ],
   },
   {
@@ -83,13 +83,13 @@ const CHAPTERS: Chapter[] = [
     verb: 'We innovate.',
     eyebrow: 'Applied AI and GenAI',
     headline: 'From prototype to governed production.',
-    desc: 'Copilots, agents, RAG systems, forecasting, and MLOps that move from prototype to governed production.',
+    desc: 'Turn early concepts into working solutions, quickly and cost-effectively: copilots, agents, RAG systems, forecasting, and MLOps that move into governed production.',
     image: '/images/new-home/chapter-innovate.jpg',
     tint: '#6366f1',
     link: { label: 'Explore applied AI', href: '/services/applied-ai-ml' },
     proofs: [
-      { value: '90 days', label: 'from prototype to production on a governed Azure lakehouse', href: '/case-studies/driving-enterprise-data-transformation-with-aci-s-azure-lakehouse', cta: 'Read the Azure Lakehouse story' },
-      { value: '94%', label: 'eval pass rate on production AI', href: '/services/applied-ai-ml', cta: 'See the practice' },
+      { value: 'Generative AI and Agentic AI', label: 'AI consulting, GenAI integrations, product development, and AI transformation', href: '/services/applied-ai-ml', cta: 'Explore applied AI' },
+      { value: 'MLOps', label: 'Automated ML pipelines, CI and CD for ML, continuous training, and model governance', href: '/services/applied-ai-ml', cta: 'See how models stay healthy' },
     ],
   },
 ];
@@ -128,7 +128,7 @@ export default function NHChapters({ headingClass }: { headingClass: string }) {
             <ul>
               {ch.proofs.map((p) => (
                 <li key={p.cta}>
-                  <a href={p.href}>{`${p.value} ${p.label}`}</a>
+                  <a href={p.href}>{`${p.value}: ${p.label}`}</a>
                 </li>
               ))}
             </ul>
@@ -228,7 +228,7 @@ export default function NHChapters({ headingClass }: { headingClass: string }) {
                         e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
                       }}
                     >
-                      <div className={`text-3xl font-semibold tracking-tight md:text-4xl ${headingClass}`}>{p.value}</div>
+                      <div className={`text-lg font-semibold leading-snug tracking-tight md:text-xl ${headingClass}`}>{p.value}</div>
                       <div className="mt-2 text-sm leading-snug text-white/70">{p.label}</div>
                       <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-[#67e8f9]">
                         {p.cta}

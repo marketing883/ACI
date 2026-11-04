@@ -2,7 +2,7 @@
 
 // Services: an editorial index on porcelain. Each practice is a large row;
 // pointing at one (or focusing it) swaps the preview panel beside it with
-// that practice's image, proof, and stack, with a clip-path image reveal.
+// that practice's image, summary, and stack, with a clip-path image reveal.
 // On small screens every row opens in place instead.
 
 import { useState } from 'react';
@@ -17,8 +17,6 @@ const PRACTICES = [
   {
     name: 'Data Engineering & Analytics',
     summary: 'Modern data platforms on Databricks, Snowflake, and cloud-native architectures: lakehouse migration, real-time pipelines, governance and lineage, and the analytics and BI that run on top of them.',
-    stat: '3 weeks → 4 hours',
-    proof: 'Campaign analysis cut from 3 weeks to 4 hours. 94% adoption.',
     chips: ['Lakehouse migration', 'Real-time pipelines', 'Analytics & BI', 'Governance & lineage'],
     stack: 'Databricks · Snowflake · Azure',
     href: '/services/data-engineering',
@@ -27,8 +25,6 @@ const PRACTICES = [
   {
     name: 'Applied AI & GenAI',
     summary: 'Copilots, agents, RAG systems, forecasting, and MLOps that move from prototype to governed production.',
-    stat: '90 days',
-    proof: 'Prototype to production on a governed Azure lakehouse, 94% eval pass rate.',
     chips: ['Copilots & agents', 'RAG systems', 'Forecasting & ML', 'MLOps & evals'],
     stack: 'Anthropic · OpenAI · LangGraph',
     href: '/services/applied-ai-ml',
@@ -37,8 +33,6 @@ const PRACTICES = [
   {
     name: 'Cloud Modernization',
     summary: 'Landing zones, FinOps, Kubernetes platforms, and mainframe-to-cloud cutovers run in parallel so nothing goes dark.',
-    stat: '68% cost cut',
-    proof: 'Mainframe-to-cloud cutovers run in parallel: zero downtime.',
     chips: ['Landing zones', 'Migrations & cutovers', 'FinOps', 'Kubernetes platforms'],
     stack: 'AWS · Azure · Google Cloud',
     href: '/services/cloud-modernization',
@@ -47,8 +41,6 @@ const PRACTICES = [
   {
     name: 'Managed Run & SRE',
     summary: '24/7 NOC and SOC coverage, observability, on-call SRE, and change management for production estates.',
-    stat: '99.97% uptime',
-    proof: 'Across a 72+ server estate, releases still moving.',
     chips: ['24/7 operations', 'SRE & on-call', 'Observability', 'Change management'],
     stack: 'Kubernetes · Dynatrace · ServiceNow',
     href: '/services/managed-operations',
@@ -57,8 +49,6 @@ const PRACTICES = [
   {
     name: 'Cybersecurity',
     summary: 'Zero-trust architecture, cloud security posture, compliance readiness, threat response, and 24/7 SOC operations.',
-    stat: '35% smaller',
-    proof: 'Attack surface cut by 35%, with secure releases moving 70% faster.',
     chips: ['Zero-trust architecture', 'SOC operations', 'Compliance readiness', 'Threat response'],
     stack: 'Microsoft Sentinel · CrowdStrike · Okta',
     href: '/services/cyber-security',
@@ -128,7 +118,7 @@ export default function NHServices({ headingClass }: { headingClass: string }) {
                     >
                       {s.name}
                     </span>
-                    <span className={`text-sm font-medium transition-colors ${isActive ? 'text-[#1d4ed8]' : 'text-[#0a1024]/35'}`}>{s.stat}</span>
+                    <span className={`hidden text-xs font-medium uppercase tracking-[0.14em] transition-colors xl:inline ${isActive ? 'text-[#1d4ed8]' : 'text-[#0a1024]/35'}`}>{s.stack}</span>
                     <span
                       className={`flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-500 ${
                         isActive ? 'rotate-0 border-[#1d4ed8] bg-[#1d4ed8] text-white' : '-rotate-45 border-[#0a1024]/15 text-[#0a1024]/40'
@@ -164,7 +154,7 @@ export default function NHServices({ headingClass }: { headingClass: string }) {
                               <Image src={s.image} alt="" fill sizes="100vw" className="object-cover" />
                             </div>
                             <p className="mt-4 text-sm leading-relaxed text-[#0a1024]/70">{s.summary}</p>
-                            <p className="mt-3 text-sm font-semibold text-[#1d4ed8]">{s.proof}</p>
+                            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#1d4ed8]">{s.stack}</p>
                             <Link href={s.href} className="nh-btn mt-4 inline-flex items-center gap-1.5 text-sm font-semibold">
                               Explore <ArrowUpRight size={15} />
                             </Link>
@@ -198,8 +188,8 @@ export default function NHServices({ headingClass }: { headingClass: string }) {
                 <div className="absolute bottom-5 left-6 right-6">
                   <AnimatePresence mode="wait">
                     <motion.div key={p.name} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.4, ease: EASE }}>
-                      <div className={`text-5xl font-semibold tracking-tight ${headingClass}`}>{p.stat}</div>
-                      <div className="mt-1 text-sm text-white/75">{p.proof}</div>
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#67e8f9]">0{active + 1} / 0{PRACTICES.length}</div>
+                      <div className={`mt-1 text-3xl font-semibold leading-tight tracking-tight ${headingClass}`}>{p.name}</div>
                     </motion.div>
                   </AnimatePresence>
                 </div>

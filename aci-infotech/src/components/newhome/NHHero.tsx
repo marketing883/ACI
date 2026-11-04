@@ -19,14 +19,15 @@ import {
 } from 'framer-motion';
 import SiteNav from '../v4/hero/SiteNav';
 import { Grain, MagneticLink, SplitHeadline } from './motion';
+import NetworkField from './NetworkField';
 import { EASE } from './tokens';
 
-// Verified outcomes, as they appear in the current homepage copy.
+// Company figures from the corporate overview (deck slide 4).
 const PROOFS = [
-  { value: '87%', label: 'less data-processing time', where: 'Retail lakehouse on Databricks' },
-  { value: '68%', label: 'cost cut, zero downtime', where: 'Mainframe-to-cloud migration' },
-  { value: '99.97%', label: 'uptime across 72+ servers', where: 'Automated DevOps and monitoring' },
-  { value: '90 days', label: 'from prototype to production', where: 'Governed Azure lakehouse for AI' },
+  { value: '280+', label: 'production deployments', where: 'Built, shipped, and run' },
+  { value: '95%', label: 'client retention', where: 'Clients who stay with us' },
+  { value: '35+', label: 'global markets', where: 'One global partnership, 4 regions' },
+  { value: '20 yrs', label: 'in business', where: 'Founded 2006' },
 ];
 
 const PARTNERS = [
@@ -71,6 +72,8 @@ export default function NHHero({ headingClass }: { headingClass: string }) {
     const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
     px.set(((e.clientX - r.left) / r.width - 0.5) * 22);
     py.set(((e.clientY - r.top) / r.height - 0.5) * 16);
+    (e.currentTarget as HTMLElement).style.setProperty('--sx', `${e.clientX - r.left}px`);
+    (e.currentTarget as HTMLElement).style.setProperty('--sy', `${e.clientY - r.top}px`);
   };
 
   const p = PROOFS[proof];
@@ -118,11 +121,14 @@ export default function NHHero({ headingClass }: { headingClass: string }) {
           WebkitMaskImage: 'radial-gradient(ellipse at 30% 50%, black 10%, transparent 70%)',
         }}
       />
+      {/* Interconnected network and a light that follows the pointer */}
+      <NetworkField className="-z-10 opacity-70" density={0.00008} maxNodes={95} />
+      <div aria-hidden="true" className="nh-spotlight pointer-events-none absolute inset-0 -z-10" />
       <Grain />
 
       <motion.div
         style={{ y: copyY, opacity: copyOpacity }}
-        className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 pb-40 pt-36 md:pb-44 md:pt-40"
+        className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 pb-52 pt-36 md:pb-56 md:pt-40"
       >
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 12 }}
@@ -174,11 +180,11 @@ export default function NHHero({ headingClass }: { headingClass: string }) {
           initial={reduce ? false : { opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, ease: EASE, delay: 1.1 }}
-          className="mt-12 w-full max-w-sm overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] p-5 shadow-[0_30px_80px_-30px_rgba(29,78,216,0.6)] backdrop-blur-xl md:absolute md:bottom-44 md:right-6 md:mt-0 lg:right-10"
+          className="mt-12 w-full max-w-sm overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] p-5 shadow-[0_30px_80px_-30px_rgba(29,78,216,0.6)] backdrop-blur-xl md:absolute md:bottom-56 md:right-6 md:mt-0 lg:right-10"
           aria-live="polite"
         >
           <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.22em] text-white/50">
-            <span>In production</span>
+            <span>ACI Infotech</span>
             <span className="flex gap-1">
               {PROOFS.map((_, i) => (
                 <span key={i} className={`h-1 rounded-full transition-all duration-500 ${i === proof ? 'w-5 bg-[#22d3ee]' : 'w-1.5 bg-white/25'}`} />
@@ -203,7 +209,7 @@ export default function NHHero({ headingClass }: { headingClass: string }) {
       </motion.div>
 
       {/* Partner platforms along the bottom edge */}
-      <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-[#05070d]/40 backdrop-blur-md">
+      <div className="absolute inset-x-0 bottom-14 border-t border-white/10 bg-[#05070d]/40 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center gap-8 px-6 py-5">
           <span className="hidden shrink-0 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45 md:block">
             Partner platforms

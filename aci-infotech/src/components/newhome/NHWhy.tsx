@@ -11,10 +11,10 @@ import { CountUp, Eyebrow, Grain, Reveal, SplitHeadline } from './motion';
 import { EASE } from './tokens';
 
 const REASONS = [
-  { value: '20 years', title: 'Two decades of delivery', body: 'Founded in 2006. Two decades of enterprise delivery experience, with a forward-looking approach to AI innovation.' },
+  { value: '95%', title: 'Client retention', body: 'Two decades of enterprise delivery experience, with a forward-looking approach to AI innovation. Clients stay.' },
   { value: '48 hours', title: 'A written plan, fast', body: 'Advisory engagements produce a written plan within 48 hours, and a build pod can be shipping within two weeks.' },
   { value: 'One team', title: 'Built and run by the same people', body: 'Five practices, one delivery team, on the hook after go-live. Someone is awake whenever your estate is.' },
-  { value: '500+', title: 'Documented in playbooks', body: 'Every engagement leaves a blueprint, so most projects start from the hundredth mile, not the first.' },
+  { value: 'Labs', title: 'Accelerators of our own', body: 'Innovation labs and micro technology centres build custom frameworks and accelerators, so most projects start from the hundredth mile, not the first.' },
 ];
 
 const LEDGER = [
@@ -44,7 +44,7 @@ export default function NHWhy({ headingClass }: { headingClass: string }) {
           {REASONS.map((r, i) => (
             <Reveal key={r.title} delay={i * 0.08} className="group relative bg-[#05070d] p-7 transition-colors duration-500 hover:bg-[#0a1024] md:p-8">
               <div className={`text-4xl font-semibold tracking-tight md:text-5xl ${headingClass}`}>
-                {/^\d/.test(r.value) ? <CountUp value={r.value} /> : r.value}
+                {/^\d/.test(r.value) && r.value.endsWith('%') ? <CountUp value={r.value} /> : r.value}
               </div>
               <div className={`mt-6 text-lg font-semibold ${headingClass}`}>{r.title}</div>
               <p className="mt-2 text-sm leading-relaxed text-white/60">{r.body}</p>

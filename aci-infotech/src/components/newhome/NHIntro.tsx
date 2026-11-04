@@ -10,18 +10,14 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { CountUp, Eyebrow, Reveal } from './motion';
+import { DECK_STATS, FOOTPRINT, MISSION } from './deck-data';
 
 const STATEMENT =
   'ACI Infotech partners with Fortune 1000 companies to turn complex data and AI ambitions into measurable business impact.';
 
-const FACTS = [
-  { value: '2006', label: 'Founded', note: 'Two decades of enterprise delivery' },
-  { value: '1,200+', label: 'Engineers', note: 'One delivery team' },
-  { value: '500+', label: 'Enterprise projects', note: 'Documented in playbooks' },
-  { value: '11', label: 'Global delivery hubs', note: 'Americas, EMEA, and India' },
-];
+const FACTS = DECK_STATS;
 
-const CERTS = ['ISO 27001:2022', 'CMMI Level 3', 'Great Place to Work Certified', 'GSA Contract Holder'];
+const CERTS = ['ISO 27001:2022', 'CMMI Level 3', 'Great Place to Work Certified', '5 Best Data Analytics Companies to Watch', 'GSA Contract Holder'];
 
 function Word({ word, i, total, progress, still }: { word: string; i: number; total: number; progress: MotionValue<number>; still: boolean }) {
   const start = i / total;
@@ -78,6 +74,7 @@ export default function NHIntro({ headingClass }: { headingClass: string }) {
               <div className="absolute bottom-0 left-0 p-7 text-white md:p-9">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/55">Headquarters</div>
                 <div className={`mt-1 text-2xl font-semibold ${headingClass}`}>New Jersey, USA</div>
+                <div className="mt-1 text-sm text-white/60">1,200+ engineers across 11 global delivery&nbsp;hubs</div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {['Americas', 'EMEA', 'India'].map((r) => (
                     <span key={r} className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs text-white/85 backdrop-blur-md">
@@ -91,19 +88,23 @@ export default function NHIntro({ headingClass }: { headingClass: string }) {
 
           <div>
             <Reveal>
-              <p className="max-w-xl text-lg leading-relaxed text-[#0a1024]/70">
-                We bring together enterprise data engineering, advanced AI capabilities, and large-scale
-                execution to help organizations modernize their data foundations, move AI from
-                experimentation to production, and embed intelligence into the decisions and operations
-                that drive business&nbsp;performance.
-              </p>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#1d4ed8]">Mission and values</div>
+                  <p className="mt-2 text-[15px] leading-relaxed text-[#0a1024]/70">{MISSION}</p>
+                </div>
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#1d4ed8]">Global footprint</div>
+                  <p className="mt-2 text-[15px] leading-relaxed text-[#0a1024]/70">{FOOTPRINT}</p>
+                </div>
+              </div>
             </Reveal>
             <dl className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[#0a1024]/10 bg-[#0a1024]/10">
               {FACTS.map((f, i) => (
                 <Reveal key={f.label} delay={i * 0.08} className="bg-white p-6 md:p-7">
                   <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0a1024]/50">{f.label}</dt>
                   <dd className={`mt-2 text-4xl font-semibold tracking-tight text-[#0a1024] md:text-5xl ${headingClass}`}>
-                    {f.value === '2006' ? '2006' : <CountUp value={f.value} />}
+                    <CountUp value={f.value} />
                   </dd>
                   <dd className="mt-2 text-sm text-[#0a1024]/55">{f.note}</dd>
                 </Reveal>

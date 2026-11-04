@@ -80,3 +80,26 @@
 /* Link cards carry `nh-btn`: the design system skips any link whose class
    contains "btn" when it paints plain links brand blue, so the cards keep
    their own text colours. */
+
+/* Accelerator rows: a beam of light runs along the migration track on hover. */
+@keyframes nh-beam {
+  0% { left: 0; opacity: 0; transform: translateX(-100%); }
+  20% { opacity: 1; }
+  100% { left: 100%; opacity: 0; transform: translateX(0); }
+}
+
+/* Framework diagrams: dashes of light flowing along each link, and a
+   breathing hub. */
+.nh-flow { animation: nh-flow 2.4s linear infinite; }
+@keyframes nh-flow { from { stroke-dashoffset: 166; } to { stroke-dashoffset: 0; } }
+.nh-pulse { transform-origin: 320px 160px; animation: nh-pulse 3.2s ease-in-out infinite; }
+@keyframes nh-pulse { 0%, 100% { transform: scale(0.92); opacity: 0.75; } 50% { transform: scale(1.08); opacity: 1; } }
+
+/* Hero: soft light that follows the pointer. */
+.nh-spotlight {
+  background: radial-gradient(520px circle at var(--sx, 70%) var(--sy, 40%), rgba(59, 130, 246, 0.22), transparent 60%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nh-flow, .nh-pulse { animation: none; }
+}
