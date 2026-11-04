@@ -49,7 +49,9 @@ export default function ConditionalLayout({
   const isV5Preview = pathname?.startsWith('/preview/v5');
   // The v5 design is now the production homepage. It renders its own
   // nav (V5Nav) and footer, so `/` is fully standalone too.
-  const isStandaloneHome = pathname === '/';
+  // The new-homepage workspace mirrors `/` (own nav and footer, plus the
+  // chat), so reviewers see it exactly as it would ship.
+  const isStandaloneHome = pathname === '/' || pathname === '/preview/new-home';
   // Staging builds set NEXT_PUBLIC_USE_V2_HOME=true, which flips `/`
   // to the v2 homepage. That page renders its own NavV2 / FooterV2,
   // so the v1 chrome must be suppressed here too. The env var is

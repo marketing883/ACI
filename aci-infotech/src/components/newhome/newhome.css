@@ -1,0 +1,82 @@
+/* New homepage (/preview/new-home) motion and accent styles. Scoped by
+   class name; nothing here touches other pages. */
+
+.nh-accent-gradient {
+  background: linear-gradient(100deg, #93c5fd 0%, #3b82f6 35%, #22d3ee 70%, #a5f3fc 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: nh-shimmer 7s ease-in-out infinite alternate;
+}
+.nh-accent-ink {
+  background: linear-gradient(100deg, #1d4ed8, #3b82f6 55%, #0891b2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@keyframes nh-shimmer {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+.nh-aurora { animation: nh-breathe 14s ease-in-out infinite alternate; }
+.nh-aurora-slow { animation: nh-breathe 22s ease-in-out infinite alternate-reverse; }
+@keyframes nh-breathe {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6%, -4%, 0) scale(1.12); }
+  100% { transform: translate3d(-4%, 5%, 0) scale(0.94); }
+}
+
+.nh-marquee { animation: nh-marquee 38s linear infinite; }
+.nh-marquee:hover { animation-play-state: paused; }
+@keyframes nh-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+/* AI orb: layered conic light that turns slowly. */
+.nh-orb-spin { animation: nh-spin 18s linear infinite; }
+.nh-orb-spin-rev { animation: nh-spin 26s linear infinite reverse; }
+.nh-float { animation: nh-float 9s ease-in-out infinite; }
+@keyframes nh-spin { to { transform: rotate(360deg); } }
+@keyframes nh-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -14px, 0); }
+}
+
+/* Gradient border that lights up on hover (cards). */
+.nh-glow-card { position: relative; }
+.nh-glow-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(59, 130, 246, 0.9), rgba(34, 211, 238, 0.35) 40%, transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.nh-glow-card:hover::before { opacity: 1; }
+
+.nh-scroll-hide { scrollbar-width: none; }
+.nh-scroll-hide::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nh-accent-gradient, .nh-aurora, .nh-aurora-slow, .nh-marquee,
+  .nh-orb-spin, .nh-orb-spin-rev, .nh-float { animation: none; }
+}
+
+/* The site design system colours h1-h6 globally; on this page every
+   heading takes its section's colour instead (dark scenes are white). */
+/* :where() keeps this at element specificity, so it beats the design
+   system only by load order and never beats a text-* utility class. */
+:where([data-nh]) :is(h1, h2, h3, h4, h5, h6) { color: inherit; }
+
+/* Link cards carry `nh-btn`: the design system skips any link whose class
+   contains "btn" when it paints plain links brand blue, so the cards keep
+   their own text colours. */
